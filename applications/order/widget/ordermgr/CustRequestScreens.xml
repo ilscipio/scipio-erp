@@ -183,7 +183,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderRequest}">
+                        <screenlet>
                             <section>
                                 <condition>
                                     <if-compare field="parameters.small" operator="equals" value="Y"/>
@@ -264,7 +264,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleRequestItems}">
+                        <screenlet>
                             <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.link_nav} ${styles.action_add}">
                                 <parameter param-name="custRequestId"/>
                             </link>

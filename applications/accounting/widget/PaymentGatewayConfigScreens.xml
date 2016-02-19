@@ -281,7 +281,7 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericPaymentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigType}">
+                        <screenlet>
                             <include-form name="EditPaymentGatewayConfigType" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
                         </screenlet>
                     </decorator-section>

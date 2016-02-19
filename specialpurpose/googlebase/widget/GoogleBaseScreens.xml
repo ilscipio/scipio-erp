@@ -77,7 +77,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleGoogleBaseProductsExportToGoogle}">
+                        <screenlet>
                             <include-form name="ProductsExportToGoogle" location="component://googlebase/widget/GoogleBaseForms.xml"/>
                         </screenlet>
                     </decorator-section>

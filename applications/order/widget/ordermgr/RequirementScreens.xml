@@ -166,7 +166,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequirementsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindApprovedRequirementsBySupplier}">
+                        <screenlet>
                             <include-form name="ApprovedProductRequirementsByVendor" location="component://order/widget/ordermgr/RequirementForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -204,12 +204,11 @@ under the License.
 
                 <set field="requirementId" from-field="parameters.requirementId"/>
                 <entity-one entity-name="Requirement" value-field="requirement" auto-field-map="true"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRequirement}">
+                        <screenlet>
                             <include-form name="EditRequirement" location="component://order/widget/ordermgr/RequirementForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -234,7 +233,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListRequirementCustRequests}">
+                        <screenlet>
                             <include-form name="ListRequirementCustRequests" location="component://order/widget/ordermgr/RequirementForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -260,7 +259,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListRequirementOrders}">
+                        <screenlet>
                             <include-form name="ListRequirementOrders" location="component://order/widget/ordermgr/RequirementForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -286,7 +285,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
+                        <screenlet>
                             <container>
                                 <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="requirementId"/>
@@ -315,7 +314,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRequirementRole}">
+                        <screenlet>
                             <include-form name="EditRequirementRole" location="component://order/widget/ordermgr/RequirementForms.xml"/>
                         </screenlet>
                     </decorator-section>

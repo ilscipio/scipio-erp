@@ -63,7 +63,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ManufacturingCreateProductionRun}">
+                        <screenlet>
                             <include-form name="CreateProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -538,7 +538,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator" location="${parameters.commonJobshopDecorator}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleProductionRunLink}">
+                        <screenlet>
                             <include-form name="linkProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                         </screenlet>
                     </decorator-section>

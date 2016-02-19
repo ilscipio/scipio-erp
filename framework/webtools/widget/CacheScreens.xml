@@ -74,7 +74,7 @@ under the License.
                                 <if-has-permission permission="UTIL_CACHE" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleFindUtilCacheElements}">
+                                <screenlet>
                                     <label>${uiLabelMap.WebtoolsCacheName} ${cacheName} (${now}) ${uiLabelMap.WebtoolsSizeTotal} ${totalSize} ${uiLabelMap.WebtoolsBytes}</label>
                                     <include-menu name="CacheElements" location="component://webtools/widget/Menus.xml"/>
                                     <include-form name="ListCacheElements" location="component://webtools/widget/CacheForms.xml"/>
@@ -107,7 +107,7 @@ under the License.
                                 <if-has-permission permission="UTIL_CACHE" action="_EDIT"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditUtilCache}">
+                                <screenlet>
                                     <include-menu name="EditCache" location="component://webtools/widget/Menus.xml"/>
                                     <include-form name="EditCache" location="component://webtools/widget/CacheForms.xml"/>
                                 </screenlet>

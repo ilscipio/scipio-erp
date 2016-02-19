@@ -49,7 +49,7 @@ under the License.
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.EbayStoreSetting}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://ebaystore/webapp/ebaystore/store/StoreSetting.ftl"/></html>
                             </platform-specific>

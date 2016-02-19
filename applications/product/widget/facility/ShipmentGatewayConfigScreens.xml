@@ -193,7 +193,7 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericShipmentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleUpdateShipmentGatewayConfigType}">
+                        <screenlet>
                             <include-form name="EditShipmentGatewayConfigType" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
                         </screenlet>
                     </decorator-section>

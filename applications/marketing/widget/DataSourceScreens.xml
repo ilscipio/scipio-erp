@@ -114,7 +114,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonDataSourceDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListDataSource}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.DataSourceCreate}" target="EditDataSource" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -183,7 +183,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonDataSourceDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListDataSourceType}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.DataSourceTypeCreate}" target="EditDataSourceType" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>

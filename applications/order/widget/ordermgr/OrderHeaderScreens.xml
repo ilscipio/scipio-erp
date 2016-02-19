@@ -57,7 +57,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderHeaderDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditOrderHeader}">
+                        <screenlet>
                             <include-form name="EditOrderHeader" location="component://order/widget/ordermgr/OrderForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -79,7 +79,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderHeaderDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListOrderHeaders}">
+                        <screenlet>
                             <include-form name="ListOrderHeaders" location="component://order/widget/ordermgr/OrderForms.xml"/>
                         </screenlet>
                     </decorator-section>

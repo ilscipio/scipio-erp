@@ -140,7 +140,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleCreateContactFromVCard}">
+                        <screenlet>
                             <container><label text="${uiLabelMap.SfaAutoCreateContactByImportingVCard}"/></container>
                             <include-form  name="NewContactFromVCard" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>

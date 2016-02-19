@@ -58,7 +58,6 @@
                 <set field="tabButtonItem" value="AgreementMain" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
@@ -102,7 +101,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementItem}">
+                        <screenlet>
                             <include-form name="EditAgreementItem" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -125,7 +124,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItems}">
+                        <screenlet>
                             <include-form name="ListAgreementItems" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -218,7 +217,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementPromoAppl}">
+                        <screenlet>
                             <include-form name="EditAgreementPromoAppl" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -245,7 +244,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementPromoAppls}">
+                        <screenlet>
                             <include-form name="ListAgreementPromoAppls" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -273,7 +272,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementGeographicalApplic}">
+                        <screenlet>
                             <include-form name="EditAgreementGeographicalApplic" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -298,7 +297,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementGeographicalApplic}">
+                        <screenlet>
                             <include-form name="ListAgreementGeographicalApplic" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -324,7 +323,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementItemFacility}">
+                        <screenlet>
                             <include-form name="EditAgreementItemFacility" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -350,7 +349,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItemFacilities}">
+                        <screenlet>
                             <include-form name="ListAgreementItemFacilities" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -405,7 +404,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementItemParty}">
+                        <screenlet>
                             <include-form name="EditAgreementItemParty" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -430,7 +429,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItemParties}">
+                        <screenlet>
                             <include-form name="ListAgreementItemParties" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -456,7 +455,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementItemProduct}">
+                        <screenlet>
                             <include-form name="EditAgreementItemProduct" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -482,7 +481,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItemProducts}">
+                        <screenlet>
                             <include-form name="ListAgreementItemProducts" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -591,7 +590,7 @@
                                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
                             </link>
                         </container>
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItemProducts}">
+                        <screenlet>
                             <include-form name="ListAgreementItemSupplierProducts" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -650,7 +649,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditAgreementItemTerm}">
+                        <screenlet>
                             <include-form name="EditAgreementItemTerm" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>
@@ -676,7 +675,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListAgreementItemTerms}">
+                        <screenlet>
                             <include-form name="ListAgreementItemTerms" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                     </decorator-section>

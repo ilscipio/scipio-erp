@@ -81,7 +81,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderRequest}">
+                        <screenlet>
                             <include-form name="EditCustRequest" location="component://projectmgr/widget/forms/CustRequestForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -96,16 +96,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAccountDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="no-clear">
-                            <screenlet title="${uiLabelMap.PageTitleCreateAccount}">
-                                <platform-specific>
+                        <screenlet>
+                            <platform-specific>
                                 <html>
-                                <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+                                    <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
                                 </html>
-                                </platform-specific>   
-                                <include-form name="NewAccount" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                            </screenlet>
-                        </container>
+                            </platform-specific>   
+                            <include-form name="NewAccount" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

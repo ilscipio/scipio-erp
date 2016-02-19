@@ -132,7 +132,7 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericTransactionDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingAuthorize}">
+                        <screenlet>
                             <include-form name="AuthorizeTransaction" location="component://accounting/widget/TransactionForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -161,7 +161,7 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericTransactionDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingCapture}">
+                        <screenlet>
                             <include-form name="CaptureTransaction" location="component://accounting/widget/TransactionForms.xml"/>
                         </screenlet>
                     </decorator-section>

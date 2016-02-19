@@ -324,7 +324,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderAddNote}">
+                        <screenlet>
                             <container>
                                 <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
                             </container>

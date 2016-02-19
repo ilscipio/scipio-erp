@@ -114,7 +114,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListContactList}">
+                        <screenlet>
                             <container>
                                 <link text="${uiLabelMap.MarketingContactListCreate}" target="EditContactList" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -152,7 +152,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditContactListParty}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.MarketingContactListPartyCreate}" target="EditContactListParty" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="contactListId"/>
@@ -193,7 +193,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListContactListParty}">
+                        <screenlet>
                             <container>
                                 <link style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.MarketingContactListPartyCreate}" target="EditContactListParty">
                                     <parameter param-name="contactListId"/>
@@ -328,7 +328,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindContactListCommEvents}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.MarketingContactListCommEventCreate}" target="EditContactListCommEvent" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="contactListId"/>

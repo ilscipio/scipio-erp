@@ -106,13 +106,9 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.AccountingCreateNewSalesInvoice}">
-                                    <include-form name="NewSalesInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="NewSalesInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -191,19 +191,15 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleNavigateContent}" >
-                                    <container style="left-border">
-                                        <container id="EditDocumentTree"/>
-                                        <platform-specific><html><html-template location="component://content/webapp/content/content/DisplayContentNav.ftl"/></html></platform-specific>
-                                    </container>
-                                    <container style="leftonly">
-                                        <include-screen name="showDocument"/>
-                                    </container>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <container style="left-border">
+                                <container id="EditDocumentTree"/>
+                                <platform-specific><html><html-template location="component://content/webapp/content/content/DisplayContentNav.ftl"/></html></platform-specific>
+                            </container>
+                            <container style="leftonly">
+                                <include-screen name="showDocument"/>
+                            </container>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

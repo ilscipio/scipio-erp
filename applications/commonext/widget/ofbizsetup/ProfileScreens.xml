@@ -63,7 +63,7 @@
                                     </actions>
                                     <widgets>
                                         <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                        <screenlet title="${uiLabelMap.PartyCreateNewCustomer}">
+                                        <screenlet>
                                             <include-form name="NewCustomer" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                         </screenlet>
                                     </widgets>

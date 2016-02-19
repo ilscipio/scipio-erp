@@ -59,7 +59,7 @@
             <widgets>
                 <decorator-screen name="CommonGeoManagementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.WebtoolsGeoEdit}">
+                        <screenlet>
                             <include-form name="EditGeo" location="component://webtools/widget/GeoManagementForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -132,7 +132,7 @@
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditFeatureType}">
+                        <screenlet>
                             <include-form name="EditFeatureType" location="component://product/widget/catalog/FeatureForms.xml"/>
                         </screenlet>
                     </decorator-section>

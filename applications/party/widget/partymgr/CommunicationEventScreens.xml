@@ -302,7 +302,7 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleListUnknownPartyComms}">
+                                <screenlet>
                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListUnknownPartyEmails"/>
                                 </screenlet>
                             </widgets>
@@ -740,7 +740,7 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PartyNewCommContent}">
+                                <screenlet>
                                     <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="addCommContent"/>
                                 </screenlet>
                             </widgets>

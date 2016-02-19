@@ -596,7 +596,7 @@ under the License.
                                 <if-empty field="glReconciliationId"/>
                             </condition>
                             <widgets>
-                                <screenlet  id="AddFinAccountReconciliation" title="${uiLabelMap.AccountingAddFinAccountReconciliations}">
+                                <screenlet id="AddFinAccountReconciliation" title="${uiLabelMap.AccountingAddFinAccountReconciliations}">
                                     <include-form name="EditFinAccountReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
                                 </screenlet>
                             </widgets>

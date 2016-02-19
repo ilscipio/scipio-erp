@@ -41,7 +41,7 @@ under the License.
                                 <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.WorkEffortJobList}">
+                                <screenlet>
                                     <include-form name="FilterUserJobs" location="component://workeffort/widget/WorkEffortForms.xml"/>
                                     <include-form name="UserJobsList" location="component://workeffort/widget/WorkEffortForms.xml"/>
                                 </screenlet>
@@ -174,7 +174,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListWorkEfforts}" navigation-form-name="ListWorkEfforts">
+                        <screenlet navigation-form-name="ListWorkEfforts">
                             <include-form name="ListWorkEfforts" location="component://workeffort/widget/WorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -303,7 +303,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditWorkEffortAssoc}">
+                        <screenlet>
                             <include-form name="EditWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>

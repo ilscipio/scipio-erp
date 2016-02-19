@@ -120,7 +120,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPromoDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductPromos}">
+                        <screenlet>
                             <include-form name="EditProductPromo" location="component://product/widget/catalog/PromoForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -309,7 +309,6 @@ under the License.
                         <container>
                             <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>
-
                         <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
                             <include-form name="EditProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
                         </screenlet>

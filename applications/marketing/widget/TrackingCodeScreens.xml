@@ -117,7 +117,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTrackingCodeDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListTrackingCode}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="/EditTrackingCode" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -165,7 +165,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTrackingCodeDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditTrackingCodeOrder}">
+                        <screenlet>
                             <include-form name="EditTrackingCodeOrder" location="component://marketing/widget/TrackingCodeForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -214,7 +214,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTrackingCodeDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindTrackingCodeOrder}">
+                        <screenlet>
                             <include-form name="FindTrackingCodeOrders" location="component://marketing/widget/TrackingCodeForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -238,7 +238,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTrackingCodeDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditTrackingCodeVisit}">
+                        <screenlet>
                             <include-form name="EditTrackingCodeVisit" location="component://marketing/widget/TrackingCodeForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -391,7 +391,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTrackingCodeDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListTrackingCodeType}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="/EditTrackingCodeType" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>

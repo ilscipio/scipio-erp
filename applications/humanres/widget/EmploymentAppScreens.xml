@@ -85,12 +85,8 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.HumanResNewEmploymentApp}">
-                            <section>
-                                 <widgets>
-                                      <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
-                                 </widgets>
-                            </section>
+                        <screenlet>
+                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

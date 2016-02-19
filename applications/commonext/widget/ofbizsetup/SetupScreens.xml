@@ -36,40 +36,40 @@
                 <set field="parameters.partyId" from-field="parties[0].partyId"/>
             </actions>
             <widgets>
-                        <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                <section>
-                    <condition>
-                        <if-empty field="parties"/>
-                    </condition>
-                    <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
                         <section>
-                            <actions>
-                                <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
-                                <set field="dependentForm" value="NewOrganization"/>
-                                <set field="paramKey" value="countryGeoId"/>                                        
-                                <set field="mainId" value="USER_COUNTRY"/>
-                                <set field="dependentId" value="USER_STATE"/>
-                                <set field="requestName" value="getAssociatedStateList"/>
-                                <set field="responseName" value="stateList"/>
-                                <set field="dependentKeyName" value="geoId"/>
-                                <set field="descName" value="geoName"/>
-                                <set field="selectedDependentOption" value="_none_"/>
-                            </actions>
+                            <condition>
+                                <if-empty field="parties"/>
+                            </condition>
                             <widgets>
-                                <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                <screenlet title="${uiLabelMap.SetupCreateNewOrganization}">
-                                    <include-form name="NewOrganization" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
-                                </screenlet>
+                                <section>
+                                    <actions>
+                                        <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
+                                        <set field="dependentForm" value="NewOrganization"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="USER_COUNTRY"/>
+                                        <set field="dependentId" value="USER_STATE"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                        <screenlet>
+                                            <include-form name="NewOrganization" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
+                            <fail-widgets>
+                                <include-screen name="viewprofile" location="component://commonext/widget/ofbizsetup/ProfileScreens.xml"/> 
+                            </fail-widgets>
                         </section>
-                    </widgets>
-                    <fail-widgets>
-                        <include-screen name="viewprofile" location="component://commonext/widget/ofbizsetup/ProfileScreens.xml"/> 
-                    </fail-widgets>
-                </section>
-                            </decorator-section>
-                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -191,7 +191,7 @@
                                 </section>
                                 <section>
                                     <widgets>
-                                        <screenlet title="${uiLabelMap.PageTitleEditWebSite}">
+                                        <screenlet>
                                             <include-form name="EditWebSite" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                         </screenlet>
                                     </widgets>
@@ -232,7 +232,7 @@
                             </condition>
                             <widgets>
                                 <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
-                                <screenlet title="${uiLabelMap.PageTitleEditProductCatalog}">
+                                <screenlet>
                                     <include-form name="EditProdCatalog" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>

@@ -94,7 +94,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReturnDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleReturnList}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/return/returnList.ftl"/></html>
                             </platform-specific>

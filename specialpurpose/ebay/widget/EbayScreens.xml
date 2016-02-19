@@ -83,7 +83,7 @@ under the License.
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEbayProductsExportToEbay}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://ebay/webapp/ebay/find/productsExportToEbay.ftl"/></html>
                             </platform-specific>

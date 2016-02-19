@@ -58,7 +58,7 @@
             <widgets>
                 <decorator-screen name="CommonOagisMessageScreen" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OagisEditMessageInfo}">
+                        <screenlet>
                             <include-form name="EditMessageInfo" location="component://oagis/widget/forms/MessageInfoForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -106,7 +106,7 @@
             <widgets>
                 <decorator-screen name="CommonOagisMessageScreen" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OagisEditMessageErrorInfo}">
+                        <screenlet>
                             <include-form name="EditMessageErrorInfo" location="component://oagis/widget/forms/MessageInfoForms.xml"/>
                         </screenlet>
                     </decorator-section>

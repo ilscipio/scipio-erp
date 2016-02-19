@@ -458,7 +458,7 @@ under the License.
                                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                             </link>
                         </container>
-                        <screenlet title="${uiLabelMap.PageTitleViewProductStoreSegments}">
+                        <screenlet>
                             <include-form name="ViewProductStoreSegments" location="component://product/widget/catalog/ProductStoreForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -624,7 +624,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductStoreGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductProductStoreGroup}">
+                        <screenlet>
                             <include-form name="EditProductStoreGroup" location="component://product/widget/catalog/StoreForms.xml"/>
                         </screenlet>
                     </decorator-section>

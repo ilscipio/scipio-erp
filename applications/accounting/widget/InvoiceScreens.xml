@@ -144,12 +144,12 @@ under the License.
                                 <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
+                                <screenlet>
                                     <include-form name="EditInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditInvoice}">
+                                <screenlet>
                                     <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
                             </fail-widgets>

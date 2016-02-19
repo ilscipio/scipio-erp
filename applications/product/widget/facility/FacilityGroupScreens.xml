@@ -30,7 +30,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindFacilityGroup}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link target="EditFacilityGroup" text="${uiLabelMap.ProductNewGroup}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>

@@ -142,7 +142,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRouting}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>
@@ -201,7 +201,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRoutingTask}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>
@@ -253,7 +253,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListRoutingTaskRoutings}">
+                        <screenlet>
                             <include-form name="ListRoutingTaskRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -278,7 +278,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <screenlet id="EditRoutingTaskProductPanel" title="${uiLabelMap.PageTitleListRoutingTaskProducts}">
+                        <screenlet id="EditRoutingTaskProductPanel">
                             <link target="EditRoutingTaskProduct" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="${styles.link_nav} ${styles.action_add}">
                                 <parameter param-name="workEffortId"/>
                             </link>
@@ -306,7 +306,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditRoutingTaskProduct}">
+                        <screenlet>
                             <include-form name="EditRoutingTaskProduct" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -63,7 +63,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonConfigDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditConfigItem}">
+                        <screenlet>
                             <include-form name="EditProductConfigItem" location="component://product/widget/catalog/ConfigForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -240,7 +240,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonConfigDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductConfigItemContent}">
+                        <screenlet>
                             <include-form name="ListProductConfigItem" location="component://product/widget/catalog/ConfigForms.xml"/>
                         </screenlet>
                     </decorator-section>

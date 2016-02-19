@@ -1405,7 +1405,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityScheduleDecorator">
                     <decorator-section name="schedule-body">
-                        <screenlet title="${uiLabelMap.PageTitlePackageShipmentScheduling}">
+                        <screenlet>
                             <include-form name="SchedulingList" location="component://product/widget/facility/FacilityForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -1435,7 +1435,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityScheduleDecorator">
                     <decorator-section name="schedule-body">
-                        <screenlet title="${uiLabelMap.PageTitleLabelPrinting}">
+                        <screenlet>
                             <include-form name="Labels" location="component://product/widget/facility/FacilityForms.xml"/>
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/facility/facility/batchPrintMarkAsAccepted.ftl"/></html>

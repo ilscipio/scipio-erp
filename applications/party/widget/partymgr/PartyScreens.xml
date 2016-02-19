@@ -234,7 +234,7 @@ under the License.
                                 <if-has-permission permission="PARTYMGR" action="_UPDATE"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PartyLink}">
+                                <screenlet>
                                     <label text="${uiLabelMap.PartyLinkExplanation}"></label>
                                     <include-form name="PartyLink" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
@@ -489,7 +489,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditPersonalInformation}">
+                        <screenlet>
                             <include-form name="EditPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -512,7 +512,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
+                        <screenlet>
                             <include-form name="EditPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -561,7 +561,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CreateUserLogin}">
+                        <screenlet>
                             <include-form name="AddUserLogin" location="component://common/widget/SecurityForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -608,7 +608,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleNewPartyNote}">
+                        <screenlet>
                             <include-form name="AddPartyNote" location="component://party/widget/partymgr/PartyForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -726,7 +726,7 @@ under the License.
                             </actions>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                <screenlet title="${uiLabelMap.PartyCreateNewCustomer}">
+                                <screenlet>
                                     <include-form name="NewUser" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -771,7 +771,7 @@ under the License.
                             </actions>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                <screenlet title="${uiLabelMap.PartyCreateNewProspect}">
+                                <screenlet>
                                     <include-form name="NewUser" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>

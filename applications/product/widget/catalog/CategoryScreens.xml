@@ -514,7 +514,6 @@ under the License.
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleCreateProductCategoryLink}">
                             <label>&gt;&gt;&gt;&gt;&gt;This function is depreciated and replaced by the function under the tab &quot;Content&quot; with the content type "Related URL"</label>
-                            
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

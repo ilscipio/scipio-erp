@@ -95,7 +95,7 @@ under the License.
                 <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <screenlet title="${uiLabelMap.AcctgAssignGlAccount}">
+                        <screenlet>
                             <include-form name="AssignGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -148,10 +148,10 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleViewGlAccountEntries}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleViewGlAccountEntries}" -->
                             <include-tree name="ListGlAccountTree" location="component://accounting/widget/AccountingTrees.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleViewGlAccountEntries}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleViewGlAccountEntries}" -->
                             <include-form name="ListAcctgTransEntries" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
                      </decorator-section>
@@ -174,10 +174,10 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <screenlet title="${uiLabelMap.PageTitleViewAccountingTransaction}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleViewAccountingTransaction}" -->
                             <include-tree name="ListGlAccountTree" location="component://accounting/widget/AccountingTrees.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleViewAccountingTransaction}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleViewAccountingTransaction}" -->
                             <include-form name="ListAcctgTransEntries" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
                      </decorator-section>
@@ -198,7 +198,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleAddGlAccount}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleAddGlAccount}" -->
                             <include-form name="EditGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
 
@@ -361,7 +361,7 @@ under the License.
                                 <set field="glAccountCategories" from-field="result.glAccountCategories" type="List"/>
                             </actions>
                             <widgets>
-                                <screenlet title="${uiLabelMap.FormFieldTitle_costCenters}">
+                                <screenlet>
                                     <platform-specific>
                                         <html>
                                             <html-template location="component://accounting/webapp/accounting/ledger/CostCenters.ftl"/>

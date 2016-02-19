@@ -109,7 +109,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCalendarDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListCalendarWeek}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link style="${styles.link_nav} ${styles.action_add}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>
@@ -132,7 +132,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCalendarDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditCalendarWeek}">
+                        <screenlet>
                             <container style="button-bar">
                                 <link style="${styles.link_nav} ${styles.action_add}" target="EditCalendarWeek" text="${uiLabelMap.ManufacturingNewCalendarWeek}"/>
                             </container>

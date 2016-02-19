@@ -36,7 +36,7 @@ under the License.
             <widgets>
                 <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingListInvoiceItemType}">
+                        <screenlet>
                             <include-form name="ListInvoiceItemType" location="component://accounting/widget/InvoiceItemTypeForms.xml"/>
                         </screenlet>
                     </decorator-section>

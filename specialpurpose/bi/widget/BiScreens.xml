@@ -66,7 +66,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchema}">
+                        <screenlet>
                             <include-form name="selectStarSchema" location="component://bi/widget/BiForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -84,7 +84,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchemaFields}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://bi/webapp/bi/reportbuilder/SelectStarSchemaFields.ftl"/></html>
                             </platform-specific>
@@ -104,7 +104,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderRenderStarSchemaReport}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://bi/webapp/bi/reportbuilder/RenderStarSchemaReport.ftl"/></html>
                             </platform-specific>

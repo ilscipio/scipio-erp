@@ -182,7 +182,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleCreateLeadFromVCard}">
+                        <screenlet>
                             <container><label text="${uiLabelMap.SfaAutoCreateLeadByImportingVCard}"/></container>
                             <include-form  name="NewLeadFromVCard" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                         </screenlet>

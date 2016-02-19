@@ -69,7 +69,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://lucene/webapp/content/AdminSearch.ftl"/></html>
                             </platform-specific>
@@ -93,7 +93,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
+                        <screenlet>
                             <include-form name="LuceneQuery" location="component://lucene/widget/LuceneForms.xml"/>
                             <include-form name="ProductList" location="component://lucene/widget/LuceneForms.xml"/>
                         </screenlet>
@@ -113,7 +113,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
+                        <screenlet>
                             <include-form name="IndexContentDocuments" location="component://lucene/widget/LuceneForms.xml"/>
                             <include-form name="IndexProductDocuments" location="component://lucene/widget/LuceneForms.xml"/>
                         </screenlet>

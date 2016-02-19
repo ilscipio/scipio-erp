@@ -136,7 +136,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditTaxAuthority}">
+                        <screenlet>
                             <include-form name="EditTaxAuthority" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -249,7 +249,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListTaxAuthorityParties}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleListTaxAuthorityParties}" -->
                             <container>
                                 <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="taxAuthPartyId"/>
@@ -258,7 +258,7 @@ under the License.
                             </container>
                             <include-form name="FindTaxAuthorityParties" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleListTaxAuthorityParties}">
+                        <screenlet> <!-- title="${uiLabelMap.PageTitleListTaxAuthorityParties}" -->
                             <include-form name="ListTaxAuthorityParties" location="component://accounting/widget/TaxAuthorityForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -282,7 +282,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditTaxAuthorityPartyInfo}">
+                        <screenlet>
                             <container>
                                 <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="taxAuthPartyId"/>

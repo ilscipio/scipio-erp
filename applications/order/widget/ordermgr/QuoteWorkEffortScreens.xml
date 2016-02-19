@@ -72,7 +72,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderCreateOrderQuoteWorkEfforts}">
+                        <screenlet>
                             <include-form name="AddQuoteWorkEffort" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -97,7 +97,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainquoteDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderOrderQuoteEditWorkEfforts}">
+                        <screenlet>
                             <include-form name="EditQuoteWorkEffort" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -120,7 +120,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderOrderQuoteWorkEfforts}">
+                        <screenlet>
                             <include-form name="ListQuoteWorkEfforts" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>

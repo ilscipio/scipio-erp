@@ -91,37 +91,42 @@ under the License.
                                 <#-- now show status details per line item -->
                                 <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
                                 <@td class="${styles.text_right!}">
-                                    <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}">
-                                   
-                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                                                
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
-                                                        <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
-                                                        <input type="hidden" name="orderId" value="${orderId!}"/>
-                                                        <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
-                                                    </form>
-                                                <br/>
-                                            </#if>
-                                            <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
-                                            <#list orderItemStatuses as orderItemStatus>
-                                                
-                                                <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
-                                                <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
-                                                <br/>
+                                    <#assign productItemStatus>
+                                         <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
+                                                        <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                        <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                            <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
+                                                            <input type="hidden" name="orderId" value="${orderId!}"/>
+                                                            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
+                                                        </form>
+                                                    <br/>
+                                                </#if>
+                                                <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
+                                                <#list orderItemStatuses as orderItemStatus>
+                                                    
+                                                    <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
+                                                    <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
+                                                    <br/>
+                                                </#list> 
+                                        <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
+                                        <#if returns?has_content>
+                                            <#list returns as returnItem>
+                                                <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
+                                                <#if returnHeader.statusId != "RETURN_CANCELLED">
+                                                    <font color="red">${uiLabelMap.OrderReturned}</font>
+                                                    ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>">${returnItem.returnId}</a>
+                                                </#if>
                                             </#list>
-                                        
-                                    <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
-                                    <#if returns?has_content>
-                                        <#list returns as returnItem>
-                                            <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
-                                            <#if returnHeader.statusId != "RETURN_CANCELLED">
-                                                <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>">${returnItem.returnId}</a>
-                                            </#if>
-                                        </#list>
+                                        </#if>
+                                    </#assign>
+                                    <#if productItemStatus?has_content>
+                                        <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}">${productItemStatus!}</@modal>
+                                    <#else>
+                                        ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
-                                   </@modal>
+                                       
+                                   
+                                   
                                 </@td>
                                 <#-- QUANTITY -->
                                 <@td>

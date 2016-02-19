@@ -101,10 +101,12 @@ under the License.
                             <widgets>
                                 <include-menu name="BlogArticleTabBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 <include-menu name="BlogArticleButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
-                                <label style="heading" text="${blogContent.contentName}"/>
-                                <link style="h1" text=" [${blogContent.contentId}]" target="blogContent">
-                                    <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
-                                </link>
+                                <container>
+                                    <label style="span" text="${blogContent.contentName}"/>
+                                    <link style="${styles.link_nav_info_id}" text=" [${blogContent.contentId}]" target="blogContent">
+                                        <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
+                                    </link>
+                                </container>
                             </widgets>
                         </section>
                         <decorator-section-include name="body"/>

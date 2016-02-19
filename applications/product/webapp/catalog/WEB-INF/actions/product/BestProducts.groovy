@@ -17,15 +17,21 @@
  * under the License.
  */
 
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.product.product.ProductContentWrapper;
+import java.sql.Timestamp
+
+import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.product.product.ProductContentWrapper
+
+Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(context.intervalPeriod, context.fromDate, context.locale, context.timeZone);
+context.dateBeginText = UtilDateTime.toDateString(intervalDates.get("dateBegin"));
+context.dateEndText = UtilDateTime.toDateString(intervalDates.get("dateEnd"));
 
 bestSellingProducts = [];
 exprList = [];
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(filterDate)));
-exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(filterDate)));
+exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.get("dateBegin")));
+exprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, intervalDates.get("dateEnd")));
 exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
 exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 

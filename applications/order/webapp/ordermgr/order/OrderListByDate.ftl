@@ -16,12 +16,18 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#if intervalDates?has_content>
+    <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateBegin']) + " to " + Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateEnd'])>
+<#elseif fromDate?has_content>
+    <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(fromDate)>
+</#if>
 
-<@section title="${uiLabelMap.OrderOrderReceivedOn} ${Static[\"org.ofbiz.base.util.UtilDateTime\"].toDateString(filterDate)}">
+<@section title="${uiLabelMap.OrderOrdersReceivedFrom} ${intervalDateTitle!}">
       <#assign listSize = state.getSize()>
-      <#if (listSize > 10)>
+      <#-- FIXME: Do we need this? -->
+      <#--if (listSize > 10)>
         <a href="/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}">${uiLabelMap.CommonMore}</a>
-      </#if>
+      </#if-->
 
     <#if orderHeaderList?has_content>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->

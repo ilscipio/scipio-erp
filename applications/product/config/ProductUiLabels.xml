@@ -13274,6 +13274,9 @@
         <value xml:lang="zh">销量最大商品：</value>
         <value xml:lang="zh_TW">最佳銷售產品於</value>
     </property>
+    <property key="ProductBestSellingProductsFrom">
+        <value xml:lang="en">Best Selling Products From</value>
+    </property>
     <property key="ProductBillingWeightUom">
         <value xml:lang="de">Verrechnung Gewicht Einheit</value>
         <value xml:lang="en">Billing Weight &amp; UOM</value>

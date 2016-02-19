@@ -22,13 +22,12 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -41,6 +40,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 /**
  * Session object for keeping track of the list of orders.
@@ -228,19 +230,28 @@ public class OrderListState implements Serializable {
     /**
      * Get the OrderHeaders corresponding to the state.
      */
-    public List<GenericValue> getOrders(String facilityId, Timestamp filterDate, Delegator delegator) throws GenericEntityException {
+    public List<GenericValue> getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context) throws GenericEntityException {
+        Debug.log("fromDate ===========> " + fromDate + "   intervalPeriod ==========> " + intervalPeriod);
+        Delegator delegator = (Delegator) context.get("delegator");
+        TimeZone timeZone = (TimeZone) context.get("timeZone");
+        Locale locale = (Locale) context.get("locale");
         List<EntityCondition> allConditions = FastList.newInstance();
 
         if (facilityId != null) {
             allConditions.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
         }
 
-        if (filterDate != null) {
-            List<EntityCondition> andExprs = FastList.newInstance();
-            andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(filterDate)));
-            andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(filterDate)));
-            allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
-        }
+        if (fromDate == null)
+            fromDate = UtilDateTime.nowTimestamp();            
+        if (intervalPeriod == null)
+            intervalPeriod = "week";
+        Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
+        context.put("intervalDates", intervalDates);
+        List<EntityCondition> andExprs = FastList.newInstance();
+        andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.get("dateBegin")));
+        andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, intervalDates.get("dateEnd")));
+        allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
+    
 
         List<EntityCondition> statusConditions = FastList.newInstance();
         for (String status : orderStatusState.keySet()) {

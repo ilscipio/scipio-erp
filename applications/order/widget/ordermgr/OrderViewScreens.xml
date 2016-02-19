@@ -589,7 +589,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="filterDate" type="Timestamp" value="${nowTimestamp}"/>
+                <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
+                <set field="intervalPeriod" type="String" value="month"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderList.groovy"/>
             </actions>
             <widgets>

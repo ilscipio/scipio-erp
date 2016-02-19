@@ -1342,11 +1342,12 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="filterDate" type="Timestamp" from-field="nowTimestamp"/>
+                <set field="fromDate" type="Timestamp" value="${nowTimestamp}"/>
+                <set field="intervalPeriod" type="String" value="month"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/BestProducts.groovy"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.ProductBestSellingProductsOf} ${now}">
+                <screenlet title="${uiLabelMap.ProductBestSellingProductsFrom} ${dateBeginText} to ${dateEndText}">
                     <section>
                         <condition>
                             <not>

@@ -8484,6 +8484,9 @@
         <value xml:lang="zh">收到订单日期</value>
         <value xml:lang="zh_TW">已接收訂單於</value>
     </property>
+    <property key="OrderOrdersReceivedFrom">
+         <value xml:lang="en">Orders Received From</value>
+    </property>
     <property key="OrderOrderReturn">
         <value xml:lang="de">Retoure</value>
         <value xml:lang="en">Return</value>

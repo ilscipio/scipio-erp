@@ -93,7 +93,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleVisitDetail"/>
                 <set field="activeMainMenuItem" value="visits"/>
-                <set field="tabButtonItem" value="visitdetail"/>
+                <set field="activeSubMenuItem" value="visitdetail"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/VisitDetails.groovy"/>
             </actions>

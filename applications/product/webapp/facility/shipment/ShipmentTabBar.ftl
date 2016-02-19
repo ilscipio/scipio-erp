@@ -19,7 +19,7 @@ under the License.
 <#if requestAttributes.uiLabelMap??>
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
-<#assign selected = tabButtonItem?default("void")>
+<#assign selected = activeSubMenuItem?default("void")>
 <#if shipmentId?has_content>
     <@menu type="tab">
             <@menuitem type="link" href=makeOfbizUrl("ViewShipment?shipmentId=${shipmentId}") text="${uiLabelMap.CommonView}" selected=(selected=="ViewShipment") class="+${styles.action_nav!} ${styles.action_view!}"/>

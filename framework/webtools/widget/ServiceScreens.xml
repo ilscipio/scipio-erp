@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleServiceList"/>
-                <set field="tabButtonItem" value="serviceList"/>
+                <set field="activeSubMenuItem" value="serviceList"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/AvailableServices.groovy"/>
             </actions>
             <widgets>
@@ -46,7 +46,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleJobList"/>
-                <set field="tabButtonItem" value="findJob"/>
+                <set field="activeSubMenuItem" value="findJob"/>
                 <set field="jobCtx" from-field="parameters"/>
                 <set field="dummy" value="${groovy: if ('SERVICE_PENDING'.equals(jobCtx.statusId)) jobCtx.jobId = ''}"/> <!--  To more easily see current pending jobs and possibly cancel some others -->
                 <!-- fields for ServerHour24HourFormatJs.ftl -->
@@ -77,7 +77,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleJobDetails"/>
-                <set field="tabButtonItem" value="findJob"/>
+                <set field="activeSubMenuItem" value="findJob"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/JobDetails.groovy"/>
             </actions>
             <widgets>
@@ -99,7 +99,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleThreadList"/>
-                <set field="tabButtonItem" value="threadList"/>
+                <set field="activeSubMenuItem" value="threadList"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/Threads.groovy"/>
             </actions>
             <widgets>
@@ -124,7 +124,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
-                <set field="tabButtonItem" value="scheduleJob"/>
+                <set field="activeSubMenuItem" value="scheduleJob"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
             <widgets>
@@ -143,7 +143,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRunService"/>
-                <set field="tabButtonItem" value="runService"/>
+                <set field="activeSubMenuItem" value="runService"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
             <widgets>
@@ -162,7 +162,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
-                <set field="tabButtonItem" value="scheduleJob"/>
+                <set field="activeSubMenuItem" value="scheduleJob"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
             <widgets>
@@ -184,7 +184,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
                 <set field="activeMainMenuItem" value="services"/>
-                <set field="tabButtonItem" value="runService"/>
+                <set field="activeSubMenuItem" value="runService"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
             <widgets>
@@ -206,7 +206,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
                 <set field="activeMainMenuItem" value="services"/>
-                <set field="tabButtonItem" value="runService"/>
+                <set field="activeSubMenuItem" value="runService"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ServiceResult.groovy"/>
             </actions>
             <widgets>

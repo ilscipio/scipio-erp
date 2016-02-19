@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
 
-                <set field="tabButtonItem" value="Costs"/>
+                <set field="activeSubMenuItem" value="Costs"/>
                 <set field="titleProperty" value="PageTitleEditCostCalcs"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

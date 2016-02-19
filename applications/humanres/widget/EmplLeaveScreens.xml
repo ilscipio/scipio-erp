@@ -25,7 +25,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplLeave"/>
                 <set field="activeMainMenuItem" value="Leave"/>
-                <set field="tabButtonItem" value="EmployeeLeave"/>
+                <set field="activeSubMenuItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -74,7 +74,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindApprovals"/>
-                <set field="tabButtonItem" value="Approval"/>
+                <set field="activeSubMenuItem" value="Approval"/>
                 <set field="activeMainMenuItem" value="Leave"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
@@ -116,7 +116,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeave"/>
                 <set field="activeMainMenuItem" value="Leave"/>
-                <set field="tabButtonItem" value="EmployeeLeave"/>
+                <set field="activeSubMenuItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -142,7 +142,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditApprovalStatus"/>
-                <set field="tabButtonItem" value="Approval"/>
+                <set field="activeSubMenuItem" value="Approval"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>

@@ -26,7 +26,7 @@ under the License.
            <actions>
                <set field="titleProperty" value="MarketingContactListFindContactLists"/>
                <set field="activeMainMenuItem" value="ContactList"/>
-               <set field="tabButtonItem" value="ContactList"/>               
+               <set field="activeSubMenuItem" value="ContactList"/>               
                <set field="contactListTabButtonItem" value="ContactList"/>
                <set field="labelTitleProperty" value="PageTitleFindContactLists"/>
                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindContactList"/>

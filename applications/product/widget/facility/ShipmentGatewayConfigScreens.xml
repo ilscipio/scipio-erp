@@ -52,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindShipmentGatewayConfig"/>
-                <set field="tabButtonItem" value="shipmentGatewayConfigTab"/> 
+                <set field="activeSubMenuItem" value="shipmentGatewayConfigTab"/> 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -82,7 +82,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleUpdateShipmentGatewayConfig"/>
-                <set field="tabButtonItem" value="shipmentGatewayConfigTab"/> 
+                <set field="activeSubMenuItem" value="shipmentGatewayConfigTab"/> 
                 
                 <set field="shipmentGatewayConfigId" from-field="parameters.shipmentGatewayConfigId"/>
                 <entity-one entity-name="ShipmentGatewayConfig" value-field="shipmentGatewayConfig"/>
@@ -155,7 +155,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindShipmentGatewayConfigTypes"/>
-                <set field="tabButtonItem" value="shipmentGatewayConfigTypesTab"/> 
+                <set field="activeSubMenuItem" value="shipmentGatewayConfigTypesTab"/> 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -185,7 +185,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleUpdateShipmentGatewayConfigType"/>
-                <set field="tabButtonItem" value="shipmentGatewayConfigTypesTab"/> 
+                <set field="activeSubMenuItem" value="shipmentGatewayConfigTypesTab"/> 
                 
                 <set field="shipmentGatewayConfTypeId" from-field="parameters.shipmentGatewayConfTypeId"/>
                 <entity-one entity-name="ShipmentGatewayConfigType" value-field="shipmentGatewayConfigType"/>

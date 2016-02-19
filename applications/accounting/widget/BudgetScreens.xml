@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingFindBudgets"/>
                 <set field="activeMainMenuItem" value="ListBudgets"/>
-                <set field="tabButtonItem" value="ListBudgets"/>
+                <set field="activeSubMenuItem" value="ListBudgets"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBudget"/>
-                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="activeSubMenuItem" value="EditBudget"/>
                 <set field="budgetId" from-field="parameters.budgetId"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
             </actions>
@@ -151,7 +151,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleBudgetOverview"/>
-                <set field="tabButtonItem" value="BudgetOverview"/>
+                <set field="activeSubMenuItem" value="BudgetOverview"/>
                 <set field="budgetId" from-field="parameters.budgetId"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and entity-name="BudgetRole" list="budgetRoles">
@@ -212,7 +212,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.viewIndex"/>
                 <set field="viewSize" from-field="parameters.viewSize"/>
                 <set field="titleProperty" value="PageTitleListBudget"/>
-                <set field="tabButtonItem" value="BudgetItem"/>
+                <set field="activeSubMenuItem" value="BudgetItem"/>
                 <set field="budgetId" from-field="parameters.budgetId"/>
                 <set field="budgetItemSeqId" from-field="parameters.budgetItemSeqId"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
@@ -241,7 +241,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListBudgetRoles"/>
-                <set field="tabButtonItem" value="BudgetRoles"/>
+                <set field="activeSubMenuItem" value="BudgetRoles"/>
                 <set field="budgetId" from-field="parameters.budgetId"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and entity-name="BudgetRole" list="budgetRoles">
@@ -265,7 +265,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListBudgetReviews"/>
-                <set field="tabButtonItem" value="BudgetReviews"/>
+                <set field="activeSubMenuItem" value="BudgetReviews"/>
                 <set field="budgetId" from-field="parameters.budgetId"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and entity-name="BudgetReview" list="budgetReviews">

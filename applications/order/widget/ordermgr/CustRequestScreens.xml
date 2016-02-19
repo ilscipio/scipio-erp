@@ -154,7 +154,7 @@ under the License.
         <section>
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
-                <set field="tabButtonItem" value="ViewRequest"/>
+                <set field="activeSubMenuItem" value="ViewRequest"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
                 <set field="showRequestManagementLinks" value="Y"/>
@@ -172,7 +172,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderRequest"/>
-                <set field="tabButtonItem" value="editRequest"/>
+                <set field="activeSubMenuItem" value="editRequest"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -224,7 +224,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRequestRoles"/>
-                <set field="tabButtonItem" value="requestroles"/>
+                <set field="activeSubMenuItem" value="requestroles"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -248,7 +248,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItems"/>
-                <set field="tabButtonItem" value="requestitems"/>
+                <set field="activeSubMenuItem" value="requestitems"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -279,7 +279,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestItem"/>
-                <set field="tabButtonItem" value="requestitem"/>
+                <set field="activeSubMenuItem" value="requestitem"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
@@ -313,7 +313,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItemNotes"/>
-                <set field="tabButtonItem" value="requestitemnotes"/>
+                <set field="activeSubMenuItem" value="requestitemnotes"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
@@ -340,7 +340,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItemRequirements"/>
-                <set field="tabButtonItem" value="requestitemrequirements"/>
+                <set field="activeSubMenuItem" value="requestitemrequirements"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
@@ -372,7 +372,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItemQuotes"/>
-                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="activeSubMenuItem" value="requestitemquotes"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
@@ -402,7 +402,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditQuoteItemForCustRequest"/>
-                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="activeSubMenuItem" value="requestitemquotes"/>
                 <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -431,7 +431,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateQuoteForCustRequest"/>
-                <set field="tabButtonItem" value="requestitemquotes"/>
+                <set field="activeSubMenuItem" value="requestitemquotes"/>
                 <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId"  from-field="parameters.custRequestId"/>
@@ -460,7 +460,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestItemWorkEffort"/>
-                <set field="tabButtonItem" value="task"/>
+                <set field="activeSubMenuItem" value="task"/>
                 <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -505,7 +505,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestContent"/>
-                <set field="tabButtonItem" value="custRequestContent"/>
+                <set field="activeSubMenuItem" value="custRequestContent"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">

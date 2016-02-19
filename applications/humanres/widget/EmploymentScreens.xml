@@ -62,7 +62,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditEmployment"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditEmployment"/>
+                <set field="activeSubMenuItem" value="EditEmployment"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="Employment" value-field="employment"/>
             </actions>
@@ -81,7 +81,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListEmployments"/>
-                <set field="tabButtonItem" value="ListEmployment"/>
+                <set field="activeSubMenuItem" value="ListEmployment"/>
                 <set field="employmentCtx.partyIdTo" from-field="parameters.partyId"/>
             </actions>
             <widgets>
@@ -100,7 +100,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResListPayHistories"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPayHistory"/>
+                <set field="activeSubMenuItem" value="EditPayHistory"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -118,7 +118,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResListPartyBenefits"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPartyBenefit"/>
+                <set field="activeSubMenuItem" value="EditPartyBenefit"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -142,7 +142,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResListPayrollPreferences"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPayrollPreference"/>
+                <set field="activeSubMenuItem" value="EditPayrollPreference"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -170,7 +170,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResAddUnemploymentClaim"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditUnemploymentClaims"/>
+                <set field="activeSubMenuItem" value="EditUnemploymentClaims"/>
                 <set field="unemploymentClaimId" from-field="parameters.unemploymentClaimId"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -196,7 +196,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResPerfNote"/>
                 <set field="activeMainMenuItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditPerformanceNotes"/>
+                <set field="activeSubMenuItem" value="EditPerformanceNotes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
@@ -216,7 +216,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditAgreementEmploymentAppl"/>
                 <set field="activeMainMenuItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditAgreementEmploymentAppls"/>
+                <set field="activeSubMenuItem" value="EditAgreementEmploymentAppls"/>
                 <set field="agreementId" from-field="parameters.agreementId"/>
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>

@@ -26,7 +26,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
                 <set field="activeMainMenuItem" value="admin"/>
                 <set field="labelTitleProperty" value="ScrumFindTimeSheet"/>
-                <set field="tabButtonItem" value="timesheets"/>
+                <set field="activeSubMenuItem" value="timesheets"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListTimeSheets.groovy"/>
             </actions>
             <widgets>
@@ -52,7 +52,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleTimesheet"/>
                 <set field="activeMainMenuItem" value="timesheet"/>
-                <set field="tabButtonItem" value="timesheets"/>
+                <set field="activeSubMenuItem" value="timesheets"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/EditDailyHourReport.groovy"/>
                 <entity-one value-field="partyNameViewMap" entity-name="PartyNameView">
                     <field-map field-name="partyId" from-field="timesheet.partyId"/>

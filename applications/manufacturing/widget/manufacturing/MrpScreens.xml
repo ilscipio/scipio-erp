@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingRunMrp"/>
-                <set field="tabButtonItem" value="RunMrp"/>
+                <set field="activeSubMenuItem" value="RunMrp"/>
                 <set field="activeMainMenuItem" value="mrp"/>
             </actions>
             <widgets>
@@ -65,7 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindInventoryEventPlan"/>
-                <set field="tabButtonItem" value="findInventoryEventPlan"/>
+                <set field="activeSubMenuItem" value="findInventoryEventPlan"/>
                 <set field="activeMainMenuItem" value="mrp"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

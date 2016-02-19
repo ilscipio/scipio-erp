@@ -90,7 +90,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTaxAuthority"/>
-                <set field="tabButtonItem" value="FindTaxAuthority"/>
+                <set field="activeSubMenuItem" value="FindTaxAuthority"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
@@ -126,7 +126,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthority"/>
-                <set field="tabButtonItem" value="EditTaxAuthority"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthority"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthority"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -149,7 +149,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthorityCategories"/>
-                <set field="tabButtonItem" value="EditTaxAuthorityCategories"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthorityCategories"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityCategories"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -171,7 +171,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthorityAssocs"/>
-                <set field="tabButtonItem" value="EditTaxAuthorityAssocs"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthorityAssocs"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityAssocs"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -193,7 +193,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthorityGlAccounts"/>
-                <set field="tabButtonItem" value="EditTaxAuthorityGlAccounts"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthorityGlAccounts"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityGlAccounts"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -215,7 +215,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthorityRateProducts"/>
-                <set field="tabButtonItem" value="EditTaxAuthorityRateProducts"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthorityRateProducts"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityRateProducts"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -240,7 +240,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListTaxAuthorityParties"/>
-                <set field="tabButtonItem" value="ListTaxAuthorityParties"/>
+                <set field="activeSubMenuItem" value="ListTaxAuthorityParties"/>
                 <set field="labelTitleProperty" value="Standard costs"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
@@ -270,7 +270,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTaxAuthorityPartyInfo"/>
-                <set field="tabButtonItem" value="EditTaxAuthorityPartyInfo"/>
+                <set field="activeSubMenuItem" value="EditTaxAuthorityPartyInfo"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>

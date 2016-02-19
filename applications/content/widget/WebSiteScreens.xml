@@ -55,7 +55,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
-                <set field="tabButtonItem" value="EditWebSite"/>
+                <set field="activeSubMenuItem" value="EditWebSite"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -80,7 +80,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSiteContent"/>
-                <set field="tabButtonItem" value="ListWebSiteContent"/>
+                <set field="activeSubMenuItem" value="ListWebSiteContent"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSiteContent"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -114,7 +114,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSiteParties"/>
-                <set field="tabButtonItem" value="EditWebSiteParties"/>
+                <set field="activeSubMenuItem" value="EditWebSiteParties"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSiteParties"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <property-map map-name="uiLabelMap" resource="PartyUiLabels"/>
@@ -142,7 +142,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSiteCMS"/>
-                <set field="tabButtonItem" value="WebSiteCMS"/>
+                <set field="activeSubMenuItem" value="WebSiteCMS"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSiteCMS"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -341,7 +341,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ContentPathAlias"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
-                <set field="tabButtonItem" value="PathAlias"/>
+                <set field="activeSubMenuItem" value="PathAlias"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
@@ -376,7 +376,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleWebSiteSEO"/>
-                <set field="tabButtonItem" value="WebSiteSEO"/>
+                <set field="activeSubMenuItem" value="WebSiteSEO"/>
                 <set field="labelTitleProperty" value="PageTitleWebSiteSEO"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -396,7 +396,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ContentWebSiteContactList"/>
-                <set field="tabButtonItem" value="WebSiteContactList"/>
+                <set field="activeSubMenuItem" value="WebSiteContactList"/>
                 <set field="labelTitleProperty" value="ContentWebSiteContactList"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>

@@ -89,7 +89,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="activeSubMenuItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
 
                 <set field="productId" from-field="parameters.productId"/>

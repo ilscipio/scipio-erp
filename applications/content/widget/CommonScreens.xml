@@ -297,7 +297,7 @@ under the License.
     <screen name="CommonDataResourceSetupDecorator">
         <section>
             <actions>
-                <set field="tabButtonItem" from-field="tabButtonItem" from-scope="user"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
@@ -376,7 +376,7 @@ under the License.
     <screen name="CommonLayoutDecorator">
         <section>
             <actions>
-                <set field="tabButtonItem" from-field="tabButtonItem" from-scope="user"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
@@ -412,7 +412,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>

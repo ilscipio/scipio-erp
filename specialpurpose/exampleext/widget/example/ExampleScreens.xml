@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExample"/>
-                <set field="tabButtonItem" value="EditExample"/>
+                <set field="activeSubMenuItem" value="EditExample"/>
                 <set field="labelTitleProperty" value="ExampleExample"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>

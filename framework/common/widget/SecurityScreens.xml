@@ -59,7 +59,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSecurityGroup"/>
-                <set field="tabButtonItem" value="EditSecurityGroup"/>
+                <set field="activeSubMenuItem" value="EditSecurityGroup"/>
                 <set field="groupId" from-field="parameters.groupId"/>
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
@@ -80,7 +80,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSecurityGroupPermissions"/>
-                <set field="tabButtonItem" value="EditSecurityGroupPermissions"/>
+                <set field="activeSubMenuItem" value="EditSecurityGroupPermissions"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -112,7 +112,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AddProtectedViewToSecurityGroup"/>
-                <set field="tabButtonItem" value="EditSecurityGroupProtectedViews"/>
+                <set field="activeSubMenuItem" value="EditSecurityGroupProtectedViews"/>
                 <set field="groupId" from-field="parameters.groupId"/>
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
@@ -136,7 +136,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AddUserLoginToSecurityGroup"/>
-                <set field="tabButtonItem" value="EditSecurityGroupUserLogins"/>
+                <set field="activeSubMenuItem" value="EditSecurityGroupUserLogins"/>
                 <set field="groupId" from-field="parameters.groupId"/>
                 <entity-one entity-name="SecurityGroup" value-field="securityGroup"/>
             </actions>
@@ -160,7 +160,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="UserLoginUpdateSecuritySettings"/>
-                <set field="tabButtonItem" value="EditUserLogin"/>
+                <set field="activeSubMenuItem" value="EditUserLogin"/>
                 <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="FindUserLogin"/>
                 <set field="updateUserLoginSecurityURI" value="updateUserLoginSecurity"/>
                 <set field="updatePasswordURI" value="updatePassword"/>
@@ -187,7 +187,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
-                <set field="tabButtonItem" value="EditUserLoginSecurityGroups"/>
+                <set field="activeSubMenuItem" value="EditUserLoginSecurityGroups"/>
                 <set field="addUserLoginSecurityGroupURI" value="userLogin_addUserLoginToSecurityGroup"/>
                 <set field="removeUserLoginSecurityGroupURI" value="userLogin_removeUserLoginFromSecurityGroup"/>
                 <set field="updateUserLoginSecurityGroupURI" value="userLogin_updateUserLoginToSecurityGroup"/>
@@ -214,7 +214,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditIssuerProvisions"/>
-                <set field="tabButtonItem" value="EditCertIssuerProvisions"/>
+                <set field="activeSubMenuItem" value="EditCertIssuerProvisions"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -241,7 +241,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindSecurityGroup"/>
-                <set field="tabButtonItem" value="FindSecurityGroup"/>
+                <set field="activeSubMenuItem" value="FindSecurityGroup"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -263,7 +263,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="FindUserLogin"/>
-                <set field="tabButtonItem" value="FindUserLogin"/>
+                <set field="activeSubMenuItem" value="FindUserLogin"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -320,7 +320,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleImportCertificate"/>
-                <set field="tabButtonItem" value="EditCertIssuerProvisions"/>
+                <set field="activeSubMenuItem" value="EditCertIssuerProvisions"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/ViewCertificate.groovy" />
             </actions>
             <widgets>

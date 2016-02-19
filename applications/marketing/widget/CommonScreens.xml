@@ -70,7 +70,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="ContactList"/>
-                <set field="tabButtonItem" value="ContactList"/>
+                <set field="activeSubMenuItem" value="ContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
             </actions>
@@ -117,7 +117,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

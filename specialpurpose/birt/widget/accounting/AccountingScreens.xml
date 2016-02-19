@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="payments"/>
-                <set field="tabButtonItem" value="paymentReport"/>
+                <set field="activeSubMenuItem" value="paymentReport"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">

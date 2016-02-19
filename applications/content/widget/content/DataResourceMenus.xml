@@ -21,7 +21,7 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
-    <menu name="contentsetup" selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="contentsetup" selected-menuitem-context-field-name="activeSubMenuItem">
         <menu-item name="adddataresource" title="${uiLabelMap.CommonAdd}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="AddDataResource" name="AddDataResource" target-window="_top" />
         </menu-item>

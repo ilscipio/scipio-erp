@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindCatalog"/>
                 <set field="activeMainMenuItem" value="catalogs"/>
-                <set field="tabButtonItem" value="FindCatalog"/>
+                <set field="activeSubMenuItem" value="FindCatalog"/>
                 <set field="labelTitleProperty" value="ProductCatalog"/>
             </actions>
             <widgets>
@@ -54,7 +54,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
-                <set field="tabButtonItem" value="ProductCatalog"/>
+                <set field="activeSubMenuItem" value="ProductCatalog"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
             </actions>
@@ -75,7 +75,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
-                <set field="tabButtonItem" value="ProductCatalog"/>
+                <set field="activeSubMenuItem" value="ProductCatalog"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
             </actions>
@@ -99,7 +99,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalogCategories"/>
-                <set field="tabButtonItem" value="ProductCategories"/>
+                <set field="activeSubMenuItem" value="ProductCategories"/>
                 <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="prodCatalogCategoryTypeId"/>
@@ -128,7 +128,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalogParties"/>
-                <set field="tabButtonItem" value="PartyParties"/>
+                <set field="activeSubMenuItem" value="PartyParties"/>
                 <entity-and entity-name="ProdCatalogRole" list="prodCatalogRoleList">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>
@@ -153,7 +153,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalogStores"/>
-                <set field="tabButtonItem" value="ProductStores"/>
+                <set field="activeSubMenuItem" value="ProductStores"/>
                 <entity-and entity-name="ProductStoreCatalog" list="productStoreCatalogList">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>

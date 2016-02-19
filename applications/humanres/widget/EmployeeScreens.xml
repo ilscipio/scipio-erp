@@ -32,7 +32,7 @@ under the License.
                         <section>
                             <actions>
                                 <service service-name="findParty" auto-field-map="true"/>
-                                <set field="tabButtonItem" value="Employee"/>
+                                <set field="activeSubMenuItem" value="Employee"/>
                             </actions>
                             <widgets>
                                 <container style="button-bar">
@@ -81,7 +81,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
-                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="activeSubMenuItem" value="EmployeeProfile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
@@ -149,7 +149,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySkill"/>
-                <set field="tabButtonItem" value="EditEmployeeSkills"/>
+                <set field="activeSubMenuItem" value="EditEmployeeSkills"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <set field="partySkillsCtx.partyId" from-field="parameters.partyId"/>
@@ -172,7 +172,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
                 <set field="activeMainMenuItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditEmployeeQuals"/>
+                <set field="activeSubMenuItem" value="EditEmployeeQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
                 <set field="parameters.insideEmployee" value="true"/>
@@ -192,7 +192,7 @@ under the License.
     <screen name="EditEmployeeTrainings">
         <section>
             <actions>
-                <set field="tabButtonItem" value="EditEmployeeTrainings"/>
+                <set field="activeSubMenuItem" value="EditEmployeeTrainings"/>
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -209,7 +209,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
-                <set field="tabButtonItem" value="EditEmployeeEmploymentApps"/>
+                <set field="activeSubMenuItem" value="EditEmployeeEmploymentApps"/>
                 <set field="referredByPartyId" from-field="parameters.partyId"/>
                 <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
                 <set field="parameters.insideEmployee" value="true"/>
@@ -230,7 +230,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="PartyResume"></set>
-                <set field="tabButtonItem" value="EditEmployeeResumes"/>
+                <set field="activeSubMenuItem" value="EditEmployeeResumes"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyResume" value-field="partyResume"/>
@@ -251,7 +251,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResPerfNote"/>
-                <set field="tabButtonItem" value="EditEmployeePerformanceNotes"/>
+                <set field="activeSubMenuItem" value="EditEmployeePerformanceNotes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
@@ -270,7 +270,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeave"/>
-                <set field="tabButtonItem" value="EditEmployeeLeaves"/>
+                <set field="activeSubMenuItem" value="EditEmployeeLeaves"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
             </actions>
@@ -313,7 +313,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResPayRollHistory"/>
-                <set field="tabButtonItem" value="PayrollHistory"/>
+                <set field="activeSubMenuItem" value="PayrollHistory"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="parameters.sortField" from-field="parameters.sortField" default-value="invoiceDate DESC"/>
                 <entity-condition list="payroll" entity-name="InvoiceAndType">

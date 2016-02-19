@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleWorkEffortRelatedSummary"/>
-                <set field="tabButtonItem" value="WorkEffortRelatedSummary"/>
+                <set field="activeSubMenuItem" value="WorkEffortRelatedSummary"/>
                 <set field="labelTitleProperty" value="PageTitleWorkEffortRelatedSummary"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>

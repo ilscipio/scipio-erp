@@ -54,7 +54,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="ProductAlternateKeyWordThesaurus"/>
-                <set field="tabButtonItem" value="EditKeywordThesaurus"/>
+                <set field="activeSubMenuItem" value="EditKeywordThesaurus"/>
                 <set field="activeMainMenuItem" value="thesaurus"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/thesaurus/EditKeywordThesaurus.groovy"/>

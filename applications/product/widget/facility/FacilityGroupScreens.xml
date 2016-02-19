@@ -82,7 +82,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroup"/>
                 <set field="activeMainMenuItem" value="facilityGroup"/>
-                <set field="tabButtonItem" value="EditFacilityGroup"/>
+                <set field="activeSubMenuItem" value="EditFacilityGroup"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
             <widgets>
@@ -103,7 +103,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupMembers"/>
                 <set field="activeMainMenuItem" value="facilityGroup"/>
-                <set field="tabButtonItem" value="EditFacilityGroupMembers"/>
+                <set field="activeSubMenuItem" value="EditFacilityGroupMembers"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <set field="orderByList[]" value="sequenceNum"/>
                 <get-related value-field="facilityGroup" relation-name="FacilityGroupMember" list="facilityGroupMembers" order-by-list="orderByList"/>
@@ -131,7 +131,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRoles"/>
                 <set field="activeMainMenuItem" value="facilityGroup"/>
-                <set field="tabButtonItem" value="EditFacilityGroupRoles"/>
+                <set field="activeSubMenuItem" value="EditFacilityGroupRoles"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <get-related value-field="facilityGroup" relation-name="FacilityGroupRole" list="facilityRoles"/>
             </actions>
@@ -158,7 +158,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRollup"/>
                 <set field="activeMainMenuItem" value="facilityGroup"/>
-                <set field="tabButtonItem" value="EditFacilityGroupRollup"/>
+                <set field="activeSubMenuItem" value="EditFacilityGroupRollup"/>
                 <set field="parameters.facilityGroupId" from-field="parameters.showFacilityGroupId" default-value="${parameters.facilityGroupId}"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <get-related relation-name="ParentFacilityGroupRollup" value-field="facilityGroup" list="parentGroupRollups"/>

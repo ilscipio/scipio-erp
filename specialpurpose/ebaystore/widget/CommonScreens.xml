@@ -145,7 +145,7 @@
     <screen name="SellingManagerDecorator">
         <section>
             <actions>
-                <set field="tabButtonItem" value="sellingManager"/>
+                <set field="activeSubMenuItem" value="sellingManager"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
@@ -166,7 +166,7 @@
     <screen name="AccountDecorator">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ebayAccount"/>
+                <set field="activeSubMenuItem" value="ebayAccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">

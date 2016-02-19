@@ -722,7 +722,7 @@ under the License.
         </field>
         <field name="mimeTypeId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="activeSubMenuItem!=void&amp;&amp;activeSubMenuItem.equals(&quot;custRequestContent&quot;)">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCustRequestContent">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="contentId"/>

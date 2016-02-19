@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindSurvey"/>
-                <set field="tabButtonItem" value="Survey"/>
+                <set field="activeSubMenuItem" value="Survey"/>
                 <set field="labelTitleProperty" value="PageTitleFindSurvey"/>
             </actions>
             <widgets>
@@ -99,7 +99,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSurvey"/>
-                <set field="tabButtonItem" value="Survey"/>
+                <set field="activeSubMenuItem" value="Survey"/>
                 <set field="labelTitleProperty" value="PageTitleEditSurvey"/>
 
                 <set field="surveyId" from-field="parameters.surveyId"/>
@@ -133,7 +133,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSurveyMultiResps"/>
-                <set field="tabButtonItem" value="SurveyMultiResps"/>
+                <set field="activeSubMenuItem" value="SurveyMultiResps"/>
                 <set field="labelTitleProperty" value="PageTitleEditSurveyMultiResps"/>
 
                 <set field="surveyId" from-field="parameters.surveyId"/>
@@ -173,7 +173,7 @@ under the License.
             <actions>
 
                 <set field="titleProperty" value="PageTitleEditSurveyQuestions"/>
-                <set field="tabButtonItem" value="SurveyQuestions"/>
+                <set field="activeSubMenuItem" value="SurveyQuestions"/>
                 <set field="labelTitleProperty" value="PageTitleEditSurveyQuestions"/>
 
                 <set field="surveyId" from-field="parameters.surveyId"/>
@@ -205,7 +205,7 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleFindSurveyResponse"/>
-                <set field="tabButtonItem" value="FindSurveyResponse"/>
+                <set field="activeSubMenuItem" value="FindSurveyResponse"/>
                 <set field="labelTitleProperty" value="PageTitleFindSurveyResponse"/>
 
                 <set field="queryString" from-field="result.queryString"/>
@@ -242,7 +242,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewSurveyResponses"/>
-                <set field="tabButtonItem" value="SurveyResponses"/>
+                <set field="activeSubMenuItem" value="SurveyResponses"/>
                 <set field="labelTitleProperty" value="PageTitleViewSurveyResponses"/>
 
                 <set field="surveyId" from-field="parameters.surveyId"/>
@@ -280,7 +280,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSurveyResponse"/>
-                <set field="tabButtonItem" value="SurveyResponses"/>
+                <set field="activeSubMenuItem" value="SurveyResponses"/>
                 <set field="labelTitleProperty" value="PageTitleEditSurveyResponse"/>
 
                 <set field="surveyId" from-field="parameters.surveyId"/>

@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditComputerHardware"/>
-                <set field="tabButtonItem" value="EditComputerHardware"/>
+                <set field="activeSubMenuItem" value="EditComputerHardware"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
@@ -45,7 +45,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="IsMgrFindComputerHardware"/>
                 <set field="activeMainMenuItem" value="ComputerHardware"/>
-                <set field="tabButtonItem" value="EditComputerHardware"/>
+                <set field="activeSubMenuItem" value="EditComputerHardware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -154,7 +154,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="IsMgrHardwareAccessories"/>
                 <set field="activeMainMenuItem" value="ComputerHardware"/>
-                <set field="tabButtonItem" value="ListHardwareAccessories"/>
+                <set field="activeSubMenuItem" value="ListHardwareAccessories"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetTypeId" value="COMPUTER_HARDWARE"/>
             </actions>
@@ -173,7 +173,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="IsMgrInstalledSoftware"/>
                 <set field="activeMainMenuItem" value="ComputerHardware"/>
-                <set field="tabButtonItem" value="ListInstalledSoftware"/>
+                <set field="activeSubMenuItem" value="ListInstalledSoftware"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetTypeId" value="COMPUTER_SOFTWARE"/>
             </actions>

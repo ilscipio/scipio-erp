@@ -51,7 +51,7 @@
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">

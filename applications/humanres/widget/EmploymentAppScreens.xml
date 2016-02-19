@@ -57,7 +57,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
                 <set field="activeMainMenuItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditEmploymentApps"/>
+                <set field="activeSubMenuItem" value="EditEmploymentApps"/>
                 <set field="referredByPartyId" from-field="parameters.partyId"/>
                 <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
                 <set field="parameters.insideEmployee" value="true"/>

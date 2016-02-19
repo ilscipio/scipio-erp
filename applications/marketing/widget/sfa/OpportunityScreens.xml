@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="SfaEditOpportunity"/>
-                <set field="tabButtonItem" value="EditSalesOpportunity"/>
+                <set field="activeSubMenuItem" value="EditSalesOpportunity"/>
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
                 <entity-one entity-name="SalesOpportunity" value-field="salesOpportunity"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="accountPartyResult">
@@ -85,7 +85,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="SfaOpportunityInfo"/>
-                <set field="tabButtonItem" value="ViewSalesOpportunity"/>
+                <set field="activeSubMenuItem" value="ViewSalesOpportunity"/>
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
                 <entity-one entity-name="SalesOpportunity" value-field="salesOpportunity"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="accountPartyResult">
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCommunications"/>
-                <set field="tabButtonItem" value="PartyCommEvents"/>
+                <set field="activeSubMenuItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="CommunicationEvent"/>
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="leadPartyResult">

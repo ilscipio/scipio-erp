@@ -23,7 +23,7 @@ under the License.
         <section>             
             <actions>   
                 <set field="titleProperty" value="PageTitleFindJobRequisition"/>
-                <set field="tabButtonItem" value="JobRequisition"/>
+                <set field="activeSubMenuItem" value="JobRequisition"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
@@ -71,7 +71,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditJobRequisition"/>
-                <set field="tabButtonItem" value="JobRequisition"/>
+                <set field="activeSubMenuItem" value="JobRequisition"/>
                 <set field="jobRequisitionId" from-field="parameters.jobRequisitionId"/>
                 <entity-one entity-name="JobRequisition" value-field="jobRequisition"/>
             </actions>
@@ -94,7 +94,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindInternalJobPosting"/>
-                <set field="tabButtonItem" value="InternalJobPosting"/>
+                <set field="activeSubMenuItem" value="InternalJobPosting"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
@@ -141,7 +141,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditInternalJobPosting"/>
-                <set field="tabButtonItem" value="InternalJobPosting"/>
+                <set field="activeSubMenuItem" value="InternalJobPosting"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
                 <set field="partyId" from-field="parameters.userLogin.partyId"/>
@@ -162,7 +162,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindJobInterviewDetails"/>
-                <set field="tabButtonItem" value="JobInterview"/>
+                <set field="activeSubMenuItem" value="JobInterview"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -204,7 +204,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditJobInterview"/>
-                <set field="tabButtonItem" value="JobInterview"/>
+                <set field="activeSubMenuItem" value="JobInterview"/>
                 <set field="jobInterviewId" from-field="parameters.jobInterviewId"/>
                 <entity-one entity-name="JobInterview" value-field="JobInterview"/>
             </actions>
@@ -228,7 +228,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindApprovals"/>
-                <set field="tabButtonItem" value="Approval"/>
+                <set field="activeSubMenuItem" value="Approval"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
@@ -266,7 +266,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditApprovalStatus"/>
-                <set field="tabButtonItem" value="Approval"/>                
+                <set field="activeSubMenuItem" value="Approval"/>                
                 <set field="candidateRequestId" from-field="parameters.candidateRequestId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>
@@ -286,7 +286,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRelocationDetails"/>
-                <set field="tabButtonItem" value="Relocation"/>
+                <set field="activeSubMenuItem" value="Relocation"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRecruitmentDecorator" location="${parameters.mainDecoratorLocation}">

@@ -20,14 +20,14 @@
 <#-- Cato: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
 <@menu type="button">
   <#if (arraySize > 0)>
-    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
+    <#assign url='/views/'+activeSubMenuItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>
     <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonFirst}" disabled=(!(viewIndex > 0)) />
-      <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
+      <#assign url='/views/'+activeSubMenuItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexPrevious>
     <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
     <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${arraySize}" />
-    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
+    <#assign url='/views/'+activeSubMenuItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexNext>|
     <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonNext}" disabled=(!(arraySize > highIndex)) />
-    <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
+    <#assign url='/views/'+activeSubMenuItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexLast>|
     <@menuitem type="link" href="javascript:nextPrevDocumentList('${url}');" text="${uiLabelMap.CommonLast}" disabled=(!(arraySize > highIndex)) />
   </#if>
 </@menu>
@@ -36,7 +36,7 @@
 
 <#if contentAssoc?has_content>  
 <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
-    <#if tabButtonItem=="ListContentTree">
+    <#if activeSubMenuItem=="ListContentTree">
     <#--Form ListContentTree-->
     <@thead>
       <@tr class="header-row">
@@ -45,7 +45,7 @@
         <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
       </@tr>
     </@thead>
-    <#elseif tabButtonItem=="ListDocument">
+    <#elseif activeSubMenuItem=="ListDocument">
     <#--Form ListDocument-->
     <@thead>
      <@tr class="header-row">
@@ -62,14 +62,14 @@
        <#assign alt_row = false/>
        <#assign listcount=0>
       <#list contentAssoc as contentData>
-      <#if tabButtonItem=="ListContentTree">
+      <#if activeSubMenuItem=="ListContentTree">
         <#--Form ListContentTree-->
           <@tr> 
               <@td><a class="plain" href="javascript:set_value('${contentData.contentId!}')" class="${styles.link_run_local!} ${styles.action_select!}">${contentData.contentId!}</a></@td>
               <@td>${contentData.contentName!}</@td>
               <@td>${contentData.mimeTypeId!}</@td>
           </@tr>
-      <#elseif tabButtonItem=="ListDocument">
+      <#elseif activeSubMenuItem=="ListDocument">
           <#--Form ListDocument-->
           <@tr>
               <@td><a class="plain" href="/content/control/editContent?contentId=${contentData.contentId!}">${contentData.contentName!}[${contentData.contentId!}]</a></@td>

@@ -27,7 +27,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleScrumMember"/>
                 <set field="labelTitleProperty" value="scrumResourceName"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
-                <set field="tabButtonItem" value="ProjectMember"/>
+                <set field="activeSubMenuItem" value="ProjectMember"/>
                 <set field="parameters.sortField" from-field="parameters.sortField" default-value="lastName"/>
                 <set field="noConditionFind" value="Y"/>
             </actions>
@@ -88,7 +88,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/prototypejs/prototype.js" global="true"/>
@@ -183,7 +183,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewroles"/>
+                <set field="activeSubMenuItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
                     <condition-list combine="and">
@@ -211,7 +211,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyPreferences"/>
-                <set field="tabButtonItem" value="preferences"/>
+                <set field="activeSubMenuItem" value="preferences"/>
                 <set field="partyId"  from-field="parameters.partyId"/>
                 <entity-and entity-name="UserLogin" list="userLogins">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -252,7 +252,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyRates"/>
+                <set field="activeSubMenuItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -300,7 +300,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ScrumRevisions"/>
-                <set field="tabButtonItem" value="findPartyRevision"/>
+                <set field="activeSubMenuItem" value="findPartyRevision"/>
                 <set field="partyId"  from-field="parameters.partyId"/>
                 <entity-and entity-name="Enumeration" list="userPreferenceList">
                     <field-map field-name="enumTypeId" value="SCRUM_PREFERENCE"/>
@@ -330,7 +330,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="admin"/>
                 <set field="titleProperty" value="PageTitleScrumMember"/>
-                <set field="tabButtonItem" value="ProjectMember"/>
+                <set field="activeSubMenuItem" value="ProjectMember"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -351,7 +351,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="admin"/>
                 <set field="titleProperty" value="PageTitleScrumMember"/>
-                <set field="tabButtonItem" value="ProjectMember"/>
+                <set field="activeSubMenuItem" value="ProjectMember"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -372,7 +372,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="admin"/>
                 <set field="titleProperty" value="PageTitleScrumMember"/>
-                <set field="tabButtonItem" value="ProjectMember"/>
+                <set field="activeSubMenuItem" value="ProjectMember"/>
                 <entity-one entity-name="PartyRate" value-field="partyRateMap"/>
                 <entity-one entity-name="UserLogin" value-field="systemUserLogin">
                 <field-map field-name="userLoginId" value="system"/>
@@ -404,7 +404,7 @@ under the License.
                 <set field="activeMainMenuItem" value="admin"/>
                 <set field="titleProperty" value="PageTitleScrumProductMembers"/>
                 <set field="productId" from-field="parameters.productId"/>
-                <set field="tabButtonItem" value="productMember"/>
+                <set field="activeSubMenuItem" value="productMember"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListScrumRolesPersonAndCompany.groovy"/>
             </actions>

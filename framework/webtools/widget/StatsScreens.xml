@@ -53,7 +53,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsStatsMainPageTitle"/>
-                <set field="tabButtonItem" value="stats"/>
+                <set field="activeSubMenuItem" value="stats"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/stats/StatsSinceStart.groovy"/>
             </actions>
             <widgets>
@@ -87,7 +87,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsStatsBinsPageTitle"/>
-                <set field="tabButtonItem" value="stats"/>
+                <set field="activeSubMenuItem" value="stats"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/stats/StatBinsHistory.groovy"/>
             </actions>
             <widgets>
@@ -113,7 +113,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsViewMetrics" />
-                <set field="tabButtonItem" value="metrics"/>
+                <set field="activeSubMenuItem" value="metrics"/>
             </actions>
             <widgets>
                 <decorator-screen name="StatsDecorator" location="${parameters.statsDecoratorLocation}">

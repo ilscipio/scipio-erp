@@ -303,8 +303,8 @@ under the License.
         <menu-item name="Expand" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show}">
             <condition>
                 <or>
-                    <if-compare operator="equals" value="EditProductStore" field="tabButtonItem"/>
-                    <if-compare operator="equals" value="EditProductStoreShipmentCostEstimates" field="tabButtonItem"/>
+                    <if-compare operator="equals" value="EditProductStore" field="activeSubMenuItem"/>
+                    <if-compare operator="equals" value="EditProductStoreShipmentCostEstimates" field="activeSubMenuItem"/>
                 </or>
             </condition>
             <link target="javascript:expandAll(true);" url-mode="plain"/>
@@ -312,8 +312,8 @@ under the License.
         <menu-item name="Collapse" title="${uiLabelMap.CommonCollapseAll}" widget-style="+${styles.action_run_local} ${styles.action_hide}">
             <condition>
                 <or>
-                    <if-compare operator="equals" value="EditProductStore" field="tabButtonItem"/>
-                    <if-compare operator="equals" value="EditProductStoreShipmentCostEstimates" field="tabButtonItem"/>
+                    <if-compare operator="equals" value="EditProductStore" field="activeSubMenuItem"/>
+                    <if-compare operator="equals" value="EditProductStoreShipmentCostEstimates" field="activeSubMenuItem"/>
                 </or>
             </condition>
             <link target="javascript:expandAll(false);" url-mode="plain"/>
@@ -592,7 +592,7 @@ under the License.
         <menu-item name="ExpandAll" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show} expand-all">
             <condition>
                 <and>
-                    <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>
+                    <if-compare operator="equals" value="EditProduct" field="activeSubMenuItem"/>
                 </and>
             </condition>
             <link target="javascript:expandAll(true);" url-mode="plain"/>
@@ -600,7 +600,7 @@ under the License.
         <menu-item name="CollapseAll" title="${uiLabelMap.CommonCollapseAll}" widget-style="+${styles.action_run_local} ${styles.action_hide} collapse-all">
             <condition>
                 <and>
-                    <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>
+                    <if-compare operator="equals" value="EditProduct" field="activeSubMenuItem"/>
                 </and>
             </condition>
             <link target="javascript:expandAll(false);" url-mode="plain"/>

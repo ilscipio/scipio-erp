@@ -74,7 +74,7 @@ under the License.
     </menu>
 
     <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <menu-item name="tempexpr" title="${uiLabelMap.WebtoolsTemporalExpression}">
             <link target="findTemporalExpression"/>
         </menu-item>
@@ -83,12 +83,12 @@ under the License.
         </menu-item>
     </menu>
     <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <include-elements menu-name="configurationTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="importExportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <menu-item name="data" title="${uiLabelMap.WebtoolsDataFileTools}">
             <link target="viewdatafile"/>
         </menu-item>
@@ -118,12 +118,12 @@ under the License.
         </menu-item>
     </menu>
     <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <include-elements menu-name="importExportTabBar" recursive="includes-only" />
     </menu>
     
     <menu name="serviceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <menu-item name="serviceList" title="${uiLabelMap.WebtoolsServiceReference}">
             <link target="ServiceList"/>
         </menu-item>
@@ -146,7 +146,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.tabButtonItem">
+          selected-menuitem-context-field-name="page.activeSubMenuItem">
         <include-elements menu-name="serviceTabBar" recursive="includes-only" />
     </menu>
 

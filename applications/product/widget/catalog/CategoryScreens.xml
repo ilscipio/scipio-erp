@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindCategory"/>
                 <set field="activeMainMenuItem" value="categories"/>
-                <set field="tabButtonItem" value="FindCategory"/>
+                <set field="activeSubMenuItem" value="FindCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
             </actions>
             <widgets>
@@ -53,7 +53,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="activeMainMenuItem" value="categories"/>
-                <set field="tabButtonItem" value="EditCategory"/>
+                <set field="activeSubMenuItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -85,7 +85,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="activeMainMenuItem" value="categories"/>
-                <set field="tabButtonItem" value="EditCategory"/>
+                <set field="activeSubMenuItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -123,7 +123,7 @@ under the License.
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="EditCategory" field="tabButtonItem"/>
+                                                <if-compare operator="not-equals" value="EditCategory" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
@@ -150,7 +150,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryContent"/>
-                <set field="tabButtonItem" value="EditCategoryContent"/>
+                <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -185,7 +185,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryContentContent"/>
-                <set field="tabButtonItem" value="EditCategoryContent"/>
+                <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -232,7 +232,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryRollup"/>
-                <set field="tabButtonItem" value="EditCategoryRollup"/>
+                <set field="activeSubMenuItem" value="EditCategoryRollup"/>
                 <set field="labelTitleProperty" value="ProductRollup"/>
                 <set field="showProductCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-condition entity-name="ProductCategoryRollup" list="currentProductCategoryRollups">
@@ -276,7 +276,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryProducts"/>
-                <set field="tabButtonItem" value="EditCategoryProducts"/>
+                <set field="activeSubMenuItem" value="EditCategoryProducts"/>
                 <set field="labelTitleProperty" value="ProductProducts"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
 
@@ -317,7 +317,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryProductCatalogs"/>
-                <set field="tabButtonItem" value="EditCategoryProdCatalogs"/>
+                <set field="activeSubMenuItem" value="EditCategoryProdCatalogs"/>
                 <set field="labelTitleProperty" value="ProductCatalogs"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -352,7 +352,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryFeatureCategories"/>
                 <set field="activeMainMenuItem" value="categories"/>
-                <set field="tabButtonItem" value="EditCategoryFeatureCats"/>
+                <set field="activeSubMenuItem" value="EditCategoryFeatureCats"/>
                 <set field="labelTitleProperty" value="ProductFeatureCategoriesGroups"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -393,7 +393,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryParties"/>
-                <set field="tabButtonItem" value="EditCategoryParties"/>
+                <set field="activeSubMenuItem" value="EditCategoryParties"/>
                 <set field="labelTitleProperty" value="PartyParties"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -425,7 +425,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryAttributes"/>
-                <set field="tabButtonItem" value="EditCategoryAttributes"/>
+                <set field="activeSubMenuItem" value="EditCategoryAttributes"/>
                 <set field="labelTitleProperty" value="ProductCategoryAttributes"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -499,7 +499,7 @@ under the License.
                 <property-map resource="ProductEntityLabels" map-name="uiLabelMap" global="true"/>
             
                 <set field="titleProperty" value="PageTitleEditProductCategoryLink"/>
-                <set field="tabButtonItem" value="EditProductCategoryLinks"/>
+                <set field="activeSubMenuItem" value="EditProductCategoryLinks"/>
                 <set field="labelTitleProperty" value="ProductCategoryLinks"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="linkSeqId" from-field="parameters.linkSeqId"/>

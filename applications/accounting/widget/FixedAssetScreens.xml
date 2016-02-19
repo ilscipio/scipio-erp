@@ -27,7 +27,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingFindFixedAssets"/>
                 <set field="activeMainMenuItem" value="ListFixedAssets"/>
-                <set field="tabButtonItem" value="ListFixedAssets"/>
+                <set field="activeSubMenuItem" value="ListFixedAssets"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -120,7 +120,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAsset"/>
-                <set field="tabButtonItem" value="EditFixedAsset"/>
+                <set field="activeSubMenuItem" value="EditFixedAsset"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
@@ -147,7 +147,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
-                <set field="tabButtonItem" value="ListFixedAssetProducts"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetProducts"/>
                 <set field="labelTitleProperty" value="AccountingFixedAssetProducts"/>
 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
@@ -175,7 +175,7 @@ under the License.
     <screen name="WorkEffortSummary">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetCalendar"/>
                 <set field="titleProperty" value="PageTitleWorkEffortRelatedSummary"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="fixedAssetId" from-field="workEffort.fixedAssetId"/>
@@ -194,7 +194,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetStdCosts"/>
-                <set field="tabButtonItem" value="EditFixedAssetStdCosts"/>
+                <set field="activeSubMenuItem" value="EditFixedAssetStdCosts"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetStdCosts"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
 
@@ -219,7 +219,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetIdents"/>
-                <set field="tabButtonItem" value="EditFixedAssetIdents"/>
+                <set field="activeSubMenuItem" value="EditFixedAssetIdents"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetIdents"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetIdentTypeId" from-field="parameters.fixedAssetIdentTypeId"/>
@@ -241,7 +241,7 @@ under the License.
     <screen name="Calendar">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetCalendar"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
             </actions>
             <widgets>
@@ -251,7 +251,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
-                        <set field="tabButtonItem" value="day"/>
+                        <set field="activeSubMenuItem" value="day"/>
                     </actions>
                     <widgets/>
                 </section>
@@ -264,7 +264,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarWeek"/>
-                        <set field="tabButtonItem" value="week"/>
+                        <set field="activeSubMenuItem" value="week"/>
                     </actions>
                     <widgets/>
                 </section>
@@ -274,7 +274,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarMonth"/>
-                        <set field="tabButtonItem" value="month"/>
+                        <set field="activeSubMenuItem" value="month"/>
                     </actions>
                     <widgets/>
                 </section>
@@ -293,7 +293,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetRegistrations"/>
-                <set field="tabButtonItem" value="EditFixedAssetRegistrations"/>
+                <set field="activeSubMenuItem" value="EditFixedAssetRegistrations"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetRegistrations"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -334,7 +334,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListFixedAssetMaints"/>
-                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
                 <set field="labelTitleProperty" value="PageTitleListFixedAssetMaints"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -358,8 +358,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
-                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditFixedAssetMaint"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaint"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -400,8 +400,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMeters"/>
-                <set field="tabButtonItem" value="EditFixedAssetMeters"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditFixedAssetMeters"/>
+                <set field="activeSubMenuItem" value="EditFixedAssetMeters"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMeters"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -425,7 +425,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListFixedAssetChildren"/>
-                <set field="tabButtonItem" value="FixedAssetChildren"/>
+                <set field="activeSubMenuItem" value="FixedAssetChildren"/>
                 <set field="labelTitleProperty" value="PageTitleListFixedAssetChildren"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="trail" from-field="parameters.trail" default-value="${parameters.fixedAssetId}"/>
@@ -447,8 +447,8 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMaintOrders"/>
-                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditFixedAssetMaintOrders"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaintOrders"/>
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -475,7 +475,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyFixedAssetAssignments"/>
-                <set field="tabButtonItem" value="EditPartyFixedAssetAssignments"/>
+                <set field="activeSubMenuItem" value="EditPartyFixedAssetAssignments"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyFixedAssetAssignments"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -501,7 +501,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFixedAssetDepreciationReport"/>
-                <set field="tabButtonItem" value="FixedAssetDepreciation"/>
+                <set field="activeSubMenuItem" value="FixedAssetDepreciation"/>
                 <set field="labelTitleProperty" value="PageTitleFixedAssetDepreciationReport"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset" auto-field-map="true"/>
@@ -603,7 +603,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFixedAssetGeoLocation"/>
-                <set field="tabButtonItem" value="FixedAssetGeoLocation"/>
+                <set field="activeSubMenuItem" value="FixedAssetGeoLocation"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one value-field="fixedAsset" entity-name="FixedAsset"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/fixedasset/FixedAssetGeoLocation.groovy"/>

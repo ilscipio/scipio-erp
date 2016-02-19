@@ -213,8 +213,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingTrialBalance"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="TrialBalance"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="TrialBalance"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -337,8 +337,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingBalanceSheet"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="BalanceSheet"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="BalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -446,8 +446,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeBalanceSheet"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeBalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -534,8 +534,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeBalanceSheet"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeBalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -606,8 +606,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeBalanceSheet"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeBalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -671,8 +671,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingTransactionTotals"/>
                 <set field="labelTitleProperty" value="AccountingTransactionTotals"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="TransactionTotals"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="TransactionTotals"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
@@ -740,8 +740,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="AccountingTransactionTotals"/>
                 <set field="labelTitleProperty" value="AccountingTransactionTotals"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="TransactionTotals"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="TransactionTotals"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
@@ -778,8 +778,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="AccountingTransactionTotals"/>
                 <set field="labelTitleProperty" value="AccountingTransactionTotals"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="TransactionTotals"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="TransactionTotals"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
@@ -807,8 +807,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingIncomeStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="IncomeStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="IncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -920,8 +920,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeIncomeStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1022,8 +1022,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeIncomeStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1104,8 +1104,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeIncomeStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1177,8 +1177,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingGlAccountTrialBalance"/>
                 <set field="labelTitleProperty" value="AccountingGlAccountTrialBalance"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="GlAccountTrialBalance"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="GlAccountTrialBalance"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GlAccountTrialBalance.groovy"/>
             </actions>
@@ -1241,8 +1241,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="FormFieldTitle_costCenters"/>
                 <set field="labelTitleProperty" value="FormFieldTitle_costCenters"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="GlAccountBalanceByCostCenter"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="GlAccountBalanceByCostCenter"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
@@ -1325,8 +1325,8 @@ under the License.
         <section>
             <actions>
                 <set field="labelTitleProperty" value="AccountingInventoryValuation"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="InventoryValuation"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="InventoryValuation"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1406,8 +1406,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingCashFlowStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="CashFlowStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="CashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1516,8 +1516,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeCashFlowStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1602,8 +1602,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeCashFlowStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -1667,8 +1667,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
-                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
-                <set field="tabButtonItem2" value="ComparativeCashFlowStatement"/>
+                <set field="activeSubMenuItem" value="OrganizationAccountingReports"/>
+                <set field="activeSubMenuItem2" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>

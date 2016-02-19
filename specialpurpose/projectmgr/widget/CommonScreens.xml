@@ -335,7 +335,7 @@ under the License.
             <actions>
                 <set field="parameters.currentStatus" value="_NA_"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

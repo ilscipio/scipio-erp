@@ -60,7 +60,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderCreateOrderQuoteWorkEfforts"/>
-                <set field="tabButtonItem" value="QuoteWorkEfforts"/>
+                <set field="activeSubMenuItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleAddQuoteWorkEffort"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
@@ -85,7 +85,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderQuoteEditWorkEfforts"/>
-                <set field="tabButtonItem" value="QuoteWorkEfforts"/>
+                <set field="activeSubMenuItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleEditQuoteWorkEffort"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
@@ -110,7 +110,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderQuoteWorkEfforts"/>
-                <set field="tabButtonItem" value="QuoteWorkEfforts"/>
+                <set field="activeSubMenuItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleListQuoteWorkEfforts"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>

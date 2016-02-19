@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProject"/>
-                <set field="tabButtonItem" value="subprojects"/>
+                <set field="activeSubMenuItem" value="subprojects"/>
                 <set field="labelTitleProperty" value="ProjectMgrProjectName"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <entity-and entity-name="WorkEffort" list="projects">
@@ -83,7 +83,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditProject"/>
-                <set field="tabButtonItem" value="editproject"/>
+                <set field="activeSubMenuItem" value="editproject"/>
                 <set field="labelTitleProperty" value="PageTitleEditProject"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <service service-name="getProject" result-map="result">
@@ -107,7 +107,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProjectBilling"/>
-                <set field="tabButtonItem" value="billing"/>
+                <set field="activeSubMenuItem" value="billing"/>
                 <set field="labelTitleProperty" value="PageTitleProjectBilling"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/ProjectBilling.groovy"/>
@@ -131,7 +131,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTask"/>
-                <set field="tabButtonItem" value="tasks"/>
+                <set field="activeSubMenuItem" value="tasks"/>
                 <set field="labelTitleProperty" value="PageTitleFindTask"/>
                 <set field="projectId" from-field="parameters.projectId"/>
                 <entity-and entity-name="ProjectAndPhaseAndTask" list="tasks">
@@ -197,7 +197,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProjectOrder"/>
-                <set field="tabButtonItem" value="orders"/>
+                <set field="activeSubMenuItem" value="orders"/>
                 <set field="activeMainMenuItem" value="editProjectOrders"/>
                 <set field="labelTitleProperty" value="PageTitleListOrder"/>
                 <set field="projectId" from-field="parameters.projectId"/>
@@ -224,7 +224,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTask"/>
-                <set field="tabButtonItem" value="edittask"/>
+                <set field="activeSubMenuItem" value="edittask"/>
                 <set field="labelTitleProperty" value="ProjectMgrTaskName"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/FindTasks"/>
                 <set field="projectId" from-field="parameters.projectId"/>
@@ -287,7 +287,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPhase"/>
-                <set field="tabButtonItem" value="phases"/>
+                <set field="activeSubMenuItem" value="phases"/>
                 <set field="labelTitleProperty" value="PageTitleFindPhase"/>
                 <set field="projectId" from-field="parameters.projectId"/>
                 <service service-name="getProjectPhaseList" result-map="result">
@@ -311,7 +311,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
-                <set field="tabButtonItem" value="parties"/>
+                <set field="activeSubMenuItem" value="parties"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 <set field="workEffortId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <set field="projectId" from-field="workEffortId"/>
@@ -333,7 +333,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProjectMgrEditPartySkill"/>
-                <set field="tabButtonItem" value="parties"/>
+                <set field="activeSubMenuItem" value="parties"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
             </actions>
@@ -356,7 +356,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListProjectNotes"/>
-                <set field="tabButtonItem" value="notes"/>
+                <set field="activeSubMenuItem" value="notes"/>
                 <set field="labelTitleProperty" value="PageTitleListProjectNotes"/>
                 <set field="workEffortId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <set field="noteId" from-field="parameters.noteId"/>
@@ -378,7 +378,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProjectMgrProjectSummary"/>
-                <set field="tabButtonItem" value="projectView"/>
+                <set field="activeSubMenuItem" value="projectView"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <service service-name="getProject" result-map="result">
                     <field-map field-name="projectId" from-field="projectId"/>
@@ -412,7 +412,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProjectMgrGanttChart"/>
-                <set field="tabButtonItem" value="ganttchart"/>
+                <set field="activeSubMenuItem" value="ganttchart"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jsgantt.js" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/images/jsgantt.css" global="true"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/GanttChart.groovy"/>
@@ -578,7 +578,7 @@ under the License.
     <screen name="listResourcesProject">
         <section>
             <actions>
-                <set field="tabButtonItem" value="listResourcesProject"/>
+                <set field="activeSubMenuItem" value="listResourcesProject"/>
                 <set field="titleProperty" value="PageTitleListProjectByParty"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="parties">
@@ -611,7 +611,7 @@ under the License.
     <screen name="listResourcesTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="listResourcesTask"/>
+                <set field="activeSubMenuItem" value="listResourcesTask"/>
                 <set field="titleProperty" value="PageTitleListTaskByParty"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-condition entity-name="WorkEffortAndPartyAssign" list="tasks">
@@ -645,7 +645,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPersonalInformation"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="activeMainMenuItem" value="create"/>
                 <set field="labelTitleProperty" value="PageTitleEditPersonalInformation"/>
 
@@ -667,7 +667,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleNewPartyNote"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleNewPartyNote"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -689,7 +689,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="editcontactmech"/>
+                <set field="activeSubMenuItem" value="editcontactmech"/>
 
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
 
@@ -732,7 +732,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCommunication"/>
-                <set field="tabButtonItem" value="PartyCommEvents"/>
+                <set field="activeSubMenuItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="CommunicationEvent"/>
                 <set field="entityName" value="CommunicationEvent"/>
 
@@ -825,7 +825,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleVisitList"/>
                 <set field="activeMainMenuItem" value="visits"/>
-                <set field="tabButtonItem" value="showvisits"/>
+                <set field="activeSubMenuItem" value="showvisits"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/ShowVisits.groovy"/>
             </actions>
@@ -856,7 +856,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleVisitDetail"/>
                 <set field="activeMainMenuItem" value="visits"/>
-                <set field="tabButtonItem" value="visitdetail"/>
+                <set field="activeSubMenuItem" value="visitdetail"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/VisitDetails.groovy"/>
             </actions>
@@ -887,7 +887,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="activeMainMenuItem" value="create"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
 
@@ -909,7 +909,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="tabButtonItem" value="projectContent"/>
+                <set field="activeSubMenuItem" value="projectContent"/>
                 <set field="activeMainMenuItem" value="EditProjectContents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
@@ -1054,7 +1054,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindMailingList"/>
-                <set field="tabButtonItem" value="mailing"/>
+                <set field="activeSubMenuItem" value="mailing"/>
                 <set field="labelTitleProperty" value="ProjectMgrListMailingList"/>
                 <set field="parameters.workEffortId" from-field="parameters.projectId"/>
                 <set field="initially-collapsed" value="true" global="true"/>
@@ -1087,7 +1087,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewMailingList"/>
-                <set field="tabButtonItem" value="mailing"/>
+                <set field="activeSubMenuItem" value="mailing"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>

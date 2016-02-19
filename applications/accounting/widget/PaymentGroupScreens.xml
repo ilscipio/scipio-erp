@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingFindPaymentGroup"/>
                 <set field="activeMainMenuItem" value="PaymentGroup"/>
-                <set field="tabButtonItem" value="Find"/>
+                <set field="activeSubMenuItem" value="Find"/>
                 <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
                     <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>
                 </entity-condition>
@@ -61,7 +61,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingEditPaymentGroup"/>
-                <set field="tabButtonItem" value="EditPaymentGroup"/>               
+                <set field="activeSubMenuItem" value="EditPaymentGroup"/>               
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <set field="display" type="Boolean" value="false"/>
             </actions>
@@ -93,7 +93,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingEditPaymentGroupMember"/>
-                <set field="tabButtonItem" value="EditPaymentGroupMember"/>
+                <set field="activeSubMenuItem" value="EditPaymentGroupMember"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers">
                     <field-map field-name="paymentGroupId"/>
@@ -117,7 +117,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingPaymentGroupOverview"/>
-                <set field="tabButtonItem" value="PaymentGroupOverview"/>
+                <set field="activeSubMenuItem" value="PaymentGroupOverview"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <set field="display" type="Boolean" value="true"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>

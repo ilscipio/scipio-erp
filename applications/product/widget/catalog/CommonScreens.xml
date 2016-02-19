@@ -140,7 +140,7 @@ under the License.
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="ProductCatalog" field="tabButtonItem"/>
+                                                <if-compare operator="not-equals" value="ProductCatalog" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
@@ -210,7 +210,7 @@ under the License.
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="EditCategory" field="tabButtonItem"/>
+                                                <if-compare operator="not-equals" value="EditCategory" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
@@ -327,7 +327,7 @@ under the License.
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="EditProductStore" field="tabButtonItem"/>
+                                                <if-compare operator="not-equals" value="EditProductStore" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar button-style-2">
@@ -563,7 +563,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>            
                 <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
@@ -650,7 +650,7 @@ under the License.
             <actions>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore"/>
-                <set field="tabButtonItem" value="EditProductStoreFacilities"/>
+                <set field="activeSubMenuItem" value="EditProductStoreFacilities"/>
                 <set field="labelTitleProperty" value="ProductFacility"/>
                 <set field="activeMainMenuItem" value="store"/>
             </actions>

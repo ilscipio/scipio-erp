@@ -142,7 +142,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitlePartyInvitation"/>
                 <set field="activeMainMenuItem" value="partyinv"/>
-                <set field="tabButtonItem" value="EditPartyInvitation"/>
+                <set field="activeSubMenuItem" value="EditPartyInvitation"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
             </actions>
@@ -162,7 +162,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyInvitationGroupAssoc"/>
-                <set field="tabButtonItem" value="PartyInvitationGroupAssocs"/>
+                <set field="activeSubMenuItem" value="PartyInvitationGroupAssocs"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
             </actions>
             <widgets>
@@ -182,7 +182,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyInvitationRoleAssoc"/>
-                <set field="tabButtonItem" value="PartyInvitationRoleAssocs"/>
+                <set field="activeSubMenuItem" value="PartyInvitationRoleAssocs"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
             </actions>
             <widgets>

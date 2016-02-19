@@ -72,7 +72,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleContentPage"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Main.groovy"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/ContentPrep.groovy"/>
             </actions>

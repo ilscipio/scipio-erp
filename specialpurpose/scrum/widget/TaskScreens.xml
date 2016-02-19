@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTask"/>
                 <set field="activeMainMenuItem" value="task"/>
-                <set field="tabButtonItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="ScrumTasksList"/>
                 <set field="viewIndex_1" from-field="parameters.TasksListError_index_1" type="Integer"/>
                 <set field="viewIndex_2" from-field="parameters.TasksListInstall_index_2" type="Integer"/>
@@ -103,7 +103,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditTask"/>
-                <set field="tabButtonItem" value="edittask"/>
+                <set field="activeSubMenuItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaskList"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <entity-one entity-name="WorkEffort" value-field="task"/>
@@ -199,7 +199,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListTimeEntries"/>
-                <set field="tabButtonItem" value="timeEntries"/>
+                <set field="activeSubMenuItem" value="timeEntries"/>
                 <set field="labelTitleProperty" value="PageTitleEditSkill"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -220,7 +220,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
-                <set field="tabButtonItem" value="Members"/>
+                <set field="activeSubMenuItem" value="Members"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd HH:mm:ss.S&quot;)}" type="String"/>
@@ -244,7 +244,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListTaskNotes"/>
                 <set field="activeMainMenuItem" value="task"/>
-                <set field="tabButtonItem" value="notes"/>
+                <set field="activeSubMenuItem" value="notes"/>
                 <set field="labelTitleProperty" value="PageTitleListTaskNotes"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -264,7 +264,7 @@ under the License.
     <screen name="SprintTaskView">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintTask"/>
+                <set field="activeSubMenuItem" value="SprintTask"/>
                 <set field="workEffortId" from-field="parameters.taskId" />
             </actions>
             <widgets>
@@ -315,7 +315,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ScrumTaskSummary"/>
-                <set field="tabButtonItem" value="taskView"/>
+                <set field="activeSubMenuItem" value="taskView"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <entity-and list="custRequestWorkEffort" entity-name="CustRequestWorkEffort">
                     <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -354,7 +354,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CommonNotes"/>
-                <set field="tabButtonItem" value="taskNote"/>
+                <set field="activeSubMenuItem" value="taskNote"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <set field="taskId" from-field="parameters.taskId"/>
                 <entity-and list="workNoteList" entity-name="WorkEffortNote">
@@ -473,7 +473,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleTaskMember"/>
-                <set field="tabButtonItem" value="taskMember"/>
+                <set field="activeSubMenuItem" value="taskMember"/>
                 <set field="workEffortId" from-field="parameters.taskId" default-value="${parameters.workEffortId}"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
                 <entity-and entity-name="ProjectSprintBacklogAndTask" list="sprintList">

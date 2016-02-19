@@ -60,7 +60,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
                 <set field="activeMainMenuItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditPartyQuals"/>
+                <set field="activeSubMenuItem" value="EditPartyQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
                 <set field="parameters.insideEmployee" value="true"/>

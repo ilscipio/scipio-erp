@@ -27,7 +27,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindParty"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="findparty"/>
+                <set field="activeSubMenuItem" value="findparty"/>
 
                 <service service-name="findParty" auto-field-map="parameters"/>
                 
@@ -62,7 +62,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
@@ -153,7 +153,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewroles"/>
+                <set field="activeSubMenuItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
                     <condition-list combine="and">
@@ -224,7 +224,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyLink"/>
                 <set field="activeMainMenuItem" value="link"/>
-                <set field="tabButtonItem" value="linkparty"/>
+                <set field="activeSubMenuItem" value="linkparty"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -253,7 +253,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRelationships"/>
-                <set field="tabButtonItem" value="EditPartyRelationships"/>
+                <set field="activeSubMenuItem" value="EditPartyRelationships"/>
                 <set field="labelTitleProperty" value="PartyRelationships"/>
                 <set field="activeMainMenuItem" value="find"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -317,7 +317,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewVendorParty"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewvendor"/>
+                <set field="activeSubMenuItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyVendorInformation"/>
 
@@ -342,7 +342,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyAttribute"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewvendor"/>
+                <set field="activeSubMenuItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyAttribute"/>
 
@@ -369,7 +369,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyTaxAuthInfos"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyTaxAuthInfos"/>
+                <set field="activeSubMenuItem" value="EditPartyTaxAuthInfos"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -398,7 +398,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleShoppingList"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="editShoppingList"/>
+                <set field="activeSubMenuItem" value="editShoppingList"/>
 
                 <set field="labelTitleProperty" value="PartyShoppingLists"/>
 
@@ -421,7 +421,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="editcontactmech"/>
+                <set field="activeSubMenuItem" value="editcontactmech"/>
 
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
 
@@ -478,7 +478,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPersonalInformation"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditPersonalInformation"/>
 
@@ -501,7 +501,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
 
@@ -524,7 +524,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="UserLoginUpdateSecuritySettings"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="UserLoginUpdateSecuritySettings"/>
                 <set field="updateUserLoginSecurityURI" value="ProfileUpdateUserLoginSecurity"/>
                 <set field="updatePasswordURI" value="ProfileUpdatePassword"/>
@@ -552,7 +552,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CreateUserLogin"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="CreateUserLogin"/>
                 <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
                 <set field="createUserLoginURI" value="ProfileCreateUserLogin"/>
@@ -573,7 +573,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditUserLoginSecurityGroups"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
                 <set field="addUserLoginSecurityGroupURI" value="ProfileAddUserLoginToSecurityGroup"/>
                 <set field="removeUserLoginSecurityGroupURI" value="ProfileRemoveUserLoginFromSecurityGroup"/>
@@ -599,7 +599,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleNewPartyNote"/>
-                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="labelTitleProperty" value="PageTitleNewPartyNote"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -622,7 +622,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyRates"/>
+                <set field="activeSubMenuItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -645,7 +645,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="ViewSegmentRoles"/>
+                <set field="activeSubMenuItem" value="ViewSegmentRoles"/>
 
                 <set field="labelTitleProperty" value="ViewSegmentRoles"/>
 
@@ -877,7 +877,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListContent"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="PartyContents"/>
+                <set field="activeSubMenuItem" value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
@@ -939,7 +939,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyResume"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyResumes"/>
+                <set field="activeSubMenuItem" value="EditPartyResumes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyResumeCtx.resumeId" from-field="parameters.resumeId"/>
@@ -962,7 +962,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyFinancialHistory"/>
                 <set field="activeMainMenuItem" value="accountsMain"/>
-                <set field="tabButtonItem" value="FinancialHistory"/>
+                <set field="activeSubMenuItem" value="FinancialHistory"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
             </actions>
@@ -1135,7 +1135,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyPreferences"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="preferences"/>
+                <set field="activeSubMenuItem" value="preferences"/>
                 <set field="partyId"  from-field="parameters.partyId"/>
                 <entity-and entity-name="EnumTypeChildAndEnum" list="enumTypeChildAndEnums">
                     <field-map field-name="parentEnumTypeId" value="USER_PREF_GROUPS"/>
@@ -1168,7 +1168,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyGeoLocation"/>
-                <set field="tabButtonItem" value="PartyGeoLocation"/>
+                <set field="activeSubMenuItem" value="PartyGeoLocation"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/PartyGeoLocation.groovy"/>
             </actions>
             <widgets>
@@ -1208,7 +1208,7 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitlePartyGeoLocation"/>
-                <set field="tabButtonItem" value="PartyGeoLocation"/>
+                <set field="activeSubMenuItem" value="PartyGeoLocation"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/PartyGeoLocation.groovy"/>
             </actions>
             <widgets>
@@ -1223,7 +1223,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyGeoLocation"/>
-                <set field="tabButtonItem" value="PartyGeoLocation"/>
+                <set field="activeSubMenuItem" value="PartyGeoLocation"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetGeoLocation.groovy"/>
             </actions>
@@ -1255,7 +1255,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListPartyIdentifications"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewidentifications"/>
+                <set field="activeSubMenuItem" value="viewidentifications"/>
 
                 <set field="labelTitleProperty" value="PartyIdentification"/>
 
@@ -1284,7 +1284,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="FindProductStoreRoles"/>
+                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="ProductStoreRole" value-field="productStoreRole" auto-field-map="true"/>

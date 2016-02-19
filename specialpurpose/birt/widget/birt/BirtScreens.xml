@@ -109,7 +109,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
@@ -129,7 +129,7 @@ under the License.
     <screen name="Report">
         <section>
             <actions>
-                <set field="tabButtonItem" value="Report"/>
+                <set field="activeSubMenuItem" value="Report"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
@@ -150,7 +150,7 @@ under the License.
     <screen name="EditMail">
         <section>
             <actions>
-                <set field="tabButtonItem" value="Mail"/>
+                <set field="activeSubMenuItem" value="Mail"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
@@ -167,7 +167,7 @@ under the License.
     <screen name="chartReport">
         <section>
             <actions>
-                <set field="tabButtonItem" value="chartReport"/>
+                <set field="activeSubMenuItem" value="chartReport"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">

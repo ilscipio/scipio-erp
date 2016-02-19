@@ -88,7 +88,7 @@ under the License.
     <screen name="FindForums">
         <section>
             <actions>
-                <set field="tabButtonItem" value="forums"/>
+                <set field="activeSubMenuItem" value="forums"/>
                 <set field="titleProperty" value="PageTitleFindForums"/>
                 <set field="tabBar" value="ForumGroupSideBar"/>
                 <set field="forumGroupId" from-field="parameters.forumGroupId" default-value="parameters.contentId"/>
@@ -118,7 +118,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleForumGroupRoles"/>
-                <set field="tabButtonItem" value="roles"/>
+                <set field="activeSubMenuItem" value="roles"/>
                 <set field="tabBar" value="ForumGroupSideBar"/>
                 <entity-one entity-name="Content" value-field="forumGroup">
                     <field-map field-name="contentId" from-field="parameters.forumGroupId"/>
@@ -147,7 +147,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleForumGroupPurposes"/>
-                <set field="tabButtonItem" value="purposes"/>
+                <set field="activeSubMenuItem" value="purposes"/>
                 <set field="tabBar" value="ForumGroupSideBar"/>
                 <entity-one entity-name="Content" value-field="forumGroup">
                     <field-map field-name="contentId" from-field="parameters.forumGroupId"/>
@@ -178,7 +178,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
                 <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
-                <set field="tabButtonItem" value="messageList"/>
+                <set field="activeSubMenuItem" value="messageList"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forum">
                     <field-map field-name="contentId" from-field="parameters.forumId"/>
@@ -223,7 +223,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
                 <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
-                <set field="tabButtonItem" value="messageThread"/>
+                <set field="activeSubMenuItem" value="messageThread"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forum">
                     <field-map field-name="contentId" from-field="parameters.forumId"/>
@@ -277,10 +277,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabButtonItem" value="EditForumMessage"/>
+                <set field="activeSubMenuItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
             </actions>
             <widgets>
@@ -299,10 +299,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabButtonItem" value="EditForumMessage"/>
+                <set field="activeSubMenuItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forumMessage">
                     <field-map field-name="contentId" from-field="parameters.forumMessageIdTo"/>
@@ -324,10 +324,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabButtonItem" value="EditForumMessage"/>
+                <set field="activeSubMenuItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <entity-one entity-name="Content" value-field="forumMessage">
                     <field-map field-name="contentId" from-field="parameters.forumMessageIdTo"/>

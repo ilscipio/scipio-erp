@@ -65,7 +65,7 @@ under the License.
                 <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditExample"/>
-                <set field="tabButtonItem" value="EditExample"/>
+                <set field="activeSubMenuItem" value="EditExample"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
@@ -79,7 +79,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExample"/>
-                <set field="tabButtonItem" value="EditExample"/>
+                <set field="activeSubMenuItem" value="EditExample"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
@@ -97,7 +97,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExample"/>
-                <set field="tabButtonItem" value="EditExample"/>
+                <set field="activeSubMenuItem" value="EditExample"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExampleItems"/>
-                <set field="tabButtonItem" value="EditExampleItems"/>
+                <set field="activeSubMenuItem" value="EditExampleItems"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
             </actions>
             <widgets>
@@ -133,7 +133,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExampleFeatureAppls"/>
-                <set field="tabButtonItem" value="EditExampleFeatureAppls"/>
+                <set field="activeSubMenuItem" value="EditExampleFeatureAppls"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
             </actions>
             <widgets>
@@ -164,7 +164,7 @@ under the License.
     <screen name="ExampleGeoLocationPointSet1">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleGeoLocationPointSet1"/>
+                <set field="activeSubMenuItem" value="ExampleGeoLocationPointSet1"/>
                 <set field="geoPoints[+0].lat" value="37.4419"/>
                 <set field="geoPoints[0].lon" value="-122.1419"/>
                 <set field="geoPoints[+1].lat" value="37.4819"/>
@@ -183,7 +183,7 @@ under the License.
     <screen name="ExampleGeoLocationPointSet2">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleGeoLocationPointSet2"/>
+                <set field="activeSubMenuItem" value="ExampleGeoLocationPointSet2"/>
                 <set field="geoPoints[+0].lat" value="37.4459"/>
                 <set field="geoPoints[0].lon" value="-122.1489"/>
                 <set field="geoPoints[+1].lat" value="37.4829"/>
@@ -202,7 +202,7 @@ under the License.
     <screen name="ExampleGeoLocationPointSet3">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleGeoLocationPointSet3"/>
+                <set field="activeSubMenuItem" value="ExampleGeoLocationPointSet3"/>
                 <set field="geoPoints[+0].lat" value="37.4379"/>
                 <set field="geoPoints[0].lon" value="-122.1119"/>
                 <set field="geoPoints[+1].lat" value="37.4819"/>
@@ -222,7 +222,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
-                <set field="tabButtonItem" value="ExampleGeoLocationPointSet4"/>
+                <set field="activeSubMenuItem" value="ExampleGeoLocationPointSet4"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -294,7 +294,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
-                <set field="tabButtonItem" value="ExampleGeoLocationAddress"/>
+                <set field="activeSubMenuItem" value="ExampleGeoLocationAddress"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_ADDRESS_GOOGLE"/>
                 <set field="geoChart.width" value="800px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -327,7 +327,7 @@ under the License.
     <screen name="ExamplePieChart">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExamplePieChart"/>
+                <set field="activeSubMenuItem" value="ExamplePieChart"/>
                 <set field="chartType" value="Pie"/>
                 <set field="chartId" value="pieChartDiv"/>
             </actions>
@@ -339,7 +339,7 @@ under the License.
     <screen name="ExampleBarChart">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleBarChart"/>
+                <set field="activeSubMenuItem" value="ExampleBarChart"/>
                 <set field="chartType" value="Bars"/>
                 <set field="chartId" value="barChartDiv"/>
             </actions>
@@ -352,7 +352,7 @@ under the License.
     <screen name="ExampleOsmGeoLocationPointSet1">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleOsmGeoLocationPointSet1"/>
+                <set field="activeSubMenuItem" value="ExampleOsmGeoLocationPointSet1"/>
                 <set field="geoPoints[+0].lat" value="37.4419"/>
                 <set field="geoPoints[0].lon" value="-122.1419"/>
                 <set field="geoPoints[+1].lat" value="37.4819"/>
@@ -371,7 +371,7 @@ under the License.
     <screen name="ExampleOsmGeoLocationPointSet2">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleOsmGeoLocationPointSet2"/>
+                <set field="activeSubMenuItem" value="ExampleOsmGeoLocationPointSet2"/>
                 <set field="geoPoints[+0].lat" value="37.4459"/>
                 <set field="geoPoints[0].lon" value="-122.1489"/>
                 <set field="geoPoints[+1].lat" value="37.4829"/>
@@ -390,7 +390,7 @@ under the License.
     <screen name="ExampleOsmGeoLocationPointSet3">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ExampleOsmGeoLocationPointSet3"/>
+                <set field="activeSubMenuItem" value="ExampleOsmGeoLocationPointSet3"/>
                 <set field="geoPoints[+0].lat" value="37.4379"/>
                 <set field="geoPoints[0].lon" value="-122.1119"/>
                 <set field="geoPoints[+1].lat" value="37.4819"/>
@@ -410,7 +410,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
-                <set field="tabButtonItem" value="ExampleOsmGeoLocationPointSet4"/>
+                <set field="activeSubMenuItem" value="ExampleOsmGeoLocationPointSet4"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>

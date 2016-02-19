@@ -135,7 +135,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewShipment"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="ViewShipment"/>
+                <set field="activeSubMenuItem" value="ViewShipment"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ViewShipment.groovy"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.groovy"/>
@@ -190,7 +190,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ProductEditShipment"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="EditShipment"/>
+                <set field="activeSubMenuItem" value="EditShipment"/>
                 <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipment.groovy"/>
             </actions>
@@ -208,7 +208,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditShipmentItems"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="EditShipmentItems"/>
+                <set field="activeSubMenuItem" value="EditShipmentItems"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.groovy"/>
             </actions>
@@ -228,7 +228,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditShipmentPlan"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="EditShipmentPlan"/>
+                <set field="activeSubMenuItem" value="EditShipmentPlan"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPlan.groovy"/>
             </actions>
@@ -273,7 +273,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditShipmentPackages"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="EditShipmentPackages"/>
+                <set field="activeSubMenuItem" value="EditShipmentPackages"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPackages.groovy"/>
             </actions>
@@ -293,7 +293,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditShipmentRouteSegments"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="EditShipmentRouteSegments"/>
+                <set field="activeSubMenuItem" value="EditShipmentRouteSegments"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentRouteSegments.groovy"/>
             </actions>
@@ -313,7 +313,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAddItemsFromOrder"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="AddItemsFromOrder"/>
+                <set field="activeSubMenuItem" value="AddItemsFromOrder"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromOrder.groovy"/>
             </actions>
@@ -333,7 +333,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ViewShipmentReceipts"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="ViewShipmentReceipts"/>
+                <set field="activeSubMenuItem" value="ViewShipmentReceipts"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShipmentDecorator">
@@ -539,7 +539,7 @@ under the License.
                 <property-map resource="ProductEntityLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="ProductReceiveInventoryAgainstPurchaseOrder"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="ProductReceiveInventoryAgainstPO"/>
+                <set field="activeSubMenuItem" value="ProductReceiveInventoryAgainstPO"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ReceiveInventoryAgainstPurchaseOrder.groovy"/>
             </actions>
@@ -562,7 +562,7 @@ under the License.
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="ProductAddItemsFromInventory"/>
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="tabButtonItem" value="AddItemsFromInventory"/>
+                <set field="activeSubMenuItem" value="AddItemsFromInventory"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromInventory.groovy"/>
             </actions>
             <widgets>

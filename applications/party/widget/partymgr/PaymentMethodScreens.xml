@@ -59,7 +59,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCreditCard"/>
-                <set field="tabButtonItem" value="editcreditcard"/>
+                <set field="activeSubMenuItem" value="editcreditcard"/>
                 <set field="cardNumberMinDisplay" value="min"/>
                 <set field="showToolTip" value="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
@@ -80,7 +80,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditGiftCard"/>
-                <set field="tabButtonItem" value="editgiftcard"/>
+                <set field="activeSubMenuItem" value="editgiftcard"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/EditPaymentMethod.groovy"/>
@@ -100,7 +100,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditEftAccount"/>
-                <set field="tabButtonItem" value="editeftaccount"/>
+                <set field="activeSubMenuItem" value="editeftaccount"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/EditPaymentMethod.groovy"/>
@@ -155,7 +155,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
                 <set field="activeMainMenuItem" value="billingaccount"/>
-                <set field="tabButtonItem" value="EditBillingAccount"/>
+                <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>

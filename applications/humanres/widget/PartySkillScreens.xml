@@ -58,7 +58,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySkill"/>
                 <set field="activeMainMenuItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditPartySkills"/>
+                <set field="activeSubMenuItem" value="EditPartySkills"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <set field="partySkillsCtx.partyId" from-field="parameters.partyId"/>

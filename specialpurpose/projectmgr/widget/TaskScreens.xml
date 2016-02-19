@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleDependencies"/>
-                <set field="tabButtonItem" value="dependencies"/>
+                <set field="activeSubMenuItem" value="dependencies"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <service service-name="getProjectIdAndNameFromTask" result-map="result">
                     <field-map field-name="taskId" from-field="parameters.workEffortId"/>
@@ -157,7 +157,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTask"/>
                 <set field="activeMainMenuItem" value="task"/>
-                <set field="tabButtonItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="ProjectMgrListTasks"/>
             </actions>
             <widgets>
@@ -187,7 +187,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditTask"/>
-                <set field="tabButtonItem" value="edittask"/>
+                <set field="activeSubMenuItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaskList"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="task"/>
@@ -223,7 +223,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditSkill"/>
-                <set field="tabButtonItem" value="taskskills"/>
+                <set field="activeSubMenuItem" value="taskskills"/>
                 <set field="labelTitleProperty" value="PageTitleEditSkill"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-and entity-name="WorkEffortSkillStandard" list="workEffortSkillStandards">
@@ -246,7 +246,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListTimeEntries"/>
-                <set field="tabButtonItem" value="timeEntries"/>
+                <set field="activeSubMenuItem" value="timeEntries"/>
                 <set field="labelTitleProperty" value="PageTitleEditSkill"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -267,7 +267,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
-                <set field="tabButtonItem" value="parties"/>
+                <set field="activeSubMenuItem" value="parties"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffortPartyAssignment" value-field="workEffortPartyAssignment"/>
@@ -294,7 +294,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListTaskNotes"/>
                 <set field="activeMainMenuItem" value="task"/>
-                <set field="tabButtonItem" value="notes"/>
+                <set field="activeSubMenuItem" value="notes"/>
                 <set field="labelTitleProperty" value="PageTitleListTaskNotes"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -347,7 +347,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProjectMgrTaskSummary"/>
-                <set field="tabButtonItem" value="taskView"/>
+                <set field="activeSubMenuItem" value="taskView"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -424,7 +424,7 @@ under the License.
     <screen name="ListWorkEffortRequests">
         <section>
             <actions>
-                <set field="tabButtonItem" value="taskView"/>
+                <set field="activeSubMenuItem" value="taskView"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PageTitleRequestList}">
@@ -468,7 +468,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditTask"/>
                 <set field="activeMainMenuItem" value="request"/>
-                <set field="tabButtonItem" value="edittask"/>
+                <set field="activeSubMenuItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTask"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName">
@@ -499,7 +499,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="tabButtonItem" value="taskContent"/>
+                <set field="activeSubMenuItem" value="taskContent"/>
                 <set field="activeMainMenuItem" value="EditTaskContents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
@@ -547,7 +547,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="task"/>
-                <set field="tabButtonItem" value="EditWorkEffortSurveyAppls"/>
+                <set field="activeSubMenuItem" value="EditWorkEffortSurveyAppls"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>

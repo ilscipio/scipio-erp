@@ -54,7 +54,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigItem"/>
                 <set field="activeMainMenuItem" value="configs"/>
-                <set field="tabButtonItem" value="EditProductConfigItem"/>
+                <set field="activeSubMenuItem" value="EditProductConfigItem"/>
                 <set field="labelTitleProperty" value="ProductConfigItem"/>
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
@@ -77,7 +77,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigOptions"/>
                 <set field="activeMainMenuItem" value="configs"/>
-                <set field="tabButtonItem" value="EditProductConfigOptions"/>
+                <set field="activeSubMenuItem" value="EditProductConfigOptions"/>
                 <set field="labelTitleProperty" value="ProductConfigOptions"/>
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
@@ -180,7 +180,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
                 <set field="activeMainMenuItem" value="configs"/>
-                <set field="tabButtonItem" value="EditProductConfigItemContent"/>
+                <set field="activeSubMenuItem" value="EditProductConfigItemContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
@@ -205,7 +205,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
                 <set field="activeMainMenuItem" value="configs"/>
-                <set field="tabButtonItem" value="EditProductConfigItemContent"/>
+                <set field="activeSubMenuItem" value="EditProductConfigItemContent"/>
                 <set field="labelTitleProperty" value=""/>
 
                 <set field="configItemId" from-field="parameters.configItemId"/>
@@ -232,7 +232,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
                 <set field="activeMainMenuItem" value="configs"/>
-                <set field="tabButtonItem" value="ProductConfigItemArticle"/>
+                <set field="activeSubMenuItem" value="ProductConfigItemArticle"/>
                 <set field="labelTitleProperty" value=""/>
                 <set field="configItemId" from-field="parameters.configItemId"/>
                 <entity-one entity-name="ProductConfigItem" value-field="configItem" auto-field-map="true"/>

@@ -88,7 +88,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSalesForecast"/>
-                <set field="tabButtonItem" value="EditSalesForecast"/>
+                <set field="activeSubMenuItem" value="EditSalesForecast"/>
                 <set field="salesForecastId" from-field="parameters.salesForecastId"/>
                 <entity-one entity-name="SalesForecast" value-field="salesForecast"/>
             </actions>
@@ -116,7 +116,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSalesForecastDetail"/>
-                <set field="tabButtonItem" value="EditSalesForecastDetail"/>
+                <set field="activeSubMenuItem" value="EditSalesForecastDetail"/>
                 <set field="salesForecastId" from-field="parameters.salesForecastId"/>
             </actions>
             <widgets>

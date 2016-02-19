@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsDataFileMainTitle"/>
-                <set field="tabButtonItem" value="data"/>
+                <set field="activeSubMenuItem" value="data"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/datafile/viewdatafile.groovy"/>
             </actions>
             <widgets>
@@ -53,7 +53,7 @@ under the License.
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>
                 <set field="activeMainMenuItem" value="LayoutDemo"/>
-                <set field="tabButtonItem" value="Selected"/>
+                <set field="activeSubMenuItem" value="Selected"/>
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
                 <set field="errorMessage" from-field="demoText" global="true"/>
                 <set field="eventMessage" from-field="demoText" global="true"/>

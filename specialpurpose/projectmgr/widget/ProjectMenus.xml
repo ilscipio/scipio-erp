@@ -418,7 +418,7 @@
                     <not><if-empty field="workEffort"/></not>
                     <and>
                         <if-empty field="workEffort"/>
-                        <if-compare field="tabButtonItem" operator="equals" value="find"/>
+                        <if-compare field="activeSubMenuItem" operator="equals" value="find"/>
                     </and>
                 </or>
             </condition>

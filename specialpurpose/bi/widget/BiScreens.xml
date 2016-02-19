@@ -120,7 +120,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BusinessIntelligenceMainPage"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <property-to-field resource="bi" property="fromDate" field="fromDateProp" no-locale="true"/>
                 <property-to-field resource="bi" property="thruDate" field="thruDateProp" no-locale="true"/>
                 <set field="fromDate" from-field="fromDateProp" type="Timestamp"/>

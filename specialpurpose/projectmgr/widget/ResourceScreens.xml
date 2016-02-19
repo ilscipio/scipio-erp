@@ -52,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListBillingHours"/>
-                <set field="tabButtonItem" value="ListBillingHours"/>
+                <set field="activeSubMenuItem" value="ListBillingHours"/>
                 <set field="labelTitleProperty" value="ProjectMgrProjectName"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/ListResourceBillingHours.groovy"/>
@@ -74,7 +74,7 @@ under the License.
     <screen name="viewprofile">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ResourcesProfile"/>
+                <set field="activeSubMenuItem" value="ResourcesProfile"/>
                 <set field="titleProperty" value="PartyProfile"/>
                 <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
@@ -124,7 +124,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyRates"/>
+                <set field="activeSubMenuItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -147,7 +147,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="viewroles"/>
+                <set field="activeSubMenuItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
                     <condition-list combine="and">

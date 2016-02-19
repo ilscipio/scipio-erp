@@ -73,7 +73,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddSprint"/>
-                <set field="tabButtonItem" value="editProject"/>
+                <set field="activeSubMenuItem" value="editProject"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
                 <entity-one value-field="projectWorkEffort" entity-name="WorkEffort">
                     <field-map field-name="workEffortId" from-field="parameters.projectId"/>
@@ -111,7 +111,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSprintOverview"/>
-                <set field="tabButtonItem" value="SprintSummary"/>
+                <set field="activeSubMenuItem" value="SprintSummary"/>
                 <set field="permissionMap.sprintId" from-field="parameters.sprintId"/>
                 <entity-one value-field="sprintStatus" entity-name="WorkEffort">
                     <field-map field-name="workEffortId" from-field="parameters.sprintId"/>
@@ -309,7 +309,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSprint"/>
-                <set field="tabButtonItem" value="EditSprint"/>
+                <set field="activeSubMenuItem" value="EditSprint"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
             </actions>
             <widgets>
@@ -368,7 +368,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditScrumProject"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" value="editProject"/>
+                <set field="activeSubMenuItem" value="editProject"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndProduct" list="workEffortList">
                     <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -413,7 +413,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScrumProjectOverview"/>
-                <set field="tabButtonItem" value="projectSummary"/>
+                <set field="activeSubMenuItem" value="projectSummary"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndProduct" list="projectList">
@@ -487,7 +487,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklog"/>
-                <set field="tabButtonItem" value="editProductBacklog"/>
+                <set field="activeSubMenuItem" value="editProductBacklog"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product">
                     <field-map field-name="productId"/>
@@ -648,7 +648,7 @@ under the License.
     <screen name="DeleteProductBacklogItem">
          <section>
             <actions>
-                <set field="tabButtonItem" value="editProductBacklog"/>
+                <set field="activeSubMenuItem" value="editProductBacklog"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one value-field="custRequestMap" entity-name="CustRequest"/>
                 <entity-and entity-name="CustRequestAndCustRequestItem" list="categoryList">
@@ -689,7 +689,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklogItemsOverview"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="tabButtonItem" value="view"/>
+                <set field="activeSubMenuItem" value="view"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-and list="custRequestItemList" entity-name="CustRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -860,7 +860,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductBacklogItems"/>
-                <set field="tabButtonItem" value="editProductBacklogItem"/>
+                <set field="activeSubMenuItem" value="editProductBacklogItem"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-and list="custRequestItem" entity-name="CustRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -969,7 +969,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CommonNotes"/>
-                <set field="tabButtonItem" value="productBacklogItemNote"/>
+                <set field="activeSubMenuItem" value="productBacklogItemNote"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-and list="custNoteList" entity-name="CustRequestNote">
@@ -1021,7 +1021,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogItemsContents"/>
-                <set field="tabButtonItem" value="productBacklogItemContent"/>
+                <set field="activeSubMenuItem" value="productBacklogItemContent"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -1073,7 +1073,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklogItemsCommunication"/>
-                <set field="tabButtonItem" value="productBacklogItemComm"/>
+                <set field="activeSubMenuItem" value="productBacklogItemComm"/>
                 <entity-and list="custRequestItem" entity-name="CustRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
@@ -1175,7 +1175,7 @@ under the License.
     <screen name="EditDeleteBacklogItem">
         <section>
             <actions>
-                <set field="tabButtonItem" value="view"/>
+                <set field="activeSubMenuItem" value="view"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one value-field="custRequestMap" entity-name="CustRequest"/>
                 <entity-and entity-name="CustRequestAndCustRequestItem" list="categoryList">
@@ -1215,7 +1215,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScrumProjectContents"/>
-                <set field="tabButtonItem" value="projectContent"/>
+                <set field="activeSubMenuItem" value="projectContent"/>
                 <set field="activeMainMenuItem" value="EditProjectContents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
@@ -1271,7 +1271,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDailyMeetingMinutes"/>
-                <set field="tabButtonItem" value="DailySprintMeetingMinute"/>
+                <set field="activeSubMenuItem" value="DailySprintMeetingMinute"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
@@ -1314,7 +1314,7 @@ under the License.
     <screen name="ListDailyMeetingMinutes">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintList"/>
+                <set field="activeSubMenuItem" value="SprintList"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
                 <entity-one value-field="custRequest" entity-name="CustRequest"/>
@@ -1328,7 +1328,7 @@ under the License.
     <screen name="ViewDailyMeetingMinutes">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintList"/>
+                <set field="activeSubMenuItem" value="SprintList"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
                 <entity-one value-field="custRequest" entity-name="CustRequest"/>
@@ -1356,7 +1356,7 @@ under the License.
     <screen name="ViewDailyScrumMeetingMinute">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintList"/>
+                <set field="activeSubMenuItem" value="SprintList"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
                 <entity-one value-field="custRequest" entity-name="CustRequest"/>
@@ -1399,7 +1399,7 @@ under the License.
     <screen name="EditSprintBacklog">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintList"/>
+                <set field="activeSubMenuItem" value="SprintList"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1426,7 +1426,7 @@ under the License.
     <screen name="listResourcesProject">
         <section>
             <actions>
-                <set field="tabButtonItem" value="listResourcesProject"/>
+                <set field="activeSubMenuItem" value="listResourcesProject"/>
                 <set field="titleProperty" value="PageTitleListProjectByParty"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="parties" filter-by-date="true">
@@ -1459,7 +1459,7 @@ under the License.
     <screen name="listResourcesTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="listResourcesTask"/>
+                <set field="activeSubMenuItem" value="listResourcesTask"/>
                 <set field="titleProperty" value="PageTitleListTaskByParty"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-condition list="tasks" entity-name="ProjectSprintBacklogTaskAndParty">
@@ -1495,7 +1495,7 @@ under the License.
     <screen name="EditSprintTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintTask"/>
+                <set field="activeSubMenuItem" value="SprintTask"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <entity-one entity-name="WorkEffort" value-field="task"/>
                 <set field="isAdmin" value="false" type="Boolean"/>
@@ -1591,7 +1591,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="edit"/>
+                <set field="activeSubMenuItem" value="edit"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <set field="permissionMap.productId" from-field="parameters.productId"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListScrumRolesPersonAndCompany.groovy"/>
@@ -1632,7 +1632,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductOverview"/>
-                <set field="tabButtonItem" value="view"/>
+                <set field="activeSubMenuItem" value="view"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="statusId" from-field="parameters.statusId"/>
@@ -1771,7 +1771,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleTotalBacklog"/>
-                <set field="tabButtonItem" value="totalProductBacklog"/>
+                <set field="activeSubMenuItem" value="totalProductBacklog"/>
                 <set field="sequence" from-field="parameters.sequence" default-value="Y"/>
                 <set field="backlogListTarget" value="ViewTotalBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
@@ -1807,7 +1807,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleBilling"/>
-                <set field="tabButtonItem" value="billing"/>
+                <set field="activeSubMenuItem" value="billing"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <set field="includeMeeting" from-field="parameters.includeMeeting" default-value="N"/>
@@ -1892,7 +1892,7 @@ under the License.
    <screen name="viewEditScrumProject">
         <section>
             <actions>
-                <set field="tabButtonItem" value="editProject"/>
+                <set field="activeSubMenuItem" value="editProject"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
@@ -1928,7 +1928,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklogCategories"/>
-                <set field="tabButtonItem" value="categories"/>
+                <set field="activeSubMenuItem" value="categories"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <set field="productId" from-field="product.productId"/>
             </actions>
@@ -1959,7 +1959,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductBacklogCategories"/>
-                <set field="tabButtonItem" value="categories"/>
+                <set field="activeSubMenuItem" value="categories"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <set field="productId" from-field="product.productId"/>
                 <entity-one value-field="custRequest" entity-name="CustRequest"/>
@@ -1985,7 +1985,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogContents"/>
-                <set field="tabButtonItem" value="productContent"/>
+                <set field="activeSubMenuItem" value="productContent"/>
                 <set field="activeMainMenuItem" value="EditProductContent"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="productId" from-field="parameters.productId"/>
@@ -2037,7 +2037,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogCommunications"/>
-                <set field="tabButtonItem" value="productComm"/>
+                <set field="activeSubMenuItem" value="productComm"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <entity-condition entity-name="CommunicationEventAndProduct" list="commEvents">
@@ -2104,7 +2104,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="tabButtonItem" value="productComm"/>
+                <set field="activeSubMenuItem" value="productComm"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="titleProperty" value="PageTitleEditCommunication" />
                 <set field="target" from-field="parameters.target" default-value="updateEmailForProduct"/>
@@ -2175,7 +2175,7 @@ under the License.
     <screen name="ViewProductEmail">
         <section>
             <actions>
-                <set field="tabButtonItem" value="productComm"/>
+                <set field="activeSubMenuItem" value="productComm"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="titleProperty" value="PageTitleEditCommunication" />
                 <set field="target" from-field="parameters.target" default-value="updateEmailForProduct"/>
@@ -2194,7 +2194,7 @@ under the License.
     <screen name="ViewlistResourcesProject">
         <section>
             <actions>
-                <set field="tabButtonItem" value="listResourcesProject"/>
+                <set field="activeSubMenuItem" value="listResourcesProject"/>
                 <set field="titleProperty" value="PageTitleListProjectByParty"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="parties">
@@ -2226,7 +2226,7 @@ under the License.
     <screen name="NewSprintBacklogTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintTask"/>
+                <set field="activeSubMenuItem" value="SprintTask"/>
                 <set field="isAdmin" value="false" type="Boolean"/>
             </actions>
             <widgets>
@@ -2278,7 +2278,7 @@ under the License.
     <screen name="NewProductBacklogEmail">
         <section>
             <actions>
-                <set field="tabButtonItem" value="productBacklogItemComm"/>
+                <set field="activeSubMenuItem" value="productBacklogItemComm"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-one>
@@ -2317,7 +2317,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSprintMembers"/>
-                <set field="tabButtonItem" value="SprintMember"/>
+                <set field="activeSubMenuItem" value="SprintMember"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSprintScreenDecorator" location="${parameters.mainDecoratorLocation}">
@@ -2351,7 +2351,7 @@ under the License.
     <screen name="SprintTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="SprintTask"/>
+                <set field="activeSubMenuItem" value="SprintTask"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
                 <entity-and list="tasksList" entity-name="ScrumProjectSprintBacklogAndTask">
@@ -2429,7 +2429,7 @@ under the License.
     <screen name="ViewProductBacklogEmail">
         <section>
             <actions>
-                <set field="tabButtonItem" value="productBacklogItemComm"/>
+                <set field="activeSubMenuItem" value="productBacklogItemComm"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-one>
@@ -2577,7 +2577,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditScrumProject"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" value="view"/>
+                <set field="activeSubMenuItem" value="view"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
@@ -2624,7 +2624,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAllBacklog"/>
                 <set field="activeMainMenuItem" value="admin"/>
-                <set field="tabButtonItem" value="totalBacklog"/>
+                <set field="activeSubMenuItem" value="totalBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/FindProductBacklogItem.groovy"/>
             </actions>
@@ -2654,7 +2654,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleBilling"/>
                 <set field="activeMainMenuItem" value="admin"/>
-                <set field="tabButtonItem" value="totalBilling"/>
+                <set field="activeSubMenuItem" value="totalBilling"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product"/>
                 <set field="includeMeeting" from-field="parameters.includeMeeting" default-value="N"/>
@@ -2716,7 +2716,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ScrumFindProductStatistics"/>
                 <set field="activeMainMenuItem" value="admin"/>
-                <set field="tabButtonItem" value="productStatistics"/>
+                <set field="activeSubMenuItem" value="productStatistics"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product"/>
             </actions>
@@ -2789,7 +2789,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ScrumQuickAddBacklog"/>
                 <set field="activeMainMenuItem" value="admin"/>
-                <set field="tabButtonItem" value="quickAddBacklog"/>
+                <set field="activeSubMenuItem" value="quickAddBacklog"/>
                 <set field="formTarget" value="${groovy: 
                     if (parameters.unplanned.equals(&quot;Y&quot;)) 
                         formTarget=&quot;createQuickAddUnPlannedBacklog&quot;
@@ -2821,7 +2821,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ScrumQuickAddNewTask"/>
                 <set field="activeMainMenuItem" value="admin"/>
-                <set field="tabButtonItem" value="quickAddNewTask"/>
+                <set field="activeSubMenuItem" value="quickAddNewTask"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -2842,7 +2842,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleUnplanBacklogItem"/>
-                <set field="tabButtonItem" value="unplanBacklog"/>
+                <set field="activeSubMenuItem" value="unplanBacklog"/>
                 <set field="backlogStatusId" from-field ="parameters.backlogStatusId" default-value="CRQ_REVIEWED"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListUnplanBacklog.groovy"/>
             </actions>
@@ -2936,7 +2936,7 @@ under the License.
     <screen name="NewUnplanBacklogTask">
         <section>
             <actions>
-                <set field="tabButtonItem" value="unplanBacklog"/>
+                <set field="activeSubMenuItem" value="unplanBacklog"/>
                 <set field="isAdmin" value="false" type="Boolean"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
             </actions>

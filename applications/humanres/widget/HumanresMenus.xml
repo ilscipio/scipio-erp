@@ -161,7 +161,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="SkillType" type="simple" id="app-navigation" default-selected-style="${styles.menu_default_itemactive}" selected-menuitem-context-field-name="tabButtonItem"/>
+    <menu name="SkillType" type="simple" id="app-navigation" default-selected-style="${styles.menu_default_itemactive}" selected-menuitem-context-field-name="activeSubMenuItem"/>
 
     <menu name="GlobalHRSettingMenus" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="SkillType">
         <menu-item name="SkillType" title="${uiLabelMap.HumanResSkillType}">
@@ -266,7 +266,7 @@
     </menu>
     
     <menu name="EmplPositionTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="tabButtonItem2">
+          default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="activeSubMenuItem2">
         <menu-item name="EditEmplPositionType" title="${uiLabelMap.HumanResEmplPositionType}">
             <link target="EditEmplPositionTypes">
                 <parameter param-name="emplPositionTypeId"/>

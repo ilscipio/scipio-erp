@@ -48,7 +48,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditOrderHeader"/>
                 <set field="activeMainMenuItem" value="OrderHeader"/>
-                <set field="tabButtonItem" value="EditOrderHeader"/>
+                <set field="activeSubMenuItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
                 <entity-one entity-name="OrderHeader" value-field="orderHeader"/>
@@ -70,7 +70,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListOrderHeaders"/>
                 <set field="activeMainMenuItem" value="OrderHeader"/>
-                <set field="tabButtonItem" value="EditOrderHeader"/>
+                <set field="activeSubMenuItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
                 <entity-one entity-name="OrderHeader" value-field="OrderHeader"/>

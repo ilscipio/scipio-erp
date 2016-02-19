@@ -52,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntitySyncStatus"/>
-                <set field="tabButtonItem" value="entitySyncStatus"/>
+                <set field="activeSubMenuItem" value="entitySyncStatus"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="component://webtools/widget/CommonScreens.xml">

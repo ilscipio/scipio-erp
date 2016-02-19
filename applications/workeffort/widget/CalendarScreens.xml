@@ -44,7 +44,7 @@ under the License.
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
-                        <set field="tabButtonItem" value="day"/>
+                        <set field="activeSubMenuItem" value="day"/>
                         <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
                     </actions>
                     <widgets>

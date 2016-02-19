@@ -24,7 +24,7 @@ under the License.
     <screen name="EditPaymentMethodType">
         <section>
             <actions>
-                <set field="tabButtonItem" value="PaymentMethodTypes"/>
+                <set field="activeSubMenuItem" value="PaymentMethodTypes"/>
                 <set field="titleProperty" value="CommonPaymentMethodType"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

@@ -984,7 +984,7 @@ under the License.
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListGlAccountReconciliation" type="multi" use-row-submit="false" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
+    <form name="ListGlAccountReconciliation" type="multi" use-row-submit="false" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;activeSubMenuItem=AccountReconciliation"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="AcctgTransEntry">
@@ -1023,7 +1023,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>        
         <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
-    <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?tabButtonItem=${tabButtonItem}" default-map-name="glReconciliation"
+    <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?activeSubMenuItem=${activeSubMenuItem}" default-map-name="glReconciliation"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updateGlReconciliation"/>
         <field name="glReconciliationId"><display/></field>
@@ -1090,7 +1090,7 @@ under the License.
         <field name="glReconciliationId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliations">
                 <parameter param-name="glReconciliationId"/>
-                <parameter param-name="tabButtonItem" from-field="AccountReconciliations"/>
+                <parameter param-name="activeSubMenuItem" from-field="AccountReconciliations"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>

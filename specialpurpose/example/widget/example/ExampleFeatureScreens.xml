@@ -63,7 +63,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExampleFeature"/>
-                <set field="tabButtonItem" value="EditExampleFeature"/>
+                <set field="activeSubMenuItem" value="EditExampleFeature"/>
                 <set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
                 <entity-one entity-name="ExampleFeature" value-field="exampleFeature"/>
             </actions>
@@ -83,7 +83,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditExampleFeatureExampleAppls"/>
-                <set field="tabButtonItem" value="EditExampleFeatureExampleAppls"/>
+                <set field="activeSubMenuItem" value="EditExampleFeatureExampleAppls"/>
                 <set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
             </actions>
             <widgets>

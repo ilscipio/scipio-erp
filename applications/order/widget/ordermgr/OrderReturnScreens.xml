@@ -66,7 +66,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleReturnHeader"/>
                 <set field="activeMainMenuItem" value="return"/>
-                <set field="tabButtonItem" value="OrderReturnHeader"/>
+                <set field="activeSubMenuItem" value="OrderReturnHeader"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/return.js" global="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnHeader.groovy"/>
@@ -109,7 +109,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleReturnItems"/>
                 <set field="activeMainMenuItem" value="return"/>
-                <set field="tabButtonItem" value="OrderReturnItems"/>
+                <set field="activeSubMenuItem" value="OrderReturnItems"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>
             </actions>
             <widgets>
@@ -135,7 +135,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="OrderReturnHistory"/>
                 <set field="activeMainMenuItem" value="return"/>
-                <set field="tabButtonItem" value="OrderReturnHistory"/>
+                <set field="activeSubMenuItem" value="OrderReturnHistory"/>
                 <set field="returnId" from-field="parameters.returnId"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>
             </actions>

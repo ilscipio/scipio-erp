@@ -50,7 +50,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleTimesheet"/>
                 <set field="activeMainMenuItem" value="timesheet"/>
-                <set field="tabButtonItem" value="editTimesheet"/>
+                <set field="activeSubMenuItem" value="editTimesheet"/>
                 <set field="labelTitleProperty" value="ProjectMgrTimeSheetMyTime"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/EditWeekTimesheet.groovy"/>
             </actions>
@@ -84,7 +84,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimesheet"/>
                 <set field="activeMainMenuItem" value="timesheet"/>
-                <set field="tabButtonItem" value="edittimesheet"/>
+                <set field="activeSubMenuItem" value="edittimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
             </actions>
@@ -109,7 +109,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimesheet"/>
                 <set field="activeMainMenuItem" value="timesheet"/>
-                <set field="tabButtonItem" value="addtimesheet"/>
+                <set field="activeSubMenuItem" value="addtimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
             </actions>
@@ -134,7 +134,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WorkEffortMyTimesheets"/>
                 <set field="activeMainMenuItem" value="mytimesheet"/>
-                <set field="tabButtonItem" value="edittimesheet"/>
+                <set field="activeSubMenuItem" value="edittimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <set field="my" value="My"/><!-- change link and target -->
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/EditWeekTimesheet.groovy"/>
@@ -154,7 +154,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTimesheetEntries"/>
-                <set field="tabButtonItem" value="TimesheetEntries"/>
+                <set field="activeSubMenuItem" value="TimesheetEntries"/>
                 <set field="labelTitleProperty" value="PageTitleEditTimesheetEntries"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
@@ -179,7 +179,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTimesheetRoles"/>
-                <set field="tabButtonItem" value="TimesheetRoles"/>
+                <set field="activeSubMenuItem" value="TimesheetRoles"/>
                 <set field="labelTitleProperty" value="PageTitleEditTimesheetRoles"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>

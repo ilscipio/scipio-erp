@@ -306,7 +306,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleMain"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
 
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Main.groovy"/>

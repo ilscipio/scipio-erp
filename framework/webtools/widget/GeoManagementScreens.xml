@@ -25,7 +25,7 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsGeosFind"/>
                 <set field="currentUrl" value="FindGeo"/>
-                <set field="tabButtonItem" value="FindGeo"/>
+                <set field="activeSubMenuItem" value="FindGeo"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonGeoManagementDecorator" location="${parameters.mainDecoratorLocation}">
@@ -50,7 +50,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsGeoEdit"/>
-                <set field="tabButtonItem" value="EditGeo"/>
+                <set field="activeSubMenuItem" value="EditGeo"/>
 
                 <set field="geoId" from-field="parameters.geoId"/>
                 <entity-one entity-name="Geo" value-field="geo"/>
@@ -97,7 +97,7 @@
                 <set field="titleProperty" value="WebtoolsGeosLink"/>
                 <set field="currentUrl" value="LinkGeos"/>
                 <set field="activeMainMenuItem" value="Geos"/>
-                <set field="tabButtonItem" value="LinkGeos"/>
+                <set field="activeSubMenuItem" value="LinkGeos"/>
                 
                 <set field="noId" value="true"/><!-- see CommonGeoManagementDecorator -->
                 

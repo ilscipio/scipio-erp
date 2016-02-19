@@ -597,7 +597,7 @@
                     <not>
                         <if-empty field="glReconciliationId" />
                     </not>
-                    <if-compare field="tabButtonItem2" operator="not-equals" value="Find" />
+                    <if-compare field="activeSubMenuItem2" operator="not-equals" value="Find" />
                 </and>
             </condition>
             <link target="FindFinAccountReconciliations">
@@ -615,7 +615,7 @@
                         <not>
                             <if-empty field="glReconciliationId" />
                         </not>
-                        <if-compare field="tabButtonItem2" operator="equals" value="Find" />
+                        <if-compare field="activeSubMenuItem2" operator="equals" value="Find" />
                     </or>
                 </and>
             </condition>
@@ -626,7 +626,7 @@
     </menu>
 
     <menu name="FixedAssetMaintTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
+        selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
         <menu-item name="EditFixedAssetMaint" title="${uiLabelMap.AccountingFixedAssetMaint}">
             <link target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId" />
@@ -649,7 +649,7 @@
     </menu>
 
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
+        selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
         <include-elements menu-name="FixedAssetMainTabBar" recursive="includes-only" />
     </menu>
 
@@ -774,7 +774,7 @@
     </menu>
 
     <menu name="GlSettingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2">
+        selected-menuitem-context-field-name="activeSubMenuItem2">
         <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
             <link target="GlAccountNavigate">
                 <parameter param-name="trail" value="null" />
@@ -786,7 +786,7 @@
     </menu>
 
     <menu name="GlAccountCategoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2">
+        selected-menuitem-context-field-name="activeSubMenuItem2">
         <menu-item name="EditGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
             <link target="EditGlAccountCategory">
                 <parameter param-name="glAccountCategoryId" />
@@ -1186,7 +1186,7 @@
     </menu>
     
     <menu name="OrganizationReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="TrialBalance">
+        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="TrialBalance">
         <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
             <link target="TrialBalance">
                 <parameter param-name="organizationPartyId" />
@@ -1285,7 +1285,7 @@
     </menu>
 
     <menu name="PartyTopTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItemTop" default-menu-item-name="PartyAccountsSummary">
+        selected-menuitem-context-field-name="activeSubMenuItemTop" default-menu-item-name="PartyAccountsSummary">
         <menu-item name="Admin" title="${uiLabelMap.AccountingSetup}">
             <condition>
                 <if-service-permission service-name="acctgPrefPermissionCheck" main-action="UPDATE" />
@@ -1305,7 +1305,7 @@
     </menu>
 
     <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItemTop" default-menu-item-name="PartyAccountsSummary">
+        selected-menuitem-context-field-name="activeSubMenuItemTop" default-menu-item-name="PartyAccountsSummary">
         <include-elements menu-name="PartyTopTabBar" recursive="includes-only" />
     </menu>
 
@@ -1344,7 +1344,7 @@
     </menu>
 
     <menu name="PartyAdminAssignTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
         <menu-item name="GlAccountTypeDefaults" title="${uiLabelMap.AccountingGlAccountTypeDefaults}">
             <link target="GlAccountTypeDefaults">
                 <parameter param-name="organizationPartyId" />
@@ -1413,12 +1413,12 @@
     </menu>
     
     <menu name="PartyAdminAssignSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
         <include-elements menu-name="PartyAdminAssignTabBar" recursive="full" />
     </menu>
     
     <menu name="PartyAccountingChecksTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
         <menu-item name="PrintChecksTabButton" title="${uiLabelMap.AccountingPrintChecks}">
             <link target="listChecksToPrint">
                 <parameter param-name="organizationPartyId" />
@@ -1432,7 +1432,7 @@
     </menu>
     
     <menu name="PartyAccountingChecksSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
         <include-elements menu-name="PartyAccountingChecksTabBar" recursive="full" />
     </menu>
 

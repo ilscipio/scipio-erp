@@ -65,7 +65,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
                 <set field="activeMainMenuItem" value="payments"/>
-                <set field="tabButtonItem" value="findPayment"/>
+                <set field="activeSubMenuItem" value="findPayment"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -114,7 +114,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPayment"/>
                 <set field="activeMainMenuItem" value="payments"/>
-                <set field="tabButtonItem" value="editPayment"/>
+                <set field="activeSubMenuItem" value="editPayment"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
@@ -140,7 +140,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPayment"/>
-                <set field="tabButtonItem" value="editPayment"/>
+                <set field="activeSubMenuItem" value="editPayment"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <entity-one entity-name="Payment" value-field="payment">
                     <field-map field-name="paymentId" from-field="parameters.paymentId"/>
@@ -165,7 +165,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListPaymentApplications"/>
-                <set field="tabButtonItem" value="editPaymentApplications"/>
+                <set field="activeSubMenuItem" value="editPaymentApplications"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <entity-one entity-name="Payment" value-field="payment"/>
                 <set field="appliedAmount" type="String" value="${groovy:
@@ -345,7 +345,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePaymentOverview"/>
-                <set field="tabButtonItem" value="paymentOverview"/>
+                <set field="activeSubMenuItem" value="paymentOverview"/>
                 <set field="labelTitleProperty" value="PageTitlePaymentOverview"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
@@ -428,7 +428,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingManualTransaction"/>
                 <set field="activeMainMenuItem" value="transaction"/>
-                <set field="tabButtonItem" value="manualtransactiontab"/>
+                <set field="activeSubMenuItem" value="manualtransactiontab"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ManualTx.groovy"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>

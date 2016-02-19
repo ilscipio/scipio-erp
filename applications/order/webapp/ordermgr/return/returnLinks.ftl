@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign selected = tabButtonItem?default("void")>
+<#assign selected = activeSubMenuItem?default("void")>
 <#if returnHeader??>
     <@menu type="button">
       <@menuitem type="link" href=makeOfbizUrl("returnMain?returnId=${returnId!}") text="${uiLabelMap.OrderReturnHeader}" selected=(selected=="OrderReturnHeader") class="+${styles.action_nav!} ${styles.action_terminate!}" />

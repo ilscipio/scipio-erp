@@ -32,7 +32,7 @@
                     </condition>
                     <actions>
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
-                        <set field="tabButtonItem" value="day"/>
+                        <set field="activeSubMenuItem" value="day"/>
                         <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy"/>
                     </actions>
                     <widgets>
@@ -104,7 +104,7 @@
     <screen name="TrainingCalendarWithDecorator">
         <section>
             <actions>
-                <set field="tabButtonItem" value="TrainingCalendar"/>
+                <set field="activeSubMenuItem" value="TrainingCalendar"/>
                 <set field="titleProperty" value="PageTitleFindTrainingCalendar"/>
             </actions>
             <widgets>
@@ -191,7 +191,7 @@
     <screen name="FindTrainingApprovals">
         <section>
             <actions>
-                <set field="tabButtonItem" value="FindTrainingApprovals"/>
+                <set field="activeSubMenuItem" value="FindTrainingApprovals"/>
                 <set field="titleProperty" value="PageTitleFindTrainingApprovals"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
@@ -218,7 +218,7 @@
     <screen name="EditTrainingApprovals">
        <section>
            <actions>
-               <set field="tabButtonItem" value="FindTrainingApprovals"/>
+               <set field="activeSubMenuItem" value="FindTrainingApprovals"/>
                <set field="partyId" from-field="parameters.partyId"/>
                <set field="trainingClassTypeId" from-field="parameters.trainingClassTypeId"/>
                <set field="fromDate" from-field="parameters.fromDate"/>
@@ -238,7 +238,7 @@
      <screen name="FindTrainingStatus">
          <section>
              <actions>
-                 <set field="tabButtonItem" value="FindTrainingStatus"/>
+                 <set field="activeSubMenuItem" value="FindTrainingStatus"/>
                  <set field="titleProperty" value="PageTitleFindTrainingStatus"/>
                  <service service-name="humanResManagerPermission" result-map="permResult">
                      <field-map field-name="mainAction" value="ADMIN"/>
@@ -265,7 +265,7 @@
      <screen name="ListTrainingStatus">
          <section>
              <actions>
-                 <set field="tabButtonItem" value="EditPersonTrainings"/>
+                 <set field="activeSubMenuItem" value="EditPersonTrainings"/>
              </actions>
                  <widgets>
                      <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">

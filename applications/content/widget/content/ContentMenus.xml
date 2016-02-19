@@ -132,7 +132,7 @@ under the License.
         </menu-item>
         <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} ${uiLabelMap.ContentAssociation}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
-                <if-compare field="tabButtonItem" operator="equals" value="association"/>
+                <if-compare field="activeSubMenuItem" operator="equals" value="association"/>
             </condition>
             <link target="EditContentAssoc">
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
@@ -224,7 +224,7 @@ under the License.
         </menu-item>
         <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
-                <if-compare field="tabButtonItem" operator="equals" value="Articles"/>
+                <if-compare field="activeSubMenuItem" operator="equals" value="Articles"/>
             </condition>
             <link target="EditBlogArticle">
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
@@ -306,7 +306,7 @@ under the License.
         </menu-item>
     </menu>
     <!-- Web Analytics -->
-    <menu name="WebAnalyticsConfigButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+    <menu name="WebAnalyticsConfigButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="activeSubMenuItem2">
         <menu-item name="EditWebAnalyticsConfig" title="${uiLabelMap.CommonCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditWebAnalyticsConfig">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>

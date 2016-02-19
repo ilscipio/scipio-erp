@@ -90,7 +90,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -167,7 +167,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEfforts"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -187,7 +187,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleTreeWorkEfforts"/>
-                <set field="tabButtonItem" value="WorkEffortAssocs"/>
+                <set field="activeSubMenuItem" value="WorkEffortAssocs"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEfforts"/>
                 <set field="trail" from-field="requestParameters.trail"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -219,7 +219,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="ChildWorkEfforts?workEffortId=${parameters.workEffortIdFrom}"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
@@ -243,7 +243,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
                 <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
@@ -269,7 +269,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortAssoc"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffortAssoc"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
                 <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
@@ -291,7 +291,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortAssoc"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffortAssoc"/>
                 <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
@@ -316,7 +316,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
-                <set field="tabButtonItem" value="WorkEffortPartyAssigns"/>
+                <set field="activeSubMenuItem" value="WorkEffortPartyAssigns"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -340,7 +340,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortFixedAssetAssigns"/>
                 <set field="labelTitleProperty" from-field="titleProperty"/>
-                <set field="tabButtonItem" value="WorkEffortFixedAssetAssigns"/>
+                <set field="activeSubMenuItem" value="WorkEffortFixedAssetAssigns"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -360,7 +360,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortAssignmentRates"/>
-                <set field="tabButtonItem" value="WorkEffortRates"/>
+                <set field="activeSubMenuItem" value="WorkEffortRates"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortAssignmentRates"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -381,7 +381,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortCommEvents"/>
-                <set field="tabButtonItem" value="WorkEffortCommEvents"/>
+                <set field="activeSubMenuItem" value="WorkEffortCommEvents"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortCommEvents"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -402,7 +402,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortShopLists"/>
-                <set field="tabButtonItem" value="WorkEffortShopLists"/>
+                <set field="activeSubMenuItem" value="WorkEffortShopLists"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortShopLists"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -424,7 +424,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
-                <set field="tabButtonItem" value="WorkEffortRequests"/>
+                <set field="activeSubMenuItem" value="WorkEffortRequests"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortRequests"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -449,7 +449,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequirements"/>
-                <set field="tabButtonItem" value="WorkEffortRequirements"/>
+                <set field="activeSubMenuItem" value="WorkEffortRequirements"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortRequirements"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
@@ -472,7 +472,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortQuotes"/>
-                <set field="tabButtonItem" value="WorkEffortQuotes"/>
+                <set field="activeSubMenuItem" value="WorkEffortQuotes"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortQuotes"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -497,7 +497,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortOrderHeaders"/>
-                <set field="tabButtonItem" value="WorkEffortOrderHeaders"/>
+                <set field="activeSubMenuItem" value="WorkEffortOrderHeaders"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortOrderHeaders"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -518,7 +518,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortTimeEntries"/>
-                <set field="tabButtonItem" value="WorkEffortTimeEntries"/>
+                <set field="activeSubMenuItem" value="WorkEffortTimeEntries"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortTimeEntries"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -548,7 +548,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortNotes"/>
-                <set field="tabButtonItem" value="WorkEffortNotes"/>
+                <set field="activeSubMenuItem" value="WorkEffortNotes"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortNotes"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="noteId" from-field="parameters.noteId"/>
@@ -571,7 +571,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortContent"/>
-                <set field="tabButtonItem" value="WorkEffortContents"/>
+                <set field="activeSubMenuItem" value="WorkEffortContents"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -591,7 +591,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortGoodStandards"/>
-                <set field="tabButtonItem" value="WorkEffortGoodStandards"/>
+                <set field="activeSubMenuItem" value="WorkEffortGoodStandards"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -611,7 +611,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortReviews"/>
-                <set field="tabButtonItem" value="WorkEffortReviews"/>
+                <set field="activeSubMenuItem" value="WorkEffortReviews"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortReviews"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="defaultUserLoginId" from-field="parameters.userLogin.userLoginId"/>
@@ -633,7 +633,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortKeyword"/>
-                <set field="tabButtonItem" value="WorkEffortKeywords"/>
+                <set field="activeSubMenuItem" value="WorkEffortKeywords"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortKeyword"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -653,7 +653,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortContactMechs"/>
-                <set field="tabButtonItem" value="WorkEffortContactMechs"/>
+                <set field="activeSubMenuItem" value="WorkEffortContactMechs"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffortContactMechs"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -709,7 +709,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementWorkEffortApplics"/>
-                <set field="tabButtonItem" value="WorkEffortAgreementAppls"/>
+                <set field="activeSubMenuItem" value="WorkEffortAgreementAppls"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -730,7 +730,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortEventReminders"/>
                 <set field="labelTitleProperty" from-field="titleProperty"/>
-                <set field="tabButtonItem" value="WorkEffortEventReminders"/>
+                <set field="activeSubMenuItem" value="WorkEffortEventReminders"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
@@ -843,7 +843,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarEdit} - ${workEffort.workEffortName}"/>
@@ -891,7 +891,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="ICalendarData"/>
+                <set field="activeSubMenuItem" value="ICalendarData"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <get-related-one value-field="workEffort" relation-name="WorkEffortIcalData" to-value-field="iCalData"/>
@@ -915,7 +915,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="WorkEffortAssocs"/>
+                <set field="activeSubMenuItem" value="WorkEffortAssocs"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="trail" from-field="requestParameters.trail"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
@@ -939,7 +939,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="WorkEffortPartyAssigns"/>
+                <set field="activeSubMenuItem" value="WorkEffortPartyAssigns"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarAddParty} - ${workEffort.workEffortName}"/>
@@ -963,7 +963,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="WorkEffortFixedAssetAssigns"/>
+                <set field="activeSubMenuItem" value="WorkEffortFixedAssetAssigns"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarAddFixedAsset} - ${workEffort.workEffortName}"/>
@@ -988,7 +988,7 @@ under the License.
             <actions>
                 <set field="layoutSettings.styleSheets[+0]" value="/images/wiki-content.css" global="true"/>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
-                <set field="tabButtonItem" value="ICalendarHelp"/>
+                <set field="activeSubMenuItem" value="ICalendarHelp"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarHelp}"/>

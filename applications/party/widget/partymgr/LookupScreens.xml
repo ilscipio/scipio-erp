@@ -357,7 +357,7 @@ under the License.
                 <set field="entityName" value="CommunicationEvent"/>
                 <set field="searchFields" value="[communicationEventId, subject]"/> 
                 <set field="title" value="${uiLabelMap.PartyLookupPartyCommEvent}"/>
-                <set field="tabButtonItem" value="ContactList"/>
+                <set field="activeSubMenuItem" value="ContactList"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">

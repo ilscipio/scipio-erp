@@ -120,7 +120,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="activeSubMenuItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -181,7 +181,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayConfigurations"/>
-                <set field="tabButtonItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
                 <!--set field="webSiteId" from-field="parameters.webSiteId"/-->
             </actions>
             <widgets>
@@ -232,7 +232,7 @@ under the License.
                 <set field="titleProperty" value="EbayConfigurations"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="EbayConfig" value-field="ebayConfig"/>
-                <set field="tabButtonItem" value="${groovy:ebayConfig == null?'newEbayConfig' : 'editEbayConfig'}"/>
+                <set field="activeSubMenuItem" value="${groovy:ebayConfig == null?'newEbayConfig' : 'editEbayConfig'}"/>
                 <set field="xmlGatewayUri" value="${groovy:ebayConfig == null?'' : org.ofbiz.base.util.StringUtil.wrapString(ebayConfig.xmlGatewayUri)}"/>
                 <set field="apiServerUrl" value="${groovy:ebayConfig == null?'' : org.ofbiz.base.util.StringUtil.wrapString(ebayConfig.apiServerUrl)}"/>
                 <set field="token" value="${groovy:ebayConfig == null?'' : org.ofbiz.base.util.StringUtil.wrapString(ebayConfig.token)}"/>

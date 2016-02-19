@@ -52,7 +52,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditProductMaintenance"/>
                 <set field="labelTitleProperty" value="ProductMaintenance"/>
-                <set field="tabButtonItem" value="EditProductMaints"/>
+                <set field="activeSubMenuItem" value="EditProductMaints"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="productName" from-field="product.productName"/>

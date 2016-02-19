@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCalendar"/>
-                <set field="tabButtonItem" value="calendar"/>
+                <set field="activeSubMenuItem" value="calendar"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="activeMainMenuItem" value="calendar"/>
 
@@ -72,7 +72,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCalendar"/>
-                <set field="tabButtonItem" value="Calendar"/>
+                <set field="activeSubMenuItem" value="Calendar"/>
                 <set field="activeMainMenuItem" value="calendar"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -98,7 +98,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCalendarWeek"/>
-                <set field="tabButtonItem" value="CalendarWeek"/>
+                <set field="activeSubMenuItem" value="CalendarWeek"/>
                 <set field="activeMainMenuItem" value="calendar"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -124,7 +124,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCalendarWeek"/>
-                <set field="tabButtonItem" value="CalendarWeek"/>
+                <set field="activeSubMenuItem" value="CalendarWeek"/>
                 <set field="activeMainMenuItem" value="calendar"/>
 
                 <entity-one entity-name="TechDataCalendarWeek" value-field="calendarWeek"/>
@@ -147,7 +147,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCalendarExceptionWeek"/>
-                <set field="tabButtonItem" value="calendarExceptionWeek"/>
+                <set field="activeSubMenuItem" value="calendarExceptionWeek"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="activeMainMenuItem" value="calendar"/>
 
@@ -172,7 +172,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCalendarExceptionDay"/>
-                <set field="tabButtonItem" value="calendarExceptionDay"/>
+                <set field="activeSubMenuItem" value="calendarExceptionDay"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="activeMainMenuItem" value="calendar"/>
 

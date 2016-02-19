@@ -23,7 +23,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="tabButtonItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="myTasks" filter-by-date="true">
                     <field-map field-name="partyId" from-field="userLogin.partyId"/>
                     <field-map field-name="statusId" value="PRTYASGN_ASSIGNED"/>

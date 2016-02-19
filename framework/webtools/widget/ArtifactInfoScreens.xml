@@ -27,7 +27,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="WebtoolsArtifactInfo"/>
-                <set field="tabButtonItem" value="artifactInfo"/>
+                <set field="activeSubMenuItem" value="artifactInfo"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/ArtifactInfo.groovy"/>
             </actions>
             <widgets>
@@ -46,7 +46,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsViewComponents"/>
-                <set field="tabButtonItem" value="viewents"/>
+                <set field="activeSubMenuItem" value="viewents"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/ComponentList.groovy"/>
                 <set field="viewSize" value="30"/>
             </actions>
@@ -65,7 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsViewComponents"/>
-                <set field="tabButtonItem" value="viewents"/>
+                <set field="activeSubMenuItem" value="viewents"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/TestSuiteInfo.groovy"/>
             </actions>
             <widgets>

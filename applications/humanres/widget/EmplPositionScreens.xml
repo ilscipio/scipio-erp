@@ -56,7 +56,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
                 <set field="activeMainMenuItem" value="EmplPosition"/>
-                <set field="tabButtonItem" value="ListEmplPositions"/>
+                <set field="activeSubMenuItem" value="ListEmplPositions"/>
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -73,7 +73,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditEmplPosition"/>
-                <set field="tabButtonItem" value="EditEmplPosition"/>
+                <set field="activeSubMenuItem" value="EditEmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
             </actions>
@@ -92,7 +92,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListEmplPositionFulfillments"/>
-                <set field="tabButtonItem" value="EditEmplPositionFulfillments"/>
+                <set field="activeSubMenuItem" value="EditEmplPositionFulfillments"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
             </actions>
             <widgets>
@@ -111,7 +111,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListEmplPositionResponsibilities"/>
-                <set field="tabButtonItem" value="EditEmplPositionResponsibilities"/>
+                <set field="activeSubMenuItem" value="EditEmplPositionResponsibilities"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
             </actions>
             <widgets>
@@ -130,7 +130,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListEmplPositionReportingStructs"/>
-                <set field="tabButtonItem" value="EditEmplPositionReportingStructs"/>
+                <set field="activeSubMenuItem" value="EditEmplPositionReportingStructs"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
             </actions>
             <widgets>
@@ -192,7 +192,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmplPositionSummary"/>
-                <set field="tabButtonItem" value="EmplPositionView"/>
+                <set field="activeSubMenuItem" value="EmplPositionView"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
             </actions>
@@ -312,7 +312,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditInternalOrg"/>
-                <set field="tabButtonItem" value="EditInternalOrg"/>
+                <set field="activeSubMenuItem" value="EditInternalOrg"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-one entity-name="PartyRole" value-field="partyRole"/>
             </actions>

@@ -501,11 +501,11 @@ under the License.
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="quote.statusId"/>
             </entity-one>
-            <set field="tabButtonItem" from-field="parameters.tabButtonItems"/>
+            <set field="activeSubMenuItem" from-field="parameters.activeSubMenuItems"/>
         </actions>
         <alt-target use-when="quoteTerm==null" target="createQuoteTerm"/>
         <field name="quoteId"><hidden/></field>
-        <field name="tabButtonItems"><hidden value="${tabButtonItem}"/></field>
+        <field name="activeSubMenuItems"><hidden value="${activeSubMenuItem}"/></field>
         <field name="quoteItemSeqId" tooltip="${uiLabelMap.OrderQuoteEmpty}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="QuoteItem" description="${quoteItemSeqId}">
@@ -563,7 +563,7 @@ under the License.
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="quoteId"/>
                 <parameter param-name="target" value="updateQuoteTerm"/>
-                <parameter param-name="tabButtonItems" value="QuoteTerms"/>
+                <parameter param-name="activeSubMenuItems" value="QuoteTerms"/>
             </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
@@ -582,7 +582,7 @@ under the License.
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="quoteId"/>
                 <parameter param-name="target" value="updateQuoteTermFromItem"/>
-                <parameter param-name="tabButtonItems" value="ListQuoteItems"/>
+                <parameter param-name="activeSubMenuItems" value="ListQuoteItems"/>
             </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">

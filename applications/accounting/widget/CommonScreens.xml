@@ -333,7 +333,7 @@ under the License.
     <screen name="CommonOrganizationAccountingReportsDecorator">
         <section>
             <actions>
-                <set field="tabButtonItemTop" value="PartyAccounts"/>
+                <set field="activeSubMenuItemTop" value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -354,7 +354,7 @@ under the License.
     <screen name="CommonAdminChecksDecorator">
         <section>
             <actions>
-                <set field="tabButtonItemTop" value="PartyAccounts"/>
+                <set field="activeSubMenuItemTop" value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
@@ -376,7 +376,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                 <set field="isReduced" value="true" type="Boolean" />
                 <set field="viewSize" value="10" />

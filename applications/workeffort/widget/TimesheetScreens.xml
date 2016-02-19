@@ -130,7 +130,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimesheet"/>
-                <set field="tabButtonItem" value="Timesheet"/>
+                <set field="activeSubMenuItem" value="Timesheet"/>
                 <set field="labelTitleProperty" value="PageTitleFindTimesheet"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
@@ -166,7 +166,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTimesheet"/>
-                <set field="tabButtonItem" value="Timesheet"/>
+                <set field="activeSubMenuItem" value="Timesheet"/>
                 <set field="labelTitleProperty" value="PageTitleEditTimesheet"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
@@ -212,7 +212,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTimesheetRoles"/>
-                <set field="tabButtonItem" value="TimesheetRoles"/>
+                <set field="activeSubMenuItem" value="TimesheetRoles"/>
                 <set field="labelTitleProperty" value="PageTitleEditTimesheetRoles"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
@@ -239,7 +239,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTimesheetEntries"/>
-                <set field="tabButtonItem" value="TimesheetEntries"/>
+                <set field="activeSubMenuItem" value="TimesheetEntries"/>
                 <set field="labelTitleProperty" value="PageTitleEditTimesheetEntries"/>
 
                 <set field="timesheetId" from-field="parameters.timesheetId"/>

@@ -95,7 +95,7 @@ under the License.
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="EditProduct" field="tabButtonItem"/>
+                                                <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <platform-specific>
@@ -154,7 +154,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="activeSubMenuItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
                 <set field="parameters.bypassIfNoProduct" value="true"/>
             </actions>
@@ -203,7 +203,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
-                <set field="tabButtonItem" value="EditProductPrices"/>
+                <set field="activeSubMenuItem" value="EditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
 
                 <entity-and entity-name="ProductPrice" list="productPrices">
@@ -237,7 +237,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleViewProductAgreements"/>
-                <set field="tabButtonItem" value="ViewProductAgreements"/>
+                <set field="activeSubMenuItem" value="ViewProductAgreements"/>
                 <set field="labelTitleProperty" value="ProductAgreements"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -286,7 +286,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
-                <set field="tabButtonItem" value="EditProductCategories"/>
+                <set field="activeSubMenuItem" value="EditProductCategories"/>
                 <set field="labelTitleProperty" value="ProductCategoryMembers"/>
 
                 <entity-condition entity-name="ProductCategoryMember" list="productCategoryMembers">
@@ -315,7 +315,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigs"/>
-                <set field="tabButtonItem" value="EditProductConfigs"/>
+                <set field="activeSubMenuItem" value="EditProductConfigs"/>
                 <set field="labelTitleProperty" value="ProductConfigs"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -344,7 +344,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
-                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="activeSubMenuItem" value="EditProductAssetUsage"/>
                 <set field="labelTitleProperty" value="ProductAssetUsage"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -377,7 +377,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
-                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="activeSubMenuItem" value="EditProductAssetUsage"/>
                 <set field="labelTitleProperty" value="ProductAssetUsage"/>
 
                 <set field="extraFunctionName"  value="uiLabelMap.AccountingFixedAssetProductUpd"/>
@@ -403,7 +403,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddProductAssetUsage"/>
-                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="activeSubMenuItem" value="EditProductAssetUsage"/>
                 <set field="labelTitleProperty" value="ProductAssetUsage"/>
 
                 <set field="extraFunctionName"  value="uiLabelMap.AccountingFixedAssetProductAdd"/>
@@ -424,7 +424,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewProductManufacturing"/>
-                <set field="tabButtonItem" value="ViewProductManufacturing"/>
+                <set field="activeSubMenuItem" value="ViewProductManufacturing"/>
                 <set field="labelTitleProperty" value="ProductManufacturing"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -468,7 +468,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCosts"/>
-                <set field="tabButtonItem" value="EditProductCosts"/>
+                <set field="activeSubMenuItem" value="EditProductCosts"/>
                 <set field="labelTitleProperty" value="ProductCosts"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -539,7 +539,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleQuickAddProductVariants"/>
-                <set field="tabButtonItem" value="QuickAddVariants"/>
+                <set field="activeSubMenuItem" value="QuickAddVariants"/>
                 <set field="labelTitleProperty" value="ProductQuickAddVariants"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -565,7 +565,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductQuickAdmin" />
-                <set field="tabButtonItem" value="EditProductQuickAdmin" />
+                <set field="activeSubMenuItem" value="EditProductQuickAdmin" />
                 <set field="labelTitleProperty" value="ProductQuickAdmin" />
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductQuickAdmin.groovy" />
@@ -588,7 +588,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFacilities"/>
-                <set field="tabButtonItem" value="EditProductFacilities"/>
+                <set field="activeSubMenuItem" value="EditProductFacilities"/>
                 <set field="labelTitleProperty" value="ProductFacilities"/>
 
                 <entity-condition entity-name="ProductFacility" list="productFacilities">
@@ -618,7 +618,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFacilityLocations"/>
-                <set field="tabButtonItem" value="EditProductFacilityLocations"/>
+                <set field="activeSubMenuItem" value="EditProductFacilityLocations"/>
                 <set field="labelTitleProperty" value="ProductFacilityLocations"/>
 
                 <entity-condition entity-name="ProductFacilityLocation" list="productFacilityLocations">
@@ -649,7 +649,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductKeywords"/>
-                <set field="tabButtonItem" value="EditProductKeyword"/>
+                <set field="activeSubMenuItem" value="EditProductKeyword"/>
                 <set field="labelTitleProperty" value="ProductKeywords"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
@@ -693,7 +693,7 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductInventoryItems"/>
-                <set field="tabButtonItem" value="EditProductInventoryItems"/>
+                <set field="activeSubMenuItem" value="EditProductInventoryItems"/>
                 <set field="labelTitleProperty" value="ProductInventorySummary"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -734,7 +734,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGoodIdentifications"/>
-                <set field="tabButtonItem" value="EditProductGoodIdentifications"/>
+                <set field="activeSubMenuItem" value="EditProductGoodIdentifications"/>
                 <set field="labelTitleProperty" value="ProductGoodIdentification"/>
 
                 <entity-condition entity-name="GoodIdentification" list="goodIdentifications">
@@ -764,7 +764,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGlAccounts"/>
-                <set field="tabButtonItem" value="EditProductGlAccounts"/>
+                <set field="activeSubMenuItem" value="EditProductGlAccounts"/>
                 <set field="labelTitleProperty" value="ProductGlAccounts"/>
 
                 <entity-condition entity-name="ProductGlAccount" list="productGlAccounts">
@@ -812,7 +812,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductPaymentMethodType"/>
-                <set field="tabButtonItem" value="EditProductPaymentMethodTypes"/>
+                <set field="activeSubMenuItem" value="EditProductPaymentMethodTypes"/>
                 <set field="labelTitleProperty" value="ProductPaymentTypes"/>
 
                 <entity-condition entity-name="ProductPaymentMethodType" list="productPaymentMethodTypes">
@@ -841,7 +841,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatures"/>
                 <set field="activeMainMenuItem" value="product"/>
-                <set field="tabButtonItem" value="EditProductFeatures"/>
+                <set field="activeSubMenuItem" value="EditProductFeatures"/>
                 <set field="labelTitleProperty" value="ProductFeatures"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -883,7 +883,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSupplierProduct"/>
-                <set field="tabButtonItem" value="EditSupplierProduct"/>
+                <set field="activeSubMenuItem" value="EditSupplierProduct"/>
                 <set field="labelTitleProperty" value="ProductSuppliers"/>
 
                 <!-- default currency in framework/common/config/general.properties -->
@@ -922,7 +922,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductContent"/>
-                <set field="tabButtonItem" value="EditProductContent"/>
+                <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/images/productAdditionalView.js" global="true"/>
@@ -963,7 +963,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductContent"/>
-                <set field="tabButtonItem" value="EditProductContent"/>
+                <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -994,7 +994,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAttributes"/>
-                <set field="tabButtonItem" value="EditProductAttributes"/>
+                <set field="activeSubMenuItem" value="EditProductAttributes"/>
                 <set field="labelTitleProperty" value="ProductAttributes"/>
 
                 <entity-and entity-name="ProductAttribute" list="productAttributes">
@@ -1022,7 +1022,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssociations"/>
-                <set field="tabButtonItem" value="EditProductAssoc"/>
+                <set field="activeSubMenuItem" value="EditProductAssoc"/>
                 <set field="labelTitleProperty" value="ProductAssociations"/>
                 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductAssoc.groovy"/>
@@ -1076,7 +1076,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssociations"/>
-                <set field="tabButtonItem" value="EditProductAssoc"/>
+                <set field="activeSubMenuItem" value="EditProductAssoc"/>
                 <set field="labelTitleProperty" value="EditProductAssoc"/>
 
                 <set field="productId" from-field="parameters.productId"/>
@@ -1106,7 +1106,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleApplyFeaturesFromCategory"/>
                 <set field="labelTitleProperty" value="ProductAddProductFeatureFromCategory"/>
-                <set field="tabButtonItem" value="EditProductFeatures"/>
+                <set field="activeSubMenuItem" value="EditProductFeatures"/>
 
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
@@ -1160,7 +1160,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductMaintenance"/>
                 <set field="labelTitleProperty" value="ProductMaintenance"/>
-                <set field="tabButtonItem" value="EditProductMaints"/>
+                <set field="activeSubMenuItem" value="EditProductMaints"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -1181,7 +1181,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductMeters"/>
                 <set field="labelTitleProperty" value="ProductMeters"/>
-                <set field="tabButtonItem" value="EditProductMeters"/>
+                <set field="activeSubMenuItem" value="EditProductMeters"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -1202,7 +1202,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGeos"/>
-                <set field="tabButtonItem" value="EditProductGeos"/>
+                <set field="activeSubMenuItem" value="EditProductGeos"/>
                 <set field="labelTitleProperty" value="ProductGeos"/>
             </actions>
             <widgets>
@@ -1224,7 +1224,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductSubscriptionResources"/>
-                <set field="tabButtonItem" value="EditProductSubscriptionResources"/>
+                <set field="activeSubMenuItem" value="EditProductSubscriptionResources"/>
                 <set field="labelTitleProperty" value="ProductSubscriptionResources"/>
             </actions>
             <widgets>
@@ -1246,7 +1246,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductWorkEffort"/>
-                <set field="tabButtonItem" value="EditProductWorkEfforts"/>
+                <set field="activeSubMenuItem" value="EditProductWorkEfforts"/>
                 <set field="labelTitleProperty" value="ProductWorkEffort"/>
             </actions>
             <widgets>
@@ -1288,7 +1288,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductParties"/>
                 <set field="activeMainMenuItem" value="product"/>
-                <set field="tabButtonItem" value="EditProductParties"/>
+                <set field="activeSubMenuItem" value="EditProductParties"/>
                 <set field="labelTitleProperty" value="PartyParties"/>
 
                 <entity-condition entity-name="ProductRole" list="productRoles">
@@ -1316,7 +1316,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditVendorProduct"/>
-                <set field="tabButtonItem" value="EditVendorProduct"/>
+                <set field="activeSubMenuItem" value="EditVendorProduct"/>
                 <set field="labelTitleProperty" value="PartyVendor"/>
 
                 <entity-condition entity-name="VendorProduct" list="vendorProductList">
@@ -1370,7 +1370,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewProductOrders"/>
-                <set field="tabButtonItem" value="viewProductOrder"/>
+                <set field="activeSubMenuItem" value="viewProductOrder"/>
                 <set field="labelTitleProperty" value="OrderOrders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FindOrders.groovy"/>
             </actions>
@@ -1389,7 +1389,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="tabButtonItem" value="EditProductCommunicationEvents"/>
+                <set field="activeSubMenuItem" value="EditProductCommunicationEvents"/>
                 <set field="labelTitleProperty" value="PageTitleCommEvents"/>
                 <entity-and entity-name="CommunicationEventAndProduct" list="communicationEvents">
                     <field-map field-name="productId" from-field="parameters.productId"/>
@@ -1413,7 +1413,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="tabButtonItem" value="EditProductCommunicationEvents"/>
+                <set field="activeSubMenuItem" value="EditProductCommunicationEvents"/>
                 <set field="labelTitleProperty" value="ProductAddCommunicationEvent"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -1436,7 +1436,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductPricesHistory"/>
-                <set field="tabButtonItem" value="EditProductPrices"/>
+                <set field="activeSubMenuItem" value="EditProductPrices"/>
                 <set field="labelTitleProperty" value="PageTitleProductPricesHistory"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
@@ -1466,7 +1466,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductGroupOrder"/>
-                <set field="tabButtonItem" value="ViewProductGroupOrder"/>
+                <set field="activeSubMenuItem" value="ViewProductGroupOrder"/>
                 <set field="labelTitleProperty" value="ProductGroupOrder"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-and entity-name="ProductGroupOrder" list="productGroupOrders">
@@ -1492,7 +1492,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductGroupOrder"/>
-                <set field="tabButtonItem" value="EditProductGroupOrder"/>
+                <set field="activeSubMenuItem" value="EditProductGroupOrder"/>
                 <set field="labelTitleProperty" value="ProductGroupOrder"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>

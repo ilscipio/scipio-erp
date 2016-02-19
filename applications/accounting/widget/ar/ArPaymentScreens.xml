@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="AccountingFindArPayments"/>
                 <set field="activeMainMenuItem" value="payments"/>
-                <set field="tabButtonItem" value="findPayments"/>
+                <set field="activeSubMenuItem" value="findPayments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -57,7 +57,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleDepositPaymentsAndCreateBatch"/>
                 <set field="activeMainMenuItem" value="payments"/>
-                <set field="tabButtonItem" value="batchPayments"/>
+                <set field="activeSubMenuItem" value="batchPayments"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.fromDate"/>

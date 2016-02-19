@@ -269,7 +269,7 @@ under the License.
                                     <widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="equals" value="defaultTasks" field="tabButtonItem"/>
+                                                <if-compare operator="equals" value="defaultTasks" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
@@ -339,7 +339,7 @@ under the License.
                                     <widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="equals" value="defaultTasks" field="tabButtonItem"/>
+                                                <if-compare operator="equals" value="defaultTasks" field="activeSubMenuItem"/>
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">

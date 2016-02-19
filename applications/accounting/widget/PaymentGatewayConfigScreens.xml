@@ -51,7 +51,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPaymentGatewayConfig"/>
-                <set field="tabButtonItem" value="paymentGatewayConfigTab"/> 
+                <set field="activeSubMenuItem" value="paymentGatewayConfigTab"/> 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -81,7 +81,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleUpdatePaymentGatewayConfig"/>
-                <set field="tabButtonItem" value="paymentGatewayConfigTab"/> 
+                <set field="activeSubMenuItem" value="paymentGatewayConfigTab"/> 
                 
                 <set field="paymentGatewayConfigId" from-field="parameters.paymentGatewayConfigId"/>
                 <entity-one entity-name="PaymentGatewayConfig" value-field="paymentGatewayConfig"/>
@@ -243,7 +243,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPaymentGatewayConfigTypes"/>
-                <set field="tabButtonItem" value="paymentGatewayConfigTypesTab"/> 
+                <set field="activeSubMenuItem" value="paymentGatewayConfigTypesTab"/> 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -273,7 +273,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleUpdatePaymentGatewayConfigType"/>
-                <set field="tabButtonItem" value="paymentGatewayConfigTypesTab"/> 
+                <set field="activeSubMenuItem" value="paymentGatewayConfigTypesTab"/> 
                 
                 <set field="paymentGatewayConfigTypeId" from-field="parameters.paymentGatewayConfigTypeId"/>
                 <entity-one entity-name="PaymentGatewayConfigType" value-field="paymentGatewayConfigType"/>

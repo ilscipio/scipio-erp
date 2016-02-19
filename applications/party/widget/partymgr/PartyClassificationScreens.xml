@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyClassifications"/>
                 <set field="activeMainMenuItem" value="find"/>
-                <set field="tabButtonItem" value="EditPartyClassifications"/>
+                <set field="activeSubMenuItem" value="EditPartyClassifications"/>
 
                 <set field="labelTitleProperty" value="PartyClassifications"/>
 
@@ -50,7 +50,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyClassificationGroupParties"/>
                 <set field="activeMainMenuItem" value="classification"/>
-                <set field="tabButtonItem" value="EditPartyClassificationGroupParties"/>
+                <set field="activeSubMenuItem" value="EditPartyClassificationGroupParties"/>
 
                 <set field="labelTitleProperty" value="PartyClassificationGroupParties"/>
 
@@ -94,7 +94,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindPartyClassificationGroups"/>
                 <set field="activeMainMenuItem" value="classification"/>
-                <set field="tabButtonItem" value="FindPartyClassificationGroups"/>
+                <set field="activeSubMenuItem" value="FindPartyClassificationGroups"/>
 
                 <set field="labelTitleProperty" value="PartyClassificationGroups"/>
 
@@ -120,7 +120,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyClassificationGroup"/>
                 <set field="activeMainMenuItem" value="classification"/>
-                <set field="tabButtonItem" value="EditPartyClassificationGroup"/>
+                <set field="activeSubMenuItem" value="EditPartyClassificationGroup"/>
 
                 <set field="labelTitleProperty" value="PartyClassificationGroup"/>
 

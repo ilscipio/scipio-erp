@@ -491,10 +491,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabButtonItem" value="EditForumMessage"/>
+                <set field="activeSubMenuItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabBar" value="ForumMessagesTabBar"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <set field="contentAssoc.contentId" from-field="parameters.forumId"/>
                 <set field="contentAssoc.contentAssocTypeId" value="PUBLISH_LINK"/>
@@ -513,10 +513,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditForumMessage"/>
-                <set field="tabButtonItem" value="EditForumMessage"/>
+                <set field="activeSubMenuItem" value="EditForumMessage"/>
                 <set field="labelTitleProperty" value="PageTitleEditForumMessage"/>
                 <set field="tabBar" value="ForumMessagesTabBar"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
                 <set field="contentAssoc.contentId" from-field="parameters.responseContentId"/>
                 <set field="contentAssoc.contentAssocTypeId" value="RESPONSE"/>

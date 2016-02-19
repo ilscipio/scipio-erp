@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreList"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreList"/>
+                <set field="activeSubMenuItem" value="EditProductStoreList"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
@@ -45,7 +45,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStore"/>
+                <set field="activeSubMenuItem" value="EditProductStore"/>
                 <set field="labelTitleProperty" value="ProductStore"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -68,7 +68,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="FindProductStoreRoles"/>
+                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="ProductStoreRole" value-field="productStoreRole" auto-field-map="true"/>
@@ -97,7 +97,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStorePromos"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStorePromos"/>
+                <set field="activeSubMenuItem" value="EditProductStorePromos"/>
                 <set field="labelTitleProperty" value="ProductPromotions"/>
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <set field="activeOnly" from-field="parameters.activeOnly" default-value="true"/>
@@ -164,7 +164,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreCatalogs"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreCatalogs"/>
+                <set field="activeSubMenuItem" value="EditProductStoreCatalogs"/>
                 <set field="labelTitleProperty" value="ProductCatalogs"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -195,7 +195,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreWebSites"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreWebSites"/>
+                <set field="activeSubMenuItem" value="EditProductStoreWebSites"/>
                 <set field="labelTitleProperty" value="ProductProductStoreWebSites"/>
                 <set field="productStoreId" from-field="parameters.viewProductStoreId"/>
                 <set field="productStoreId" from-field="parameters.productStoreId" default-value="${productStoreId}"/>
@@ -223,7 +223,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreShipSetup"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreShipSetup"/>
+                <set field="activeSubMenuItem" value="EditProductStoreShipSetup"/>
                 <set field="labelTitleProperty" value="ProductProductStoreShipmentSettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -277,7 +277,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreShipmentCostEstimates"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreShipmentCostEstimates"/>
+                <set field="activeSubMenuItem" value="EditProductStoreShipmentCostEstimates"/>
                 <set field="labelTitleProperty" value="ProductProductStoreShipmentSettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -321,7 +321,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStorePaySetup"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStorePaySetup"/>
+                <set field="activeSubMenuItem" value="EditProductStorePaySetup"/>
                 <set field="labelTitleProperty" value="ProductProductStorePaymentSettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -358,7 +358,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreEmailSetup"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreEmails"/>
+                <set field="activeSubMenuItem" value="EditProductStoreEmails"/>
                 <set field="labelTitleProperty" value="ProductProductStoreEmailSettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -388,7 +388,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreSurveys"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreSurveys"/>
+                <set field="activeSubMenuItem" value="EditProductStoreSurveys"/>
                 <set field="labelTitleProperty" value="ProductStoreSurveySettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -412,7 +412,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreKeywordOvrd"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreKeywordOvrd"/>
+                <set field="activeSubMenuItem" value="EditProductStoreKeywordOvrd"/>
                 <set field="labelTitleProperty" value="ProductStoreKeywordOverrides"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -441,7 +441,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleViewProductStoreSegments"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="ViewProductStoreSegments"/>
+                <set field="activeSubMenuItem" value="ViewProductStoreSegments"/>
                 <set field="labelTitleProperty" value="ProductSegments"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -472,7 +472,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductStoreFinAccountSettings"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreFinAccountSettings"/>
+                <set field="activeSubMenuItem" value="EditProductStoreFinAccountSettings"/>
                 <set field="labelTitleProperty" value="ProductStoreFinAccountSettings"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -504,7 +504,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductStoreVendorPayments"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreVendorPayments"/>
+                <set field="activeSubMenuItem" value="EditProductStoreVendorPayments"/>
                 <set field="labelTitleProperty" value="ProductStoreVendorPayments"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -533,7 +533,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreVendorShipments"/>
                 <set field="activeMainMenuItem" value="store"/>
-                <set field="tabButtonItem" value="EditProductStoreVendorShipments"/>
+                <set field="activeSubMenuItem" value="EditProductStoreVendorShipments"/>
                 <set field="labelTitleProperty" value="ProductStoreVendorShipments"/>
 
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -562,7 +562,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductStoreFacilityAssocList"/>
-                <set field="tabButtonItem" value="EditProductStoreFacilities"/>
+                <set field="activeSubMenuItem" value="EditProductStoreFacilities"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -600,7 +600,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductProductStoreGroup"/>
-                <set field="tabButtonItem" value="storeGroup"/>
+                <set field="activeSubMenuItem" value="storeGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreGroupDecorator" location="${parameters.mainDecoratorLocation}">
@@ -618,7 +618,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductProductStoreGroup"/>
-                <set field="tabButtonItem" value="storeGroup"/>
+                <set field="activeSubMenuItem" value="storeGroup"/>
                 <entity-one entity-name="ProductStoreGroup" value-field="productStoreGroup"/>
             </actions>
             <widgets>

@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntitySQLProcessor"/>
-                <set field="tabButtonItem" value="EntitySQLProcessor"/>
+                <set field="activeSubMenuItem" value="EntitySQLProcessor"/>
                 <set field="labelTitleProperty" value="PageTitleEntitySQLProcessor"/>
                 <set field="sqlCommand" from-field="parameters.sqlCommand"/>
                 <set field="selGroup" from-field="parameters.group"/>
@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
-                <set field="tabButtonItem" value="entityExportAll"/>
+                <set field="activeSubMenuItem" value="entityExportAll"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 <set field="results" from-field="parameters.results"/>
             </actions>
@@ -70,7 +70,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
-                <set field="tabButtonItem" value="programExport"/>
+                <set field="activeSubMenuItem" value="programExport"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/ProgramExport.groovy"/>
             </actions>
             <widgets>
@@ -93,7 +93,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportDir"/>
-                <set field="tabButtonItem" value="entityImportDir"/>
+                <set field="activeSubMenuItem" value="entityImportDir"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
 
                 <set field="messages" from-field="parameters.messages"/>
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImport"/>
-                <set field="tabButtonItem" value="entityImport"/>
+                <set field="activeSubMenuItem" value="entityImport"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
 
                 <set field="messages" from-field="parameters.messages"/>
@@ -137,7 +137,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportReaders"/>
-                <set field="tabButtonItem" value="entityImportReaders"/>
+                <set field="activeSubMenuItem" value="entityImportReaders"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
 
                 <set field="messages" from-field="parameters.messages"/>
@@ -160,7 +160,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebtoolsEntityDataMaintenance"/>
-                <set field="tabButtonItem" value="entitymaint"/>
+                <set field="activeSubMenuItem" value="entitymaint"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityMaint.groovy"/>
             </actions>
             <widgets>
@@ -186,7 +186,7 @@ under the License.
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.WebtoolsFindValues} ${uiLabelMap.WebtoolsForEntity}: ${entityName}"/>
                 <set field="commonDisplaying" value="${uiLabelMap.CommonDisplaying}"/>
-                <set field="tabButtonItem" value="entitymaint"/>
+                <set field="activeSubMenuItem" value="entitymaint"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -234,7 +234,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/ViewGeneric.groovy"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.WebtoolsViewValue}: ${entityName}"/>
-                <set field="tabButtonItem" value="entitymaint"/>
+                <set field="activeSubMenuItem" value="entitymaint"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -259,7 +259,7 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/ViewRelations.groovy"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.WebtoolsRelations}: ${entityName}"/>
-                <set field="tabButtonItem" value="entitymaint"/>
+                <set field="activeSubMenuItem" value="entitymaint"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -381,7 +381,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEntityEoModelBundle"/>
-                <set field="tabButtonItem" value="entityEoModelBundle"/>
+                <set field="activeSubMenuItem" value="entityEoModelBundle"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
@@ -400,7 +400,7 @@ under the License.
             <actions>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsCheckUpdateDatabase"/>
-                <set field="tabButtonItem" value="checkDb"/>
+                <set field="activeSubMenuItem" value="checkDb"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/CheckDb.groovy"/>
             </actions>
             <widgets>
@@ -422,7 +422,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsPerformanceTests"/>
-                <set field="tabButtonItem" value="entityPerformanceTest"/>
+                <set field="activeSubMenuItem" value="entityPerformanceTest"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityPerformanceTest.groovy"/>
             </actions>
             <widgets>
@@ -445,7 +445,7 @@ under the License.
             <actions>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEntityExport"/>
-                <set field="tabButtonItem" value="xmlDsDump"/>
+                <set field="activeSubMenuItem" value="xmlDsDump"/>
                 <set field="entityFrom" from-field="parameters.entityFrom" type="Timestamp"/>
                 <set field="entityThru" from-field="parameters.entityThru" type="Timestamp"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/XmlDsDump.groovy"/>
@@ -466,7 +466,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ConnectionPoolStatus"/>
-                <set field="tabButtonItem" value="ConnectionPoolStatus"/>
+                <set field="activeSubMenuItem" value="ConnectionPoolStatus"/>
                 <set field="labelTitleProperty" value="ConnectionPoolStatus"/>
             </actions>
             <widgets>

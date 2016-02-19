@@ -63,13 +63,13 @@ under the License.
 
     <!-- Cato: Original stock Ofbiz base tab bar menu, modified. 
         NOTE: Despite individual menu names, some "*ButtonBar"-named menus belong more as extending this CommonTabBarMenu instead of CommonButtonBarMenu. -->
-    <menu name="CommonEmptyTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
+    <menu name="CommonEmptyTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple"
           menu-container-style="menu-tab" default-selected-style="${styles.menu_tab_itemactive}" default-link-style="${styles.menu_tab_item_link}"/>
     <menu name="CommonTabBarMenu" extends="CommonEmptyTabBarMenu"/>
     
     <!-- Cato: New menu for sub-tar bars. 
-        NOTE: I'm not sure if tabButtonItem is appropriate in all cases, but individual menus can always override... -->
-    <menu name="CommonEmptySubTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
+        NOTE: I'm not sure if activeSubMenuItem is appropriate in all cases, but individual menus can always override... -->
+    <menu name="CommonEmptySubTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple"
           menu-container-style="menu-tab" default-selected-style="${styles.menu_subtab_itemactive}" default-link-style="${styles.menu_subtab_item_link}"/>
     <menu name="CommonSubTabBarMenu" extends="CommonEmptySubTabBarMenu"/>
     
@@ -81,7 +81,7 @@ under the License.
     
     <!-- Cato: New menu for sidebars, usually derived from tar bar menus. 
         NOTE: Screens expect this to be similar in function as CommonTabBarMenu. For sidebars that deviate, use/make another Common* base menu class. For menus whose contents derive from main app menus, use CommonAppSideBarMenu. -->
-    <menu name="CommonEmptySideBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
+    <menu name="CommonEmptySideBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonSideBarMenu" extends="CommonEmptySideBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">

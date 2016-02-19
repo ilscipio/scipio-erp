@@ -168,7 +168,7 @@ under the License.
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/LayeredNavigation.groovy"/>
                 <set field="detailScreen" value="LayeredCategoryDetail"/>
                  -->
-                <set field="tabButtonItem" value="LookupProductCategories"/>
+                <set field="activeSubMenuItem" value="LookupProductCategories"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -519,7 +519,7 @@ under the License.
     <screen name="productCategories">
         <section>
             <actions>
-                <set field="tabButtonItem" value="LookupProductCategories"/>
+                <set field="activeSubMenuItem" value="LookupProductCategories"/>
                 
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/ProductCategories.groovy"/>
             </actions>

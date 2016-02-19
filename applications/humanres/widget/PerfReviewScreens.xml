@@ -55,7 +55,7 @@
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="PerfReview"/>
-                <set field="tabButtonItem" value="EditPerfReview"/>
+                <set field="activeSubMenuItem" value="EditPerfReview"/>
                 <set field="titleProperty" value="PageTitleListPartyReview"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
                 <set field="employeePartyId" from-field="parameters.employeePartyId"/>
@@ -82,7 +82,7 @@
             <actions>
                 <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="titleProperty" value="PageTitleEditPartyReviewItem"/>
-                <set field="tabButtonItem" value="EditPerfReviewItems"/>
+                <set field="activeSubMenuItem" value="EditPerfReviewItems"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
                 <set field="employeePartyId" from-field="parameters.employeePartyId"/>
                 <set field="employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/>

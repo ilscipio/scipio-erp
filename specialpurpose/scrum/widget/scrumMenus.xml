@@ -676,7 +676,7 @@ under the License.
         <menu-item name="CreateDefaultTask" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
-                    <if-compare field="tabButtonItem" operator="equals" value="defaultTasks"/>
+                    <if-compare field="activeSubMenuItem" operator="equals" value="defaultTasks"/>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="SPRINT"/>
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
@@ -688,7 +688,7 @@ under the License.
         <menu-item name="NewCategory" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
-                    <if-compare field="tabButtonItem" operator="equals" value="categories"/>
+                    <if-compare field="activeSubMenuItem" operator="equals" value="categories"/>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="PROJECT"/>
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
@@ -717,7 +717,7 @@ under the License.
         <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
             <and>
-                <if-compare field="tabButtonItem" operator="equals" value="productComm"/>
+                <if-compare field="activeSubMenuItem" operator="equals" value="productComm"/>
                 <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>
                 <if-empty field="product.supportDiscontinuationDate"/>
             </and>
@@ -729,7 +729,7 @@ under the License.
         <menu-item name="Reply" title="${uiLabelMap.ScrumReply}">
             <condition>
                 <and>
-                    <if-compare field="tabButtonItem" operator="equals" value="productComm"/>
+                    <if-compare field="activeSubMenuItem" operator="equals" value="productComm"/>
                     <if-compare-field operator="equals" field="productOwnerId" to-field="communicationEvent.partyIdFrom"/>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>
                     <if-empty field="product.supportDiscontinuationDate"/>

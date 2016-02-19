@@ -76,7 +76,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsMainPage"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -92,7 +92,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsServer"/>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -131,7 +131,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="server"/>
-                <set field="tabButtonItem" value="myCertificates"/>
+                <set field="activeSubMenuItem" value="myCertificates"/>
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
             </actions>
             <widgets>

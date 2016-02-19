@@ -24,7 +24,7 @@
     <screen name="InitialSetup">
         <section>
             <actions>
-                <set field="tabButtonItemTop" value="organization"/>
+                <set field="activeSubMenuItemTop" value="organization"/>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
                 <set field="target" value="createOrganization"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
@@ -78,7 +78,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="ProductNewFacility"/>
-                <set field="tabButtonItemTop" value="facility"/>
+                <set field="activeSubMenuItemTop" value="facility"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
             </actions>
@@ -121,7 +121,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
-                <set field="tabButtonItemTop" value="productstore"/>
+                <set field="activeSubMenuItemTop" value="productstore"/>
                 <set field="labelTitleProperty" value="PageTitleEditProductStore"/>
                 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -170,7 +170,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
-                <set field="tabButtonItemTop" value="website"/>
+                <set field="activeSubMenuItemTop" value="website"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
@@ -219,7 +219,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
-                <set field="tabButtonItem" value="productcatalog"/>
+                <set field="activeSubMenuItem" value="productcatalog"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
             </actions>
@@ -248,7 +248,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
 
-                <set field="tabButtonItem" value="productcategory"/>
+                <set field="activeSubMenuItem" value="productcategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -281,7 +281,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="product"/>
+                <set field="activeSubMenuItem" value="product"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
                 
                 <set field="partyId" from-field="parameters.partyId"/>           
@@ -313,7 +313,7 @@
     <screen name="CommonFirstProductDecorator">
         <section>
             <actions>
-                <set field="tabButtonItemTop" value="firstproduct"/>
+                <set field="activeSubMenuItemTop" value="firstproduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">

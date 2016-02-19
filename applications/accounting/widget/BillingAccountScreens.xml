@@ -115,7 +115,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
                 <set field="activeMainMenuItem" value="billingaccount"/>
-                <set field="tabButtonItem" value="EditBillingAccount"/>
+                <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
@@ -183,7 +183,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountInvoices"/>
                 <set field="activeMainMenuItem" value="billingaccount"/>
-                <set field="tabButtonItem" value="BillingAccountInvoices"/>
+                <set field="activeSubMenuItem" value="BillingAccountInvoices"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <set field="billingAccountTermId" from-field="parameters.billingAccountTermId"/>
@@ -208,7 +208,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountOrders"/>
                 <set field="activeMainMenuItem" value="billingaccount"/>
-                <set field="tabButtonItem" value="BillingAccountOrders"/>
+                <set field="activeSubMenuItem" value="BillingAccountOrders"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
@@ -234,7 +234,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccountPayments"/>
                 <set field="activeMainMenuItem" value="billingaccount"/>
-                <set field="tabButtonItem" value="BillingAccountPayments"/>
+                <set field="activeSubMenuItem" value="BillingAccountPayments"/>
 
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>
                 <entity-one entity-name="BillingAccount" value-field="billingAccount"/>

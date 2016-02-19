@@ -304,7 +304,7 @@
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="ebayStore"/>
-                <set field="tabButtonItem" value="automaticEbayDisputeItems"/>
+                <set field="activeSubMenuItem" value="automaticEbayDisputeItems"/>
                 <set field="autoPrefEnumId1" value="EBAY_AUTO_DISPUTE1"/>
                 <set field="autoPrefEnumId2" value="EBAY_AUTO_DISPUTE2"/>
                 <set field="serviceName1" value="automaticEbayDisputeNotComplete"/>

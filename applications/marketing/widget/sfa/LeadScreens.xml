@@ -95,7 +95,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Leads"/>
-                <set field="tabButtonItem" value="ConvertLead"/>
+                <set field="activeSubMenuItem" value="ConvertLead"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
@@ -126,7 +126,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Leads"/>
-                <set field="tabButtonItem" value="CloneLead"/>
+                <set field="activeSubMenuItem" value="CloneLead"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/CloneLead.groovy"/>
             </actions>
             <widgets>
@@ -145,7 +145,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Leads"/>
-                <set field="tabButtonItem" value="MergeLeads"/>
+                <set field="activeSubMenuItem" value="MergeLeads"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
             <widgets>

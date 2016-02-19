@@ -54,7 +54,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindGatewayResponses"/> <!-- shows up in browser title bar -->
-                <set field="tabButtonItem" value="gatewayresponsestab"/>
+                <set field="activeSubMenuItem" value="gatewayresponsestab"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -85,7 +85,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewGatewayResponse"/>
-                <set field="tabButtonItem" value="gatewayresponsestab"/>
+                <set field="activeSubMenuItem" value="gatewayresponsestab"/>
 
                 <set field="paymentGatewayResponseId" from-field="parameters.paymentGatewayResponseId"/>
                 <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
@@ -117,7 +117,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAuthorize"/>
-                <set field="tabButtonItem" value="authorizetransactiontab"/>
+                <set field="activeSubMenuItem" value="authorizetransactiontab"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
                 <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
@@ -146,7 +146,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCapture"/>
-                <set field="tabButtonItem" value="capturetransactiontab"/>
+                <set field="activeSubMenuItem" value="capturetransactiontab"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
                 <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>

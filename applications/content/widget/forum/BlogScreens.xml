@@ -120,7 +120,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Blog"/>
-                <set field="tabButtonItem" value="ListBlog"/>
+                <set field="activeSubMenuItem" value="ListBlog"/>
                 <set field="titleProperty" value="ContentBlogList"/>
                 <entity-condition entity-name="ContentAssocViewTo" list="blogs" use-cache="true">
                     <condition-list combine="and">
@@ -152,7 +152,7 @@ under the License.
     <screen name="EditBlog">
         <section>
             <actions>
-                <set field="tabButtonItem" value="EditBlog"/>
+                <set field="activeSubMenuItem" value="EditBlog"/>
                 <set field="contentId" from-field="parameters.blogContentId"/>
                 <set field="titleProperty" value="ContentBlogEdit"/>
                 <entity-one entity-name="Content" value-field="content"/>
@@ -172,7 +172,7 @@ under the License.
     <screen name="BlogContent">
         <section>
             <actions>
-                <set field="tabButtonItem" value="Articles"/>
+                <set field="activeSubMenuItem" value="Articles"/>
                 <set field="titleProperty" value="ContentBlogArticleList"/>
                 <entity-condition entity-name="ContentAssocViewTo" use-cache="false" list="blogContent">
                     <condition-list combine="and">
@@ -198,7 +198,7 @@ under the License.
     <screen name="EditArticle">
         <section>
             <actions>
-                <set field="tabButtonItem" value="EditBlogArt"/>
+                <set field="activeSubMenuItem" value="EditBlogArt"/>
                 <set field="blogContentId" from-field="parameters.blogContentId"/>
                 <set field="upPerm.contentId" from-field="parameters.blogContentId"/>
                 <set field="upPerm.contentOperationId" value="CONTENT_UPDATE"/>
@@ -231,7 +231,7 @@ under the License.
     <screen name="ViewArticle">
         <section>
             <actions>
-                <set field="tabButtonItem" value="ViewBlogArt"/>
+                <set field="activeSubMenuItem" value="ViewBlogArt"/>
                 <set field="contentId" from-field="parameters.articleContentId"/>
                 <set field="blogContentId" from-field="parameters.blogContentId"/>
                 <entity-one entity-name="Content" value-field="blogEntry"/>

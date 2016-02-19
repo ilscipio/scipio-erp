@@ -30,7 +30,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Content"/>
                 <set field="titleProperty" value="PageTitleFindContent"/>
                 <set field="entityName" value="Content"/>
-                <set field="tabButtonItem" value="findContent"/>
+                <set field="activeSubMenuItem" value="findContent"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
@@ -87,7 +87,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleNavigateContent"/>
-                <set field="tabButtonItem" value="navigateContent"/>
+                <set field="activeSubMenuItem" value="navigateContent"/>
                 <set field="labelTitleProperty" value="PageTitleNavigateContent"/>
                 <entity-and entity-name="ContentAssoc" list="contentAssoc">
                     <field-map field-name="contentId" value="TREE_ROOT"/>
@@ -148,7 +148,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="tabButtonItem" value="ListDocument"/>
+                <set field="activeSubMenuItem" value="ListDocument"/>
                 <set field="contentIdTo" from-field="parameters.contentIdTo"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="viewSize" value="${parameters.VIEW_SIZE}" default-value="30" type="Integer"/>
@@ -212,7 +212,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="tabButtonItem" value="content"/>
+                <set field="activeSubMenuItem" value="content"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue"/>
             </actions>
@@ -233,7 +233,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditContentAssoc"/>
                 <set field="currentContentMenuItemName" value="contentassoc" to-scope="user"/>
                 <set field="extraFunctionName" value="'${uiLabelMap.CommonFrom}'"/>
-                <set field="tabButtonItem" value="association"/>
+                <set field="activeSubMenuItem" value="association"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="contentIdTo" from-field="parameters.contentIdTo"/>
                 <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId"  default-value="${defaultContentAssocTypeId}"/>
@@ -291,7 +291,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentRole"/>
-                <set field="tabButtonItem" value="role"/>
+                <set field="activeSubMenuItem" value="role"/>
 
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="contentRoleTarget" value=""/>
@@ -317,7 +317,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentPurpose"/>
-                <set field="tabButtonItem" value="purpose"/>
+                <set field="activeSubMenuItem" value="purpose"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue">
                     <field-map field-name="contentId" from-field="parameters.contentId"/>
@@ -341,7 +341,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentAttribute"/>
-                <set field="tabButtonItem" value="attribute"/>
+                <set field="activeSubMenuItem" value="attribute"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue">
                     <field-map field-name="contentId" from-field="parameters.contentId"/>
@@ -365,7 +365,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindWebSite"/>
                 <set field="labelTitleProperty" value="PageTitleFindWebSite"/>
-                <set field="tabButtonItem" value="websites"/>
+                <set field="activeSubMenuItem" value="websites"/>
                 <entity-condition entity-name="WebSiteAndContent" list="webSites">
                     <condition-expr field-name="contentId" from-field="parameters.contentId"/>
                     <order-by field-name="webSiteId"/>
@@ -401,7 +401,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentMetadata"/>
-                <set field="tabButtonItem" value="metaData"/>
+                <set field="activeSubMenuItem" value="metaData"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue">
                     <field-map field-name="contentId" from-field="parameters.contentId"/>
@@ -425,7 +425,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentWorkEffort"/>
-                <set field="tabButtonItem" value="workEffort"/>
+                <set field="activeSubMenuItem" value="workEffort"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue">
                     <field-map field-name="contentId" from-field="parameters.contentId"/>
@@ -470,7 +470,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="tabButtonItem" value="ListContentTree"/>
+                <set field="activeSubMenuItem" value="ListContentTree"/>
                 <set field="contentIdTo" from-field="parameters.contentIdTo"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="viewSize" value="${parameters.VIEW_SIZE}" default-value="30" type="Integer"/>
@@ -495,7 +495,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleLookupContent}"/>
-                <set field="tabButtonItem" value="LookupContentTree"/>
+                <set field="activeSubMenuItem" value="LookupContentTree"/>
                 <set field="labelTitleProperty" value="PageTitleNavigateContent"/>
                 <entity-and entity-name="ContentAssoc" list="contentAssoc">
                     <field-map field-name="contentId" value="TREE_ROOT"/>
@@ -529,7 +529,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleLookupContent}"/>
-                <set field="tabButtonItem" value="LookupDetailContentTree"/>
+                <set field="activeSubMenuItem" value="LookupDetailContentTree"/>
                 <set field="labelTitleProperty" value="PageTitleNavigateContent"/>
                 <entity-and entity-name="ContentAssoc" list="contentAssoc">
                     <field-map field-name="contentId" value="TREE_ROOT"/>
@@ -631,7 +631,7 @@ under the License.
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/GetMenuContext.groovy"/>
                 <set field="titleProperty" value="PageTitleEditContentKeywords"/>
-                <set field="tabButtonItem" value="keywords"/>
+                <set field="activeSubMenuItem" value="keywords"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="currentValue">
                     <field-map field-name="contentId" from-field="parameters.contentId"/>

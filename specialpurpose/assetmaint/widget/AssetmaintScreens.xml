@@ -25,7 +25,7 @@
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="viewSize" value="10" />
                 <set field="createdPeriod" value="month"/>
             </actions>
@@ -74,7 +74,7 @@
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
-                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
+                <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
@@ -189,7 +189,7 @@
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditWorkEfforts"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEfforts"/>
                 <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/workeffort/EditWorkEfforts.groovy"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
             </actions>
@@ -277,7 +277,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortTimeEntries"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditWorkEffortTimeEntries"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortTimeEntries"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -302,7 +302,7 @@
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortNotes"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditWorkEffortNotes"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditWorkEffortNotes"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -326,7 +326,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListItemIssuance"/>
-                <set field="tabButtonItemFixedAssetMaint" value="EditItemIssuances"/>
+                <set field="activeSubMenuItemFixedAssetMaint" value="EditItemIssuances"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>

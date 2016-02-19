@@ -72,7 +72,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="invoices"/>
-                <set field="tabButtonItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
@@ -129,7 +129,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditInvoice"/>
-                <set field="tabButtonItem" value="editInvoice"/>
+                <set field="activeSubMenuItem" value="editInvoice"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-one entity-name="InvoiceType" value-field="invoiceType">
@@ -166,7 +166,7 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleInvoiceOverview"/>
-                <set field="tabButtonItem" value="invoiceOverview"/>
+                <set field="activeSubMenuItem" value="invoiceOverview"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-and entity-name="InvoiceRole" list="invoiceRoles">
@@ -320,7 +320,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListInvoices"/>
-                <set field="tabButtonItem" value="invoiceStatus"/>
+                <set field="activeSubMenuItem" value="invoiceStatus"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice" auto-field-map="true"/>
                 <entity-and entity-name="InvoiceStatus" list="invoiceStatus">
@@ -344,7 +344,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListEditInvoiceApplications"/>
-                <set field="tabButtonItem" value="editInvoiceApplications"/>
+                <set field="activeSubMenuItem" value="editInvoiceApplications"/>
 
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
@@ -415,7 +415,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.viewIndex"/>
                 <set field="viewSize" from-field="parameters.viewSize"/>
                 <set field="titleProperty" value="PageTitleListInvoices"/>
-                <set field="tabButtonItem" value="listInvoiceItems"/>
+                <set field="activeSubMenuItem" value="listInvoiceItems"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
@@ -462,7 +462,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.viewIndex"/>
                 <set field="viewSize" from-field="parameters.viewSize"/>
                 <set field="titleProperty" value="PageTitleListInvoiceTimeEntries"/>
-                <set field="tabButtonItem" value="EditInvoiceTimeEntries"/>
+                <set field="activeSubMenuItem" value="EditInvoiceTimeEntries"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-and entity-name="TimeEntry" list="timeEntries">
@@ -486,7 +486,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListInvoiceRoles"/>
-                <set field="tabButtonItem" value="invoiceRoles"/>
+                <set field="activeSubMenuItem" value="invoiceRoles"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-and entity-name="InvoiceRole" list="invoiceRoles">
@@ -513,7 +513,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleSendInvoicePerEmail"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
-                <set field="tabButtonItem" value="sendPerEmail"/>
+                <set field="activeSubMenuItem" value="sendPerEmail"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">

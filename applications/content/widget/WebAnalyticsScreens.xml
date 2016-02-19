@@ -25,8 +25,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="CatalogWebAnalytics"/>
                 <set field="activeMainMenuItem" value="websites"/>
-                <set field="tabButtonItem" value="WebAnalytics"/>
-                <set field="tabButtonItem2" value="FindWebAnalyticsConfigs"/>
+                <set field="activeSubMenuItem" value="WebAnalytics"/>
+                <set field="activeSubMenuItem2" value="FindWebAnalyticsConfigs"/>
                 <set field="webAnalyticsConfigCtx" from-field="parameters"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
@@ -50,8 +50,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebAnalyticsConfigs"/>
-                <set field="tabButtonItem" value="WebAnalytics"/>
-                <set field="tabButtonItem2" value="EditWebAnalyticsConfig"/>
+                <set field="activeSubMenuItem" value="WebAnalytics"/>
+                <set field="activeSubMenuItem2" value="EditWebAnalyticsConfig"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
                 <set field="webAnalyticsTypeId" from-field="parameters.webAnalyticsTypeId"/>

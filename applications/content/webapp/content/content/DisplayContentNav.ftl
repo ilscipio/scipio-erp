@@ -78,7 +78,7 @@ var rawdata = [
 
 <#-------------------------------------------------------------------------------------callDocument function-->
     function callDocument(contentId) {
-        var tabitem='${tabButtonItem!}';
+        var tabitem='${activeSubMenuItem!}';
         if (tabitem=="navigateContent")
             listDocument = '<@ofbizUrl>/views/ListDocument</@ofbizUrl>';
         if (tabitem=="LookupContentTree")
@@ -117,8 +117,8 @@ var rawdata = [
 </@script>
 
 <style>
-<#if tabButtonItem?has_content>
-    <#if tabButtonItem=="LookupContentTree"||tabButtonItem=="LookupDetailContentTree">
+<#if activeSubMenuItem?has_content>
+    <#if activeSubMenuItem=="LookupContentTree"||activeSubMenuItem=="LookupDetailContentTree">
         body{background:none;}
         .left-border{float:left;width:25%;}
         .contentarea{margin: 0 0 0 0.5em;padding:0 0 0 0.5em;}

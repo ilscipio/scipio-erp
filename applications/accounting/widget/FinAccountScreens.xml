@@ -69,7 +69,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFinAccount"/>
-                <set field="tabButtonItem" value="FindFinAccount"/>
+                <set field="activeSubMenuItem" value="FindFinAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFinAccount"/>
-                <set field="tabButtonItem" value="EditFinAccount"/>
+                <set field="activeSubMenuItem" value="EditFinAccount"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
@@ -153,7 +153,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFinAccountRole"/>
-                <set field="tabButtonItem" value="EditFinAccountRoles"/>
+                <set field="activeSubMenuItem" value="EditFinAccountRoles"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -178,7 +178,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFinAccountTrans"/>
-                <set field="tabButtonItem" value="FinAccountTrans"/>
+                <set field="activeSubMenuItem" value="FinAccountTrans"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
@@ -200,7 +200,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFinAccountAuths"/>
-                <set field="tabButtonItem" value="EditFinAccountAuths"/>
+                <set field="activeSubMenuItem" value="EditFinAccountAuths"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="finAccountAuthId" from-field="parameters.finAccountAuthId"/>
@@ -222,7 +222,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingDepositOrWithdrawPayments"/>
-                <set field="tabButtonItem" value="depositWithdraw"/>
+                <set field="activeSubMenuItem" value="depositWithdraw"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
@@ -266,7 +266,7 @@ under the License.
     <screen name="FinAccountMain">
         <section>
             <actions>
-                <set field="tabButtonItem" value="finAccountMain"/>
+                <set field="activeSubMenuItem" value="finAccountMain"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
@@ -294,7 +294,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindDepositSlip"/>
-                <set field="tabButtonItem" value="findDepositSlips"/>
+                <set field="activeSubMenuItem" value="findDepositSlips"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <entity-condition entity-name="PmtGrpMembrPaymentAndFinAcctTrans" list="pmtGrpMembrPaymentAndFinAcctTransList">
@@ -341,7 +341,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindDepositSlip"/>
-                <set field="tabButtonItem" value="findDepositSlips"/>
+                <set field="activeSubMenuItem" value="findDepositSlips"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
@@ -380,7 +380,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCreateNewDepositSlipForFinancialAccount"/>
-                <set field="tabButtonItem" value="findDepositSlips"/>
+                <set field="activeSubMenuItem" value="findDepositSlips"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
@@ -418,7 +418,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFinAccountTrans"/>
-                <set field="tabButtonItem" value="FinAccountTrans"/>
+                <set field="activeSubMenuItem" value="FinAccountTrans"/>
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
@@ -470,7 +470,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingBankReconciliation"/>
-                <set field="tabButtonItem" value="FinAccountTrans"/>
+                <set field="activeSubMenuItem" value="FinAccountTrans"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
@@ -537,7 +537,7 @@ under the License.
     <screen name="NewDepositPayment">
         <section>
             <actions>
-                <set field="tabButtonItem" value="depositWithdraw"/>
+                <set field="activeSubMenuItem" value="depositWithdraw"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="statusId" value="PMNT_RECEIVED"/>
                 <set field="parentTypeId" value="RECEIPT"/>
@@ -559,7 +559,7 @@ under the License.
     <screen name="NewWithdrawalPayment">
         <section>
             <actions>
-                <set field="tabButtonItem" value="depositWithdraw"/>
+                <set field="activeSubMenuItem" value="depositWithdraw"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="statusId" value="PMNT_SENT"/>
                 <set field="parentTypeId" value="DISBURSEMENT"/>
@@ -581,10 +581,10 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingEditFinAccountReconciliations"/>
-                <set field="tabButtonItem" value="FindFinAccountReconciliations"/>
+                <set field="activeSubMenuItem" value="FindFinAccountReconciliations"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId" default-value=""/>
-                <set field="tabButtonItem2" value="${groovy:glReconciliationId==null?'NewFinAccountReconciliations':'EditFinAccountReconciliations'}"/>
+                <set field="activeSubMenuItem2" value="${groovy:glReconciliationId==null?'NewFinAccountReconciliations':'EditFinAccountReconciliations'}"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
@@ -614,7 +614,7 @@ under the License.
     <screen name="ViewGlReconciliationWithTransaction">
         <section>
             <actions>
-                <set field="tabButtonItem" value="FindFinAccountReconciliations"/>
+                <set field="activeSubMenuItem" value="FindFinAccountReconciliations"/>
                 <set field="titleProperty" value="AccountingEditFinAccountReconciliations"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
@@ -666,9 +666,9 @@ under the License.
     <screen name="FindFinAccountReconciliations">
         <section>
             <actions>
-                <set field="tabButtonItem" value="FindFinAccountReconciliations"/>
+                <set field="activeSubMenuItem" value="FindFinAccountReconciliations"/>
                 <set field="titleProperty" value="PageTitleFindFinAccountReconciliations"/>
-                <set field="tabButtonItem2" value="Find"/>
+                <set field="activeSubMenuItem2" value="Find"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId" default-value=""/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>

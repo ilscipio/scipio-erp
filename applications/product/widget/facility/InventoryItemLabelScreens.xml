@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindInventoryItemLabels"/>
                 <set field="activeMainMenuItem" value="inventoryItemLabel"/>
-                <set field="tabButtonItem" value="FindInventoryItemLabels"/>
+                <set field="activeSubMenuItem" value="FindInventoryItemLabels"/>
                 <entity-condition entity-name="InventoryItemLabel" list="inventoryItemLabels"/>
             </actions>
             <widgets>
@@ -48,7 +48,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditInventoryItemLabelTypes"/>
                 <set field="activeMainMenuItem" value="inventoryItemLabel"/>
-                <set field="tabButtonItem" value="EditInventoryItemLabelTypes"/>
+                <set field="activeSubMenuItem" value="EditInventoryItemLabelTypes"/>
                 <entity-condition entity-name="InventoryItemLabelType" list="inventoryItemLabelTypes"/>
             </actions>
             <widgets>
@@ -68,7 +68,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ProductInventoryItemLabel"/>
                 <set field="activeMainMenuItem" value="inventoryItemLabel"/>
-                <set field="tabButtonItem" value="FindInventoryItemLabels"/>
+                <set field="activeSubMenuItem" value="FindInventoryItemLabels"/>
                 <set field="subTabButtonItem" value="EditInventoryItemLabel"/>
                 <entity-one entity-name="InventoryItemLabel" value-field="inventoryItemLabel"/>
             </actions>
@@ -107,7 +107,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditInventoryItemLabelAppls"/>
                 <set field="activeMainMenuItem" value="inventoryItemLabel"/>
-                <set field="tabButtonItem" value="FindInventoryItemLabels"/>
+                <set field="activeSubMenuItem" value="FindInventoryItemLabels"/>
                 <set field="subTabButtonItem" value="EditInventoryItemLabelAppls"/>
                 <entity-one entity-name="InventoryItemLabel" value-field="inventoryItemLabel"/>
                 <get-related value-field="inventoryItemLabel" relation-name="InventoryItemLabelAppl" list="inventoryItemLabelAppls"/>

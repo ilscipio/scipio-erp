@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductBom"/>
-                <set field="tabButtonItem" value="EditProductBom"/>
+                <set field="activeSubMenuItem" value="EditProductBom"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="activeMainMenuItem" value="bom"/>
                 <set field="productId" from-field="parameters.productId"/>
@@ -69,7 +69,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductManufacturingRules"/>
-                <set field="tabButtonItem" value="productManufacturingRules"/>
+                <set field="activeSubMenuItem" value="productManufacturingRules"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="activeMainMenuItem" value="bom"/>
 
@@ -96,7 +96,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingBomSimulation"/>
-                <set field="tabButtonItem" value="bomSimulation"/>
+                <set field="activeSubMenuItem" value="bomSimulation"/>
                 <set field="activeMainMenuItem" value="bom"/>
 
                 <set field="bomType" from-field="parameters.bomType"/>
@@ -133,7 +133,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindBom"/>
-                <set field="tabButtonItem" value="findBom"/>
+                <set field="activeSubMenuItem" value="findBom"/>
                 <set field="labelTitleProperty" value="findBom"/>
                 <set field="activeMainMenuItem" value="bom"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/FindProductBom.groovy"/>

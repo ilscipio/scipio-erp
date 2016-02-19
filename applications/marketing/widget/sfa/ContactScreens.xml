@@ -94,7 +94,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCreateContact"/>
                 <set field="activeMainMenuItem" value="Contacts"/>
-                <set field="tabButtonItem" value="MergeContacts"/>
+                <set field="activeSubMenuItem" value="MergeContacts"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
             <widgets>

@@ -70,7 +70,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="Segment"/>
-                <set field="tabButtonItem" value="Segment"/>
+                <set field="activeSubMenuItem" value="Segment"/>
 
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>

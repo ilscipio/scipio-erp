@@ -100,7 +100,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitlePendingCommunications"/>
                 <set field="activeMainMenuItem" value="comm"/>
-                <set field="tabButtonItem" value="pending"/>
+                <set field="activeSubMenuItem" value="pending"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
@@ -146,7 +146,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCommunications"/>
-                <set field="tabButtonItem" value="PartyCommEvents"/>
+                <set field="activeSubMenuItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="CommunicationEvent"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="leadPartyResult">
                     <field-map field-name="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
@@ -292,7 +292,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListUnknownPartyComms"/>
-                <set field="tabButtonItem" value="ListUnknownPartyComms"/>
+                <set field="activeSubMenuItem" value="ListUnknownPartyComms"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.communicationEventDecoratorLocation}">
@@ -319,7 +319,7 @@ under the License.
     <screen name="FindCommunicationByOrder">
         <section>
             <actions>
-                <set field="tabButtonItem" value="FindCommunicationByOrder"/>
+                <set field="activeSubMenuItem" value="FindCommunicationByOrder"/>
                 <set field="entityName" value="CommunicationEventAndOrder"/>
             </actions>
             <widgets>
@@ -354,7 +354,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindCommunicationEvents"/>
                 <set field="activeMainMenuItem" value="comm"/>
-                <set field="tabButtonItem" value="Find"/>
+                <set field="activeSubMenuItem" value="Find"/>
                 <set field="entityName" value="CommunicationEventAndRole"/>
             </actions>
             <widgets>
@@ -387,7 +387,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewCommunication"/>
-                <set field="tabButtonItem" value="OverView"/>
+                <set field="activeSubMenuItem" value="OverView"/>
                 <set field="parentCommEventId" from-field="parameters.parentCommEventId"/>
                 <service service-name="setCommEventRoleToRead"></service>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
@@ -516,7 +516,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCommunication"/>
-                <set field="tabButtonItem" value="CommunicationEvent"/>
+                <set field="activeSubMenuItem" value="CommunicationEvent"/>
                 <set field="my" from-field="parameters.my" default-value=""/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
                 <set field="partyIdFrom" from-field="communicationEvent.partyIdFrom" default-value="${userLogin.partyId}"/>
@@ -554,7 +554,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewCommRoles"/>
-                <set field="tabButtonItem" value="UpdateCommRoles"/>
+                <set field="activeSubMenuItem" value="UpdateCommRoles"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="parentCommEventId" from-field="parameters.parentCommEventId"/>
                 <set field="partyId" value="${parameters.partyId}"/>
@@ -586,7 +586,7 @@ under the License.
             <actions>
                 <property-map map-name="uiLabelMap" resource="PartyUiLabels"/>
                 <set field="titleProperty" value="PageTitleViewCommPurposes"/>
-                <set field="tabButtonItem" value="UpdateCommPurposes"/>
+                <set field="activeSubMenuItem" value="UpdateCommPurposes"/>
 
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="parentCommEventId" from-field="parameters.parentCommEventId"/>
@@ -613,7 +613,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCommWorkEfforts"/>
-                <set field="tabButtonItem" value="UpdateCommWorkEfforts"/>
+                <set field="activeSubMenuItem" value="UpdateCommWorkEfforts"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -642,7 +642,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCommWorkEfforts"/>
-                <set field="tabButtonItem" value="UpdateCommWorkEfforts"/>
+                <set field="activeSubMenuItem" value="UpdateCommWorkEfforts"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -665,7 +665,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListCommWorkEfforts"/>
-                <set field="tabButtonItem" value="UpdateCommWorkEfforts"/>
+                <set field="activeSubMenuItem" value="UpdateCommWorkEfforts"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -686,7 +686,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyCommContent"/>
                 <set field="activeMainMenuItem" value="comm"/>
-                <set field="tabButtonItem" value="CommContent"/>
+                <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="parameters.partyId" value="${parameters.partyId}" default-value="${userLogin.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
@@ -725,7 +725,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyNewCommContent"/>
                 <set field="activeMainMenuItem" value="comm"/>
-                <set field="tabButtonItem" value="CommContent"/>
+                <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
@@ -757,7 +757,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="tabButtonItem" value="CommContent"/>
+                <set field="activeSubMenuItem" value="CommContent"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
@@ -982,7 +982,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyViewCommOrders"/>
-                <set field="tabButtonItem" value="UpdateCommOrders"/>
+                <set field="activeSubMenuItem" value="UpdateCommOrders"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom" default-value="${userLogin.partyId}"/>
@@ -1007,7 +1007,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyViewCommProducts"/>
-                <set field="tabButtonItem" value="UpdateCommProducts"/>
+                <set field="activeSubMenuItem" value="UpdateCommProducts"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom" default-value="${userLogin.partyId}"/>

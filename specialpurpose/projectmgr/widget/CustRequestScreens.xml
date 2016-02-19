@@ -50,7 +50,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
-                <set field="tabButtonItem" value="requestlist"/>
+                <set field="activeSubMenuItem" value="requestlist"/>
                 <set field="activeMainMenuItem" value="request"/>
             </actions>
             <widgets>
@@ -66,7 +66,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderRequest"/>
-                <set field="tabButtonItem" value="editRequest"/>
+                <set field="activeSubMenuItem" value="editRequest"/>
                 <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -93,7 +93,7 @@ under the License.
         <section>
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
-                <set field="tabButtonItem" value="ViewRequest"/>
+                <set field="activeSubMenuItem" value="ViewRequest"/>
                 <set field="activeMainMenuItem" value="request"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
                 <!--<set field="activeMainMenuItem" value="Shopping List"/>-->

@@ -44,7 +44,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditResponsibilityType"/>
-                <set field="tabButtonItem" value="ResponsibilityType"/>
+                <set field="activeSubMenuItem" value="ResponsibilityType"/>
                 <set field="responsibilityTypeId" from-field="parameters.responsibilityTypeId"/>
                 <entity-one entity-name="ResponsibilityType" value-field="responsibilityType"/>
             </actions>
@@ -63,7 +63,7 @@
     <screen name="EditTerminationTypes">
         <section>
             <actions>
-                <set field="tabButtonItem" value="TerminationType"/>
+                <set field="activeSubMenuItem" value="TerminationType"/>
                 <set field="titleProperty" value="HumanResTerminationTypes"/>
                 <set field="terminationTypeId" from-field="parameters.terminationTypeId"/>
                 <entity-one entity-name="TerminationType" value-field="terminationType"/>
@@ -85,7 +85,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
                 <set field="activeMainMenuItem" value="EmplPositionTypes"/>
-                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="activeSubMenuItem" value="EmplPositionTypes"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <set field="emplPositionTypeCtx" from-field="parameters"/>
             </actions>
@@ -115,8 +115,8 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
                 <set field="activeMainMenuItem" value="EmplPositionTypes"/>
-                <set field="tabButtonItem" value="EmplPositionTypes"/>
-                <set field="tabButtonItem2" value="EditEmplPositionType"/>
+                <set field="activeSubMenuItem" value="EmplPositionTypes"/>
+                <set field="activeSubMenuItem2" value="EditEmplPositionType"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
             </actions>
@@ -150,8 +150,8 @@
             <actions>
                 <set field="titleProperty" value="HumanResEmplPositionTypeRate"/>
                 <set field="activeMainMenuItem" value="EmplPositionTypes"/>
-                <set field="tabButtonItem" value="EmplPositionTypes"/>
-                <set field="tabButtonItem2" value="EditEmplPositionTypeRate"/>
+                <set field="activeSubMenuItem" value="EmplPositionTypes"/>
+                <set field="activeSubMenuItem2" value="EditEmplPositionTypeRate"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <entity-one entity-name="EmplPositionTypeRate" value-field="emplPositionTypeRate"/>
             </actions>
@@ -172,7 +172,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResAddTerminationReason"/>
-                <set field="tabButtonItem" value="TerminationReason"/>
+                <set field="activeSubMenuItem" value="TerminationReason"/>
                 <set field="terminationReasonId" from-field="parameters.terminationReasonId"/>
                 <entity-one entity-name="TerminationReason" value-field="terminationReason"/>
             </actions>
@@ -191,7 +191,7 @@
     <screen name="EditJobInterviewType">
         <section>                        
             <actions>
-                <set field="tabButtonItem" value="JobInterviewType"/>
+                <set field="activeSubMenuItem" value="JobInterviewType"/>
                 <set field="titleProperty" value="PageTitleEditJobInterviewType"/>
                 <set field="jobInterviewTypeId" from-field="parameters.jobInterviewTypeId"/>
                 <entity-one entity-name="JobInterviewType" value-field="interviewType" />
@@ -211,7 +211,7 @@
     <screen name="EditTrainingTypes">
         <section>                        
             <actions>
-                <set field="tabButtonItem" value="EditTrainingTypes"/>
+                <set field="activeSubMenuItem" value="EditTrainingTypes"/>
                 <set field="titleProperty" value="PageTitleEditTrainingTypes"/>
             </actions>            
             <widgets>
@@ -231,7 +231,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeaveType"/>
                 <set field="activeMainMenuItem" value="GlobalHRSettings"/>
-                <set field="tabButtonItem" value="EmplLeaveType"/>
+                <set field="activeSubMenuItem" value="EmplLeaveType"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <entity-one entity-name="EmplLeaveType" value-field="emplLeaveType"/>
             </actions>
@@ -253,7 +253,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplReasonype"/>
                 <set field="activeMainMenuItem" value="GlobalHRSettings"/>
-                <set field="tabButtonItem" value="EmplLeaveReasonType"/>
+                <set field="activeSubMenuItem" value="EmplLeaveReasonType"/>
                 <set field="emplLeaveReasonTypeId" from-field="parameters.emplLeaveReasonTypeId"/>
                 <entity-one entity-name="EmplLeaveReasonType" value-field="emplreasonType"/>
             </actions>
@@ -275,7 +275,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitlePublicHoliday"/>
                 <set field="activeMainMenuItem" value="GlobalHRSettings"/>
-                <set field="tabButtonItem" value="publicHoliday"/>
+                <set field="activeSubMenuItem" value="publicHoliday"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>

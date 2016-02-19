@@ -820,6 +820,32 @@ public class UtilDateTime {
         tempCal.add(adjType, adjQuantity);
         return new Timestamp(tempCal.getTimeInMillis());
     }
+    
+    public static Timestamp getHourStart(Timestamp stamp, TimeZone timeZone, Locale locale) {
+        return getDayStart(stamp, 0, timeZone, locale);
+    }
+
+    public static Timestamp getHourStart(Timestamp stamp, int hoursLater, TimeZone timeZone, Locale locale) {
+        Calendar tempCal = toCalendar(stamp, timeZone, locale);
+        tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), tempCal.get(Calendar.HOUR_OF_DAY), 0, 0);
+        tempCal.add(Calendar.HOUR_OF_DAY, hoursLater);
+        Timestamp retStamp = new Timestamp(tempCal.getTimeInMillis());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
+    
+    public static Timestamp getHourEnd(Timestamp stamp, TimeZone timeZone, Locale locale) {
+        return getDayEnd(stamp, Long.valueOf(0), timeZone, locale);
+    }
+
+    public static Timestamp getHourEnd(Timestamp stamp, Long hoursLater, TimeZone timeZone, Locale locale) {
+        Calendar tempCal = toCalendar(stamp, timeZone, locale);
+        tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), tempCal.get(Calendar.HOUR_OF_DAY), 59, 59);
+        tempCal.add(Calendar.HOUR_OF_DAY, hoursLater.intValue());
+        Timestamp retStamp = new Timestamp(tempCal.getTimeInMillis());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
 
     public static Timestamp getDayStart(Timestamp stamp, TimeZone timeZone, Locale locale) {
         return getDayStart(stamp, 0, timeZone, locale);

@@ -25,7 +25,6 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsGeosFind"/>
                 <set field="currentUrl" value="FindGeo"/>
-                <set field="headerItem" value="Geos"/>
                 <set field="tabButtonItem" value="FindGeo"/>
             </actions>
             <widgets>

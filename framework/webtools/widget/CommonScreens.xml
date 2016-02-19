@@ -92,6 +92,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsServer"/>
                 <set field="headerItem" value="server"/>
+                <set field="tabButtonItem" from-field="headerItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -129,6 +130,7 @@ under the License.
     <screen name="browsercerts">
         <section>
             <actions>
+                <set field="headerItem" value="server"/>
                 <set field="tabButtonItem" value="myCertificates"/>
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
             </actions>
@@ -153,7 +155,6 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="entity"/>
-                
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -191,7 +192,6 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="service"/>
-                
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -266,8 +266,7 @@ under the License.
     <screen name="CommonArtifactDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="artifact"/>
-                
+                <set field="headerItem" value="server"/>
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -300,11 +299,47 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CommonLabelDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="labels"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="ENTITY_MAINT"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="labelSideBar" location="component://webtools/widget/Menus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for WEBTOOLS, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ENTITY_MAINT"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="CommonConfigurationDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="configuration"/>
+                <set field="headerItem" value="server"/>
                 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -343,7 +378,6 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="geoManagement"/>
-                
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>

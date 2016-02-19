@@ -351,6 +351,15 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewComponents"/>
     </request-map>
+    
+    <!-- Ajax Requests -->
+    <!-- CATO Dashboard example -->
+    <request-map uri="ajaxDashboardCurrentRequest">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="getServerRequestsThisHour"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
 
     <request-map uri="TestSuiteInfo">
         <security https="true" auth="true"/>

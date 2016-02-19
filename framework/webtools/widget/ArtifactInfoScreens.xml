@@ -45,7 +45,6 @@ under the License.
     <screen name="ViewComponents">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsViewComponents"/>
                 <set field="tabButtonItem" value="viewents"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/ComponentList.groovy"/>
@@ -65,7 +64,6 @@ under the License.
     <screen name="TestSuiteInfo">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsViewComponents"/>
                 <set field="tabButtonItem" value="viewents"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/TestSuiteInfo.groovy"/>

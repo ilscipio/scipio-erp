@@ -43,9 +43,15 @@ body {}
 }
 
 // Fix form elements
-form > div > .columns:last-child {max-width:50em;float:left!important;}
-// DEV NOTE: I _think_ the selector should be this instead, but not committing for now:
-// div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
+// form > div > .columns:last-child {max-width:50em;float:left!important;}
+// DEV NOTE: I _think_ the selector below is correct in most cases.
+//     widgetpostfix is the container that is by default added around widget and postfix (but not label).
+//     @field supports omitting this container, but as of some time ago, it is there by default.
+//     I think we can simply apply the max-width to both widgetpostfix and widget (for cases without postfix) and it will work out.
+//     The only case this doesn't work is for edge cases where template requests no widgetpostfix container,
+//     but I don't remember any.
+div.form-field-entry div.field-entry-widgetpostfix, 
+div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
 
 
 

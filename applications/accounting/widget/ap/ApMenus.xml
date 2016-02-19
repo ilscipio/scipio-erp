@@ -18,12 +18,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="ApAppBar" title="${uiLabelMap.Accounting}" extends="CommonAppBarDashboardMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ApAppBar" title="${uiLabelMap.Accounting}" extends="CommonAppBarDashboardMenu" extends-resource="component://common/widget/CommonMenus.xml"  selected-menuitem-context-field-name="ap">
         <menu-item name="mainAccounting" title="${uiLabelMap.CommonDashboard}" sort-mode="off" > 
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="/accounting/control/main" link-type="anchor" url-mode="inter-app" />
         </menu-item>         
-        <menu-item name="main" title="${uiLabelMap.AccountingApMenu}" sort-mode="off" selected-style="${styles.menu_main_itemactive}" override-mode="remove-replace"> 
+        <menu-item name="main" title="${uiLabelMap.AccountingApMenu}" sort-mode="off" override-mode="remove-replace"> 
             <link target="/ap/control/main" url-mode="inter-app"/>
         </menu-item>
         <menu-item name="ar" title="${uiLabelMap.AccountingArMenu}" sort-mode="off">

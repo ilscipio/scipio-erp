@@ -19,15 +19,15 @@ under the License.
 -->
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="ArAppBar" title="${uiLabelMap.Accounting}" extends="CommonAppBarDashboardMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" override-mode="replace"> 
+    <menu name="ArAppBar" title="${uiLabelMap.Accounting}" extends="CommonAppBarDashboardMenu" extends-resource="component://common/widget/CommonMenus.xml"  selected-menuitem-context-field-name="ar">
+        <menu-item name="mainAccounting" title="${uiLabelMap.CommonDashboard}" sort-mode="off"> 
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="/accounting/control/main" link-type="anchor" url-mode="inter-app" />
         </menu-item>
          <menu-item name="ap" title="${uiLabelMap.AccountingApMenu}" sort-mode="off">
             <link target="/ap/control/main" url-mode="inter-app" />
         </menu-item>
-        <menu-item name="ar" title="${uiLabelMap.AccountingArMenu}" sort-mode="off">
+        <menu-item name="main" title="${uiLabelMap.AccountingArMenu}" sort-mode="off" override-mode="remove-replace">
             <link target="/ar/control/main" url-mode="inter-app" />
         </menu-item>         
         <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}">

@@ -869,6 +869,16 @@
   <@commonMsg type="fail">Non-fatal error message (fail)</@commonMsg>
 </@section>
 
+<@section title="Containers">
+  <@container class="+myclass">
+    <@container open=true close=false elem="p"/>
+      <@container elem="span">
+        [Inside three containers]
+      </@container>
+    <@container close=true open=false /> <#-- this should remember the "p" -->
+  </@container>
+</@section>
+
 
 <#-- NOTE: keep last -->
 <hr />

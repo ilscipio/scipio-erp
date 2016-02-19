@@ -47,8 +47,18 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
+  <#-- Cato: now support a few more containers -->
+  <#local elem = "">
+  <#if ["div", "span", "p"]?seq_contains(style)>
+    <#local elem = style>
+    <#local style = "">
+  <#elseif style?contains(":")>
+    <#local parts = style?split(":")>
+    <#local elem = parts[0]>
+    <#local style = parts[1]>
+  </#if>
   <#-- Cato: delegate to cato libs -->
-  <@container open=true close=false class=style id=id />
+  <@container open=true close=false class=style id=id elem=elem />
 </#macro>
 
 <#macro renderContainerEnd>

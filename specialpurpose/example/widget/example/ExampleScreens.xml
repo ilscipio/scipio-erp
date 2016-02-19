@@ -313,7 +313,7 @@ under the License.
                             <widgets>
                                 <container style="clear" />
                                 <label>Using Google geocoding services may need to register for an individual key. Please visit this website to have more details :</label>
-                                <link target="http://code.google.com/intl/fr/apis/maps/signup.html" url-mode="plain" text="Google Maps API"/>
+                                <link target="http://code.google.com/intl/fr/apis/maps/signup.html" url-mode="plain" text="Google Maps API" style="${styles.link_nav} ${styles.action_external}"/>
                                 <label style="h3">Geolocation of DemoCustomer, living at ${pointAddress}</label>
                                 <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
                             </widgets>

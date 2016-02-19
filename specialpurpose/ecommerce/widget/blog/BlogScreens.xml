@@ -41,7 +41,7 @@
             <widgets>
                 <container style="bloghr">
                     <container style="leftjustify">
-                        <link text="${blogContent.contentName} - ${blogContent.description}" target="MainBlog" style="blogtitle">
+                        <link text="${blogContent.contentName} - ${blogContent.description}" target="MainBlog" style="${styles.link_nav_info_desc} blogtitle">
                             <parameter param-name="blogContentId"/>
                         </link>
                     </container>
@@ -56,7 +56,7 @@
                                 </link>
                             </widgets>
                         </section>
-                        <link target="ViewBlogRss" target-window="_blank" link-type="anchor">
+                        <link target="ViewBlogRss" target-window="_blank" link-type="anchor" style="${styles.link_type_image!} ${styles.action_nav!} ${styles.action_view}">
                             <parameter param-name="blogContentId" from-field="blogContent.contentId"/>
                             <parameter param-name="mainLinkReq" value="MainBlog"/>
                             <parameter param-name="entryLinkReq" value="ViewBlogArticle"/>
@@ -117,12 +117,12 @@
                                     <container style="blogwrapper">
                                         <include-menu name="view_edit" location="component://ecommerce/widget/blog/BlogMenus.xml"/>
                                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/blog/blogContentAltLink.ftl"/></html></platform-specific>
-                                        <!--<link text="${blog.contentName} [${blog.contentId}]" target="ViewBlogArticle" style="blogheader">
+                                        <!--<link text="${blog.contentName} [${blog.contentId}]" target="ViewBlogArticle" style="${styles.link_nav_info_idname} blogheader">
                                             <parameter param-name="contentId" from-field="blog.contentId"/>
                                             <parameter param-name="blogContentId"/>
                                         </link>-->
                                         <!--
-                                            <link text="Latest" target="LatestResponses" >
+                                            <link text="Latest" target="LatestResponses" style="${styles.link_nav} ${styles.action_view}">
                                                 <parameter param-name="ownerContentId" from-field="blog.ownerContentId"/>
                                             </link>
                                         -->
@@ -141,12 +141,12 @@
                                         <include-menu name="view_edit" location="component://ecommerce/widget/blog/BlogMenus.xml"/>
                                         <!--<label text="${blog.contentName} [${blog.contentId}]" style="blogheader"/>-->
                                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/blog/blogContentAltLink.ftl"/></html></platform-specific>
-                                        <!--<link text="${blog.contentName} [${blog.contentId}]" target="ViewBlogArticle" style="blogheader">
+                                        <!--<link text="${blog.contentName} [${blog.contentId}]" target="ViewBlogArticle" style="${styles.link_nav_info_idname} blogheader">
                                             <parameter param-name="contentId" from-field="blog.contentId"/>
                                             <parameter param-name="blogContentId"/>
                                         </link>-->
                                         <!--
-                                            <link text="Latest" target="LatestResponses" >
+                                            <link text="Latest" target="LatestResponses" style="${styles.link_nav} ${styles.action_view}">
                                                 <parameter param-name="ownerContentId" from-field="blog.ownerContentId"/>
                                             </link>
                                         -->
@@ -272,7 +272,7 @@
 
                         <include-screen name="BlogResponses"/>
                         <!--
-                            <link text="Latest" target="LatestResponses" >
+                            <link text="Latest" target="LatestResponses" style="${styles.link_nav} ${styles.action_view}">
                                 <parameter param-name="ownerContentId" from-field="webPubPt"/>
                             </link>
                         -->
@@ -308,7 +308,7 @@
                     <decorator-section name="body">
                         <container style="bloghr">
                             <container style="leftjustify">
-                                <link text="${article.contentName}: ${article.description}" target="ViewBlogArticle" style="blogtitle">
+                                <link text="${article.contentName}: ${article.description}" target="ViewBlogArticle" style="${styles.link_nav_info_desc} blogtitle">
                                     <parameter param-name="articleContentId"/>
                                     <parameter param-name="blogContentId"/>
                                 </link>
@@ -482,7 +482,7 @@
                     </condition>
                     <widgets>
                         <container>
-                            <link text="${rsp.contentName}[${rsp.contentId}]" target="ViewResponse" style="responseheader">
+                            <link text="${rsp.contentName}[${rsp.contentId}]" target="ViewResponse" style="${styles.link_nav_info_idname} responseheader">
                                 <parameter param-name="contentId" from-field="rsp.contentId"/>
                                 <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                                 <parameter param-name="articleContentId"/>
@@ -507,7 +507,7 @@
                     </condition>
                     <widgets>
                         <container style="responseSelected">
-                            <link text="${rsp.contentName}[${rsp.contentId}]" target="ViewResponse" style="responseheader">
+                            <link text="${rsp.contentName} [${rsp.contentId}]" target="ViewResponse" style="${styles.link_nav_info_idname} responseheader">
                                 <parameter param-name="contentId" from-field="rsp.contentId"/>
                                 <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                                 <parameter param-name="articleContentId"/>
@@ -534,7 +534,7 @@
         <section>
             <widgets>
                 <container>
-                    <link text="${rsp.contentName}[${rsp.contentId}]" target="ViewBlogArticle" style="responseheader">
+                    <link text="${rsp.contentName} [${rsp.contentId}]" target="ViewBlogArticle" style="${styles.link_nav_info_idname} responseheader">
                         <parameter param-name="articleContentId"/>
                         <parameter param-name="ownerContentId" from-field="rsp.ownerContentId"/>
                         <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>

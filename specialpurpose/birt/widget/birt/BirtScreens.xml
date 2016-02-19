@@ -118,7 +118,7 @@ under the License.
                         <label style="p" text="This application provides you with a sample example report."/>
                         <container style="p">
                             <label style="span" text="See the help option how to create your own OFBiz intergrated reports"></label>
-                            <link text="or see the Birt home for more information." target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
+                            <link text="or see the Birt home for more information." target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_" style="${styles.link_nav_info_desc} ${styles.action_external}"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>

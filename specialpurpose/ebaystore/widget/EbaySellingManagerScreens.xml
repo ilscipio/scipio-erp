@@ -193,9 +193,9 @@
                             <label text="Please subscribed to Selling Manager Pro before you use this function because ebay product inventory will open when you start selling manager pro on ebay site."></label>
                             <label text="if you subscribed already then still can not use, please check you internet connection."></label>
                             <label text="- To subscribe for production site"></label>
-                            <link target="http://pages.ebay.com/selling_manager_pro" text="http://pages.ebay.com/selling_manager_pro"  target-window="_BLANK" url-mode="plain"></link>
+                            <link target="http://pages.ebay.com/selling_manager_pro" text="http://pages.ebay.com/selling_manager_pro"  target-window="_BLANK" url-mode="plain" style="${styles.link_nav_info_uri} ${styles.action_external}"></link>
                             <label text="- To upgrade store level sandbox site"></label>
-                            <link target="http://k2b-bulk.sandbox.ebay.com/ws/eBayISAPI.dll?MyeBaySellingPendingListings" target-window="_BLANK" url-mode="plain" text="http://k2b-bulk.sandbox.ebay.com/ws/eBayISAPI.dll?MyeBaySellingPendingListings"></link>
+                            <link target="http://k2b-bulk.sandbox.ebay.com/ws/eBayISAPI.dll?MyeBaySellingPendingListings" target-window="_BLANK" url-mode="plain" text="http://k2b-bulk.sandbox.ebay.com/ws/eBayISAPI.dll?MyeBaySellingPendingListings" style="${styles.link_nav_info_uri} ${styles.action_external}"></link>
                         </screenlet>
                         <screenlet title="How to upgrade sandbox store level?">
                             <label text="- Click on the link &quot;To upgrade store level for sandbox site&quot;"></label>

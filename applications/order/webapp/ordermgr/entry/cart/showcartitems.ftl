@@ -71,12 +71,14 @@ under the License.
           <@tr valign="top">
             <@td>&nbsp;</@td>
             <@td>
+
+          <@fields type="default-manual-widgetonly">
           <@table type="fields" inheritAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: border="0" -->
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
                     <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
-                    <input size="60" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br />
+                    <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=StringUtil.wrapString(cartLine.getName()!'')/><br />
                     <i>${cartLine.getDescription()!}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders -->
@@ -99,7 +101,7 @@ under the License.
                        <#assign features = cartLine.getStandardFeatureList()>
                    </#if>
                    <#if features?has_content>
-                     <br /><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description?default("")} </#list></i>
+                     <br /><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description!""} </#list></i>
                    </#if>
                     <#-- show links to survey response for this item -->
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
@@ -166,7 +168,7 @@ under the License.
                 <@tr>
                   <@td>
                       ${uiLabelMap.OrderOrderItemType}:
-                      <select name="itemType_${cartLineIndex}">
+                      <@field type="select" name="itemType_${cartLineIndex}">
                         <#if currentOrderItemType?has_content>
                         <option value="${currentOrderItemType.orderItemTypeId}">${currentOrderItemType.get("description",locale)}</option>
                         <option value="${currentOrderItemType.orderItemTypeId}">---</option>
@@ -175,7 +177,7 @@ under the License.
                         <#list purchaseOrderItemTypeList as orderItemType>
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.get("description",locale)}</option>
                         </#list>
-                      </select>
+                      </@field>
                   </@td>
                 </@tr>
             </#if>
@@ -212,14 +214,15 @@ under the License.
               </#list>
             </#if>
           </@table>
+          </@fields>
 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div>${uiLabelMap.OrderChooseFollowingForGift}:</div>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId), true)>
-                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "html")!>
-                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_sys_long!} ${styles.action_update!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
+                    <#assign alternativeOptionName = StringUtil.wrapString(Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "html")!)>
+                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </@td>

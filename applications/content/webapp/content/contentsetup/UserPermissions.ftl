@@ -54,39 +54,25 @@ function call_fieldlookup3(view_name) {
 
 <#-- ============================================================= -->
 
-<@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside"> <#-- orig: class="boxoutside" -->
-  <@tr>
-    <@td width='100%'>
-      <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>" >
-      <@table type="fields" width="100%" class="+appTitle"> <#-- orig: class="appTitle" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
-        <@tr>
-          <@td colspan="1" valign="middle" align="right">
-            <div class="boxhead">&nbsp; WebSitePublishPoint&nbsp;&nbsp; </div>
-          </@td>
-          <@td valign="middle">
-            <div class="boxhead">
-             <input type="text" name="webSitePublishPoint" size="20" value="${webSitePublishPoint!}" />
-             <input type="submit" value="${uiLabelMap.CommonRefresh}" class="${styles.link_run_sys!} ${styles.action_reload!}"/>
-             <input type="hidden" name="partyId" value="${partyId!}"/>
-             <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
-            </div>
-          </@td>
-        </@tr>
-      </@table>
-      </form>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td width='100%'>
-      <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
-      <@table type="data-list" width="100%" class="+${styles.table_spacing_small_hint!} boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" -->
+<@section title="WebSitePublishPoint">
+  <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>">
+     <input type="hidden" name="partyId" value="${partyId!}"/>
+     <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
+     <@field type="input" name="webSitePublishPoint" size="20" value="${webSitePublishPoint!}" />
+     <@field type="submit" text="${uiLabelMap.CommonRefresh}" class="${styles.link_run_sys!} ${styles.action_reload!}"/>
+  </form>
+</@section>
+
+<@section>
+  <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+  <@fields type="default-manual">
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" --> <#-- orig: width="100%" -->
         <@tr>
             <@td>${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>
               <@td>${roleTypeId}</@td>
             </#list>
         </@tr>
-
       <#assign rowCount=0/>
         <#list siteList as map>
           <@tr>
@@ -94,23 +80,22 @@ function call_fieldlookup3(view_name) {
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
               <@td align="center">
-              <input type="checkbox" name="${cappedSiteRole}_o_${rowCount}" value="Y" <#if map[cappedSiteRole]?has_content && map[cappedSiteRole] == "Y">checked="checked"</#if>/>
+                <@field type="checkbox" inline=true name="${cappedSiteRole}_o_${rowCount}" value="Y" checked=(map[cappedSiteRole]?has_content && map[cappedSiteRole] == "Y")/>
+                <input type="hidden" name="contentId_o_${rowCount}" value="${webSitePublishPoint}"/>
+                <input type="hidden" name="partyId_o_${rowCount}" value="${map.partyId}"/>
               </@td>
             </#list>
           </@tr>
-          <input type="hidden" name="contentId_o_${rowCount}" value="${webSitePublishPoint}"/>
-          <input type="hidden" name="partyId_o_${rowCount}" value="${map.partyId}"/>
           <#assign rowCount=rowCount + 1/>
         </#list>
         <@tfoot>
           <@tr>
             <@td>
-              <a href="javascript:submitRows('${rowCount!}')" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+              <@field type="submit" submitType="link" href="javascript:submitRows('${rowCount!}')" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonUpdate}" />
             </@td>
           </@tr>
         </@tfoot>
       </@table>
-      </form>
-    </@td>
-  </@tr>
-</@table>
+  </@fields>
+  </form>
+</@section>

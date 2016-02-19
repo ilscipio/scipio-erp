@@ -30,7 +30,7 @@ under the License.
     <@field type="checkbox" name="createDummyFks" checked=createDummyFks?? label="${uiLabelMap.WebtoolsCreateDummyFks}"/>
     <@field type="checkbox" name="checkDataOnly" checked=checkDataOnly?? label="${uiLabelMap.WebtoolsCheckDataOnly}"/>
     <@field type="input" size="6" value="${txTimeoutStr!'7200'}" name="txTimeout" label="${uiLabelMap.WebtoolsTimeoutSeconds}"/>
-    <@field type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
+    <@field type="submit" text="${uiLabelMap.WebtoolsImportFile}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
 <hr />
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">

@@ -129,7 +129,7 @@ function submitForm(form, mode, value) {
                     <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <@field type="textarea" class="+textAreaBox" cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</@field>
                   </@td>
-                  <@td><@field type="submit" submitType="button" class="+${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}" onClick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
+                  <@td><@field type="submit" submitType="button" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" onClick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
                 </@tr>
                 <#assign groupIdx = groupIdx + 1>
                 <#if group_has_next>
@@ -231,7 +231,7 @@ function submitForm(form, mode, value) {
                     </@field>
                   </div>
                 </@td>
-                <@td><@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}"/></@td>
+                <@td><@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonSubmit}"/></@td>
               </form>
             </@tr>
           </#list>

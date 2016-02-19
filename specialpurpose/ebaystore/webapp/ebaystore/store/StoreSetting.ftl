@@ -368,7 +368,7 @@ under the License.
                <option <#if storeSubscriptionLevel.storeSubscriptionLevelCodeValue.equals(ebayStore.storeSubscriptionLevel)>selected="selected"</#if> value="${storeSubscriptionLevel.storeSubscriptionLevelCodeName!}">${storeSubscriptionLevel.storeSubscriptionLevelCodeValue!}</option>
             </#list>
         </@field>
-        <@field type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+        <@field type="submit" text="${uiLabelMap.CommonSubmit}" name="submitButton" class="+${styles.link_run_sys!} ${styles.action_update!}" />
 
         <@script>
             document.getElementById('charsleft1').innerHTML =  (35 - document.StoreSettingForm.storeName.value.length)  + " charactors left.";

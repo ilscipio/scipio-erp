@@ -208,7 +208,7 @@ under the License.
                         <@field type="display" label="${uiLabelMap.ProductCurrentPackageSequence}">
                             ${packingSession.getCurrentPackageSeq()}
                         </@field>
-                        <@field type="submit" submitType="input-button" value="${uiLabelMap.ProductNextPackage}" onClick="javascript:document.incPkgSeq.submit();" />
+                        <@field type="submit" submitType="input-button" text="${uiLabelMap.ProductNextPackage}" onClick="javascript:document.incPkgSeq.submit();" />
                     </@cell>
                   </@row>
                   </@fields>
@@ -319,8 +319,8 @@ under the License.
                     <@tr>
                       <@td colspan="12" align="right">
                         <@field type="submitarea">
-                            <@field type="submit" value="${uiLabelMap.ProductPackItem}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                            <@field type="submit" type="input-button" value="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onClick="javascript:document.clearPackForm.submit();"/>
+                            <@field type="submit" text="${uiLabelMap.ProductPackItem}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+                            <@field type="submit" type="input-button" text="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onClick="javascript:document.clearPackForm.submit();"/>
                         </@field>
                       </@td>
                     </@tr>
@@ -400,7 +400,7 @@ under the License.
                           <#if forceComplete?default("false") == "true">
                             <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
                           </#if>
-                          <@field type="submit" type="input-button" value="${buttonName}" onClick="javascript:document.completePackForm.submit();"/>
+                          <@field type="submit" type="input-button" text="${buttonName}" onClick="javascript:document.completePackForm.submit();"/>
                       </@td>
                     </@tr>
                   </@table>

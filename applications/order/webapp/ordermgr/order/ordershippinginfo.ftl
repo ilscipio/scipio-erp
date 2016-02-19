@@ -294,7 +294,7 @@ under the License.
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <@field type="submit" value="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                        <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                         <a class="${styles.link_nav!} ${styles.action_add!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
                         <@script>
                             jQuery("#newShippingAddress").click(function(){jQuery("#newShippingAddressForm").dialog("open")});
@@ -339,10 +339,10 @@ under the License.
           </@field>
 
           <@field type="submitarea">
-            <@field type="submit" submitType="input-button" id="submitAddShippingAddress" value="${uiLabelMap.CommonSubmit}" style="display:none"/>
+            <@field type="submit" submitType="input-button" id="submitAddShippingAddress" text="${uiLabelMap.CommonSubmit}" style="display:none"/>
             <#-- FIXME: form within form -->
             <form action="">
-              <@field type="submit" submitType="input-button" class="+popup_closebox ${styles.link_run_local!} ${styles.action_close!}" value="${uiLabelMap.CommonClose}" style="display:none"/>
+              <@field type="submit" submitType="input-button" class="+popup_closebox ${styles.link_run_local!} ${styles.action_close!}" text="${uiLabelMap.CommonClose}" style="display:none"/>
             </form>
           </@field>
           </@fields>

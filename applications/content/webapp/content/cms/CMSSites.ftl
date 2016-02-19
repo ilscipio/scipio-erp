@@ -65,8 +65,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           <@td>
             <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
               <@table type="generic" width="100%" border="0" cellpadding="1">
-                    <#assign rowCount = 0 />
-                    <@showSites forumId=rootForumId />
+                <#assign rowCount = 0 />
+                <@showSites forumId=rootForumId />
               </@table>
             </form>
           </@td>

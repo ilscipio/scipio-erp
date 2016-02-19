@@ -144,7 +144,7 @@ function doPublish() {
                     </@table>
                 </@td>
                 <@td align="right">
-                    <@field type="submit" name="applyToAll" value="${uiLabelMap.ProductAddSelectableFeature}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                    <@field type="submit" name="applyToAll" text="${uiLabelMap.ProductAddSelectableFeature}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                 </@td>
                 <@td colspan="2"></@td>
             </@tr>
@@ -251,7 +251,7 @@ function doPublish() {
                 </@tr>
               <@tfoot>
                 <@tr>
-                    <@td colspan="10" align="right"><@field type="submit" value="${uiLabelMap.ProductUpdateShipping}" class="+${styles.link_run_sys!} ${styles.action_update!}" /></@td>
+                    <@td colspan="10" align="right"><@field type="submit" text="${uiLabelMap.ProductUpdateShipping}" class="+${styles.link_run_sys!} ${styles.action_update!}" /></@td>
                 </@tr>
               </@tfoot>
         </#if>
@@ -289,7 +289,7 @@ function doPublish() {
                     </@tr>
                 </#list>
                 <@tfoot>
-                <@tr><@td colspan="2" align="right"><@field type="submit" value="${uiLabelMap.ProductAddFeatures}" class="+${styles.link_run_sys!} ${styles.action_add!}"/></@td></@tr>
+                <@tr><@td colspan="2" align="right"><@field type="submit" text="${uiLabelMap.ProductAddFeatures}" class="+${styles.link_run_sys!} ${styles.action_add!}"/></@td></@tr>
                 </@tfoot>
             </@table>
               </@fields>

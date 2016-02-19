@@ -33,15 +33,17 @@ to this one.
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.container_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#local attribs = makeAttribMapFromArgMap(args)>
-  <#if !elem?has_content || elem == "container">
-    <#local elem = "div">
-  </#if>
-  <#if open && !close>
-    <#local dummy = pushRequestStack("catoContainerStack", {
-      "class":class, "elem":elem, "id":id, "attribs":attribs, "origArgs":origArgs, "passArgs":passArgs
-    })>
-  <#elseif close && !open>
+  <#if open>
+    <#local attribs = makeAttribMapFromArgMap(args)>
+    <#if !elem?has_content || elem == "container">
+      <#local elem = "div">
+    </#if>
+    <#if !close>
+      <#local dummy = pushRequestStack("catoContainerStack", {
+        "class":class, "elem":elem, "id":id, "attribs":attribs, "origArgs":origArgs, "passArgs":passArgs
+      })>
+    </#if>
+  <#elseif close>
     <#local stackValues = popRequestStack("catoContainerStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>

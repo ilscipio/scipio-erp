@@ -114,14 +114,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                  <label style="p" text="BIRT is an open source Eclipse-based reporting system that integrates with any OFBiz application to produce compelling reports including graphical presentations like pie and bar charts."/>
-                                  <label style="p" text="This application provides you with a sample example report."/>
-                                  <label style="p" text="See the help option how to create your own OFBiz intergrated reports."/>
-                                  <link text="or see the Birt home for more information" target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
-                            </widgets>
-                        </section>
+                        <label style="p" text="BIRT is an open source Eclipse-based reporting system that integrates with any OFBiz application to produce compelling reports including graphical presentations like pie and bar charts."/>
+                        <label style="p" text="This application provides you with a sample example report."/>
+                        <container style="p">
+                            <label style="span" text="See the help option how to create your own OFBiz intergrated reports"></label>
+                            <link text="or see the Birt home for more information." target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -136,17 +134,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="Using report tag">
-                                    <platform-specific>
-                                        <html>
-                                            <html-template location="component://birt/webapp/birt/birt/report.ftl"/>
-                                        </html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="Using report tag">
+                            <platform-specific>
+                                <html>
+                                    <html-template location="component://birt/webapp/birt/birt/report.ftl"/>
+                                </html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -161,13 +155,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="Send BIRT report by mail">
-                                    <include-form location="component://birt/widget/birt/BirtForms.xml" name="EditMail"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="Send BIRT report by mail">
+                            <include-form location="component://birt/widget/birt/BirtForms.xml" name="EditMail"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -182,15 +172,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="Using report tag">
-                                    <platform-specific>
-                                        <html><html-template location="component://birt/webapp/birt/birt/chartReport.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="Using report tag">
+                            <platform-specific>
+                                <html><html-template location="component://birt/webapp/birt/birt/chartReport.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

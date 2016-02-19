@@ -25,7 +25,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreList"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreList"/>
             </actions>
             <widgets>
@@ -44,7 +44,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStore"/>
                 <set field="labelTitleProperty" value="ProductStore"/>
 
@@ -67,7 +67,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="FindProductStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
@@ -96,7 +96,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStorePromos"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStorePromos"/>
                 <set field="labelTitleProperty" value="ProductPromotions"/>
                 <set field="userEntered" from-field="parameters.userEntered"/>
@@ -163,7 +163,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreCatalogs"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreCatalogs"/>
                 <set field="labelTitleProperty" value="ProductCatalogs"/>
 
@@ -194,7 +194,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreWebSites"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreWebSites"/>
                 <set field="labelTitleProperty" value="ProductProductStoreWebSites"/>
                 <set field="productStoreId" from-field="parameters.viewProductStoreId"/>
@@ -222,7 +222,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreShipSetup"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreShipSetup"/>
                 <set field="labelTitleProperty" value="ProductProductStoreShipmentSettings"/>
 
@@ -276,7 +276,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreShipmentCostEstimates"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreShipmentCostEstimates"/>
                 <set field="labelTitleProperty" value="ProductProductStoreShipmentSettings"/>
 
@@ -320,7 +320,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStorePaySetup"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStorePaySetup"/>
                 <set field="labelTitleProperty" value="ProductProductStorePaymentSettings"/>
 
@@ -357,7 +357,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreEmailSetup"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreEmails"/>
                 <set field="labelTitleProperty" value="ProductProductStoreEmailSettings"/>
 
@@ -387,7 +387,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreSurveys"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreSurveys"/>
                 <set field="labelTitleProperty" value="ProductStoreSurveySettings"/>
 
@@ -411,7 +411,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreKeywordOvrd"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreKeywordOvrd"/>
                 <set field="labelTitleProperty" value="ProductStoreKeywordOverrides"/>
 
@@ -440,7 +440,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewProductStoreSegments"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="ViewProductStoreSegments"/>
                 <set field="labelTitleProperty" value="ProductSegments"/>
 
@@ -471,7 +471,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductStoreFinAccountSettings"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreFinAccountSettings"/>
                 <set field="labelTitleProperty" value="ProductStoreFinAccountSettings"/>
 
@@ -503,7 +503,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductStoreVendorPayments"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreVendorPayments"/>
                 <set field="labelTitleProperty" value="ProductStoreVendorPayments"/>
 
@@ -532,7 +532,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStoreVendorShipments"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreVendorShipments"/>
                 <set field="labelTitleProperty" value="ProductStoreVendorShipments"/>
 

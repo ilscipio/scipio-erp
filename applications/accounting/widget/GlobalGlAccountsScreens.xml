@@ -24,7 +24,7 @@ under the License.
     <screen name="GenericDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="chartofaccounts"/>
+                <set field="activeMainMenuItem" value="chartofaccounts"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
@@ -164,7 +164,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewAccountingTransaction"/>
-                <set field="headerItem" value="chartofaccounts"/>
+                <set field="activeMainMenuItem" value="chartofaccounts"/>
                 <set field="acctgTransId" from-field="requestParameters.acctgTransId"/>
                 <entity-and entity-name="AcctgTransEntry" list="entries">
                     <field-map field-name="acctgTransId"/>

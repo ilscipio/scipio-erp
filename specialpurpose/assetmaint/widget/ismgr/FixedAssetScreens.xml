@@ -44,7 +44,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrFindComputerHardware"/>
-                <set field="headerItem" value="ComputerHardware"/>
+                <set field="activeMainMenuItem" value="ComputerHardware"/>
                 <set field="tabButtonItem" value="EditComputerHardware"/>
             </actions>
             <widgets>
@@ -75,7 +75,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditComputerSoftware"/>
-                <set field="headerItem" value="ComputerSoftware"/>
+                <set field="activeMainMenuItem" value="ComputerSoftware"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
@@ -94,7 +94,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrFindComputerSoftware"/>
-                <set field="headerItem" value="ComputerSoftware"/>
+                <set field="activeMainMenuItem" value="ComputerSoftware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -153,7 +153,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrHardwareAccessories"/>
-                <set field="headerItem" value="ComputerHardware"/>
+                <set field="activeMainMenuItem" value="ComputerHardware"/>
                 <set field="tabButtonItem" value="ListHardwareAccessories"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetTypeId" value="COMPUTER_HARDWARE"/>
@@ -172,7 +172,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="IsMgrInstalledSoftware"/>
-                <set field="headerItem" value="ComputerHardware"/>
+                <set field="activeMainMenuItem" value="ComputerHardware"/>
                 <set field="tabButtonItem" value="ListInstalledSoftware"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetTypeId" value="COMPUTER_SOFTWARE"/>

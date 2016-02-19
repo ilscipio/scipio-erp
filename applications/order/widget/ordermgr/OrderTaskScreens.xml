@@ -85,7 +85,7 @@ Also add this back to appheader.ftl:
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderTasks"/>
-                <set field="headerItem" value="tasklist"/>
+                <set field="activeMainMenuItem" value="tasklist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/task/OrderTaskList.groovy"/>
             </actions>
             <widgets>

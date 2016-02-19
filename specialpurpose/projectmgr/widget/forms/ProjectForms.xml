@@ -466,7 +466,7 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="orderDate"><display/></field>
         <field name="entryDate"><display/></field>
-        <field name="linkProjectOrderAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="headerItem.equals(&quot;editProjectOrders&quot;)">
+        <field name="linkProjectOrderAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="activeMainMenuItem.equals(&quot;editProjectOrders&quot;)">
             <hyperlink target="unLinkProjectOrder" description="${uiLabelMap.ProjectMgrRemoveLinkFromProject}">
                 <parameter param-name="workEffortId" from-field="projectId"/>
                 <parameter param-name="orderId"/>
@@ -849,14 +849,14 @@
         <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml" default-entity-name="WorkEffortContent">
-        <field name="contentId" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="contentId" use-when="activeMainMenuItem.equals(&quot;EditProjectContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
                 <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="${styles.link_nav_info_id}" target-type="inter-app">
                     <auto-parameters-entity/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="contentId" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
+        <field name="contentId" use-when="activeMainMenuItem.equals(&quot;EditTaskContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
                 <sub-hyperlink target="EditTaskContents" description="${contentId}" link-style="${styles.link_nav_info_id}" target-type="inter-app">
                     <auto-parameters-entity/>
@@ -865,7 +865,7 @@
         </field>
         <field name="thruDate"><ignored/></field>
         <field name="submitAction"><ignored/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="activeMainMenuItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
                 <auto-parameters-entity/>
             </hyperlink>
@@ -873,7 +873,7 @@
         <field name="downloadAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="headerItem.equals(&quot;EditTaskContents&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="activeMainMenuItem.equals(&quot;EditTaskContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTaskContent">
                 <auto-parameters-entity/>
             </hyperlink>
@@ -892,9 +892,9 @@
             </entity-one>
         </actions>
 
-        <alt-target use-when="workEffortContent!=null&amp;&amp;headerItem.equals(&quot;EditTaskContents&quot;)" target="updateTaskContent"/>
-        <alt-target use-when="workEffortContent==null&amp;&amp;headerItem.equals(&quot;EditProjectContents&quot;)" target="createProjectContent"/>
-        <alt-target use-when="workEffortContent==null&amp;&amp;headerItem.equals(&quot;EditTaskContents&quot;)" target="createTaskContent"/>
+        <alt-target use-when="workEffortContent!=null&amp;&amp;activeMainMenuItem.equals(&quot;EditTaskContents&quot;)" target="updateTaskContent"/>
+        <alt-target use-when="workEffortContent==null&amp;&amp;activeMainMenuItem.equals(&quot;EditProjectContents&quot;)" target="createProjectContent"/>
+        <alt-target use-when="workEffortContent==null&amp;&amp;activeMainMenuItem.equals(&quot;EditTaskContents&quot;)" target="createTaskContent"/>
 
         <field name="workEffortId" map-name="parameters"><hidden/></field>
         <field name="projectId" map-name="parameters"><hidden/></field>

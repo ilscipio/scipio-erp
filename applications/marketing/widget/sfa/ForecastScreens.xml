@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonSalesForecastDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Forecast"/>
+                <set field="activeMainMenuItem" value="Forecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">                 
@@ -52,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindSalesForecast"/>
-                <set field="headerItem" value="Forecast"/>
+                <set field="activeMainMenuItem" value="Forecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">            

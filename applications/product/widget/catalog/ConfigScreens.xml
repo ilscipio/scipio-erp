@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindConfigItems"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonConfigDecorator" location="${parameters.mainDecoratorLocation}">
@@ -53,7 +53,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigItem"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigItem"/>
                 <set field="labelTitleProperty" value="ProductConfigItem"/>
 
@@ -76,7 +76,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditConfigOptions"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigOptions"/>
                 <set field="labelTitleProperty" value="ProductConfigOptions"/>
 
@@ -179,7 +179,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigItemContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
@@ -204,7 +204,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigItemContent"/>
                 <set field="labelTitleProperty" value=""/>
 
@@ -231,7 +231,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
-                <set field="headerItem" value="configs"/>
+                <set field="activeMainMenuItem" value="configs"/>
                 <set field="tabButtonItem" value="ProductConfigItemArticle"/>
                 <set field="labelTitleProperty" value=""/>
                 <set field="configItemId" from-field="parameters.configItemId"/>

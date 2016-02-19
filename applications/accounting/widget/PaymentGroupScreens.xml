@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindPaymentGroup"/>
-                <set field="headerItem" value="PaymentGroup"/>
+                <set field="activeMainMenuItem" value="PaymentGroup"/>
                 <set field="tabButtonItem" value="Find"/>
                 <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
                     <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>

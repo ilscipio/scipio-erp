@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonForumDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Forum"/>
+                <set field="activeMainMenuItem" value="Forum"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
             </actions>
@@ -65,7 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindForumGroup"/>
-                <set field="headerItem" value="ForumGroups"/>
+                <set field="activeMainMenuItem" value="ForumGroups"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumGroup"/>
                 <entity-and entity-name="Content" list="forumGroups">
                     <field-map field-name="contentTypeId" value="FORUM_ROOT"/>
@@ -176,7 +176,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
-                <set field="headerItem" value="ForumMessages"/>
+                <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value="messageList"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
@@ -221,7 +221,7 @@ under the License.
                 <set field="webPutPt" from-field="parameters.forumGroupId"/>
                 <set field="rsp.contentName" value="${content.contentName}"/>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
-                <set field="headerItem" value="ForumMessages"/>
+                <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="tabButtonItem" value="messageThread"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>

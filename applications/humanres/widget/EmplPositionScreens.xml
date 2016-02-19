@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="headerItem" value="EmplPosition"/>
+                <set field="activeMainMenuItem" value="EmplPosition"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
@@ -55,7 +55,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="headerItem" value="EmplPosition"/>
+                <set field="activeMainMenuItem" value="EmplPosition"/>
                 <set field="tabButtonItem" value="ListEmplPositions"/>
             </actions>
             <widgets>

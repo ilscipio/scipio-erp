@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTask"/>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="tabButtonItem" value="find"/>
                 <set field="labelTitleProperty" value="ScrumTasksList"/>
                 <set field="viewIndex_1" from-field="parameters.TasksListError_index_1" type="Integer"/>
@@ -101,7 +101,7 @@ under the License.
     <screen name="EditTask">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditTask"/>
                 <set field="tabButtonItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaskList"/>
@@ -149,7 +149,7 @@ under the License.
     <screen name="FindTaskRevision">
         <section>
             <actions>
-                <set field="headerItem" value="revision"/>
+                <set field="activeMainMenuItem" value="revision"/>
                 <set field="titleProperty" value="ScrumRevision"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListRevision.groovy"/>
@@ -218,7 +218,7 @@ under the License.
     <screen name="EditTaskPartyAssigns">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 <set field="tabButtonItem" value="Members"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
@@ -243,7 +243,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListTaskNotes"/>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="tabButtonItem" value="notes"/>
                 <set field="labelTitleProperty" value="PageTitleListTaskNotes"/>
 

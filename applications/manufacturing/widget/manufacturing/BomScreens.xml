@@ -49,7 +49,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProductBom"/>
                 <set field="tabButtonItem" value="EditProductBom"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="headerItem" value="bom"/>
+                <set field="activeMainMenuItem" value="bom"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/EditProductBom.groovy"/>
@@ -71,7 +71,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProductManufacturingRules"/>
                 <set field="tabButtonItem" value="productManufacturingRules"/>
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
-                <set field="headerItem" value="bom"/>
+                <set field="activeMainMenuItem" value="bom"/>
 
                 <set field="ruleId" from-field="parameters.ruleId"/>
                 <entity-one entity-name="ProductManufacturingRule" value-field="manufacturingRule"/>
@@ -97,7 +97,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingBomSimulation"/>
                 <set field="tabButtonItem" value="bomSimulation"/>
-                <set field="headerItem" value="bom"/>
+                <set field="activeMainMenuItem" value="bom"/>
 
                 <set field="bomType" from-field="parameters.bomType"/>
                 <set field="productId" from-field="parameters.productId"/>
@@ -135,7 +135,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindBom"/>
                 <set field="tabButtonItem" value="findBom"/>
                 <set field="labelTitleProperty" value="findBom"/>
-                <set field="headerItem" value="bom"/>
+                <set field="activeMainMenuItem" value="bom"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/FindProductBom.groovy"/>
             </actions>
             <widgets>

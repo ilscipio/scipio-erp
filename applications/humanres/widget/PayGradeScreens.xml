@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPayGrade"/>
-                <set field="headerItem" value="GlobalHRSettingMenus"/>
+                <set field="activeMainMenuItem" value="GlobalHRSettingMenus"/>
                 <set field="tabButtonItem" value="PayGrade"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="payGradeCtx" from-field="parameters"/>
@@ -90,7 +90,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditSalaryStep"/>
-                <set field="headerItem" value="PayGrade"/>
+                <set field="activeMainMenuItem" value="PayGrade"/>
                 <set field="tabButtonItem" value="EditSalaryStep"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="salaryStepSeqId" from-field="parameters.salaryStepSeqId"/>

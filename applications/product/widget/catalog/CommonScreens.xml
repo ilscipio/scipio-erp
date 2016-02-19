@@ -93,7 +93,7 @@ under the License.
     <screen name="CommonCatalogDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="catalogs"/>
+                <set field="activeMainMenuItem" value="catalogs"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -163,7 +163,7 @@ under the License.
     <screen name="CommonCategoryDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -562,8 +562,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>            
                 <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
@@ -603,7 +603,7 @@ under the License.
     <screen name="ImageManagementDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Imagemanagement"/>
+                <set field="activeMainMenuItem" value="Imagemanagement"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -652,7 +652,7 @@ under the License.
                 <entity-one entity-name="ProductStore" value-field="productStore"/>
                 <set field="tabButtonItem" value="EditProductStoreFacilities"/>
                 <set field="labelTitleProperty" value="ProductFacility"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">

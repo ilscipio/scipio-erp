@@ -65,7 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromos"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="ProductPromo"/>
 
                 <set field="userEntered" from-field="parameters.userEntered"/>
@@ -110,7 +110,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromo"/>
                 <set field="labelTitleProperty" value="ProductPromotion"/>
 
@@ -132,7 +132,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoRules"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoRules"/>
                 <set field="labelTitleProperty" value="ProductRules"/>
 
@@ -206,7 +206,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoStores"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoStores"/>
                 <set field="labelTitleProperty" value="ProductStores"/>
 
@@ -237,7 +237,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromotionCode"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
 
@@ -297,7 +297,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromotionCode"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
 
@@ -325,7 +325,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoContent"/>
-                <set field="headerItem" value="promos"/>
+                <set field="activeMainMenuItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoContent"/>
                 <set field="labelTitleProperty" value="ProductPromoContents"/>
                 <set field="productPromoId" from-field="parameters.productPromoId"/>

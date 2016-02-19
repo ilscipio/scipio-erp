@@ -96,7 +96,7 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsGeosLink"/>
                 <set field="currentUrl" value="LinkGeos"/>
-                <set field="headerItem" value="Geos"/>
+                <set field="activeMainMenuItem" value="Geos"/>
                 <set field="tabButtonItem" value="LinkGeos"/>
                 
                 <set field="noId" value="true"/><!-- see CommonGeoManagementDecorator -->

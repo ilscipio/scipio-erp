@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}"/>
-                <set field="headerItem" value="Employees"/>
+                <set field="activeMainMenuItem" value="Employees"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -59,7 +59,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
-                <set field="headerItem" value="Employees"/>
+                <set field="activeMainMenuItem" value="Employees"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
@@ -171,7 +171,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
-                <set field="headerItem" value="Employee"/>
+                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="tabButtonItem" value="EditEmployeeQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
@@ -229,7 +229,7 @@ under the License.
     <screen name="EditEmployeeResumes">
         <section>
             <actions>
-                <set field="headerItem" value="PartyResume"></set>
+                <set field="activeMainMenuItem" value="PartyResume"></set>
                 <set field="tabButtonItem" value="EditEmployeeResumes"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>

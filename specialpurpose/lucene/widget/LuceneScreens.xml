@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-                <set field="headerItem" value="CMS"/>
+                <set field="activeMainMenuItem" value="CMS"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-                <set field="headerItem" value="Subscription"/>
+                <set field="activeMainMenuItem" value="Subscription"/>
                 <set field="titleProperty" value="PageTitleFindSubscription"/>
             </actions>
             <widgets>
@@ -68,7 +68,7 @@ under the License.
     <screen name="CommonSubscriptionDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Subscription"/>
+                <set field="activeMainMenuItem" value="Subscription"/>
                 <set field="subscriptionId" from-field="parameters.subscriptionId"/>
                 <entity-one entity-name="Subscription" value-field="subscription"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
@@ -175,7 +175,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap"/>
-                <set field="headerItem" value="Subscription"/>
+                <set field="activeMainMenuItem" value="Subscription"/>
                 <set field="titleProperty" value="PageTitleFindSubscriptionResource"/>
             </actions>
             <widgets>
@@ -207,7 +207,7 @@ under the License.
     <screen name="CommonSubscriptionResourceDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Subscription"/>
+                <set field="activeMainMenuItem" value="Subscription"/>
                 <set field="subscriptionResourceId" from-field="parameters.subscriptionResourceId"/>
                 <entity-one entity-name="SubscriptionResource" value-field="subscriptionResource"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />

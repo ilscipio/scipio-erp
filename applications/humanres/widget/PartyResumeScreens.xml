@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartyResume"/>
-                <set field="headerItem" value="PartyResume"/>
+                <set field="activeMainMenuItem" value="PartyResume"/>
                 <set field="partyResumeCtx" from-field="parameters"/>
                 <set field="insideParty.partyResume" value="true"/>
             </actions>
@@ -56,7 +56,7 @@
     <screen name="EditPartyResume">
         <section>
             <actions>
-                <set field="headerItem" value="PartyResume"></set>
+                <set field="activeMainMenuItem" value="PartyResume"></set>
                 <set field="tabButtonItem" value="EditPartySkill"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>

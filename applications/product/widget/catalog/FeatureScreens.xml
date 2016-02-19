@@ -59,7 +59,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>
@@ -92,7 +92,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeatureTypes"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureType"/>
             </actions>
             <widgets>
@@ -124,7 +124,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeatureType"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureType"/>
                 <set field="productFeatureTypeId" from-field="parameters.productFeatureTypeId"/>
                 <entity-one entity-name="ProductFeatureType" value-field="productFeatureType"/>
@@ -144,7 +144,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeatureInterActions"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureInterAction"/>
             </actions>
             <widgets>
@@ -176,7 +176,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeatureInterAction"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureInterAction"/>
 
                 <set field="productFeatureId" from-field="parameters.productFeatureId"/>
@@ -199,7 +199,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureCategory"/>
             </actions>
             <widgets>
@@ -217,7 +217,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureCategory"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE_1" type="Integer" default-value="10"/>
@@ -253,7 +253,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeatureCategoryFeatures"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureCategory"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -276,7 +276,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatureGroups"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureGroup"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureGroups.groovy"/>
@@ -295,7 +295,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="ProductEditFeatureGroupAppls"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureGroup"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -336,7 +336,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="ProductAddProductFeatureInBulk"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="featureNum" from-field="parameters.featureNum" type="Integer"/>
                 <set field="productFeatureCategoryId" from-field="parameters.productFeatureCategoryId"/>
                 <set field="tabButtonItem" value="FeatureCategory"/>
@@ -357,7 +357,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeaturePrice"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeaturePrice"/>
             </actions>
             <widgets>
@@ -391,7 +391,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
-                <set field="headerItem" value="featurecats"/>
+                <set field="activeMainMenuItem" value="featurecats"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>

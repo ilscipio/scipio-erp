@@ -63,7 +63,7 @@ under the License.
     <screen name="CommonFindDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="googlebase"/>
+                <set field="activeMainMenuItem" value="googlebase"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

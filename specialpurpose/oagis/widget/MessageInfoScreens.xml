@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="OagisListMessageInfo"/>
-                <set field="headerItem" value="MessageInfos"/>
+                <set field="activeMainMenuItem" value="MessageInfos"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOagisMessageScreen" location="${parameters.mainDecoratorLocation}">
@@ -48,7 +48,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="OagisEditMessageInfo"/>
-                <set field="headerItem" value="MessageInfos"/>
+                <set field="activeMainMenuItem" value="MessageInfos"/>
                 <set field="logicalId" from-field="parameters.logicalId"/>
                 <set field="component" from-field="parameters.component"/>
                 <set field="task" from-field="parameters.task"/>
@@ -71,7 +71,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="OagisListMessageErrorInfo"/>
-                <set field="headerItem" value="MessageErrorInfos"/>
+                <set field="activeMainMenuItem" value="MessageErrorInfos"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOagisMessageScreen" location="${parameters.mainDecoratorLocation}">
@@ -95,7 +95,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="OagisEditMessageErrorInfo"/>
-                <set field="headerItem" value="MessageErrorInfos"/>
+                <set field="activeMainMenuItem" value="MessageErrorInfos"/>
                 <set field="logicalId" from-field="parameters.logicalId"/>
                 <set field="component" from-field="parameters.component"/>
                 <set field="task" from-field="parameters.task"/>

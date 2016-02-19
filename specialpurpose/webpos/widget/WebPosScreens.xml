@@ -45,7 +45,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitleManager"/>
-                <set field="headerItem" value="Manager"/>
+                <set field="activeMainMenuItem" value="Manager"/>
                 <set field="leftbarScreenName" value="LeftBar"/>
                 <set field="leftbarScreenLocation" value="component://webpos/widget/CommonScreens.xml"/>
                 <set field="rightbarScreenName" value="RightBar"/>

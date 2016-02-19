@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="${uiLabelMap.EbayStore}"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
@@ -42,7 +42,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="${uiLabelMap.EbayStoreSetting}"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayStoreSetting"/>
                 <script  location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/RetrieveStoreOptions.groovy"/>
             </actions>
@@ -63,7 +63,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayExportAllCategoryToEbayStore"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayExportAllCategoryToEbayStore"/>
                 <set field="productStoreId" value="${parameters.productStoreId}"/>
                 <entity-and entity-name="ProdCatalogCategory" list="categoriesList">
@@ -146,7 +146,7 @@ under the License.
     <screen name="NewEbayAccount">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="NewEbayAccount"/>
             </actions>
             <widgets>
@@ -163,7 +163,7 @@ under the License.
     <screen name="AssociateCatalog">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="associateCatalogToStore"/>
                 <entity-and entity-name="ProductStoreCatalog" list="prodStoreCatalogList" filter-by-date="true">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -201,7 +201,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="exportProductListing"/>
                 <entity-condition entity-name="ProductCategory" list="productCategories">
                     <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
@@ -225,7 +225,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSearchResults"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="exportProductListing"/>
                 <set field="toEbayStore"  default-value="Y"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -249,7 +249,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSearchResults"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="exportProductListing"/>
                 <!--set field="layoutSettings.javaScripts[+0]" value="/ebaystore/js/itemSpecifics.js" global="true"/-->
                 <!--entity-condition entity-name="Geo" list="countries">
@@ -278,7 +278,7 @@ under the License.
     <screen name="errorMessageList">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="errorMessageList"/>
                 <entity-and entity-name="EBayLogMessagesInfo" list="errorMsgList">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>

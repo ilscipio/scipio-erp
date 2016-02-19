@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCatalog"/>
-                <set field="headerItem" value="catalogs"/>
+                <set field="activeMainMenuItem" value="catalogs"/>
                 <set field="tabButtonItem" value="FindCatalog"/>
                 <set field="labelTitleProperty" value="ProductCatalog"/>
             </actions>

@@ -66,7 +66,7 @@ under the License.
     <screen name="CommonQuoteDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="quote"/>
+                <set field="activeMainMenuItem" value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 
             </actions>
@@ -160,7 +160,7 @@ under the License.
     <screen name="CommonOrderCheckoutDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="orderentry"/>
+                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
             </actions>

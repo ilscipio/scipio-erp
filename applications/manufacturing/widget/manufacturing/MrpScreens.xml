@@ -48,7 +48,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ManufacturingRunMrp"/>
                 <set field="tabButtonItem" value="RunMrp"/>
-                <set field="headerItem" value="mrp"/>
+                <set field="activeMainMenuItem" value="mrp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMrpDecorator">
@@ -66,7 +66,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindInventoryEventPlan"/>
                 <set field="tabButtonItem" value="findInventoryEventPlan"/>
-                <set field="headerItem" value="mrp"/>
+                <set field="activeMainMenuItem" value="mrp"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>

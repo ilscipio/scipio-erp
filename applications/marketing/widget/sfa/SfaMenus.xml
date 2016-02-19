@@ -64,7 +64,7 @@ under the License.
             </condition>
             <link target="ListPartyCommEvents">
                 <parameter param-name="partyId" from-field="partyId"/>
-                <parameter param-name="headerItem" value="Accounts"/>
+                <parameter param-name="activeMainMenuItem" value="Accounts"/>
             </link>
         </menu-item>
     </menu>
@@ -128,7 +128,7 @@ under the License.
             </condition>
             <link target="ListPartyCommEvents">
                 <parameter param-name="partyId" from-field="partyId"/>
-                <parameter param-name="headerItem" value="Contacts"/>
+                <parameter param-name="activeMainMenuItem" value="Contacts"/>
             </link>
         </menu-item>
     </menu>
@@ -221,7 +221,7 @@ under the License.
             </condition>
             <link target="ListPartyCommEvents">
                 <parameter param-name="partyId" from-field="partyId"/>
-                <parameter param-name="headerItem" value="Leads"/>
+                <parameter param-name="activeMainMenuItem" value="Leads"/>
             </link>
         </menu-item>
         <menu-item name="AddRelatedCompany" title="${uiLabelMap.PageTitleAddRelatedCompany}">
@@ -233,7 +233,7 @@ under the License.
             </condition>
             <link target="AddRelatedCompany">
                 <parameter param-name="partyId" from-field="partyId"/>
-                <parameter param-name="headerItem" value="Leads"/>
+                <parameter param-name="activeMainMenuItem" value="Leads"/>
             </link>
         </menu-item>
     </menu>

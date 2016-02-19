@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="labelTitleProperty" value="ProjectMgrFindTimeSheet"/>
             </actions>
             <widgets>
@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleTimesheet"/>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="tabButtonItem" value="editTimesheet"/>
                 <set field="labelTitleProperty" value="ProjectMgrTimeSheetMyTime"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/EditWeekTimesheet.groovy"/>
@@ -83,7 +83,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimesheet"/>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="tabButtonItem" value="edittimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
@@ -108,7 +108,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimesheet"/>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="tabButtonItem" value="addtimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
@@ -133,7 +133,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WorkEffortMyTimesheets"/>
-                <set field="headerItem" value="mytimesheet"/>
+                <set field="activeMainMenuItem" value="mytimesheet"/>
                 <set field="tabButtonItem" value="edittimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <set field="my" value="My"/><!-- change link and target -->

@@ -23,7 +23,7 @@
     <screen name="ebayStoreInventory">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <entity-and entity-name="ProductStoreFacility" list="productStoreFacilityList">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -89,7 +89,7 @@
     <screen name="ebayLoadStoreInventory">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <entity-and entity-name="ProductStoreFacility" list="productStoreFacilityList">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -116,7 +116,7 @@
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditInventoryItem"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -160,7 +160,7 @@
     <screen name="reserveEbayProductInventory">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="Facility" value-field="facility">
@@ -182,7 +182,7 @@
     <screen name="ebayStoreInventoryFail">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
             </actions>
@@ -213,7 +213,7 @@
     <screen name="updateQuantityReserved">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <entity-one entity-name="EbayProductStoreInventory" value-field="ebayProductStoreInventory">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -236,7 +236,7 @@
     <screen name="EbayAutomationPreferences">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="automationPreferences"/>
                 <service service-name="getEbayStoreUser" result-map="result">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -281,7 +281,7 @@
     <screen name="AutomationRelistSoldItems">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="autoPrefEnumId" value="EBAY_AUTO_RELISTING"/>
                 <set field="serviceName" value="autoRelistingItems"/>
                 <entity-one value-field="ebayPrefRelisting" entity-name="EbayProductStorePref">
@@ -303,7 +303,7 @@
     <screen name="AutomationDispute">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="automaticEbayDisputeItems"/>
                 <set field="autoPrefEnumId1" value="EBAY_AUTO_DISPUTE1"/>
                 <set field="autoPrefEnumId2" value="EBAY_AUTO_DISPUTE2"/>
@@ -398,7 +398,7 @@
     <screen name="EditEmailTemplate">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="automationPreferences"/>
                 <service service-name="getEbayStoreUser" result-map="result">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -537,7 +537,7 @@
     <screen name="ordersImported">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="ordersImported"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FindOrders.groovy"/>
                 <set field="orderList" value="${orderList}" type="List"/>
@@ -562,7 +562,7 @@
     <screen name="GetItemProduct">
         <section>
             <actions>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <service service-name="getEbayStoreProductItem" result-map="result">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                     <field-map field-name="itemId" from-field="parameters.itemId"/>
@@ -589,7 +589,7 @@
     <screen name="customerService">
         <section>
             <actions>
-                    <set field="headerItem" value="ebayStore"/>
+                    <set field="activeMainMenuItem" value="ebayStore"/>
                     <service service-name="getEbayStoreUser" result-map="result">
                         <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                     </service>

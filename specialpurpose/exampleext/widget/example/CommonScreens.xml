@@ -35,7 +35,7 @@ under the License.
     <screen name="CommonExampleDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Example"/>
+                <set field="activeMainMenuItem" value="Example"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>

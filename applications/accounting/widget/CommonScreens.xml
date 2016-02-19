@@ -71,7 +71,7 @@ under the License.
     <screen name="CommonAgreementDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="agreements" />
+                <set field="activeMainMenuItem" value="agreements" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
             </actions>
@@ -154,7 +154,7 @@ under the License.
     <screen name="CommonFinAccountDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="FindFinAccount"/>
+                <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <entity-one value-field="finAccount" entity-name="FinAccount"/>
             </actions>
             <widgets>
@@ -196,7 +196,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -249,7 +249,7 @@ under the License.
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="PaymentGroup"/>
+                <set field="activeMainMenuItem" value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -307,7 +307,7 @@ under the License.
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="companies"/>
+                <set field="activeMainMenuItem" value="companies"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
             </actions>
             <widgets>
@@ -375,8 +375,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                 <set field="isReduced" value="true" type="Boolean" />
                 <set field="viewSize" value="10" />
@@ -456,7 +456,7 @@ under the License.
     <screen name="GlobalGLSettingsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="GlobalGLSettings"/>
+                <set field="activeMainMenuItem" value="GlobalGLSettings"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

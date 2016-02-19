@@ -76,7 +76,7 @@ under the License.
             <actions>
                 <set field="tabButtonItem" value="ResourcesProfile"/>
                 <set field="titleProperty" value="PartyProfile"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
@@ -123,7 +123,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
@@ -146,7 +146,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">

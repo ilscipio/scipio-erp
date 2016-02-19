@@ -24,7 +24,7 @@ under the License.
     <screen name="PaymentMethodDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
             </actions>
             <widgets>
@@ -121,7 +121,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAvsOverride"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -154,7 +154,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
-                <set field="headerItem" value="billingaccount"/>
+                <set field="activeMainMenuItem" value="billingaccount"/>
                 <set field="tabButtonItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>

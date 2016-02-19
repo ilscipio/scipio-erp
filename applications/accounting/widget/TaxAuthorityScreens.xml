@@ -25,7 +25,7 @@ under the License.
     <screen name="CommonTaxAuthorityDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="TaxAuthorities"/>
+                <set field="activeMainMenuItem" value="TaxAuthorities"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>

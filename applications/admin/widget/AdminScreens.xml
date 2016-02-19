@@ -5,8 +5,8 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="AdminViewTitleMain" global="true"/>
                 
                 <!-- Groovy scripts -->

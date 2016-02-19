@@ -461,7 +461,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <set field="headerItem" value="Advanced Search"/>
+                <set field="activeMainMenuItem" value="Advanced Search"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
             </actions>
             <widgets>

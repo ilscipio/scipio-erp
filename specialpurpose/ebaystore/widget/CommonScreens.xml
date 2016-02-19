@@ -110,7 +110,7 @@
     <screen name="CommonEbayConfigDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="eBayConfigurations"/>
+                <set field="activeMainMenuItem" value="eBayConfigurations"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

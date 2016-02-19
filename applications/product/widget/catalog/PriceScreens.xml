@@ -54,7 +54,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPriceRule"/>
-                <set field="headerItem" value="pricerules"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -78,7 +78,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
-                <set field="headerItem" value="pricerules"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules_old.groovy"/>
             </actions>
@@ -97,7 +97,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPriceRules"/>
-                <set field="headerItem" value="pricerules"/>
+                <set field="activeMainMenuItem" value="pricerules"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/price/EditProductPriceRules.groovy"/>
             </actions>

@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProjectAndSprintList"/>
-                <set field="headerItem" value="Sprints"/><!--this highlights the selected menu-item with name "Sprints" -->
+                <set field="activeMainMenuItem" value="Sprints"/><!--this highlights the selected menu-item with name "Sprints" -->
                 <set field="partyId" from-field="userLogin.partyId"/>
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
@@ -367,7 +367,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditScrumProject"/>
-                <set field="headerItem" value="main"/>
+                <set field="activeMainMenuItem" value="main"/>
                 <set field="tabButtonItem" value="editProject"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndProduct" list="workEffortList">
@@ -1022,7 +1022,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogItemsContents"/>
                 <set field="tabButtonItem" value="productBacklogItemContent"/>
-                <set field="headerItem" value="request"/>
+                <set field="activeMainMenuItem" value="request"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="productId" from-field="parameters.productId"/>
@@ -1216,7 +1216,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleScrumProjectContents"/>
                 <set field="tabButtonItem" value="projectContent"/>
-                <set field="headerItem" value="EditProjectContents"/>
+                <set field="activeMainMenuItem" value="EditProjectContents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <set field="workEffortId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
@@ -1868,7 +1868,7 @@ under the License.
    <screen name="ViewEditProdBacklog">
         <section>
             <actions>
-                <set field="headerItem" value="EditProdBacklogItem"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="activeMainMenuItem" value="EditProdBacklogItem"/><!-- this highlights the selected menu-item with name "main" -->
                 <entity-and list="custRequestItem" entity-name="CustRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
@@ -1986,7 +1986,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogContents"/>
                 <set field="tabButtonItem" value="productContent"/>
-                <set field="headerItem" value="EditProductContent"/>
+                <set field="activeMainMenuItem" value="EditProductContent"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-and entity-name="ProductContent" list="productContent">
@@ -2576,7 +2576,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditScrumProject"/>
-                <set field="headerItem" value="main"/>
+                <set field="activeMainMenuItem" value="main"/>
                 <set field="tabButtonItem" value="view"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
@@ -2623,7 +2623,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="PageTitleAllBacklog"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="tabButtonItem" value="totalBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/FindProductBacklogItem.groovy"/>
@@ -2653,7 +2653,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="PageTitleBilling"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="tabButtonItem" value="totalBilling"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product"/>
@@ -2715,7 +2715,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="ScrumFindProductStatistics"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="tabButtonItem" value="productStatistics"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one value-field="product" entity-name="Product"/>
@@ -2788,7 +2788,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="ScrumQuickAddBacklog"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="tabButtonItem" value="quickAddBacklog"/>
                 <set field="formTarget" value="${groovy: 
                     if (parameters.unplanned.equals(&quot;Y&quot;)) 
@@ -2820,7 +2820,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="ScrumQuickAddNewTask"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="tabButtonItem" value="quickAddNewTask"/>
             </actions>
             <widgets>

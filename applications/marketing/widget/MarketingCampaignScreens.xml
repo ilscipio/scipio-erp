@@ -26,7 +26,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="headerItem" value="Campaign"/>
+                <set field="activeMainMenuItem" value="Campaign"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
             </actions>
             <widgets>

@@ -68,8 +68,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" from-field="parameters.headerItem" default-value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" from-field="parameters.activeMainMenuItem" default-value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
@@ -102,7 +102,7 @@ under the License.
             <actions>
                 <!-- Do action here -->
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
-                <set field="headerItem" value="Opportunities"/>
+                <set field="activeMainMenuItem" value="Opportunities"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -137,7 +137,7 @@ under the License.
                         </or>
                     </condition>
                     <actions>
-                        <set field="headerItem" value="Leads"/>
+                        <set field="activeMainMenuItem" value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
                     </actions>
                     <widgets/>
@@ -147,7 +147,7 @@ under the License.
                         <not><if-empty field="contactDescription"/></not>
                     </condition>
                     <actions>
-                        <set field="headerItem" value="Contacts"/>
+                        <set field="activeMainMenuItem" value="Contacts"/>
                         <set field="currentCommonDecorator" value="CommonContactDecorator"/>
                     </actions>
                     <widgets/>
@@ -157,7 +157,7 @@ under the License.
                         <not><if-empty field="accountDescription"/></not>
                     </condition>
                     <actions>
-                        <set field="headerItem" value="Accounts"/>
+                        <set field="activeMainMenuItem" value="Accounts"/>
                         <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
                     </actions>
                     <widgets/>
@@ -359,7 +359,7 @@ under the License.
     <screen name="CommonCommunicationEventDecorator">
         <section>
             <actions>
-                <set field="headerItem" from-field="parameters.headerItem"/>
+                <set field="activeMainMenuItem" from-field="parameters.activeMainMenuItem"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
             </actions>
             <widgets>
@@ -457,7 +457,7 @@ under the License.
     <screen name="CommonEventDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Events"/>
+                <set field="activeMainMenuItem" value="Events"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">

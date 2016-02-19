@@ -67,7 +67,7 @@ under the License.
     <screen name="CommonFacilityDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
             </actions>
@@ -110,7 +110,7 @@ under the License.
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ListFixedAssets"/>
+                <set field="activeMainMenuItem" value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>

@@ -52,8 +52,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
             </actions>
             <widgets>
@@ -104,7 +104,7 @@ under the License.
     <screen name="EditVendor">
         <section>
             <actions>
-                <set field="headerItem" value="findVendors"/>
+                <set field="activeMainMenuItem" value="findVendors"/>
                 <set field="titleProperty" value="AccountingApPageTitleEditVendor"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -123,7 +123,7 @@ under the License.
     <screen name="FindVendors">
         <section>
             <actions>
-                <set field="headerItem" value="findVendors"/>
+                <set field="activeMainMenuItem" value="findVendors"/>
                 <set field="titleProperty" value="AccountingApPageTitleFindVendors"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -158,7 +158,7 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="invoices"/>
+                <set field="activeMainMenuItem" value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -176,7 +176,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -205,7 +205,7 @@ under the License.
     <screen name="CommonPaymentGroupDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="PaymentGroup"/>
+                <set field="activeMainMenuItem" value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -244,7 +244,7 @@ under the License.
     <screen name="CommonApPaymentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -264,7 +264,7 @@ under the License.
     <screen name="CommonApReportDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="reports"/>
+                <set field="activeMainMenuItem" value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

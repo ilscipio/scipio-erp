@@ -343,7 +343,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
-                <set field="headerItem" value="init"/>
+                <set field="activeMainMenuItem" value="init"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

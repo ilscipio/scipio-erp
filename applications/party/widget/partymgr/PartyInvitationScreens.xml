@@ -23,7 +23,7 @@ under the License.
     <screen name="CommonPartyInvitationDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="partyinv"/>
+                <set field="activeMainMenuItem" value="partyinv"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
                 
@@ -74,7 +74,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyFindPartyInvitations"/>
-                <set field="headerItem" value="partyinv"/>
+                <set field="activeMainMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -112,7 +112,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyInvitation"/>
-                <set field="headerItem" value="partyinv"/>
+                <set field="activeMainMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -141,7 +141,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyInvitation"/>
-                <set field="headerItem" value="partyinv"/>
+                <set field="activeMainMenuItem" value="partyinv"/>
                 <set field="tabButtonItem" value="EditPartyInvitation"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>

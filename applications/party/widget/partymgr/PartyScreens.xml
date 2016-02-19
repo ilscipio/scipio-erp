@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindParty"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="findparty"/>
 
                 <service service-name="findParty" auto-field-map="parameters"/>
@@ -152,7 +152,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyRole"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="viewroles"/>
                 <set field="labelTitleProperty" value="PartyMemberRoles"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
@@ -223,7 +223,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyLink"/>
-                <set field="headerItem" value="link"/>
+                <set field="activeMainMenuItem" value="link"/>
                 <set field="tabButtonItem" value="linkparty"/>
             </actions>
             <widgets>
@@ -255,7 +255,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditPartyRelationships"/>
                 <set field="tabButtonItem" value="EditPartyRelationships"/>
                 <set field="labelTitleProperty" value="PartyRelationships"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-condition entity-name="RoleType" list="roleTypes">
@@ -316,7 +316,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewVendorParty"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyVendorInformation"/>
@@ -341,7 +341,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyAttribute"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="viewvendor"/>
 
                 <set field="labelTitleProperty" value="PartyAttribute"/>
@@ -368,7 +368,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyTaxAuthInfos"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyTaxAuthInfos"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
@@ -397,7 +397,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleShoppingList"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="editShoppingList"/>
 
                 <set field="labelTitleProperty" value="PartyShoppingLists"/>
@@ -420,7 +420,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContactMech"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="editcontactmech"/>
 
                 <set field="labelTitleProperty" value="PageTitleEditContactMech"/>
@@ -479,7 +479,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditPersonalInformation"/>
                 <set field="tabButtonItem" value="viewprofile"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditPersonalInformation"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -502,7 +502,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditGroupInformation"/>
                 <set field="tabButtonItem" value="viewprofile"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="labelTitleProperty" value="PageTitleEditGroupInformation"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -621,7 +621,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPartyRates"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyRates"/>
                 <set field="labelTitleProperty" value="PageTitleEditPartyRates"/>
 
@@ -644,7 +644,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySegmentRoles"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="ViewSegmentRoles"/>
 
                 <set field="labelTitleProperty" value="ViewSegmentRoles"/>
@@ -670,7 +670,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateNewPartyDetail"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -699,7 +699,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="target" value="createCustomer"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
@@ -745,7 +745,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewProspect"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
@@ -790,7 +790,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
@@ -835,7 +835,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatchMap"/>
-                <set field="headerItem" value="addrmap"/>
+                <set field="activeMainMenuItem" value="addrmap"/>
                 <entity-condition entity-name="AddressMatchMap" list="addressMatchMaps">
                     <order-by field-name="sequenceNum"/>
                 </entity-condition>
@@ -856,7 +856,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatches"/>
-                <set field="headerItem" value="addrmap"/>
+                <set field="activeMainMenuItem" value="addrmap"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindMatches.groovy"/>
             </actions>
             <widgets>
@@ -876,7 +876,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
@@ -938,7 +938,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyResume"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="EditPartyResumes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="resumeId" from-field="parameters.resumeId"/>
@@ -961,7 +961,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyFinancialHistory"/>
-                <set field="headerItem" value="accountsMain"/>
+                <set field="activeMainMenuItem" value="accountsMain"/>
                 <set field="tabButtonItem" value="FinancialHistory"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
@@ -1134,7 +1134,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyPreferences"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="preferences"/>
                 <set field="partyId"  from-field="parameters.partyId"/>
                 <entity-and entity-name="EnumTypeChildAndEnum" list="enumTypeChildAndEnums">
@@ -1254,7 +1254,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListPartyIdentifications"/>
-                <set field="headerItem" value="find"/>
+                <set field="activeMainMenuItem" value="find"/>
                 <set field="tabButtonItem" value="viewidentifications"/>
 
                 <set field="labelTitleProperty" value="PartyIdentification"/>
@@ -1283,7 +1283,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
-                <set field="headerItem" value="store"/>
+                <set field="activeMainMenuItem" value="store"/>
                 <set field="tabButtonItem" value="FindProductStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
@@ -1346,7 +1346,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CommonImportExport"/>
-                <set field="headerItem" value="importexport"/>
+                <set field="activeMainMenuItem" value="importexport"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindReturn"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindQuickReturn"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/QuickReturn.groovy"/>
             </actions>
             <widgets>
@@ -65,7 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnHeader"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <set field="tabButtonItem" value="OrderReturnHeader"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/return.js" global="true"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
@@ -88,7 +88,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnList"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <entity-condition list="returnList" entity-name="ReturnHeader"/>
             </actions>
             <widgets>
@@ -108,7 +108,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnItems"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <set field="tabButtonItem" value="OrderReturnItems"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>
             </actions>
@@ -134,7 +134,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReturnHistory"/>
-                <set field="headerItem" value="return"/>
+                <set field="activeMainMenuItem" value="return"/>
                 <set field="tabButtonItem" value="OrderReturnHistory"/>
                 <set field="returnId" from-field="parameters.returnId"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnItems.groovy"/>

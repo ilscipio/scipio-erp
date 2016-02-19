@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitleOpenTerminal"/>
-                <set field="headerItem" value="Manager"/>
+                <set field="activeMainMenuItem" value="Manager"/>
             </actions>
             <widgets>
                 <container>
@@ -39,7 +39,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitleCloseTerminal"/>
-                <set field="headerItem" value="Manager"/>
+                <set field="activeMainMenuItem" value="Manager"/>
             </actions>
             <widgets>
                 <container>
@@ -53,7 +53,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitlePaidOutAndIn"/>
-                <set field="headerItem" value="PaidOutAndIn"/>
+                <set field="activeMainMenuItem" value="PaidOutAndIn"/>
                 <script location="component://webpos/webapp/webpos/WEB-INF/actions/manager/PaidOutAndIn.groovy"/>
             </actions>
             <widgets>
@@ -68,7 +68,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitleVoidOrder"/>
-                <set field="headerItem" value="VoidOrder"/>
+                <set field="activeMainMenuItem" value="VoidOrder"/>
             </actions>
             <widgets>
                 <container>

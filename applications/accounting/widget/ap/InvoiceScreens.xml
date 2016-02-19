@@ -106,7 +106,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCreateNewPurchaseInvoice"/>
-                <set field="headerItem" value="invoices"/>
+                <set field="activeMainMenuItem" value="invoices"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>

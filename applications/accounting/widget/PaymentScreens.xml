@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -64,7 +64,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="tabButtonItem" value="findPayment"/>
             </actions>
             <widgets>
@@ -113,7 +113,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditPayment"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="tabButtonItem" value="editPayment"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
@@ -427,7 +427,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingManualTransaction"/>
-                <set field="headerItem" value="transaction"/>
+                <set field="activeMainMenuItem" value="transaction"/>
                 <set field="tabButtonItem" value="manualtransactiontab"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ManualTx.groovy"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -487,7 +487,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindSalesInvoicesByDueDate"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -520,7 +520,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindPurchaseInvoicesByDueDate"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>

@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CatalogWebAnalytics"/>
-                <set field="headerItem" value="websites"/>
+                <set field="activeMainMenuItem" value="websites"/>
                 <set field="tabButtonItem" value="WebAnalytics"/>
                 <set field="tabButtonItem2" value="FindWebAnalyticsConfigs"/>
                 <set field="webAnalyticsConfigCtx" from-field="parameters"/>

@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditOrderHeader"/>
-                <set field="headerItem" value="OrderHeader"/>
+                <set field="activeMainMenuItem" value="OrderHeader"/>
                 <set field="tabButtonItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
@@ -69,7 +69,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListOrderHeaders"/>
-                <set field="headerItem" value="OrderHeader"/>
+                <set field="activeMainMenuItem" value="OrderHeader"/>
                 <set field="tabButtonItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>

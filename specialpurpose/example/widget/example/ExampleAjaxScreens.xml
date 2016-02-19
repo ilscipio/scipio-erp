@@ -24,7 +24,7 @@ under the License.
     <screen name="AjaxExample">
         <section>
             <actions>
-                <set field="headerItem" value="AjaxExample"/>
+                <set field="activeMainMenuItem" value="AjaxExample"/>
                 <set field="titleProperty" value="PageTitleFindExample"/>
                 <set field="exampleCtx" from-field="parameters"/>
             </actions>

@@ -55,7 +55,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductReviews"/>
-                <set field="headerItem" value="reviews"/>
+                <set field="activeMainMenuItem" value="reviews"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonReviewDecorator">

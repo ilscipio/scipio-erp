@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFindFacilities"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.groovy"/>
             </actions>
             <widgets>
@@ -151,7 +151,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductNewFacility"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="EditFacility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
             </actions>
@@ -224,7 +224,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFacilityChildren" />
-                <set field="headerItem" value="facility" />
+                <set field="activeMainMenuItem" value="facility" />
                 <set field="tabButtonItem" value="FacilityChildren" />
                 <set field="facilityId" from-field="parameters.facilityId" />
                 <set field="trail" from-field="parameters.trail" default-value="${facilityId}" />
@@ -391,7 +391,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSearchInventoryItemsByLabels"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -556,7 +556,7 @@ under the License.
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleViewFacilityInventoryItemsDetails"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="ViewFacilityInventoryItemsDetails"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -617,7 +617,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="tabButtonItem2" value="InventoryItemTotalsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -644,7 +644,7 @@ under the License.
     <screen name="InventoryItemGrandTotals">
         <section>
             <actions>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="tabButtonItem2" value="InventoryItemGrandTotalsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -693,7 +693,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="tabButtonItem2" value="InventoryAverageCostsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -972,7 +972,7 @@ under the License.
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditInventoryItem"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
                 <set field="subTabButtonItem" value="ViewInventoryItemDetail"/>
 
@@ -1005,7 +1005,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditInventoryItemLabels"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
                 <set field="subTabButtonItem" value="EditInventoryItemLabels"/>
 
@@ -1036,7 +1036,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFacilityPhysicalInventory"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="PhysicalInventory"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/FindFacilityPhysicalInventory.groovy"/>
 
@@ -1104,7 +1104,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductReceiveReturn"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="ReceiveReturn"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
@@ -1137,7 +1137,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="PicklistOptions"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1237,7 +1237,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="PicklistManage"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1275,7 +1275,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickingMoveStock"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="PickMoveStock"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1381,7 +1381,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePackageShipmentScheduling"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="Scheduling"/>
                 <set field="scheduleTabButtonItem" value="ScheduleTabButton"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1419,7 +1419,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLabelPrinting"/>
-                <set field="headerItem" value="facility"/>
+                <set field="activeMainMenuItem" value="facility"/>
                 <set field="tabButtonItem" value="Scheduling"/>
                 <set field="scheduleTabButtonItem" value="LabelsTabButton"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>

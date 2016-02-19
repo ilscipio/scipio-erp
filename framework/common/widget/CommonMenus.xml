@@ -31,7 +31,7 @@ under the License.
     <!-- Cato: Original stock Ofbiz base app bar menu, modified. -->
     <menu name="CommonEmptyAppBarMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
         default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" 
-        selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
+        selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppBarMenu" extends="CommonEmptyAppBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">
@@ -42,7 +42,7 @@ under the License.
     
     <!-- Cato: New dashboard app bar menu. -->
     <menu name="CommonEmptyAppBarDashboardMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
+        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppBarDashboardMenu" extends="CommonEmptyAppBarDashboardMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">
@@ -52,7 +52,7 @@ under the License.
     </menu>
     
     <!-- Cato: New menu for sidebars derived from main app bar menus. Should have mostly minor differences with CommonSideBarMenu. -->
-    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" selected-menuitem-context-field-name="headerItem" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
+    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" selected-menuitem-context-field-name="activeMainMenuItem" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppSideBarMenu" extends="CommonEmptyAppSideBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}" >

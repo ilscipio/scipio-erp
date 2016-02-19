@@ -51,7 +51,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
                 <set field="tabButtonItem" value="requestlist"/>
-                <set field="headerItem" value="request"/>
+                <set field="activeMainMenuItem" value="request"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
@@ -67,7 +67,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="OrderRequest"/>
                 <set field="tabButtonItem" value="editRequest"/>
-                <set field="headerItem" value="request"/>
+                <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -94,9 +94,9 @@ under the License.
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="tabButtonItem" value="ViewRequest"/>
-                <set field="headerItem" value="request"/>
+                <set field="activeMainMenuItem" value="request"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
-                <!--<set field="headerItem" value="Shopping List"/>-->
+                <!--<set field="activeMainMenuItem" value="Shopping List"/>-->
                 <set field="showRequestManagementLinks" value="Y"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>

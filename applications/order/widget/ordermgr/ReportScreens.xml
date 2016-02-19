@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReports"/>
-                <set field="headerItem" value="reports"/>
+                <set field="activeMainMenuItem" value="reports"/>
                 <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -236,7 +236,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReportOpenOrderItems"/>
-                <set field="headerItem" value="reports"/>
+                <set field="activeMainMenuItem" value="reports"/>
                 <set field="viewSize" value="${parameters.VIEW_SIZE}" default-value="20" type="Integer"/>
                 <set field="viewIndex" value="${parameters.VIEW_INDEX}" default-value="0" type="Integer"/>
                 <set field="fromOrderDate" from-field="parameters.fromOrderDate" type="Timestamp"/>

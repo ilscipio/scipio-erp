@@ -23,7 +23,7 @@ under the License.
     <screen name="UserJobs">
         <section>
             <actions>
-                <set field="headerItem" value="userJobs"/>
+                <set field="activeMainMenuItem" value="userJobs"/>
                 <set field="titleProperty" value="WorkEffortJobList"/>
                 <set field="filterByStatusId" from-field="parameters.statusId" default-value="SERVICE_RUNNING"/>
                 <entity-condition entity-name="JobSandbox" list="userJobs">
@@ -58,7 +58,7 @@ under the License.
     <screen name="mytasks">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleViewActivityAndTaskList"/>
 
                 <service service-name="getWorkEffortAssignedActivities"/>
@@ -134,7 +134,7 @@ under the License.
     <screen name="FindWorkEffort">
         <section>
             <actions>
-                <set field="headerItem" value="workeffort"/>
+                <set field="activeMainMenuItem" value="workeffort"/>
                 <set field="titleProperty" value="PageTitleFindWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
             </actions>
@@ -775,7 +775,7 @@ under the License.
     <screen name="iCalendarDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="WorkEffortICalendar"/>
+                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -809,7 +809,7 @@ under the License.
     <screen name="FindICalendars">
         <section>
             <actions>
-                <set field="headerItem" value="WorkEffortICalendar"/>
+                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
                 <set field="titleProperty" value="WorkEffortICalendarFind"/>
             </actions>
             <widgets>

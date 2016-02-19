@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonBlogDecorator">
         <section>
             <actions>
-                <set field="headerItem" from-field="headerItem" default-value="Blog"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Blog"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -119,7 +119,7 @@ under the License.
     <screen name="BlogMain">
         <section>
             <actions>
-                <set field="headerItem" value="Blog"/>
+                <set field="activeMainMenuItem" value="Blog"/>
                 <set field="tabButtonItem" value="ListBlog"/>
                 <set field="titleProperty" value="ContentBlogList"/>
                 <entity-condition entity-name="ContentAssocViewTo" list="blogs" use-cache="true">

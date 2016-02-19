@@ -89,7 +89,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and context.headerItem != 'init'}" override-by-auto-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and context.activeMainMenuItem != 'init'}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>
@@ -158,7 +158,7 @@
                 <set field="tabButtonItem" value="entityExportAll"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 <set field="results" from-field="parameters.results"/>
-                <set field="headerItem" value="export"/>
+                <set field="activeMainMenuItem" value="export"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

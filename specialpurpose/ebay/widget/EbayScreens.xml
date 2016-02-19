@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <set field="headerItem" value="export"/>
+                <set field="activeMainMenuItem" value="export"/>
                 <entity-condition entity-name="ProductCategory" list="productCategories">
                     <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
                     <order-by field-name="description"/>
@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSearchResults"/>
-                <set field="headerItem" value="export"/>
+                <set field="activeMainMenuItem" value="export"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearch.groovy"/>
             </actions>
             <widgets>
@@ -71,7 +71,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="GoogleBaseUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="export"/>
+                <set field="activeMainMenuItem" value="export"/>
                 <set field="titleProperty" value="PageTitleEbayProductsExportToEbay"/>
                 <set field="selectResult" from-field="parameters.selectResult"/>
                 <entity-condition entity-name="Geo" list="countries">
@@ -98,7 +98,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayImportOrdersFromEbay"/>
-                <set field="headerItem" value="importOrders"/>
+                <set field="activeMainMenuItem" value="importOrders"/>
                 <set field="orderList" from-field="parameters.orderList"/>
             </actions>
             <widgets>
@@ -146,7 +146,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayEBayOrders"/>
-                <set field="headerItem" value="eBayOrders"/>
+                <set field="activeMainMenuItem" value="eBayOrders"/>
                 <set field="orderList" from-field="parameters.orderList"/>
                 <script location="component://ebay/webapp/ebay/WEB-INF/actions/find/eBayOrders.groovy"/>
             </actions>
@@ -209,7 +209,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayShippingMethodConfigurations"/>
-                <set field="headerItem" value="eBayShippingMethods"/>
+                <set field="activeMainMenuItem" value="eBayShippingMethods"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <set field="shipmentMethodName" from-field="parameters.shipmentMethodName"/>
             </actions>
@@ -259,7 +259,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayEBayOrders"/>
-                <set field="headerItem" value="eBayOrders"/>
+                <set field="activeMainMenuItem" value="eBayOrders"/>
                 <script location="component://ebay/webapp/ebay/WEB-INF/actions/find/updatedEbayOrders.groovy"/>
             </actions>
             <widgets>

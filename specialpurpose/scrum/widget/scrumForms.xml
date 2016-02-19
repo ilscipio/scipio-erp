@@ -2537,12 +2537,12 @@ under the License.
         <field name="workEffortContentTypeId"><hidden/></field>
         <field name="mimeTypeId"><hidden/></field>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="contentName" use-when="activeMainMenuItem.equals(&quot;EditProjectContents&quot;)">
             <display description="${contentMap.contentName} ${contentId}"/>
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><ignored/></field>
         <field name="submitAction"><ignored/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="activeMainMenuItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="workEffortId"/>

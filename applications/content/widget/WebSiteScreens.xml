@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindWebSite"/>
-                <set field="headerItem" value="websites"/>
+                <set field="activeMainMenuItem" value="websites"/>
                 <set field="labelTitleProperty" value="PageTitleFindWebSite"/>
             </actions>
             <widgets>

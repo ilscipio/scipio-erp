@@ -80,7 +80,7 @@ under the License.
     <screen name="CommonWorkEffortDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="workeffort"/>
+                <set field="activeMainMenuItem" value="workeffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
@@ -131,7 +131,7 @@ under the License.
     <screen name="CommonTimesheetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
             </actions>
@@ -177,7 +177,7 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="calendar" />
+                <set field="activeMainMenuItem" value="calendar" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -208,8 +208,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

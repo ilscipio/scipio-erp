@@ -68,7 +68,7 @@ under the License.
     <screen name="CommonFixedAssetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ComputerHardware"/>
+                <set field="activeMainMenuItem" value="ComputerHardware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -121,7 +121,7 @@ under the License.
     <screen name="CommonComputerSoftwareDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ComputerSoftware"/>
+                <set field="activeMainMenuItem" value="ComputerSoftware"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

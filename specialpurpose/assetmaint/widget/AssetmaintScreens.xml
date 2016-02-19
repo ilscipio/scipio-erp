@@ -24,8 +24,8 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="viewSize" value="10" />
                 <set field="createdPeriod" value="month"/>
             </actions>
@@ -73,7 +73,7 @@
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ListFixedAssetMaints"/>
+                <set field="activeMainMenuItem" value="ListFixedAssetMaints"/>
                 <set field="tabButtonItem" value="ListFixedAssetMaints"/>
             </actions>
             <widgets>
@@ -92,7 +92,7 @@
     <screen name="FindFixedAssetMaints">
         <section>
             <actions>
-                <set field="headerItem" value="fixedAssetMaints"/>
+                <set field="activeMainMenuItem" value="fixedAssetMaints"/>
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>

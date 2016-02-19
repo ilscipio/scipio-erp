@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WebPosPageTitlePromoCode"/>
-                <set field="headerItem" value="Promo"/>
+                <set field="activeMainMenuItem" value="Promo"/>
             </actions>
             <widgets>
                 <container>

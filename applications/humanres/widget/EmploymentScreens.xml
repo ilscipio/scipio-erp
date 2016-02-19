@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmployment"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
@@ -61,7 +61,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmployment"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditEmployment"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="Employment" value-field="employment"/>
@@ -99,7 +99,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPayHistories"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditPayHistory"/>
             </actions>
             <widgets>
@@ -117,7 +117,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPartyBenefits"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditPartyBenefit"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -141,7 +141,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPayrollPreferences"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditPayrollPreference"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -169,7 +169,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResAddUnemploymentClaim"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditUnemploymentClaims"/>
                 <set field="unemploymentClaimId" from-field="parameters.unemploymentClaimId"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
@@ -195,7 +195,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResPerfNote"/>
-                <set field="headerItem" value="Employee"/>
+                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="tabButtonItem" value="EditPerformanceNotes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -215,7 +215,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditAgreementEmploymentAppl"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="tabButtonItem" value="EditAgreementEmploymentAppls"/>
                 <set field="agreementId" from-field="parameters.agreementId"/>
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>

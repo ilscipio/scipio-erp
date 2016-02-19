@@ -24,7 +24,7 @@ under the License.
     <screen name="StatsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="stats"/>
+                <set field="activeMainMenuItem" value="stats"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

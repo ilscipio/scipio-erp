@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArPayments"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="tabButtonItem" value="findPayments"/>
             </actions>
             <widgets>
@@ -56,7 +56,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDepositPaymentsAndCreateBatch"/>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="tabButtonItem" value="batchPayments"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
@@ -111,7 +111,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArPaymentGroups"/>
-                <set field="headerItem" value="paymentGroups"/>
+                <set field="activeMainMenuItem" value="paymentGroups"/>
                 <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
                     <condition-list combine="and">
                         <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>

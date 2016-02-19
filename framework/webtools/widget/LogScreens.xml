@@ -23,7 +23,7 @@ under the License.
     <screen name="log-decorator">
         <section>
             <actions>
-                <set field="headerItem" value="server"/>
+                <set field="activeMainMenuItem" value="server"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

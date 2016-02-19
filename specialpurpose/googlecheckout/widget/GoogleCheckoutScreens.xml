@@ -140,7 +140,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="GoogleCheckoutGoogleCheckoutConfiguration"/>
-                <set field="headerItem" value="GoogleCheckoutConfigurations"/>
+                <set field="activeMainMenuItem" value="GoogleCheckoutConfigurations"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
             </actions>
             <widgets>
@@ -160,7 +160,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="GoogleCheckoutGoogleCheckoutConfiguration"/>
-                <set field="headerItem" value="GoogleCheckoutShippingMethods"/>
+                <set field="activeMainMenuItem" value="GoogleCheckoutShippingMethods"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <set field="shipmentMethodName" from-field="parameters.shipmentMethodName"/>
             </actions>

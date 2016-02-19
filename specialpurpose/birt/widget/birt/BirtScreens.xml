@@ -70,7 +70,7 @@ under the License.
     <screen name="CommonBirtDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Birt"/>
+                <set field="activeMainMenuItem" value="Birt"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -108,8 +108,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBirtDecorator" location="${parameters.mainDecoratorLocation}">

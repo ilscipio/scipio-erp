@@ -26,7 +26,7 @@ under the License.
     <screen name="CommonFinAccountDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="FindFinAccount"/>
+                <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <entity-one value-field="finAccount" entity-name="FinAccount"/>
             </actions>
             <widgets>
@@ -382,7 +382,7 @@ under the License.
                 <set field="titleProperty" value="AccountingCreateNewDepositSlipForFinancialAccount"/>
                 <set field="tabButtonItem" value="findDepositSlips"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
-                <set field="headerItem" value="FindFinAccount"/>
+                <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.fromDate"/>

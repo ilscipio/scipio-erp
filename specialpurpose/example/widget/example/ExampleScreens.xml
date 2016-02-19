@@ -25,7 +25,7 @@ under the License.
     <screen name="FindExample">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleMenuItem"/>
+                <set field="activeMainMenuItem" value="ExampleMenuItem"/>
                 <set field="titleProperty" value="PageTitleFindExample"/>
                 <set field="exampleCtx" from-field="parameters"/>
             </actions>
@@ -221,7 +221,7 @@ under the License.
     <screen name="ExampleGeoLocationPointSet4">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
                 <set field="tabButtonItem" value="ExampleGeoLocationPointSet4"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>
@@ -293,7 +293,7 @@ under the License.
     <screen name="ExampleGeoLocationAddress">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
                 <set field="tabButtonItem" value="ExampleGeoLocationAddress"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_ADDRESS_GOOGLE"/>
                 <set field="geoChart.width" value="800px"/>
@@ -409,7 +409,7 @@ under the License.
     <screen name="ExampleOsmGeoLocationPointSet4">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
                 <set field="tabButtonItem" value="ExampleOsmGeoLocationPointSet4"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>

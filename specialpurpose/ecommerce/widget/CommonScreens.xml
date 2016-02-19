@@ -305,8 +305,8 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleMain"/>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
 
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Main.groovy"/>
@@ -327,7 +327,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLogin"/>
-                <set field="headerItem" value="login"/>
+                <set field="activeMainMenuItem" value="login"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>
@@ -348,7 +348,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLogin"/>
-                <set field="headerItem" value="login"/>
+                <set field="activeMainMenuItem" value="login"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>

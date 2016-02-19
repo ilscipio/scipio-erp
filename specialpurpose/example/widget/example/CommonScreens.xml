@@ -77,7 +77,7 @@ under the License.
             screen and decorator. -->
         <section>
             <actions>
-                <set field="headerItem" value="ExampleMenuItem"/>
+                <set field="activeMainMenuItem" value="ExampleMenuItem"/>
                 <set field="exampleId" from-field="parameters.exampleId"/>
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
@@ -146,7 +146,7 @@ under the License.
     <screen name="CommonExampleFeatureDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleFeature"/>
+                <set field="activeMainMenuItem" value="ExampleFeature"/>
                 <set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
                 <entity-one entity-name="ExampleFeature" value-field="exampleFeature"/>
             </actions>
@@ -205,7 +205,7 @@ under the License.
     <screen name="CommonExampleGeoLocationDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -229,7 +229,7 @@ under the License.
     <screen name="CommonExampleOsmGeoLocationDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleGeoLocation"/>
+                <set field="activeMainMenuItem" value="ExampleGeoLocation"/>
                 <set field="geoChart.dataSourceId" value="GEOPT_OSM"/>
                 <set field="geoChart.width" value="600px"/>
                 <set field="geoChart.height" value="500px"/>
@@ -253,7 +253,7 @@ under the License.
     <screen name="CommonExampleChartsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ExampleCharts"/>
+                <set field="activeMainMenuItem" value="ExampleCharts"/>
                 <entity-condition entity-name="ExampleCountByType" list="chartData">
                     <order-by field-name="exampleTypeId"/>
                 </entity-condition>
@@ -280,8 +280,8 @@ under the License.
             the user. -->
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                  <include-screen name="FindExample" location="component://example/widget/example/ExampleScreens.xml"/>

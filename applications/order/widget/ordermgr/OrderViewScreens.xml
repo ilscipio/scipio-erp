@@ -22,8 +22,8 @@ under the License.
     <screen name="Main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="OrderManager"/>
             </actions>
             <widgets>
@@ -62,7 +62,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderViewOrder"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/order.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
@@ -237,7 +237,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderLookupOrder"/>
-                <set field="headerItem" value="orderlist"/>
+                <set field="activeMainMenuItem" value="orderlist"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.filterDate"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderList.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FilterOrderList.groovy"/>
@@ -258,7 +258,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderEditItems"/>
-                <set field="headerItem" value="orderlist"/>
+                <set field="activeMainMenuItem" value="orderlist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
             </actions>
@@ -283,7 +283,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderFindOrder"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FindOrders.groovy"/>
                 <!-- Cato: FIXME?: this hangs my rendering for unknown reasons and not currently used by the FTL
                 <script location="component://content/webapp/content/WEB-INF/actions/print/FindPrinters.groovy"/>-->
@@ -318,7 +318,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="OrderAddNote"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/NewNote.groovy"/>
             </actions>
             <widgets>
@@ -343,7 +343,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderViewEditDeliveryScheduleInfo"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -365,7 +365,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderStatisticsPage"/>
-                <set field="headerItem" value="stats"/>
+                <set field="activeMainMenuItem" value="stats"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderStats.groovy"/>
             </actions>
             <widgets>
@@ -385,7 +385,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReceiveOfflinePayments"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/ReceivePayment.groovy"/>
                 <entity-and entity-name="OrderRole" list="orderRoles">
                   <field-map field-name="orderId" value="${parameters.orderId}"/>
@@ -423,7 +423,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderSendConfirmationEmail"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <set field="emailType" value="PRDS_ODR_CONFIRM"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
@@ -443,7 +443,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderSendConfirmationEmail"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <set field="emailType" value="PRDS_ODR_COMPLETE"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
@@ -463,7 +463,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderTerms"/>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <entity-and entity-name="OrderTerm" list="orderTerms">
                     <field-map field-name="orderId" from-field="parameters.orderId"/>
                 </entity-and>
@@ -484,7 +484,7 @@ under the License.
     <screen name="OrderHistory">
         <section>
             <actions>
-                <set field="headerItem" value="findorders"/>
+                <set field="activeMainMenuItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>

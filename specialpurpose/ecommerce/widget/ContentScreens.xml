@@ -71,8 +71,8 @@ under the License.
                 <set field="MainColumnStyle" value="leftonly"/>
 
                 <set field="titleProperty" value="PageTitleContentPage"/>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/Main.groovy"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/ContentPrep.groovy"/>
             </actions>
@@ -93,7 +93,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleViewBlog"/>
-                <set field="headerItem" value="Blog"/>
+                <set field="activeMainMenuItem" value="Blog"/>
                 <set field="formDefFile" value="/BlogForms.xml"/>
                 <set field="entityName" value="Content"/>
                 <set field="permissionType" value="none"/>
@@ -116,7 +116,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleShoppingCart"/>
-                <set field="headerItem" value="ContentMenu"/>
+                <set field="activeMainMenuItem" value="ContentMenu"/>
                 <set field="formDefFile" value="component://ecommerce/widget/ContentForms.xml"/>
                 <set field="entityName" value=""/>
                 <set field="permission" value="CONTENTMGR"/>
@@ -144,7 +144,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleViewContent"/>
-                <set field="headerItem" value="Content"/>
+                <set field="activeMainMenuItem" value="Content"/>
                 <set field="entityName" value="ContentAssocDataResourceViewFrom"/>
                 <set field="permissionType" value="none"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/NodeTrailPrep.groovy"/>

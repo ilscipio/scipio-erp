@@ -23,7 +23,7 @@ under the License.
     <screen name="PaymentReport">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="activeMainMenuItem" value="payments"/>
                 <set field="tabButtonItem" value="paymentReport"/>
             </actions>
             <widgets>

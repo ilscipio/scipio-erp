@@ -22,7 +22,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleOrderInits"/>
-                <set field="headerItem" value="orderentry"/>
+                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckInits.groovy"/>
             </actions>
             <widgets>
@@ -39,7 +39,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleOrderAgreements"/>
-                <set field="headerItem" value="orderentry"/>
+                <set field="activeMainMenuItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/OrderAgreements.groovy"/>
             </actions>
             <widgets>

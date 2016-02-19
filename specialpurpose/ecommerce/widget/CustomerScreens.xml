@@ -215,7 +215,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
-                <set field="headerItem" value="contactus"/>
+                <set field="activeMainMenuItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>
@@ -640,7 +640,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
-                <set field="headerItem" value="contactus"/>
+                <set field="activeMainMenuItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
             <widgets>

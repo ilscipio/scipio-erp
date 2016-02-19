@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindBudgets"/>
-                <set field="headerItem" value="ListBudgets"/>
+                <set field="activeMainMenuItem" value="ListBudgets"/>
                 <set field="tabButtonItem" value="ListBudgets"/>
             </actions>
             <widgets>
@@ -75,7 +75,7 @@ under the License.
     <screen name="CommonBudgetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="ListBudgets"/>
+                <set field="activeMainMenuItem" value="ListBudgets"/>
                 <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and list="budgetStatus" entity-name="BudgetStatus">

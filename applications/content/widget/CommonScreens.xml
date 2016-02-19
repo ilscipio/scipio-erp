@@ -67,7 +67,7 @@ under the License.
         <section>
             <actions>
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-                <set field="headerItem" value="CMS"/>
+                <set field="activeMainMenuItem" value="CMS"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -102,7 +102,7 @@ under the License.
     <screen name="CommonContentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Content"/>
+                <set field="activeMainMenuItem" value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -157,7 +157,7 @@ under the License.
     <screen name="ContentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Content"/>
+                <set field="activeMainMenuItem" value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -195,7 +195,7 @@ under the License.
     <screen name="CommonDataResourceDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="DataResource"/>
+                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
@@ -242,7 +242,7 @@ under the License.
     <screen name="CommonCompDocDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="CompDoc"/>
+                <set field="activeMainMenuItem" value="CompDoc"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -332,7 +332,7 @@ under the License.
     <screen name="CommonWebSiteDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="websites"/>
+                <set field="activeMainMenuItem" value="websites"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
@@ -411,8 +411,8 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>
@@ -484,7 +484,7 @@ under the License.
     <screen name="CommonWebAnalyticsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="websites"/>
+                <set field="activeMainMenuItem" value="websites"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

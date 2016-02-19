@@ -253,7 +253,7 @@ under the License.
             <actions>
                 <set field="MainColumnStyle" value="leftonly"/>
                 <set field="titleProperty" value="PageTitleLogin"/>
-                <set field="headerItem" value="login"/>
+                <set field="activeMainMenuItem" value="login"/>
                 <script location="component://webpos/webapp/webpos/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>

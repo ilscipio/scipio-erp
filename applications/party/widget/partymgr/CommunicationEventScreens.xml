@@ -23,7 +23,7 @@ under the License.
     <screen name="CommonCommunicationEventDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="comm"/>
+                <set field="activeMainMenuItem" value="comm"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
                 
                 <service service-name="partyBasePermissionCheck" result-map="permResult">
@@ -99,7 +99,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePendingCommunications"/>
-                <set field="headerItem" value="comm"/>
+                <set field="activeMainMenuItem" value="comm"/>
                 <set field="tabButtonItem" value="pending"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -353,7 +353,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCommunicationEvents"/>
-                <set field="headerItem" value="comm"/>
+                <set field="activeMainMenuItem" value="comm"/>
                 <set field="tabButtonItem" value="Find"/>
                 <set field="entityName" value="CommunicationEventAndRole"/>
             </actions>
@@ -685,7 +685,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCommContent"/>
-                <set field="headerItem" value="comm"/>
+                <set field="activeMainMenuItem" value="comm"/>
                 <set field="tabButtonItem" value="CommContent"/>
                 <set field="parameters.partyId" value="${parameters.partyId}" default-value="${userLogin.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -724,7 +724,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyNewCommContent"/>
-                <set field="headerItem" value="comm"/>
+                <set field="activeMainMenuItem" value="comm"/>
                 <set field="tabButtonItem" value="CommContent"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -831,7 +831,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="headerItem" value="mycomm"/>
+                <set field="activeMainMenuItem" value="mycomm"/>
                 <set field="my" value="My" global="true"/>
                 
                 <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" />

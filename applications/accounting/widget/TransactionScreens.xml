@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="transaction"/>
+                <set field="activeMainMenuItem" value="transaction"/>
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->

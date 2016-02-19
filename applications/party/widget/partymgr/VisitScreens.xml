@@ -24,7 +24,7 @@ under the License.
     <screen name="FindVisits">
         <section>
             <actions>
-                <set field="headerItem" value="visits"/>
+                <set field="activeMainMenuItem" value="visits"/>
                 <set field="titleProperty" value="PageTitleVisitList"/>
                 <set field="noConditionFind" value="Y"/>
             </actions>
@@ -59,7 +59,7 @@ under the License.
     <screen name="ListLoggedInUsers">
         <section>
             <actions>
-                <set field="headerItem" value="loggedinusers"/>
+                <set field="activeMainMenuItem" value="loggedinusers"/>
                 <set field="titleProperty" value="PageTitleListLoggedInUsers"/>
             </actions>
             <widgets>
@@ -92,7 +92,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleVisitDetail"/>
-                <set field="headerItem" value="visits"/>
+                <set field="activeMainMenuItem" value="visits"/>
                 <set field="tabButtonItem" value="visitdetail"/>
 
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/VisitDetails.groovy"/>

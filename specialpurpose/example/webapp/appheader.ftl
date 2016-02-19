@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign selected = headerItem?default("void")>
+<#assign selected = activeMainMenuItem!"void">
 <div id="app-navigation">
   <ul>
     <li>

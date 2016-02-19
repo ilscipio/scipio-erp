@@ -23,7 +23,7 @@ under the License.
     <screen name="Dependencies">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleDependencies"/>
                 <set field="tabButtonItem" value="dependencies"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -76,7 +76,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="WorkEffortMyTasks"/>
-                <set field="headerItem" value="mytasks"/>
+                <set field="activeMainMenuItem" value="mytasks"/>
                 <set field="labelTitleProperty" value="ProjectMgrMyTasks"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="projects" filter-by-date="true">
                     <field-map field-name="partyId" from-field="userLogin.partyId"/>
@@ -156,7 +156,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTask"/>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="tabButtonItem" value="find"/>
                 <set field="labelTitleProperty" value="ProjectMgrListTasks"/>
             </actions>
@@ -185,7 +185,7 @@ under the License.
     <screen name="EditTask">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditTask"/>
                 <set field="tabButtonItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaskList"/>
@@ -221,7 +221,7 @@ under the License.
     <screen name="EditTaskSkills">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleEditSkill"/>
                 <set field="tabButtonItem" value="taskskills"/>
                 <set field="labelTitleProperty" value="PageTitleEditSkill"/>
@@ -265,7 +265,7 @@ under the License.
     <screen name="EditTaskPartyAssigns">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
                 <set field="tabButtonItem" value="parties"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEffortPartyAssigns"/>
@@ -293,7 +293,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListTaskNotes"/>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="tabButtonItem" value="notes"/>
                 <set field="labelTitleProperty" value="PageTitleListTaskNotes"/>
 
@@ -467,7 +467,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditTask"/>
-                <set field="headerItem" value="request"/>
+                <set field="activeMainMenuItem" value="request"/>
                 <set field="tabButtonItem" value="edittask"/>
                 <set field="labelTitleProperty" value="PageTitleEditTask"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -500,7 +500,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleListContent"/>
                 <set field="tabButtonItem" value="taskContent"/>
-                <set field="headerItem" value="EditTaskContents"/>
+                <set field="activeMainMenuItem" value="EditTaskContents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
                 <set field="workEffortId" from-field="parameters.workEffortId" default-value="${parameters.workEffortId}"/>
@@ -546,7 +546,7 @@ under the License.
     <screen name="EditWorkEffortSurveyAppls">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <set field="tabButtonItem" value="EditWorkEffortSurveyAppls"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>

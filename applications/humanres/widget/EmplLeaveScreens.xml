@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplLeave"/>
-                <set field="headerItem" value="Leave"/>
+                <set field="activeMainMenuItem" value="Leave"/>
                 <set field="tabButtonItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
@@ -75,7 +75,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleFindApprovals"/>
                 <set field="tabButtonItem" value="Approval"/>
-                <set field="headerItem" value="Leave"/>
+                <set field="activeMainMenuItem" value="Leave"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
@@ -115,7 +115,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeave"/>
-                <set field="headerItem" value="Leave"/>
+                <set field="activeMainMenuItem" value="Leave"/>
                 <set field="tabButtonItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>

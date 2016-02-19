@@ -25,8 +25,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="MarketingFindLeads"/>
                 <set field="currentUrl" value="FindLeads"/>
-                <set field="headerItem" value="Leads"/>
-                <set field="setLeadtDescription" value="${groovy:session.setAttribute(&quot;leadDescription&quot;,headerItem)}"/>
+                <set field="activeMainMenuItem" value="Leads"/>
+                <set field="setLeadtDescription" value="${groovy:session.setAttribute(&quot;leadDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
             </actions>
@@ -76,7 +76,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLead"/>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
@@ -94,7 +94,7 @@ under the License.
     <screen name="ConvertLead">
         <section>
             <actions>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="tabButtonItem" value="ConvertLead"/>
             </actions>
             <widgets>
@@ -125,7 +125,7 @@ under the License.
     <screen name="CloneLead">
         <section>
             <actions>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="tabButtonItem" value="CloneLead"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/CloneLead.groovy"/>
             </actions>
@@ -144,7 +144,7 @@ under the License.
     <screen name="MergeLeads">
         <section>
             <actions>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="tabButtonItem" value="MergeLeads"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
@@ -177,7 +177,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLeadFromVCard"/>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
@@ -212,7 +212,7 @@ under the License.
     <screen name="AddRelatedCompany">
         <section>
             <actions>
-                <set field="headerItem" value="Leads"/>
+                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">

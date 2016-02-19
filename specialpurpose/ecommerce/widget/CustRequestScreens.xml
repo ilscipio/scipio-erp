@@ -39,7 +39,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleListRequests"/>
-                <!--<set field="headerItem" value="Shopping List"/>-->
+                <!--<set field="activeMainMenuItem" value="Shopping List"/>-->
                 <entity-condition entity-name="CustRequest" list="requestList">
                     <condition-list combine="and">
                         <condition-expr field-name="fromPartyId" from-field="userLogin.partyId"/>
@@ -66,7 +66,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleViewRequest"/>
-                <!--<set field="headerItem" value="Shopping List"/>-->
+                <!--<set field="activeMainMenuItem" value="Shopping List"/>-->
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <get-related-one value-field="custRequest" relation-name="CustRequestType" to-value-field="custRequestType"/>

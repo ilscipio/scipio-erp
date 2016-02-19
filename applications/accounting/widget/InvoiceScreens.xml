@@ -26,7 +26,7 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>                
-                <set field="headerItem" value="invoices"/>
+                <set field="activeMainMenuItem" value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -71,7 +71,7 @@ under the License.
     <screen name="FindInvoices">
         <section>
             <actions>
-                <set field="headerItem" value="invoices"/>
+                <set field="activeMainMenuItem" value="invoices"/>
                 <set field="tabButtonItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>

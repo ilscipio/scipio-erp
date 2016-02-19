@@ -54,7 +54,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <set field="headerItem" value="Advanced Search"/>
+                <set field="activeMainMenuItem" value="Advanced Search"/>
 
                 <entity-condition entity-name="ProductCategory" list="productCategories">
                     <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>

@@ -74,7 +74,7 @@ under the License.
     <screen name="CommonProjectDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="projects"/>
+                <set field="activeMainMenuItem" value="projects"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <entity-one entity-name="WorkEffort" value-field="project">
                     <field-map field-name="workEffortId" from-field="projectId"/>
@@ -132,7 +132,7 @@ under the License.
     <screen name="CommonTaskDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="task"/>
+                <set field="activeMainMenuItem" value="task"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/getProjectId.groovy"/>
             
@@ -191,7 +191,7 @@ under the License.
     <screen name="CommonMyTaskDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="mytasks"/>
+                <set field="activeMainMenuItem" value="mytasks"/>
                 
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="primaryPermission" value="PROJECTMGR" />
@@ -253,7 +253,7 @@ under the License.
     <screen name="CommonTimesheetDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName">
@@ -300,7 +300,7 @@ under the License.
     <screen name="CommonMyTimeDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="mytime"/>
+                <set field="activeMainMenuItem" value="mytime"/>
                 
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="primaryPermission" value="PROJECTMGR" />
@@ -334,8 +334,8 @@ under the License.
         <section>
             <actions>
                 <set field="parameters.currentStatus" value="_NA_"/>
-                <set field="headerItem" value="main"/>
-                <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="tabButtonItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -366,7 +366,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="resources"/>
+                <set field="activeMainMenuItem" value="resources"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
@@ -456,7 +456,7 @@ under the License.
     <screen name="GlobalHRSettingsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="SkillType"/>
+                <set field="activeMainMenuItem" value="SkillType"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

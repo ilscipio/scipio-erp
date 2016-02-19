@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFacilityGroup"/>
-                <set field="headerItem" value="facilityGroup"/>
+                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <entity-condition entity-name="FacilityGroup" list="facilityGroups"/>
             </actions>
             <widgets>
@@ -81,7 +81,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroup"/>
-                <set field="headerItem" value="facilityGroup"/>
+                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="tabButtonItem" value="EditFacilityGroup"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
@@ -102,7 +102,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupMembers"/>
-                <set field="headerItem" value="facilityGroup"/>
+                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="tabButtonItem" value="EditFacilityGroupMembers"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <set field="orderByList[]" value="sequenceNum"/>
@@ -130,7 +130,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRoles"/>
-                <set field="headerItem" value="facilityGroup"/>
+                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="tabButtonItem" value="EditFacilityGroupRoles"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <get-related value-field="facilityGroup" relation-name="FacilityGroupRole" list="facilityRoles"/>
@@ -157,7 +157,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRollup"/>
-                <set field="headerItem" value="facilityGroup"/>
+                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="tabButtonItem" value="EditFacilityGroupRollup"/>
                 <set field="parameters.facilityGroupId" from-field="parameters.showFacilityGroupId" default-value="${parameters.facilityGroupId}"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>

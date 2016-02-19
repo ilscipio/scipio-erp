@@ -44,7 +44,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="accountItem" value="feedback"/>
             </actions>
             <widgets>
@@ -73,7 +73,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="feedbackItem" value="Feedback"/>
                 <service service-name="loadFeedback"> 
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -106,7 +106,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="feedbackItem" value="LeaveFeedback"/>
                 <set field="role" from-field="parameters.role" default-value="all"/>
                 <service service-name="getItemsAwaitingFeedback" result-map="results"/>
@@ -132,7 +132,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="accountItem" value="feedback"/>
             </actions>
             <widgets>
@@ -161,7 +161,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="feedbackItem" value="Feedback"/>
                 <service service-name="loadFeedback"> 
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -194,7 +194,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="eBay Feedback"/>
-                <set field="headerItem" value="ebayStore"/>
+                <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="feedbackItem" value="LeaveFeedback"/>
                 <set field="role" from-field="parameters.role" default-value="all"/>
                 <service service-name="getItemsAwaitingFeedback" result-map="results"/>

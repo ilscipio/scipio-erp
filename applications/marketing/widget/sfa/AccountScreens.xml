@@ -25,8 +25,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="MarketingFindAccounts"/>
                 <set field="currentUrl" value="FindAccounts"/>
-                <set field="headerItem" value="Accounts"/>
-                <set field="setAccountDescription" value="${groovy:session.setAttribute(&quot;accountDescription&quot;,headerItem)}"/>
+                <set field="activeMainMenuItem" value="Accounts"/>
+                <set field="setAccountDescription" value="${groovy:session.setAttribute(&quot;accountDescription&quot;,activeMainMenuItem)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>
             </actions>
@@ -78,7 +78,7 @@ under the License.
     <screen name="NewAccount">
         <section>
             <actions>
-                <set field="headerItem" value="Accounts"/>
+                <set field="activeMainMenuItem" value="Accounts"/>
                 <set field="titleProperty" value="PageTitleCreateAccount"/>
                 <set field="accountType" from-field="parameters.accountType"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>

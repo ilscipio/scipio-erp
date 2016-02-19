@@ -124,7 +124,7 @@ under the License.
     <screen name="CommonEmplPositionDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="EmplPosition"/>
+                <set field="activeMainMenuItem" value="EmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
             </actions>
@@ -259,7 +259,7 @@ under the License.
     <!-- Decorator for Employee edit/view screen set. partyId in this context is a Party in Employee Role and in Employment relationship with internal organization  -->
         <section>
             <actions>
-                <set field="headerItem" value="Employees"/>
+                <set field="activeMainMenuItem" value="Employees"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
@@ -376,7 +376,7 @@ under the License.
     <screen name="GlobalHRSettingsDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -393,7 +393,7 @@ under the License.
     <screen name="CommonRecruitmentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Recruitment"/>
+                <set field="activeMainMenuItem" value="Recruitment"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -413,7 +413,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="Training"/>
+                <set field="activeMainMenuItem" value="Training"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

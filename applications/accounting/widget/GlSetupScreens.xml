@@ -55,7 +55,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
-                <set field="headerItem" value="companies"/>
+                <set field="activeMainMenuItem" value="companies"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingAvailableInternalOrganizations}"/>
                 <entity-condition entity-name="PartyAcctgPreference" list="parties"/>
                 <service service-name="acctgPrefPermissionCheck" result-map="permResult">

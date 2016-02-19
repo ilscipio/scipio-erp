@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
-                <set field="headerItem" value="admin"/>
+                <set field="activeMainMenuItem" value="admin"/>
                 <set field="labelTitleProperty" value="ScrumFindTimeSheet"/>
                 <set field="tabButtonItem" value="timesheets"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListTimeSheets.groovy"/>
@@ -51,7 +51,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleTimesheet"/>
-                <set field="headerItem" value="timesheet"/>
+                <set field="activeMainMenuItem" value="timesheet"/>
                 <set field="tabButtonItem" value="timesheets"/>
                 <script location="component://scrum/webapp/scrum/WEB-INF/actions/EditDailyHourReport.groovy"/>
                 <entity-one value-field="partyNameViewMap" entity-name="PartyNameView">

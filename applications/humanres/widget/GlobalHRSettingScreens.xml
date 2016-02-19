@@ -23,7 +23,7 @@
     <screen name="EditSkillTypes">
         <section>
             <actions>
-                <set field="headerItem" value="SkillType"/>
+                <set field="activeMainMenuItem" value="SkillType"/>
                 <set field="titleProperty" value="PageTitleListSkillTypes"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <entity-one entity-name="SkillType" value-field="skillType"/>
@@ -84,7 +84,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
-                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem" value="EmplPositionTypes"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <set field="emplPositionTypeCtx" from-field="parameters"/>
@@ -114,7 +114,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
-                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem2" value="EditEmplPositionType"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
@@ -149,7 +149,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmplPositionTypeRate"/>
-                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem" value="EmplPositionTypes"/>
                 <set field="tabButtonItem2" value="EditEmplPositionTypeRate"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
@@ -230,7 +230,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeaveType"/>
-                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <set field="tabButtonItem" value="EmplLeaveType"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <entity-one entity-name="EmplLeaveType" value-field="emplLeaveType"/>
@@ -252,7 +252,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplReasonype"/>
-                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <set field="tabButtonItem" value="EmplLeaveReasonType"/>
                 <set field="emplLeaveReasonTypeId" from-field="parameters.emplLeaveReasonTypeId"/>
                 <entity-one entity-name="EmplLeaveReasonType" value-field="emplreasonType"/>
@@ -274,7 +274,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePublicHoliday"/>
-                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <set field="tabButtonItem" value="publicHoliday"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>

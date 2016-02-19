@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPerfReview"/>
-                <set field="headerItem" value="PerfReview"/>
+                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="employeePartyId" from-field="parameters.partyId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"  default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -54,7 +54,7 @@
     <screen name="EditPerfReviews">
         <section>
             <actions>
-                <set field="headerItem" value="PerfReview"/>
+                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="tabButtonItem" value="EditPerfReview"/>
                 <set field="titleProperty" value="PageTitleListPartyReview"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
@@ -80,7 +80,7 @@
     <screen name="EditPerfReviewItems">
         <section>
             <actions>
-                <set field="headerItem" value="PerfReview"/>
+                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="titleProperty" value="PageTitleEditPartyReviewItem"/>
                 <set field="tabButtonItem" value="EditPerfReviewItems"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>

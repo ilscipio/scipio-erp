@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonQuoteDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="quote"/>
+                <set field="activeMainMenuItem" value="quote"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

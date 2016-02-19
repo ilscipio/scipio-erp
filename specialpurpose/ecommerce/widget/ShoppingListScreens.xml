@@ -28,7 +28,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleShoppingList"/>
-                <set field="headerItem" value="Shopping List"/>
+                <set field="activeMainMenuItem" value="Shopping List"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/shoppinglist/EditShoppingList.groovy"/>
             </actions>
             <widgets>

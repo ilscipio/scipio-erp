@@ -284,7 +284,7 @@ under the License.
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="server"/>
+                <set field="activeMainMenuItem" value="server"/>
                 <service service-name="securityPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>

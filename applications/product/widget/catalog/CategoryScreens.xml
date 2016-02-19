@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindCategory"/>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="tabButtonItem" value="FindCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
             </actions>
@@ -52,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="tabButtonItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -84,7 +84,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="tabButtonItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
@@ -351,7 +351,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryFeatureCategories"/>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="tabButtonItem" value="EditCategoryFeatureCats"/>
                 <set field="labelTitleProperty" value="ProductFeatureCategoriesGroups"/>
 
@@ -452,7 +452,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateProductCategoryStart"/>
-                <set field="headerItem" value="categories"/>
+                <set field="activeMainMenuItem" value="categories"/>
                 <set field="labelTitleProperty" value="ProductCreateProductInCategory"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>

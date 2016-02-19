@@ -26,7 +26,7 @@ under the License.
     <screen name="FindPortalPage">
         <section>
             <actions>
-                <set field="headerItem" value="portalAdmin"/>
+                <set field="activeMainMenuItem" value="portalAdmin"/>
                 <set field="titleProperty" value="PageTitleFindPortalPage"/>
             </actions>
             <widgets>
@@ -80,7 +80,7 @@ under the License.
     <screen name="EditPortalPage">
         <section>
             <actions>
-                <set field="headerItem" value="PortalPageAdminItem"/>
+                <set field="activeMainMenuItem" value="PortalPageAdminItem"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/myportal.js" global="true"/> 
                 <set field="layoutSettings.styleSheets[+0]" value="/images/myportal.css" global="true"/> 
                 <entity-one entity-name="PortalPage" value-field="portalPage"/>

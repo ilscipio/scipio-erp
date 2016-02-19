@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmploymentApp"/>
-                <set field="headerItem" value="EmploymentApp"/>
+                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="employmentAppCtx" from-field="parameters"/>
             </actions>
             <widgets>
@@ -56,7 +56,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
-                <set field="headerItem" value="Employee"/>
+                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="tabButtonItem" value="EditEmploymentApps"/>
                 <set field="referredByPartyId" from-field="parameters.partyId"/>
                 <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
@@ -78,7 +78,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResNewEmploymentApp"/>
-                <set field="headerItem" value="EmploymentApp"/>
+                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
             </actions>

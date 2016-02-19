@@ -27,7 +27,7 @@ under the License.
     <screen name="CommonProductDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="products"/>
+                <set field="activeMainMenuItem" value="products"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="productId" from-field="parameters.productId" global="true"/>
@@ -840,7 +840,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFeatures"/>
-                <set field="headerItem" value="product"/>
+                <set field="activeMainMenuItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductFeatures"/>
                 <set field="labelTitleProperty" value="ProductFeatures"/>
 
@@ -1287,7 +1287,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductParties"/>
-                <set field="headerItem" value="product"/>
+                <set field="activeMainMenuItem" value="product"/>
                 <set field="tabButtonItem" value="EditProductParties"/>
                 <set field="labelTitleProperty" value="PartyParties"/>
 

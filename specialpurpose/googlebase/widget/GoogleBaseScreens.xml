@@ -70,7 +70,7 @@ under the License.
     <screen name="ProductsExportToGoogle">
         <section>
             <actions>
-                <set field="headerItem" value="googlebase"/>
+                <set field="activeMainMenuItem" value="googlebase"/>
                 <set field="titleProperty" value="PageTitleGoogleBaseProductsExportToGoogle"/>
                 <script location="component://googlebase/webapp/googlebase/WEB-INF/actions/productsExportToGoogle.groovy"/>
             </actions>
@@ -115,7 +115,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="GoogleBaseConfiguration"/>
-                <set field="headerItem" value="GoogleBaseConfigs"/>
+                <set field="activeMainMenuItem" value="GoogleBaseConfigs"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
             </actions>
             <widgets>
@@ -134,7 +134,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="GooglebaseAutoUpdate"/>
-                <set field="headerItem" value="GooglebaseAutoUpdate"/>
+                <set field="activeMainMenuItem" value="GooglebaseAutoUpdate"/>
                 <entity-condition entity-name="GoogleBaseConfig" list="googleBaseConfigList"/>
             </actions>
             <widgets>

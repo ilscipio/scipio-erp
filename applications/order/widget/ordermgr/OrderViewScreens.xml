@@ -238,7 +238,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="OrderLookupOrder"/>
                 <set field="headerItem" value="orderlist"/>
-                <set field="filterDate" type="Timestamp" from-field="parameters.filterDate"/>
+                <set field="fromDate" type="Timestamp" from-field="parameters.filterDate"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderList.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FilterOrderList.groovy"/>
             </actions>

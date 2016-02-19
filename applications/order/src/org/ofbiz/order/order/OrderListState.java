@@ -45,18 +45,15 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
- * Session object for keeping track of the list of orders.
- * The state of the list is preserved here instead of
- * via url parameters, which can get messy.  There
- * are three types of state:  Order State, Order Type,
- * and pagination position.
+ * Session object for keeping track of the list of orders. The state of the list
+ * is preserved here instead of via url parameters, which can get messy. There
+ * are three types of state: Order State, Order Type, and pagination position.
  *
- * Also provides convenience methods for retrieving
- * the right set of data for a particular state.
+ * Also provides convenience methods for retrieving the right set of data for a
+ * particular state.
  *
- * TODO: this can be generalized to use a set of State
- * objects, including Pagination. Think about design
- * patterns in Fowler.
+ * TODO: this can be generalized to use a set of State objects, including
+ * Pagination. Think about design patterns in Fowler.
  */
 @SuppressWarnings("serial")
 public class OrderListState implements Serializable {
@@ -78,6 +75,7 @@ public class OrderListState implements Serializable {
     protected static final Map<String, String> parameterToOrderStatusId;
     protected static final Map<String, String> parameterToOrderTypeId;
     protected static final Map<String, String> parameterToFilterId;
+
     static {
         Map<String, String> map = FastMap.newInstance();
         map.put("viewcompleted", "ORDER_COMPLETED");
@@ -86,7 +84,7 @@ public class OrderListState implements Serializable {
         map.put("viewapproved", "ORDER_APPROVED");
         map.put("viewcreated", "ORDER_CREATED");
         map.put("viewprocessing", "ORDER_PROCESSING");
-        //map.put("viewsent", "ORDER_SENT");
+        // map.put("viewsent", "ORDER_SENT");
         map.put("viewhold", "ORDER_HOLD");
         parameterToOrderStatusId = map;
 
@@ -104,15 +102,15 @@ public class OrderListState implements Serializable {
         parameterToFilterId = map;
     }
 
-    //=============   Initialization and Request methods   ===================//
+    // ============= Initialization and Request methods ===================//
 
     /**
-     * Initializes the order list state with default values. Do not use directly,
-     * instead use getInstance().
+     * Initializes the order list state with default values. Do not use
+     * directly, instead use getInstance().
      */
     protected OrderListState() {
         // Cato: unhardcode default
-        //viewSize = 10;
+        // viewSize = 10;
         viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;
         orderStatusState = FastMap.newInstance();
@@ -132,8 +130,8 @@ public class OrderListState implements Serializable {
     }
 
     /**
-     * Retrieves the current user's OrderListState from the session
-     * or creates a new one with defaults.
+     * Retrieves the current user's OrderListState from the session or creates a
+     * new one with defaults.
      */
     public static OrderListState getInstance(HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -146,9 +144,10 @@ public class OrderListState implements Serializable {
     }
 
     /**
-     * Given a request, decides what state to change.  If a parameter changeStatusAndTypeState
-     * is present with value "Y", the status and type state will be updated.  Otherwise, if the
-     * viewIndex and viewSize parameters are present, the pagination changes.
+     * Given a request, decides what state to change. If a parameter
+     * changeStatusAndTypeState is present with value "Y", the status and type
+     * state will be updated. Otherwise, if the viewIndex and viewSize
+     * parameters are present, the pagination changes.
      */
     public void update(HttpServletRequest request) {
         if ("Y".equals(request.getParameter("changeStatusAndTypeState"))) {
@@ -166,7 +165,8 @@ public class OrderListState implements Serializable {
             viewSize = Integer.parseInt(viewSizeParam);
             viewIndex = Integer.parseInt(viewIndexParam);
         } catch (NumberFormatException e) {
-            Debug.logWarning("Values of " + VIEW_SIZE_PARAM + " ["+viewSizeParam+"] and " + VIEW_INDEX_PARAM + " ["+viewIndexParam+"] must both be Integers. Not paginating order list.", module);
+            Debug.logWarning("Values of " + VIEW_SIZE_PARAM + " [" + viewSizeParam + "] and " + VIEW_INDEX_PARAM + " [" + viewIndexParam
+                    + "] must both be Integers. Not paginating order list.", module);
         }
     }
 
@@ -198,39 +198,73 @@ public class OrderListState implements Serializable {
         viewIndex = 0;
     }
 
+    // ============== Get and Set methods =================//
 
-    //==============   Get and Set methods   =================//
+    public Map<String, String> getOrderStatusState() {
+        return orderStatusState;
+    }
 
+    public Map<String, String> getOrderTypeState() {
+        return orderTypeState;
+    }
 
-    public Map<String, String> getOrderStatusState() { return orderStatusState; }
-    public Map<String, String> getOrderTypeState() { return orderTypeState; }
-    public Map<String, String> getorderFilterState() { return orderFilterState; }
+    public Map<String, String> getorderFilterState() {
+        return orderFilterState;
+    }
 
-    public void setStatus(String param, boolean b) { orderStatusState.put(param, (b ? "Y" : "N")); }
-    public void setType(String param, boolean b) { orderTypeState.put(param, (b ? "Y" : "N")); }
-    
-    public boolean hasStatus(String param) { return ("Y".equals(orderStatusState.get(param))); }
-    public boolean hasType(String param) { return ("Y".equals(orderTypeState.get(param))); }
-    public boolean hasFilter(String param) { return ("Y".equals(orderFilterState.get(param))); }
+    public void setStatus(String param, boolean b) {
+        orderStatusState.put(param, (b ? "Y" : "N"));
+    }
+
+    public void setType(String param, boolean b) {
+        orderTypeState.put(param, (b ? "Y" : "N"));
+    }
+
+    public boolean hasStatus(String param) {
+        return ("Y".equals(orderStatusState.get(param)));
+    }
+
+    public boolean hasType(String param) {
+        return ("Y".equals(orderTypeState.get(param)));
+    }
+
+    public boolean hasFilter(String param) {
+        return ("Y".equals(orderFilterState.get(param)));
+    }
 
     public boolean hasAllStatus() {
         for (Iterator<String> iter = orderStatusState.values().iterator(); iter.hasNext();) {
-            if (!"Y".equals(iter.next())) return false;
+            if (!"Y".equals(iter.next()))
+                return false;
         }
         return true;
     }
 
-    public int getViewSize() { return viewSize; }
-    public int getViewIndex() { return viewIndex; }
-    public int getSize() { return orderListSize; }
+    public int getViewSize() {
+        return viewSize;
+    }
 
-    public boolean hasPrevious() { return (viewIndex > 0); }
-    public boolean hasNext() { return (viewIndex < getSize() / viewSize); }
+    public int getViewIndex() {
+        return viewIndex;
+    }
+
+    public int getSize() {
+        return orderListSize;
+    }
+
+    public boolean hasPrevious() {
+        return (viewIndex > 0);
+    }
+
+    public boolean hasNext() {
+        return (viewIndex < getSize() / viewSize);
+    }
 
     /**
      * Get the OrderHeaders corresponding to the state.
      */
-    public List<GenericValue> getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context) throws GenericEntityException {
+    public List<GenericValue> getOrders(String facilityId, Timestamp fromDate, String intervalPeriod, Map<String, Object> context)
+            throws GenericEntityException {
         Debug.log("fromDate ===========> " + fromDate + "   intervalPeriod ==========> " + intervalPeriod);
         Delegator delegator = (Delegator) context.get("delegator");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
@@ -241,30 +275,34 @@ public class OrderListState implements Serializable {
             allConditions.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
         }
 
-        if (fromDate == null)
-            fromDate = UtilDateTime.nowTimestamp();            
-        if (intervalPeriod == null)
-            intervalPeriod = "week";
-        Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
-        context.put("intervalDates", intervalDates);
-        List<EntityCondition> andExprs = FastList.newInstance();
-        andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.get("dateBegin")));
-        andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, intervalDates.get("dateEnd")));
-        allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
-    
+        if (fromDate != null) {
+            List<EntityCondition> andExprs = FastList.newInstance();
+            if (intervalPeriod != null) {                
+                Map<String, Timestamp> intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
+                context.put("intervalDates", intervalDates);
+                andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, intervalDates.get("dateBegin")));
+                andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, intervalDates.get("dateEnd")));
+            } else {
+                andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+                andExprs.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDate));
+            }
+            allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
+        }
 
         List<EntityCondition> statusConditions = FastList.newInstance();
         for (String status : orderStatusState.keySet()) {
-            if (!hasStatus(status)) continue;
+            if (!hasStatus(status))
+                continue;
             statusConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, parameterToOrderStatusId.get(status)));
         }
         List<EntityCondition> typeConditions = FastList.newInstance();
         for (String type : orderTypeState.keySet()) {
-            if (!hasType(type)) continue;
+            if (!hasType(type))
+                continue;
             typeConditions.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, parameterToOrderTypeId.get(type)));
         }
 
-        EntityCondition statusConditionsList = EntityCondition.makeCondition(statusConditions,  EntityOperator.OR);
+        EntityCondition statusConditionsList = EntityCondition.makeCondition(statusConditions, EntityOperator.OR);
         EntityCondition typeConditionsList = EntityCondition.makeCondition(typeConditions, EntityOperator.OR);
         if (statusConditions.size() > 0) {
             allConditions.add(statusConditionsList);
@@ -273,18 +311,14 @@ public class OrderListState implements Serializable {
             allConditions.add(typeConditionsList);
         }
 
-        EntityListIterator iterator = EntityQuery.use(delegator).from("OrderHeader")
-                .where(allConditions)
-                .orderBy("orderDate DESC")
-                .maxRows(viewSize * (viewIndex + 1))
-                .cursorScrollInsensitive()
-                .queryIterator();
+        EntityListIterator iterator = EntityQuery.use(delegator).from("OrderHeader").where(allConditions).orderBy("orderDate DESC")
+                .maxRows(viewSize * (viewIndex + 1)).cursorScrollInsensitive().queryIterator();
 
         // get subset corresponding to pagination state
         List<GenericValue> orders = iterator.getPartialList(viewSize * viewIndex, viewSize);
         orderListSize = iterator.getResultsSizeAfterPartialList();
         iterator.close();
-        //Debug.logInfo("### size of list: " + orderListSize, module);
+        // Debug.logInfo("### size of list: " + orderListSize, module);
         return orders;
     }
 

@@ -386,8 +386,8 @@ under the License.
         <field name="periodTypeId"><display-entity entity-name="PeriodType"/></field>
         <field name="periodNum"><display/></field>
         <field name="periodName"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="isClosed"><display/></field>
     </form>
 </forms>

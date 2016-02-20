@@ -83,8 +83,8 @@ under the License.
         <field name="productFeature"><display/></field>
         <field name="quantity"><display/></field>
         <field name="ruleOperator"><display/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="updateAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditProductManufacturingRules" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="ruleId"/>

@@ -1212,7 +1212,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <#-- TODO: better tooltips -->
   <#if tooltip?has_content>
-    <span class="tooltip">${tooltip}</span>
+    <span><em>${tooltip}</em></span><#-- class="tooltip" -->
   </#if>
 </#macro>
 
@@ -1236,6 +1236,6 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <#-- TODO: better tooltips -->
   <#if tooltip?has_content>
-    <span class="tooltip">${tooltip}</span>
+    <span><em>${tooltip}</em></span><#-- class="tooltip" -->
   </#if>
 </#macro>

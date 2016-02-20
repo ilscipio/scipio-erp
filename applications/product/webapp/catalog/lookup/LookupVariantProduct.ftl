@@ -26,18 +26,16 @@ under the License.
   <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
-            <@field type="generic" label="<b>${searchFeature.featureType}</b>">
-                <select name="${searchFeature.featureType}">
-                    <#assign features = searchFeature.features>
-                    <option value=""></option>
-                    <#list features as feature>
-                        <#if searchFeature.selectedFeatureId?has_content && searchFeature.selectedFeatureId == feature.productFeatureId>
-                            <option value="${feature.productFeatureId}" selected>${feature.get("description",locale)}</option>
-                        <#else>
-                            <option value="${feature.productFeatureId}">${feature.get("description",locale)}</option>
-                        </#if>
-                    </#list>
-                </select>
+            <@field type="select" name="${searchFeature.featureType}" label="${searchFeature.featureType}">
+                <#assign features = searchFeature.features>
+                <option value=""></option>
+                <#list features as feature>
+                  <#if searchFeature.selectedFeatureId?has_content && searchFeature.selectedFeatureId == feature.productFeatureId>
+                    <option value="${feature.productFeatureId}" selected>${feature.get("description",locale)}</option>
+                  <#else>
+                    <option value="${feature.productFeatureId}">${feature.get("description",locale)}</option>
+                  </#if>
+                </#list>
             </@field>
         </#list>
         <@field type="submit" text="${uiLabelMap.CommonSearch}" class="+${styles.link_run_sys!} ${styles.action_find!}" />

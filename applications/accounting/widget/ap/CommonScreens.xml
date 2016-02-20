@@ -248,7 +248,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    
                     <decorator-section name="body">
                         <section>
                             <widgets>

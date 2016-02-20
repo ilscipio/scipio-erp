@@ -170,7 +170,7 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AgreementTermPanel" title="${uiLabelMap.PageTitleEditAgreementTerm}" collapsible="true">
+                        <screenlet id="AgreementTermPanel" collapsible="true"> <!-- title="${uiLabelMap.PageTitleEditAgreementTerm}" -->
                             <include-form name="AddAgreementTerm" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                         <include-form name="ListAgreementTerms" location="component://accounting/widget/AgreementForms.xml" />

@@ -949,7 +949,7 @@
         <field name="contentId" title="${uiLabelMap.ProductContentId}">
             <lookup target-form-name="LookupContent" />
         </field>
-        <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" position="3">
+        <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" position="2">
             <drop-down>
                 <entity-options entity-name="ProductContentType" description="${description}">
                     <entity-order-by field-name="description" />
@@ -957,12 +957,12 @@
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" />
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="3" />
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2" />
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}" />
-        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="3" />
+        <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}" position="2" />
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}" />
         <field name="useTime" title="${uiLabelMap.ProductUseTime}" />
-        <field name="useTimeUomId" title="${uiLabelMap.ProductUseTimeUom}" position="3">
+        <field name="useTimeUomId" title="${uiLabelMap.ProductUseTimeUom}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description}">
                     <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE" />

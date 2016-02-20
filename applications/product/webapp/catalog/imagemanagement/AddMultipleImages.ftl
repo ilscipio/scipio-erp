@@ -23,13 +23,13 @@ under the License.
 
   <@fields type="default-nolabels">
     <@field type="select" name="imageResize">
-          <#list productFeatures as productFeature>
-              <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
-          </#list>
-          <option selected="" value="">Do not resize</option>
+      <option selected="selected" value="">${uiLabelMap.ImageManagementDoNotResize}</option>
+      <#list productFeatures as productFeature>
+        <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
+      </#list>
     </@field>
     <#macro imageField name>
-      <@field type="generic"><input type="file" size="20" name="${name}"/></@field>
+      <@field type="file" size="20" name="${name}"/>
     </#macro>
     <#assign namePrefix = "additionalImage">
     <@imageField name=namePrefix + "One" />

@@ -31588,4 +31588,9 @@
         <value xml:lang="en">Product Settings</value>
         <value xml:lang="fr">Paramètres du produit</value>
     </property>
+    <property key="ImageManagementDoNotResize">
+        <value xml:lang="de">Nicht die Größe</value>
+        <value xml:lang="en">Do not resize</value>
+        <value xml:lang="fr">Ne pas redimensionner</value>
+    </property>
 </resource>

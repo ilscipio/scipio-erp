@@ -27,16 +27,16 @@ under the License.
 </@script>
 
     <#if fileType?has_content>
-    <@heading>${uiLabelMap.ProductResultOfImageUpload}</@heading>
+        <@heading>${uiLabelMap.ProductResultOfImageUpload}</@heading>
         <#if !(clientFileName?has_content)>
-    <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
+          <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
         <#else>
-    <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
-    <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
-    <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-    <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>">${imageUrl!}</a></b></div>
+          <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
+          <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
+          <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
+          <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>">${imageUrl!}</a></b></div>
         </#if>
-    <br />
+        <br />
     </#if>
     
     <@section>
@@ -45,17 +45,16 @@ under the License.
             <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
             <@field type="textarea" label="${uiLabelMap.ProductProductDescription}" name="description" cols="60" rows="2">${(product.description)!}</@field>
             <@field type="textarea" label="${uiLabelMap.ProductLongDescription}" class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
-            <@field type="generic" label="${uiLabelMap.ProductDetailScreen}">
-                <input type="text" name="detailScreen" value="${(product.detailScreen)!}" size="60" maxlength="250"/>
-                    <br /><span class="tooltip">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
-            </@field>
+            <#assign fieldTooltip>${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</#assign>
+            <@field type="input" label="${uiLabelMap.ProductDetailScreen}" name="detailScreen" value="${(product.detailScreen)!}" size="60" maxlength="250" tooltip=fieldTooltip/>
+            <#-- Cato: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>
               <#if (product.smallImageUrl)??>
                 <a href="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall"/></a>
               </#if>
             </#assign>
             <@field type="generic" label="${uiLabelMap.ProductSmallImage}" labelDetail=labelDetail>
-                <input type="text" name="smallImageUrl" value="${(product.smallImageUrl)?default('')}" size="60" maxlength="255"/>
+                <@field type="input" name="smallImageUrl" value="${(product.smallImageUrl)!''}" size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -71,7 +70,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label="${uiLabelMap.ProductMediumImage}" labelDetail=labelDetail>
-                <input type="text" name="mediumImageUrl" value="${(product.mediumImageUrl)?default('')}" size="60" maxlength="255"/>
+                <@field type="input" name="mediumImageUrl" value="${(product.mediumImageUrl)!''}" size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -87,7 +86,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label="${uiLabelMap.ProductLargeImage}" labelDetail=labelDetail>
-                <input type="text" name="largeImageUrl" value="${(product.largeImageUrl)?default('')}" size="60" maxlength="255"/>
+                <@field type="input" name="largeImageUrl" value="${(product.largeImageUrl)!''}" size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -103,7 +102,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label="${uiLabelMap.ProductDetailImage}" labelDetail=labelDetail>
-                <input type="text" name="detailImageUrl" value="${(product.detailImageUrl)?default('')}" size="60" maxlength="255"/>
+                <@field type="input" name="detailImageUrl" value="${(product.detailImageUrl)!''}" size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -119,7 +118,7 @@ under the License.
                   </#if>
             </#assign>
             <@field type="generic" label="${uiLabelMap.ProductOriginalImage}" labelDetail=labelDetail>
-                <input type="text" name="originalImageUrl" value="${(product.originalImageUrl)?default('')}" size="60" maxlength="255"/>
+                <@field type="input" name="originalImageUrl" value="${(product.originalImageUrl)!''}" size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -142,17 +141,16 @@ under the License.
     <@section title="${uiLabelMap.ProductUploadImage}">
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
           <@fields type="default-nolabels">
+            <p><em>${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</em></p><#-- orig: <span class="tooltip"> -->
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
-                <input type="radio" name="upload_file_type_bogus" value="small" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>');"/>${uiLabelMap.CommonSmall}
-                <input type="radio" name="upload_file_type_bogus" value="medium" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=medium</@ofbizUrl>');"/>${uiLabelMap.CommonMedium}
-                <input type="radio" name="upload_file_type_bogus" value="large" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=large</@ofbizUrl>');"/>${uiLabelMap.CommonLarge}
-                <input type="radio" name="upload_file_type_bogus" value="detail" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>');"/>${uiLabelMap.CommonDetail}
-                <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>');"/>${uiLabelMap.ProductOriginal}
+                <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=small')}');" label="${uiLabelMap.CommonSmall}"/>
+                <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=medium')}');" label="${uiLabelMap.CommonMedium}"/>
+                <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=large')}');" label="${uiLabelMap.CommonLarge}"/>
+                <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=detail')}');" label="${uiLabelMap.CommonDetail}"/>
+                <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${makeOfbizUrl('UploadProductImage?productId=${productId}&amp;upload_file_type=original')}');" label="${uiLabelMap.ProductOriginal}"/>
             </@field>
             <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}"/>
-            <#-- FIXME -->
-            <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>
           </@fields>
         </form>
     </@section>

@@ -94,7 +94,7 @@ under the License.
                                         <set field="roleTypeId" value="BILL_TO_CUSTOMER"/>
                                     </actions>
                                     <widgets>
-                                        <screenlet title="${uiLabelMap.PageTitleFindBillingAccount}">
+                                        <screenlet> <!-- title="${uiLabelMap.PageTitleFindBillingAccount}" -->
                                             <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} " style="${styles.link_nav} ${styles.action_add}">
                                                 <parameter param-name="partyId" from-field="parameters.partyId"/>
                                                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>

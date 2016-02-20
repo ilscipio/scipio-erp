@@ -898,6 +898,7 @@
     
     <#-- misc single field styles -->
     "field_inline" : "field-inline",                    <#-- a field (usually input) that has to inline with other inputs or inline html elements -->
+    "field_tooltip_wrapper" : "has-tip field-tooltip-wrapper",  <#-- for some @field types, an extra container is added to support tooltips; it receives this style -->
     
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.

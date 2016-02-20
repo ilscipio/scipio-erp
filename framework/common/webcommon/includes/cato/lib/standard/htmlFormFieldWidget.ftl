@@ -11,7 +11,8 @@
 <#-- 
 TODO: the parameters on these should be refined to be less ofbiz-like and more cato-like; but must
     be flexible enough to 100% allow calls from ofbiz widget lib macros.
-TODO: _markup_widget macros should be cleaned up and logic moved to _widget macros -->
+TODO: _markup_widget macros should be cleaned up of logic and the logic moved to _widget macros 
+TODO: the tooltips should be made less hardcoded (configure via styles hash somehow) -->
 
 <#-- migrated from @renderClass form widget macro -->
 <#macro fieldClassAttribStr class alert=false>
@@ -1176,20 +1177,24 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderDisplayField form widget macro -->
 <#assign field_display_widget_defaultArgs = {
   "type":"", "imageLocation":"", "idName":"", "description":"", "title":"", "class":"", "alert":"", "inPlaceEditorUrl":"", 
-  "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, "passArgs":{}
+  "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
+  "interpretText":true, "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <@field_display_markup_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel interpretText=interpretText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <#if type?has_content && type=="image">
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false interpretText=true origArgs={} passArgs={} catchArgs...>
+  <#if tooltip?has_content>
+    <div class="${styles.field_tooltip_wrapper!}" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip}"><#t>
+  </#if>
+  <#if type?has_content && type == "image">
     <img src="${imageLocation}" alt="${imageAlt}"/><#lt/>
   <#else>
     <#--
@@ -1198,7 +1203,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     </#if>
     -->
     <#if description?has_content>
-      ${description?replace("\n", "<br />")}<#t/>
+      <#if interpretText>
+        ${description?replace("\n", "<br />")}<#t/>
+      <#else>
+        ${description}<#t/>
+      </#if>
     <#else>
       &nbsp;<#t/>
     </#if>
@@ -1210,9 +1219,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <@script>ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});</@script>
     </#if>-->
   </#if>
-  <#-- TODO: better tooltips -->
   <#if tooltip?has_content>
-    <span><em>${tooltip}</em></span><#-- class="tooltip" -->
+    </div><#t>
   </#if>
 </#macro>
 
@@ -1229,13 +1237,15 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_generic_markup_widget text="" tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <#if text?has_content>
-    ${text}<#t>
-  <#else>
-    <#nested><#t>
-  </#if>
-  <#-- TODO: better tooltips -->
   <#if tooltip?has_content>
-    <span><em>${tooltip}</em></span><#-- class="tooltip" -->
+    <div class="${styles.field_tooltip_wrapper!}" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip}"><#t>
+  </#if>
+    <#if text?has_content>
+      ${text}<#t>
+    <#else>
+      <#nested><#t>
+    </#if>
+  <#if tooltip?has_content>
+    </div><#t>
   </#if>
 </#macro>

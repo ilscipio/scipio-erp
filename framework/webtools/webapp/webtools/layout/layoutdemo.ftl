@@ -556,6 +556,17 @@
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple=true asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple=true 
         asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
+     
+      <@field type="generic" label="Generic 1" tooltip="This is a tooltip text">
+        This is <p>random text</p> and 
+        <div>
+            <span>elements</span>. There is an inlined input
+            <@field type="input" inline=true size=5 name="input99" />
+            in this sentence. 
+            There is also a tooltip on the whole generic field.
+        </div>
+      </@field>
+
       <@field type="submit" submitType="submit" text="Submit" onClick="alert('submitted!'); return false;" />
     </@fields>
     </@form>
@@ -881,7 +892,6 @@
   <#assign mySet = toSet(["val1", "val2", "val2", "val3", "val4", "val3"])>
   <#assign mySet = toSet(mySet)>
   <p>Basic set: <@objectAsScript lang="raw" escape=false object=mySet /></p>
-  
 </@section>
 
 <@section title="Common messages">

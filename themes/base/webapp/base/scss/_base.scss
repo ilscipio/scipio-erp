@@ -459,6 +459,13 @@ input.field-inline, select.field-inline, textarea.field-inline {
   width: auto;
 }
 
+// Tooltips
+.has-tip.field-tooltip-wrapper {
+ font-weight: normal;
+ border-bottom: 0;
+}
+
+
 /* GENERAL ELEMENT COLORS */
 
 .colored-elem.primary, .colored-elem { color:$primary-color; }

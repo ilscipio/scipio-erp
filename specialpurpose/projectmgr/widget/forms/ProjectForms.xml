@@ -272,7 +272,7 @@
         <field name="fromDate"><hidden/></field>
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="workEffortIdTo" entry-name="workEffortId"><hidden/></field>
-        <field name="workEffortName" position="1" title="${uiLabelMap.CommonName}*"><display/></field>
+        <field name="workEffortName" title="${uiLabelMap.CommonName}*"><display/></field>
 
         <field name="currentStatusId">
             <drop-down allow-empty="false" current-description="${currentStatus.description}">
@@ -283,7 +283,7 @@
             </drop-down>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="15"/></field>
-        <field name="priority" title="${uiLabelMap.CommonPriority}" position="1">
+        <field name="priority" title="${uiLabelMap.CommonPriority}">
             <drop-down allow-empty="true">
                 <option key="1" description="${uiLabelMap.WorkEffortPriorityOne}"/>
                 <option key="2" description="${uiLabelMap.WorkEffortPriorityTwo}"/>
@@ -367,7 +367,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="workEffortIdTo" entry-name="workEffortId"><hidden/></field>
-        <field name="workEffortName" position="1" title="${uiLabelMap.CommonName}*"><display/></field>
+        <field name="workEffortName" title="${uiLabelMap.CommonName}*"><display/></field>
         <field name="projectId" title="${uiLabelMap.ProjectMgrWorkEffortIdFrom}"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="currentStatusId">
@@ -379,7 +379,7 @@
             </drop-down>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="15"/></field>
-        <field name="priority" title="${uiLabelMap.CommonPriority}" position="1">
+        <field name="priority" title="${uiLabelMap.CommonPriority}">
             <drop-down allow-empty="true">
                 <option key="1" description="${uiLabelMap.WorkEffortPriorityOne}"/>
                 <option key="2" description="${uiLabelMap.WorkEffortPriorityTwo}"/>

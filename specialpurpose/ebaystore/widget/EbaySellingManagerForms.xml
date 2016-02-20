@@ -170,7 +170,7 @@ under the License.
     </form>
     <form name="ListEbayProductInventoryDetail" type="multi" use-row-submit="true" target="updateEbayStoreInventory" title="" list-name="ebayProductStoreInventoryList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden/></field>
         <field name="facilityId"><hidden/></field>
         <field name="folderId" use-when="ebayfolderId != null"><hidden value="${ebayfolderId}"/></field>
@@ -718,7 +718,7 @@ under the License.
         <row-actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/CheckOrderStatus.groovy"></script>
         </row-actions>
-        <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
         <field name="orderId" title="Order ID" widget-style="${styles.link_nav_info_id}">
             <!-- FIXME: horrible hardcoded URL -->

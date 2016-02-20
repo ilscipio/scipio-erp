@@ -91,7 +91,7 @@ under the License.
                 <field-map field-name="parentProductCategoryId" value="${productCategoryId}"/>
             </entity-and>
         </row-actions>
-        <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId"><hidden/></field>
         <field name="productCategoryId"><display></display></field>

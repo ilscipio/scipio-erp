@@ -90,9 +90,9 @@
         <value xml:lang="zh">转化了的线索</value>
         <value xml:lang="zh_TW">轉化了的線索</value>
     </property>
-    <property key="FormFieldTitle_custReqestId">
+    <property key="FormFieldTitle_custRequestId">
         <value xml:lang="de">Kundenanfrage Id</value>
-        <value xml:lang="en">Cust Reqest Id</value>
+        <value xml:lang="en">Cust Request Id</value>
         <value xml:lang="fr">Réf. de requête de client</value>
         <value xml:lang="it">Numero richiesta cliente</value>
         <value xml:lang="ja">顧客リクエストID</value>

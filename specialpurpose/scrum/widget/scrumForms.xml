@@ -2955,7 +2955,7 @@ under the License.
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
         </row-actions>
         <field name="UnplannedSequence"><hidden value="Y"/></field>
-        <field name="deleteFlag" position="1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+        <field name="deleteFlag" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteProductBacklogItem" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
@@ -3162,7 +3162,7 @@ under the License.
             <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
             <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;parentCustRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(parentCustRequestId)));}" type="Boolean"/>
         </row-actions>
-        <!--<field name="custRequestCategoryGroupId" position="1" use-when="${groovy:showPosition1}" title="${uiLabelMap.ScrumCategory}">
+        <!--<field name="custRequestCategoryGroupId" use-when="${groovy:showPosition1}" title="${uiLabelMap.ScrumCategory}">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"/>
         </field>-->
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>

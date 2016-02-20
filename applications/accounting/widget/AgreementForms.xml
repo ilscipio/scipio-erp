@@ -223,23 +223,21 @@ under the License.
          -->
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementTermId" ><display/></field>
-        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" position="2">
-            <display/>
-        </field>
+        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><display/></field>
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType"/>
         </field>
-        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice}  ${uiLabelMap.CommonType}" position="2">
+        <field name="invoiceItemTypeId" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonType}">
             <display-entity entity-name="InvoiceItemType" description="${description}"/>
         </field>
         <field name="minQuantity" title="${uiLabelMap.Qty}" widget-area-style="amount" title-area-style="align-right"><display/></field>
-        <field name="maxQuantity" title=" " widget-area-style="amount" title-area-style="align-right" position="2"><display/></field>
+        <field name="maxQuantity" title=" " widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="termValue" title="${uiLabelMap.CommonValue}" widget-area-style="amount" title-area-style="align-right"><display/></field>
-        <field name="termDays" title="${uiLabelMap.CommonDays}" widget-area-style="amount" title-area-style="align-right" position="2"><display/></field>
+        <field name="termDays" title="${uiLabelMap.CommonDays}" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="textValue"><display/></field>
-        <field name="description" position="2"><display/></field>
+        <field name="description"><display/></field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="editAgreementTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>

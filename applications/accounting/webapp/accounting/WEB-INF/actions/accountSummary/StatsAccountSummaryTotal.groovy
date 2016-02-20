@@ -38,7 +38,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 
-contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 0, true, false, null);
+contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 0, true, false);
 
 def begin, end,dailyStats,weeklyStats,monthlyStats;
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");

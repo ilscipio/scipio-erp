@@ -10,7 +10,7 @@ import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.party.party.PartyWorker
 
-contentCache = UtilCache.getOrCreateUtilCache("dashboard.accounting", 0, 0, 0, true, false, null);
+contentCache = UtilCache.getOrCreateUtilCache("dashboard.accounting", 0, 0, 0, true, false);
 
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 currentYearBegin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);

@@ -23,7 +23,7 @@ under the License.
   </#if>
   <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
     
-  <@heading><a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>">${orderId}</a> ${externalOrder!}</@heading>
+  <@heading>${uiLabelMap.CommonOverview}</@heading>
    <#--${screens.render("component://order/widget/ordermgr/OrderViewScreens.xml#orderactions")}-->
 
   <@table type="fields"> <#-- orig: class="basic-table" -->
@@ -37,10 +37,10 @@ under the License.
   </#if>
   
     <@tr>
-      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderStatusHistory}</@td>
+      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderCurrentStatus}</@td>
       <@td colspan="3">
-        ${uiLabelMap.OrderCurrentStatus}: ${currentStatus.get("description",locale)} 
-        <@modal id="${orderId}_info" label="${uiLabelMap.CommonDetail}">
+        ${currentStatus.get("description",locale)} 
+        <@modal id="${orderId}_info" label="(${uiLabelMap.OrderStatusHistory})">
         <#if orderHeaderStatuses?has_content>
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>
@@ -60,16 +60,16 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDateOrdered}</@td>
       <@td colspan="3">
-
-      <#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if>
+          <#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if>
       </@td>
     </@tr>
 
+    <#-- This is probably not required anymore - the currency is apparent when looking at the order
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCurrency}</@td>
       <@td colspan="3">${orderHeader.currencyUom?default("???")}</@td>
     </@tr>
-
+    -->
   <#if orderHeader.internalCode?has_content>
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderInternalCode}</@td>
@@ -78,39 +78,31 @@ under the License.
     </@tr>
   </#if>
 
-    <@tr>
-      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSalesChannel}</@td>
-      <@td colspan="3">
-        <#if orderHeader.salesChannelEnumId?has_content>
-          <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
-          ${(channel.get("description",locale))!(uiLabelMap.CommonNA)}
-        <#else>
-          ${uiLabelMap.CommonNA}
-        </#if>
-      </@td>
-    </@tr>
-
   <#if productStore?has_content>
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
-        ${productStore.storeName!}&nbsp;<a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr">(${productStore.productStoreId})</a>
+        <a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr">${productStore.storeName!}</a> 
+        <#if orderHeader.salesChannelEnumId?has_content>
+          <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
+          <#if channel.get("description",locale)?has_content && channel.get("enumId")!= "UNKNWN_SALES_CHANNEL">
+            (${(channel.get("description",locale))!})
+          </#if>
+        </#if>
       </@td>
     </@tr>
   </#if>
 
-
-    <@tr>
-      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
-      <@td colspan="3">
-      <#if orderHeader.originFacilityId?has_content>
-        <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${StringUtil.wrapString(externalKeyParam)}" target="facilitymgr">${orderHeader.originFacilityId}</a>
-      <#else>
-        ${uiLabelMap.CommonNA}
-      </#if>
-      </@td>
-    </@tr>
-      
+    <#if orderHeader.originFacilityId?has_content>
+        <@tr>
+          <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
+          <@td colspan="3">
+            <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${StringUtil.wrapString(externalKeyParam)}" target="facilitymgr">${orderHeader.originFacilityId}</a>
+          </@td>
+        </@tr>
+    </#if>
+  
+  <#--
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCreatedBy}</@td>
       <@td colspan="3">
@@ -121,7 +113,7 @@ under the License.
       </#if>
       </@td>
     </@tr>
-
+    -->
   <#if (orderItem.cancelBackOrderDate)??>
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.FormFieldTitle_cancelBackOrderDate}</@td>
@@ -150,8 +142,8 @@ under the License.
       </@td>
     </@tr>
   </#if>
-  
-  <#if orderContentWrapper.get("IMAGE_URL", "url")?has_content>
+ 
+  <#if orderContentWrapper.get("IMAGE_URL", "url")?trim?has_content>
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
@@ -166,12 +158,18 @@ under the License.
       <@td colspan="3">
          <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
          <input type="hidden" name="orderId" value="${orderId}"/>
-        <select name="priority">
-          <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
-          <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
-          <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
-        </select>
-        <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
+        <@row>
+            <@cell columns=6>
+                <select name="priority">
+                  <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
+                  <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
+                  <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
+                </select>
+            </@cell>
+            <@cell columns=6>
+                <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
+            </@cell>
+        </@row>
         </form>
       </@td>
     </@tr>
@@ -181,14 +179,22 @@ under the License.
       <@td colspan="3">
          <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
          <input type="hidden" name="orderId" value="${orderId}"/>
-        <select name="invoicePerShipment">
-          <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
-          <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
-        </select>
-        <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
+         <@row>
+            <@cell columns=6>
+                <select name="invoicePerShipment">
+                  <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
+                  <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
+                </select>
+            </@cell>
+            <@cell columns=6>
+                <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
+            </@cell>
+        </@row>
+        
         </form>
       </@td>
     </@tr>
+  <#-- The usefulness of this seems a bit limited atm
   <#if orderHeader.isViewed?has_content && orderHeader.isViewed == "Y">
     <@tr>
       <@td>${uiLabelMap.OrderViewed}</@td>
@@ -214,6 +220,7 @@ under the License.
       </@td>
     </@tr>
   </#if>
+  -->
   </@table>
 </@section>
 

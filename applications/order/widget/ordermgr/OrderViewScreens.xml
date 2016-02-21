@@ -61,7 +61,8 @@ under the License.
     <screen name="OrderHeaderView">
         <section>
             <actions>
-                <set field="titleProperty" value="${parameters.orderId}"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+                <set field="titleProperty" value="${uiLabelMap.OrderOrder}: ${parameters.orderId}"/>
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="Summary"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/order.js" global="true"/>
@@ -96,28 +97,16 @@ under the License.
             </condition>
             <widgets>
                <container style="${styles.grid_row}">
-                   <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                       <!-- <label style="heading" text="${uiLabelMap.OrderOrderInfo}"/> -->
-                       <include-screen name="orderactions"/>
-                   </container>
-               </container>
-               <container style="${styles.grid_row}">
-                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <include-screen name="orderinfo"/>
-                        <include-screen name="orderterms"/>
+                    <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                            <include-screen name="orderinfo"/>
+                            <include-screen name="orderterms"/>
                     </container>
-                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <include-screen name="ordercontactinfo"/>
+                    <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                            <include-screen name="ordercontactinfo"/>
                     </container>
-                </container>
-                <container style="${styles.grid_row}">
-                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <include-screen name="orderpaymentinfo"/>
-                        <include-screen name="projectAssoOrder"/>
-                    </container>
-                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <include-screen name="ordershippinginfo"/>
-                        <include-screen name="OrderSalesReps"/>
+                    <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                            <include-screen name="orderpaymentinfo"/>
+                            <include-screen name="projectAssoOrder"/>
                     </container>
                 </container>
             </widgets>
@@ -134,12 +123,15 @@ under the License.
             <widgets>
                <container style="${styles.grid_row}">
                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
-                        </platform-specific>
+                                <!--  Move to seperate screen
+                                <include-screen name="ordershippinginfo"/>-->
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
+                                </platform-specific>
+                                <include-screen name="OrderSalesReps"/>
                     </container>
                 </container>
             </widgets>

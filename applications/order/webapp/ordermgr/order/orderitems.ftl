@@ -237,14 +237,6 @@ under the License.
                                             <@modal id="${productId}_i" label="${uiLabelMap.ProductInventory}">
                                                     <@table type="fields"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
                                                         <@tr>
-                                                            <@td style="text-align: right; padding-bottom: 10px;">
-                                                                <a class=""
-                                                                   href="/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${StringUtil.wrapString(externalKeyParam)}"
-                                                                   target="_blank">${uiLabelMap.ProductInventory}</a>
-                                                            </@td>
-                                                            <@td>&nbsp;</@td>
-                                                        </@tr>
-                                                        <@tr>
                                                             <@td>${uiLabelMap.OrderRequiredForSO}</@td>
                                                             <@td style="padding-left: 15px; text-align: left;">${requiredQuantity}</@td>
                                                         </@tr>
@@ -289,7 +281,8 @@ under the License.
                                                             <@td style="padding-left: 15px; text-align: left;">${unplannedQuantity}</@td>
                                                         </@tr>
                                                     </@table>
-                                                    <a class="close-reveal-modal">&#215;</a>
+                                                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${StringUtil.wrapString(externalKeyParam)}" 
+                                                        class="${styles.link_run_sys!} ${styles.action_view!}"target="_blank">${uiLabelMap.ProductInventory}</a>
                                             </@modal>
                                         </#if>
                                     </#if>

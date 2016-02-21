@@ -174,7 +174,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             </#if>
             <#if title?has_content>
               <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
-              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateFormatProp)>
+              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateFormatProp)!"">
               <#if title == "FORMAT">
                 <#local title = dateFormatString>
               <#elseif title == "LABEL">
@@ -483,7 +483,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#assign field_lookup_widget_defaultArgs = {
   "name":"", "formName":"", "fieldFormName":"", "class":"", "alert":"false", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
-  "ajaxEnabled":javaScriptEnabled, "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
+  "ajaxEnabled":javaScriptEnabled!false, "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
   "inlineLabel":false, "passArgs":{}
 }>

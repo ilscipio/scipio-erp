@@ -50,7 +50,7 @@ under the License.
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <@td>
-                                        <strong>
+                                        
                                         <#if orderItem.supplierProductId?has_content>
                                             <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
@@ -64,7 +64,7 @@ under the License.
                                         <#else>
                                             <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItem.itemDescription!}</a>
                                         </#if>
-                                        </strong>
+                                        
                                         <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
                                         <#if orderItemAttributes?has_content>
                                             <ul>

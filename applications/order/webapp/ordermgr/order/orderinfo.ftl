@@ -39,8 +39,8 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderCurrentStatus}</@td>
       <@td colspan="3">
-        ${currentStatus.get("description",locale)} 
-        <@modal id="${orderId}_info" label="(${uiLabelMap.OrderStatusHistory})">
+         
+        <@modal id="${orderId}_info" label="${currentStatus.get('description',locale)}">
         <#if orderHeaderStatuses?has_content>
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>

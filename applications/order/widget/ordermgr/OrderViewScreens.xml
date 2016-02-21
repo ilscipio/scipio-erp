@@ -61,8 +61,9 @@ under the License.
     <screen name="OrderHeaderView">
         <section>
             <actions>
-                <set field="titleProperty" value="OrderViewOrder"/>
+                <set field="titleProperty" value="${parameters.orderId}"/>
                 <set field="activeMainMenuItem" value="findorders"/>
+                <set field="activeSubMenuItem" value="Summary"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/order.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
@@ -76,17 +77,12 @@ under the License.
                         <include-screen name="orderHeader"/>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/order/orderitems.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
-                        </platform-specific>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/order/orderitems.ftl"/></html>
+                                </platform-specific>
                             </container>
                         </container>
+                        <include-screen name="orderFooter"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -99,23 +95,23 @@ under the License.
                 <not><if-empty field="orderHeader"/></not>
             </condition>
             <widgets>
-                   <container style="${styles.grid_row}">
-                       <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                           <label style="heading" text="${uiLabelMap.OrderOrderInfo}"/>
-                           <include-screen name="orderactions"/>
-                       </container>
+               <container style="${styles.grid_row}">
+                   <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                       <!-- <label style="heading" text="${uiLabelMap.OrderOrderInfo}"/> -->
+                       <include-screen name="orderactions"/>
                    </container>
-                   <container style="${styles.grid_row}">
-                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+               </container>
+               <container style="${styles.grid_row}">
+                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <include-screen name="orderinfo"/>
                         <include-screen name="orderterms"/>
-                        </container>
-                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                            <include-screen name="ordercontactinfo"/>
-                        </container>
                     </container>
-                    <container style="${styles.grid_row}">
-                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                        <include-screen name="ordercontactinfo"/>
+                    </container>
+                </container>
+                <container style="${styles.grid_row}">
+                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <include-screen name="orderpaymentinfo"/>
                         <include-screen name="projectAssoOrder"/>
                     </container>
@@ -124,7 +120,28 @@ under the License.
                         <include-screen name="OrderSalesReps"/>
                     </container>
                 </container>
-
+            </widgets>
+            <fail-widgets>
+                <label style="common-msg-error" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
+            </fail-widgets>
+        </section>
+    </screen>
+    <screen name="orderFooter">
+        <section>
+            <condition>
+                <not><if-empty field="orderHeader"/></not>
+            </condition>
+            <widgets>
+               <container style="${styles.grid_row}">
+                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/></html>
+                        </platform-specific>
+                    </container>
+                </container>
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
@@ -344,6 +361,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="OrderViewEditDeliveryScheduleInfo"/>
                 <set field="activeMainMenuItem" value="findorders"/>
+                <set field="activeSubMenuItem" value="OrderDeliveryScheduleInfo"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -485,6 +503,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="findorders"/>
+                <set field="activeSubMenuItem" value="OrderHistory"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderHistory.groovy"/>
             </actions>
             <widgets>

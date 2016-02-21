@@ -1040,7 +1040,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
             var options =  {
                     responsive: true, 
                     responsiveAnimationDuration: 0, 
-                    animation: { duration: 0 },
+                    animation: {
+                        duration: 1000
+                    },
                     maintainAspectRatio: true,
                     tooltips: {
                         mode: 'label'

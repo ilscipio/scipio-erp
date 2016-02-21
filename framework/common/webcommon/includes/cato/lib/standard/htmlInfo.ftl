@@ -21,20 +21,21 @@
     id              = set id (required)
     label           = set anchor text (required)
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
+    class           = classes or additional classes for anchor
 -->
 <#assign modal_defaultArgs = {
-  "id":"", "label":"", "href":"", "icon":"", "passArgs":{}
+  "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
 }>
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@modal_markup id=id label=label href=href icon=icon origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
+  <@modal_markup id=id label=label href=href class=class icon=icon origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 
 <#-- @modal main markup - theme override -->
-<#macro modal_markup id="" label="" href="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
+<#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
+  <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if> <@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>

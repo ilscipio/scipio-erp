@@ -1752,7 +1752,7 @@
         <value xml:lang="zh_TW">編輯值</value>
     </property>
     <property key="WebtoolsEntityEngine">
-        <value xml:lang="de">"Daten-Maschine"</value>
+        <value xml:lang="de">Entity Engine</value>
         <value xml:lang="en">Entity Engine</value>
         <value xml:lang="fr">Moteur d'entité</value>
         <value xml:lang="it">Engine entità</value>
@@ -1765,7 +1765,7 @@
         <value xml:lang="zh_TW">資料實體引擎</value>
     </property>
     <property key="WebtoolsEntityEnginePerformanceTests">
-        <value xml:lang="de">Performancetests für die "Daten-Maschine"</value>
+        <value xml:lang="de">Performancetests für die Entity-Engine</value>
         <value xml:lang="en">Entity Engine Performance Tests</value>
         <value xml:lang="fr">Tests de performance du moteur d'entité</value>
         <value xml:lang="it">Test prestazioni engine entità</value>
@@ -1777,7 +1777,7 @@
         <value xml:lang="zh_TW">資料實體引擎性能測試</value>
     </property>
     <property key="WebtoolsEntityEngineTools">
-        <value xml:lang="de">"Daten Maschine"</value>
+        <value xml:lang="de">Entity Engine Tools</value>
         <value xml:lang="en">Entity Engine Tools</value>
         <value xml:lang="fr">Outils du moteur d'entité</value>
         <value xml:lang="it">Strumenti per engine Entità</value>
@@ -4714,7 +4714,7 @@
         <value xml:lang="zh_TW">服務ECA's</value>
     </property>
     <property key="WebtoolsServiceEngineThreads">
-        <value xml:lang="de">Dienste-Engine Threads</value>
+        <value xml:lang="de">Service-Engine Threads</value>
         <value xml:lang="en">Job Queue Service Threads</value>
         <value xml:lang="fr">Threads du Service Engine</value>
         <value xml:lang="it">Threads dell' Engine Servizi</value>
@@ -4726,7 +4726,7 @@
         <value xml:lang="zh_TW">服務引擎執行緒</value>
     </property>
     <property key="WebtoolsServiceEngineTools">
-        <value xml:lang="de">"Dienste-Engine"</value>
+        <value xml:lang="de">Service-Engine</value>
         <value xml:lang="en">Service Engine</value>
         <value xml:lang="fr">Outils du moteur de services</value>
         <value xml:lang="it">Strumenti per engine servizi</value>

@@ -172,10 +172,6 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#if htmlWrap?is_boolean>
-    <#local htmlWrap = htmlWrap?string("ul", "")>
-  </#if>
-
   <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
@@ -189,6 +185,15 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
+
+  <#if htmlWrap?is_boolean>
+    <#if htmlWrap>
+      <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!"ul">
+    <#else>
+      <#local htmlWrap = "">
+    </#if>
+  </#if>
+
   <#local menuInfo = {"type":type, "styleName":styleName, 
     "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs,
     "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, "nestedFirst":nestedFirst}>
@@ -334,7 +339,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   
   <#if htmlWrap?is_boolean>
-    <#local htmlWrap = htmlWrap?string("li", "")>
+    <#if htmlWrap>
+      <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!"li">
+    <#else>
+      <#local htmlWrap = "">
+    </#if>
   </#if>
 
   <#if disabled>

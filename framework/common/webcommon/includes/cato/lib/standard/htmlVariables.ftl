@@ -212,7 +212,9 @@
          and also for individual value fallbacks for values not defined in the type-specific entries above -->    
     "menu_default" : "menu-type-default",  
     "menu_default_type" : "menu-type-default", 
+    "menu_default_htmlwrap" : "",
     "menu_default_item" : "", 
+    "menu_default_item_htmlwrap" : "",
     "menu_default_itemdisabled" : "disabled", 
     "menu_default_itemactive" : "active", 
     "menu_default_itemselected" : "selected", 

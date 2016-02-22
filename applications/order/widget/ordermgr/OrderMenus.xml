@@ -110,6 +110,11 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="OrderShipping" title="${uiLabelMap.OrderShipmentInformation}" widget-style="+${styles.action_nav}">
+             <condition>
+                <not>
+                    <if-empty field="shipGroups"/>
+                </not>              
+            </condition>
             <link target="orderShipping">
                 <parameter param-name="orderId" from-field="orderId"/>
             </link>

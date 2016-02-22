@@ -62,7 +62,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrder}: #${parameters.orderId}"/>
+                <set field="titleProperty" value="${uiLabelMap.OrderOrder}: ${parameters.orderId}"/>
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="Summary"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/order.js" global="true"/>
@@ -521,6 +521,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="OrderShipping"/>
+                <set field="title" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
@@ -528,7 +529,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="heading" text="${uiLabelMap.OrderShipmentInformation} #${orderId}"/>
                         <screenlet>
                             <container>
                                 <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>

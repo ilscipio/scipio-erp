@@ -150,7 +150,7 @@
           <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text="${uiLabelMap.OrderCreateAsNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}"/>
         </#if>
         --> 
-        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+        <#if currentStatus.statusId == "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
           <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text="${uiLabelMap.OrderCreateReplacementOrder}" class="+${styles.action_run_sys!} ${styles.action_add!}"/>
         </#if>
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
@@ -160,7 +160,12 @@
         <#-- Shipping -->
 
             <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
-              <@menuitem type="link" href=makeOfbizUrl("createOrderItemShipGroup?orderId=${orderId}") text="${uiLabelMap.OrderCreateShipGroup}" class="+${styles.action_run_sys!} ${styles.action_add!}"/>
+              <@menuitem type="generic">
+                 <form action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>" method="post">
+                    <input type="hidden" name="orderId" value="${orderId}"/>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderCreateShipGroup}"/>
+                 </form>
+              </@menuitem>
             </#if>
             <#if security.hasPermission("FACILITY_CREATE", session)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
@@ -178,11 +183,27 @@
         <#if security.hasPermission("ORDERMGR_RETURN", session)>
             <#if returnableItems?has_content>
                 <#if currentStatus.statusId == "ORDER_COMPLETED">
-                  <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderCreateReturn}" class="+${styles.action_nav!}"/>
+                    <@menuitem type="generic">
+                        <form action="<@ofbizUrl>quickreturn</@ofbizUrl>" method="post">
+                            <input type="hidden" name="orderId" value="${orderId!}"/>
+                            <input type="hidden" name="partyId" value="${partyId!}"/>
+                            <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
+                            <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
+                            <input type="submit" class="${styles.action_nav!}" value="${uiLabelMap.OrderCreateReturn}"/>
+                        </form>
+                    </@menuitem>
                 </#if>
             </#if>
             <#if currentStatus.statusId == "ORDER_COMPLETED">
-              <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderQuickRefundEntireOrder}" class="+${styles.action_nav!} ${styles.action_terminate!}"/>
+              <@menuitem type="generic">
+                        <form action="<@ofbizUrl>quickreturn</@ofbizUrl>" method="post">
+                            <input type="hidden" name="orderId" value="${orderId!}"/>
+                            <input type="hidden" name="partyId" value="${partyId!}"/>
+                            <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
+                            <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
+                            <input type="submit" class="${styles.action_nav!} ${styles.action_terminate!}" value="${uiLabelMap.OrderQuickRefundEntireOrder}"/>
+                        </form>
+                    </@menuitem>
             </#if>
         </#if>
         <#-- Export >> moved to OrderSideBar

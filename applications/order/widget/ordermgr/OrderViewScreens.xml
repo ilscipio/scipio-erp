@@ -75,7 +75,6 @@ under the License.
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--<include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderSubTabBar"/> replaced by orderaction-->
-                        <include-screen name="orderactions"/>
                         <include-screen name="orderHeader"/>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
@@ -97,6 +96,7 @@ under the License.
                 <not><if-empty field="orderHeader"/></not>
             </condition>
             <widgets>
+               <include-screen name="orderactions"/>
                <container style="${styles.grid_row}">
                     <container style="${styles.grid_large}4 ${styles.grid_cell}">
                             <include-screen name="orderinfo"/>

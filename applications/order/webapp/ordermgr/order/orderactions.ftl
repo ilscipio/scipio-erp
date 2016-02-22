@@ -158,23 +158,29 @@
         </#if>
 
         <#-- Shipping -->
-        <#if !shipGroups?has_content>
+
             <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
               <@menuitem type="link" href=makeOfbizUrl("createOrderItemShipGroup?orderId=${orderId}") text="${uiLabelMap.OrderCreateShipGroup}" class="+${styles.action_run_sys!} ${styles.action_add!}"/>
             </#if>
-            <#if security.hasPermission("FACILITY_CREATE", session) && orderHeader.orderTypeId == "SALES_ORDER">
-                <#if currentStatus.statusId == "ORDER_APPROVED" || currentStatus.statusId != "ORDER_SENT">
-                  <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?orderId=${orderId}") text="${uiLabelMap.OrderQuickShipEntireOrder}" class="+${styles.action_run_sys!} ${styles.action_complete!}"/>
+            <#if security.hasPermission("FACILITY_CREATE", session)>
+                <#if orderHeader.orderTypeId == "SALES_ORDER">
+                    <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
+                         <@menuitem type="generic">
+                             <form action="<@ofbizUrl>quickShipOrder</@ofbizUrl>" method="post">
+                               <input type="hidden" name="orderId" value="${orderId}"/>
+                              <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderQuickShipEntireOrder}"/>
+                             </form>
+                          </@menuitem>
+                    </#if>
                 </#if>
             </#if>
-        </#if>
         <#-- Return / Refund -->
-        <#if security.hasPermission("ORDERMGR_RETURN", session) && returnableItems?has_content>
-            <#if currentStatus.statusId == "ORDER_COMPLETED">
-              <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderCreateReturn}" class="+${styles.action_nav!}"/>
-            </#if>
-        </#if>
         <#if security.hasPermission("ORDERMGR_RETURN", session)>
+            <#if returnableItems?has_content>
+                <#if currentStatus.statusId == "ORDER_COMPLETED">
+                  <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderCreateReturn}" class="+${styles.action_nav!}"/>
+                </#if>
+            </#if>
             <#if currentStatus.statusId == "ORDER_COMPLETED">
               <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderQuickRefundEntireOrder}" class="+${styles.action_nav!} ${styles.action_terminate!}"/>
             </#if>

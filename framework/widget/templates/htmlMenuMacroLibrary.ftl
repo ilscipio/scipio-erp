@@ -51,9 +51,9 @@ TODO/FIXME:
           "items": This goes on recursively for nested menus...
 
   Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
-    * menu-main
-    * menu-sidebar
-    * menu-button
+    * menu-type-main
+    * menu-type-sidebar
+    * menu-type-button
     * etc.
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
@@ -71,29 +71,29 @@ TODO/FIXME:
   </#if>
   <#if !inlineEntries>
     <#local extraMenuAttribs = {}>
-    <#if styleSet.contains("menu-main")>
-      <#local remStyle = removeStyleNames(style, "menu-main")>
+    <#if styleSet.contains("menu-type-main")>
+      <#local remStyle = removeStyleNames(style, "menu-type-main")>
         <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
             <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
       <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
-    <#elseif styleSet.contains("menu-sidebar")>
-      <#local remStyle = removeStyleNames(style, "menu-sidebar")>
+    <#elseif styleSet.contains("menu-type-sidebar")>
+      <#local remStyle = removeStyleNames(style, "menu-type-sidebar")>
         <nav class="${styles.nav_sidenav!""}">
             <#if navigation?has_content><h2>${navigation!}</h2></#if>
       <#local classes = joinStyleNames(styles.menu_sidebar!, remStyle)>
-    <#elseif styleSet.contains("menu-button")>
-      <#local remStyle = removeStyleNames(style, "menu-button")>
+    <#elseif styleSet.contains("menu-type-button")>
+      <#local remStyle = removeStyleNames(style, "menu-type-button")>
       <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
-    <#elseif styleSet.contains("menu-button-dropdown")>
-      <#local remStyle = removeStyleNames(style, "menu-button-dropdown")>
+    <#elseif styleSet.contains("menu-type-button-dropdown")>
+      <#local remStyle = removeStyleNames(style, "menu-type-button-dropdown")>
       <#local classes = joinStyleNames(styles.menu_button_dropdown!, remStyle)>
       <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
       <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
-    <#elseif styleSet.contains("menu-tab")>    
-      <#local remStyle = removeStyleNames(style, "menu-tab")>
+    <#elseif styleSet.contains("menu-type-tab")>    
+      <#local remStyle = removeStyleNames(style, "menu-type-tab")>
       <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
     <#elseif styleSet.contains("button-bar")>
-      <#-- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-button) or alternative base menu -->
+      <#-- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-type-button) or alternative base menu -->
       <#local remStyle = removeStyleNames(style, ["button-bar"])> <#-- ["button-bar", "no-clear"] -->
       <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
            note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
@@ -129,15 +129,15 @@ TODO/FIXME:
         <#global isSubMenu=true/>
     </#if>
     -->
-    <#if styleSet.contains("menu-main")>
+    <#if styleSet.contains("menu-type-main")>
             </ul>
         </li>
-    <#elseif styleSet.contains("menu-sidebar")>
+    <#elseif styleSet.contains("menu-type-sidebar")>
             </ul>
         </nav>
-    <#elseif styleSet.contains("menu-button")>
+    <#elseif styleSet.contains("menu-type-button")>
         </ul>
-    <#elseif styleSet.contains("menu-tab")>
+    <#elseif styleSet.contains("menu-type-tab")>
         </ul>
     <#elseif styleSet.contains("button-bar")>
         </ul>

@@ -56,93 +56,85 @@ TODO/FIXME:
     * menu-type-button
     * etc.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
-  <#--<p><@objectAsScript lang="raw" object=items /></p>-->
-  <#local styleSet = splitStyleNamesToSet(style)>
-  <#local remStyle = "">
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] htmlWrap=true>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
+<#--<p><@objectAsScript lang="raw" object=items /></p>-->
+  <#-- Extract menu types from style string, remove, and get global style -->
+  <#local type = "">
+  <#local class = style>
+  <#local menuTypeStyles = getStyleNamesByPrefix(class, "menu-type-")>
+  <#if menuTypeStyles?has_content>
+    <#local class = removeStyleNames(class, menuTypeStyles)>
+    <#-- Use only the first, we only support one -->
+    <#local type = menuTypeStyles[0]?substring(10)>
+  </#if>
+  <#-- FIXME?: we don't fully support +/= syntax here, non-standard, treat empty as "+"...
+      We may not even receive a +/= sign at all; see ModelMenu.java, may get stripped; should maybe be changed... -->
+  <#if !class?starts_with("=")>
+    <#local class = "+" + class>
+  </#if>
+  <#local styleName = type?replace("-","_")>
+  <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
+    <#local styleName = "default">
+  </#if>
+  <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
+  <#-- Count menu and make sure has ID -->
   <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
   <#if !id?has_content>
-    <#local id = "menu_" + menuIdNum>
+    <#local id = "menu_" + menuIdNum> <#-- FIXME? is this name too general? -->
   </#if>
+  <#if htmlWrap?is_boolean && htmlWrap == false>
+    <#local htmlWrap = "">
+  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
+    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
+    <#if htmlWrap?is_boolean>
+      <#local htmlWrap = htmlWrap?string("ul", "")>
+    </#if>
+  </#if>
+  <#-- Menu open -->
   <#if !inlineEntries>
     <#local extraMenuAttribs = {}>
-    <#if styleSet.contains("menu-type-main")>
-      <#local remStyle = removeStyleNames(style, "menu-type-main")>
+    <#if type == "main">
         <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
             <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
-      <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
-    <#elseif styleSet.contains("menu-type-sidebar")>
-      <#local remStyle = removeStyleNames(style, "menu-type-sidebar")>
+    <#elseif type == "sidebar">
         <nav class="${styles.nav_sidenav!""}">
+            <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
             <#if navigation?has_content><h2>${navigation!}</h2></#if>
-      <#local classes = joinStyleNames(styles.menu_sidebar!, remStyle)>
-    <#elseif styleSet.contains("menu-type-button")>
-      <#local remStyle = removeStyleNames(style, "menu-type-button")>
-      <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
-    <#elseif styleSet.contains("menu-type-button-dropdown")>
-      <#local remStyle = removeStyleNames(style, "menu-type-button-dropdown")>
-      <#local classes = joinStyleNames(styles.menu_button_dropdown!, remStyle)>
-      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
-      <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
-    <#elseif styleSet.contains("menu-type-tab")>    
-      <#local remStyle = removeStyleNames(style, "menu-type-tab")>
-      <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
-    <#elseif styleSet.contains("button-bar")>
-      <#-- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-type-button) or alternative base menu -->
-      <#local remStyle = removeStyleNames(style, ["button-bar"])> <#-- ["button-bar", "no-clear"] -->
-      <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
-           note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
-      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
-           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
-      <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
+    <#elseif type == "button-dropdown">
+        <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
+        <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     <#else>
       <#-- all other cases -->
       <#-- WARN: stock ofbiz usually applied styles to a containing div, 
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
-      <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
-            <#-- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
-            <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
-            <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>-->
+        <#if htmlWrap?has_content><${htmlWrap}<#if id?has_content> id="${id}"</#if><@compiledClassAttribStr class=class /><@elemAttribStr attribs=extraMenuAttribs />></#if>
   </#if>
-   <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
-   
+   <#local dummy = pushRequestStack("renderMenuStack", {"type":type, "class":class,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
+  
+  <#-- Items (nested) --> 
   <#list items as item>
-    <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![]/>
+    <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
+        containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
+        menuType=type menuStyleName=styleName menuHtmlWrap=htmlWrap />
   </#list>
 
-  <#local styleSet = splitStyleNamesToSet(style)>
-  <#local menu = popRequestStack("renderMenuStack")>
+  <#-- Menu close -->
+  <#local menuStack = popRequestStack("renderMenuStack")>
   <#if !inlineEntries>
-    <#--        
-    <#if isSubMenu>
-            </ul>
-    <#else>
-        </ul>
+    <#if type == "main">
+            <#if htmlWrap?has_content></${htmlWrap}></#if>
         </li>
-        <#global isSubMenu=true/>
-    </#if>
-    -->
-    <#if styleSet.contains("menu-type-main")>
-            </ul>
-        </li>
-    <#elseif styleSet.contains("menu-type-sidebar")>
-            </ul>
+    <#elseif type == "sidebar">
+            <#if htmlWrap?has_content></${htmlWrap}></#if>
         </nav>
-    <#elseif styleSet.contains("menu-type-button")>
-        </ul>
-    <#elseif styleSet.contains("menu-type-tab")>
-        </ul>
-    <#elseif styleSet.contains("button-bar")>
-        </ul>
     <#else>
-        </ul>
+        <#if htmlWrap?has_content></${htmlWrap}></#if>
     </#if>
   </#if>
   
@@ -150,8 +142,8 @@ TODO/FIXME:
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#if renderMenuHiddenFormContent?has_content>
       ${renderMenuHiddenFormContent}
-      <#-- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
-           note: for simplicity, don't use xxxRequestStack for now, probably not needed -->
+      <#-- NOTE: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
+           NOTE: for simplicity, don't use xxxRequestStack for now, probably not needed -->
       <#local dummy = setRequestVar("renderMenuHiddenFormContent", "")>
     </#if>
   </#if>
@@ -162,7 +154,7 @@ TODO/FIXME:
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[]>
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] menuType="" menuStyleName="" menuHtmlWrap=true htmlWrap=true>
   <#-- TODO? maybe want to expand the renderLink and/or renderImage calls -->
   <#if linkArgs?has_content>
     <#local imgStr = "">
@@ -172,15 +164,25 @@ TODO/FIXME:
     </#if>
     <#local linkStr><@renderLink linkArgs.linkUrl linkArgs.parameterList linkArgs.targetWindow linkArgs.uniqueItemName linkArgs.actionUrl linkArgs.linkType linkArgs.id linkArgs.style linkArgs.name linkArgs.height linkArgs.width linkArgs.text imgStr linkArgs.menuCtxRole /></#local>
   </#if>
-  <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#rt>
-    <#if containsNestedMenus>
-      <ul>
-      <#list items as item>
-        <@renderMenuItemFull item.style item.toolTip item.linkArgs!{} item.linkStr!"" item.containsNestedMenus item.menuCtxRole item.items![] />
-      </#list>
-      </ul>
+  <#if htmlWrap?is_boolean && htmlWrap == false>
+    <#local htmlWrap = "">
+  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
+    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
+    <#if htmlWrap?is_boolean>
+      <#local htmlWrap = htmlWrap?string("li", "")>
     </#if>
-  </li><#lt>
+  </#if>
+  <#if htmlWrap?has_content><${htmlWrap}<@compiledClassAttribStr class=style /><#if toolTip?has_content> title="${toolTip}"</#if>></#if><#if linkStr?has_content>${linkStr}</#if><#rt>
+    <#if containsNestedMenus>
+      <#if menuHtmlWrap?has_content><${menuHtmlWrap}></#if>
+      <#list items as item>
+        <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
+            containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
+            menuType=menuType menuStyleName=menuStyleName menuHtmlWrap=menuHtmlWrap />
+      </#list>
+      <#if menuHtmlWrap?has_content></${menuHtmlWrap}></#if>
+    </#if>
+  <#if htmlWrap?has_content></${htmlWrap}></#if><#lt>
 </#macro>
 
 

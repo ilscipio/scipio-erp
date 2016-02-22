@@ -27,19 +27,20 @@ WARN: no code run here or indirectly from here should assume full current contex
 *************************************
 * CATO: NEW MENU MACROS (ONE-SHOT) *
 *************************************
-Must be enabled in catoWebapp.properties.
-
-WARN: this is currently DUPLICATED from the traditional macros further below.
-Until this is tested and sorted out, please apply changes to both copies.
+These render a whole single item without splitting into begin/end sections, using data in hashes.
+Must be enabled in catoWebapp.properties (enabled by default in Cato).
 
 TODO/FIXME:
-* I don't see a good way to separate markup in these yet...
-* expand renderLink/renderImage... maybe...
+* I don't see a good way to separate markup in these yet... may be none...
+  * Ideally the html generation of these and the cato macros should be based on a common library
+  * maybe @menu, but this is a lot more hardcoded than @menu, and the data structure needs extra conversion...
+* expand renderLink/renderImage, or part of them
 * the java is inefficient and implementation maybe not final (see OneShotMacro.java) - depends
   on how much end up using and where
+* Special style names too hardcoded
 -->
 
-<#-- Cato: One-shot macro menu rendering
+<#-- Cato: One-shot macro full menu
   Data structure (indented means member of): 
   items: List of maps, each entry corresponding to old @renderMenuItemBegin arguments
     (item)
@@ -48,6 +49,12 @@ TODO/FIXME:
       "items": List of sub-menu items. Same format as parent items. Will be non-empty if parent item.containsNestedMenus is true. NOTE: there's no dedicated submenu (<ul>) open/close element or map. Implementation decides how to handle and what to call recursively.
         (item)
           "items": This goes on recursively for nested menus...
+
+  Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
+    * menu-main
+    * menu-sidebar
+    * menu-button
+    * etc.
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
   <#--<p><@objectAsScript lang="raw" object=items /></p>-->
@@ -156,7 +163,7 @@ TODO/FIXME:
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
 <#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[]>
-  <#-- TODO? maybe want to expand the renderLink/renderImage calls -->
+  <#-- TODO? maybe want to expand the renderLink and/or renderImage calls -->
   <#if linkArgs?has_content>
     <#local imgStr = "">
     <#if linkArgs.imgArgs?has_content>
@@ -217,6 +224,7 @@ TODO/FIXME:
 *************************************
 * CATO: TRADITIONAL MENU MACROS *
 *************************************
+Mostly deprecated and no longer need to maintain except where noted.
 -->
 
 <#-- 
@@ -226,11 +234,12 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     * menu-button
     * menu-tab // ToDo
 -->
+<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local remStyle = "">
 <#if boundaryComment?has_content>
-<!-- ${boundaryComment} -->
+<!- ${boundaryComment} ->
 </#if>
   <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
@@ -262,32 +271,34 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       <#local remStyle = removeStyleNames(style, "menu-tab")>
       <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
     <#elseif styleSet.contains("button-bar")>
-      <#-- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-button) or alternative base menu -->
-      <#local remStyle = removeStyleNames(style, ["button-bar"])> <#-- ["button-bar", "no-clear"] -->
-      <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
-           note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
-      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
-           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
+      <#- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-button) or alternative base menu ->
+      <#local remStyle = removeStyleNames(style, ["button-bar"])> <#-- ["button-bar", "no-clear"] ->
+      <#- right now translating button-bar menu-container-style here to avoid modifying all menu styles
+           note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) ->
+      <#- WARN: stock ofbiz usually applied styles to a containing div, 
+           not sure should keep that behavior or not, but might not consistent with foundation styles? ->
       <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
     <#else>
-      <#-- all other cases -->
-      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
-           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
+      <#- all other cases ->
+      <#- WARN: stock ofbiz usually applied styles to a containing div, 
+           not sure should keep that behavior or not, but might not consistent with foundation styles? ->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
         <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
-            <#-- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
+            <#- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
             <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
-            <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>-->
+            <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>->
   </#if>
-   <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
+   <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#- pushing info to stack, so that this can be used by subsequently -> 
 </#macro>
+-->
 
+<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local menu = popRequestStack("renderMenuStack")>
   <#if !inlineEntries>
-    <#--        
+    <#-        
     <#if isSubMenu>
             </ul>
     <#else>
@@ -295,7 +306,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         </li>
         <#global isSubMenu=true/>
     </#if>
-    -->
+    ->
     <#if styleSet.contains("menu-main")>
             </ul>
         </li>
@@ -313,24 +324,27 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     </#if>
   </#if>
   
-  <#if !readRequestStack("renderMenuStack")??> <#-- if top-level menu -->
+  <#if !readRequestStack("renderMenuStack")??> <#- if top-level menu ->
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#if renderMenuHiddenFormContent?has_content>
       ${renderMenuHiddenFormContent}
-      <#-- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
-           note: for simplicity, don't use xxxRequestStack for now, probably not needed -->
+      <#- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
+           note: for simplicity, don't use xxxRequestStack for now, probably not needed ->
       <#local dummy = setRequestVar("renderMenuHiddenFormContent", "")>
     </#if>
   </#if>
 <#if boundaryComment?has_content>
-<!-- ${boundaryComment} -->
+<!- ${boundaryComment} ->
 </#if>
 </#macro>
+-->
 
+<#-- Cato: TODO: refactor? -->
 <#macro renderImage src id style width height border menuCtxRole="">
 <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
 </#macro>
 
+<#-- Cato: TODO: refactor? -->
 <#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="">
 <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
      because can't centralize these menus easily anywhere else. -->
@@ -362,10 +376,12 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>
 </#macro>
 
+<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemBegin style toolTip="" linkStr="" containsNestedMenus=false menuCtxRole="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
-</#macro>
+</#macro>-->
 
+<#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only
 <#macro renderMenuItemEnd containsNestedMenus=false menuCtxRole="">
 <#if containsNestedMenus></ul></#if></li>
-</#macro>
+</#macro>-->

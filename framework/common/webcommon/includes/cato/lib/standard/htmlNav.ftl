@@ -189,7 +189,10 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#if htmlWrap?is_boolean && htmlWrap == false>
     <#local htmlWrap = "">
   <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!"ul">
+    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
+    <#if htmlWrap?is_boolean>
+      <#local htmlWrap = htmlWrap?string("ul", "")>
+    </#if>
   </#if>
 
   <#local menuInfo = {"type":type, "styleName":styleName, 
@@ -339,7 +342,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#if htmlWrap?is_boolean && htmlWrap == false>
     <#local htmlWrap = "">
   <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!"li">
+    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
+    <#if htmlWrap?is_boolean>
+      <#local htmlWrap = htmlWrap?string("li", "")>
+    </#if>
   </#if>
 
   <#if disabled>

@@ -74,7 +74,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderSubTabBar"/>
+                        <!--<include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderSubTabBar"/> replaced by orderaction-->
+                        <include-screen name="orderactions"/>
                         <include-screen name="orderHeader"/>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
@@ -267,6 +268,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderEditItems"/>
+                <set field="activeSubMenuItem" value="Summary"/>
                 <set field="activeMainMenuItem" value="orderlist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
@@ -274,6 +276,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <container>
+                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
+                        </container>
                         <include-screen name="orderHeader"/>
                         <container style="clear"/>
                         <platform-specific>
@@ -521,7 +526,8 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="OrderShipping"/>
-                <set field="title" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
+                <set field="titleProperty" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
@@ -529,10 +535,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="OrderShippingSubTabBar"/>
                         <screenlet>
-                            <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
-                            </container>
                             <include-screen name="ordershippinginfo"/>
                         </screenlet>
                     </decorator-section>

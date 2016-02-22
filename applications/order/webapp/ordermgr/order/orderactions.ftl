@@ -85,13 +85,6 @@
       </@menu>
       
       <@menu type="button">
-        <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
-          <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text="${uiLabelMap.FormFieldTitle_printPickSheet}" class="+${styles.action_run_sys!} ${styles.action_export!}"><form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
-            <input type="hidden" name="facilityId" value="${storeFacilityId!}"/>
-            <input type="hidden" name="orderId" value="${orderHeader.orderId!}"/>
-            <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
-          </form></@menuitem>
-        </#if>
         <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
           <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text="${uiLabelMap.OrderApproveOrder}" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
             <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
@@ -140,7 +133,56 @@
             <input type="hidden" name="orderId" value="${orderId!}"/>
           </form></@menuitem>
         </#if>
+        <#-- Migrated to OrderShippingSubTabBar
+        <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
+          <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text="${uiLabelMap.FormFieldTitle_printPickSheet}" class="+${styles.action_run_sys!} ${styles.action_export!}"><form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
+            <input type="hidden" name="facilityId" value="${storeFacilityId!}"/>
+            <input type="hidden" name="orderId" value="${orderHeader.orderId!}"/>
+            <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
+          </form></@menuitem>
+        </#if>
+        -->
+
+        <#-- migrated from OrderSubTabBar -->
+        <#-- Order Modification -->
+        <#-- Disabled for now, until usefulness is evaluated
+        <#if currentStatus.statusId != "ORDER_CANCELLED">
+          <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text="${uiLabelMap.OrderCreateAsNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}"/>
+        </#if>
+        --> 
+        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+          <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text="${uiLabelMap.OrderCreateReplacementOrder}" class="+${styles.action_run_sys!} ${styles.action_add!}"/>
+        </#if>
+        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+          <@menuitem type="link" href=makeOfbizUrl("editOrderItems?orderId=${orderId}") text="${uiLabelMap.OrderEditItems}" class="+${styles.action_nav!}"/>
+        </#if>
+
+        <#-- Shipping -->
+        <#if !shipGroups?has_content>
+            <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+              <@menuitem type="link" href=makeOfbizUrl("createOrderItemShipGroup?orderId=${orderId}") text="${uiLabelMap.OrderCreateShipGroup}" class="+${styles.action_run_sys!} ${styles.action_add!}"/>
+            </#if>
+            <#if security.hasPermission("FACILITY_CREATE", session) && orderHeader.orderTypeId == "SALES_ORDER">
+                <#if currentStatus.statusId == "ORDER_APPROVED" || currentStatus.statusId != "ORDER_SENT">
+                  <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?orderId=${orderId}") text="${uiLabelMap.OrderQuickShipEntireOrder}" class="+${styles.action_run_sys!} ${styles.action_complete!}"/>
+                </#if>
+            </#if>
+        </#if>
+        <#-- Return / Refund -->
+        <#if security.hasPermission("ORDERMGR_RETURN", session) && returnableItems?has_content>
+            <#if currentStatus.statusId == "ORDER_COMPLETED">
+              <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderCreateReturn}" class="+${styles.action_nav!}"/>
+            </#if>
+        </#if>
+        <#if security.hasPermission("ORDERMGR_RETURN", session)>
+            <#if currentStatus.statusId == "ORDER_COMPLETED">
+              <@menuitem type="link" href=makeOfbizUrl("quickreturn?orderId=${orderId}&partyId=${partyId}&returnHeaderTypeId=${returnHeaderTypeId}&needsInventoryReceive=${needsInventoryReceive}") text="${uiLabelMap.OrderQuickRefundEntireOrder}" class="+${styles.action_nav!} ${styles.action_terminate!}"/>
+            </#if>
+        </#if>
+        <#-- Export >> moved to OrderSideBar
+            <@menuitem type="link" href=makeOfbizUrl("order.pdf?orderId=${orderId}") text="PDF" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
+        -->
       </@menu>
-      
+       
   </@section>
 </#if>

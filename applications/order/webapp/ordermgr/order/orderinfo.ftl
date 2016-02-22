@@ -24,8 +24,6 @@ under the License.
   <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
     
   <@heading>${uiLabelMap.CommonOverview}</@heading>
-   <#--${screens.render("component://order/widget/ordermgr/OrderViewScreens.xml#orderactions")}-->
-
   <@table type="fields"> <#-- orig: class="basic-table" -->
   
   <#if orderHeader.orderName?has_content>

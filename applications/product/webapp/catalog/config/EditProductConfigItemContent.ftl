@@ -61,7 +61,15 @@ function insertImageName(size,nameValue) {
             <@td>${productContentType.description?default(productContent.confItemContentTypeId)}</@td>
             <@td>${productContent.fromDate!(uiLabelMap.CommonNA)}</@td>
             <@td>${productContent.thruDate!(uiLabelMap.CommonNA)}</@td>
-            <@td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+            <@td>
+              <form name="removeContentFromProductConfigItem_${productContent.contentId}_${entry_index}" method="post" action="<@ofbizUrl>removeContentFromProductConfigItem</@ofbizUrl>">
+                <input name="configItemId" type="hidden" value="${productContent.configItemId}"/>
+                <input name="contentId" type="hidden" value="${productContent.contentId}"/>
+                <input name="confItemContentTypeId" type="hidden" value="${productContent.confItemContentTypeId}"/>
+                <input name="fromDate" type="hidden" value="${productContent.fromDate}"/>
+                <input type="submit" value="${uiLabelMap.CommonDelete}"/>
+              </form>
+            </@td>
             <@td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</a></@td>
          </@tr>
          </#list>

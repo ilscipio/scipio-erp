@@ -114,11 +114,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
   <#else>
   <@table type="data-complex"> <#-- orig: class="basic-table" -->
      <#-- order payment status -->
+    <#assign orderPaymentStatuses = orderReadHelper.getOrderPaymentStatuses()>
+     <#if orderPaymentStatuses?has_content>
      <@tr>
        <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderStatusHistory}</@td>
        <@td colspan="3">
-         <#assign orderPaymentStatuses = orderReadHelper.getOrderPaymentStatuses()>
-         <#if orderPaymentStatuses?has_content>
              <#assign currStatusItem = orderPaymentStatuses[0].getRelatedOne("StatusItem", false)!>
              <#if currStatusItem?has_content>${currStatusItem.get("description",locale)}</#if> 
              
@@ -136,10 +136,10 @@ ToDo: Update menu with Authorize and Capture transaction actions
                    </#list>
                 </ul>
             </@modal>
-         </#if>
+         
        </@td>
      </@tr>
-     
+     </#if>
      <#if orderPaymentPreferences?has_content || billingAccount?has_content || invoices?has_content>
         <#list orderPaymentPreferences as orderPaymentPreference>
           <#assign paymentList = orderPaymentPreference.getRelated("Payment", null, null, false)>

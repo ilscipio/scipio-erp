@@ -109,6 +109,11 @@ under the License.
                 <parameter param-name="orderId"/>
             </link>
         </menu-item>
+        <menu-item name="OrderShipping" title="${uiLabelMap.OrderShipmentInformation}" widget-style="+${styles.action_nav}">
+            <link target="orderShipping">
+                <parameter param-name="orderId" from-field="orderId"/>
+            </link>
+        </menu-item>
         <menu-item name="OrderDeliveryScheduleInfo" title="${uiLabelMap.OrderViewEditDeliveryScheduleInfo}">
             <condition>
                 <and>

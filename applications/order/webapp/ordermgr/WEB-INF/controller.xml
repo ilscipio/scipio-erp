@@ -61,6 +61,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
+    <request-map uri="orderShipping">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderShipping"/>
+    </request-map>
     <request-map uri="findorders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findorders"/>
@@ -1927,6 +1931,7 @@ under the License.
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
     <view-map name="OrderDeliveryScheduleInfo" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderDeliveryScheduleInfo"/>
     <view-map name="orderview" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
+    <view-map name="orderShipping" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderShipping"/>
     <view-map name="OrderHistory" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHistory"/>
     <view-map name="orderlist" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderListView"/>
     <view-map name="editorderitems" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderItemEdit"/>

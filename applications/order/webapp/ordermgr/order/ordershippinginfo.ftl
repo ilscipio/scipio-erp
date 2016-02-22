@@ -22,7 +22,7 @@ under the License.
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-       <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" class="+${styles.action_nav!} ${styles.action_view!}" />
+       <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   </#macro>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
@@ -186,7 +186,7 @@ under the License.
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" class="+${styles.action_run_sys!} ${styles.action_view!}" />
+           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
        </@menu>
     </#macro>

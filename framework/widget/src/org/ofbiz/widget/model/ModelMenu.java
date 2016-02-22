@@ -760,6 +760,9 @@ public class ModelMenu extends ModelWidget {
      * <p>
      * NOTE: subtle difference between null and empty string.
      * <p>
+     * FIXME?: there is a loss of information here, because the +/= styles are always
+     * removed in the final string. should preserve so macros can use?
+     * <p>
      * FIXME: this is inefficient in cases where parent style does not need to be visited,
      * but can't change easily in java.
      */

@@ -186,12 +186,10 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     <#local styleName = "default">
   </#if>
 
-  <#if htmlWrap?is_boolean>
-    <#if htmlWrap>
-      <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!"ul">
-    <#else>
-      <#local htmlWrap = "">
-    </#if>
+  <#if htmlWrap?is_boolean && htmlWrap == false>
+    <#local htmlWrap = "">
+  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
+    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!"ul">
   </#if>
 
   <#local menuInfo = {"type":type, "styleName":styleName, 
@@ -338,12 +336,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   
-  <#if htmlWrap?is_boolean>
-    <#if htmlWrap>
-      <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!"li">
-    <#else>
-      <#local htmlWrap = "">
-    </#if>
+  <#if htmlWrap?is_boolean && htmlWrap == false>
+    <#local htmlWrap = "">
+  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
+    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!"li">
   </#if>
 
   <#if disabled>

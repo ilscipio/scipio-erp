@@ -471,4 +471,22 @@ public abstract class TemplateFtlUtil {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         return compileProgressSuccessAction(progressSuccessAction, ContextFtlUtil.getRequest(env), ContextFtlUtil.getResponse(env));
     }
+    
+    public static String getPlainClassArgNames(String style) {
+        if (style.startsWith("+") || style.startsWith("=")) {
+            return style.substring(1);
+        }
+        else {
+            return style;
+        }
+    }
+    
+    public static String getClassArgPrefix(String style) {
+        if (style.startsWith("+") || style.startsWith("=")) {
+            return style.substring(0, 1);
+        }
+        else {
+            return "";
+        }
+    }
 }

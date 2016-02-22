@@ -364,6 +364,26 @@ Joins style names in a nice string
 
 <#-- 
 *************
+* getStyleNamesByPrefix
+************
+Returns all style names with given prefix, as sequence.
+NOTE: now recognizes special syntax cato class args.
+Now implemented as java transform.
+         
+  * Parameters *
+    styleString     = style string containing classes
+    classNamePrefix = prefix
+    
+  * Return Value *
+    true if class/style string contains given style, false otherwise.
+
+<#function getStyleNamesByPrefix styleString className>
+- implemented as java transform -
+</#function> 
+-->
+
+<#-- 
+*************
 * containsStyleName
 ************
 Returns true if class/style string contains given style.

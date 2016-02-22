@@ -158,7 +158,6 @@
         </#if>
 
         <#-- Shipping -->
-
             <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
               <@menuitem type="generic">
                  <form action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>" method="post">
@@ -167,7 +166,7 @@
                  </form>
               </@menuitem>
             </#if>
-            <#if security.hasPermission("FACILITY_CREATE", session)>
+            <#if security.hasEntityPermission("FACILITY","_CREATE", session)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
                     <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
                          <@menuitem type="generic">
@@ -180,7 +179,7 @@
                 </#if>
             </#if>
         <#-- Return / Refund -->
-        <#if security.hasPermission("ORDERMGR_RETURN", session)>
+        <#if security.hasEntityPermission("ORDERMGR","_RETURN", session)>
             <#if returnableItems?has_content>
                 <#if currentStatus.statusId == "ORDER_COMPLETED">
                     <@menuitem type="generic">

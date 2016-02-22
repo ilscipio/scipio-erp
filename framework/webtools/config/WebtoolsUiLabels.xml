@@ -2502,7 +2502,7 @@
         <value xml:lang="zh_TW">拜訪</value>
     </property>
     <property key="WebtoolsImplementedServices">
-        <value xml:lang="de">Implementierte Dienste</value>
+        <value xml:lang="de">Implementierte Services</value>
         <value xml:lang="en">Implemented Services</value>
         <value xml:lang="fr">Services Implementés</value>
         <value xml:lang="it">Servizi implementati</value>
@@ -3673,7 +3673,7 @@
         <value xml:lang="zh_TW">沒有執行中的進程</value>
     </property>
     <property key="WebtoolsNoServicesFound">
-        <value xml:lang="de">Es wurden keine Dienste gefunden</value>
+        <value xml:lang="de">Es wurden keine Service gefunden</value>
         <value xml:lang="en">No services found</value>
         <value xml:lang="fr">Aucun services trouvé</value>
         <value xml:lang="it">Nessun servizio trovato</value>
@@ -4701,7 +4701,7 @@
         <value xml:lang="zh_TW">預設</value>
     </property>
     <property key="WebtoolsServiceECA">
-        <value xml:lang="de">ECA-Dienste</value>
+        <value xml:lang="de">ECA-Services</value>
         <value xml:lang="en">Service ECAs</value>
         <value xml:lang="fr">Service ECAs</value>
         <value xml:lang="it">Servizio ECA's</value>
@@ -4752,7 +4752,7 @@
         <value xml:lang="zh_TW">服務清單</value>
     </property>
     <property key="WebtoolsServiceLog">
-        <value xml:lang="de">Dienstelog</value>
+        <value xml:lang="de">Servicelog</value>
         <value xml:lang="en">Service Log</value>
         <value xml:lang="fr">Log des services</value>
         <value xml:lang="it">Log dei servizi</value>
@@ -4778,7 +4778,7 @@
         <value xml:lang="zh_TW">服務名稱</value>
     </property>
     <property key="WebtoolsServiceReference">
-        <value xml:lang="de">Dienste-Referenz</value>
+        <value xml:lang="de">Service-Referenz</value>
         <value xml:lang="en">Service Reference</value>
         <value xml:lang="fr">Liste des services</value>
         <value xml:lang="it">Riferimenti servizi</value>
@@ -4816,7 +4816,7 @@
         <value xml:lang="zh_TW">WSDL服務定義</value>
     </property>
     <property key="WebtoolsServicesFound">
-        <value xml:lang="de">Gefunden Dienste</value>
+        <value xml:lang="de">Gefunden Services</value>
         <value xml:lang="en">Services Found</value>
         <value xml:lang="fr">Services trouvés</value>
         <value xml:lang="it">Servizio trovato</value>

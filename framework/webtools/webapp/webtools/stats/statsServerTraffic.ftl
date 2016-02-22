@@ -8,7 +8,8 @@
     <#list currData.keySet() as key>
       <#assign date = key?date/>
         <@chartdata value="${(currData[key].count)!0}" title="${key}"/>
-    </#list>  
+    </#list>
+    
   </@chart>
 <#else>
   <@commonMsg type="result-norecord" />

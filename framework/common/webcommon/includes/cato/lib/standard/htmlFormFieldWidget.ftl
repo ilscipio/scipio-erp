@@ -483,7 +483,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#assign field_lookup_widget_defaultArgs = {
   "name":"", "formName":"", "fieldFormName":"", "class":"", "alert":"false", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
-  "ajaxEnabled":javaScriptEnabled!false, "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
+  "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
   "inlineLabel":false, "passArgs":{}
 }>
@@ -491,6 +491,13 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_lookup_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+  <#if !ajaxEnabled?is_boolean>
+    <#if ajaxEnabled?has_content>
+      <#local ajaxEnabled = ajaxEnabled?boolean>
+    <#else>
+      <#local ajaxEnabled = javaScriptEnabled!false>
+    </#if>
+  </#if>
   <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert=alert value=value size=size 
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
@@ -501,12 +508,12 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#-- field markup - theme override -->
 <#macro field_lookup_markup_widget name="" formName="" fieldFormName="" class="" alert="false" value="" size="" 
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
-    targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
+    targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
     lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>
-  <#if (!ajaxUrl?has_content) && ajaxEnabled?has_content && ajaxEnabled>
+  <#if (!ajaxUrl?has_content) && ajaxEnabled>
     <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, fieldFormName)/>
     <#local ajaxUrl = id + "," + ajaxUrl + ",ajaxLookup=Y" />
   </#if>
@@ -518,7 +525,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       <#local showDescription = "false" />
     </#if>
   </#if>
-  <#if ajaxEnabled?has_content && ajaxEnabled>
+  <#if ajaxEnabled>
     <@script>
       jQuery(document).ready(function(){
         if (!jQuery('form[name="${formName}"]').length) {
@@ -552,7 +559,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       </#if>
       );"></a><#rt>
     <#else>
-      <#if ajaxEnabled?has_content && ajaxEnabled>
+      <#if ajaxEnabled>
         <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
         <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
         <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
@@ -576,8 +583,8 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             height : "${height}",
             position : "${position}",
             modal : "${fadeBackground}",
-            ajaxUrl : <#if ajaxEnabled?has_content && ajaxEnabled>"${ajaxUrl}"<#else>""</#if>,
-            showDescription : <#if ajaxEnabled?has_content && ajaxEnabled>"${showDescription}"<#else>false</#if>,
+            ajaxUrl : <#if ajaxEnabled>"${ajaxUrl}"<#else>""</#if>,
+            showDescription : <#if ajaxEnabled>"${showDescription}"<#else>false</#if>,
             presentation : "${presentation!}",
             defaultMinLength : "${defaultMinLength}",
             defaultDelay : "${defaultDelay}",
@@ -615,7 +622,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       </a>
     </#if>
   </span>
-  <#if ajaxEnabled?has_content && ajaxEnabled && (presentation?has_content && presentation == "window")>
+  <#if ajaxEnabled && (presentation?has_content && presentation == "window")>
     <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
       <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
     </#if>

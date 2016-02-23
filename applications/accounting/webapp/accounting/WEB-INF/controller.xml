@@ -261,12 +261,14 @@ under the License.
         <response name="success" type="view" value="invoiceOverview"/>
         <response name="error" type="view" value="invoiceOverview"/>
     </request-map>
+    <!-- CATO: Disabled feature for now (how useful is this?!
     <request-map uri="copyInvoiceToTemplate">
         <security https="true" auth="true"/>
         <event type="service" invoke="copyInvoiceToTemplate"/>
         <response name="success" type="view" value="editInvoice"/>
         <response name="error" type="view" value="editInvoice"/>
     </request-map>
+    -->
     <request-map uri="getInvoiceRunningTotal">
         <event type="service" invoke="getInvoiceRunningTotal"/>
         <response name="success" type="request" value="json"/>

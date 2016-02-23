@@ -1095,6 +1095,7 @@
                 <parameter param-name="statusId" value="INVOICE_CANCELLED" />
             </link>
         </menu-item>
+        <!-- CATO: Disabled feature for now (how useful is this?!
         <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
             <condition>
                 <and>
@@ -1112,6 +1113,7 @@
                 <parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
             </link>
         </menu-item>
+         -->
         <menu-item name="addtax" title="${uiLabelMap.AccountingAddTax}">
             <condition>
                 <and>

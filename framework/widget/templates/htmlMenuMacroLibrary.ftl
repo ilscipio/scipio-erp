@@ -374,7 +374,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   </#local>
   <#if isLink>
     <#local href><#if linkType == "hidden-form">javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if></#local>
-    <@menuitem_link_markup class=style id=id style="" name=name href="" onClick="" target=targetWindow title="" 
+    <@menuitem_link_markup class=style id=id style="" name=name href=href onClick="" target=targetWindow title="" 
         attribs={} excludeAttribs=[] disabled=disabled selected=selected active=active>${innerContent}</@menuitem_link_markup><#t>
   <#else>
     <@menuitem_generic_markup class=style id=id style="" onClick="" title="" 

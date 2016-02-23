@@ -85,7 +85,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                [${partyId}]
              </#if>
              </@td>
-             <@td><@ofbizCurrency amount=payment.amount!/></@td>
+             <@td><@ofbizCurrency amount=payment.amount! isoCode=currencyUomId! /></@td>
              <@td>${statusItem.description}</@td>
            </@tr>
          </#list>

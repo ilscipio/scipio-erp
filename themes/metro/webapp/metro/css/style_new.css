@@ -18,7 +18,7 @@ body {
 	font-style: normal;
 	line-height: 1;
 	position: relative;
-    background: url('http://themes.webdevia.com/flat-metro/demo1/sites/all/themes/flat-metro/images/bg-.jpg') no-repeat center center fixed; 
+    background: url('/metro-theme/images/bg-.jpg') no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

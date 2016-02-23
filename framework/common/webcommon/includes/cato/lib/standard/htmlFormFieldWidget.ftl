@@ -144,6 +144,10 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     <#-- make this easier for markup -->
     <#local dateDisplayType = dateType>
   </#if>
+  <#-- REQUIRE a unique ID for this type of field -->
+  <#if !id?has_content>
+    <#local id = getNextFieldId()>
+  </#if>
   <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
@@ -296,6 +300,10 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#if !dateDisplayType?has_content || dateDisplayType == "default">
     <#-- make this easier for markup -->
     <#local dateDisplayType = dateType>
+  </#if>
+  <#-- REQUIRE a unique ID for this type of field -->
+  <#if !id?has_content>
+    <#local id = getNextFieldId()>
   </#if>
   <@field_datefind_markup_widget class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 

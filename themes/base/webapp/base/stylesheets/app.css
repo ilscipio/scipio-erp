@@ -10000,16 +10000,25 @@ table.basic-table input {
 }
 
 /* line 165, ../scss/_base.scss */
+.page-login, .page-forgotPassword {
+  background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+/* line 173, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 177, ../scss/_base.scss */
+/* line 185, ../scss/_base.scss */
 .login-box a {
   color: #008cba;
 }
-/* line 179, ../scss/_base.scss */
+/* line 187, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -10021,7 +10030,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 191, ../scss/_base.scss */
+  /* line 199, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -10030,27 +10039,27 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 195, ../scss/_base.scss */
+/* line 203, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 199, ../scss/_base.scss */
+/* line 207, ../scss/_base.scss */
 td {
   word-break: normal;
 }
 
-/* line 200, ../scss/_base.scss */
+/* line 208, ../scss/_base.scss */
 td.button-col {
   word-break: normal;
 }
 
-/* line 202, ../scss/_base.scss */
+/* line 210, ../scss/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 205, ../scss/_base.scss */
+/* line 213, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -10058,31 +10067,31 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 211, ../scss/_base.scss */
+/* line 219, ../scss/_base.scss */
 fieldset {
   border: none;
   padding-left: 0px;
   padding-right: 0px;
 }
-/* line 216, ../scss/_base.scss */
+/* line 224, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 223, ../scss/_base.scss */
+/* line 231, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 230, ../scss/_base.scss */
+/* line 238, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 234, ../scss/_base.scss */
+/* line 242, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -10090,7 +10099,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 241, ../scss/_base.scss */
+/* line 249, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -10098,7 +10107,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 248, ../scss/_base.scss */
+/* line 256, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -10106,7 +10115,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 255, ../scss/_base.scss */
+/* line 263, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10130,36 +10139,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 277, ../scss/_base.scss */
+/* line 285, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 282, ../scss/_base.scss */
+/* line 290, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 284, ../scss/_base.scss */
+/* line 292, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 285, ../scss/_base.scss */
+/* line 293, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 286, ../scss/_base.scss */
+/* line 294, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 287, ../scss/_base.scss */
+/* line 295, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 291, ../scss/_base.scss */
+/* line 299, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10172,62 +10181,62 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 303, ../scss/_base.scss */
+/* line 311, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 305, ../scss/_base.scss */
+/* line 313, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 312, ../scss/_base.scss */
+/* line 320, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 320, ../scss/_base.scss */
+/* line 328, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 326, ../scss/_base.scss */
+/* line 334, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 335, ../scss/_base.scss */
+/* line 343, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 339, ../scss/_base.scss */
+/* line 347, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 344, ../scss/_base.scss */
+/* line 352, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 349, ../scss/_base.scss */
+/* line 357, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 354, ../scss/_base.scss */
+/* line 362, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 358, ../scss/_base.scss */
+/* line 366, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10235,12 +10244,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 368, ../scss/_base.scss */
+/* line 376, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 373, ../scss/_base.scss */
+/* line 381, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10254,18 +10263,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 388, ../scss/_base.scss */
+  /* line 396, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 393, ../scss/_base.scss */
+  /* line 401, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 395, ../scss/_base.scss */
+  /* line 403, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10281,27 +10290,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 415, ../scss/_base.scss */
+/* line 423, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 419, ../scss/_base.scss */
+/* line 427, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 423, ../scss/_base.scss */
+/* line 431, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 428, ../scss/_base.scss */
+/* line 436, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 433, ../scss/_base.scss */
+/* line 441, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10314,87 +10323,87 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 446, ../scss/_base.scss */
+/* line 454, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 451, ../scss/_base.scss */
+/* line 459, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 457, ../scss/_base.scss */
+/* line 465, ../scss/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 463, ../scss/_base.scss */
+/* line 471, ../scss/_base.scss */
 .has-tip.field-tooltip-wrapper {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 471, ../scss/_base.scss */
+/* line 479, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 472, ../scss/_base.scss */
+/* line 480, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 473, ../scss/_base.scss */
+/* line 481, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 474, ../scss/_base.scss */
+/* line 482, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 475, ../scss/_base.scss */
+/* line 483, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 476, ../scss/_base.scss */
+/* line 484, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 481, ../scss/_base.scss */
+/* line 489, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 482, ../scss/_base.scss */
+/* line 490, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 483, ../scss/_base.scss */
+/* line 491, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 484, ../scss/_base.scss */
+/* line 492, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 485, ../scss/_base.scss */
+/* line 493, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 486, ../scss/_base.scss */
+/* line 494, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10407,7 +10416,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 499, ../scss/_base.scss */
+/* line 507, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10429,7 +10438,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 511, ../scss/_base.scss */
+/* line 519, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10445,7 +10454,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* terminate actions (like cancel order) */
-/* line 516, ../scss/_base.scss */
+/* line 524, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10462,7 +10471,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 523, ../scss/_base.scss */
+/* line 531, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10484,7 +10493,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 536, ../scss/_base.scss */
+/* line 544, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10500,7 +10509,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 542, ../scss/_base.scss */
+/* line 550, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10516,7 +10525,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 547, ../scss/_base.scss */
+/* line 555, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

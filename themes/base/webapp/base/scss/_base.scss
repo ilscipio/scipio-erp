@@ -162,6 +162,14 @@ table.basic-table {
   );
 }
 
+.page-login, .page-forgotPassword {
+    background: url('/base-theme/images/background3.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .login-box {
   margin: 200px 0;
   padding:0px;

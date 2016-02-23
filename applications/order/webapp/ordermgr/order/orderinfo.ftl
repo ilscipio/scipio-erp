@@ -154,42 +154,62 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.FormFieldTitle_priority}</@td>
       <@td colspan="3">
-         <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
-         <input type="hidden" name="orderId" value="${orderId}"/>
-        <@row>
-            <@cell columns=6>
-                <select name="priority">
-                  <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
-                  <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
-                  <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
-                </select>
-            </@cell>
-            <@cell columns=6>
-                <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
-            </@cell>
-        </@row>
-        </form>
+         
+         <#assign priorityLabel>
+            <#switch orderHeader.priority!>
+                <#case "1">${uiLabelMap.CommonHigh}<#break>
+                <#case "2">${uiLabelMap.CommonNormal}<#break>
+                <#case "3">${uiLabelMap.CommonLow}<#break>
+                <#default>${uiLabelMap.CommonNormal}
+            </#switch>
+         </#assign>
+         <@modal id="${orderId}_priority" label="${priorityLabel!}">
+             <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
+             <input type="hidden" name="orderId" value="${orderId}"/>
+            <@row>
+                <@cell columns=6>
+                    <select name="priority">
+                      <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
+                      <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
+                      <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
+                    </select>
+                </@cell>
+                <@cell columns=6>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
+                </@cell>
+            </@row>
+            </form>
+        </@modal>
       </@td>
     </@tr>
   </#if>
     <@tr>
       <@td>${uiLabelMap.AccountingInvoicePerShipment}</@td>
       <@td colspan="3">
-         <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
-         <input type="hidden" name="orderId" value="${orderId}"/>
-         <@row>
-            <@cell columns=6>
-                <select name="invoicePerShipment">
-                  <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
-                  <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
-                </select>
-            </@cell>
-            <@cell columns=6>
-                <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
-            </@cell>
-        </@row>
+         <#assign invoicePerShipmentLabel>
+             <#switch orderHeader.invoicePerShipment!>
+                <#case "Y">${uiLabelMap.CommonYes!}<#break>
+                <#case "N">${uiLabelMap.CommonNo!}<#break>
+                <#default>${uiLabelMap.CommonYes!}
+            </#switch>
+         </#assign>
+         <@modal id="${orderId}_invoicePerShipment" label="${invoicePerShipmentLabel!}">
+             <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
+                <input type="hidden" name="orderId" value="${orderId}"/>
+                <@row>
+                    <@cell columns=6>
         
-        </form>
+                        <select name="invoicePerShipment">
+                          <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
+                          <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
+                        </select>
+                    </@cell>
+                    <@cell columns=6>
+                        <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
+                    </@cell>
+                </@row>
+            </form>
+         </@modal>
       </@td>
     </@tr>
   <#-- The usefulness of this seems a bit limited atm

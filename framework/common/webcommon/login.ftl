@@ -16,10 +16,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#if layoutSettings.headerImageUrl??>
+    <#assign headerImageUrl = layoutSettings.headerImageUrl>
+<#elseif layoutSettings.commonHeaderImageUrl??>
+    <#assign headerImageUrl = layoutSettings.commonHeaderImageUrl>
+<#elseif layoutSettings.VT_HDR_IMAGE_URL??>
+    <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
+</#if>
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
-<#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
+<#assign logo><img src="<@ofbizContentUrl><#if headerImageUrl?has_content>${StringUtil.wrapString(headerImageUrl)}<#else>/images/cato/cato-logo-small.png</#if></@ofbizContentUrl>"/></#assign>
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#if username != "">
   <#assign focusName = false>

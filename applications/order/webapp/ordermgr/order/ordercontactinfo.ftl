@@ -118,26 +118,29 @@ under the License.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>&nbsp;&nbsp;
+                          ${uiLabelMap.CommonNbr} <a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                                                          (<a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
-                          <@cell columns=6>
-                                <a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
-                                  <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
-                                    <#assign shipmentRouteSegments = delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipment.shipmentId}, null, false)>
-                                    <#if shipmentRouteSegments?has_content>
-                                      <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRouteSegments)>
-                                      <#if "UPS" == (shipmentRouteSegment.carrierPartyId)!>
-                                        <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_run_sys!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
-                                      </#if>
-                                      <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">
-                                        <input type="hidden" name="orderId" value="${orderId}"/>
-                                        <input type="hidden" name="shipmentId" value="${shipment.shipmentId}"/>
-                                        <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
-                                      </form>
-                                    </#if>
-                                  </#if>
-                            </@cell>
                         </@row>
+                        <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
+                            <#assign shipmentRouteSegments = delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipment.shipmentId}, null, false)>
+                            <#if shipmentRouteSegments?has_content>
+                            <@row>
+                            <@cell columns=6>
+                              <hr/>
+                              <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRouteSegments)>
+                              <#if "UPS" == (shipmentRouteSegment.carrierPartyId)!>
+                                <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_nav_info_id!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
+                              </#if>
+                              <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">
+                                <input type="hidden" name="orderId" value="${orderId}"/>
+                                <input type="hidden" name="shipmentId" value="${shipment.shipmentId}"/>
+                                <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
+                              </form>
+                              </@cell>
+                            </@row>
+                            </#if>
+                          </#if>
                     </#list>
                 </@td>
               </@tr>

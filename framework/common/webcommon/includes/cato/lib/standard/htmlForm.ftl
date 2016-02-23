@@ -837,7 +837,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * dateTime *
     dateType        = [date-time|date|time] (default: date-time) type of datetime
-                      NOTE: date-time is equivalent to "timestamp" in form widgets
+                      NOTE: Also accepts "timestamp" instead of "date-time". date-time is equivalent to "timestamp" in form widgets.
+    dateDisplayType = [default|date|...] (default: same as dateType). The visual display format of the date. Optional.
+                      If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
+                      This means the user will be presented with a short date only, but the data sent to the server
+                      will be a full timestamp.
     title           = shows requested title.
                       If empty, markup/theme decides what to show.
                       Can also be a special value in format "#PROP:resource#propname". If no resource, taken from CommonUiLabels.
@@ -962,7 +966,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
-  "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
+  "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
   "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"", "containerId":"", "containerClass":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
@@ -1301,13 +1305,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               passArgs=passArgs><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
-        <#if dateType == "date">
-          <#local shortDateInput=true/>
-        <#elseif dateType == "time">
-          <#local shortDateInput=false/>
+        <#if dateType == "date" || dateType == "time">
+          <#-- leave as-is -->
         <#else> <#-- "date-time" -->
           <#local dateType = "timestamp">
-          <#local shortDateInput=false/>
         </#if>
         <@field_datetime_widget name=name 
                               class=class 
@@ -1318,7 +1319,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               maxlength=maxlength 
                               id=id 
                               dateType=dateType 
-                              shortDateInput=shortDateInput 
+                              dateDisplayType=dateDisplayType 
                               timeDropdownParamName="" 
                               defaultDateTimeString="" 
                               localizedIconTitle="" 

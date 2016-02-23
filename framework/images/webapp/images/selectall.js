@@ -1040,13 +1040,16 @@ function submitPaginationPostForm(obj, url) {
 }
 
 /**
- * Cato: Transforms a partial date into a normalized date-time value (timestamp), optionally
+ * Cato: Transforms a partial date into a normalized date-time/timestamp value (yyyy-MM-dd HH:mm:ss.SSS), optionally
  * completing the unspecified parts with a filler date.
+ * It will also truncate.
  * NOTE: Normalized means the value can be submitted by form to service and entity update code.
  * TODO?: this is currently somewhat hardcoded; should follow sys timestamp format and/or use Date js class?
  * TODO: this currently only supports date as YYYY-mm-DD or prefix of a full timestamp value. should support more.
+ * TODO: more robust and user-friendly date handling
  */
 function convertToDateTimeNorm(date, fillerDate) {
+    var zeroPat = "0000-00-00 00:00:00.000";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
        if (date.length >= fillerDate.length) {
@@ -1058,7 +1061,6 @@ function convertToDateTimeNorm(date, fillerDate) {
        }
     }
     else {
-       var zeroPat = "0000-00-00 00:00:00.000";
        if (date.length >= zeroPat.length) {
            result = date;
        }
@@ -1067,5 +1069,79 @@ function convertToDateTimeNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
+	// Don't do this in case want to accept higher precision
+    //// TRUNCATE to ensure correctness
+    //if (result.length > zeroPat.length) {
+    //	result = result.substring(0, zeroPat.length);
+    //}
+    return result;
+}
+
+/**
+ * Cato: Transforms or truncates a date into normalize simple date format (yyyy-MM-dd).
+ * TODO: more robust and user-friendly date handling
+ */
+function convertToDateNorm(date, fillerDate) {
+    var zeroPat = "0000-00-00";
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d$/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    // TRUNCATE to ensure correctness
+    if (result.length > zeroPat.length) {
+    	result = result.substring(0, zeroPat.length);
+    }    
+    return result;
+}
+
+/**
+ * Cato: Transforms or truncates a time into normalized time (HH:mm:ss.SSS).
+ * TODO: more robust and user-friendly date handling
+ */
+function convertToTimeNorm(time, fillerTime) {
+	var zeroPat = "00:00:00.000";
+	var result;
+	// Treat the "h" separator as a ":" for user friendliness
+	// NOTE: it only replaces the first occurrence, but that's what we want anyway
+	time = time.replace("h", ":");
+	result = time;
+	/* FIXME: DON'T do any of this for now, because it doesn't handle differences in numbers of digits
+	if (fillerTime && fillerTime.match(/^\d\d:$/)) {
+       if (time.length >= fillerTime.length) {
+           result = time;
+       }
+       else {
+           result = time + fillerTime.substr(time.length);
+       }
+    }
+    else {
+       if (time.length >= zeroPat.length) {
+           result = time;
+       }
+       else {
+           // append zeroes
+           result = time + zeroPat.substr(time.length);
+       }
+    }
+    */
+	// Don't do this in case want to accept higher precision
+    //// TRUNCATE to ensure correctness
+    //if (result.length > zeroPat.length) {
+    //	result = result.substring(0, zeroPat.length);
+    //}   
     return result;
 }

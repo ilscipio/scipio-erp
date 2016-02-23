@@ -127,7 +127,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderDateTimeField form widget macro -->
 <#assign field_datetime_widget_defaultArgs = {
-  "name":"", "class":"", "title":"", "value":"", "size":"", "maxlength":"", "id":"", "dateType":"", "shortDateInput":false, 
+  "name":"", "class":"", "title":"", "value":"", "size":"", "maxlength":"", "id":"", "dateType":"", "dateDisplayType":"", 
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":false, "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
@@ -137,26 +137,32 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datetime_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput 
+  <#if !["date", "time", "timestamp"]?seq_contains(dateType)>
+    <#local dateType = "timestamp">
+  </#if>
+  <#if !dateDisplayType?has_content || dateDisplayType == "default">
+    <#-- make this easier for markup -->
+    <#local dateDisplayType = dateType>
+  </#if>
+  <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datetime_markup_widget name="" class="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
+<#macro field_datetime_markup_widget name="" class="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  
+  <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
+      dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
+      (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
-  <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
-  <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
-  <#local dateFormat><#if shortDateInput>yyyy-MM-dd<#elseif dateType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local dateFormatProp><#if shortDateInput>CommonFormatDate<#elseif dateType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
-  <#local useTsFormat = ((!shortDateInput) && dateType != "time")>
+  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
 
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if tooltip?has_content> 
             <#local class = addClassArg(class, "has-tip tip-right")>
@@ -174,7 +180,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             </#if>
             <#if title?has_content>
               <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
-              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateFormatProp)!"">
+              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
               <#if title == "FORMAT">
                 <#local title = dateFormatString>
               <#elseif title == "LABEL">
@@ -191,54 +197,62 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             </#if>
           </#if>
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-          <#if dateType == "time">
-            <input type="text" name="${name}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
-            <#if title?has_content> title="${title}"</#if><#rt/>
-            <#if value?has_content> value="${value}"</#if><#rt/>
-            <#if size?has_content> size="${size}"</#if><#rt/>
-            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}"</#if> /><#rt/>
-          <#else>
-            <input type="text" name="${name}_i18n"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
-            <#if title?has_content> title="${title}"</#if><#rt/>
-            <#if value?has_content> value="${value}"</#if>
-            <#if size?has_content> size="${size}"</#if><#rt/>
-            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-            <#if id?has_content> id="${id}_i18n"</#if> /><#rt/>
+          <input type="text" name="${name}_i18n"<@fieldClassAttribStr class=class alert=alert /><#rt/>
+          <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
+          <#if title?has_content> title="${title}"</#if><#rt/>
+          <#if value?has_content> value="${value}"</#if>
+          <#if size?has_content> size="${size}"</#if><#rt/>
+          <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
+          <#if id?has_content> id="${id}_i18n"</#if> /><#rt/>
 
-            <input type="hidden" name="${name}"<#if id?has_content> id="${id}"</#if><#if value?has_content> value="${value}"</#if> />
-          </#if>
+          <input type="hidden" name="${name}"<#if id?has_content> id="${id}"</#if><#if value?has_content> value="${value}"</#if> />
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
           <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
         </div>
-      <#if dateType != "time">
+      
         <@script>
             $(function() {
 
                 var dateI18nToNorm = function(date) {
-                    <#-- TODO (note: depends on dateType) -->
+                    <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
+                            internal format (timestamp-like) 
+                        NOTE: this will vary based on date type and format -->
                     return date;
                 };
                 
                 var dateNormToI18n = function(date) {
-                    <#-- TODO (note: depends on dateType) -->
+                    <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
+                            internal format (timestamp-like) 
+                        NOTE: this will vary based on date type and format -->
                     return date;
                 };
             
                 jQuery("#${id}_i18n").change(function() {
-                    jQuery("#${id}").val(dateI18nToNorm(this.value));
+                  <#if dateType == "timestamp">
+                    jQuery("#${id}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
+                  <#elseif dateType == "date">
+                    jQuery("#${id}").val(convertToDateNorm(dateI18nToNorm(this.value)));
+                  <#elseif dateType == "time">
+                    jQuery("#${id}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+                  </#if>
                 });
                 
+              <#if dateType == "time">
+              
+                <#-- do nothing for now; user inputs into box manually and change() should adjust -->
+
+              <#else>
+              
                 var oldDate = "";
                 var onFDatePopup = function(ev) {
                     oldDate = dateI18nToNorm(jQuery("#${id}_i18n").val());
                 };
                 var onFDateChange = function(ev) {
-                  <#if useTsFormat>
+                  <#if dateDisplayType == "timestamp">
                     jQuery("#${id}_i18n").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${id}_i18n").val()), oldDate)));
+                  <#elseif dateDisplayType == "date">
+                    jQuery("#${id}_i18n").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${id}_i18n").val()), oldDate)));
                   </#if>
                 };
                 
@@ -247,10 +261,14 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
                 <#else>
                     <#local dateElemJs>$("input")</#local>
                 </#if>
+                <#-- How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
+                    This triggers onFDateChange which may transform the date and put it back in id_i18n.
+                    This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
                 ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+
+              </#if>
             });
         </@script>
-      </#if>
   </div>
 </#macro>
 
@@ -278,10 +296,10 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
-  <#local dateFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local useTsFormat = (dateType != "date" && dateType != "time")>
+  <#local dateDisplayFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsDisplay = (dateType != "date" && dateType != "time")>
   
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
           <input id="${name?html}_fld0_value" type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
@@ -305,7 +323,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
                     oldDate = jQuery("#${name?html}_fld0_value").val();
                 };
                 var onFDateChange = function(ev) {
-                  <#if useTsFormat>
+                  <#if useTsDisplay>
                     jQuery("#${name?html}_fld0_value").val(convertToDateTimeNorm(jQuery("#${name?html}_fld0_value").val(), oldDate));
                   </#if>
                 };

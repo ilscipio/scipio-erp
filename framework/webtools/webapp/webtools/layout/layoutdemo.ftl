@@ -505,8 +505,10 @@
       <@field type="input" name="input4" label="Input 4 (required)" required=true />
       <@field type="input" name="input5" label="Input 5 (required, tooltip force-disabled)" required=true tooltip=false/>
 
-      <@field type="datetime" label="Date 1" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" label="Date 2" name="date2" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 1 (timestamp)" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2 (short date)" name="date2" value="" size="25" maxlength="30" dateType="date" />
+      <@field type="datetime" label="Date 3 (time only)" name="date3" value="" size="25" maxlength="30" dateType="time" />
+      <@field type="datetime" label="Date 4 (timestamp internal, displayed as short date)" name="date4" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>

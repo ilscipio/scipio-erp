@@ -55,7 +55,11 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#else>
     <#local events = {}>
   </#if>
-  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <#local dateDisplayType = "">
+  <#if shortDateInput>
+    <#local dateDisplayType = "date">
+  </#if>
+  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>

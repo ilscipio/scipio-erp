@@ -114,10 +114,10 @@
     "menu_button_item_link" : "button tiny",
     "menu_button_item_text" : "text-entry",
     "menu_button_item_submit" : "button tiny",
-    "menu_button_dropdown" : "f-dropdown",
+    "menu_button_dropdown" : "f-dropdown menu-type-button-dropdown",
+    "menu_button_dropdown_type" : "menu-type-button-dropdown",
     "menu_button_dropdown_specialtype" : "button-dropdown",
     "menu_button_dropdown_mainbutton" : "button tiny dropdown",
-    "menu_button_dropdown_type" : "menu-type-button-dropdown",
     "menu_button_dropdown_item" : "",
     "menu_button_dropdown_itemdisabled" : "disabled", 
     "menu_button_dropdown_itemactive" : "active", 
@@ -131,6 +131,7 @@
     <#-- Main navigation menus -->
     "menu_main" : "dropdown menu-type-main",
     "menu_main_type" : "menu-type-main",
+    "menu_main_specialtype" : "main",       <#-- specialtype allows to reuse special markup across many custom menu types (specified here instead of hardcoding custom type checks in markup macros) -->
     "menu_main_wrap" : "has-dropdown not-click active",        
     "menu_main_item" : "",
     "menu_main_itemdisabled" : "disabled", 
@@ -144,6 +145,7 @@
     "menu_main_item_submit" : "", 
     "menu_sidebar" : "side-nav menu-type-sidebar",
     "menu_sidebar_type" : "menu-type-sidebar",
+    "menu_sidebar_specialtype" : "sidebar",
     "menu_sidebar_wrap" :"", 
     "menu_sidebar_item" : "",
     "menu_sidebar_itemdisabled" : "disabled", 

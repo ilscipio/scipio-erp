@@ -412,10 +412,12 @@
     {"type":"link", "text":"Menu Tab 2", "disabled":true},
     {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
     {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.button_color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
-    {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"}
-    {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"}
-    {"type":"link", "text":"Menu Tab 6", "selected":true}
-    {"type":"link", "text":"Menu Tab 7", "active":true}
+    {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"},
+    {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"},
+    {"type":"link", "text":"Menu Tab 6", "selected":true},
+    {"type":"link", "text":"Menu Tab 7", "active":true},
+    {"type":"generic", "text":"Menu Tab 8"},
+    {"type":"generic", "text":"Menu Tab 9", "contentClass":"+thisclassaddsacontainer"}
   ]>
   <@menu type="subtab" items=menuItems sort=true sortDesc=true/>
 

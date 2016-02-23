@@ -31,13 +31,12 @@ These render a whole single item without splitting into begin/end sections, usin
 Must be enabled in catoWebapp.properties (enabled by default in Cato).
 
 TODO/FIXME:
-* I don't see a good way to separate markup in these yet... may be none...
-  * Ideally the html generation of these and the cato macros should be based on a common library
-  * maybe @menu, but this is a lot more hardcoded than @menu, and the data structure needs extra conversion...
-* expand renderLink/renderImage, or part of them
-* the java is inefficient and implementation maybe not final (see OneShotMacro.java) - depends
+* Currently the new renderMenuFull partly shares code with @menu, but only markup macros;
+  logic is duplicated. This is a compromise for now...
+* Integrate renderLink with the @menu markup stuff...
+* Sub-menu control is limited, but not really implemented anywhere else either.
+* The java for one-shot macro is inefficient and implementation maybe not final (see OneShotMacro.java) - depends
   on how much end up using and where
-* Special style names too hardcoded
 -->
 
 <#-- Cato: One-shot macro full menu
@@ -50,17 +49,20 @@ TODO/FIXME:
         (item)
           "items": This goes on recursively for nested menus...
 
-  Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
-    * menu-type-main
-    * menu-type-sidebar
-    * menu-type-button
-    * etc.
+  Menu types can be set via menu-container-style attribute by specifying a "virtual" style name having the prefix "menu-type-", 
+  which will cause a different set of default styles and rendering to be used. 
+  Specifying "menu-type-xxx" is roughly equivalent to specifying type="xxx" on @menu macro.
+  The "menu-type-xxx" name will only be included in the resulting class attribute if it is specified as a style in the styles hash; otherwise is automatically removed.
+  See @menu macro and style hash for possible types.
+  
+  TODO?: menu-container-style does not currently fully support the standard Cato +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] htmlWrap=true>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
 <#--<p><@objectAsScript lang="raw" object=items /></p>-->
+
   <#-- Extract menu types from style string, remove, and get global style -->
   <#local type = "">
   <#local class = style>
@@ -70,7 +72,7 @@ TODO/FIXME:
     <#-- Use only the first, we only support one -->
     <#local type = menuTypeStyles[0]?substring(10)>
   </#if>
-  <#-- FIXME?: we don't fully support +/= syntax here, non-standard, treat empty as "+"...
+  <#-- FIXME?: we don't fully support +/= syntax here, non-standard; treat empty as "+" for now...
       We may not even receive a +/= sign at all; see ModelMenu.java, may get stripped; should maybe be changed... -->
   <#if !class?starts_with("=")>
     <#local class = "+" + class>
@@ -80,6 +82,7 @@ TODO/FIXME:
     <#local styleName = "default">
   </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
+  
   <#-- Count menu and make sure has ID -->
   <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
@@ -87,58 +90,36 @@ TODO/FIXME:
   <#if !id?has_content>
     <#local id = "menu_" + menuIdNum> <#-- FIXME? is this name too general? -->
   </#if>
-  <#if htmlWrap?is_boolean && htmlWrap == false>
-    <#local htmlWrap = "">
-  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
-    <#if htmlWrap?is_boolean>
-      <#local htmlWrap = htmlWrap?string("ul", "")>
-    </#if>
-  </#if>
-  <#-- Menu open -->
-  <#if !inlineEntries>
-    <#local extraMenuAttribs = {}>
-    <#if type == "main">
-        <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
-            <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
-    <#elseif type == "sidebar">
-        <nav class="${styles.nav_sidenav!""}">
-            <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
-            <#if navigation?has_content><h2>${navigation!}</h2></#if>
-    <#elseif type == "button-dropdown">
-        <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
-        <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
-    <#else>
-      <#-- all other cases -->
-      <#-- WARN: stock ofbiz usually applied styles to a containing div, 
-           not sure should keep that behavior or not, but might not consistent with foundation styles? -->
-    </#if>
-        <#if htmlWrap?has_content><${htmlWrap}<#if id?has_content> id="${id}"</#if><@compiledClassAttribStr class=class /><@elemAttribStr attribs=extraMenuAttribs />></#if>
-  </#if>
-   <#local dummy = pushRequestStack("renderMenuStack", {"type":type, "class":class,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
-  
-  <#-- Items (nested) --> 
-  <#list items as item>
-    <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
-        containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-        menuType=type menuStyleName=styleName menuHtmlWrap=htmlWrap />
-  </#list>
 
-  <#-- Menu close -->
-  <#local menuStack = popRequestStack("renderMenuStack")>
-  <#if !inlineEntries>
-    <#if type == "main">
-            <#if htmlWrap?has_content></${htmlWrap}></#if>
-        </li>
-    <#elseif type == "sidebar">
-            <#if htmlWrap?has_content></${htmlWrap}></#if>
-        </nav>
-    <#else>
-        <#if htmlWrap?has_content></${htmlWrap}></#if>
-    </#if>
+  <#-- Special menu settings -->
+  <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
+  <#if htmlWrap?is_boolean>
+    <#local htmlWrap = htmlWrap?string("ul", "")>
   </#if>
+  <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
+  <#local mainButtonClass = "">
+  <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
   
-  <#if !readRequestStack("renderMenuStack")??> <#-- if top-level menu -->
+  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, "menuIdNum":menuIdNum, "inlineEntires":inlineEntries, "htmlWrap":htmlWrap}>
+  <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
+  <#if inlineEntries>
+    <#list items as item>
+      <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
+          containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
+          menuInfo=menuInfo />
+    </#list>
+  <#else>
+    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title htmlWrap=htmlWrap>
+      <#list items as item>
+        <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
+            containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
+            menuInfo=menuInfo />
+      </#list>
+    </@menu_markup>
+  </#if>
+  <#local dummy = popRequestStack("renderMenuStack")>
+  
+  <#if !readRequestStack("renderMenuStack")??> <#-- if top-level menu (in stock Ofbiz this is always true for @renderMenuBegin) -->
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#if renderMenuHiddenFormContent?has_content>
       ${renderMenuHiddenFormContent}
@@ -154,35 +135,42 @@ TODO/FIXME:
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] menuType="" menuStyleName="" menuHtmlWrap=true htmlWrap=true>
-  <#-- TODO? maybe want to expand the renderLink and/or renderImage calls -->
-  <#if linkArgs?has_content>
-    <#local imgStr = "">
-    <#if linkArgs.imgArgs?has_content>
-      <#local imgArgs = linkArgs.imgArgs>
-      <#local imgStr><@renderImage imgArgs.src imgArgs.id imgArgs.style imgArgs.width imgArgs.height imgArgs.border imgArgs.menuCtxRole /></#local>
-    </#if>
-    <#local linkStr><@renderLink linkArgs.linkUrl linkArgs.parameterList linkArgs.targetWindow linkArgs.uniqueItemName linkArgs.actionUrl linkArgs.linkType linkArgs.id linkArgs.style linkArgs.name linkArgs.height linkArgs.width linkArgs.text imgStr linkArgs.menuCtxRole /></#local>
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] menuInfo={}>
+  <#local class = style>
+  <#local id = "">
+  <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
+  <#local disabled = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
+  <#local active = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
+  <#local selected = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
+  <#local htmlWrap = styles["menu_" + menuInfo.styleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
+  <#if htmlWrap?is_boolean>
+    <#local htmlWrap = htmlWrap?string("li", "")>
   </#if>
-  <#if htmlWrap?is_boolean && htmlWrap == false>
-    <#local htmlWrap = "">
-  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
-    <#if htmlWrap?is_boolean>
-      <#local htmlWrap = htmlWrap?string("li", "")>
-    </#if>
+  <#local attribs = {}>
+  <#if toolTip?has_content>
+    <#local attribs = attribs + {"title":toolTip}>
   </#if>
-  <#if htmlWrap?has_content><${htmlWrap}<@compiledClassAttribStr class=style /><#if toolTip?has_content> title="${toolTip}"</#if>></#if><#if linkStr?has_content>${linkStr}</#if><#rt>
+  <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
+      style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlWrap=htmlWrap 
+      disabled=disabled selected=selected active=active><#rt>
+    <#if linkArgs?has_content>
+      <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
+          uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
+          style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=linkArgs.imgArgs!{} imgStr=linkArgs.imgStr!""
+          menuCtxRole=linkArgs.menuCtxRole menuInfo=menuInfo /><#t>
+    <#elseif linkStr?has_content>
+      ${linkStr}
+    </#if><#t>
     <#if containsNestedMenus>
-      <#if menuHtmlWrap?has_content><${menuHtmlWrap}></#if>
+      <#if menuInfo.htmlWrap?has_content><${menuInfo.htmlWrap}></#if>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-            menuType=menuType menuStyleName=menuStyleName menuHtmlWrap=menuHtmlWrap />
+            menuInfo=menuInfo />
       </#list>
-      <#if menuHtmlWrap?has_content></${menuHtmlWrap}></#if>
+      <#if menuInfo.htmlWrap?has_content></${menuInfo.htmlWrap}></#if>
     </#if>
-  <#if htmlWrap?has_content></${htmlWrap}></#if><#lt>
+  </@menuitem_markup>
 </#macro>
 
 
@@ -341,41 +329,57 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 -->
 
-<#-- Cato: TODO: refactor? -->
 <#macro renderImage src id style width height border menuCtxRole="">
-<img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
+  <img src="${src}"<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if width?has_content> width="${width}"</#if><#if height?has_content> height="${height}"</#if><#if border?has_content> border="${border}"</#if> />
 </#macro>
 
-<#-- Cato: TODO: refactor? -->
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="">
-<#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
-     because can't centralize these menus easily anywhere else. -->
-<#if menuCtxRole=="screenlet-nav-menu">
-  <#if !style?has_content>
-    <#local style = "${styles.menu_section_item_link!}">
+<#-- Cato: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} menuInfo={}>
+  <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
+  <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
+       because can't centralize these menus easily anywhere else. -->
+  <#if menuCtxRole == "screenlet-nav-menu">
+    <#if !style?has_content && isLink>
+      <#local style = "${styles.menu_section_item_link!}">
+    </#if>
   </#if>
-</#if>
-<#-- Cato: treat "none" keyword as requesting empty style, as workaround -->
-<#if style == "none">
-  <#local style = "">
-</#if>
-
+  <#-- Cato: treat "none" keyword as requesting empty style, as workaround -->
+  <#if style == "none" || style == "=">
+    <#local style = "">
+  </#if>
+  <#local disabled = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
+  <#local selected = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
+  <#local active = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
   <#if linkType?has_content && "hidden-form" == linkType>
     <#local hiddenFormContent>
-<form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#rt/>
-    <#list parameterList as parameter>
-<input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#rt/>
-    </#list>
-</form><#rt/>
+      <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#t>
+        <#list parameterList as parameter>
+          <input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#t>
+        </#list>
+      </form><#t>
     </#local>
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#local dummy = setRequestVar("renderMenuHiddenFormContent", renderMenuHiddenFormContent+hiddenFormContent)>
   </#if>
-<#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content>
-<a<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if name?has_content> name="${name}"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if> href="<#if "hidden-form"==linkType>javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if>"><#rt/>
-</#if>
-<#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${text}</#if><#rt/>
-<#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>
+  <#local innerContent> <#-- Cato: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
+    <#if imgArgs?has_content>
+      <@renderImage src=imgArgs.src id=imgArgs.id style=imgArgs.style width=imgArgs.width height=imgArgs.height 
+          border=imgArgs.border menuCtxRole=imgArgs.menuCtxRole /><#t>
+    <#elseif imgStr?has_content>
+      ${imgStr}<#t>
+    </#if>
+    <#if text?has_content>
+      ${text}<#t>
+    </#if>
+  </#local>
+  <#if isLink>
+    <#local href><#if linkType == "hidden-form">javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if></#local>
+    <@menuitem_link_markup class=style id=id style="" name=name href="" onClick="" target=targetWindow title="" 
+        attribs={} excludeAttribs=[] disabled=disabled selected=selected active=active>${innerContent}</@menuitem_link_markup><#t>
+  <#else>
+    <@menuitem_generic_markup class=style id=id style="" onClick="" title="" 
+        attribs={} excludeAttribs=[] disabled=disabled selected=selected active=active>${innerContent}</@menuitem_generic_markup><#t>
+  </#if>
 </#macro>
 
 <#-- Cato: DEPRECATED/unmaintained/obsolete, replaced by one-shot macros, kept for reference only

@@ -802,6 +802,9 @@
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoices}">
+            <condition>
+                <if-empty field="invoice.invoiceId" />
+            </condition>
             <link target="findInvoices" />
         </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
@@ -848,11 +851,9 @@
         </menu-item>
         <menu-item name="invoiceRoles" title="${uiLabelMap.PartyRoles}">
             <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                </and>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
             </condition>
             <link target="invoiceRoles">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
@@ -877,12 +878,58 @@
             </link>
         </menu-item>
         <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
+            <condition>
+                <if-empty field="invoice.invoiceId" />
+            </condition>
             <link target="CommissionRun" />
         </menu-item>
     </menu>
 
     <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="InvoiceTabBar" recursive="includes-only" />
+        <!-- Purchase Invoice PDF -->
+        <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.AccountingInvoicePurchase}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_PAID" />
+                    </or>
+                </and>
+            </condition>
+            <link target="InvoiceAcctgTransEntriesPdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <!-- Invoice -->
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
+                        to-field="defaultOrganizationPartyCurrencyUomId" />
+                </and>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1075,47 +1122,6 @@
                 </and>
             </condition>
             <link target="addtax">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_PAID" />
-                    </or>
-                </and>
-            </condition>
-            <link target="InvoiceAcctgTransEntriesPdf">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
-                        to-field="defaultOrganizationPartyCurrencyUomId" />
-                </and>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
-            </link>
-        </menu-item>
-        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>

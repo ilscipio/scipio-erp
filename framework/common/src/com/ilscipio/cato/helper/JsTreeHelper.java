@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 /**
  * Provides several utilities for handling jsTree objects (data, settings,
@@ -19,6 +23,13 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public class JsTreeHelper {
 
+    private static String JSTREE_FIELD_ID_SEPARATOR = "_";
+
+    /**
+     * 
+     * @param treeDataList
+     * @return
+     */
     public static String buildTreeData(List<JsTreeDataItem> treeDataList) {
         StringBuffer buffer = new StringBuffer();
         JSON json;
@@ -32,6 +43,11 @@ public class JsTreeHelper {
         return buffer.toString();
     }
 
+    /**
+     * 
+     * @author jsoto
+     *
+     */
     public static class JsTreeCore extends HashMap<String, Object> {
         private static final long serialVersionUID = 2371673939917629690L;
 
@@ -137,10 +153,17 @@ public class JsTreeHelper {
 
     }
 
-    public static class JsTreeDataItem extends HashMap<String, Object> {
+    /**
+     * 
+     * @author jsoto
+     *
+     */
+    public static class JsTreeDataItem extends HashMap<String, Object>implements TreeDataItem {
         private static final long serialVersionUID = -660269373973470543L;
 
-        public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, List<JsTreeDataItem> children) {
+        private boolean multipleOccurrences = false;
+
+        public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, List<TreeDataItem> children) {
             if (UtilValidate.isNotEmpty(id))
                 put("id", id);
             if (UtilValidate.isNotEmpty(text))
@@ -153,8 +176,14 @@ public class JsTreeHelper {
                 put("children", children);
         }
 
+        @Override
         public void setId(String id) {
             put("id", id);
+        }
+
+        @Override
+        public String getId() {
+            return (String) this.get("id");
         }
 
         public void setText(String text) {
@@ -169,12 +198,26 @@ public class JsTreeHelper {
             put("state", state);
         }
 
-        public void setChildren(List<JsTreeDataItem> children) {
+        public void setChildren(List<TreeDataItem> children) {
             put("children", children);
         }
-        
+
+        public List<JsTreeDataItem> getChildren() {
+            return (List<JsTreeDataItem>) get("children");
+        }
+
+        @Override
         public void setType(String type) {
             put("type", type);
+        }
+
+        @Override
+        public void setMultipleOccurrences(boolean multipleOccurrences) {
+            this.multipleOccurrences = multipleOccurrences;
+        }
+
+        public boolean hasMultipleOccurrences() {
+            return multipleOccurrences;
         }
 
         public static class JsTreeDataItemState extends HashMap<String, Boolean> {
@@ -204,15 +247,20 @@ public class JsTreeHelper {
         }
     }
 
+    /**
+     * 
+     * @author jsoto
+     *
+     */
     public static class JsTreeEvent extends HashMap<String, String> {
         private static final long serialVersionUID = 2708617525071551004L;
         public static final String JSTREE_EVENT = ".jstree";
 
         public static final String[] VALID_EVENTS = { "init", "loading", "loaded", "ready", "load_node", "load_all", "model", "redraw", "before_open",
                 "open_node", "after_open", "close_node", "after_close", "open_all", "close_all", "enable_node", "disable_node", "show_node", "hide_all",
-                "show_all", "activate_node", "hover_node", "dehover_node", "select_node", "changed", "deselect_node", "select_all", "deselect_all",
-                "set_state", "refresh", "refresh_node", "set_text", "create_node", "rename_node", "delete_node", "move_node", "copy_node", "cut", "copy",
-                "paste", "clear_buffer", "set_theme" };
+                "show_all", "activate_node", "hover_node", "dehover_node", "select_node", "changed", "deselect_node", "select_all", "deselect_all", "set_state",
+                "refresh", "refresh_node", "set_text", "create_node", "rename_node", "delete_node", "move_node", "copy_node", "cut", "copy", "paste",
+                "clear_buffer", "set_theme" };
 
         public JsTreeEvent(String event, String function) {
             addEvent(event, function);
@@ -232,6 +280,11 @@ public class JsTreeHelper {
 
     }
 
+    /**
+     * 
+     * @author jsoto
+     *
+     */
     public static abstract class JsTreePlugin extends HashMap<String, Object> {
         private static final long serialVersionUID = 4248393333916299308L;
 
@@ -472,6 +525,11 @@ public class JsTreeHelper {
 
     }
 
+    /**
+     * 
+     * @author jsoto
+     *
+     */
     public static class JsTreePluginList extends ArrayList<JsTreePlugin> {
         private static final long serialVersionUID = 2601099764369384246L;
         private static String[] VALID_PLUGINS = { "changed", "checkbox", "conditionalselect", "contextmenu", "dnd", "massload", "search", "sort", "state",
@@ -495,6 +553,56 @@ public class JsTreeHelper {
             return false;
         }
 
+    }
+
+    /**
+     * 
+     * @param list
+     * @param dataItem
+     * @param count
+     */
+    public static void preventDataItemsSameId(List<JsTreeDataItem> list) {
+        // FIXME: This require more refinement, it can overload the system if
+        // the list being passed is very large
+        List<JsTreeDataItem> allDataItems = getAllDataItems(list);
+        Debug.log("data item plain list size ===========> " + allDataItems.size());
+        
+        List<JsTreeDataItem> repeatedDataItems = getAllRepeatedItems(allDataItems);
+        Debug.log("repeated data item size ===========> " + repeatedDataItems.size());
+        
+
+        // for (String idKey : sameIdDataItemsMap.keySet()) {
+        // int count = 0;
+        // Debug.log("repeated id ===========> " + idKey);
+        // for (TreeDataItem item : sameIdDataItemsMap.get(idKey)) {
+        // if (list.indexOf(item) >= 0) {
+        // TreeDataItem dataItem = list.get(list.indexOf(item));
+        // dataItem.setMultipleOccurrences(true);
+        // dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
+        // }
+        // }
+        // }
+    }
+
+    private static List<JsTreeDataItem> getAllDataItems(List<JsTreeDataItem> list) {
+        List<JsTreeDataItem> sameIdDataItemsList = FastList.newInstance();
+        // Isolate repeated items with same ids
+        for (JsTreeDataItem i : list) {
+            sameIdDataItemsList.add(i);
+            if (UtilValidate.isNotEmpty(i.getChildren())) {
+                sameIdDataItemsList.addAll(getAllDataItems(i.getChildren()));
+            }
+        }
+        return sameIdDataItemsList;
+    }
+
+    private static List<JsTreeDataItem> getAllRepeatedItems(List<JsTreeDataItem> allItems) {
+        List<JsTreeDataItem> sameIdDataItemsList = FastList.newInstance();
+        for (JsTreeDataItem i : allItems)
+            for (JsTreeDataItem x : allItems)
+                if (x.getId().equals(i.getId()))
+                    sameIdDataItemsList.add(i);
+        return sameIdDataItemsList;
     }
 
 }

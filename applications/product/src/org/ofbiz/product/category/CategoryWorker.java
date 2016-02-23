@@ -28,8 +28,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -47,7 +45,16 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import com.ilscipio.cato.helper.JsTreeHelper;
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem;
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState;
+import com.ilscipio.cato.helper.TreeDataItem;
+
+import javolution.util.FastList;
 
 /**
  * CategoryWorker - Worker class to reduce code in JSPs.
@@ -477,5 +484,81 @@ public class CategoryWorker {
         Collections.reverse(trailElements);
         results.put("trail", trailElements);
         return results;
+    }
+    
+    /**
+     * Cato: Retrieves categories based on either a list of
+     * ProductCategoryRollup or ProdCatalogCategory and returns a list of
+     * TreeDataItem representing categories
+     * 
+     * @param delegator
+     * @param dispatcher
+     * @param productCategories
+     * @return
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
+    public static List<TreeDataItem> getTreeCategories(Delegator delegator, LocalDispatcher dispatcher, List<GenericValue> productCategories, String library)
+            throws GenericEntityException, GenericServiceException {
+        List<TreeDataItem> categories = FastList.newInstance();
+        for (GenericValue productCategory : productCategories) {
+            GenericValue category = null;
+            if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
+                category = productCategory.getRelatedOne("CurrentProductCategory", true);
+            } else if (productCategory.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
+                category = productCategory.getRelatedOne("ProductCategory", true);
+            }
+            if (UtilValidate.isNotEmpty(category)) {
+                Debug.log("productCategoryId ============> " + category.getString("productCategoryId"));
+                List<TreeDataItem> children = FastList.newInstance();
+
+                List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                        .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(true).queryList();
+                if (UtilValidate.isNotEmpty(childProductCategoryRollups))
+                    children = getTreeCategories(delegator, dispatcher, childProductCategoryRollups, library);
+
+                Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
+                        UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
+                if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
+                    children.addAll(getTreeProducts((List<GenericValue>) productCategoryMembers.get("categoryMembers"), library));
+                }
+
+                JsTreeDataItem dataItem = null;
+                if (library.equals("jsTree")) {
+                    dataItem = new JsTreeDataItem(category.getString("productCategoryId"), category.getString("categoryName"), "jstree-folder",
+                            new JsTreeDataItemState(true, false), children);
+                    dataItem.setType("category");
+                }
+
+                if (UtilValidate.isNotEmpty(dataItem))
+                    categories.add(dataItem);
+            }
+        }
+        return categories;
+    }
+
+    /**
+     * Cato: Retrieves products members for a given category and returns a list
+     * of JsTreeDataItem representing products
+     * 
+     * @param delegator
+     * @param dispatcher
+     * @param productCategories
+     * @return
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
+    public static List<TreeDataItem> getTreeProducts(List<GenericValue> productCategoryMembers, String library) throws GenericEntityException {
+        List<TreeDataItem> products = FastList.newInstance();
+        if (UtilValidate.isNotEmpty(productCategoryMembers)) {
+            for (GenericValue productCategoryMember : productCategoryMembers) {
+                GenericValue product = productCategoryMember.getRelatedOne("Product", true);
+                JsTreeDataItemState itemState = new JsTreeDataItemState(true, false);
+                JsTreeDataItem dataItem = new JsTreeDataItem(product.getString("productId"), product.getString("productName"), "jstree-file", itemState, null);
+                dataItem.setType("product");
+                products.add(dataItem);
+            }
+        }
+        return products;
     }
 }

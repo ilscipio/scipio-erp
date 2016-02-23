@@ -5,6 +5,7 @@ public class DemoDataProduct implements DemoDataObject {
     private String id;
     private String name;
     private String description;
+    private String longDescription;
     private String price;
 
     public String getId() {
@@ -37,6 +38,14 @@ public class DemoDataProduct implements DemoDataObject {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
 }

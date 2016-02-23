@@ -1,4 +1,6 @@
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.base.util.UtilValidate
@@ -30,14 +32,15 @@ public Map createDemoProduct(DispatcherContext ) {
     ]
 
     List<String> productTypes = [
-        "AGGREGATED",
-        "AGGREGATED_CONF",
+        //TODO: Gotta figure how to handle these two types
+        //        "AGGREGATED",
+        //        "AGGREGATED_CONF",
         "ASSET_USAGE",
         "DIGITAL_GOOD",
         "FINDIG_GOOD",
         "FINISHED_GOOD",
         "GOOD",
-        "MARKETING _PKG_PICK",
+        "MARKETING_PKG_PICK",
         "MARKETING_PKG_AUTO",
         "RAW_MATERIAL",
         "SERVICE",
@@ -62,7 +65,7 @@ public Map createDemoProduct(DispatcherContext ) {
     GenericValue prodCatalog = checkProdCatalog();
     GenericValue productCategory = checkProductCategory();
 
-    List productCategoryIds = [];   
+    List productCategoryIds = [];
     if (productCategory) {
         // An explicit productCategory has preference, skipping the rest
         productCategoryIds += [
@@ -72,7 +75,7 @@ public Map createDemoProduct(DispatcherContext ) {
         //  If productCategory is empty, try with an explicit prodCatalog
         productCategoryIds = getCatalogRelatedCategoryIds(prodCatalog);
     } else if (productStore) {
-        // Ultimately check for productStore, if nothing has been passed for that too, a random one taken from productStoreIds will be used        
+        // Ultimately check for productStore, if nothing has been passed for that too, a random one taken from productStoreIds will be used
         Debug.log("ProductStoreId ======> " + productStore.productStoreId);
         // Find Catalogs
         productStoreCatalogs = productStore.getRelated("ProductStoreCatalog", null, null, true);
@@ -89,12 +92,12 @@ public Map createDemoProduct(DispatcherContext ) {
         String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
         int num = context.num;
 
-        // Let's distribute the products into categories equally
+        // Let's distribute the products into categories evenly
         int factor = 0;
         Debug.log("productCategoryIds size ========> " + productCategoryIds.size());
         if (num > 1 && num > productCategoryIds.size())
             factor = productCategoryIds.size() / num;
-            
+
         List<DemoDataProduct> generatedProducts = DemoSuiteDataWorker.generateProduct(num, MockarooDataGenerator.class);
 
         if (UtilValidate.isNotEmpty(generatedProducts) && generatedProducts.size() == num) {
@@ -103,22 +106,31 @@ public Map createDemoProduct(DispatcherContext ) {
                 // Create Product
                 String productId = "GEN_" + delegator.getNextSeqId("demo-product");
                 productCategoryId = productCategoryIds.get(UtilRandom.random(productCategoryIds));
-                productName = demoDataProduct.getName();
-                productDescription = demoDataProduct.getDescription();
-                Debug.log("selected category id =====> " + productCategoryId + " product id =========> " + productId + " product name " + productName);
+                productTypeId = productTypes.get(UtilRandom.random(productTypes));
+                introductionDate = UtilDateTime.getTimestamp(UtilRandom.getRandomTimeBetweenTwoDates(null, context));
+
+                fields = UtilMisc.toMap("productId", productId, "productTypeId", productTypeId, "productName", demoDataProduct.getName(), "description", demoDataProduct.getDescription(), 
+                    "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
+                GenericValue product = delegator.makeValue("Product", fields);
+                toBeStored.add(product);
+                Debug.log("selected category id =====> " + productCategoryId + "  type ==========> " + productTypeId + " product id =========> " + productId + " product name " + demoDataProduct.getName());
+                
+                fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
+                GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
+                toBeStored.add(productCategoryMember);
+                
             }
         }
-        //
-        //      // store the changes
-        //      if (toBeStored.size() > 0) {
-        //          try {
-        //              delegator.storeAll(toBeStored);
-        //          } catch (GenericEntityException e) {
-        //              return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-        //              "OrderErrorCannotStoreStatusChanges", locale) + e.getMessage());
-        //          }
-        //      }
-
+        
+        // store the changes
+        if (toBeStored.size() > 0) {
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                "OrderErrorCannotStoreStatusChanges", locale) + e.getMessage());
+            }
+        }
     } else {
         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "ProductErrorProductStoreNotFound", locale) + ". Please load the specific Cato demo data.");
     }

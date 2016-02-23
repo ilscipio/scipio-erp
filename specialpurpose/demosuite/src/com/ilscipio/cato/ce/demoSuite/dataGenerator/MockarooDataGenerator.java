@@ -122,7 +122,15 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
 
                 Map<String, Object> description = FastMap.newInstance();
                 description.put("name", "description");
-                description.put("type", "Sentences");
+                description.put("type", "Words");
+                description.put("min", 5);
+                description.put("max", 15);
+
+                Map<String, Object> longDescription = FastMap.newInstance();
+                longDescription.put("name", "longDescription");
+                longDescription.put("type", "Sentences");
+                longDescription.put("min", 1);
+                longDescription.put("max", 3);
 
                 Map<String, Object> price = FastMap.newInstance();
                 price.put("name", "price");
@@ -131,6 +139,7 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
                 fields.add(id);
                 fields.add(name);
                 fields.add(description);
+                fields.add(longDescription);
                 fields.add(price);
             }
             return fields;
@@ -142,7 +151,8 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
     List<T> handleData(String result, String format) {
         if (format.equals("json")) {
             try {
-//                Debug.log("json result ===========> " + JSON.from(result).toString());
+                // Debug.log("json result ===========> " +
+                // JSON.from(result).toString());
                 JSONToList jsonListConverter = new JSONConverters.JSONToList();
                 List<T> resultList = FastList.newInstance();
                 for (Object o : jsonListConverter.convert(JSON.from(result))) {

@@ -10000,7 +10000,7 @@ table.basic-table input {
 }
 
 /* line 165, ../scss/_base.scss */
-.page-login, .page-forgotPassword, .page-requirePasswordChange {
+.page-noauth {
   background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;

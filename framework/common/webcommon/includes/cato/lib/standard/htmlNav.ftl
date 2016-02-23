@@ -147,14 +147,14 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       normally case-insensitive.
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
-    htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
+    htmlwrap        = wrapping HTML element (ul|div|span, default: ul)
     specialType     = [|button-dropdown]
                       DEV NOTE: each specialType could have its own styles hash menu_special_xxx entries
 -->
 <#assign menu_defaultArgs = {
   "type":"generic", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
-  "nestedFirst":false, "title":"", "specialType":"", "mainButtonClass":"", "htmlWrap":true, "passArgs":{}
+  "nestedFirst":false, "title":"", "specialType":"", "mainButtonClass":"", "htmlwrap":true, "passArgs":{}
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -186,12 +186,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     <#local styleName = "default">
   </#if>
 
-  <#if htmlWrap?is_boolean && htmlWrap == false>
-    <#local htmlWrap = "">
-  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
-    <#if htmlWrap?is_boolean>
-      <#local htmlWrap = htmlWrap?string("ul", "")>
+  <#if htmlwrap?is_boolean && htmlwrap == false>
+    <#local htmlwrap = "">
+  <#elseif (htmlwrap?is_boolean && htmlwrap == true) || !htmlwrap?has_content>
+    <#local htmlwrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
+    <#if htmlwrap?is_boolean>
+      <#local htmlwrap = htmlwrap?string("ul", "")>
     </#if>
   </#if>
 
@@ -210,7 +210,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
   
-  <@menu_markup type=type specialType=specialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap title=title mainButtonClass=mainButtonClass origArgs=origArgs passArgs=passArgs>
+  <@menu_markup type=type specialType=specialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlwrap=htmlwrap title=title mainButtonClass=mainButtonClass origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -256,8 +256,8 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 
 <#-- @menu container main markup - theme override 
     DEV NOTE: This is called directly from both @menu and widgets @renderMenuFull -->
-<#macro menu_markup type="" specialType="" class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false mainButtonClass="" title="" htmlWrap="ul" origArgs={} passArgs={} catchArgs...>
-  <#if !inlineItems && htmlWrap?has_content>
+<#macro menu_markup type="" specialType="" class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false mainButtonClass="" title="" htmlwrap="ul" origArgs={} passArgs={} catchArgs...>
+  <#if !inlineItems && htmlwrap?has_content>
     <#-- NOTE: here we always test specialType and never type, so that many (custom) menu types may reuse the same 
         existing specialType special handling without having to modify this code -->
     <#if specialType == "main">
@@ -271,18 +271,18 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
       <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${mainButtonClass}">${title}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
-    <#if htmlWrap?has_content><${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
+    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
   </#if>
       <#nested>
-  <#if !inlineItems && htmlWrap?has_content>
+  <#if !inlineItems && htmlwrap?has_content>
     <#if type == "main">
-        <#if htmlWrap?has_content></${htmlWrap}></#if>
+        <#if htmlwrap?has_content></${htmlwrap}></#if>
       </li>
     <#elseif type == "sidebar">
-        <#if htmlWrap?has_content></${htmlWrap}></#if>
+        <#if htmlwrap?has_content></${htmlwrap}></#if>
       </nav>
     <#else>
-      <#if htmlWrap?has_content></${htmlWrap}></#if>
+      <#if htmlwrap?has_content></${htmlwrap}></#if>
     </#if>
   </#if>
 </#macro>
@@ -323,7 +323,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
                       for menu to use as sub-menu.
     wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
     nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
-    htmlWrap        = wrapping HTML element (li|span|div, default: li)
+    htmlwrap        = wrapping HTML element (li|span|div, default: li)
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
@@ -331,7 +331,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":false, "nestedFirst":false,
-  "htmlWrap":true, "inlineItem":false, "passArgs":{}
+  "htmlwrap":true, "inlineItem":false, "passArgs":{}
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -359,12 +359,12 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuSpecialType = (catoCurrentMenuInfo.specialType)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   
-  <#if htmlWrap?is_boolean && htmlWrap == false>
-    <#local htmlWrap = "">
-  <#elseif (htmlWrap?is_boolean && htmlWrap == true) || !htmlWrap?has_content>
-    <#local htmlWrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
-    <#if htmlWrap?is_boolean>
-      <#local htmlWrap = htmlWrap?string("li", "")>
+  <#if htmlwrap?is_boolean && htmlwrap == false>
+    <#local htmlwrap = "">
+  <#elseif (htmlwrap?is_boolean && htmlwrap == true) || !htmlwrap?has_content>
+    <#local htmlwrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
+    <#if htmlwrap?is_boolean>
+      <#local htmlwrap = htmlwrap?string("li", "")>
     </#if>
   </#if>
 
@@ -397,7 +397,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
   <#local specialType = "">
 
-  <@menuitem_markup type=type menuType=menuType menuSpecialType=menuSpecialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#rt>
+  <@menuitem_markup type=type menuType=menuType menuSpecialType=menuSpecialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlwrap=htmlwrap disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -427,13 +427,13 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 
 <#-- @menuitem container markup - theme override 
   DEV NOTE: This is called directly from both @menuitem and widgets @renderMenuItemFull -->
-<#macro menuitem_markup type="" menuType="" menuSpecialType="" class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
-  <#if !inlineItem && htmlWrap?has_content>
-    <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+<#macro menuitem_markup type="" menuType="" menuSpecialType="" class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlwrap="li" disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
+  <#if !inlineItem && htmlwrap?has_content>
+    <${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
       <#nested><#t>
-  <#if !inlineItem && htmlWrap?has_content>
-    </${htmlWrap}><#lt>
+  <#if !inlineItem && htmlwrap?has_content>
+    </${htmlwrap}><#lt>
   </#if>
 </#macro>
 

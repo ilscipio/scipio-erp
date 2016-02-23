@@ -92,15 +92,15 @@ TODO/FIXME:
   </#if>
 
   <#-- Special menu settings -->
-  <#local htmlWrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
-  <#if htmlWrap?is_boolean>
-    <#local htmlWrap = htmlWrap?string("ul", "")>
+  <#local htmlwrap = styles["menu_" + styleName + "_htmlwrap"]!styles["menu_default_htmlwrap"]!true>
+  <#if htmlwrap?is_boolean>
+    <#local htmlwrap = htmlwrap?string("ul", "")>
   </#if>
   <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
   <#local mainButtonClass = "">
   <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
   
-  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, "menuIdNum":menuIdNum, "inlineEntires":inlineEntries, "htmlWrap":htmlWrap}>
+  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, "menuIdNum":menuIdNum, "inlineEntires":inlineEntries, "htmlwrap":htmlwrap}>
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
     <#list items as item>
@@ -109,7 +109,7 @@ TODO/FIXME:
           menuInfo=menuInfo />
     </#list>
   <#else>
-    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title htmlWrap=htmlWrap>
+    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title htmlwrap=htmlwrap>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
@@ -142,16 +142,16 @@ TODO/FIXME:
   <#local disabled = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
   <#local active = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
   <#local selected = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
-  <#local htmlWrap = styles["menu_" + menuInfo.styleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
-  <#if htmlWrap?is_boolean>
-    <#local htmlWrap = htmlWrap?string("li", "")>
+  <#local htmlwrap = styles["menu_" + menuInfo.styleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
+  <#if htmlwrap?is_boolean>
+    <#local htmlwrap = htmlwrap?string("li", "")>
   </#if>
   <#local attribs = {}>
   <#if toolTip?has_content>
     <#local attribs = attribs + {"title":toolTip}>
   </#if>
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
-      style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlWrap=htmlWrap 
+      style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
       disabled=disabled selected=selected active=active><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
@@ -162,13 +162,13 @@ TODO/FIXME:
       ${linkStr}
     </#if><#t>
     <#if containsNestedMenus>
-      <#if menuInfo.htmlWrap?has_content><${menuInfo.htmlWrap}></#if>
+      <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}></#if>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
             menuInfo=menuInfo />
       </#list>
-      <#if menuInfo.htmlWrap?has_content></${menuInfo.htmlWrap}></#if>
+      <#if menuInfo.htmlwrap?has_content></${menuInfo.htmlwrap}></#if>
     </#if>
   </@menuitem_markup>
 </#macro>

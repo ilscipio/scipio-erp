@@ -158,7 +158,6 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
-  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
 
@@ -210,71 +209,79 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
           <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
         </div>
-      
-        <@script>
-            $(function() {
-
-                var dateI18nToNorm = function(date) {
-                    <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
-                            internal format (timestamp-like) 
-                        NOTE: this will vary based on date type and format -->
-                    return date;
-                };
-                
-                var dateNormToI18n = function(date) {
-                    <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
-                            internal format (timestamp-like) 
-                        NOTE: this will vary based on date type and format -->
-                    return date;
-                };
-            
-                jQuery("#${id}_i18n").change(function() {
-                  <#if dateType == "timestamp">
-                    jQuery("#${id}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
-                  <#elseif dateType == "date">
-                    jQuery("#${id}").val(convertToDateNorm(dateI18nToNorm(this.value)));
-                  <#elseif dateType == "time">
-                    jQuery("#${id}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
-                  </#if>
-                });
-                
-              <#if dateType == "time">
-              
-                <#-- do nothing for now; user inputs into box manually and change() should adjust -->
-
-              <#else>
-              
-                var oldDate = "";
-                var onFDatePopup = function(ev) {
-                    oldDate = dateI18nToNorm(jQuery("#${id}_i18n").val());
-                };
-                var onFDateChange = function(ev) {
-                  <#if dateDisplayType == "timestamp">
-                    jQuery("#${id}_i18n").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${id}_i18n").val()), oldDate)));
-                  <#elseif dateDisplayType == "date">
-                    jQuery("#${id}_i18n").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${id}_i18n").val()), oldDate)));
-                  </#if>
-                };
-                
-                <#if name??>
-                    <#local dateElemJs>$("input[name='${name?html}_i18n']")</#local>
-                <#else>
-                    <#local dateElemJs>$("input")</#local>
-                </#if>
-                <#-- How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
-                    This triggers onFDateChange which may transform the date and put it back in id_i18n.
-                    This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
-                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-
-              </#if>
-            });
-        </@script>
   </div>
+  <#local displayId = "">
+  <#if id?has_content>
+    <#local displayId = "${id}_i18n">
+  </#if>
+  <#local displayName = "">
+  <#if name?has_content>
+    <#local displayName = "${name?html}_i18n">
+  </#if>
+  <@field_datetime_markup_script id=id name=name?html displayId=displayId displayName=displayName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+</#macro>
+
+<#macro field_datetime_markup_script id="" name="" displayId="" displayName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+  <@script htmlwrap=htmlwrap>
+    $(function() {
+
+        var dateI18nToNorm = function(date) {
+            <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
+                    internal format (timestamp-like) 
+                NOTE: this will vary based on date type and format -->
+            return date;
+        };
+        
+        var dateNormToI18n = function(date) {
+            <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
+                    internal format (timestamp-like) 
+                NOTE: this will vary based on date type and format -->
+            return date;
+        };
+    
+        jQuery("#${displayId}").change(function() {
+          <#if dateType == "timestamp">
+            jQuery("#${id}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
+          <#elseif dateType == "date">
+            jQuery("#${id}").val(convertToDateNorm(dateI18nToNorm(this.value)));
+          <#elseif dateType == "time">
+            jQuery("#${id}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+          </#if>
+        });
+        
+      <#if dateType == "time">
+      
+        <#-- do nothing for now; user inputs into box manually and change() should adjust -->
+
+      <#else>
+      
+        var oldDate = "";
+        var onFDatePopup = function(ev) {
+            oldDate = dateI18nToNorm(jQuery("#${displayId}").val());
+        };
+        var onFDateChange = function(ev) {
+          <#if dateDisplayType == "timestamp">
+            jQuery("#${displayId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayId}").val()), oldDate)));
+          <#elseif dateDisplayType == "date">
+            jQuery("#${displayId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayId}").val()), oldDate)));
+          </#if>
+        };
+        
+        <#-- Cato: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
+            This triggers onFDateChange which may transform the date and put it back in id_i18n.
+            This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
+        $("#${displayId}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+        <#-- Cannot use name, must use ID, this is invalid: $("input[name='${displayName}']")-->
+
+      </#if>
+    });
+  </@script>
 </#macro>
 
 <#-- migrated from @renderDateFindField form widget macro -->
 <#assign field_datefind_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", 
+  "class":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleStyle":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"", "opGreaterThan":"", 
   "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", "inlineLabel":false, "passArgs":{}
@@ -283,21 +290,27 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datefind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_datefind_markup_widget class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType 
+  <#if !["date", "time", "timestamp"]?seq_contains(dateType)>
+    <#local dateType = "timestamp">
+  </#if>
+  <#if !dateDisplayType?has_content || dateDisplayType == "default">
+    <#-- make this easier for markup -->
+    <#local dateDisplayType = dateType>
+  </#if>
+  <@field_datefind_markup_widget class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
     opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datefind_markup_widget class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
+<#macro field_datefind_markup_widget class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
 
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
-  <#local dateDisplayFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local useTsDisplay = (dateType != "date" && dateType != "time")>
+  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
@@ -323,7 +336,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
                     oldDate = jQuery("#${name?html}_fld0_value").val();
                 };
                 var onFDateChange = function(ev) {
-                  <#if useTsDisplay>
+                  <#if dateDisplayType == "timestamp">
                     jQuery("#${name?html}_fld0_value").val(convertToDateTimeNorm(jQuery("#${name?html}_fld0_value").val(), oldDate));
                   </#if>
                 };

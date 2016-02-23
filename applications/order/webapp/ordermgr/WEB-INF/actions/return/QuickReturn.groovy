@@ -30,7 +30,7 @@ context.orderId = orderId;
 returnHeaderTypeId = parameters.returnHeaderTypeId;
 context.returnHeaderTypeId = returnHeaderTypeId;
 
-partyId = parameters.party_id;
+partyId = parameters.party_id != null ? parameters.party_id : parameters.partyId;
 
 if (partyId) {
     if (("VENDOR_RETURN").equals(returnHeaderTypeId)) {

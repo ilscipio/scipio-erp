@@ -180,6 +180,7 @@
             </#if>
         <#-- Return / Refund -->
         <#if security.hasEntityPermission("ORDERMGR","_RETURN", session)>
+            <#-- Apart from the returnableItems check, this is really just a duplicate of OrderQuickRefundEntireOrder
             <#if returnableItems?has_content>
                 <#if currentStatus.statusId == "ORDER_COMPLETED">
                     <@menuitem type="generic">
@@ -188,11 +189,11 @@
                             <input type="hidden" name="partyId" value="${partyId!}"/>
                             <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
                             <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
-                            <input type="submit" class="${styles.action_nav!}" value="${uiLabelMap.OrderCreateReturn}"/>
+                            <input type="submit" class="${styles.action_nav!}" value="${uiLabelMap.OrderQuickRefundEntireOrder}"/>
                         </form>
                     </@menuitem>
                 </#if>
-            </#if>
+            </#if>-->
             <#if currentStatus.statusId == "ORDER_COMPLETED">
               <@menuitem type="generic">
                         <form action="<@ofbizUrl>quickreturn</@ofbizUrl>" method="post">
@@ -200,7 +201,7 @@
                             <input type="hidden" name="partyId" value="${partyId!}"/>
                             <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
                             <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
-                            <input type="submit" class="${styles.action_nav!} ${styles.action_terminate!}" value="${uiLabelMap.OrderQuickRefundEntireOrder}"/>
+                            <input type="submit" class="${styles.action_nav!} ${styles.action_terminate!}" value="${uiLabelMap.OrderCreateReturn}"/>
                         </form>
                     </@menuitem>
             </#if>

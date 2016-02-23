@@ -48,7 +48,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   <@field_textarea_widget name=name class=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
-<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldType="" fieldTitleBlank=false>
+<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
   <#if event?has_content>
     <#local events = {event:action}>

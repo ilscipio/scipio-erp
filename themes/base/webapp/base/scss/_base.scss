@@ -162,7 +162,7 @@ table.basic-table {
   );
 }
 
-.page-noauth {
+.page-noauth, .page-requirePasswordChange {
     background: url('/base-theme/images/background3.jpg') no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;

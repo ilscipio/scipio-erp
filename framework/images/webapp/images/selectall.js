@@ -1049,6 +1049,10 @@ function submitPaginationPostForm(obj, url) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToDateTimeNorm(date, fillerDate) {
+	date = date.trim();
+	if (!date) {
+		return "";
+	}
     var zeroPat = "0000-00-00 00:00:00.000";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
@@ -1082,6 +1086,10 @@ function convertToDateTimeNorm(date, fillerDate) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToDateNorm(date, fillerDate) {
+	date = date.trim();
+	if (!date) {
+		return "";
+	}
     var zeroPat = "0000-00-00";
     var result;
     if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d$/)) {
@@ -1113,6 +1121,10 @@ function convertToDateNorm(date, fillerDate) {
  * TODO: more robust and user-friendly date handling
  */
 function convertToTimeNorm(time, fillerTime) {
+	time = time.trim();
+	if (!time) {
+		return "";
+	}
 	var zeroPat = "00:00:00.000";
 	var result;
 	// Treat the "h" separator as a ":" for user friendliness

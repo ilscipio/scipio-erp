@@ -140,7 +140,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
             <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(headerImageUrl)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
         </#if>
         <#else>
-        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/<#if isSmall>feather-tiny.png<#else>ofbiz-logo-tiny.png</#if></@ofbizContentUrl>"/></a>
+        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/cato/<#if isSmall>cato-logo-small.png<#else>cato-logo.png</#if></@ofbizContentUrl>"/></a>
     </#if>
 </#macro>
 

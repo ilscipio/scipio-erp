@@ -56,8 +56,6 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
 
 
 /* NAVIGATION */
-  
-
 .side-nav {
     margin-top:0px;
     background: #FAFAFA;
@@ -102,6 +100,12 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
         color: $primary-color;
         border-radius: $button-radius;
     }
+}
+
+// Logo
+li.name img { 
+    width: auto;
+    height: 22px;
 }
 
 /* CONTENT */
@@ -178,7 +182,7 @@ table.basic-table {
   #login-box-title {
       
     h1 {
-
+        img {height:22px; margin-right:10px;}
     }
   }
   

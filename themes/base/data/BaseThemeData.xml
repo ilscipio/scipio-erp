@@ -30,6 +30,9 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://base-theme/includes/appbar.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://base-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://base-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/base-theme/images/favicon.ico" sequenceId="01"/>
+    <!-- Cato: Set custom logo
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/base-theme/images/cato-logo.png" sequenceId="01"/>-->  
     
     <!-- Cato: The following includes can be used to override specific default pages
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://base-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page

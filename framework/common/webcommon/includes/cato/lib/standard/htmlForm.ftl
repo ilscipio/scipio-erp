@@ -699,7 +699,7 @@ A form field input widget with optional label and post-input (postfix) content.
 @field can be used as a low-level field control (similar to original Ofbiz
 form widget macros, but with friendlier parameters) and for high-level declarations
 of fields (similar to the actual <field> elements in Ofbiz form widget definitions, but friendlier
-and more configurable). This versaility is the main reason for its implementation complexity.
+and more configurable). This versatility is the main reason for its implementation complexity.
 
 In the high-level role, the macro takes care of label area logic and alignment
 such that you will not get fields looking out of place even if they have no label,
@@ -829,13 +829,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
     postfix         = if set to true, attach submit button (default:false)
     
-    * textArea *
+    * textarea *
     readonly        = readonly
     rows            = number of rows
     cols            = number of columns
     wrap            = HTML5 wrap attribute
     
-    * dateTime *
+    * datetime *
     dateType        = [date-time|date|time] (default: date-time) type of datetime
                       NOTE: Also accepts "timestamp" instead of "date-time". date-time is equivalent to "timestamp" in form widgets.
     dateDisplayType = [default|date|...] (default: same as dateType). The visual display format of the date. Optional.
@@ -846,6 +846,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                       If empty, markup/theme decides what to show.
                       Can also be a special value in format "#PROP:resource#propname". If no resource, taken from CommonUiLabels.
                       NOTE: Tooltip has priority over title.
+    
+    * datefind *
+    dateType        = (same as datetime)
+    dateDisplayType = (same as datetime)
+    opValue         = the selected operator (value)
     
     * select *
     multiple        = allow multiple select true/false
@@ -976,6 +981,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
   "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
   "inline":"", "ignoreParentField":"",
+  "opValue":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1314,26 +1320,34 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               id=id 
                               dateType=dateType 
                               dateDisplayType=dateDisplayType 
-                              timeDropdownParamName="" 
-                              defaultDateTimeString="" 
-                              localizedIconTitle="" 
-                              timeDropdown="" 
-                              timeHourName="" 
-                              classString="" 
-                              hour1="" 
-                              hour2="" 
-                              timeMinutesName="" 
-                              minutes="" 
-                              isTwelveHour="" 
-                              ampmName="" 
-                              amSelected="" 
-                              pmSelected="" 
-                              compositeType="" 
-                              formName=""
+                              formName=formName
                               tooltip=tooltip
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                
+        <#break>
+      <#case "datefind">
+        <#if dateType == "date" || dateType == "time">
+          <#-- leave as-is -->
+        <#else> <#-- "date-time" -->
+          <#local dateType = "timestamp">
+        </#if>
+        <@field_datefind_widget name=name 
+                              class=class 
+                              alert=alert 
+                              title=title 
+                              value=value 
+                              defaultOptionFrom=opValue
+                              size=size 
+                              maxlength=maxlength 
+                              id=id 
+                              dateType=dateType 
+                              dateDisplayType=dateDisplayType 
+                              formName=formName
+                              tooltip=tooltip
+                              origLabel=origLabel
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs/>                 
         <#break>
       <#case "select">
         <#if !manualItemsOnly?is_boolean>

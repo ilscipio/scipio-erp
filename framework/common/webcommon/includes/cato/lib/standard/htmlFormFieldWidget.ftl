@@ -130,7 +130,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   "name":"", "class":"", "title":"", "value":"", "size":"", "maxlength":"", "id":"", "dateType":"", "dateDisplayType":"", 
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
-  "pmSelected":"", "compositeType":"", "formName":"", "alert":false, "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
+  "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
   "collapse":false, "fieldTitleBlank":false, "origLabel":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
@@ -164,68 +164,70 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
-
-  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
-        <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
-          <#if tooltip?has_content> 
-            <#local class = addClassArg(class, "has-tip tip-right")>
-            <#-- tooltip supplants title -->
-            <#local title = tooltip>
-          </#if>
-          <#if title?is_boolean && title == false>
-            <#local title = "">
-          <#else>
-            <#if title?is_boolean && title == true>
-              <#local title = "">
-            </#if>
-            <#if !title?has_content>
-              <#local title = styles.field_datetime_default_title!>
-            </#if>
-            <#if title?has_content>
-              <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
-              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
-              <#if title == "FORMAT">
-                <#local title = dateFormatString>
-              <#elseif title == "LABEL">
-                <#local title = origLabel>
-              <#elseif title == "LABEL+FORMAT">
-                <#if origLabel?has_content>
-                  <#local title = origLabel + " (" + dateFormatString + ")">
-                <#else>
-                  <#local title = dateFormatString>
-                </#if>
-              <#else>
-                <#local title = getTextLabelFromExpr(title, {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
-              </#if>
-            </#if>
-          </#if>
-          <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-          <input type="text" name="${name}_i18n"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-          <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
-          <#if title?has_content> title="${title}"</#if><#rt/>
-          <#if value?has_content> value="${value}"</#if>
-          <#if size?has_content> size="${size}"</#if><#rt/>
-          <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
-          <#if id?has_content> id="${id}_i18n"</#if> /><#rt/>
-
-          <input type="hidden" name="${name}"<#if id?has_content> id="${id}"</#if><#if value?has_content> value="${value}"</#if> />
-        </div>
-        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
-          <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
-        </div>
-  </div>
-  <#local displayId = "">
+  <#local displayInputId = "">
+  <#local inputId = "">
   <#if id?has_content>
-    <#local displayId = "${id}_i18n">
+    <#local displayInputId = "${id}_i18n">
+    <#local inputId = "${id}">
   </#if>
-  <#local displayName = "">
+  <#local displayInputName = "">
+  <#local inputName = "">
   <#if name?has_content>
-    <#local displayName = "${name?html}_i18n">
+    <#local displayInputName = "${name?html}_i18n">
+    <#local inputName = "${name?html}">
   </#if>
-  <@field_datetime_markup_script id=id name=name?html displayId=displayId displayName=displayName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
+    <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
+      <#if tooltip?has_content> 
+        <#local class = addClassArg(class, "has-tip tip-right")>
+        <#-- tooltip supplants title -->
+        <#local title = tooltip>
+      </#if>
+      <#if title?is_boolean && title == false>
+        <#local title = "">
+      <#else>
+        <#if title?is_boolean && title == true>
+          <#local title = "">
+        </#if>
+        <#if !title?has_content>
+          <#local title = styles.field_datetime_default_title!>
+        </#if>
+        <#if title?has_content>
+          <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
+          <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
+          <#if title == "FORMAT">
+            <#local title = dateFormatString>
+          <#elseif title == "LABEL">
+            <#local title = origLabel>
+          <#elseif title == "LABEL+FORMAT">
+            <#if origLabel?has_content>
+              <#local title = origLabel + " (" + dateFormatString + ")">
+            <#else>
+              <#local title = dateFormatString>
+            </#if>
+          <#else>
+            <#local title = getTextLabelFromExpr(title, {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
+          </#if>
+        </#if>
+      </#if>
+      <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
+      <input type="text" name="${displayInputName}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
+      <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
+      <#if title?has_content> title="${title}"</#if><#rt/>
+      <#if value?has_content> value="${value}"</#if>
+      <#if size?has_content> size="${size}"</#if><#rt/>
+      <#if maxlength?has_content> maxlength="${maxlength}"</#if>
+      <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#rt/>
+      <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
+    </div>
+    <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+      <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
+    </div>
+  </div>
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />
 </#macro>
 
-<#macro field_datetime_markup_script id="" name="" displayId="" displayName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+<#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" dateDisplayType="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <@script htmlwrap=htmlwrap>
     $(function() {
@@ -244,13 +246,13 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             return date;
         };
     
-        jQuery("#${displayId}").change(function() {
+        jQuery("#${displayInputId}").change(function() {
           <#if dateType == "timestamp">
-            jQuery("#${id}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
+            jQuery("#${inputId}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "date">
-            jQuery("#${id}").val(convertToDateNorm(dateI18nToNorm(this.value)));
+            jQuery("#${inputId}").val(convertToDateNorm(dateI18nToNorm(this.value)));
           <#elseif dateType == "time">
-            jQuery("#${id}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
+            jQuery("#${inputId}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
           </#if>
         });
         
@@ -262,21 +264,21 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       
         var oldDate = "";
         var onFDatePopup = function(ev) {
-            oldDate = dateI18nToNorm(jQuery("#${displayId}").val());
+            oldDate = dateI18nToNorm(jQuery("#${displayInputId}").val());
         };
         var onFDateChange = function(ev) {
           <#if dateDisplayType == "timestamp">
-            jQuery("#${displayId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayId}").val()), oldDate)));
+            jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           <#elseif dateDisplayType == "date">
-            jQuery("#${displayId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayId}").val()), oldDate)));
+            jQuery("#${displayInputId}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${displayInputId}").val()), oldDate)));
           </#if>
         };
         
         <#-- Cato: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
             This triggers onFDateChange which may transform the date and put it back in id_i18n.
             This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
-        $("#${displayId}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-        <#-- Cannot use name, must use ID, this is invalid: $("input[name='${displayName}']")-->
+        $("#${displayInputId}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${displayInputName}']")-->
 
       </#if>
     });
@@ -285,10 +287,10 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderDateFindField form widget macro -->
 <#assign field_datefind_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
+  "class":"", "id":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleStyle":"", "defaultOptionFrom":"", 
-  "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"", "opGreaterThan":"", 
-  "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", "inlineLabel":false, "passArgs":{}
+  "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
+  "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", "inlineLabel":false, "origLabel":"", "passArgs":{}
 }>
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datefind_widget_defaultArgs)>
@@ -305,60 +307,78 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#if !id?has_content>
     <#local id = getNextFieldId()>
   </#if>
-  <@field_datefind_markup_widget class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
+  <#if !(opEquals?is_boolean && opEquals == false) && !opEquals?has_content>
+    <#local opEquals = getPropertyMsg("conditional", "equals")!"">
+  </#if>
+  <#if !(opGreaterThan?is_boolean && opGreaterThan == false) && !opGreaterThan?has_content>
+    <#local opGreaterThan = getPropertyMsg("conditional", "greater_than")!"">
+  </#if>
+  <#if !(opSameDay?is_boolean && opSameDay == false) && !opSameDay?has_content>
+    <#local opSameDay = getPropertyMsg("conditional", "same_day")!"">
+  </#if>
+  <#if !(opGreaterThanFromDayStart?is_boolean && opGreaterThanFromDayStart == false) && !opGreaterThanFromDayStart?has_content>
+    <#local opGreaterThanFromDayStart = getPropertyMsg("conditional", "greater_than_from_day_start")!"">
+  </#if>
+  <#if !(opLessThan?is_boolean && opLessThan == false) && !opLessThan?has_content>
+    <#local opLessThan = getPropertyMsg("conditional", "less_than")!"">
+  </#if>
+  <#if !(opUpToDay?is_boolean && opUpToDay == false) && !opUpToDay?has_content>
+    <#local opUpToDay = getPropertyMsg("conditional", "up_to_day")!"">
+  </#if>
+  <#if !(opUpThruDay?is_boolean && opUpThruDay == false) && !opUpThruDay?has_content>
+    <#local opUpThruDay = getPropertyMsg("conditional", "up_thru_day")!"">
+  </#if>
+  <#if !(opIsEmpty?is_boolean && opIsEmpty == false) && !opIsEmpty?has_content>
+    <#local opIsEmpty = getPropertyMsg("conditional", "is_empty")!"">
+  </#if>
+  <@field_datefind_markup_widget id=id class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
-    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
+    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origLabel=origLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datefind_markup_widget class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
+<#macro field_datefind_markup_widget id="" class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
-    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
-
-  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  
+  <#local displayInputId = "">
+  <#local inputId = "">
+  <#if id?has_content>
+    <#local displayInputId = "${id}_i18n">
+    <#local inputId = "${id}">
+  </#if>
+  <#local displayInputName = "">
+  <#local inputName = "">
+  <#if name?has_content>
+    <#local displayInputName = "${name?html}_fld0_i18n">
+    <#local inputName = "${name?html}_fld0_value">
+  </#if>
+  <#local opSelectName = "">
+  <#if name?has_content>
+    <#local opSelectName = "${name?html}_fld0_op">
+  </#if>
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
-        <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
-          <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-          <input id="${name?html}_fld0_value" type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
-        </div>
-        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
-          <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
-        </div>
-        <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-          <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
-            <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-            <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
-            <option value="greaterThanFromDayStart"<#if defaultOptionFrom=="greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
-            <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-          </select><#rt/>
-        </div>
-      <#if dateType != "time">
-        <@script>
-            $(function() {
-                var oldDate = "";
-                var onFDatePopup = function(ev) {
-                    oldDate = jQuery("#${name?html}_fld0_value").val();
-                };
-                var onFDateChange = function(ev) {
-                  <#if dateDisplayType == "timestamp">
-                    jQuery("#${name?html}_fld0_value").val(convertToDateTimeNorm(jQuery("#${name?html}_fld0_value").val(), oldDate));
-                  </#if>
-                };
-            
-                <#if name??>
-                    <#local dateElemJs>$('#${name?html}_fld0_value')</#local>
-                <#else>
-                    <#local dateElemJs>$('input')</#local>
-                </#if>
-                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-            });
-        </@script>
-      </#if>
+    <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
+      <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
+      <input type="text"<#if displayInputId?has_content> id="${displayInputId}"</#if><#if displayInputName?has_content> name="${displayInputName}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt>
+        <#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#lt>
+      <input type="hidden"<#if inputId?has_content> id="${inputId}"</#if><#if inputName?has_content> name="${inputName}"</#if><#if value?has_content> value="${value}"</#if>/>
+    </div>
+    <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+      <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
+    </div>
+    <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
+      <select<#if opSelectName?has_content> name="${opSelectName}"</#if> class="selectBox"><#rt/>
+        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
+        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
+        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
+      </select><#rt/>
+    </div>
   </div>
+  <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />  
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
@@ -520,7 +540,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderLookupField form widget macro -->
 <#assign field_lookup_widget_defaultArgs = {
-  "name":"", "formName":"", "fieldFormName":"", "class":"", "alert":"false", "value":"", "size":"", "maxlength":"", "id":"", 
+  "name":"", "formName":"", "fieldFormName":"", "class":"", "alert":"", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 

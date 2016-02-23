@@ -510,6 +510,11 @@
       <@field type="datetime" label="Date 3 (time only)" name="date3" value="" size="25" maxlength="30" dateType="time" />
       <@field type="datetime" label="Date 4 (timestamp internal, displayed as short date)" name="date4" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
 
+      <@field type="datefind" label="Date Find 1 (timestamp)" name="datefind1" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datefind" label="Date Find 2 (short date)" name="datefind2" value="" size="25" maxlength="30" dateType="date" />
+      <@field type="datefind" label="Date Find 3 (time only)" name="datefind3" value="" size="25" maxlength="30" dateType="time" opValue="greaterThanFromDayStart" />
+      <@field type="datefind" label="Date Find 4 (timestamp internal, displayed as short date)" name="datefind4" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date" opValue="equals" />
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [

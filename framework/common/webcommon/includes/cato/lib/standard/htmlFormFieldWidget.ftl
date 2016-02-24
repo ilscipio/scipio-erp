@@ -1258,37 +1258,66 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#local title = tooltip>
     <#local attribs = attribs + styles.field_textfind_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
+  <#-- Get heuristic-based current container sizes -->
+  <#local absColSizes = getAbsContainerSizeFactors()>
+  <#-- we say the parent is large if the ratio is greater than 6 -->
+  <#local isLargeParent = (absColSizes.large > 6)>
+  <#-- NOTE: all the code below assumes that the parent containers are using only
+      large-x classes to split the page or form into columns (e.g., large-6, not medium-6) -->
   <@row collapse=collapse>
-    <#if !hideOptions>
-      <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-      <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
-      <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>  
+    <#if isLargeParent>
+      <#-- Here, specify only large, so that when screen is smaller, the second cell will auto-wrap onto a second row (as usual)... -->
+      <#local classOuter1 = "${styles.grid_large!}9"/>
+      <#local classOuter2 = "${styles.grid_large!}3"/>
     <#else>
-      <#local class1=""/>
-      <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
-      <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-    </#if>      
-    <#if !hideOptions>
-      <#local newName = "${name}"/>
-      <@cell class="${class1!}">
-        <select<#if name?has_content> name="${name}_op"</#if> class="selectBox">
-          <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option>
-          <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option>
-          <option value="empty"<#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option>
-          <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option>
-          <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith} (${opLike})</option>
-        </select>
-      </@cell>
-    <#else>
-      <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
+      <#-- FIXME?: I think this is not proper foundation (> 12 columns), but we want this to emulate the behavior
+        when small screen takes effect (above) but no small-x classes are specified, which is more like this than it is making a separate row... right?
+        NOTE: if someone changes this, you can't use #local capture, move nested to a separate macro call instead. 
+            This hackish version simplifies it... -->
+      <#local classOuter1 = "${styles.grid_large!}12"/>
+      <#local classOuter2 = "${styles.grid_large!}12"/>
     </#if>
-      <@cell class="${class2!}">
-        <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#rt/>
-          <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if !autocomplete> autocomplete="off"</#if><#t/>
-          <@fieldElemAttribStr attribs=attribs /><#t/>
-          <#if title?has_content> title="${title}"</#if>/><#t/>
-      </@cell>
-      <@cell class="${class3!}"> 
+    <@cell class=classOuter1>
+      <@row collapse=collapse>
+        <#if !hideOptions>
+          <#if isLargeParent>
+            <#local class1 = "${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#local class2 = "${styles.grid_small!}9 ${styles.grid_large!}9"/>
+          <#else>
+            <#-- NOTE: this works together with the rest of the page. When small screen, usually
+                the outer grid will create only one page column (small-12), and 3/9 looks fine.
+                if we're in large screen, the page/form will be in two big columns (large-6), and since our parent
+                is small, will look squished unless we set 4/8. -->
+            <#local class1 = "${styles.grid_small!}3 ${styles.grid_large!}4"/>
+            <#local class2 = "${styles.grid_small!}9 ${styles.grid_large!}8"/>
+          </#if>
+        <#else>
+          <#local class1 = ""/>
+          <#local class2 = "${styles.grid_small!}12 ${styles.grid_large!}12"/>
+        </#if>      
+        <#if !hideOptions>
+          <#local newName = "${name}"/>
+          <@cell class="${class1!}">
+            <select<#if name?has_content> name="${name}_op"</#if> class="selectBox">
+              <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${opEquals}</option>
+              <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${opContains}</option>
+              <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${opIsEmpty}</option>
+              <option value="notEqual"<#if defaultOption == "notEqual"> selected="selected"</#if>>${opNotEqual}</option>
+              <option value="like"<#if defaultOption == "like"> selected="selected"</#if>>${opBeginsWith} (${opLike})</option>
+            </select>
+          </@cell>
+        <#else>
+          <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
+        </#if>
+        <@cell class="${class2!}">
+          <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#rt/>
+            <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if !autocomplete> autocomplete="off"</#if><#t/>
+            <@fieldElemAttribStr attribs=attribs /><#t/>
+            <#if title?has_content> title="${title}"</#if>/><#t/>
+        </@cell>
+      </@row>
+    </@cell>
+    <@cell class=classOuter2>
         <#if hideIgnoreCase>
           <input type="hidden" name="${name}_ic" value="<#if ignoreCase>Y<#else></#if>"/><#rt/> 
         <#else>
@@ -1298,7 +1327,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
             <#rt/>
           </div>
         </#if>
-      </@cell>
+    </@cell>
   </@row>
 </#macro>
 

@@ -1093,7 +1093,7 @@ Render menu in a tree fashion way
     </@treemenu>
                     
   * Parameters *
-      treeMenuLibrary = (jsTree) (default:jsTree)
+    treeMenuLibrary = (jsTree) (default:jsTree)
     inlineItems     = boolean, if true, generate only items, not menu container    
     id              = menu id    
     attribs         = hash of other tree menu attribs
@@ -1122,9 +1122,11 @@ Render menu in a tree fashion way
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
     <#if treeMenuLibrary == "jsTree">
-        ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
-        ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)}
-        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local> 
+        <#-- ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
+        ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)} -->
+        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>         
+        <#-- FIXME: I'm not sure why, but I must replace the # manually becase it gets encoded somewhere within objectAsScript -->
+        <#local treeMenuDataJson>${treeMenuDataJson?replace("&#x23;", "#")}</#local>
         <#local nestedEvents><#nested></#local>
 
         <div id="${id!''}"></div>
@@ -1163,10 +1165,10 @@ Render menu in a tree fashion way
     <#if event?has_content>
         <#assign validEvents = Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].VALID_EVENTS />        
         <#assign e = event?keep_before(Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].JSTREE_EVENT) />
-        ${Static["org.ofbiz.base.util.Debug"].log("e ====> " + e)}
+        <#-- ${Static["org.ofbiz.base.util.Debug"].log("e ====> " + e)} -->
 
         <#if validEvents?has_content && validEvents?seq_contains(e)>
-            ${Static["org.ofbiz.base.util.Debug"].log("valid event")}            
+            <#-- ${Static["org.ofbiz.base.util.Debug"].log("valid event")} -->            
             .on("${event}", function (e, data) {
 				
 				/*for(var propertyName in e) {

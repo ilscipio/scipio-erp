@@ -1844,7 +1844,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         Locale locale = (Locale) context.get("locale");
-        if (!textFindField.getHideOptions()) {
+        // Cato: pass options hide setting to macro
+        boolean hideOptions = textFindField.getHideOptions();
+        if (!hideOptions) {
             opEquals = UtilProperties.getMessage("conditional", "equals", locale);
             opBeginsWith = UtilProperties.getMessage("conditional", "begins_with", locale);
             opContains = UtilProperties.getMessage("conditional", "contains", locale);
@@ -1904,7 +1906,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(ignCase));
         sr.append(" ignoreCase=\"");
         sr.append(ignoreCase);
-        sr.append("\" />");
+        sr.append("\"");
+        // Cato: new args
+        sr.append(" hideOptions=");
+        sr.append(Boolean.toString(hideOptions));
+        sr.append(" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
     }

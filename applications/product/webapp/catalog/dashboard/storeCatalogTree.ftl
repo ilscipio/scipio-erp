@@ -17,7 +17,7 @@
 					dataType: "html"
                 })
 				.done(function(html) {
-					console.log("html ====> " + html);
+					//console.log("html ====> " + html);
 					$(modal).html(html).foundation('reveal','open');
 				});
             }

@@ -900,9 +900,23 @@
     <#-- datetime type styles -->
     "field_datetime_default_title" : "LABEL+FORMAT",    <#-- can be a property label from CommonUiLabels; prefix with "#PROP:". Can also add colon and resource afterward. Also supports these predefined: LABEL, FORMAT, LABEL+FORMAT -->
     
+    <#-- display type styles -->
+    "field_display_tooltip" : "has-tip field-tooltip-wrapper",
+    
+    <#-- generic type styles -->
+    "field_generic_tooltip" : "has-tip field-tooltip-wrapper",
+    
+    <#-- default, for all fields -->
+    "field_default_tooltip" : "has-tip tip-right",
+    "field_default_tooltip_attribs" : {
+      "data-tooltip" : "_NO_VALUE_",
+      "aria-haspopup" : "true",
+      "data-options" : "disable_for_touch:true"
+    },
+    
     <#-- misc single field styles -->
     "field_inline" : "field-inline",                    <#-- a field (usually input) that has to inline with other inputs or inline html elements -->
-    "field_tooltip_wrapper" : "has-tip field-tooltip-wrapper",  <#-- for some @field types, an extra container is added to support tooltips; it receives this style -->
+    "field_tooltip_wrapper" : "field-tooltip-wrapper",  <#-- for some @field types, an extra container is added to support tooltips; it receives this style -->
     
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.

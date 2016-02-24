@@ -9,58 +9,100 @@
 -->
 
 <#-- 
-TODO: the parameters on these should be refined to be less ofbiz-like and more cato-like; but must
+TODO:
+  * The parameters on these should be refined to be less ofbiz-like and more cato-like; but must
     be flexible enough to 100% allow calls from ofbiz widget lib macros.
-TODO: _markup_widget macros should be cleaned up of logic and the logic moved to _widget macros 
-TODO: the tooltips should be made less hardcoded (configure via styles hash somehow) -->
+  * _markup_widget macros should be cleaned up of logic and the logic moved to _widget macros 
+  * The tooltip attributes are not safe for arbitrary attributes coming from styles hash
+  * title arg should override tooltip, but currently doing the other way around
+  * CONVERT EVERYTHING TO USE attribs WITH @elemAttribStr MAP INSTEAD OF INLINES, this 
+    would fix the previous point too and prevent a lot of other bugs
+    but may be a little bit harder than it sounds due to multiple sources of attrib maps
+-->
 
 <#-- migrated from @renderClass form widget macro -->
 <#macro fieldClassAttribStr class alert=false>
   <#if alert?string == "true">
     <#local class = addClassArg(class, "alert")>
   </#if>
-  <@compiledClassAttribStr class=class /><#t>
+  <@compiledClassAttribStr class=class /><#t/>
+</#macro>
+
+<#-- 
+*************
+* fieldElemAttribStr
+************
+Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific for these fields.
+-->
+<#macro fieldElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
+  <#t/><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken noValToken=noValToken exclude=exclude
+    attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
+    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t/>
 </#macro>
 
 <#-- migrated from @renderTextField form widget macro -->
 <#assign field_input_widget_defaultArgs = {
   "name":"", "class":"", "alert":"", "value":"", "textSize":"", "maxlength":"", "id":"", "events":{}, "disabled":false, "ajaxUrl":"", 
-  "ajaxEnabled":false, "mask":false, "clientAutocomplete":"", "placeholder":"", "tooltip":"", "collapse":false, "readonly":false, 
+  "ajaxEnabled":false, "mask":false, "clientAutocomplete":"", "placeholder":"", "tooltip":"", "title":"", "collapse":false, "readonly":false, 
   "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_input_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_input_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+  <#if !disabled?is_boolean>
+    <#if disabled?has_content>
+      <#local disabled = true>
+    <#else>
+      <#local disabled = false>
+    </#if>
+  </#if>
+  <#if !readonly?is_boolean>
+    <#if readonly?has_content>
+      <#local readonly = true>
+    <#else>
+      <#local readonly = false>
+    </#if>
+  </#if>
+  <#if !clientAutocomplete?is_boolean>
+    <#if clientAutocomplete?has_content>
+      <#local clientAutocomplete = clientAutocomplete?boolean>
+    <#else>
+      <#local clientAutocomplete = true>
+    </#if>
+  </#if>
   <@field_input_markup_widget name=name class=class alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
-    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
+    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip title=title collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_input_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_input_markup_widget name="" class="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
-    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
   <#if tooltip?has_content> 
-    <#local class = addClassArg(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
   <#if mask?has_content && mask>
     <@script>
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
     </@script>
   </#if>
-  <input type="text" name="${name?default("")?html}"<#t/>
-    <#if tooltip?has_content> 
-     data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"<#rt/>
-     </#if><#rt/>
-    <@fieldClassAttribStr class=class alert=alert />
-    <#if value?has_content> value="${value}"</#if><#rt/>
-    <#if textSize?has_content> size="${textSize}"</#if><#rt/>
-    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
-    <#if disabled?has_content && disabled> disabled="disabled"</#if><#rt/>
-    <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/>
-    <#if id?has_content> id="${id}"</#if><#rt/>
-    <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/>
-    <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
-    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
+  <input type="text" name="${name?html}"<#t/>
+    <@fieldElemAttribStr attribs=attribs /><#t/>
+    <#if title?has_content> title="${title}"</#if><#t/>
+    <@fieldClassAttribStr class=class alert=alert /><#t/>
+    <#if value?has_content> value="${value}"</#if><#t/>
+    <#if textSize?has_content> size="${textSize}"</#if><#t/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+    <#if disabled> disabled="disabled"</#if><#t/>
+    <#if readonly> readonly="readonly"</#if><#t/>
+    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
+    <#if !clientAutocomplete> autocomplete="off"</#if><#t/>
+    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
   /><#t/>
   <#if ajaxUrl?has_content>
     <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
@@ -79,32 +121,42 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_textarea_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+  <#if !readonly?is_boolean>
+    <#if readonly?has_content>
+      <#local readonly = true>
+    <#else>
+      <#local readonly = false>
+    </#if>
+  </#if>
   <@field_textarea_markup_widget name=name class=class alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
     buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
+<#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
   <#if tooltip?has_content> 
-    <#local class = addClassArg(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_textarea_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
   <textarea name="${name}"<#t/>
-    <@fieldClassAttribStr class=class alert=alert />
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-    <#if cols?has_content> cols="${cols}"</#if><#rt/>
-    <#if rows?has_content> rows="${rows}"</#if><#rt/>
-    <#if id?has_content> id="${id}"</#if><#rt/>
-    <#if (readonly?is_string && readonly?has_content) || (readonly?is_boolean && readonly == true)> readonly="readonly"</#if><#rt/>
-    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
-    <#if wrap?has_content> wrap="${wrap}"</#if><#rt/>
+    <@fieldElemAttribStr attribs=attribs /><#t/>
+    <@fieldClassAttribStr class=class alert=alert /><#t/>
+    <#if title?has_content> title="${title}"</#if><#t/>
+    <#if cols?has_content> cols="${cols}"</#if><#t/>
+    <#if rows?has_content> rows="${rows}"</#if><#t/>
+    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if readonly> readonly="readonly"</#if><#t/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+    <#if wrap?has_content> wrap="${wrap}"</#if><#t/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
-    ><#t/>
-    <#if value?has_content>${value}<#else><#nested></#if><#t>
+  ><#t/>
+    <#if value?has_content>${value}<#else><#nested></#if><#t/>
   </textarea><#lt/>
-  
   <#--
-  ToDo: Remove
+  TODO: Remove
   <#if visualEditorEnable?has_content>
     <@script src="/images/jquery/plugins/elrte-1.3/js/elrte.min.js" /><#rt/>
     <#if language?has_content && language != "en">
@@ -176,12 +228,14 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     <#local displayInputName = "${name?html}_i18n">
     <#local inputName = "${name?html}">
   </#if>
+  <#local attribs = {}>
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
     <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
       <#if tooltip?has_content> 
-        <#local class = addClassArg(class, "has-tip tip-right")>
+        <#local class = addClassArg(class, styles.field_datetime_tooltip!styles.field_default_tooltip!"")>
         <#-- tooltip supplants title -->
         <#local title = tooltip>
+        <#local attribs = attribs + styles.field_datetime_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
       </#if>
       <#if title?is_boolean && title == false>
         <#local title = "">
@@ -212,12 +266,12 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       </#if>
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
       <input type="text" name="${displayInputName}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-      <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
-      <#if title?has_content> title="${title}"</#if><#rt/>
-      <#if value?has_content> value="${value}"</#if>
-      <#if size?has_content> size="${size}"</#if><#rt/>
-      <#if maxlength?has_content> maxlength="${maxlength}"</#if>
-      <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#rt/>
+        <@fieldElemAttribStr attribs=attribs /><#t/>
+        <#if title?has_content> title="${title}"</#if><#t/>
+        <#if value?has_content> value="${value}"</#if><#t/>
+        <#if size?has_content> size="${size}"</#if><#t/>
+        <#if maxlength?has_content> maxlength="${maxlength}"</#if>
+        <#if displayInputId?has_content> id="${displayInputId}"</#if> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${inputName}"</#if><#if inputId?has_content> id="${inputId}"</#if><#if value?has_content> value="${value}"</#if> />
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
@@ -288,9 +342,10 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#-- migrated from @renderDateFindField form widget macro -->
 <#assign field_datefind_widget_defaultArgs = {
   "class":"", "id":"", "alert":"", "name":"", "localizedInputTitle":"", "value":"", "value2":"", "size":"", "maxlength":"", "dateType":"", "dateDisplayType":"",
-  "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleStyle":"", "defaultOptionFrom":"", 
+  "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleClass":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
-  "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", "inlineLabel":false, "origLabel":"", "passArgs":{}
+  "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", 
+  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "passArgs":{}
 }>
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datefind_widget_defaultArgs)>
@@ -332,15 +387,17 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     <#local opIsEmpty = getPropertyMsg("conditional", "is_empty")!"">
   </#if>
   <@field_datefind_markup_widget id=id class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType dateDisplayType=dateDisplayType
-    formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
+    formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleClass defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
-    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origLabel=origLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
+    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty 
+    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datefind_markup_widget id="" class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
-    formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
-    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
+    formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
+    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
+    title="" tooltip="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
@@ -362,20 +419,20 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateDisplayFormat}">
     <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
       <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-      <input type="text"<#if displayInputId?has_content> id="${displayInputId}"</#if><#if displayInputName?has_content> name="${displayInputName}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt>
-        <#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#lt>
+      <input type="text"<#if displayInputId?has_content> id="${displayInputId}"</#if><#if displayInputName?has_content> name="${displayInputName}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
+        <#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#lt/>
       <input type="hidden"<#if inputId?has_content> id="${inputId}"</#if><#if inputName?has_content> name="${inputName}"</#if><#if value?has_content> value="${value}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
       <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-      <select<#if opSelectName?has_content> name="${opSelectName}"</#if> class="selectBox"><#rt/>
-        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
-        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
-        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-      </select><#rt/>
+      <select<#if opSelectName?has_content> name="${opSelectName}"</#if> class="selectBox">
+        <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${opEquals}</option>
+        <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${opSameDay}</option>
+        <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option>
+        <option value="greaterThan"<#if defaultOptionFrom == "greaterThan"> selected="selected"</#if>>${opGreaterThan}</option>
+      </select>
     </div>
   </div>
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName dateType=dateType dateDisplayType=dateDisplayType origArgs=origArgs passArgs=passArgs />  
@@ -455,34 +512,45 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
-
-    <#if tooltip?has_content>
-      <#local class = addClassArg(class, "has-tip tip-right")>
+  <#local attribs = {}>
+  <#if tooltip?has_content>
+    <#local class = addClassArg(class, styles.field_select_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_select_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
+  <select name="${name}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
+    <@fieldElemAttribStr attribs=attribs /><#t/>
+    <#if id?has_content> id="${id}"</#if><#t/>
+    <#if multiple> multiple="multiple"</#if><#t/>
+    <#-- FIXME: this onchange may conflict with the other events -->
+    <#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#t/>
+    <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
+    <#--<#if size?has_content> size="${size}"</#if>-->
+    <#if title?has_content> title="${title}"</#if><#t/>
+  ><#lt/>
+  <#if !manualItemsOnly>  
+    <#if currentFirst && currentValue?has_content && !multiple>
+      <option selected="selected" value="${currentValue}">${currentDescription}</option>
+      <option value="${currentValue}">---</option>
     </#if>
-    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/><#--<#if size?has_content> size="${size}"</#if>-->
-    <#if title?has_content> title="${title}"<#elseif tooltip?has_content> title="${tooltip}"</#if>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>>
-    <#if !manualItemsOnly>  
-      <#if currentFirst && currentValue?has_content && !multiple>
-        <option selected="selected" value="${currentValue}">${currentDescription}</option><#rt/>
-        <option value="${currentValue}">---</option><#rt/>
-      </#if>
-      <#if allowEmpty || (!manualItems && !options?has_content)>
-        <option value="">&nbsp;</option>
-      </#if>
-      <#list options as item>
-        <#-- Cato: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
-        <#local itemValue = item.value!item.key!>
-        <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
-        <#if multiple>
-          <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#rt/>
-        <#else>
-          <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#rt/>
-        </#if>
-      </#list>
+    <#if allowEmpty || (!manualItems && !options?has_content)>
+      <option value="">&nbsp;</option>
     </#if>
-      <#nested>
-    </select>
+    <#list options as item>
+      <#-- Cato: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+      <#local itemValue = item.value!item.key!>
+      <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
+      <#if multiple>
+        <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#rt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#lt/>
+      <#else>
+        <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#rt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#lt/>
+      </#if>
+    </#list>
+  </#if>
+    <#nested>
+  </select>
   <#if otherFieldName?has_content>
     <noscript><input type="text" name="${otherFieldName}" /></noscript>
     <@script>
@@ -494,7 +562,6 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       document.${formName}.${otherFieldName}.styles.visibility  = 'hidden';
     </@script>
   </#if>
-
   <#if ajaxEnabled>
     <@script>
       ajaxAutoCompleteDropDown();
@@ -535,7 +602,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- field markup - theme override -->
 <#macro field_option_markup_widget text="" value="" selected=false origArgs={} passArgs={} catchArgs...>
-   <option value="${value}"<#if selected> selected="selected"</#if>>${text}</option><#t>
+   <option value="${value}"<#if selected> selected="selected"</#if>>${text}</option><#t/>
 </#macro>    
 
 <#-- migrated from @renderLookupField form widget macro -->
@@ -597,26 +664,26 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
-        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
-        <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/><#rt/>
-        <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#rt/>
+        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#t/>
+        <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
+        <#if autocomplete?has_content> autocomplete="off"</#if>/></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <a href="javascript:call_fieldlookup3(document.${formName?html}.${name?html},document.${formName?html}.${descriptionFieldName},'${fieldFormName}', '${presentation}'<#rt/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${formName}.${item}.value<#rt>
+          ,document.${formName}.${item}.value<#t/>
         </#list>
       </#if>
-      );"></a><#rt>
+      );"></a><#rt/>
     <#elseif presentation?has_content && presentation == "window">
       <a href="javascript:call_fieldlookup2(document.${formName?html}.${name?html},'${fieldFormName}', '${presentation}'<#rt/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${formName}.${item}.value<#rt>
+          ,document.${formName}.${item}.value<#t/>
         </#list>
       </#if>
-      );"></a><#rt>
+      );"></a><#rt/>
     <#else>
       <#if ajaxEnabled>
         <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
@@ -648,22 +715,20 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
             defaultMinLength : "${defaultMinLength}",
             defaultDelay : "${defaultDelay}",
             args :
-              <#rt/>
                 <#if targetParameterIter?has_content>
                   <#local isFirst = true>
-                  <#lt/>[<#rt/>
+                  [<#t/>
                   <#list targetParameterIter as item>
                     <#if isFirst>
-                      <#lt/>document.${formName}.${item}<#rt/>
+                      document.${formName}.${item}<#t/>
                       <#local isFirst = false>
                     <#else>
-                      <#lt/> ,document.${formName}.${item}<#rt/>
+                      ,document.${formName}.${item}<#t/>
                     </#if>
                   </#list>
-                  <#lt/>]<#rt/>
+                  ]<#t/>
                 <#else>[]
                 </#if>
-                <#lt/>
           };
           new Lookup(options).init();
         });
@@ -692,7 +757,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
-  "tooltip":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
+  "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -741,7 +806,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_checkbox_default_labeltype"]!"standard">
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_checkbox_default_labelposition"]!"after">
   <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
-    currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip multiMode=multiMode 
+    currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
@@ -749,7 +814,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
-    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
+    events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
@@ -760,6 +825,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
 
+  <#local attribs = {}>
   <#if inlineItems>
     <#local inlineClass = "checkbox-item-inline">
   <#else>
@@ -768,19 +834,32 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local class = addClassArg(class, "checkbox-item")>
   <#local class = addClassArg(class, inlineClass)>
 
+  <#if tooltip?has_content>
+    <#-- redundant...
+    <#local class = addClassArg(class, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+    <#local attribs = attribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
+    <#local title = tooltip>
+  </#if>
+
   <#-- Cato: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
        (and is logical for single items at least). -->
   <#local currentId = id>
   <#list items as item>
+    <#local inputAttribs = {}>
     <#local itemValue = item.value!"">
     <#local itemClass = class>
     <#local itemAlert = alert>
     
+    <#local inputTitle = title>
     <#local inputClass = "">
     <#local inputAlert = false>
     <#if item.tooltip?has_content || tooltip?has_content>
-      <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
+      <#local inputClass = addClassArg(inputClass, styles.field_checkbox_tooltip!styles.field_default_tooltip!"")>
+      <#if item.tooltip?has_content>
+        <#local inputTitle = item.tooltip>
+      </#if>
+      <#local inputAttribs = inputAttribs + styles.field_checkbox_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
     </#if>
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>>
       <#local labelMarkup>
@@ -795,12 +874,14 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
-      <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#rt/>
-        <#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
-        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if>
-        <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
-        <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
-        name="${name?html}" value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+      <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
+        <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
+        <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
+        <#if currentId?has_content> id="${currentId}"</#if><#t/>
+        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if><#t/>
+        <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"<#t/>
+        <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if><#t/>
+        <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">
@@ -818,7 +899,7 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
-  "items":"", "id":"", "class":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", 
+  "items":"", "id":"", "class":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
   "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
@@ -840,12 +921,12 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_radio_default_labeltype"]!"standard">
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
-    events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
     type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" 
+<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
@@ -861,11 +942,14 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
   <#else>
     <#local inlineClass = "radio-item-noninline">
   </#if>
-
+  <#local attribs = {}>
   <#local class = addClassArg(class, "radio-item")>
   <#local class = addClassArg(class, inlineClass)>
   <#if tooltip?has_content>
-    <#local class = addClassArg(class, "has-tip tip-right")>
+    <#-- redundant...
+    <#local class = addClassArg(class, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
+    <#local attribs = attribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>-->
+    <#local title = tooltip>
   </#if>
   <#local currentId = id>
   <#list items as item>
@@ -876,8 +960,14 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
     
     <#local inputClass = "">
     <#local inputAlert = false>
+    <#local inputAttribs = {}>
+    <#local inputTitle = title>
     <#if item.tooltip?has_content || tooltip?has_content>
-      <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
+      <#local inputClass = addClassArg(inputClass, styles.field_radio_tooltip!styles.field_default_tooltip!"")>
+      <#local inputAttribs = inputAttribs + styles.field_radio_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+      <#if item.tooltip?has_content>
+        <#local inputTitle = item.tooltip>
+      </#if>
     </#if>
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>><#rt/>
       <#local labelMarkup>
@@ -886,9 +976,12 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
         </#if>
       </#local>
       <#if labelPosition == "before">${labelMarkup}</#if>
-      <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
+      <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
+        <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
+        <#if inputTitle?has_content> title="${inputTitle}"</#if><#t/>
+        <#if currentId?has_content> id="${currentId}"</#if><#t/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
-        <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
+        <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if><#t/>
         name="${name?html}" value="${itemValue!""?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
@@ -936,14 +1029,18 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- field markup - theme override -->
 <#macro field_password_markup_widget class="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
   <#if tooltip?has_content>
-    <#local class = addClassArg(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, styles.field_password_tooltip!styles.field_default_tooltip!"")>
+    <#local attribs = attribs + styles.field_password_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+    <#local title = tooltip>
   </#if>
-  <input type="password"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
-  <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 
-  <#if placeholder?has_content> placeholder="${placeholder}"</#if>
-  <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-  />
+  <input type="password"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#rt/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if><#rt/>
+    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
+    <@fieldElemAttribStr attribs=attribs /><#t/>
+    <#if title?has_content> title="${title}"</#if><#t/>
+  /><#t/>
 </#macro>
 
 <#-- migrated from @renderResetField form widget macro -->
@@ -1106,26 +1203,63 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#assign field_textfind_widget_defaultArgs = {
-  "name":"", "value":"", "defaultOption":"", "opEquals":"", "opBeginsWith":"", "opContains":"", "opIsEmpty":"", "opNotEqual":"", 
-  "class":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleStyle":"", "hideIgnoreCase":"", "ignCase":"", 
-  "ignoreCase":"", "title":"", "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "name":"", "formName":"", "value":"", "defaultOption":"", "opEquals":"", "opBeginsWith":"", "opContains":"", "opIsEmpty":"", "opNotEqual":"", "opLike":"",
+  "class":"", "id":"", "alert":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "hideIgnoreCase":false, "ignoreCase":"", 
+  "ignoreCaseMsg":"", "title":"", "tooltip":"", "fieldTitleBlank":false, "hideOptions":false, "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
 <#macro field_textfind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_textfind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_textfind_markup_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
-    opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=class alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle 
-    hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
+    <#if !(opEquals?is_boolean && opEquals == false) && !opEquals?has_content>
+    <#local opEquals = getPropertyMsg("conditional", "equals")!"">
+  </#if>
+  <#if !(opBeginsWith?is_boolean && opBeginsWith == false) && !opBeginsWith?has_content>
+    <#local opBeginsWith = getPropertyMsg("conditional", "begins_with")!"">
+  </#if>
+  <#if !(opContains?is_boolean && opContains == false) && !opContains?has_content>
+    <#local opContains = getPropertyMsg("conditional", "contains")!"">
+  </#if>
+  <#if !(opIsEmpty?is_boolean && opIsEmpty == false) && !opIsEmpty?has_content>
+    <#local opIsEmpty = getPropertyMsg("conditional", "is_empty")!"">
+  </#if>
+  <#if !(opNotEqual?is_boolean && opNotEqual == false) && !opNotEqual?has_content>
+    <#local opNotEqual = getPropertyMsg("conditional", "not_equal")!"">
+  </#if>
+  <#if !(opLike?is_boolean && opLike == false) && !opLike?has_content>
+    <#local opLike = getPropertyMsg("conditional", "like")!"">
+  </#if>
+  <#if !(ignoreCaseMsg?is_boolean && ignoreCaseMsg == false) && !ignoreCaseMsg?has_content>
+    <#local ignoreCaseMsg = getPropertyMsg("conditional", "ignore_case")!"">
+  </#if>
+  <#if !ignoreCase?is_boolean>
+    <#local ignoreCase = true>
+  </#if>
+  <#if !autocomplete?is_boolean>
+    <#if autocomplete?has_content>
+      <#local autocomplete = false>
+    <#else>
+      <#local autocomplete = true>
+    </#if>
+  </#if>
+  <@field_textfind_markup_widget name=name formName=formName value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
+    opIsEmpty=opIsEmpty opNotEqual=opNotEqual opLike=opLike class=class id=id alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleClass=titleClass 
+    hideIgnoreCase=hideIgnoreCase ignoreCase=ignoreCase ignoreCaseMsg=ignoreCaseMsg title=title tooltip=tooltip fieldTitleBlank=fieldTitleBlank hideOptions=hideOptions 
+    inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_textfind_markup_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
-    opIsEmpty="" opNotEqual="" class="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
-    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
-
-  <@row collapse=collapse!false>
-    <#if opEquals?has_content>
+<#macro field_textfind_markup_widget name="" formName="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
+    opIsEmpty="" opNotEqual="" opLike="" class="" id="" alert="" size="" maxlength="" autocomplete=true titleClass="" 
+    hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
+  <#if tooltip?has_content> 
+    <#local class = addClassArg(class, styles.field_textfind_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_textfind_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
+  <@row collapse=collapse>
+    <#if !hideOptions>
       <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
       <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
       <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>  
@@ -1134,30 +1268,33 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
       <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
     </#if>      
-    <#if opEquals?has_content>
+    <#if !hideOptions>
       <#local newName = "${name}"/>
       <@cell class="${class1!}">
-        <select<#if name?has_content> name="${name}_op"</#if> class="selectBox"><#rt/>
-            <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-            <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
-            <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
-            <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
-            <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
+        <select<#if name?has_content> name="${name}_op"</#if> class="selectBox">
+          <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option>
+          <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option>
+          <option value="empty"<#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option>
+          <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option>
+          <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith} (${opLike})</option>
         </select>
       </@cell>
     <#else>
       <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
     </#if>
       <@cell class="${class2!}">
-        <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+        <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#rt/>
+          <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if !autocomplete> autocomplete="off"</#if><#t/>
+          <@fieldElemAttribStr attribs=attribs /><#t/>
+          <#if title?has_content> title="${title}"</#if>/><#t/>
       </@cell>
       <@cell class="${class3!}"> 
         <#if hideIgnoreCase>
-          <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
+          <input type="hidden" name="${name}_ic" value="<#if ignoreCase>Y<#else></#if>"/><#rt/> 
         <#else>
           <div>
-            <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y"<#if ignCase> checked="checked"</#if>/>
-            ${ignoreCase!}</label>
+            <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>/>
+            ${ignoreCaseMsg}</label>
             <#rt/>
           </div>
         </#if>
@@ -1167,57 +1304,97 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#assign field_rangefind_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleStyle":"", "defaultOptionFrom":"", 
-  "opEquals":"", "opGreaterThan":"", "opGreaterThanEquals":"", "opLessThan":"", "opLessThanEquals":"", "value2":"", 
-  "defaultOptionThru":"", "inlineLabel":false, "passArgs":{}
+  "class":"", "id":"", "alert":"", "name":"", "formName":"", "value":"", "size":"", "maxlength":"", "autocomplete":"", "titleClass":"", "defaultOptionFrom":"", 
+  "opEquals":"", "opGreaterThan":"", "opGreaterThanEquals":"", "opLessThan":"", "opLessThanEquals":"", "opIsEmpty":"", "value2":"", 
+  "defaultOptionThru":"", "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "collapse":false, "passArgs":{}
 }>
 <#macro field_rangefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_rangefind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_rangefind_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-      autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
-      opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals
-      value2=value2 defaultOptionThru=defaultOptionThru inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
+  <#if !(opEquals?is_boolean && opEquals == false) && !opEquals?has_content>
+    <#local opEquals = getPropertyMsg("conditional", "equals")!"">
+  </#if>
+  <#if !(opGreaterThan?is_boolean && opGreaterThan == false) && !opGreaterThan?has_content>
+    <#local opGreaterThan = getPropertyMsg("conditional", "greater_than")!"">
+  </#if>
+  <#if !(opGreaterThanEquals?is_boolean && opGreaterThanEquals == false) && !opGreaterThanEquals?has_content>
+    <#local opGreaterThanEquals = getPropertyMsg("conditional", "greater_than_equals")!"">
+  </#if>
+  <#if !(opLessThan?is_boolean && opLessThan == false) && !opLessThan?has_content>
+    <#local opLessThan = getPropertyMsg("conditional", "less_than")!"">
+  </#if>
+  <#if !(opLessThanEquals?is_boolean && opLessThanEquals == false) && !opLessThanEquals?has_content>
+    <#local opLessThanEquals = getPropertyMsg("conditional", "less_than_equals")!"">
+  </#if>
+  <#if !(opIsEmpty?is_boolean && opIsEmpty == false) && !opIsEmpty?has_content>
+    <#local opIsEmpty = getPropertyMsg("conditional", "is_empty")!"">
+  </#if>
+  <#if !autocomplete?is_boolean>
+    <#if autocomplete?has_content>
+      <#local autocomplete = false>
+    <#else>
+      <#local autocomplete = true>
+    </#if>
+  </#if>
+  <@field_rangefind_markup_widget class=class id=id alert=alert name=name formName=formName value=value size=size maxlength=maxlength 
+      autocomplete=autocomplete titleClass=titleClass defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
+      opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals opIsEmpty=opIsEmpty
+      value2=value2 defaultOptionThru=defaultOptionThru title=title tooltip=tooltip
+      inlineLabel=inlineLabel origLabel=origLabel collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@field_rangefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_rangefind_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" 
-    defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" 
-    defaultOptionThru="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_rangefind_markup_widget class="" id="" alert="" name="" formName="" value="" size="" maxlength="" autocomplete=true titleClass="" 
+    defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" opIsEmpty="" value2="" 
+    defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
+  <#if tooltip?has_content> 
+    <#local class = addClassArg(class, styles.field_rangefind_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_rangefind_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-  <@row collapse=collapse!false>
+  <@row collapse=collapse>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld0_value"</#if><#rt/>
+        <#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+        <#if !autocomplete> autocomplete="off"</#if><#t/>
+        <@fieldElemAttribStr attribs=attribs /><#t/>
+        <#if title?has_content> title="${title}"</#if>/><#t/>
     </@cell>
     <@cell class=class2>
-      <#if titleStyle?has_content>
-        <span class="${titleStyle}"><#rt/>
+      <#if titleClass?has_content>
+        <span class="${titleClass}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
-        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option><#rt/>
+      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox">
+        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option>
+        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option>
+        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option>
       </select><#rt/>
-      <#if titleStyle?has_content>
+      <#if titleClass?has_content>
         </span><#rt/>
       </#if>
     </@cell>
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld1_value"</#if><#rt/>
+        <#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
+        <#if !autocomplete> autocomplete="off"</#if><#t/>
+        <@fieldElemAttribStr attribs=attribs /><#t/>
+        <#if title?has_content> title="${title}"</#if>/><#t/>
     </@cell>
     <@cell class=class2>
-      <#if titleStyle?has_content>
-        <span class="${titleStyle}"><#rt/>
+      <#if titleClass?has_content>
+        <span class="${titleClass}"><#rt/>
       </#if>
-      <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
-        <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
-        <option value="lessThanEqualTo"<#if defaultOptionThru=="lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option><#rt/>
-      </select><#rt/>
-      <#if titleStyle?has_content>
+      <select<#if name?has_content> name="${name}_fld1_op"</#if> class="selectBox">
+        <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${opLessThan?html}</option>
+        <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option>
+      </select>
+      <#if titleClass?has_content>
         </span>
       </#if>
     </@cell>
@@ -1242,23 +1419,34 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
 
 <#-- migrated from @renderDisplayField form widget macro -->
 <#assign field_display_widget_defaultArgs = {
-  "type":"", "imageLocation":"", "idName":"", "description":"", "title":"", "class":"", "alert":"", "inPlaceEditorUrl":"", 
+  "type":"", "imageLocation":"", "idName":"", "description":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
-  "interpretText":true, "passArgs":{}
+  "interpretText":"", "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_display_markup_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
+  <#if !interpretText?is_boolean>
+    <#local interpretText = true>
+  </#if>
+  <@field_display_markup_widget type=type imageLocation=imageLocation id=id idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
     inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel interpretText=interpretText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+<#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false interpretText=true origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
   <#if tooltip?has_content>
-    <div class="${styles.field_tooltip_wrapper!}" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip}"><#t>
+    <#local class = addClassArg(class, styles.field_display_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_display_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
+  <#local classes = compileClassArg(class)>
+  <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
+  <#if hasWrapper>
+    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if>><#rt/>
   </#if>
   <#if type?has_content && type == "image">
     <img src="${imageLocation}" alt="${imageAlt}"/><#lt/>
@@ -1285,33 +1473,41 @@ TODO: the tooltips should be made less hardcoded (configure via styles hash some
       <@script>ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});</@script>
     </#if>-->
   </#if>
-  <#if tooltip?has_content>
-    </div><#t>
+  <#if hasWrapper>
+    </div><#lt/>
   </#if>
 </#macro>
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "text":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
+  "text":"", "class":"", "id":"", "title":"", "tooltip":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_generic_markup_widget text=text tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+  <@field_generic_markup_widget text=text class=class id=id title=title tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget text="" tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_generic_markup_widget text="" class="" id="" tooltip="" title="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
   <#if tooltip?has_content>
-    <div class="${styles.field_tooltip_wrapper!}" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip}"><#t>
+    <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_generic_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
+  <#local classes = compileClassArg(class)>
+  <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
+  <#if hasWrapper>
+    <div<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><#if title?has_content> title="${title}"</#if>><#rt/>
   </#if>
     <#if text?has_content>
-      ${text}<#t>
+      ${text}<#t/>
     <#else>
-      <#nested><#t>
+      <#nested><#t/>
     </#if>
-  <#if tooltip?has_content>
-    </div><#t>
+  <#if hasWrapper>
+    </div><#lt/>
   </#if>
 </#macro>

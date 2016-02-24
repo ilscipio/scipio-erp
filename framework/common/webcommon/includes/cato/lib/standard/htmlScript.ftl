@@ -244,9 +244,9 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                     see function getAttribMapAllExcludes for implementation details.
     noExclude     = prevents excludes of attribs with specified names (list)
 -->
-<#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] noExclude=[]
+<#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
-  <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken exclude=getAttribMapAllExcludes(attribs, exclude, noExclude)
+  <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken noValToken=noValToken exclude=getAttribMapAllExcludes(attribs, exclude, noExclude)
     attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
     attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t>
 </#macro>

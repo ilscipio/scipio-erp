@@ -305,14 +305,19 @@ public abstract class TemplateFtlUtil {
      * <p>
      * If emptyValToken non-empty, values matching emptyValToken are treated as empty and 
      * included regardless of includeEmpty setting.
+     * noValToken is similar but prevents values altogether.
      */
-    public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, 
+    public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, String noValToken,
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
             String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames) {
         StringBuilder sb = new StringBuilder();
         
         if (emptyValToken == null) {
             emptyValToken = "";
+        }
+        
+        if (noValToken != null && noValToken.isEmpty()) {
+            noValToken = null;
         }
         
         if (exclude == null || exclude.isEmpty()) {
@@ -362,11 +367,13 @@ public abstract class TemplateFtlUtil {
                         name = LangFtlUtil.camelCaseToDashLowerName(name);
                     }
                     sb.append(name);
-                    sb.append("=\"");
-                    if (!valStr.equals(emptyValToken)) {
-                        sb.append(valStr);
+                    if (noValToken == null || !noValToken.equals(valStr)) {
+                        sb.append("=\"");
+                        if (!valStr.equals(emptyValToken)) {
+                            sb.append(valStr);
+                        }
+                        sb.append("\"");
                     }
-                    sb.append("\"");
                 }
             } 
         }

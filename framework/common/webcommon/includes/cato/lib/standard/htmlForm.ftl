@@ -834,6 +834,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     rows            = number of rows
     cols            = number of columns
     wrap            = HTML5 wrap attribute
+    text/value      = text/value, alternate to #nested
     
     * datetime *
     dateType        = [date-time|date|time] (default: date-time) type of datetime
@@ -851,6 +852,19 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     dateType        = (same as datetime)
     dateDisplayType = (same as datetime)
     opValue         = the selected operator (value)
+    
+    * textfind *
+    opValue         = the selected operator (value)
+    ignoreCaseValue = boolean (default: true), the ignore case checkbox (current value)
+                      The default should be same as form widget default (text-find's "ignore-case" in widget-form.xsd).
+    hideOptions     = boolean (default: false). If true, don't show select options.
+    hideIgnoreCase  = boolean (default: false). If true, hide case sensitivity boolean.
+    titleClass      = extra class
+    
+    * rangefind *
+    opFromValue     = the selected "from" operator (value)
+    opThruValue     = the selected "thru" operator (value)
+    titleClass      = extra class
     
     * select *
     multiple        = allow multiple select true/false
@@ -886,7 +900,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     formName        = The name of the form that contains the lookup field.
     fieldFormName   = Contains the lookup window form name.
     
-    * Checkbox (single mode) *
+    * checkbox (single mode) *
     value           = Y/N
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
@@ -896,7 +910,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                       Cato standard theme:
                         simple: guarantees a minimalistic checkbox
     
-    * Checkbox (multi mode) *
+    * checkbox (multi mode) *
     items           = if specified, multiple-items checkbox field generated; 
                       list of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                       NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
@@ -965,6 +979,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                       TODO: currently all are handled as text/generic (because formatting done in java in stock ofbiz)
     value           = display value or image URL
     description     = for image type: image alt
+    tooltip         = tooltip, may result in extra wrapping container for tooltip
+    interpretText   = boolean (default: true). If true, translates newlines to <br/>; else untouched.
+    
+    * generic *
+    tooltip         = tooltip, may result in extra wrapping container for tooltip
 -->
 <#assign field_defaultArgs = {
   <#-- TODO: group these arguments so easier to read... -->
@@ -981,7 +1000,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
   "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
   "inline":"", "ignoreParentField":"",
-  "opValue":"",
+  "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
+  "titleClass":"", "interpretText":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1302,7 +1322,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               tooltip=tooltip
                               inlineLabel=effInlineLabel
                               wrap=wrap
-                              passArgs=passArgs><#nested></@field_textarea_widget>
+                              passArgs=passArgs>${text}${value}<#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time">
@@ -1332,12 +1352,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else> <#-- "date-time" -->
           <#local dateType = "timestamp">
         </#if>
+        <#if opFromValue?has_content>
+          <#local datefindOpFromValue = opFromValue>
+        <#else>
+          <#local datefindOpFromValue = opValue>
+        </#if>
         <@field_datefind_widget name=name 
                               class=class 
                               alert=alert 
                               title=title 
                               value=value 
-                              defaultOptionFrom=opValue
+                              defaultOptionFrom=datefindOpFromValue
                               size=size 
                               maxlength=maxlength 
                               id=id 
@@ -1345,6 +1370,44 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               dateDisplayType=dateDisplayType 
                               formName=formName
                               tooltip=tooltip
+                              origLabel=origLabel
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs/>                 
+        <#break>
+      <#case "textfind">
+        <@field_textfind_widget name=name 
+                              class=class 
+                              alert=alert 
+                              title=title 
+                              value=value 
+                              defaultOption=opValue
+                              ignoreCase=ignoreCaseValue
+                              size=size 
+                              maxlength=maxlength 
+                              id=id 
+                              formName=formName
+                              tooltip=tooltip
+                              hideOptions=hideOptions
+                              hideIgnoreCase=hideIgnoreCase
+                              titleClass=titleClass
+                              origLabel=origLabel
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs/>                 
+        <#break>
+      <#case "rangefind">
+        <@field_rangefind_widget name=name 
+                              class=class 
+                              alert=alert 
+                              title=title 
+                              value=value 
+                              defaultOptionFrom=opFromValue
+                              defaultOptionThru=opThruValue
+                              size=size 
+                              maxlength=maxlength 
+                              id=id 
+                              formName=formName
+                              tooltip=tooltip
+                              titleClass=titleClass
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                 
@@ -1520,14 +1583,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local desc = value>
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
-          title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-          imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+          title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+          imageAlt=description tooltip=tooltip interpretText=interpretText inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-          <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+          <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         <#else>
-          <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs><#nested /></@field_generic_widget>
+          <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>

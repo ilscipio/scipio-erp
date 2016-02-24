@@ -1569,12 +1569,14 @@ NOTE: this is a very generic function; for common implementation, see commonElem
                             should be the names of the subtitutes, not the input attrib names.
                             note this is applied after prefix ops are applied.
     camelCaseToDashLowerNames = boolean, if true converts attrib names from camelCase to camel-case at the very end.
+    emptyValToken             = when this (string) value encountered, will include an empty attrib
+    noValToken                = when this (string) value encountered, will include an attrib with no value
 -->
-<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
   <#if attribs?is_hash>
     <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
-      emptyValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
+      emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

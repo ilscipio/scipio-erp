@@ -515,6 +515,14 @@
       <@field type="datefind" label="Date Find 3 (time only)" name="datefind3" value="" size="25" maxlength="30" dateType="time" opValue="greaterThanFromDayStart" />
       <@field type="datefind" label="Date Find 4 (timestamp internal, displayed as short date)" name="datefind4" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date" opValue="equals" />
 
+      <@field type="textfind" label="Text Find 1" name="textfind1" value="" size="25" maxlength="30" opValue="like" />
+      <@field type="textfind" label="Text Find 2" name="textfind2" value="" size="25" maxlength="30" hideOptions=true ignoreCaseValue=false tooltip="this is a tooltip!" />
+      <@field type="textfind" label="Text Find 3" name="textfind3" id="mytextfind3" value="" hideIgnoreCase=true />
+
+      <@field type="rangefind" label="Range Find 1" name="rangefind1" value="" size="25" maxlength="30" opValue="contains" />
+      <@field type="rangefind" label="Range Find 2" name="rangefind2" value="" size="25" maxlength="30" opFromValue="greaterThan" opThruValue="lessThanEqualTo" tooltip="this is a tooltip!" />
+      <@field type="rangefind" label="Range Find 3" name="rangefind3" id="myrangefind3" value="test" />
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [
@@ -523,7 +531,7 @@
         {"value":"val3", "description":"Option 3", "tooltip":"this is radio option 3"}
       ]>
       <@field type="radio" name="radio3a" label="Radio 3a (multi - inline)" items=items currentValue="val2" inlineItems=true tooltip="these are radios"/>
-      <@field type="radio" name="radio3b" label="Radio 3b (multi - one per line)" items=items currentValue="val2" inlineItems=false tooltip="these are radios"/>
+      <@field type="radio" name="radio3b" label="Radio 3b (multi - one per line)" items=items currentValue="val2" inlineItems=false tooltip="these are also radios"/>
       <@field type="radio" name="radio4" label="Radio 4" value="Y" currentValue="Y" />
       <@field type="radio" name="radio5" label="Radio 5" value="Y" currentValue="N" />
       <@field type="radio" name="radio6" label="Radio 6" value="Y" defaultValue="Y" />
@@ -537,10 +545,15 @@
       ]>
       <@field type="checkbox" name="checkbox3a" label="Checkbox 3a (multi - inline)" items=items currentValue=["val2", "val3"] inlineItems=true tooltip="these are checkboxes"/>
       <@field type="checkbox" name="checkbox3b" label="Checkbox 3b (multi - one per line)" items=items currentValue=["val2", "val3"] inlineItems=false tooltip="these are checkboxes"/>
+      <@field type="checkbox" name="checkbox3a1" label="Checkbox 3a1 (multi - inline - forced to simple-standard look)" items=items currentValue=["val2", "val3"] inlineItems=true tooltip="these are checkboxes" checkboxType="simple-standard"/>
+
       <@field type="checkbox" name="checkbox4" label="Checkbox 4" value="Y" currentValue="Y" />
-      <@field type="checkbox" name="checkbox5" label="Checkbox 5" value="Y" currentValue="N" />
+      <@field type="checkbox" name="checkbox5" label="Checkbox 5" value="Y" currentValue="N" tooltip="this is checkbox option 5"/>
       <@field type="checkbox" name="checkbox6" label="Checkbox 6" value="Y" defaultValue="Y" />
       <@field type="checkbox" name="checkbox7" label="Checkbox 7" value="Y" defaultValue="N" />
+
+      <@field type="textarea" name="textarea1" label="Textarea 1" />
+      <@field type="textarea" name="textarea2" label="Textarea 2 (readonly)" readonly=true text="test"/>
 
       <#assign items = [
         {"value":"val1", "description":"Value 1"},
@@ -565,6 +578,22 @@
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple=true asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple=true 
         asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
+     
+      <@field type="display" label="Display Field 1" tooltip="This is a tooltip text" interpretText=true>
+        This 
+        is 
+        text 
+        with 
+        newlines
+      </@field>
+      <@field type="display" label="Display Field 1" interpretText=false>
+        This 
+        is 
+        text 
+        with 
+        no
+        newlines
+      </@field>
      
       <@field type="generic" label="Generic 1" tooltip="This is a tooltip text">
         This is <p>random text</p> and 

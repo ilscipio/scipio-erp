@@ -17,7 +17,6 @@ if (!productStoreId) {
     Debug.logError("No product store Id found.", "");
     return;
 }
-Debug.log("productStoreId =======> " + productStoreId);
 
 LocalDispatcher dispatcher = context.dispatcher;
 pluginList = new JsTreeHelper.JsTreePluginList();
@@ -30,7 +29,7 @@ treeMenuData =  [];
 //Get the Catalogs
 productStoreCatalogs = from("ProductStoreCatalog").where(new EntityExpr("productStoreId", EntityComparisonOperator.EQUALS, productStoreId)).filterByDate().queryList();
 for (productStoreCatalog in productStoreCatalogs) {
-    Debug.log("prodCatalogId ==========> " + productStoreCatalog.prodCatalogId);
+    
     prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
     if (prodCatalog) {
         result = dispatcher.runSync("buildCatalogTree", ["prodCatalogId" : prodCatalog.getString("prodCatalogId")]);

@@ -567,7 +567,20 @@ under the License.
             </actions>
             <widgets>            
                 <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="topLeft">
+                    <decorator-section name="topRight">
+                       <section>
+                            <actions>
+                                <script location="component://product/script/com/ilscipio/product/dashboard/NewProducts.groovy"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.ProductRecentProductsAdded}">
+                                    <include-form name="newProducts" location="component://product/widget/catalog/CatalogForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    
+                    <decorator-section name="bottomLeft">
                            <section>
                                <actions>
                                    <set field="productStoreId" value="CATO_FOUNDATION_1"/>
@@ -581,7 +594,7 @@ under the License.
                                </widgets>
                            </section>
                     </decorator-section>
-                    <decorator-section name="topRight">
+                    <decorator-section name="bottomRight">
                            <section>
                                <actions>
                                    <set field="productStoreId" value="CATO_FOUNDATION_2"/>

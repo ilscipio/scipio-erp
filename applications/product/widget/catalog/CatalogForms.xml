@@ -316,16 +316,20 @@
         </field>
     </form>
     
-    <form name="productPromotions" type="list" title="" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
-        <actions>
-            <script location="component://" />
-            
-        </actions>
+    <form name="productPromotions" type="list" title="" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->        
         <field name="productCategoryId"></field>
         <field name="productStore"></field>
         <field name="productDate"></field>
         <field name="promoTitle"></field>
         <field name="voucher"></field>
-        
+    </form>
+    
+    <form name="newProducts" type="list" title="" header-row-style="header-row" list-name="products" default-entity-name="Product"> <!-- orig: default-table-style=-style="basic-table" -->        
+        <field name="productId"><display/></field>
+        <field name="productName"><display/></field>
+        <field name="productTypeId"><display/></field>
+        <field name="introductionDate"><display/></field>
+       <!--  <field name="price"></field> -->
+        <!-- <field name="voucher"></field> -->
     </form>
 </forms>

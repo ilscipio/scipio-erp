@@ -584,14 +584,13 @@ public class CategoryServices {
                 List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
                         .filterByDate().queryList();
                 if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
-                    List<TreeDataItem> children = CategoryWorker.getTreeCategories(delegator, dispatcher, prodCatalogCategories, library);
 
-                    TreeDataItem dataItem = null;
+                    JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        dataItem = new JsTreeDataItem(catalog.getString("prodCatalogId"), catalog.getString("catalogName"), "jstree-folder",
-                                new JsTreeDataItemState(true, false), children);
+                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, prodCatalogCategories, library, prodCatalogId));
+                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(true, false),
+                                null);
                         dataItem.setType("catalog");
-                        // JsTreeHelper.preventDuplicates(children, dataItem);
                     }
 
                     if (UtilValidate.isNotEmpty(dataItem))
@@ -608,6 +607,7 @@ public class CategoryServices {
         } else if (mode.equals("product")) {
 
         }
+
         result.put("treeList", resultList);
         return result;
     }

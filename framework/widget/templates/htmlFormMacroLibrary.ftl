@@ -481,14 +481,14 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#-- TODO: review this: for the time being, we will only set the grid_large values if the
           estimated absolute column width for "large" is larger than 6. 
           otherwise, this form is probably in a small space so the grid_small settings are more appropriate. -->
-  <#local isLarge = (absColSizes.large > 6)>  
+  <#local isLargeParent = (absColSizes.large > 6)>  
     
   <#-- DEV NOTE: field spans were intentionally made to total to 11 instead of 12 as temporary workaround for small-vs-large-sizing-within-columns adaptation problems -->
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
       <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
-      <#local titleAreaClassDefault>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#local>
+      <#local titleAreaClassDefault>${styles.grid_small!}3<#if isLargeParent> ${styles.grid_large!}2</#if></#local>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
@@ -506,9 +506,9 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local innerClass = addClassArg(innerClass, "${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClassDefault>${styles.grid_small!}8<#if isLarge> ${styles.grid_large!}9</#if></#local>
+      <#local innerClassDefault>${styles.grid_small!}8<#if isLargeParent> ${styles.grid_large!}9</#if></#local>
   <#else>
-      <#local innerClassDefault>${styles.grid_small!}12<#if isLarge> ${styles.grid_large!}12</#if></#local>
+      <#local innerClassDefault>${styles.grid_small!}12<#if isLargeParent> ${styles.grid_large!}12</#if></#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
       <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />

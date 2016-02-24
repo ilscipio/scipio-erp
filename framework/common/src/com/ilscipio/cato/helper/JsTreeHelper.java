@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -161,9 +162,9 @@ public class JsTreeHelper {
     public static class JsTreeDataItem extends HashMap<String, Object>implements TreeDataItem {
         private static final long serialVersionUID = -660269373973470543L;
 
-        private boolean multipleOccurrences = false;
+        private String originalId;
 
-        public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, List<TreeDataItem> children) {
+        public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
             if (UtilValidate.isNotEmpty(id))
                 put("id", id);
             if (UtilValidate.isNotEmpty(text))
@@ -172,8 +173,11 @@ public class JsTreeHelper {
                 put("state", state);
             if (UtilValidate.isNotEmpty(icon))
                 put("icon", icon);
-            if (UtilValidate.isNotEmpty(children))
-                put("children", children);
+            if (UtilValidate.isNotEmpty(parent))
+                put("parent", parent);
+            else
+                put("parent", "#");
+            this.originalId = id;
         }
 
         @Override
@@ -198,26 +202,24 @@ public class JsTreeHelper {
             put("state", state);
         }
 
-        public void setChildren(List<TreeDataItem> children) {
-            put("children", children);
+        public void setParent(String parent) {
+            put("parent", parent);
         }
 
-        public List<JsTreeDataItem> getChildren() {
-            return (List<JsTreeDataItem>) get("children");
+        public String getParent() {
+            return (String) get("parent");
         }
 
-        @Override
         public void setType(String type) {
             put("type", type);
         }
 
-        @Override
-        public void setMultipleOccurrences(boolean multipleOccurrences) {
-            this.multipleOccurrences = multipleOccurrences;
+        public String getOriginalId() {
+            return originalId;
         }
 
-        public boolean hasMultipleOccurrences() {
-            return multipleOccurrences;
+        protected void setOriginalId(String originalId) {
+            this.originalId = originalId;
         }
 
         public static class JsTreeDataItemState extends HashMap<String, Boolean> {
@@ -245,6 +247,14 @@ public class JsTreeHelper {
             }
 
         }
+
+        @Override
+        public boolean equals(Object o) {
+            // TODO Auto-generated method stub
+            return this == o;
+            // return super.equals(o);
+        }
+
     }
 
     /**
@@ -561,48 +571,45 @@ public class JsTreeHelper {
      * @param dataItem
      * @param count
      */
-    public static void preventDataItemsSameId(List<JsTreeDataItem> list) {
-        // FIXME: This require more refinement, it can overload the system if
-        // the list being passed is very large
-        List<JsTreeDataItem> allDataItems = getAllDataItems(list);
-        Debug.log("data item plain list size ===========> " + allDataItems.size());
-        
-        List<JsTreeDataItem> repeatedDataItems = getAllRepeatedItems(allDataItems);
+    public static List<JsTreeDataItem> preventDataItemsSameId(List<JsTreeDataItem> list) {
+        Map<String, List<JsTreeDataItem>> repeatedDataItems = getAllRepeatedItems(list);        
         Debug.log("repeated data item size ===========> " + repeatedDataItems.size());
-        
 
-        // for (String idKey : sameIdDataItemsMap.keySet()) {
-        // int count = 0;
-        // Debug.log("repeated id ===========> " + idKey);
-        // for (TreeDataItem item : sameIdDataItemsMap.get(idKey)) {
-        // if (list.indexOf(item) >= 0) {
-        // TreeDataItem dataItem = list.get(list.indexOf(item));
-        // dataItem.setMultipleOccurrences(true);
-        // dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
-        // }
-        // }
-        // }
-    }
-
-    private static List<JsTreeDataItem> getAllDataItems(List<JsTreeDataItem> list) {
-        List<JsTreeDataItem> sameIdDataItemsList = FastList.newInstance();
-        // Isolate repeated items with same ids
-        for (JsTreeDataItem i : list) {
-            sameIdDataItemsList.add(i);
-            if (UtilValidate.isNotEmpty(i.getChildren())) {
-                sameIdDataItemsList.addAll(getAllDataItems(i.getChildren()));
+        for (String idKey : repeatedDataItems.keySet()) {
+            Debug.log("repeated data item id ===========> " + idKey);
+            int count = 0;
+            for (TreeDataItem dataItem : repeatedDataItems.get(idKey)) { 
+                dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
+                updateDataItemsParentReference(idKey, count, list);
+                count++;
             }
         }
-        return sameIdDataItemsList;
+        return list;
     }
 
-    private static List<JsTreeDataItem> getAllRepeatedItems(List<JsTreeDataItem> allItems) {
-        List<JsTreeDataItem> sameIdDataItemsList = FastList.newInstance();
-        for (JsTreeDataItem i : allItems)
-            for (JsTreeDataItem x : allItems)
-                if (x.getId().equals(i.getId()))
-                    sameIdDataItemsList.add(i);
-        return sameIdDataItemsList;
+    private static void updateDataItemsParentReference(String idKey, int count, List<JsTreeDataItem> resultList) {
+        for (JsTreeDataItem dataItem : resultList) {
+            if (dataItem.getParent().equals(idKey)) {
+                if (dataItem.getId().equals(dataItem.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count)) {
+                    dataItem.setParent(dataItem.getParent() + JSTREE_FIELD_ID_SEPARATOR + count);
+                } 
+            }
+        }
     }
 
+    private static Map<String, List<JsTreeDataItem>> getAllRepeatedItems(List<JsTreeDataItem> resultList) {
+        Map<String, List<JsTreeDataItem>> sameIdDataItemsMap = FastMap.newInstance();
+        for (TreeDataItem i : resultList) {
+            List<JsTreeDataItem> sameIdDataItemsList = FastList.newInstance();
+            for (TreeDataItem x : resultList) {
+                if (x.getId().equals(i.getId()) && !x.equals(i)) {
+                    if (sameIdDataItemsMap.containsKey(i.getId()))
+                        sameIdDataItemsList = sameIdDataItemsMap.get(i.getId());
+                    sameIdDataItemsList.add((JsTreeDataItem) i);
+                    sameIdDataItemsMap.put(i.getId(), sameIdDataItemsList);
+                }
+            }
+        }
+        return sameIdDataItemsMap;
+    }
 }

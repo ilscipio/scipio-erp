@@ -1,7 +1,5 @@
 package com.ilscipio.cato.helper;
 
-import java.util.List;
-
 /**
  * Cato: An interface representing a tree item. All tree menu libraries
  * integration must implement this as a representation of a data item in order
@@ -40,18 +38,18 @@ public interface TreeDataItem {
 //     */
 //    public void setChildren(List<TreeDataItem> children);
 
-    /**
-     * The type of the item. If the third party library doesn't support types
-     * for their tree items, override it but do nothing there.
-     * 
-     * @param type
-     */
-    public void setType(String type);
+//    /**
+//     * The type of the item. If the third party library doesn't support types
+//     * for their tree items, override it but do nothing there.
+//     * 
+//     * @param type
+//     */
+//    public void setType(String type);
 
-    /**
-     * Since a tree menu may contain multiple occurrences of the same item, mark
-     * it so
-     */
-    public void setMultipleOccurrences(boolean multipleOccurrences);
+//    /**
+//     * Since a tree menu may contain multiple occurrences of the same item, mark
+//     * it so
+//     */
+//    public void setMultipleOccurrences(boolean multipleOccurrences);
 
 }

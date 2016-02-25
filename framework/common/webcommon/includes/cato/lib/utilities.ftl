@@ -69,6 +69,22 @@ or empty string (signifies use defaults).
 
 <#-- 
 *************
+* makeOfbizWebappUrl
+************
+Wraps an inter-webapp Ofbiz URL (most often in the form /webappmountpoint/control/requesturi).
+Boolean arguments can be given as booleans, string representation of booleans
+or empty string (signifies use defaults).
+-->
+<#macro ofbizWebappUrl uri fullPath=false secure=true encode=true>
+  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
+  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
+  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
+  ${StringUtil.wrapString(uri)}<#t>
+</#macro>
+
+<#-- 
+*************
 * makeOfbizContentUrl
 ************
 Function version of the @ofbizContentUrl macro.

@@ -26088,6 +26088,9 @@
         <value xml:lang="zh">评级</value>
         <value xml:lang="zh_TW">評級</value>
     </property>
+    <property key="ProductRecentProductsAdded">
+        <value xml:lang="en">New Products</value>
+    </property>
     <property key="ProductRatingTypeEnum">
         <value xml:lang="de">Bewertungstyp Aufzählung</value>
         <value xml:lang="en">Rating Type Enum</value>

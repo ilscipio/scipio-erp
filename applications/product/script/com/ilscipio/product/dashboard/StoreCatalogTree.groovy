@@ -21,7 +21,7 @@ if (!productStoreId) {
 LocalDispatcher dispatcher = context.dispatcher;
 pluginList = new JsTreeHelper.JsTreePluginList();
 pluginList.add("sort, state");
-pluginList.add(new JsTreeTypesPlugin(["catalog", "category", "product"], new JsTreeType(3, 5, null, null), new JsTreeType(6, 2, null, null), new JsTreeType(0, 0, null, null)));
+pluginList.add(new JsTreeTypesPlugin(["catalog", "category", "product"], new JsTreeType(3, 5, ["category"], null), new JsTreeType(6, 2, ["category", "product"], null), new JsTreeType(0, 0, null, null)));
 context.treeMenuPlugins = pluginList;
 context.treeMenuSettings = new JsTreeHelper.JsTreeCore(false, null, null);
 

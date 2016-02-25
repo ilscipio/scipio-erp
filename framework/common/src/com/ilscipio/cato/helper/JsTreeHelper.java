@@ -475,7 +475,7 @@ public class JsTreeHelper {
 
             public JsTreeTypesPlugin(List<String> types, JsTreeType... jsTreeType) throws Exception {
                 if (types.size() != jsTreeType.length)
-                    throw new Exception("Odd array sizes have been passed. The number of types and and jsTreeTypes must be the same.");
+                    throw new Exception("Odd arrays have been passed. The number of types and and jsTreeTypes must be the same.");
                 for (int i = 0; i < types.size(); i++)
                     addType(types.get(i), jsTreeType[i]);
             }
@@ -490,7 +490,7 @@ public class JsTreeHelper {
             public static class JsTreeType extends HashMap<String, Object> {
                 private static final long serialVersionUID = 2385436629068719748L;
 
-                public JsTreeType(Integer maxChildren, Integer maxDepth, String validChildren, String icon) {
+                public JsTreeType(Integer maxChildren, Integer maxDepth, List<String> validChildren, String icon) {
                     if (maxChildren == null)
                         maxChildren = -1;
                     setMaxChildren(maxChildren);
@@ -516,7 +516,7 @@ public class JsTreeHelper {
                     put("max_depth", maxDepth);
                 }
 
-                public void setValidChildren(String validChildren) {
+                public void setValidChildren(List<String> validChildren) {
                     put("valid_children", validChildren);
                 }
 

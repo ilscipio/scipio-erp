@@ -35,7 +35,7 @@ under the License.
   </#if>
   
     <@tr>
-      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderCurrentStatus}</@td>
+      <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
       <@td colspan="3">
          
         <@modal id="${orderId}_info" label="${currentStatus.get('description',locale)}">

@@ -149,9 +149,11 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
+                                <!-- 
                                 <screenlet>
                                     <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
+                                -->
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -166,7 +168,8 @@ under the License.
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="PageTitleInvoiceOverview"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="${uiLabelMap.AccountingInvoice}: ${parameters.invoiceId}"/>
                 <set field="activeSubMenuItem" value="invoiceOverview"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
@@ -213,23 +216,33 @@ under the License.
                                 <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceInfo"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceTerms"/>
+                                        <include-screen name="CatoInvoicePaymentInfo"/>
+                                        <include-screen name="CatoInvoiceAppliedPayment"/>
+                                    </container>
+                                </container>
+                            
+                                <!-- TODO: Migrate?
                                     <link target="editInvoice" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                         <parameter param-name="invoiceId"/>
                                     </link>
-                                    <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
-                               
-                                <screenlet title="${uiLabelMap.CommonStatus}" navigation-form-name="ListInvoiceStatus">
-                                    <include-form name="ListInvoiceStatus" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
-                                    navigation-form-name="ListInvoiceApplications">
-                                    <link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
+                                    
+                                    <link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                         <parameter param-name="invoiceId"/>
                                     </link>
-                                    <include-form name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>                                
+                                -->
+                                
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceItems"/>
+                                    </container>
+                               </container>
+                                <!--    
                                 <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles">
                                     <container>
                                         <link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
@@ -237,17 +250,7 @@ under the License.
                                         </link>
                                     </container>
                                     <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.PartyTerms}">
-                                    <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>                                
-                                <screenlet title="${uiLabelMap.AccountingInvoiceItems}" navigation-form-name="invoiceItems">
-                                    <link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
-                                        <parameter param-name="invoiceId"/>
-                                    </link>
-                                    <include-form name="invoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
+                                </screenlet>                             
                                 <section>
                                     <condition>
                                         <not><if-empty field="timeEntries"/></not>
@@ -263,34 +266,30 @@ under the License.
                                 </section>
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
+                                </screenlet>-->  
                             </widgets>
                             <fail-widgets>
-                                <screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
-                                    <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
-                                <container style="${styles.grid_large}6">
-                                    <screenlet title="${uiLabelMap.CommonStatus}" navigation-form-name="ListInvoiceStatus">
-                                        <include-form name="ListInvoiceStatus" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                    <screenlet title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
-                                        navigation-form-name="ListInvoiceApplications">
-                                        <include-form name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                </container>
+                               <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceInfo"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceTerms"/>
+                                        <include-screen name="CatoInvoicePaymentInfo"/>
+                                        <include-screen name="CatoInvoiceAppliedPayment"/>
+                                    </container>
+                               </container>
+                               <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                        <include-screen name="CatoInvoiceItems"/>
+                                    </container>
+                               </container>
+                                <!-- 
                                 <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles">
                                         <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
                                     </screenlet>
-                                    <screenlet title="${uiLabelMap.PartyTerms}">
-                                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
-                                        <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
                                 </container>
-                                <container style="clear"/>
-                                <screenlet title="${uiLabelMap.AccountingInvoiceItems}" navigation-form-name="invoiceItems">
-                                    <include-form name="invoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
-                                </screenlet>
                                 <section>
                                     <condition>
                                         <not><if-empty field="timeEntries"/></not>
@@ -304,6 +303,7 @@ under the License.
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
+                                -->
                             </fail-widgets>
                                 </section>
                             </widgets>
@@ -311,30 +311,6 @@ under the License.
                                 <label text="${uiLabelMap.AccountingInvoiceDoesNotExists}"></label>
                             </fail-widgets>
                         </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="InvoiceStatus">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PageTitleListInvoices"/>
-                <set field="activeSubMenuItem" value="invoiceStatus"/>
-                <set field="invoiceId" from-field="parameters.invoiceId"/>
-                <entity-one entity-name="Invoice" value-field="invoice" auto-field-map="true"/>
-                <entity-and entity-name="InvoiceStatus" list="invoiceStatus">
-                    <field-map from-field="invoice.invoiceId" field-name="invoiceId"/>
-                    <order-by field-name="statusDate"/>
-                </entity-and>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingInvoiceStatusHistory}">
-                            <include-form name="ListInvoiceStatus" location="component://accounting/widget/InvoiceForms.xml"/>
-                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -583,6 +559,116 @@ under the License.
             <widgets>
                 <screenlet title="${uiLabelMap.PageTitleListInvoices}" navigation-form-name="ListInvoices">
                     <include-form name="ListSupplierInvoices"  location="component://accounting/widget/InvoiceForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- CATO: Form migration -->
+    <screen name="CatoInvoiceInfo">
+        <section>
+            <actions>
+                <set field="total" value="${groovy:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}"/>
+                <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                    <field-map field-name="partyId" from-field="invoice.partyIdFrom"/>
+                    <field-map field-name="compareDate" from-field="invoice.invoiceDate"/>
+                    <field-map field-name="lastNameFirst" value="Y"/>
+                </service>
+                <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
+                    <field-map field-name="partyId" from-field="invoice.partyId"/>
+                    <field-map field-name="compareDate" from-field="invoice.invoiceDate"/>
+                    <field-map field-name="lastNameFirst" value="Y"/>
+                </service>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="parameters.invoiceId"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>        
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceInfo.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoInvoiceAppliedPayment">
+        <section>
+            <actions>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="invoiceApplications"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceAppliedPayment.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CatoInvoiceItems">
+        <section>
+            <actions>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="invItemAndOrdItems"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceItems.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoInvoiceTerms">
+        <section>
+            <actions>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="invoiceTerms"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoiceTerms.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoInvoicePaymentInfo">
+        <section>
+            <actions>
+                <service service-name="getInvoicePaymentInfoList" result-map-list="invoicePaymentInfoList">
+                    <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
+                </service>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="invoicePaymentInfoList"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicePaymentInfo.ftl"/></html>
+                    </platform-specific>
                 </screenlet>
             </widgets>
         </section>

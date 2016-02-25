@@ -316,12 +316,12 @@
         </field>
     </form>
     
-    <form name="productPromotions" type="list" title="" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->        
-        <field name="productCategoryId"></field>
-        <field name="productStore"></field>
-        <field name="productDate"></field>
-        <field name="promoTitle"></field>
-        <field name="voucher"></field>
+    <form name="activePromotions" type="list" title="" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->        
+        <field name="productCategoryId"><display/></field>
+        <field name="productStore"><display/></field>
+        <field name="productDate"><display/></field>
+        <field name="promoTitle"><display/></field>
+        <field name="voucher"><display/></field>
     </form>
     
     <form name="newProducts" type="list" title="" header-row-style="header-row" list-name="products" default-entity-name="Product"> <!-- orig: default-table-style=-style="basic-table" -->        

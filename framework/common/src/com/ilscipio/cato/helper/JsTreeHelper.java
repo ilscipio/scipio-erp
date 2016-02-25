@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -177,7 +176,11 @@ public class JsTreeHelper {
                 put("parent", parent);
             else
                 put("parent", "#");
+
             this.originalId = id;
+            Map<String, String> liAttrValues = FastMap.newInstance();
+            liAttrValues.put("original_id", originalId);
+            put("li_attr", liAttrValues);
         }
 
         @Override
@@ -230,12 +233,21 @@ public class JsTreeHelper {
                 put("selected", selected);
             }
 
+            public JsTreeDataItemState(boolean opened, boolean selected, boolean disabled) {
+                this(opened, selected);
+                put("disabled", disabled);
+            }
+
             public boolean isOpened() {
                 return get("opened");
             }
 
             public boolean isSelected() {
                 return get("selected");
+            }
+
+            public boolean isDisabled() {
+                return get("disabled");
             }
 
             public void setOpened(boolean opened) {
@@ -246,6 +258,9 @@ public class JsTreeHelper {
                 put("selected", selected);
             }
 
+            public void setDisabled(boolean disabled) {
+                put("disabled", disabled);
+            }
         }
 
         @Override
@@ -572,13 +587,14 @@ public class JsTreeHelper {
      * @param count
      */
     public static List<JsTreeDataItem> preventDataItemsSameId(List<JsTreeDataItem> list) {
-        Map<String, List<JsTreeDataItem>> repeatedDataItems = getAllRepeatedItems(list);        
-        Debug.log("repeated data item size ===========> " + repeatedDataItems.size());
+        Map<String, List<JsTreeDataItem>> repeatedDataItems = getAllRepeatedItems(list);
+        // Debug.log("repeated data item size ===========> " +
+        // repeatedDataItems.size());
 
         for (String idKey : repeatedDataItems.keySet()) {
-            Debug.log("repeated data item id ===========> " + idKey);
+            // Debug.log("repeated data item id ===========> " + idKey);
             int count = 0;
-            for (TreeDataItem dataItem : repeatedDataItems.get(idKey)) { 
+            for (TreeDataItem dataItem : repeatedDataItems.get(idKey)) {
                 dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
                 updateDataItemsParentReference(idKey, count, list);
                 count++;
@@ -592,7 +608,7 @@ public class JsTreeHelper {
             if (dataItem.getParent().equals(idKey)) {
                 if (dataItem.getId().equals(dataItem.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count)) {
                     dataItem.setParent(dataItem.getParent() + JSTREE_FIELD_ID_SEPARATOR + count);
-                } 
+                }
             }
         }
     }

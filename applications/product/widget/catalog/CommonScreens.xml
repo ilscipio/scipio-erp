@@ -587,8 +587,7 @@ under the License.
 				                <entity-condition entity-name="ProductPromo" list="productPromos">
 				                    <condition-expr field-name="userEntered" from-field="userEntered" ignore-if-empty="true"/>
 				                    <order-by field-name="-createdDate"/>
-				                </entity-condition>
-                               <!--  <script location="component://product/script/com/ilscipio/product/dashboard/ActivePromotions.groovy"/> -->
+				                </entity-condition>                               
                             </actions>
                             <widgets>
                                 <screenlet title="${uiLabelMap.ProductProductPromotionsList}">

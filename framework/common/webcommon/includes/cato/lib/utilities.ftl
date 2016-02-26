@@ -1650,6 +1650,82 @@ NOTE: this is a very generic function; for common implementation, see commonElem
   </#if>
 </#macro>
 
+
+<#-- 
+*************
+* formattedDate
+************
+Renders a formatted date.
+
+NOTE: formattedDate by default renders the "date" type but it also doubles as handler for the other types
+    (which also have convenience wrappers below).
+    
+See also function versions below (helpful when inlining).
+
+  * Parameters *
+   date         = the date
+   dateType     = [date-time|date|time], default date (macro name is indicative).
+                  Also accepts "timestamp" for date-time.   
+   defaultVal   = if no output is produced (empty), this value (string) will be shown instead.
+-->
+<#macro formattedDate date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="" dateType="date">
+  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, dateType)!defaultVal}<#t>
+</#macro>
+
+<#-- Convenience wrappers -->
+<#macro formattedDateTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
+  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!defaultVal}<#t>
+</#macro>
+
+<#macro formattedTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
+  ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!defaultVal}<#t>
+</#macro>
+
+<#-- These functions return VOID (no value) if no or empty output, so default value operator can be used -->
+<#function formatDate date dateTimeFormat="" specLocale=true specTimeZone=true dateType="date">
+  <#if specLocale?is_boolean>
+    <#if specLocale>
+      <#local specLocale = locale!>
+    <#else>
+      <#local specLocale = ""> <#-- FIXME: won't work, must emulate null but freemarker sucks here... -->
+    </#if>
+  </#if>
+  <#if specTimeZone?is_boolean>
+    <#if specTimeZone>
+      <#local specTimeZone = timeZone!>
+    <#else>
+      <#local specTimeZone = ""> <#-- FIXME: won't work, must emulate null but freemarker sucks here... -->
+    </#if>
+  </#if>
+  <#if dateType == "date">
+    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(date, dateTimeFormat, locale, timeZone)!"">
+  <#elseif dateType == "time">
+    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatTime(date, dateTimeFormat, locale, timeZone)!"">
+  <#else>
+    <#local res = Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(date, dateTimeFormat, locale, timeZone)!"">
+  </#if>
+  <#if res?has_content>
+    <#return res>
+    <#-- otherwise, return void (for default value operator) -->
+  </#if>
+</#function>
+
+<#function formatDateTime date dateTimeFormat="" specLocale=true specTimeZone=true>
+  <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!"">
+  <#if res?has_content>
+    <#return res>
+    <#-- otherwise, return void (for default value operator) -->
+  </#if>
+</#function>
+
+<#function formatTime date dateTimeFormat="" specLocale=true specTimeZone=true>
+  <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!"">
+  <#if res?has_content>
+    <#return res>
+    <#-- otherwise, return void (for default value operator) -->
+  </#if>
+</#function>
+
 <#-- 
 *************
 * getHeadingElemSpecFromStyleStr

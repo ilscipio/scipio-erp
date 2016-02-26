@@ -1736,17 +1736,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     "labelInRow" : true,
     "postfix" : false,
     "postfixSize" : 0,
-    "isLarge" : "",
+    "isLargeParent" : "",
     "labelSmallColDiff" : 1,
     "widgetPostfixCombined" : false
   })>
   <#local dummy = localsPutAll(args)> 
   
-  <#if !isLarge?is_boolean>
+  <#if !isLargeParent?is_boolean>
     <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
     <#local absColSizes = getAbsContainerSizeFactors()>
     <#-- if parent container is large, then we'll include the large grid sizes; otherwise only want small to apply -->
-    <#local isLarge = (absColSizes.large > 6)>  
+    <#local isLargeParent = (absColSizes.large > 6)>  
   </#if>
 
   <#if postfix>
@@ -1778,10 +1778,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#local columnslabelarea = 12>
   </#if>
 
-  <#local defaultLabelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallColDiff}<#else>${columnslabelarea}</#if><#if isLarge> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
-  <#local defaultWidgetAndPostfixClass><#if labelArea && labelInRow>${styles.grid_small!}${widgetAndPostfixColumns - labelSmallColDiff}<#else>${styles.grid_small!}${widgetAndPostfixColumns}</#if><#if isLarge> ${styles.grid_large!}${widgetAndPostfixColumns}</#if></#local>
-  <#local defaultWidgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columns - labelSmallColDiff}<#else>${styles.grid_small!}${columns}</#if><#if isLarge> ${styles.grid_large!}${columns}</#if></#local>
-  <#local defaultPostfixClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLarge> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
+  <#local defaultLabelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallColDiff}<#else>${columnslabelarea}</#if><#if isLargeParent> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
+  <#local defaultWidgetAndPostfixClass><#if labelArea && labelInRow>${styles.grid_small!}${widgetAndPostfixColumns - labelSmallColDiff}<#else>${styles.grid_small!}${widgetAndPostfixColumns}</#if><#if isLargeParent> ${styles.grid_large!}${widgetAndPostfixColumns}</#if></#local>
+  <#local defaultWidgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columns - labelSmallColDiff}<#else>${styles.grid_small!}${columns}</#if><#if isLargeParent> ${styles.grid_large!}${columns}</#if></#local>
+  <#local defaultPostfixClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLargeParent> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
   
   <#return {
     "labelArea" : defaultLabelAreaClass,

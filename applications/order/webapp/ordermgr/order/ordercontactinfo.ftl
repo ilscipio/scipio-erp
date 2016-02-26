@@ -118,8 +118,8 @@ under the License.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
-                                                          (<a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
+                          ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                                                          (<a target="_BLANK" href="<@ofbizInterWebappUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
                         </@row>
                         <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>

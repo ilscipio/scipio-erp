@@ -229,8 +229,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                                                     <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
                                                     <@td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></@td>
                                                     <@td><@ofbizCurrency amount=payment.amount!/></@td>
-                                                    <@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}" class="${styles.link_nav_info_id!}">${fromPartyName.partyId!}</a></#if></@td>
-                                                    <@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}" class="${styles.link_nav_info_id!}">${toPartyName.partyId!}</a></#if></@td>
+                                                    <@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${fromPartyName.partyId!}</a></#if></@td>
+                                                    <@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${toPartyName.partyId!}</a></#if></@td>
                                                 </@tr>
                                             </#list>
                                         </@table>
@@ -243,7 +243,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                                 </#if>
                             </@td>
                             <@td>${finAccountTransType.description!}</@td>
-                            <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} <a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}" class="${styles.link_nav_info_id!}">${(partyName.partyId)!}</a></#if></@td>
+                            <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(partyName.partyId)!}</a></#if></@td>
                             <@td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!} <a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}" class="${styles.link_nav_info_id!}">${glReconciliation.glReconciliationId!}</a></#if></@td>
                             <@td>${finAccountTrans.transactionDate!}</@td>
                             <@td>${finAccountTrans.entryDate!}</@td>

@@ -86,7 +86,7 @@ under the License.
                 </@td>
                 <@td class="button-col">
                   <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
-                    <a href="/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.PartyManualTx}</a>
+                    <a href="<@ofbizInterWebappUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.PartyManualTx}</a>
                   </#if>
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
                     <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>

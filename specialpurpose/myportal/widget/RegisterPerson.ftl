@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<form name="RegisterPerson" onsubmit="javascript:submitFormDisableSubmits(this)" class="basic-form" id="RegisterPerson" action="/myportal/control/createRegister" method="post">
+<form name="RegisterPerson" onsubmit="javascript:submitFormDisableSubmits(this)" class="basic-form" id="RegisterPerson" action="<@ofbizInterWebappUrl>/myportal/control/createRegister</@ofbizInterWebappUrl>" method="post">
     <input type="hidden" value="${webSiteId}" name="webSiteId"/>
     <input type="hidden" name="reload"/>
     <div id="_G0_" class="fieldgroup">

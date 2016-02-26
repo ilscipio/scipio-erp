@@ -196,8 +196,8 @@ function runAction() {
             <@td>${statusItem.description?default(invoice.statusId)}</@td>
             <@td>${invoice.get("referenceNumber")!}</@td>
             <@td>${(invoice.description)!}</@td>
-            <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
-            <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
+            <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
+            <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>

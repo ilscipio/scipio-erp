@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}") text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuContent=menuContent>
@@ -35,7 +35,7 @@ under the License.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <@td><a href="<@ofbizInterWebappUrl>/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <@td>${webSite.httpHost?default('&nbsp;')}</@td>
                   <@td>${webSite.httpPort?default('&nbsp;')}</@td>
                   <@td align="center">

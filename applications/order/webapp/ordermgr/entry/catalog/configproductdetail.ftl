@@ -145,7 +145,7 @@ function getConfigDetails() {
        }
 
        jQuery.ajax({
-           url: '/ordermgr/control/getConfigDetailsEvent',
+           url: '<@ofbizInterWebappUrl>/ordermgr/control/getConfigDetailsEvent</@ofbizInterWebappUrl>',
            data: jQuery('configFormId').serialize(),
            type: "POST",
            success: function(data) {

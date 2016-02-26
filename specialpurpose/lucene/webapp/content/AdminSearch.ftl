@@ -18,7 +18,7 @@ under the License.
 -->
 <hr />
 
-  <form method="post" action="/content/control/AdminSearch" name="searchQuery">
+  <form method="post" action="<@ofbizInterWebappUrl>/content/control/AdminSearch</@ofbizInterWebappUrl>" name="searchQuery">
 
     <@field type="input" label="${uiLabelMap.ContentQueryLine}" class="+inputBox" name="queryLine" size="60"/>
     

@@ -131,7 +131,7 @@ under the License.
                 <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
                 <#list trackingCodes as trackingCode>
                     <#if trackingCode?has_content>
-                        <a href="/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}">${trackingCode.trackingCodeId}</a><br />
+                        <a href="<@ofbizInterWebappUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${trackingCode.trackingCodeId}</a><br />
                     </#if>
                 </#list>
               </@td>

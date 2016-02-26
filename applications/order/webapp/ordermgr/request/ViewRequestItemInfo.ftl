@@ -45,7 +45,7 @@ under the License.
                     <@td valign="top">
                             ${(product.internalName)!}&nbsp;
                             <#if showRequestManagementLinks??>
-                                <a href="/catalog/control/EditProduct?productId=${requestItem.productId!}" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
+                                <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${requestItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
                             <#else>
                                 <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
                             </#if>

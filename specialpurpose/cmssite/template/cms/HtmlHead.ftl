@@ -29,12 +29,12 @@ under the License.
   <@scripts output=true>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(decoratedContent.subcontent.title.render)!"CMS Site Generic Title (Set subcontent 'title' on your content!)"}</title>
-    <link rel="shortcut icon" href="/images/ofbiz.ico" />
+    <link rel="shortcut icon" href="<@ofbizContentUrl>/images/ofbiz.ico</@ofbizContentUrl>" />
     <@script src="/images/fieldlookup.js" />
     <@script src="/images/selectall.js" />
-    <link rel="stylesheet" href="/images/ecommain.css" type="text/css"/>
-    <link rel="stylesheet" href="/ecommerce/images/blog.css" type="text/css"/>
-    <link rel="stylesheet" href="/content/images/contentForum.css" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>/images/ecommain.css</@ofbizContentUrl>" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>/ecommerce/images/blog.css</@ofbizContentUrl>" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>/content/images/contentForum.css</@ofbizContentUrl>" type="text/css"/>
 
     <meta name="description" content="${(decoratedContent.subcontent.metaDescription.render)!}"/>
     <meta name="keywords" content="${(decoratedContent.subcontent.metaKeywords.render)!}"/>

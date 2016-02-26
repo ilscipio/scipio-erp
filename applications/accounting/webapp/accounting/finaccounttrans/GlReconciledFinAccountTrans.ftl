@@ -125,7 +125,7 @@ under the License.
                             ${finAccountTrans.finAccountTransId!}
                         </@td>
                         <@td>${finAccountTransType.description!}</@td>
-                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}">[${(partyName.partyId)!}]</a></#if></@td>
+                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@ofbizInterWebappUrl>">[${(partyName.partyId)!}]</a></#if></@td>
                         <@td>${finAccountTrans.transactionDate!}</@td>
                         <@td>${finAccountTrans.entryDate!}</@td>
                         <@td><@ofbizCurrency amount=finAccountTrans.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>

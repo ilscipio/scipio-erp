@@ -107,7 +107,7 @@ under the License.
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
                         <br />Surveys:
                        <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
             </@td></@tr>
@@ -143,7 +143,7 @@ under the License.
               <#assign product = cartLine.getProduct()>
               <@tr>
                 <@td colspan="2">
-                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
+                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}

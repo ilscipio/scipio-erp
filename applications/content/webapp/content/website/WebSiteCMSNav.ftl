@@ -22,7 +22,7 @@
 <@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!'en'}.js") /><#rt/>
 </#if>
 
-<link href="/images/jquery/plugins/elrte-1.3/css/elrte.min.css" rel="stylesheet" type="text/css">
+<link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
 
 <@script>
     jQuery(document).ready(loadTrees);

@@ -184,7 +184,7 @@ under the License.
                                 <fo:block>${productionRunContent.contentName!}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt">
-                                <fo:block><fo:basic-link background-color="lightblue" external-destination="<@ofbizContentUrl>/content/control/ViewBinaryDataResource?dataResourceId=${productionRunContent.drDataResourceId}</@ofbizContentUrl>">${uiLabelMap.CommonView}</fo:basic-link></fo:block>
+                                <fo:block><fo:basic-link background-color="lightblue" external-destination="<@ofbizInterWebappUrl>/content/control/ViewBinaryDataResource?dataResourceId=${productionRunContent.drDataResourceId}</@ofbizInterWebappUrl>">${uiLabelMap.CommonView}</fo:basic-link></fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>

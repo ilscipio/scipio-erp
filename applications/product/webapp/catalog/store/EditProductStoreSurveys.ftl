@@ -36,7 +36,7 @@ under the License.
               <@tr valign="middle">
                 <@td>${surveyType.get("description",locale)}</@td>
                 <@td>${storeSurvey.groupName!}</@td>
-                <@td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
+                <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
                 <@td>${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</@td>
                 <@td>${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</@td>
                 <@td>${storeSurvey.fromDate!?string}</@td>

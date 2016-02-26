@@ -54,7 +54,7 @@ under the License.
               <#if (quantityOrdered > 0) >
           <@tr>
               <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
-              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="/catalog/control/EditProduct?productId=${orderItem.productId!}" class="link">${orderItem.productId!}</a>]</@td>
+              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${orderItem.productId!}</@ofbizInterWebappUrl>" class="link">${orderItem.productId!}</a>]</@td>
               <@td>${quantityOrdered}</@td>
               <@td>${quantityNotAvailable}</@td>
               <@td colspan="2">
@@ -92,15 +92,15 @@ under the License.
                       <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                           <#if orderType == "SALES_ORDER">
                               <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>
                                   <#if orderShipment.quantity?has_content & orderShipment.quantity!=0.0 >
-                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                                   <#else>
                                       <#assign shipmentItem = orderShipment.getShipmentItem()>
-                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
                                   </#if>
                               </#list>
                           </#if>
@@ -358,7 +358,7 @@ under the License.
            <@tr>
               <@td colspan="2" valign="top" width="100%" align="center">
                    <a href="javascript:document.deleteOISG_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.DeleteOrderItemShipGroup}</a>
-                   <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="/ordermgr/control/DeleteOrderItemShipGroup">
+                   <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/DeleteOrderItemShipGroup</@ofbizInterWebappUrl>">
                      <input type="hidden" name="orderId" value="${orderId}"/>
                      <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                    </form>
@@ -572,11 +572,11 @@ under the License.
              <#if orderHeader.orderTypeId == "SALES_ORDER">
                <#if !shipGroup.supplierPartyId?has_content>
                  <#if orderHeader.statusId == "ORDER_APPROVED">
-                 <a href="/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
+                 <a href="<@ofbizInterWebappUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
                  <br />
                  </#if>
                  <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
-                 <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="/facility/control/createShipment">
+                 <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
                    <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                    <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                    <input type="hidden" name="statusId" value="SHIPMENT_INPUT" />
@@ -588,7 +588,7 @@ under the License.
                <#assign facilities = facilitiesForShipGroup.get(shipGroup.shipGroupSeqId)>
                <#if facilities?has_content>
                    <div>
-                    <form name="createShipment2_${shipGroup.shipGroupSeqId}" method="post" action="/facility/control/createShipment">
+                    <form name="createShipment2_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
                        <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                        <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                        <input type="hidden" name="shipmentTypeId" value="PURCHASE_SHIPMENT"/>
@@ -612,7 +612,7 @@ under the License.
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         <input type="hidden" name="externalLoginKey" value="${externalLoginKey}" />
                     </form>
-                    <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="/facility/control/createShipment">
+                    <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
                         <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                         <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         <input type="hidden" name="shipmentTypeId" value="DROP_SHIPMENT" />

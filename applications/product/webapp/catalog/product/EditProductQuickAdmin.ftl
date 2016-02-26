@@ -53,7 +53,7 @@ function removeSelectable(typeString, productFeatureTypeId, productId) {
 }
 
 function doPublish() {
-    window.open('/ecommerce/control/product?product_id=${productId!}');
+    window.open('<@ofbizInterWebappUrl>/ecommerce/control/product?product_id=${productId!}</@ofbizInterWebappUrl>');
     document.publish.submit();
 }
 

@@ -23,5 +23,5 @@ under the License.
     <a href="#" class="headerlink">Recommended</a>
     <a href="#" class="headerlink">Highest Rated</a>
     <a href="#" class="headerlink">Upload Pitch</a>
-    <a href="/webtools/control/main" class="headerlink">${uiLabelMap.WebTools}</a>
+    <a href="<@ofbizInterWebappUrl>/webtools/control/main</@ofbizInterWebappUrl>" class="headerlink">${uiLabelMap.WebTools}</a>
 </div>

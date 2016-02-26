@@ -111,8 +111,8 @@ under the License.
                                   </div>
                                   <#if productId??>
                                   <div>
-                                      <a href="/catalog/control/EditProduct?productId=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                      <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                      <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <a href="<@ofbizInterWebappUrl>/ecommerce/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
@@ -247,11 +247,11 @@ under the License.
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                           <#list downloadContents as downloadContent>
-                                            <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+                                            <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text="${uiLabelMap.ContentDownload}" target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                         </#if>
-                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
+                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.ProductCatalog}" target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
+                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/ecommerce/control/product?product_id=${productId}") text="${uiLabelMap.OrderEcommerce}" target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>

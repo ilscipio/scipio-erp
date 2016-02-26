@@ -80,7 +80,7 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
-        <a href="/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}" target="catalogmgr">${productStore.storeName!}</a> 
+        <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalogmgr">${productStore.storeName!}</a> 
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
           <#if channel.get("description",locale)?has_content && channel.get("enumId")!= "UNKNWN_SALES_CHANNEL">
@@ -95,7 +95,7 @@ under the License.
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
           <@td colspan="3">
-            <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${StringUtil.wrapString(externalKeyParam)}" target="facilitymgr">${orderHeader.originFacilityId}</a>
+            <a href="<@ofbizInterWebappUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
           </@td>
         </@tr>
     </#if>
@@ -105,7 +105,7 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCreatedBy}</@td>
       <@td colspan="3">
       <#if orderHeader.createdBy?has_content>
-        <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="">${orderHeader.createdBy}</a>
+        <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
       <#else>
         ${uiLabelMap.CommonNotSet}
       </#if>

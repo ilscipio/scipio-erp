@@ -17,7 +17,7 @@
   under the License.
   -->
 <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-    <param name="SRC" value="/content/control/stream?contentId=${contentId}" />
+    <param name="SRC" value="<@ofbizInterWebappUrl>/content/control/stream?contentId=${contentId}</@ofbizInterWebappUrl>" />
     <param name="WIDTH" value="320" />
     <param name="HEIGHT" value="263" />
     <param name="SCALE" value="tofit" />

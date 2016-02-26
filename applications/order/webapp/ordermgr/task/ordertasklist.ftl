@@ -143,7 +143,7 @@ under the License.
               </@td>
               <@td>${task.priority!"0"}</@td>
               <@td>
-                <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}${StringUtil.wrapString(externalKeyParam)}" target="workeffort" class="${styles.link_nav_info_name!}">
+                <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                   ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                 </a>
               </@td>
@@ -206,7 +206,7 @@ under the License.
                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>
                 <@td>${task.priority!"0"}</@td>
                 <@td>
-                  <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}" target="workeffort" class="${styles.link_nav_info_name!}">
+                  <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                     ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                   </a>
                 </@td>

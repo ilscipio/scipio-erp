@@ -11,7 +11,7 @@
               <#-- FIXME
               <#if !allShipments?has_content>
                   <@menuitem type="generic">
-                     <form action="/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}" method="post">
+                     <form action="<@ofbizInterWebappUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" method="post">
                        <input type="hidden" name="initialSelected" value="Y"/>
                        <input type="hidden" name="orderId" value="${orderId}"/>
                        <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -24,7 +24,7 @@
                      </form>
                   </@menuitem>
                   <@menuitem type="generic">
-                    <form name="receivePurchaseOrderForm" action="/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}" method="post">
+                    <form name="receivePurchaseOrderForm" action="<@ofbizInterWebappUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="orderId" value="${orderId}"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -39,7 +39,7 @@
                   </@menuitem>
               <#else>
                   <@menuitem type="generic">
-                    <form name="receiveInventoryForm" action="/facility/control/ReceiveInventory" method="post">
+                    <form name="receiveInventoryForm" action="<@ofbizInterWebappUrl>/facility/control/ReceiveInventory</@ofbizInterWebappUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
                       <select name="facilityId">
@@ -51,7 +51,7 @@
                     <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
                   </@menuitem>
                   <@menuitem type="generic">
-                    <form name="partialReceiveInventoryForm" action="/facility/control/ReceiveInventory" method="post">
+                    <form name="partialReceiveInventoryForm" action="<@ofbizInterWebappUrl>/facility/control/ReceiveInventory</@ofbizInterWebappUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
                       <input type="hidden" name="partialReceive" value="Y"/>

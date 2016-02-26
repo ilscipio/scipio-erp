@@ -83,7 +83,7 @@ under the License.
                                     
                                     ${quoteItem.productId} - ${(product.internalName)!}
                                   <#else>
-                                    <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="${styles.link_nav!} ${styles.action_add!}">
+                                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${quoteItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_add!}">
                                     ${uiLabelMap.ProductCreateProduct}
                                     </a>
                                   </#if>

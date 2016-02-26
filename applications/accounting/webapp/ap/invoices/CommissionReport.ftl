@@ -37,13 +37,13 @@ under the License.
     </@thead>
     <#list commissionReportList as commissionReport>
       <@tr valign="middle">
-        <@td><a href="/catalog/control/EditProduct?productId=${commissionReport.productId!}">${commissionReport.productName!}</a></@td>
+        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${commissionReport.productId!}</@ofbizInterWebappUrl>">${commissionReport.productName!}</a></@td>
         <@td>${commissionReport.quantity!}</@td>
         <@td>
           ${commissionReport.numberOfOrders!} /
           <#if commissionReport.salesInvoiceIds?has_content>
             <#list commissionReport.salesInvoiceIds as salesInvoiceId>
-              [<a href="/ap/control/invoiceOverview?invoiceId=${salesInvoiceId!}">${salesInvoiceId!}</a>]
+              [<a href="<@ofbizInterWebappUrl>/ap/control/invoiceOverview?invoiceId=${salesInvoiceId!}</@ofbizInterWebappUrl>">${salesInvoiceId!}</a>]
             </#list>
           </#if>
         </@td>
@@ -53,7 +53,7 @@ under the License.
           <#if commissionReport.salesAgentAndTermAmtMap?has_content>
             <#list commissionReport.salesAgentAndTermAmtMap.values() as partyIdAndTermAmountMap>
               <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : partyIdAndTermAmountMap.partyId}, true))!>
-              <p>[${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}(<a href="/partymgr/control/viewprofile?partyId=${partyIdAndTermAmountMap.partyId!}">${partyIdAndTermAmountMap.partyId!}</a>)]
+              <p>[${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}(<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyIdAndTermAmountMap.partyId!}</@ofbizInterWebappUrl>">${partyIdAndTermAmountMap.partyId!}</a>)]
                 / <@ofbizCurrency amount = (partyIdAndTermAmountMap.termAmount)!/>
               </p>
             </#list>

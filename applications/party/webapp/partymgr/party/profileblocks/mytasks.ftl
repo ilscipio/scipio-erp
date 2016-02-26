@@ -22,7 +22,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href="/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION" text="${uiLabelMap.WorkEffortNewTask}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizInterWebappUrl("/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text="${uiLabelMap.WorkEffortNewTask}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.WorkEffortMyCurrentTaskList}" menuContent=menuContent>
@@ -44,8 +44,8 @@ under the License.
         <@td>${(workEffort.estimatedStartDate.toString())!}</@td>
         <@td>${workEffort.priority!}</@td>
         <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
-        <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
-        <@td class="button-col"><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a></@td>
+        <@td><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
+        <@td class="button-col"><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a></@td>
       </@tr>
     </#list>
     </@tbody>
@@ -76,8 +76,8 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <#-- <@td>${workEffort.partyId}</@td> -->
           <@td>${workEffort.roleTypeId}</@td>
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
-          <@td class="button-col"><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a></@td>
+          <@td><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a></@td>
         </@tr>
       </#list>
       </@tbody>
@@ -108,8 +108,8 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <#-- <@td>${workEffort.partyId}</@td> -->
           <@td>${workEffort.roleTypeId}</@td>
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
-          <@td class="button-col"><a href="/workeffort/control/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+          <@td><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizInterWebappUrl>/workeffort/control/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>
       </@tbody>
@@ -140,8 +140,8 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <@td>${workEffort.groupPartyId}</@td>
           <#-- <@td>${workEffort.roleTypeId}</@td> -->
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
-          <@td class="button-col"><a href="/workeffort/control/acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+          <@td><a href="<@ofbizInterWebappUrl>/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${workEffort.workEffortName}</a></@td>
+          <@td class="button-col"><a href="<@ofbizInterWebappUrl>/workeffort/control/acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>
       </@tbody>

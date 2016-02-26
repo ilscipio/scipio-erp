@@ -25,7 +25,7 @@ margin: 1em;
 -->
 
 <@script src="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.pack.js" />
-<link rel="stylesheet" href="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.css</@ofbizContentUrl>" type="text/css" media="screen" />
 
 <@script>
     $(document).ready(function() {

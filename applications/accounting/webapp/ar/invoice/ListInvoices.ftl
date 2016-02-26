@@ -176,8 +176,8 @@ under the License.
                 ${statusItem.description?default(invoice.statusId)}
               </@td>
               <@td>${(invoice.description)!}</@td>
-              <@td><a class="${styles.link_nav_info_idname!}" href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}]</a></@td>
-              <@td><a class="${styles.link_nav_info_idname!}" href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
+              <@td><a class="${styles.link_nav_info_idname!}" href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}]</a></@td>
+              <@td><a class="${styles.link_nav_info_idname!}" href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>

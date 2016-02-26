@@ -30,7 +30,7 @@ under the License.
               <#assign thumbSrc><@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl></#assign>
               <@tile size="normal" image=thumbSrc> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
                   <@container class="+${styles.text_center!}">
-                      <#--<a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
+                      <#--<a href="<@ofbizInterWebappUrl>/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}</@ofbizInterWebappUrl>" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
                       <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>-->
                       <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                   </@container>

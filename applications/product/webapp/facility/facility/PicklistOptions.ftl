@@ -276,14 +276,14 @@ under the License.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

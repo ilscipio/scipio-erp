@@ -54,13 +54,13 @@ under the License.
   <@menu args=menuArgs>
       <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text="${uiLabelMap.PartyCreateNewQuote}" class="+${styles.action_run_sys!} ${styles.action_add!}">
-        <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
+        <form method="post" name="createQuoteFromShoppingListForm" action="<@ofbizInterWebappUrl>/ordermgr/control/createQuoteFromShoppingList</@ofbizInterWebappUrl>">
           <input type="hidden" name="applyStorePromotions" value="N"/>
           <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId!}"/>
         </form>
       </@menuitem>
-      <@menuitem type="link" href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.PartyCreateNewCustRequest}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
-      <@menuitem type="link" href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.OrderNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text="${uiLabelMap.PartyCreateNewCustRequest}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text="${uiLabelMap.OrderNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
@@ -181,7 +181,7 @@ under the License.
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
-            <@td><a href="/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}">${shoppingListItem.productId} -
+            <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
             </@td>
             <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">

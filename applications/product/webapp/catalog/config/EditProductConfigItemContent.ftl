@@ -70,7 +70,7 @@ function insertImageName(size,nameValue) {
                 <input type="submit" value="${uiLabelMap.CommonDelete}"/>
               </form>
             </@td>
-            <@td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</a></@td>
+            <@td><a href="<@ofbizInterWebappUrl>/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</a></@td>
          </@tr>
          </#list>
        </@tbody>

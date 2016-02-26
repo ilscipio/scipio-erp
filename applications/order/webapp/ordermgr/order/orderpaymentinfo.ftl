@@ -21,10 +21,10 @@ under the License.
 ToDo: Update menu with Authorize and Capture transaction actions 
 <#if paymentMethodType.paymentMethodTypeId =="CREDIT_CARD" || paymentMethodType.paymentMethodTypeId =="FIN_ACCOUNT">
     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-      <a href="/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingAuthorize}</a>
+      <a href="<@ofbizInterWebappUrl>/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingAuthorize}</a>
     </#if>
     <#if orderPaymentPreference.statusId == "PAYMENT_AUTHORIZED">
-      <a href="/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingCapture}</a>
+      <a href="<@ofbizInterWebappUrl>/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingCapture}</a>
     </#if>
 </#if>
 
@@ -74,13 +74,13 @@ ToDo: Update menu with Authorize and Capture transaction actions
            <#assign partyName = delegator.findOne("PartyNameView", {"partyId" : payment.partyIdTo}, true)>
            <@tr>
              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-               <@td scope="row" class="${styles.grid_large!}3"><a href="/accounting/control/paymentOverview?paymentId=${payment.paymentId}">${payment.paymentId}</a></@td>
+               <@td scope="row" class="${styles.grid_large!}3"><a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${payment.paymentId}</@ofbizInterWebappUrl>">${payment.paymentId}</a></@td>
              <#else>
                <@td scope="row" class="${styles.grid_large!}3">${payment.paymentId}</@td>
              </#if>
              <@td>${partyName.groupName!}${partyName.lastName!} ${partyName.firstName!} ${partyName.middleName!}
              <#if security.hasPermission("PARTYMGR_VIEW", session) || security.hasPermission("PARTYMGR_ADMIN", session)>
-               [<a href="/partymgr/control/viewprofile?partyId=${partyId}">${partyId}</a>]
+               [<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyId}</@ofbizInterWebappUrl>">${partyId}</a>]
              <#else>
                [${partyId}]
              </#if>
@@ -97,8 +97,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
            <@td>&nbsp;</@td>
            <@td>
              <#list invoices as invoice>
-               <div>${uiLabelMap.CommonNbr} <a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
-               (<a target="_BLANK" href="/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">PDF</a>)</div>
+               <div>${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${invoice}</a>
+               (<a target="_BLANK" href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">PDF</a>)</div>
              </#list>
            </@td>
            <@td>&nbsp;</@td>
@@ -171,7 +171,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@td colspan="3">
                         <@row>
                             <@cell columns=6>
-                                ${uiLabelMap.CommonNbr} <a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
+                                ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
                             </@cell>
                             <@cell columns=6>
                                 <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
@@ -208,7 +208,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (finAccountType?has_content)>
                                 ${finAccountType.description?default(finAccountType.finAccountTypeId)}&nbsp;
                               </#if>
-                              #${finAccount.finAccountCode?default(finAccount.finAccountId)} (<a href="/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${StringUtil.wrapString(externalKeyParam)}">${finAccount.finAccountId}</a>)
+                              #${finAccount.finAccountCode?default(finAccount.finAccountId)} (<a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${finAccount.finAccountId}</a>)
                               <br />
                               ${finAccount.finAccountName!}
                         </@cell>
@@ -236,7 +236,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                   (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                   ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
                                   ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
-                                  <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
+                                  <a href="<@ofbizInterWebappUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.CommonDetails}</a>
                                   <#if gatewayResponse_has_next><hr /></#if>
                                 </#list>
                         </@modal>
@@ -248,7 +248,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                       <@td>${uiLabelMap.AccountingInvoicePayments}</@td>
                       <@td colspan="3">
                             <#list paymentList as paymentMap>
-                                <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
                       </@td>
                     </@tr>
@@ -297,7 +297,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               <@cell columns=6>${uiLabelMap.AccountingInvoicePayments}</@cell>
                               <@cell columns=6>
                                     <#list paymentList as paymentMap>
-                                        <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                        <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                                     </#list>
                               </@cell>
                         </@row>
@@ -372,7 +372,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                     (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                     ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
                                     ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
-                                    <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
+                                    <a href="<@ofbizInterWebappUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.CommonDetails}</a>
                                     <#if gatewayResponse_has_next><hr /></#if>
                                   </#list>
                         </@modal>
@@ -427,7 +427,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     </@cell>
                     <@cell columns=6>
                         <#list paymentList as paymentMap>
-                            <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                            <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                         </#list>
                     </@cell>
                 </@row>
@@ -478,7 +478,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                       <@cell columns=6>${uiLabelMap.AccountingInvoicePayments}</@cell>
                       <@cell columns=6>
                             <#list paymentList as paymentMap>
-                                <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
                       </@cell>
                     </@row>
@@ -509,7 +509,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
               <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
               <@td colspan="3">
                 <#list paymentList as paymentMap>
-                    <a href="/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                    <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                 </#list>
               </@td>
             </@tr>
@@ -530,8 +530,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
             <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderInvoices}</@td>
             <@td colspan="3">
               <#list invoices as invoice>
-                <div>${uiLabelMap.CommonNbr} <a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
-                (<a target="_BLANK" href="/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">PDF</a>)</div>
+                <div>${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${invoice}</a>
+                (<a target="_BLANK" href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">PDF</a>)</div>
               </#list>
             </@td>
           </@tr>

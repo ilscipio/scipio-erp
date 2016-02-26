@@ -18,13 +18,13 @@ under the License.
 -->
 
 <#if workEffort.workEffortTypeId == "PROD_ORDER_HEADER">
-  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}" class="${styles.link_nav_info_id!} event">
+  <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} event">
     ${workEffort.workEffortId}
   </a>
   &nbsp;${workEffort.workEffortName?default("Undefined")}
   <#if workOrderItemFulfillments?has_content>
     <#list workOrderItemFulfillments as workOrderItemFulfillment>
-      <br/>${uiLabelMap.OrderOrderId}: <a href="/ordermgr/control/orderview?orderId=${workOrderItemFulfillment.orderId}" class="event">${workOrderItemFulfillment.orderId} / ${workOrderItemFulfillment.orderItemSeqId}</a>
+      <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${workOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${workOrderItemFulfillment.orderId} / ${workOrderItemFulfillment.orderItemSeqId}</a>
       <#assign orderItemAndShipGroupAssocs = delegator.findByAnd("OrderHeaderItemAndShipGroup", {"orderId", workOrderItemFulfillment.orderId, "orderItemSeqId", workOrderItemFulfillment.orderItemSeqId}, null, false)!/>
       <#list orderItemAndShipGroupAssocs as orderItemAndShipGroupAssoc>
         <#if orderItemAndShipGroupAssoc.shipByDate?has_content>
@@ -34,13 +34,13 @@ under the License.
     </#list>
   </#if>
 <#elseif workEffort.workEffortTypeId == "PROD_ORDER_TASK">
-  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}" class="${styles.link_nav_info_desc!} event">
+  <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!} event">
     ${workEffort.workEffortParentId} / ${workEffort.workEffortId}
   </a>
   &nbsp;${workEffort.workEffortName?default("Undefined")}<#if workEffort.reservPersons??>&nbsp;Persons:${workEffort.reservPersons}</#if>
   <#if parentWorkOrderItemFulfillments?has_content>
     <#list parentWorkOrderItemFulfillments as parentWorkOrderItemFulfillment>
-      <br/>${uiLabelMap.OrderOrderId}: <a href="/ordermgr/control/orderview?orderId=${parentWorkOrderItemFulfillment.orderId}" class="event">${parentWorkOrderItemFulfillment.orderId} / ${parentWorkOrderItemFulfillment.orderItemSeqId}</a>
+      <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${parentWorkOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${parentWorkOrderItemFulfillment.orderId} / ${parentWorkOrderItemFulfillment.orderItemSeqId}</a>
       <#assign orderItemAndShipGroupAssocs = delegator.findByAnd("OrderHeaderItemAndShipGroup", {"orderId", parentWorkOrderItemFulfillment.orderId, "orderItemSeqId", parentWorkOrderItemFulfillment.orderItemSeqId}, null, false)!/>
       <#list orderItemAndShipGroupAssocs as orderItemAndShipGroupAssoc>
         <#if orderItemAndShipGroupAssoc.shipByDate?has_content>

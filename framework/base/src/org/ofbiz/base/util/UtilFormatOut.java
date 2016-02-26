@@ -347,6 +347,21 @@ public class UtilFormatOut {
     public static String formatDateTime(Date date, String dateTimeFormat, Locale locale, TimeZone timeZone) {
         return UtilDateTime.toDateTimeFormat(dateTimeFormat, timeZone, locale).format(date);
     }
+    
+    /** 
+     * Cato: Formats a <code>Date</code> into a time <code>String</code> using the specified locale and time zone,
+     * or using the specified format.
+     *
+     * @param date The date to format
+     * @param dateTimeFormat Optional format string
+     * @param locale The format locale - can be <code>null</code> if <code>dateFormat</code> is not <code>null</code>
+     * @param timeZone The format time zone
+     * @return <code>date</code> formatted as a date-time <code>String</code>
+     * @throws NullPointerException if any required parameter is <code>null</code>
+     */
+    public static String formatTime(Date date, String dateTimeFormat, Locale locale, TimeZone timeZone) {
+        return UtilDateTime.toTimeFormat(dateTimeFormat, timeZone, locale).format(date);
+    }    
 
     // ------------------- null string handlers -------------------
     /** Checks to see if the passed Object is null, if it is returns an empty but non-null string, otherwise calls toString() on the object

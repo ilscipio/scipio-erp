@@ -37,7 +37,7 @@
 
     <#if total?has_content>
         <@tr>
-          <@td class="${styles.grid_large!}2">${uiLabelMap.CommonCurrency}</@td>
+          <@td class="${styles.grid_large!}2">${uiLabelMap.CommonTotal}</@td>
           <@td colspan="3"><@ofbizCurrency isoCode=invoice.currencyUomId amount=total/></@td>
         </@tr>
       </#if>

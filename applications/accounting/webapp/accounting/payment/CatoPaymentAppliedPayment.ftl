@@ -7,7 +7,7 @@
                 <@th >${uiLabelMap.CommonInvoice}</@th>
                 <#--<@th >${uiLabelMap.CommonSequenceNum}</@th>-->
                 <@th >${uiLabelMap.CommonTo}</@th>
-                <@th class="${styles.text_right!}">${uiLabelMap.CommonAmount}</@th>
+                <@th class="${styles.text_right!}">${uiLabelMap.AccountingAmountApplied}</@th>
             </@tr>
         </@thead>
         <#list paymentList as iApp>

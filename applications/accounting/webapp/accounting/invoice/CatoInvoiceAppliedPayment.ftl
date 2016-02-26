@@ -7,8 +7,8 @@
                 <#--<@th >${uiLabelMap.CommonSequenceNum}</@th>-->
                 <@th>${uiLabelMap.CommonProduct}</@th>
                 <@th >${uiLabelMap.CommonDescription}</@th>
+                <@th class="${styles.text_right!}">${uiLabelMap.AccountingAmountApplied}</@th>
                 <@th class="${styles.text_right!}">${uiLabelMap.CommonTotal}</@th>
-                <@th class="${styles.text_right!}">${uiLabelMap.CommonAmount}</@th>
             </@tr>
         </@thead>
         <#list invoiceApplications as iApp>
@@ -17,8 +17,8 @@
                 <#--<@td>${iApp.invoiceItemSeqId!}</@td>-->
                 <@td>${iApp.productId!}</@td>
                 <@td>${iApp.description!}</@td>
-                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=iApp.total!/></@td>
                 <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=iApp.amountApplied!/></@td>
+                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=iApp.total!/></@td>
             </@tr>
         </#list>        
     </@table>

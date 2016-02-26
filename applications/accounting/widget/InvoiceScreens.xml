@@ -566,6 +566,9 @@ under the License.
     
     
     <!-- CATO: Form migration -->
+    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceHeader 
+                                        component://accounting/widget/InvoiceForms.xml#ListInvoiceStatus
+    -->
     <screen name="CatoInvoiceInfo">
         <section>
             <actions>
@@ -596,6 +599,7 @@ under the License.
         </section>
     </screen>
     
+    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
     <screen name="CatoInvoiceAppliedPayment">
         <section>
             <actions>
@@ -614,6 +618,8 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
     <screen name="CatoInvoiceItems">
         <section>
             <actions>
@@ -633,6 +639,7 @@ under the License.
         </section>
     </screen>
     
+    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
     <screen name="CatoInvoiceTerms">
         <section>
             <actions>
@@ -652,6 +659,7 @@ under the License.
         </section>
     </screen>
     
+    <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoicePaymentInfo -->
     <screen name="CatoInvoicePaymentInfo">
         <section>
             <actions>

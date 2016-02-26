@@ -377,8 +377,7 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                <set field="isReduced" value="true" type="Boolean" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                
                 <set field="viewSize" value="10" />
             </actions>
             <widgets>
@@ -424,7 +423,12 @@ under the License.
                                     <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                                     <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                                 </actions>
-                                <widgets><include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" /></widgets>
+                                <widgets>
+                                    <platform-specific>
+                                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicesPastDue.ftl"/></html>
+                                    </platform-specific>
+                                   <!--  <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" /> -->
+                                </widgets>
                             </section>
                         </screenlet>
                     </decorator-section>                
@@ -436,7 +440,12 @@ under the License.
                                     <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                                     <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                                 </actions>
-                                <widgets><include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" /></widgets>
+                               <!--  <widgets><include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" /></widgets> -->
+                                <widgets>
+                                    <platform-specific>
+                                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicesDueSoon.ftl"/></html>
+                                    </platform-specific>
+                                </widgets>
                             </section>                            
                         </screenlet>
                     </decorator-section>

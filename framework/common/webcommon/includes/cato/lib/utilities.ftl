@@ -52,9 +52,43 @@ or empty string (signifies use defaults).
 
 <#-- 
 *************
+* makeOfbizInterWebappUrl
+************
+Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+Boolean arguments can be given as booleans, string representation of booleans
+or empty string (signifies use defaults).
+-->
+<#function makeOfbizInterWebappUrl uri fullPath=false secure=true encode=true>
+  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
+  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
+  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+  <#-- TODO: implement -->
+  <#local res>${StringUtil.wrapString(uri)}</#local>
+  <#return res>
+</#function>
+
+<#-- 
+*************
+* ofbizInterWebappUrl
+************
+Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+Accepts uri argument or #nested content (legacy).
+Boolean arguments can be given as booleans, string representation of booleans
+or empty string (signifies use defaults).
+-->
+<#macro ofbizInterWebappUrl uri="" fullPath=false secure=true encode=true>
+  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
+  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
+  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
+  <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
+</#macro>
+
+<#-- 
+*************
 * makeOfbizWebappUrl
 ************
-Wraps an inter-webapp Ofbiz URL (most often in the form /webappmountpoint/control/requesturi)
+Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
@@ -71,7 +105,7 @@ or empty string (signifies use defaults).
 *************
 * ofbizWebappUrl
 ************
-Wraps an inter-webapp Ofbiz URL (most often in the form /webappmountpoint/control/requesturi).
+Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
 Accepts uri argument or #nested content (legacy).
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).

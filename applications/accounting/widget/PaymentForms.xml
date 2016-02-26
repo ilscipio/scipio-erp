@@ -390,8 +390,10 @@ under the License.
         </field>
     </form>
 
+
+    <!-- Cato: Migrated to screen
     <form name="paymentHeader" type="single" default-map-name="payment"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row">
         <actions>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
                 <field-map field-name="partyId" from-field="payment.partyIdFrom"/>
@@ -432,9 +434,9 @@ under the License.
             </hyperlink>
         </field>
     </form>
-
+     
     <form name="paymentApplications" type="list" list-name="paymentApplications"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row">
         <actions>
             <entity-condition entity-name="PaymentApplication">
                 <condition-list combine="or">
@@ -475,9 +477,10 @@ under the License.
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName}"></display-entity></field>
         <field name="amountApplied" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${payment.currencyUomId}"/></field>
     </form>
-
+        -->
+    
     <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> 
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>
         </field>
@@ -509,7 +512,8 @@ under the License.
             <sort-field name="acctgTransEntrySeqId"/>
         </sort-order>
     </form>
-
+    
+    
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
@@ -600,7 +604,8 @@ under the License.
         <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
     
-    <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- Migrated to screen
+    <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row">
         <field name="finAccountTransId" position="1"><display/></field>
         <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <display-entity entity-name="FinAccountTransType" description="${description}"/>
@@ -615,4 +620,5 @@ under the License.
         <field name="transactionDate" position="1"><display/></field>
         <field name="statusId" position="2" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/></field>
     </form>
+     -->
 </forms>

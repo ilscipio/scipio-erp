@@ -344,16 +344,13 @@ under the License.
     <screen name="PaymentOverview">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitlePaymentOverview"/>
-                <set field="activeSubMenuItem" value="paymentOverview"/>
-                <set field="labelTitleProperty" value="PageTitlePaymentOverview"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="titleProperty" value="${uiLabelMap.AccountingPayment}: ${parameters.paymentId}"/>
+                <set field="activeSubMenuItem" value="paymentOverview"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <entity-one entity-name="Payment" value-field="payment"/>
-                <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
-                <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
-                <set field="appliedAmount" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
-                <set field="notAppliedAmount" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
                 <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
                     <condition-expr field-name="paymentId" from-field="paymentId"/>
                     <order-by field-name="acctgTransId"/>
@@ -367,7 +364,24 @@ under the License.
                             <condition>
                                 <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
                             </condition>
-                            <widgets>                                
+                            <widgets>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentInfo"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentAppliedPayment"/>
+                                    </container>
+                               </container>
+                               <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentFinancialTrans"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    </container>
+                               </container>
+                            
+                                <!--  CATO: Delete once fully migrated                         
                                 <screenlet title="${uiLabelMap.AccountingPaymentHeader} ${uiLabelMap.CommonId}:[${paymentId}]">
                                      <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                          <parameter param-name="paymentId"/>
@@ -394,8 +408,25 @@ under the License.
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
+                                -->
                             </widgets>
                             <fail-widgets>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentInfo"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentAppliedPayment"/>
+                                    </container>
+                               </container>
+                               <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="CatoPaymentFinancialTrans"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                    </container>
+                               </container>
+                                <!-- CATO: Delete once fully migrated  
                                 <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
                                     <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>                              
@@ -411,10 +442,13 @@ under the License.
                                             <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
                                         </screenlet>
                                     </widgets>
-                                </section>                               
+                                </section>             
+                                
+                                The following is more of an overview type of ongoing transactions - To be ignored for this screen                  
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
+                                -->
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -545,6 +579,89 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- CATO: Form migration -->
+    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentHeader -->
+    <screen name="CatoPaymentInfo">
+        <section>
+            <actions>
+                <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                    <field-map field-name="partyId" from-field="payment.partyIdFrom"/>
+                    <field-map field-name="compareDate" from-field="payment.effectiveDate"/>
+                    <field-map field-name="lastNameFirst" value="Y"/>
+                </service>
+                <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
+                    <field-map field-name="partyId" from-field="payment.partyIdTo"/>
+                    <field-map field-name="compareDate" from-field="payment.effectiveDate"/>
+                    <field-map field-name="lastNameFirst" value="Y"/>
+                </service>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="payment"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>        
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentInfo.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentApplication -->
+    <screen name="CatoPaymentAppliedPayment">
+        <section>
+            <actions>
+                <set field="appliedAmount" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
+                <set field="notAppliedAmount" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>                
+               <entity-condition entity-name="PaymentApplication" list="paymentList">
+                    <condition-list combine="or">
+                        <condition-expr field-name="paymentId" from-field="paymentId"/>
+                        <condition-expr field-name="toPaymentId" from-field="paymentId"/>
+                    </condition-list>
+                    <order-by field-name="invoiceId"/>
+                    <order-by field-name="invoiceItemSeqId"/>
+                </entity-condition>
+            </actions>
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="parameters.paymentId"/>
+                    </not>
+                </and>
+            </condition>
+            <widgets>
+                <screenlet>        
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentAppliedPayment.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://accounting/widget/PaymentForms.xml#FinAccountTransAssociatedWithPayment -->
+    <screen name="CatoPaymentFinancialTrans">
+        <section>
+            <actions>
+                <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
+                <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+            </actions>
+            <condition>
+            </condition>
+            <widgets>
+                <screenlet>        
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/payment/CatoPaymentFinancialTrans.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
             </widgets>
         </section>
     </screen>

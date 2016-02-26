@@ -72,6 +72,7 @@ or empty string (signifies use defaults).
 * ofbizWebappUrl
 ************
 Wraps an inter-webapp Ofbiz URL (most often in the form /webappmountpoint/control/requesturi).
+Accepts uri argument or #nested content (legacy).
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->

@@ -50,7 +50,6 @@ under the License.
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <@td>
-                                        
                                         <#if orderItem.supplierProductId?has_content>
                                             <a href="<@ofbizWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
@@ -93,17 +92,16 @@ under the License.
                                 <@td class="${styles.text_right!}">
                                     <#assign productItemStatus>
                                          <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
-                                                        <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                        <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
-                                                            <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
-                                                            <input type="hidden" name="orderId" value="${orderId!}"/>
-                                                            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
-                                                        </form>
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                        <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
+                                                        <input type="hidden" name="orderId" value="${orderId!}"/>
+                                                        <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
+                                                    </form>
                                                     <br/>
                                                 </#if>
                                                 <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                                                 <#list orderItemStatuses as orderItemStatus>
-                                                    
                                                     <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
                                                     <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
                                                     <br/>
@@ -393,36 +391,35 @@ under the License.
                         <#if orderItemAdjustments?? && orderItemAdjustments?has_content>
                             <#list orderItemAdjustments as orderItemAdjustment>
                                 <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)>
-                                                    <@tr class="${rowColor!}">
-                                                        <@td colspan="2">
-                                                            ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}
+                                <@tr class="${rowColor!}">
+                                    <@td colspan="2">
+                                        ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}
                                         ${StringUtil.wrapString(orderItemAdjustment.get("description",locale)!)}
                                         <#if orderItemAdjustment.comments?has_content>
                                             (${orderItemAdjustment.comments?default("")})
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
-                                            <a href="<@ofbizWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${StringUtil.wrapString(externalKeyParam)}</@ofbizWebappUrl>"
-                                               >${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
+                                            <a href="<@ofbizWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${StringUtil.wrapString(externalKeyParam)}</@ofbizWebappUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
                                         </#if>
                                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                             <#if orderItemAdjustment.primaryGeoId?has_content>
                                                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
                                                 <#if primaryGeo.geoName?has_content>
-                                                                        ${uiLabelMap.OrderJurisdiction}&nbsp;${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
+                                                    ${uiLabelMap.OrderJurisdiction}&nbsp;${primaryGeo.geoName} [${primaryGeo.abbreviation!}]
                                                 </#if>
                                                 <#if orderItemAdjustment.secondaryGeoId?has_content>
                                                     <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
-                                                                        ${uiLabelMap.CommonIn}&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
+                                                    ${uiLabelMap.CommonIn}&nbsp;${secondaryGeo.geoName} [${secondaryGeo.abbreviation!}])
                                                 </#if>
                                             </#if>
                                             <#if orderItemAdjustment.sourcePercentage??>
-                                                                    ${uiLabelMap.OrderRate}&nbsp;${orderItemAdjustment.sourcePercentage?string("0.######")}
+                                                ${uiLabelMap.OrderRate}&nbsp;${orderItemAdjustment.sourcePercentage?string("0.######")}
                                             </#if>
                                             <#if orderItemAdjustment.customerReferenceId?has_content>
-                                                                    ${uiLabelMap.OrderCustomerTaxId}&nbsp;${orderItemAdjustment.customerReferenceId}
+                                                ${uiLabelMap.OrderCustomerTaxId}&nbsp;${orderItemAdjustment.customerReferenceId}
                                             </#if>
                                             <#if orderItemAdjustment.exemptAmount??>
-                                                                    ${uiLabelMap.OrderExemptAmount}&nbsp;${orderItemAdjustment.exemptAmount}
+                                                ${uiLabelMap.OrderExemptAmount}&nbsp;${orderItemAdjustment.exemptAmount}
                                             </#if>
                                         </#if>
                                     </@td>
@@ -438,17 +435,17 @@ under the License.
                         <#-- now show price info per line item -->
                         <#assign orderItemPriceInfos = orderReadHelper.getOrderItemPriceInfos(orderItem)>
                         <#if orderItemPriceInfos?? && orderItemPriceInfos?has_content>
-                                                <@tr class="${rowColor!}">
+                            <@tr class="${rowColor!}">
                                 <@td colspan="6">&nbsp;</@td>
                             </@tr>
                             <#list orderItemPriceInfos as orderItemPriceInfo>
-                                                    <@tr class="${rowColor!}">
-                                                        <@td colspan="2">
-                                                            ${uiLabelMap.ProductPriceRuleNameId}&nbsp;[${orderItemPriceInfo.productPriceRuleId!}:${orderItemPriceInfo.productPriceActionSeqId!}]
+                                <@tr class="${rowColor!}">
+                                    <@td colspan="2">
+                                        ${uiLabelMap.ProductPriceRuleNameId}&nbsp;[${orderItemPriceInfo.productPriceRuleId!}:${orderItemPriceInfo.productPriceActionSeqId!}]
                                         ${orderItemPriceInfo.description!}
                                     </@td>
                                     <@td>&nbsp;</@td>
-                                                        <@td class="${styles.text_right!}">
+                                    <@td class="${styles.text_right!}">
                                         <@ofbizCurrency amount=orderItemPriceInfo.modifyAmount isoCode=currencyUomId/>
                                     </@td>
                                     <@td colspan="3">&nbsp;</@td>
@@ -478,25 +475,25 @@ under the License.
                             </@tr>
                         </#if>
                         <#if orderItem.estimatedDeliveryDate??>
-                                                <@tr class="${rowColor!}">
-                                                    <@td colspan="2">
-                                                        ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.estimatedDeliveryDate, "", locale, timeZone)!}
+                            <@tr class="${rowColor!}">
+                                <@td colspan="2">
+                                    ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.estimatedDeliveryDate, "", locale, timeZone)!}
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
                         </#if>
                         <#if orderItem.shipAfterDate??>
-                                                <@tr class="${rowColor!}">
-                                                    <@td colspan="2">
-                                                        ${uiLabelMap.OrderShipAfterDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipAfterDate, "", locale, timeZone)!}
+                            <@tr class="${rowColor!}">
+                                <@td colspan="2">
+                                    ${uiLabelMap.OrderShipAfterDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipAfterDate, "", locale, timeZone)!}
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
                         </#if>
                         <#if orderItem.shipBeforeDate??>
-                                                <@tr class="${rowColor!}">
-                                                    <@td colspan="2">
-                                                        ${uiLabelMap.OrderShipBeforeDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipBeforeDate, "", locale, timeZone)!}
+                            <@tr class="${rowColor!}">
+                                <@td colspan="2">
+                                    ${uiLabelMap.OrderShipBeforeDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipBeforeDate, "", locale, timeZone)!}
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
@@ -507,9 +504,9 @@ under the License.
                             <#list orderItemShipGroupAssocs as shipGroupAssoc>
                                 <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup", false)>
                                 <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-                                                    <@tr class="${rowColor!}">
-                                                        <@td colspan="2">
-                                                            ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}]
+                                <@tr class="${rowColor!}">
+                                    <@td colspan="2">
+                                        ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}]
                                         ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
                                     </@td>
                                     <@td align="center">

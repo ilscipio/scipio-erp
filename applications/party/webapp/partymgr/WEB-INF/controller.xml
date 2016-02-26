@@ -1266,7 +1266,7 @@ under the License.
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
+    <view-map name="main" type="screen" page="component://party/widget/partymgr/CommonScreens.xml#main"/>
 
     <view-map name="findparty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
 

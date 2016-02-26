@@ -64,13 +64,7 @@ under the License.
     <@row>
       <@cell columns=9>        
         
-        <#assign radioItems = [
-          { "key": "N", "description": "${uiLabelMap.CommonNone}", "events": {"click": "javascript:refreshInfo();"} },
-          { "key": "P", "description": "${uiLabelMap.PartyPostal}", "events": {"click": "javascript:refreshInfo();"} },
-          { "key": "T", "description": "${uiLabelMap.PartyTelecom}", "events": {"click": "javascript:refreshInfo();"} },
-          { "key": "O", "description": "${uiLabelMap.CommonOther}", "events": {"click": "javascript:refreshInfo();"} }
-        ]>
-        <@field type="radio" label="${uiLabelMap.PartyContactInformation}" name="extInfo" items=radioItems currentValue="${extInfo!}"/>
+       
         
         <@field type="input" label="${uiLabelMap.PartyPartyId}" name="partyId" value="${parameters.partyId!}"/>
         <@field type="input" label="${uiLabelMap.PartyUserLogin}" name="userLoginId" value="${parameters.userLoginId!}"/>
@@ -96,11 +90,7 @@ under the License.
           <#list partyTypes as partyType>
             <option value="${partyType.partyTypeId}">${partyType.get("description",locale)}</option>
           </#list>    
-        </@field>
-        <@field type="input" label="${uiLabelMap.ProductInventoryItemId}" name="inventoryItemId" value="${parameters.inventoryItemId!}"/>
-        <@field type="input" label="${uiLabelMap.ProductSerialNumber}" name="serialNumber" value="${parameters.serialNumber!}"/>
-        <@field type="input" label="${uiLabelMap.ProductSoftIdentifier}" name="softIdentifier" value="${parameters.softIdentifier!}"/>
-        
+        </@field>        
     <#if extInfo == "P">
         <hr />
         <@field type="input" label="${uiLabelMap.CommonAddress1}" name="address1" value="${parameters.address1!}"/>

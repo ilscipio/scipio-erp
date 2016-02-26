@@ -389,95 +389,6 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-
-
-    <!-- Cato: Migrated to screen
-    <form name="paymentHeader" type="single" default-map-name="payment"
-        header-row-style="header-row">
-        <actions>
-            <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
-                <field-map field-name="partyId" from-field="payment.partyIdFrom"/>
-                <field-map field-name="compareDate" from-field="payment.effectiveDate"/>
-                <field-map field-name="lastNameFirst" value="Y"/>
-            </service>
-            <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
-                <field-map field-name="partyId" from-field="payment.partyIdTo"/>
-                <field-map field-name="compareDate" from-field="payment.effectiveDate"/>
-                <field-map field-name="lastNameFirst" value="Y"/>
-            </service>
-        </actions>
-        <field name="paymentId"><hidden/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1"><display-entity entity-name="PaymentType"/></field>
-        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}" position="2"><display-entity entity-name="PaymentMethodType"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1"><display-entity entity-name="StatusItem"/></field>
-        <field name="paymentMethodId" position="2"><display-entity entity-name="PaymentMethod" description="${description} [${paymentMethodId}]"/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" position="1" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName} [${payment.partyIdFrom}]">
-                <parameter param-name="partyId" from-field="payment.partyIdFrom"/>
-            </hyperlink>
-        </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" position="2" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${payment.partyIdTo}]">
-                <parameter param-name="partyId" from-field="payment.partyIdTo"/>
-            </hyperlink>
-        </field>
-        <field name="paymentRefNum" position="1"><display/></field>
-        <field name="paymentPreferenceId" position="2"><display/></field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
-        <field name="actualCurrencyAmount" title="${uiLabelMap.AccountingActualCurrencyAmount}" position="2"><display type="currency" currency="${payment.actualCurrencyUomId}"/></field>
-        <field name="effectiveDate" position="1"><display type="date"/></field>
-        <field name="comments" position="2"><display/></field>
-        <field name="overrideGlAccountId" position="1"><display/></field>
-        <field name="paymentGatewayResponseId" position="2" widget-style="${styles.link_nav_info_id}">
-            <hyperlink description="${payment.paymentGatewayResponseId}" target="ViewGatewayResponse">
-                <parameter param-name="paymentGatewayResponseId" from-field="payment.paymentGatewayResponseId"/>
-            </hyperlink>
-        </field>
-    </form>
-     
-    <form name="paymentApplications" type="list" list-name="paymentApplications"
-        odd-row-style="alternate-row">
-        <actions>
-            <entity-condition entity-name="PaymentApplication">
-                <condition-list combine="or">
-                    <condition-expr field-name="paymentId" from-field="paymentId"/>
-                    <condition-expr field-name="toPaymentId" from-field="paymentId"/>
-                </condition-list>
-                <order-by field-name="invoiceId"/>
-                <order-by field-name="invoiceItemSeqId"/>
-            </entity-condition>
-        </actions>
-        <row-actions>
-            <set field="amountApplied" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentAppliedAmount(delegator, paymentApplicationId);}"/>
-        </row-actions>
-        <auto-fields-entity entity-name="PaymentApplication" default-field-type="display"/>
-        <field name="paymentApplicationId"><hidden/></field>
-        <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="invoiceOverview" description="${invoiceId}">
-                <parameter param-name="invoiceId"/>
-            </hyperlink>
-        </field>
-        <field name="invoiceItemSeqId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
-                <parameter param-name="invoiceId"/>
-                <parameter param-name="invoiceItemSeqId"/>
-            </hyperlink>
-        </field>
-        <field name="toPaymentId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="paymentOverview" description="${toPaymentId}">
-                <parameter param-name="paymentId" from-field="toPaymentId"/>
-            </hyperlink>
-        </field>
-        <field name="billingAccountId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditBillingAccount" description="${billingAccountId}">
-                <parameter param-name="billingAccountId"/>
-            </hyperlink>
-        </field>
-        <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName}"></display-entity></field>
-        <field name="amountApplied" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${payment.currencyUomId}"/></field>
-    </form>
-        -->
     
     <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
         odd-row-style="alternate-row"> 
@@ -603,22 +514,4 @@ under the License.
         <field name="paidAmount" title="${uiLabelMap.CommonPaid}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
-    
-    <!-- Migrated to screen
-    <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row">
-        <field name="finAccountTransId" position="1"><display/></field>
-        <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="2">
-            <display-entity entity-name="FinAccountTransType" description="${description}"/>
-        </field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
-        <field name="glReconciliationId" position="2" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="ViewGlReconciliationWithTransaction" description="${finAccountTrans.glReconciliationId}">
-                <parameter param-name="glReconciliationId" from-field="finAccountTrans.glReconciliationId"/>
-                <parameter param-name="finAccountId" from-field="finAccountTrans.finAccountId"/>
-            </hyperlink>
-        </field>
-        <field name="transactionDate" position="1"><display/></field>
-        <field name="statusId" position="2" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/></field>
-    </form>
-     -->
 </forms>

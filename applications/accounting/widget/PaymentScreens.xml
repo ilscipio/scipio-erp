@@ -381,30 +381,8 @@ under the License.
                                     </container>
                                </container>
                             
-                                <!--  CATO: Delete once fully migrated                         
-                                <screenlet title="${uiLabelMap.AccountingPaymentHeader} ${uiLabelMap.CommonId}:[${paymentId}]">
-                                     <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
-                                         <parameter param-name="paymentId"/>
-                                     </link>
-                                     <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>                               
-                                
-                                <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
-                                     <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
-                                         <parameter param-name="paymentId"/>
-                                     </link>
-                                     <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>
-                                <section>
-                                     <condition>
-                                         <not><if-empty field="finAccountTransId"/></not>
-                                     </condition>
-                                     <widgets>
-                                         <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
-                                             <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
-                                         </screenlet>
-                                     </widgets>
-                                </section>                                
+                                <!--  CATO: Remove once fully migrated  
+                                The following is more of an overview type of ongoing transactions - To be ignored for this screen                                                     
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
@@ -427,23 +405,6 @@ under the License.
                                     </container>
                                </container>
                                 <!-- CATO: Delete once fully migrated  
-                                <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
-                                    <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>                              
-                                <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
-                                    <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="finAccountTransId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
-                                            <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
-                                        </screenlet>
-                                    </widgets>
-                                </section>             
-                                
                                 The following is more of an overview type of ongoing transactions - To be ignored for this screen                  
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
                                     <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>

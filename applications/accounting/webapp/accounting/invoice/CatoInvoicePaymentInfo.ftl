@@ -14,7 +14,7 @@
             <#assign itemType = item.getRelatedOne("TermType", false)/>
             <@tr>
                 <@td>${itemType.get("description",locale)!}</@td>
-                <@td>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(item.dueDate, "", locale, timeZone)!}</@td>
+                <@td><@formattedDateTime date=item.dueDate /></@td>
                 
                 <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.amount!/></@td>
                 <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.paidAmount!/></@td>

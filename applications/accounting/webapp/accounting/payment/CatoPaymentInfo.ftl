@@ -14,7 +14,7 @@
         <@tr>
           <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingEffectiveDate}
           </@td>
-          <@td colspan="3">${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(payment.effectiveDate, "", locale, timeZone)!}</@td>
+          <@td colspan="3"><@formattedDateTime date=payment.effectiveDate /></@td>
         </@tr>
       </#if>
 

@@ -44,7 +44,7 @@
             <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.FormFieldTitle_transactionDate}</@td>
                 <@td colspan="3">
-                ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(finAccountTrans.transactionDate, "", locale, timeZone)!}              
+                  <@formattedDateTime date=finAccountTrans.transactionDate />             
                 </@td>
             </@tr>
         </#if>

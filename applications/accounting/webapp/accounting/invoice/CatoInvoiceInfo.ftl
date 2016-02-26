@@ -11,7 +11,7 @@
               <ul class="no-bullet">
                 <#list invoiceStatus as iStatus>
                   <#assign loopStatusItem = iStatus.getRelatedOne("StatusItem", false)>
-                  <li>${loopStatusItem.get("description",locale)} <#if iStatus.statusDate?has_content>- ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(iStatus.statusDate, "", locale, timeZone)?default("0000-00-00 00:00:00")}</#if></li>
+                  <li>${loopStatusItem.get("description",locale)} <#if iStatus.statusDate?has_content>- <@formattedDateTime date=iStatus.statusDate defaultVal="0000-00-00 00:00:00"/></#if></li>
                 </#list>
               </ul>
             </#if>
@@ -23,7 +23,7 @@
         <@tr>
           <@td class="${styles.grid_large!}2">${uiLabelMap.CommonDate}
           </@td>
-          <@td colspan="3">${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(invoice.invoiceDate, "", locale, timeZone)!}</@td>
+          <@td colspan="3"><@formattedDateTime date=invoice.invoiceDate /></@td>
         </@tr>
       </#if>
 
@@ -31,7 +31,7 @@
         <@tr>
           <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingDueDate}
           </@td>
-          <@td colspan="3">${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(invoice.dueDate, "", locale, timeZone)!}</@td>
+          <@td colspan="3"><@formattedDateTime date=invoice.dueDate /></@td>
         </@tr>
       </#if>
 

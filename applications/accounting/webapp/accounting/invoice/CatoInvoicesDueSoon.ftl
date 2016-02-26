@@ -19,7 +19,7 @@
             <@td><a href="<@ofbizUrl>/invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
             <@td>${itemType.get("description",locale)!}</@td>
             <#-- <@td>${item.partyIdFrom}</@td> -->
-            <@td>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(item.dueDate, "", locale, timeZone)!}</@td>
+            <@td><@formattedDateTime date=item.dueDate /></@td>
             <@td><@ofbizCurrency isoCode=item.currencyUomId amount=total!/></@td>              
             <@td><strong><@ofbizCurrency isoCode=item.currencyUomId amount=outstandingAmount!/></strong></@td>
         </@tr>

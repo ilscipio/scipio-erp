@@ -45,7 +45,7 @@ under the License.
               <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem", false)>
               <#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin", false)>
             
-              <li>${loopStatusItem.get("description",locale)} <#if orderHeaderStatus.statusDatetime?has_content>- ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeaderStatus.statusDatetime, "", locale, timeZone)?default("0000-00-00 00:00:00")}</#if>
+              <li>${loopStatusItem.get("description",locale)} <#if orderHeaderStatus.statusDatetime?has_content>- <@formattedDateTime date=orderHeaderStatus.statusDatetime defaultVal="0000-00-00 00:00:00"/></#if>
                       &nbsp;
               ${uiLabelMap.CommonBy} - <#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userlogin.getString("partyId"), true)}--> [${orderHeaderStatus.statusUserLogin}]</li>
             </#list>
@@ -58,7 +58,7 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDateOrdered}</@td>
       <@td colspan="3">
-          <#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if>
+          <#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if>
       </@td>
     </@tr>
 
@@ -116,7 +116,7 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.FormFieldTitle_cancelBackOrderDate}</@td>
       <@td colspan="3">
-        <#if orderItem.cancelBackOrderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItem.cancelBackOrderDate, "", locale, timeZone)!}</#if>
+        <#if orderItem.cancelBackOrderDate?has_content><@formattedDateTime date=orderItem.cancelBackOrderDate /></#if>
       </@td>
     </@tr>
   </#if>

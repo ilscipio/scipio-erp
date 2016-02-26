@@ -128,7 +128,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                      <#assign statusItem = orderPaymentStatus.getRelatedOne("StatusItem", false)!>
                      <#if statusItem?has_content>
                                 <li>
-                          ${statusItem.get("description",locale)} <#if orderPaymentStatus.statusDatetime?has_content>- ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderPaymentStatus.statusDatetime, "", locale, timeZone)!}</#if>
+                          ${statusItem.get("description",locale)} <#if orderPaymentStatus.statusDatetime?has_content>- <@formattedDateTime date=orderPaymentStatus.statusDatetime /></#if>
                           &nbsp;
                           ${uiLabelMap.CommonBy} - [${orderPaymentStatus.statusUserLogin!}]
                                 </li>
@@ -231,7 +231,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                 <#list gatewayResponses as gatewayResponse>
                                   <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
                                   ${(transactionCode.get("description",locale))?default("Unknown")}:
-                                  <#if gatewayResponse.transactionDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(gatewayResponse.transactionDate, "", locale, timeZone)!} </#if>
+                                  <#if gatewayResponse.transactionDate?has_content><@formattedDateTime date=gatewayResponse.transactionDate /></#if>
                                   <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br />
                                   (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                   ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
@@ -367,7 +367,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                   <#list gatewayResponses as gatewayResponse>
                                     <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
                                     ${(transactionCode.get("description",locale))?default("Unknown")}:
-                                    <#if gatewayResponse.transactionDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(gatewayResponse.transactionDate, "", locale, timeZone)!} </#if>
+                                    <#if gatewayResponse.transactionDate?has_content><@formattedDateTime date=gatewayResponse.transactionDate /></#if>
                                     <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br />
                                     (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                     ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}

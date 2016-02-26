@@ -56,7 +56,7 @@ under the License.
                                             <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
-                                                    ${uiLabelMap.OrderItemDiscontinued}: ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(product.salesDiscontinuationDate, "", locale, timeZone)!}
+                                                    ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
                                         <#elseif orderItemType??>
                                             <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
@@ -103,7 +103,7 @@ under the License.
                                                 <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                                                 <#list orderItemStatuses as orderItemStatus>
                                                     <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem", false)>
-                                                    <#if orderItemStatus.statusDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderItemStatus.statusDatetime, "", locale, timeZone)!}&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
+                                                    <#if orderItemStatus.statusDatetime?has_content><@formattedDateTime date=orderItemStatus.statusDatetime />&nbsp;&nbsp;</#if>${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
                                                     <br/>
                                                 </#list> 
                                         <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
@@ -318,8 +318,8 @@ under the License.
                                             ${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}
                                         <#else>
                                             ${uiLabelMap.CommonFrom}
-                                            : <#if workEffort.estimatedStartDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(workEffort.estimatedStartDate, "", locale, timeZone)!}</#if> ${uiLabelMap.CommonTo}
-                                            : <#if workEffort.estimatedCompletionDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(workEffort.estimatedCompletionDate, "", locale, timeZone)!}</#if> ${uiLabelMap.OrderNumberOfPersons}
+                                            : <#if workEffort.estimatedStartDate?has_content><@formattedDate date=workEffort.estimatedStartDate /></#if> ${uiLabelMap.CommonTo}
+                                            : <#if workEffort.estimatedCompletionDate?has_content><@formattedDate date=workEffort.estimatedCompletionDate /></#if> ${uiLabelMap.OrderNumberOfPersons}
                                             : ${workEffort.reservPersons?default("")}
                                         </#if>
                                     </@td>
@@ -469,7 +469,7 @@ under the License.
                         <#if orderItem.estimatedShipDate??>
                             <@tr class="${rowColor!}">
                                 <@td colspan="2">
-                                    ${uiLabelMap.OrderEstimatedShipDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.estimatedShipDate, "", locale, timeZone)!}
+                                    ${uiLabelMap.OrderEstimatedShipDate}&nbsp;<@formattedDate date=orderItem.estimatedShipDate />
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
@@ -477,7 +477,7 @@ under the License.
                         <#if orderItem.estimatedDeliveryDate??>
                             <@tr class="${rowColor!}">
                                 <@td colspan="2">
-                                    ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.estimatedDeliveryDate, "", locale, timeZone)!}
+                                    ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}&nbsp;<@formattedDate date=orderItem.estimatedDeliveryDate />
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
@@ -485,7 +485,7 @@ under the License.
                         <#if orderItem.shipAfterDate??>
                             <@tr class="${rowColor!}">
                                 <@td colspan="2">
-                                    ${uiLabelMap.OrderShipAfterDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipAfterDate, "", locale, timeZone)!}
+                                    ${uiLabelMap.OrderShipAfterDate}&nbsp;<@formattedDate date=orderItem.shipAfterDate />
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
@@ -493,7 +493,7 @@ under the License.
                         <#if orderItem.shipBeforeDate??>
                             <@tr class="${rowColor!}">
                                 <@td colspan="2">
-                                    ${uiLabelMap.OrderShipBeforeDate}&nbsp;${Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(orderItem.shipBeforeDate, "", locale, timeZone)!}
+                                    ${uiLabelMap.OrderShipBeforeDate}&nbsp;<@formattedDate date=orderItem.shipBeforeDate />
                                 </@td>
                                 <@td colspan="5">&nbsp;</@td>
                             </@tr>
@@ -609,7 +609,7 @@ under the License.
                                             ${uiLabelMap.OrderShipmentReceived}&nbsp;
                                             <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipmentReceipt.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
                                         </#if>
-                                        &nbsp;<#if shipmentReceipt.datetimeReceived?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(shipmentReceipt.datetimeReceived, "", locale, timeZone)!}</#if>&nbsp;
+                                        &nbsp;<#if shipmentReceipt.datetimeReceived?has_content><@formattedDateTime date=shipmentReceipt.datetimeReceived /></#if>&nbsp;
                                         ${uiLabelMap.CommonInventory}&nbsp;
                                         <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
                                     </@td>
@@ -656,7 +656,7 @@ under the License.
                                                 <div>
                                                 ${(comm.changeComments)!}
                                                 &nbsp;
-                                                <#if comm.changeDatetime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(comm.changeDatetime, "", locale, timeZone)?default("0000-00-00 00:00:00")}</#if>  &nbsp;  ${uiLabelMap.CommonBy} -  [${(comm.changeUserLogin)!}]
+                                                <#if comm.changeDatetime?has_content><@formattedDateTime date=comm.changeDatetime defaultVal="0000-00-00 00:00:00" /></#if> &nbsp; ${uiLabelMap.CommonBy} - [${(comm.changeUserLogin)!}]
                                                 </div>
                                               </#if>
                                             </#if>

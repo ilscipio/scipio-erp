@@ -119,7 +119,7 @@ under the License.
               <@td>
                 <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a>
               </@td>
-              <@td><#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if></@td>
+              <@td><#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if></@td>
               <#--<@td>${orderHeader.orderName!}</@td>-->
               <#--<@td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</@td>-->
               <#--<@td>${billFrom!}</@td>-->

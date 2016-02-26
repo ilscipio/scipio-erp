@@ -36,7 +36,7 @@ under the License.
             <#if note.noteParty?has_content>
               <div>&nbsp;${uiLabelMap.CommonBy}&nbsp;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
             </#if>
-              <div>&nbsp;${uiLabelMap.CommonAt}&nbsp;<#if note.noteDateTime?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(note.noteDateTime, "", locale, timeZone)!}</#if></div>
+              <div>&nbsp;${uiLabelMap.CommonAt}&nbsp;<#if note.noteDateTime?has_content><@formattedDateTime date=note.noteDateTime /></#if></div>
           </@td>
           <@td valign="top" width="50%">
             ${note.noteInfo?replace("\n", "<br/>")}

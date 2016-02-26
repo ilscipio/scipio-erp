@@ -50,9 +50,7 @@ margin: 1em;
     <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("visualThemeId")/>
     <table cellspacing="0" class="basic-table">
       <#list visualThemes as visualTheme>
-        <#assign screenshots = delegator.findByAnd("VisualThemeResource", Static["org.ofbiz.base.util.UtilMisc"].toMap(
-                                        "visualThemeId", "${visualTheme.visualThemeId}",
-                                        "resourceTypeEnumId", "VT_SCREENSHOT"), orderByList, false)>
+        <#assign screenshots = delegator.findByAnd("VisualThemeResource", {"visualThemeId":"${visualTheme.visualThemeId}", "resourceTypeEnumId":"VT_SCREENSHOT"}, orderByList, false)>
         <tr<#if visualTheme.visualThemeId == visualThemeId> class="${styles.selected!}"</#if>>
           <td>
             <form name="SetUserPreferences_${visualTheme.visualThemeId}" method="post" action="<@ofbizUrl>setUserPreference</@ofbizUrl>">

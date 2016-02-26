@@ -250,7 +250,7 @@ function submitFindForm(val){
           <@field type="select" label="${uiLabelMap.OrderShipToCountry}" name="countryGeoId">
               <#if requestParameters.countryGeoId?has_content>
                   <#assign countryGeoId = requestParameters.countryGeoId>
-                  <#assign geo = delegator.findOne("Geo", Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId", countryGeoId), true)>
+                  <#assign geo = delegator.findOne("Geo", {"geoId":countryGeoId}, true)>
                   <@field type="option" value="${countryGeoId}">${geo.geoName!}</@field>
                   <@field type="option" value="${countryGeoId}">---</@field>
               <#else>
@@ -399,7 +399,7 @@ document.lookuporder.orderId.focus();
               <@td>
                 <div>
                   <#if displayParty?has_content>
-                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate!, "userLogin", userLogin))/>
+                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate!, "userLogin":userLogin})/>
                       ${displayPartyNameResult.fullName!"[${uiLabelMap.OrderPartyNameNotFound}]"}
                   <#else>
                     ${uiLabelMap.CommonNA}

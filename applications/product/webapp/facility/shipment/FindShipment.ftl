@@ -121,10 +121,10 @@ function lookupShipments() {
           </@tr>
         </@thead>
           <#list shipmentList as shipment>
-            <#assign originFacility = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", shipment.originFacilityId), true)! />
-            <#assign destinationFacility = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", shipment.destinationFacilityId), true)! />
-            <#assign statusItem = delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", shipment.statusId), true)!/>
-            <#assign shipmentType = delegator.findOne("ShipmentType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentTypeId", shipment.shipmentTypeId), true)!/>
+            <#assign originFacility = delegator.findOne("Facility", {"facilityId":shipment.originFacilityId}, true)! />
+            <#assign destinationFacility = delegator.findOne("Facility", {"facilityId":shipment.destinationFacilityId}, true)! />
+            <#assign statusItem = delegator.findOne("StatusItem", {"statusId":shipment.statusId}, true)!/>
+            <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
             <@tr valign="middle">
               <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>

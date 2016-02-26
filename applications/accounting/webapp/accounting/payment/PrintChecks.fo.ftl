@@ -66,7 +66,7 @@ by hand from a real template using a ruler.
                                                 <fo:table-row>
                                                     <fo:table-cell padding-before="0.8cm">
                                                         <fo:block margin-left="3.0cm">
-                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", payment.partyIdTo, "compareDate", payment.effectiveDate, "userLogin", userLogin))/>
+                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
                                                             ${toPartyNameResult.fullName?default("Name Not Found")}
                                                         </fo:block>
                                                     </fo:table-cell>
@@ -106,7 +106,7 @@ by hand from a real template using a ruler.
                                                 <fo:table-row>
                                                     <fo:table-cell padding="3pt" number-columns-spanned="3" text-align="center">
                                                         <fo:block text-align="center">
-                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", payment.partyIdTo, "compareDate", payment.effectiveDate, "userLogin", userLogin))/>
+                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
                                                             ${toPartyNameResult.fullName?default("Name Not Found")}
                                                         </fo:block>
                                                     </fo:table-cell>

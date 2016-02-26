@@ -18,7 +18,7 @@ under the License.
 -->
 
 
-<#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", Static["org.ofbiz.base.util.UtilMisc"].toMap("finAccountTransId", finAccountTrans.finAccountTransId, "userLogin", userLogin))/>
+<#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", {"finAccountTransId":finAccountTrans.finAccountTransId, "userLogin":userLogin})/>
 <#assign acctgTransAndEntries = acctgTransAndEntries.acctgTransAndEntries>
 <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>

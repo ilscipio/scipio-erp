@@ -69,7 +69,7 @@ function uploadTrackingCode(orderId, productStoreId) {
               <@td><a href="#" onclick="javascript:uploadTrackingCode('${orderHeader.orderId}','${productStoreId}')" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
               <@td>
                   <#if displayParty?has_content>
-                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
                       ${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                   <#else>
                     ${uiLabelMap.CommonNA}

@@ -161,7 +161,7 @@ under the License.
            <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
           </#if>
           <option selected="selected" value="${defaultCountryGeoId}">
-            <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
+            <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
             ${countryGeo.get("geoName",locale)}
           </option>
     </@field>

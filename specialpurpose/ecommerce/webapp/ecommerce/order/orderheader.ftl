@@ -46,7 +46,7 @@ under the License.
     <#if localOrderReadHelper?? && orderHeader?has_content>
       <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
       <#if displayParty?has_content>
-        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
       </#if>
       <li>
         ${uiLabelMap.PartyName}

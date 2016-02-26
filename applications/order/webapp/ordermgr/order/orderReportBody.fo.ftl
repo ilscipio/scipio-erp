@@ -199,7 +199,7 @@ under the License.
                                 <fo:table-cell number-columns-spanned="2">
                                     <fo:block>
                                     <#if note.noteParty?has_content>
-                                        <#assign notePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", note.noteParty, "compareDate", note.noteDateTime, "lastNameFirst", "Y", "userLogin", userLogin))/>
+                                        <#assign notePartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":note.noteParty, "compareDate":note.noteDateTime, "lastNameFirst":"Y", "userLogin":userLogin})/>
                                         ${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName?default("${uiLabelMap.OrderPartyNameNotFound}")}
                                     </#if>
                                     </fo:block>

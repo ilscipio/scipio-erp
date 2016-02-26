@@ -25,7 +25,7 @@ under the License.
   <@section>
         <#list 1..shoppingCart.getShipGroupSize() as currIndex>
           <#assign shipGroupIndex = currIndex - 1>
-          <#assign supplier =  delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", shoppingCart.getSupplierPartyId(shipGroupIndex)), false)! />
+          <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)}, false)! />
           <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${uiLabelMap.OrderDropShipped} - ${supplier.groupName?default(supplier.partyId)}</#if></#assign>
           <@section title=sectionTitle>
             <@row>

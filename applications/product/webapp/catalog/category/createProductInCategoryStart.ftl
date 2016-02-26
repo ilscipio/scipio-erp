@@ -30,7 +30,7 @@ under the License.
         <form name="createProductInCategoryCheckExistingForm" method="post" action="<@ofbizUrl>CreateProductInCategoryCheckExisting</@ofbizUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
             <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
-                <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+                <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
                 <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
                 <@field type="generic" label="${productFeatureType.description}">
@@ -48,7 +48,7 @@ under the License.
                 <@field type="input" label="${uiLabelMap.ProductShortDescription}" name="description" size="60" maxlength="250"/>
                 <@field type="generic" label="${uiLabelMap.ProductDefaultPrice}">
                     <input type="text" name="defaultPrice" size="8"/>
-                    <#assign findCurrenciesMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("uomTypeId", "CURRENCY_MEASURE")>
+                    <#assign findCurrenciesMap = {"uomTypeId":"CURRENCY_MEASURE"}>
                     <#assign currencies = delegator.findByAnd('Uom', findCurrenciesMap, null, true) />
                     <#if currencies?has_content && (currencies?size > 0)>
                         <select name="currencyUomId">

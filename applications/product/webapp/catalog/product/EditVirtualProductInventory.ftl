@@ -22,7 +22,7 @@ under the License.
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductProductId}</@th>
                     <#list featureTypeIds as featureTypeId>
-                        <#assign featureType = delegator.findOne("ProductFeatureType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", featureTypeId), false)>
+                        <#assign featureType = delegator.findOne("ProductFeatureType", {"productFeatureTypeId":featureTypeId}, false)>
                         <@th>${featureType.description}&nbsp;</@th>
                     </#list>
                 <@th>${uiLabelMap.ProductQoh}</@th>

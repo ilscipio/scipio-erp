@@ -125,7 +125,7 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
       <@td colspan="3">
-         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", distributorId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
          ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>
@@ -135,7 +135,7 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.OrderAffiliate}</@td>
       <@td colspan="3">
-        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", affiliateId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
         ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>

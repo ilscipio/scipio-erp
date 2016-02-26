@@ -81,8 +81,8 @@ document.lookupinventory.productId.focus();
             </#if>
             <#if ! product.equals( productTmp )>
                 <#assign quantityAvailableAtDate = 0>
-                <#assign errorEvents = delegator.findByAnd("MrpEvent", Static["org.ofbiz.base.util.UtilMisc"].toMap("mrpEventTypeId", "ERROR", "productId", inven.productId), null, false)>
-                <#assign qohEvents = delegator.findByAnd("MrpEvent", Static["org.ofbiz.base.util.UtilMisc"].toMap("mrpEventTypeId", "INITIAL_QOH", "productId", inven.productId), null, false)>
+                <#assign errorEvents = delegator.findByAnd("MrpEvent", {"mrpEventTypeId":"ERROR", "productId":inven.productId}, null, false)>
+                <#assign qohEvents = delegator.findByAnd("MrpEvent", {"mrpEventTypeId":"INITIAL_QOH", "productId":inven.productId}, null, false)>
                 <#assign additionalErrorMessage = "">
                 <#assign initialQohEvent = "">
                 <#assign productFacility = "">
@@ -94,7 +94,7 @@ document.lookupinventory.productId.focus();
                         <#assign quantityAvailableAtDate = initialQohEvent.quantity>
                     </#if>
                     <#if initialQohEvent.facilityId?has_content>
-                        <#assign productFacility = delegator.findOne("ProductFacility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", initialQohEvent.facilityId, "productId", inven.productId), false)!>
+                        <#assign productFacility = delegator.findOne("ProductFacility", {"facilityId":initialQohEvent.facilityId, "productId":inven.productId}, false)!>
                     </#if>
                 <#else>
                     <#assign additionalErrorMessage = "No QOH information found, assuming 0.">

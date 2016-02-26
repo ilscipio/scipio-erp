@@ -17,7 +17,7 @@
   under the License.
   -->
 <form name="editContentTree" action="<#if parameters.rename?has_content><@ofbizUrl>updateDocumentTree</@ofbizUrl><#else><@ofbizUrl>addDocumentToTree</@ofbizUrl></#if>" method="post">
-    <#assign content  = delegator.findOne("Content",Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId",parameters.contentId), false)/>
+    <#assign content  = delegator.findOne("Content",{"contentId":parameters.contentId}, false)/>
     <#if parameters.rename?has_content>
         <@heading relLevel=+1>${uiLabelMap.ContentRenameFolder}</@heading>
         ${uiLabelMap.ContentRenameFolder} : ${content.contentName}<br />

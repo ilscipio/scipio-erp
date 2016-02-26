@@ -46,7 +46,7 @@ under the License.
           <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
           <#assign billToParty = orh.getBillToParty()!>
           <#if billToParty?has_content>
-            <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", billToParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+            <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
             <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />

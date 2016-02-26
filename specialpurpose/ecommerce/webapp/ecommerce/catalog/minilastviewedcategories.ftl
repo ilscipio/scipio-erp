@@ -29,7 +29,7 @@ under the License.
   <@section title="${uiLabelMap.EcommerceLastCategories}" menuContent=menuContent id="minilastviewedcategories" class="+screenlet">
       <ul class="browsecategorylist">
         <#list lastViewedCategories[0..limit] as categoryId>
-          <#assign category = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId), true)!>
+          <#assign category = delegator.findOne("ProductCategory", {"productCategoryId":categoryId}, true)!>
           <#if category?has_content>
             <li class="browsecategorytext">
               <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")??>

@@ -123,7 +123,7 @@ under the License.
                         <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
                             <@td>${(product.internalName)!} [${orderItem.productId!(uiLabelMap.CommonNA)}]</@td>
                             <@td>
-                                    <#assign upcaLookup = Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", product.productId, "goodIdentificationTypeId", "UPCA")/>
+                                    <#assign upcaLookup = {"productId":product.productId, "goodIdentificationTypeId":"UPCA"}/>
                                     <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>
                                     <#if upca?has_content>
                                         ${upca.idValue!}

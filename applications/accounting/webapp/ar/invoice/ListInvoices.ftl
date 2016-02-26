@@ -160,7 +160,7 @@ under the License.
       </@thead>
       <@tbody>
         <#list invoiceList as invoice>
-          <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
+          <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
             <@tr valign="middle">
               <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>

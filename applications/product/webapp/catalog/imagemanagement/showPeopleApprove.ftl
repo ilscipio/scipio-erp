@@ -40,11 +40,11 @@ jQuery(document).ready(function(){
           <@row>
             <@cell>
               <ul class="${styles.list_inline}">
-                    <#assign userLoginApprovers  = delegator.findByAnd("UserLogin",Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyRole.partyId))/>
+                    <#assign userLoginApprovers  = delegator.findByAnd("UserLogin",{"partyId":partyRole.partyId})/>
                     <#assign userLoginApprover = userLoginApprovers[0]>
-                    <#assign userLoginAndPartyDetails = delegator.findOne("UserLoginAndPartyDetails", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", userLoginApprover.partyId, "userLoginId", userLoginApprover.userLoginId), false)!>
+                    <#assign userLoginAndPartyDetails = delegator.findOne("UserLoginAndPartyDetails", {"partyId":userLoginApprover.partyId, "userLoginId":userLoginApprover.userLoginId}, false)!>
                     <#if userLoginAndPartyDetails?has_content>
-                        <#assign partyContentDetail  = delegator.findByAnd("ContentApproval",Static["org.ofbiz.base.util.UtilMisc"].toMap("roleTypeId", "IMAGEAPPROVER", "approvalStatusId", "IM_PENDING", "partyId", userLoginAndPartyDetails.partyId))/>
+                        <#assign partyContentDetail  = delegator.findByAnd("ContentApproval",{"roleTypeId":"IMAGEAPPROVER", "approvalStatusId":"IM_PENDING", "partyId":userLoginAndPartyDetails.partyId})/>
                         <#assign imageApproveSize = partyContentDetail.size()>
                         <#if userLoginAndPartyDetails.userLoginId == userLogin.userLoginId>
                             <#if userMap.checkUser == userLoginAndPartyDetails.userLoginId>

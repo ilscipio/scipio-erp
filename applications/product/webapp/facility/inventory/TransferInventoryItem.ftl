@@ -130,7 +130,7 @@ under the License.
                 <a href="#" onclick="setNow('receiveDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
             </@field>
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
-                <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)> ${(fac.facilityName)?default("&nbsp;")}
+                <#assign fac = delegator.findOne("Facility", {"facilityId":inventoryTransfer.facilityIdTo}, false)> ${(fac.facilityName)?default("&nbsp;")}
             </@field>
             <@field type="lookup" label="${uiLabelMap.ProductToLocation}" value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />

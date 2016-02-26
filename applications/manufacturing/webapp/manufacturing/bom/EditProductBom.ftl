@@ -43,7 +43,7 @@ function lookupBom() {
             <a name="topform"></a>
             <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
-                    <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
+                    <#assign curAssocType = delegator.findOne("ProductAssocType", {"productAssocTypeId":productAssocTypeId}, false)>
                     <#if curAssocType??>
                         <option selected="selected" value="${(curAssocType.productAssocTypeId)!}">${(curAssocType.get("description",locale))!}</option>
                         <option value="${(curAssocType.productAssocTypeId)!}"></option>
@@ -87,7 +87,7 @@ function lookupBom() {
     <#if !(productAssoc??)>
           <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
-                    <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
+                    <#assign curAssocType = delegator.findOne("ProductAssocType", {"productAssocTypeId":productAssocTypeId}, false)>
                     <#if curAssocType??>
                         <option selected="selected" value="${(curAssocType.productAssocTypeId)!}">${(curAssocType.get("description",locale))!}</option>
                         <option value="${(curAssocType.productAssocTypeId)!}"></option>

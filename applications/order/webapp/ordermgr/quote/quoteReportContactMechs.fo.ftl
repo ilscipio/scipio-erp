@@ -27,7 +27,7 @@ under the License.
                         <fo:block>
                             <fo:block font-weight="bold">${uiLabelMap.OrderAddress}: </fo:block>
                             <#if quote.partyId??>
-                                <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quote.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
+                                <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":quote.partyId, "compareDate":quote.issueDate, "userLogin":userLogin})/>
                                 <fo:block>${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
                             <#else>
                                 <fo:block>[${uiLabelMap.OrderPartyNameNotFound}]</fo:block>

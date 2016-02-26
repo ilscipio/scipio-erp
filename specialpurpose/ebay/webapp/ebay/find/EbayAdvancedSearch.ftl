@@ -189,7 +189,7 @@ under the License.
                 <input type="text" name="LIST_PRICE_HIGH" size="8" value="${requestParameters.LIST_PRICE_HIGH!}" />&nbsp;
           </@field>
           <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
-            <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId) />
+            <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId} />
             <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true) />
             <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId] />
             <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">

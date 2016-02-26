@@ -18,8 +18,8 @@ under the License.
 -->
 <#escape x as x?xml>
 
-        <#assign fromPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.fromPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
-        <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.toPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
+        <#assign fromPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":returnHeader.fromPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
+        <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":returnHeader.toPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
 
         <fo:table>
           <fo:table-column column-width="3.50in"/>

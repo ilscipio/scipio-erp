@@ -232,7 +232,7 @@ under the License.
     <fo:table-body font-size="10pt">
 
     <#list vatTaxIds as vatTaxId>
-    <#assign taxRate = delegator.findOne("TaxAuthorityRateProduct", Static["org.ofbiz.base.util.UtilMisc"].toMap("taxAuthorityRateSeqId", vatTaxId), true)/>
+    <#assign taxRate = delegator.findOne("TaxAuthorityRateProduct", {"taxAuthorityRateSeqId":vatTaxId}, true)/>
     <fo:table-row>
         <fo:table-cell>
           <fo:block/>

@@ -41,7 +41,7 @@ under the License.
     <#assign chosenShippingMethod = cart.getShipmentMethodTypeId(shipGroupIndex) + '@' + cart.getCarrierPartyId(shipGroupIndex)>
 </#if>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
-<#assign supplier =  delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", supplierPartyId), false)! />
+<#assign supplier =  delegator.findOne("PartyGroup", {"partyId":supplierPartyId}, false)! />
   <#assign sectionTitle>${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}<#if supplier?has_content> - ${supplier.groupName!(supplier.partyId)}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>

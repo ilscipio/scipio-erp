@@ -66,7 +66,7 @@ under the License.
                         </@thead>
                         <#list custRequestItemNoteViews as custRequestItemNoteViewList>
                             <#if custRequestItemNoteViewList.custRequestItemSeqId == custRequestItemList.custRequestItemSeqId>
-                            <#assign partyNameView = delegator.findOne("PartyNameView", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", custRequestItemNoteViewList.partyId), false)!/>
+                            <#assign partyNameView = delegator.findOne("PartyNameView", {"partyId":custRequestItemNoteViewList.partyId}, false)!/>
                             <@tr>
                                 <@td>
                                 </@td>

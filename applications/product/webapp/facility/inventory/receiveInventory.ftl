@@ -142,7 +142,7 @@ under the License.
               <@field type="input" label="${uiLabelMap.lotId}" name="lotId" size="10"/>
 
               <#-- facility location(s) -->
-              <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
+              <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
               <@field type="generic" label="${uiLabelMap.ProductFacilityLocation}">
                   <#if facilityLocations?has_content>
                     <select name="locationSeqId">
@@ -298,7 +298,7 @@ under the License.
                           <@td align="right">${uiLabelMap.ProductLocation}:</@td>
                           <#-- location(s) -->
                           <@td align="right">
-                            <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
+                            <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
                             <#if facilityLocations?has_content>
                               <select name="locationSeqId_o_${rowCount}">
                                 <#list facilityLocations as productFacilityLocation>

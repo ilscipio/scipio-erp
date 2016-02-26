@@ -27,7 +27,7 @@ under the License.
     <@menu type="button" class="+button-style-1">
       <@menuitem type="link" href=makeOfbizUrl("return.pdf?returnId=${returnId!}") text="PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
       <#if returnId??>
-        <#assign returnItems = delegator.findByAnd("ReturnItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("returnId", returnId, "returnTypeId", "RTN_REFUND"), null, false)/>
+        <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId":returnId, "returnTypeId":"RTN_REFUND"}, null, false)/>
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>

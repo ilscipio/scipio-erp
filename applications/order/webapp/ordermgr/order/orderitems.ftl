@@ -315,7 +315,7 @@ under the License.
                                             ${uiLabelMap.ManufacturingProductionRun}
                                             <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
                                             ${uiLabelMap.OrderCurrentStatus}
-                                            ${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}
+                                            ${(delegator.findOne("StatusItem", {"statusId":workEffort.getString("currentStatusId")}, true).get("description",locale))!}
                                         <#else>
                                             ${uiLabelMap.CommonFrom}
                                             : <#if workEffort.estimatedStartDate?has_content><@formattedDate date=workEffort.estimatedStartDate /></#if> ${uiLabelMap.CommonTo}
@@ -328,8 +328,8 @@ under the License.
                             </#list>
                         </#if>
                         <#-- show linked order lines -->
-                        <#assign linkedOrderItemsTo = delegator.findByAnd("OrderItemAssoc", Static["org.ofbiz.base.util.UtilMisc"].toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")), null, false)>
-                        <#assign linkedOrderItemsFrom = delegator.findByAnd("OrderItemAssoc", Static["org.ofbiz.base.util.UtilMisc"].toMap("toOrderId", orderItem.getString("orderId"), "toOrderItemSeqId", orderItem.getString("orderItemSeqId")), null, false)>
+                        <#assign linkedOrderItemsTo = delegator.findByAnd("OrderItemAssoc", {"orderId":orderItem.getString("orderId"), "orderItemSeqId":orderItem.getString("orderItemSeqId")}, null, false)>
+                        <#assign linkedOrderItemsFrom = delegator.findByAnd("OrderItemAssoc", {"toOrderId":orderItem.getString("orderId"), "toOrderItemSeqId":orderItem.getString("orderItemSeqId")}, null, false)>
                         <#if linkedOrderItemsTo?has_content>
                             <#list linkedOrderItemsTo as linkedOrderItem>
                                 <#assign linkedOrderId = linkedOrderItem.toOrderId>

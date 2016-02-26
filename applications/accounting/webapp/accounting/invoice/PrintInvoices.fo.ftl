@@ -105,7 +105,7 @@ under the License.
                         <fo:block>${uiLabelMap.CommonTo}: </fo:block>
                         <#if invoiceDetail.billingAddress?has_content>
                           <#assign billingAddress = invoiceDetail.billingAddress />
-                          <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", billToParty.partyId, "compareDate", invoice.invoiceDate, "userLogin", userLogin))/>
+                          <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
                           <fo:block>${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
                           <#if billingAddress.attnName??>
                             <fo:block>${billingAddress.attnName}</fo:block>

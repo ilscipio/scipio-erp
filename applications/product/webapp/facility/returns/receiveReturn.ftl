@@ -111,7 +111,7 @@ under the License.
                           <#if orderItem.productId??>
                             <#assign product = orderItem.getRelatedOne("Product", false)>
                             <#assign productId = product.productId>
-                            <#assign serializedInv = product.getRelated("InventoryItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"), null, false)>
+                            <#assign serializedInv = product.getRelated("InventoryItem", {"inventoryItemTypeId":"SERIALIZED_INV_ITEM"}, null, false)>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                             <@td width="45%">
                                 ${returnItem.returnItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
@@ -134,7 +134,7 @@ under the License.
                           <@td align="right">${uiLabelMap.ProductLocation}
                           </@td>
                           <@td align="right">
-                            <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!>
+                            <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!>
                             <#if facilityLocations?has_content>
                               <select name="locationSeqId_o_${rowCount}">
                                 <#list facilityLocations as productFacilityLocation>

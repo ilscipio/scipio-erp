@@ -261,8 +261,8 @@ under the License.
         <@td></@td><@td></@td>
       </#if>
         <@td>
-      <#assign mainRole = dispatcher.runSync("getPartyMainRole", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyRow.partyId, "userLogin", userLogin))/>
-              ${mainRole.description!}
+            <#assign mainRole = dispatcher.runSync("getPartyMainRole", {"partyId": partyRow.partyId, "userLogin": userLogin})/>
+            ${mainRole.description!}
         </@td>
         <#assign partyDate = delegator.findOne("Party", {"partyId":partyRow.partyId}, true)/>
         <@td>${partyDate.createdDate!}</@td>

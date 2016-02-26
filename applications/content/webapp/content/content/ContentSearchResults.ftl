@@ -34,7 +34,7 @@ under the License.
       <@table type="data-complex" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
-          <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>
+          <#assign content = delegator.findOne("Content", {"contentId":contentId}, false)>
           <@tr>
             <@td>
               <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${contentId} ${(content.contentName)!}</a>

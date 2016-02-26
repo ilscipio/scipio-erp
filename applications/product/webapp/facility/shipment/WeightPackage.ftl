@@ -235,7 +235,7 @@ under the License.
                     </@td>
                     <@td>
                       <#if (shipmentPackage.shipmentBoxTypeId)?has_content>
-                        <#assign shipmentBoxType = delegator.findOne("ShipmentBoxType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentBoxTypeId", shipmentPackage.shipmentBoxTypeId), true)>
+                        <#assign shipmentBoxType = delegator.findOne("ShipmentBoxType", {"shipmentBoxTypeId":shipmentPackage.shipmentBoxTypeId}, true)>
                       </#if>
                       <input type="text" readonly="readonly" name="shipmentBoxTypeId" value="${(shipmentBoxType.description)!}" size="50"/>
                     </@td>

@@ -117,6 +117,9 @@ under the License.
 
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
+            <actions>
+
+            </actions>
             <widgets>
                 <!-- 
                 <section name="h1-h6 Styles">

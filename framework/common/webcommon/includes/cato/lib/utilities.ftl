@@ -34,31 +34,22 @@
 * Intended for use anywhere in production templates and templating macros.
 -->
 
-<#-- 
-*************
-* makeOfbizUrl
-************
-Function version of the @ofbizUrl macro.
-Boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
--->
-<#function makeOfbizUrl uri fullPath=false secure=false encode=true>
-  <#local res><@ofbizUrl uri=StringUtil.wrapString(uri) fullPath=fullPath secure=secure encode=encode /></#local>
-  <#return res>
-</#function>
 
 <#-- 
 *************
 * ofbizUrl
 ************
 Wraps a controller-based Ofbiz URL.
-THIS IS THE MAIN STOCK OFBIZ URL MACRO, implemented as Java transform. It will be modified with enhanced
+THIS IS THE MAIN STOCK OFBIZ URL MACRO, implemented as Java transform. It may be modified with enhanced
 capabilities for Cato.
+
+With Cato, Boolean arguments can be given as booleans, string representation of booleans
+or empty string (signifies use defaults).
 
   * Parameters *
     uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
                       (New in Cato) 
-    fullPath        = boolean (default: false) or string boolean repr. If true, forces a full URL with protocol (HTTP).
+    fullPath        = boolean (default: false) or string boolean repr. If true, forces a full URL with protocol (HTTP or HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     secure          = boolean (default: false) or string boolean repr. If true, forces a full URL with secure protocol (HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
@@ -74,41 +65,25 @@ capabilities for Cato.
 
 <#-- 
 *************
-* makeOfbizInterWebappUrl
+* makeOfbizUrl
 ************
-Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
-Boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
+Function version of the @ofbizUrl macro.
+
+This is useful to prevent bloating templates with <#assign...><@ofbizUrl.../></#assign> captures
+which is very frequent due to use of macros.
 -->
-<#function makeOfbizInterWebappUrl uri fullPath=false secure=false encode=true>
-  <#-- TODO: implement -->
-  <#local res>${StringUtil.wrapString(uri)}</#local>
+<#function makeOfbizUrl uri fullPath="" secure="" encode="">
+  <#local res><@ofbizUrl uri=StringUtil.wrapString(uri) fullPath=fullPath secure=secure encode=encode /></#local>
   <#return res>
 </#function>
-
-<#-- 
-*************
-* ofbizInterWebappUrl
-************
-Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
-Accepts uri argument or #nested content (legacy).
-Boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
--->
-<#macro ofbizInterWebappUrl uri="" fullPath=false secure=false encode=true>
-  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
-  <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
-</#macro>
 
 <#-- 
 *************
 * makeOfbizWebappUrl
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
-Boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
 -->
-<#function makeOfbizWebappUrl uri fullPath=false secure=false encode=true>
+<#function makeOfbizWebappUrl uri fullPath="" secure="" encode="">
   <#-- TODO: implement -->
   <#local res>${StringUtil.wrapString(uri)}</#local>
   <#return res>
@@ -119,14 +94,50 @@ or empty string (signifies use defaults).
 * ofbizWebappUrl
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
-Accepts uri argument or #nested content (legacy).
-Boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).
 -->
-<#macro ofbizWebappUrl uri="" fullPath=false secure=false encode=true>
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
   <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
 </#macro>
+
+
+<#-- 
+*************
+* ofbizInterWebappUrl
+************
+Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+-->
+<#macro ofbizInterWebappUrl uri="" fullPath="" secure="" encode="">
+  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
+  <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
+</#macro>
+
+<#-- 
+*************
+* makeOfbizInterWebappUrl
+************
+Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+-->
+<#function makeOfbizInterWebappUrl uri fullPath="" secure="" encode="">
+  <#-- TODO: implement -->
+  <#local res>${StringUtil.wrapString(uri)}</#local>
+  <#return res>
+</#function>
+
+<#-- 
+*************
+* ofbizContentUrl
+************
+Wraps a Ofbiz content/resource URL.
+THIS IS THE STOCK OFBIZ CONTENT URL MACRO, implemented as Java transform. It may be modified with enhanced
+capabilities for Cato.
+
+  * Parameters *
+    ...
+
+<#macro ofbizContentUrl ...>
+- implemented as java transform -
+</#macro>-->
 
 <#-- 
 *************

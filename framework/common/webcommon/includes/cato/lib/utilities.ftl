@@ -57,6 +57,8 @@ or empty string (signifies use defaults).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     webSiteId       = string, target web site ID (default: current website). 
                       NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId.
+                      WARN: The stock functionality provided by this parameter is currently limited,
+                          in particular to producing full URLs only.
                       (Stock arg, some fixes in Cato)
 
 <#macro ofbizUrl uri="" fullPath=false secure=true encode=true webSiteId="">

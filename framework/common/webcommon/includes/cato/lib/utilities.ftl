@@ -57,7 +57,8 @@ DEV NOTES:
     uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
                       (New in Cato) 
     webSiteId       = string, target web site ID (default: current website, found in request, if any). 
-                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId.
+                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this
+                          is considered normal.
                       WARN: The stock functionality provided by this parameter is currently limited,
                           in particular to producing full URLs only.
                       WARN: The behavior of this is currently poorly defined.
@@ -87,13 +88,18 @@ which is very frequent due to use of macros.
                           DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
                               for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
                               However majority of cases use only a URI so we can shortcut in that case.
+                              Freemarker doesn't support overloading so we basically implement it ourselves.
+                              Note that if we needed extra positional parameters for common cases, should keep the args map check on
+                              the first param only, otherwise it creates too many checks needed; this is
+                              consistent with macros anyway (you use either positional OR named params, you can't combine,
+                              so you use only args map or only positionals).
 -->
 <#function makeOfbizUrl args>
-  <#if isObjectType("string", args)> <#-- ?is_string doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
-  <#else>
+  <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" 
         fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+  <#else>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
   </#if>
   <#return res>
 </#function>
@@ -119,10 +125,10 @@ Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usua
 <#function makeOfbizWebappUrl args>
   <#-- FIXME: this is ACTUALLY BROKEN, DO NOT USE -->
   <#-- TODO: implement by calling @ofbizUrl with more flags... -->
-  <#if isObjectType("string", args)>
-    <#local res>${StringUtil.wrapString(args)}</#local>
-  <#else>
+  <#if isObjectType("map", args)>
     <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+  <#else>
+    <#local res>${StringUtil.wrapString(args)}</#local>
   </#if>
   <#return res>
 </#function>
@@ -155,10 +161,10 @@ Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/c
 -->
 <#function makeOfbizInterWebappUrl args>
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
-  <#if isObjectType("string", args)>
-    <#local res>${StringUtil.wrapString(args)}</#local>
-  <#else>
+  <#if isObjectType("map", args)>
     <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+  <#else>
+    <#local res>${StringUtil.wrapString(args)}</#local>
   </#if>
   <#return res>
 </#function>

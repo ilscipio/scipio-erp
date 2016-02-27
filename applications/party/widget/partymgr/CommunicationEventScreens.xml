@@ -393,7 +393,7 @@ under the License.
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
                 <set field="partyIdFrom" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
             
-                <set field="widePage" type="Boolean" value="true" />
+                <!--<set field="widePage" type="Boolean" value="true" />-->
             </actions>
             <widgets>
                 <section>
@@ -834,7 +834,7 @@ under the License.
                 <set field="activeMainMenuItem" value="mycomm"/>
                 <set field="my" value="My" global="true"/>
                 
-                <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" />
+                <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
             </actions>
             <widgets>
                 <decorator-screen  name="main-decorator" location="${parameters.mainDecoratorLocation}">

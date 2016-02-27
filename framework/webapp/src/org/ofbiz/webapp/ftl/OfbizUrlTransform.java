@@ -174,7 +174,13 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         builder.buildFullUrl(newUrlBuff, buf.toString(), secure);
                         String newUrl = newUrlBuff.toString();
                         if (encode) {
-                            newUrl = URLEncoder.encode(newUrl, "UTF-8");
+                            // Cato: This was invalid! This is not what the "encode" boolean is supposed to mean!
+                            // It means pass through response.encodeURL.
+                            //newUrl = URLEncoder.encode(newUrl, "UTF-8");
+                            HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
+                            if (response != null) {
+                                newUrl = response.encodeURL(newUrl);
+                            }
                         }
                         out.write(newUrl);
                         return;

@@ -191,7 +191,9 @@ public final class OfbizUrlBuilder {
             throw new IllegalStateException("Servlet path is unknown");
         }
         buffer.append(servletPath);
-        if (!url.startsWith("/")) {
+        // Cato: added check to make sure servletPath doesn't already end with "/"
+        // FIXME: we should really check buffer instead of servletPath, but we can't because Appendable...
+        if (!servletPath.endsWith("/") && !url.startsWith("/")) {
             buffer.append("/");
         }
         buffer.append(url);

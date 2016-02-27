@@ -81,7 +81,11 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         else if (o instanceof TemplateScalarModel) {
             TemplateScalarModel s = (TemplateScalarModel) o;
             try {
-                return "true".equalsIgnoreCase(s.getAsString());
+                String val = s.getAsString();
+                // Cato: empty check is desirable and makes it so caller can request default by specifying ""
+                if (!val.isEmpty()) {
+                    return "true".equalsIgnoreCase(s.getAsString());
+                }
             } catch (TemplateModelException e) {
                 Debug.logError(e, "Could not get boolean arg for ofbizUrl (from string model)", module);
             }

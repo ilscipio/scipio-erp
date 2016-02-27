@@ -37,6 +37,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
@@ -64,13 +65,44 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     private static boolean checkBooleanArg(Map args, String key, boolean defaultValue) {
         Object o = args.get(key);
-        if (o instanceof SimpleScalar) {
-            SimpleScalar s = (SimpleScalar) o;
-            return "true".equalsIgnoreCase(s.getAsString());
+        // Cato (2016-02): we now support real booleans. 
+        // In addition, SimpleScalar was a bad type to use.
+        //if (o instanceof SimpleScalar) {
+        //    SimpleScalar s = (SimpleScalar) o;
+        //    return "true".equalsIgnoreCase(s.getAsString());
+        //}
+        if (o instanceof TemplateBooleanModel) {
+            try {
+                return ((TemplateBooleanModel) o).getAsBoolean();
+            } catch (TemplateModelException e) {
+                Debug.logError(e, "Could not get boolean arg for ofbizUrl (as boolean model)", module);
+            }
+        }
+        else if (o instanceof TemplateScalarModel) {
+            TemplateScalarModel s = (TemplateScalarModel) o;
+            try {
+                return "true".equalsIgnoreCase(s.getAsString());
+            } catch (TemplateModelException e) {
+                Debug.logError(e, "Could not get boolean arg for ofbizUrl (from string model)", module);
+            }
         }
         return defaultValue;
     }
 
+    private static String getStringArg(Map args, String key, String defaultValue) {
+        Object o = args.get(key);
+        if (o instanceof TemplateScalarModel) {
+            TemplateScalarModel s = (TemplateScalarModel) o;
+            try {
+                return s.getAsString();
+            } catch (TemplateModelException e) {
+                Debug.logError(e, "Invalid uri arg for ofbizUrl", module);
+            }
+        }
+        return defaultValue;
+    }
+
+    
     private static String convertToString(Object o) {
         String result = "";
         if (o != null) {
@@ -98,12 +130,19 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         final boolean secure = checkBooleanArg(args, "secure", false);
         final boolean encode = checkBooleanArg(args, "encode", true);
         final String webSiteId = convertToString(args.get("webSiteId"));
+        // Cato: We now support a "uri" arg as alternative to #nested
+        final String uriArg = getStringArg(args, "uri", null);
 
         return new Writer(out) {
 
             @Override
             public void close() throws IOException {
                 try {
+                    // Cato: can use uri instead of buffer
+                    if (uriArg != null) {
+                        buf.append(uriArg);
+                    }
+                    
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     // Handle prefix.
                     String prefixString = convertToString(env.getVariable("urlPrefix"));

@@ -42,13 +42,35 @@ Function version of the @ofbizUrl macro.
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
-<#function makeOfbizUrl uri fullPath=false secure=true encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
-  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
-  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
-  <#local res><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${StringUtil.wrapString(uri)}</@ofbizUrl></#local>
+<#function makeOfbizUrl uri fullPath=false secure=false encode=true>
+  <#local res><@ofbizUrl uri=StringUtil.wrapString(uri) fullPath=fullPath secure=secure encode=encode /></#local>
   <#return res>
 </#function>
+
+<#-- 
+*************
+* ofbizUrl
+************
+Wraps a controller-based Ofbiz URL.
+THIS IS THE MAIN STOCK OFBIZ URL MACRO, implemented as Java transform. It will be modified with enhanced
+capabilities for Cato.
+
+  * Parameters *
+    uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
+                      (New in Cato) 
+    fullPath        = boolean (default: false) or string boolean repr. If true, forces a full URL with protocol (HTTP).
+                      (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
+    secure          = boolean (default: false) or string boolean repr. If true, forces a full URL with secure protocol (HTTPS).
+                      (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
+    encode          = boolean (default: true) or string boolean repr. If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
+                      (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
+    webSiteId       = string, target web site ID (default: current website). 
+                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId.
+                      (Stock arg, some fixes in Cato)
+
+<#macro ofbizUrl uri="" fullPath=false secure=true encode=true webSiteId="">
+- implemented as java transform -
+</#macro>-->
 
 <#-- 
 *************
@@ -58,10 +80,7 @@ Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/c
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
-<#function makeOfbizInterWebappUrl uri fullPath=false secure=true encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
-  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
-  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+<#function makeOfbizInterWebappUrl uri fullPath=false secure=false encode=true>
   <#-- TODO: implement -->
   <#local res>${StringUtil.wrapString(uri)}</#local>
   <#return res>
@@ -76,10 +95,7 @@ Accepts uri argument or #nested content (legacy).
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
-<#macro ofbizInterWebappUrl uri="" fullPath=false secure=true encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
-  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
-  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+<#macro ofbizInterWebappUrl uri="" fullPath=false secure=false encode=true>
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
   <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
 </#macro>
@@ -92,10 +108,7 @@ Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usua
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
-<#function makeOfbizWebappUrl uri fullPath=false secure=true encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
-  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
-  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+<#function makeOfbizWebappUrl uri fullPath=false secure=false encode=true>
   <#-- TODO: implement -->
   <#local res>${StringUtil.wrapString(uri)}</#local>
   <#return res>
@@ -110,10 +123,7 @@ Accepts uri argument or #nested content (legacy).
 Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 -->
-<#macro ofbizWebappUrl uri="" fullPath=false secure=true encode=true>
-  <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
-  <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
-  <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
+<#macro ofbizWebappUrl uri="" fullPath=false secure=false encode=true>
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
   <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
 </#macro>
@@ -161,7 +171,7 @@ The following URI forms are currently interpreted and transformed:
 
 <#-- 
 *************
-* label
+* getLabel
 ************
 Returns empty string if no label is found
 

@@ -953,6 +953,8 @@
 </@section>
 
 <@section title="URL generation">
+  <p>Our webSiteId (<em>NOTE:</em> in stock Ofbiz there is none assigned to webtools, so should be nothing here! Do not add one!): 
+    <em>${Static["org.ofbiz.webapp.website.WebSiteWorker"].getWebSiteId(request)!"(none)"}</em></p>
   <ul>
     <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
@@ -965,6 +967,9 @@
     <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl uri="main" webSiteId="WebStore"/></li>
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" /></li>
+    <li>${makeOfbizInterWebappUrl("/ecommerce/control/main")}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"/ecommerce/control/main", "webSiteId":"WebStore"})}</li>
   </ul>
 </@section>
 

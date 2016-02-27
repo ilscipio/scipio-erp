@@ -46,22 +46,30 @@ capabilities for Cato.
 With Cato, Boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 
+DEV NOTES:
+* TODO: RequestHandler.makeLink has been modified noticeably in Ofbiz 14 and requires more review to integrate
+  the code from Cato magnolia project
+  * The inter-webapp is still complicated by need for webSiteId which stock apps don't have (and can't give)
+* webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
+
+
   * Parameters *
     uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
                       (New in Cato) 
+    webSiteId       = string, target web site ID (default: current website, found in request, if any). 
+                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId.
+                      WARN: The stock functionality provided by this parameter is currently limited,
+                          in particular to producing full URLs only.
+                      WARN: The behavior of this is currently poorly defined.
+                      (Stock arg, some fixes in Cato)
     fullPath        = boolean (default: false) or string boolean repr. If true, forces a full URL with protocol (HTTP or HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     secure          = boolean (default: false) or string boolean repr. If true, forces a full URL with secure protocol (HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     encode          = boolean (default: true) or string boolean repr. If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-    webSiteId       = string, target web site ID (default: current website). 
-                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId.
-                      WARN: The stock functionality provided by this parameter is currently limited,
-                          in particular to producing full URLs only.
-                      (Stock arg, some fixes in Cato)
 
-<#macro ofbizUrl uri="" fullPath=false secure=true encode=true webSiteId="">
+<#macro ofbizUrl uri="" webSiteId="" fullPath=false secure=true encode=true>
 - implemented as java transform -
 </#macro>-->
 
@@ -73,21 +81,20 @@ Function version of the @ofbizUrl macro.
 
 This is useful to prevent bloating templates with <#assign...><@ofbizUrl.../></#assign> captures
 which is very frequent due to use of macros.
--->
-<#function makeOfbizUrl uri fullPath="" secure="" encode="">
-  <#local res><@ofbizUrl uri=StringUtil.wrapString(uri) fullPath=fullPath secure=secure encode=encode /></#local>
-  <#return res>
-</#function>
 
-<#-- 
-*************
-* makeOfbizWebappUrl
-************
-Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
+  * Parameters *
+   args (uri)           = map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+                          DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
+                              for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
+                              However majority of cases use only a URI so we can shortcut in that case.
 -->
-<#function makeOfbizWebappUrl uri fullPath="" secure="" encode="">
-  <#-- TODO: implement -->
-  <#local res>${StringUtil.wrapString(uri)}</#local>
+<#function makeOfbizUrl args>
+  <#if isObjectType("string", args)> <#-- ?is_string doesn't work right with context var strings and hashes -->
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
+  <#else>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" 
+        fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+  </#if>
   <#return res>
 </#function>
 
@@ -97,19 +104,45 @@ Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usua
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
+<#macro ofbizWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
+  <#-- FIXME: this is ACTUALLY BROKEN, DO NOT USE -->
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
   <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
 </#macro>
 
+<#-- 
+*************
+* makeOfbizWebappUrl
+************
+Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
+-->
+<#function makeOfbizWebappUrl args>
+  <#-- FIXME: this is ACTUALLY BROKEN, DO NOT USE -->
+  <#-- TODO: implement by calling @ofbizUrl with more flags... -->
+  <#if isObjectType("string", args)>
+    <#local res>${StringUtil.wrapString(args)}</#local>
+  <#else>
+    <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+  </#if>
+  <#return res>
+</#function>
 
 <#-- 
 *************
 * ofbizInterWebappUrl
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+
+DEV NOTES:
+* The problems with this have not really improved in recent Ofbiz (even though code has changed);
+  we actually should retrieve a webSiteId but there is no way to get it from mount-point only.
+  stock apps don't have their own webSiteId so can use current to look up settings, but already this requires
+  modification.
+  the main problem is apps that DO have their own webSiteId; it MUST be passed here and it can't
+  be fetched from the mount-point!!!
+
 -->
-<#macro ofbizInterWebappUrl uri="" fullPath="" secure="" encode="">
+<#macro ofbizInterWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
   <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
 </#macro>
@@ -120,9 +153,13 @@ Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/c
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
 -->
-<#function makeOfbizInterWebappUrl uri fullPath="" secure="" encode="">
-  <#-- TODO: implement -->
-  <#local res>${StringUtil.wrapString(uri)}</#local>
+<#function makeOfbizInterWebappUrl args>
+  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
+  <#if isObjectType("string", args)>
+    <#local res>${StringUtil.wrapString(args)}</#local>
+  <#else>
+    <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+  </#if>
   <#return res>
 </#function>
 

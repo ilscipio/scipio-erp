@@ -17,6 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!-- CATO: Pending removal of portal pages -->
 <entity-engine-xml>
 
     <PortletCategory portletCategoryId="ACCOUNTING" description="Accounting related data"/>
@@ -61,7 +62,7 @@
 
     <PortletPortletCategory portalPortletId="ApPastDueInvoices" portletCategoryId="ACCOUNTING"/>
     <PortletPortletCategory portalPortletId="ApInvoicesDueSoon" portletCategoryId="ACCOUNTING"/>
-
+    
     <PortalPage portalPageId="ApPortalPage" sequenceNum="0" portalPageName="Main" description="Portal page for Past Due Invoices and Invoices Due Soon in AP" ownerUserLoginId="_NA_"/>
 
     <PortalPageColumn portalPageId="ApPortalPage" columnSeqId="00001"/>

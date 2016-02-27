@@ -65,38 +65,15 @@ under the License.
                                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                             </actions>
                             <widgets>
-                                <include-portal-page id="ApPortalPage"/>
+                                <!-- CATO: Removed portal page
+                                    <include-portal-page id="ApPortalPage"/>
+                                 -->
+                                 <include-screen name="ApInvoicesDueSoon" location="component://accounting/widget/ap/CommonScreens.xml"/>
+                                 <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="ApPastDueInvoices">
-        <section>
-           <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="invoices" from-field="PastDueInvoices"/>
-            </actions>
-            <widgets>
-                <screenlet>
-                    <include-form name="ListReports" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ApInvoicesDueSoon">
-        <section>
-            <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="invoices" from-field="InvoicesDueSoon"/>
-            </actions>
-            <widgets>
-                <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
-                    <include-form name="ListReports"  location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                </screenlet>
             </widgets>
         </section>
     </screen>
@@ -274,6 +251,52 @@ under the License.
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form migration -->
+    <screen name="ApPastDueInvoices">
+        <section>
+           <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="invoices" from-field="PastDueInvoices"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="invoices"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.AccountingPastDueInvoices}">
+                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                        </screenlet>
+                    </widgets>              
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ApInvoicesDueSoon">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="invoices" from-field="InvoicesDueSoon"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="invoices"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
+                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                        </screenlet>
+                    </widgets>              
+                </section>
             </widgets>
         </section>
     </screen>

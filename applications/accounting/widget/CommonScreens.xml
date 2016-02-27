@@ -424,10 +424,7 @@ under the License.
                                     <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                                 </actions>
                                 <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicesPastDue.ftl"/></html>
-                                    </platform-specific>
-                                   <!--  <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" /> -->
+                                   <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" />
                                 </widgets>
                             </section>
                         </screenlet>
@@ -436,16 +433,14 @@ under the License.
                         <screenlet title="${uiLabelMap.AccountingArMenu}">
                             <section>
                                 <actions>
+                                    
                                     <set field="invoiceTypeId" value="SALES_INVOICE"/>
                                     <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                                     <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
                                 </actions>
-                               <!--  <widgets><include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" /></widgets> -->
-                                <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoicesDueSoon.ftl"/></html>
-                                    </platform-specific>
-                                </widgets>
+                               <widgets>
+                                    <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" />
+                               </widgets>
                             </section>                            
                         </screenlet>
                     </decorator-section>

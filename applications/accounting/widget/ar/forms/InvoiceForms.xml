@@ -20,9 +20,9 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-   <!-- show list of upto 10 Invoices past due for longest duration -->
+    <!-- CATO: Remove (Duplicate of ap/InvoiceForms)
     <form name="ListReports" type="list" separate-columns="true" title="Invoice List" list-name="invoices" target=""
-        odd-row-style="alternate-row" paginate="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" paginate="true">
         <row-actions>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
                 <field-map field-name="partyId" from-field="partyIdFrom"/>
@@ -64,6 +64,7 @@ under the License.
         <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    -->
 
     <form name="FindArInvoices" type="single" target="FindArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" default-position-span="1">
         <field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>

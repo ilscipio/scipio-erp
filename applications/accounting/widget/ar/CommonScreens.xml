@@ -75,34 +75,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-
-    <screen name="ArPastDueInvoices">
-        <section>
-           <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="invoices" from-field="PastDueInvoices"/>
-            </actions>
-            <widgets>
-                <screenlet>
-                    <include-form name="ListReports" location="component://accounting/widget/ar/forms/InvoiceForms.xml"/>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ArInvoicesDueSoon">
-        <section>
-            <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="invoices" from-field="InvoicesDueSoon"/>
-            </actions>
-            <widgets>
-                <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
-                    <include-form name="ListReports"  location="component://accounting/widget/ar/forms/InvoiceForms.xml"/>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
@@ -198,6 +170,52 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form migration -->
+    <screen name="ArPastDueInvoices">
+        <section>
+           <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="invoices" from-field="PastDueInvoices"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="invoices"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.AccountingPastDueInvoices}">
+                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                        </screenlet>
+                    </widgets>              
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ArInvoicesDueSoon">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="invoices" from-field="InvoicesDueSoon"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="invoices"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
+                            <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
+                        </screenlet>
+                    </widgets>              
+                </section>
             </widgets>
         </section>
     </screen>

@@ -639,6 +639,24 @@ under the License.
         </section>
     </screen>
     
+    <!-- CATO: Form widget replacement: component://accounting/widget/ap/InvoiceForms.xml#ListReports
+                                        component://accounting/widget/ar/InvoiceForms.xml#ListReports
+    -->
+    <screen name="CatoInvoices">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            </actions>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://accounting/webapp/accounting/invoice/CatoInvoices.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- CATO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
     <screen name="CatoInvoiceTerms">
         <section>

@@ -57,7 +57,11 @@ under the License.
     </screen>
 
     <!-- Party Profile Screens -->
-
+    <!-- CATO: Changelist
+               * Removed portal page reference
+               * Removed "showOld buttons
+               * 
+     -->
     <screen name="viewprofile">
         <section>
             <actions>
@@ -111,6 +115,7 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
+                                <!--
                                 <section>
                                     <condition>
                                         <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
@@ -130,10 +135,45 @@ under the License.
                                             </link>
                                         </container>
                                     </fail-widgets>
-                                </section>
+                                </section>-->
                                 <section>
                                     <widgets>
-                                        <include-portal-page id="PartyProfile"/>
+                                        <!-- 
+                                        <include-portal-page id="PartyProfile"/>AvsSettings
+                                         -->
+                                         <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <!--
+                                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
+                                                    <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                -->
+                                                <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+
+                                        </container>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                            
+                                             </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                 <include-screen name="AvsSettings" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                        </container>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                
+                                            
+                                             </container>
+                                        </container>
                                     </widgets>
                                 </section>
                             </widgets>

@@ -109,11 +109,17 @@ public class FreeMarkerWorker {
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
+        
+        // Cato: New code for includes and shared vars...
         Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
         Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
-        List includeFreemarkerTemplates = new ArrayList(includeProperties.values()); 
-        if(includeFreemarkerTemplates.size()>0) newConfig.setAutoIncludes(includeFreemarkerTemplates);
+        List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values()); 
+        if (includeFreemarkerTemplates.size() > 0) {
+            newConfig.setAutoIncludes(includeFreemarkerTemplates);
+        }
+        // ... end.
+        
         newConfig.setTemplateExceptionHandler(new FreeMarkerWorker.OFBizTemplateExceptionHandler());
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
@@ -163,7 +169,7 @@ public class FreeMarkerWorker {
     }
     
     /**
-     * Protected helper method to add .
+     * Cato: Loads shared vars.
      */
     protected static void loadSharedVars(Properties props, Configuration config) {
         for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {

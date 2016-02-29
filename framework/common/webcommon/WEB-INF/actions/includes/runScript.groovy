@@ -1,5 +1,5 @@
 /**
- * This script merely invokes another script name dynamically. 
+ * Cato: This script merely invokes another script name dynamically. 
  * In stock can't do this from screens because script loc not context-aware.
  * TODO: support more scripts/args?
  */

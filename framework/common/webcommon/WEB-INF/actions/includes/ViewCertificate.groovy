@@ -1,3 +1,7 @@
+/**
+ * Cato: View certificate action code.
+ */
+
 import org.ofbiz.base.util.KeyStoreUtil
 import org.ofbiz.base.component.ComponentConfig
 import org.ofbiz.base.util.Debug

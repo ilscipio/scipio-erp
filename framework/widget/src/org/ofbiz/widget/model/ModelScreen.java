@@ -20,7 +20,6 @@ package org.ofbiz.widget.model;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -34,9 +33,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.widget.renderer.ScreenRenderException;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Element;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 /**
  * Widget Library - Screen model class

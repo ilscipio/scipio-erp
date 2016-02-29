@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
-<web-app>
+
+<web-app version="3.0">
     <display-name>Open For Business - Admin Component</display-name>
     <description>Admin Component of the Open For Business Project</description>
 
@@ -63,8 +63,15 @@
     </servlet>
     <servlet-mapping><servlet-name>ControlServlet</servlet-name><url-pattern>/control/*</url-pattern></servlet-mapping>
 
-    <session-config><session-timeout>60</session-timeout><!-- in minutes --></session-config>
-
+    <session-config>
+        <session-timeout>60</session-timeout>    <!-- in minutes -->
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>

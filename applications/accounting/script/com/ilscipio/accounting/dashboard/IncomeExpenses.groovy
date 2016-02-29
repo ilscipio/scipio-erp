@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat
 
 import javolution.util.FastList
 
+import org.apache.xmlrpc.util.HttpUtil
 import org.ofbiz.accounting.util.UtilAccounting
 import org.ofbiz.base.util.*
 import org.ofbiz.base.util.cache.UtilCache
@@ -22,11 +23,9 @@ cacheId = "accounting_" + currentYearBeginText + "-" + currentYearEndText;
 Map<Date, Map<String, BigDecimal>> processResults() {
     // Setup the divisions for which the report is executed
     List partyIds = PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, context.organizationPartyId, 'GROUP_ROLLUP');
-    partyIds.add(context.organizationPartyId);
-    Debug.log("organizationPartyId ===========> " + context.organizationPartyId);
+    partyIds.add(context.organizationPartyId);  
     GenericValue incomeGlAccountClass = from("GlAccountClass").where("glAccountClassId", "INCOME").cache(true).queryOne();
-    List incomeAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(incomeGlAccountClass);
-    Debug.log("incomeAccountClassIds =============> " + incomeAccountClassIds);
+    List incomeAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(incomeGlAccountClass);    
     GenericValue expenseGlAccountClass = from("GlAccountClass").where("glAccountClassId", "EXPENSE").cache(true).queryOne();
     List expenseAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(expenseGlAccountClass);
     List mainAndExprs = FastList.newInstance();
@@ -34,7 +33,9 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
     mainAndExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
     mainAndExprs.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.NOT_EQUAL, "PERIOD_CLOSING"));
-    mainAndExprs.add(EntityCondition.makeCondition("currencyUomId", EntityOperator.EQUALS, context.currencyUomId));
+    currencyUomId = UtilHttp.getCurrencyUom(request);
+    context.currencyUomId = currencyUomId;    
+    mainAndExprs.add(EntityCondition.makeCondition("currencyUomId", EntityOperator.EQUALS, currencyUomId));
     
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
@@ -56,13 +57,9 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     fromDate = UtilDateTime.toTimestamp(calendar.getTime());
     
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDate, context.locale, context.timeZone);
-    Debug.log("dateIntervals ========> " + dateIntervals);
-    //Debug.log("dateIntervals ========> " + dateIntervals);
     
     Map<Date, Map<String, BigDecimal>> totalMap = [:];
     for (int i = 0; i <= iCount; i++) {
-        Debug.log("dateIntervals " + i + " ========> " + dateIntervals);
-        
         Map<String, BigDecimal> auxMap = [:];
         List transactionDateAndExprs = FastList.newInstance();
         transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals["dateBegin"]));
@@ -72,10 +69,9 @@ Map<Date, Map<String, BigDecimal>> processResults() {
         // EXPENSE
         List expenseAndExprs = FastList.newInstance(mainAndExprs);
         expenseAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, expenseAccountClassIds));
-        // mainAndExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "D"));
         expenseAndExprs.addAll(transactionDateAndExprs);
     
-        expenseTransactionTotals = select("glAccountId", "debitCreditFlag", "amount").from("AcctgTransAndEntries").where(expenseAndExprs).queryList();
+        expenseTransactionTotals = select("glAccountId", "debitCreditFlag", "amount", "currencyUomId").from("AcctgTransAndEntries").where(expenseAndExprs).queryList();
         balanceTotalCredit = BigDecimal.ZERO;
         balanceTotalDebit = BigDecimal.ZERO;
         expenseTransactionTotals.each { transactionTotal ->
@@ -109,17 +105,17 @@ Map<Date, Map<String, BigDecimal>> processResults() {
         totalMap.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), auxMap);
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, dateIntervals["dateEnd"] + 1, context.locale, context.timeZone);
     }
-//    Debug.log("totalMap ==========> " + totalMap);
     return totalMap;
 }
 
 Map cacheMap = [:];
-if (contentCache.get(cacheId)==null) {
+// TODO: Not sure wether I should leave or not the result to be cached, for now let's not cache it
+//if (contentCache.get(cacheId)==null) {
     cacheMap = processResults();    
-    contentCache.put(cacheId, cacheMap);
-    Debug.log("adding totalMap to cache");
-} else {
-    cacheMap = contentCache.get(cacheId);
-    Debug.log("taking totalMap from cache");    
-}
+//    contentCache.put(cacheId, cacheMap);
+//    Debug.log("adding totalMap to cache");
+//} else {
+//    cacheMap = contentCache.get(cacheId);
+//    Debug.log("taking totalMap from cache");    
+//}
 context.totalMap = cacheMap;

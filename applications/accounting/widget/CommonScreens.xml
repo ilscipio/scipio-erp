@@ -404,7 +404,9 @@ under the License.
                                     <set field="xlabel" value=""/> <!-- x-axis label -->
                                     <set field="ylabel" value=""/> <!-- y-axis label -->
                                     <set field="label1" value="${uiLabelMap.AccountingIncome}"/> <!-- 1st dataset label -->
-                                    <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> <!-- 2nd dataset label -->                                   
+                                    <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> <!-- 2nd dataset label -->  
+                                    <!-- IMPORTANT NOTE: This script only retrieves the existing (income/expense) transactions for the default 
+                                    currency defined in general.properties - currency.uom.id.default -->                                 
                                     <script location="component://accounting/script/com/ilscipio/accounting/dashboard/IncomeExpenses.groovy"/>
                                 </actions>
                                 <widgets>

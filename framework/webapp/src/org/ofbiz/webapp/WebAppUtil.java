@@ -128,7 +128,12 @@ public final class WebAppUtil {
     public static WebXml getWebXml(WebappInfo webAppInfo) throws IOException, SAXException {
         Assert.notNull("webAppInfo", webAppInfo);
         String webXmlFileLocation = webAppInfo.getLocation().concat(webAppFileName);
-        return parseWebXmlFile(webXmlFileLocation, true);
+        // Cato: TEMPORARILY CHANGED THIS TO NON-VALIDATING
+        // FIXME: RETURN THIS TO VALIDATING ONCE ALL web.xml VALIDATION ISSUES ARE MERGED FROM UPSTREAM
+        // The ofbiz team neglected to do it in this part of code, probably
+        // because stock doesn't use it much yet... but we rely on it
+        //return parseWebXmlFile(webXmlFileLocation, true);
+        return parseWebXmlFile(webXmlFileLocation, false);
     }
 
     /**

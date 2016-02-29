@@ -26,6 +26,7 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     Debug.log("organizationPartyId ===========> " + context.organizationPartyId);
     GenericValue incomeGlAccountClass = from("GlAccountClass").where("glAccountClassId", "INCOME").cache(true).queryOne();
     List incomeAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(incomeGlAccountClass);
+    Debug.log("incomeAccountClassIds =============> " + incomeAccountClassIds);
     GenericValue expenseGlAccountClass = from("GlAccountClass").where("glAccountClassId", "EXPENSE").cache(true).queryOne();
     List expenseAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(expenseGlAccountClass);
     List mainAndExprs = FastList.newInstance();
@@ -33,6 +34,8 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
     mainAndExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
     mainAndExprs.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.NOT_EQUAL, "PERIOD_CLOSING"));
+    Debug.log("context ============> " + context);
+    mainAndExprs.add(EntityCondition.makeCondition("currencyUomId", EntityOperator.EQUALS, context.currencyUomId));
     
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year

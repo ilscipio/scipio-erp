@@ -2662,6 +2662,12 @@ under the License.
         <response name="success" type="view-last"/>
         <response name="error" type="view-last"/>
     </request-map>
+
+    <!-- Cato: Accounting Settings -->
+    <request-map uri="settings">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCompanies"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -2986,6 +2992,9 @@ under the License.
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>
 
+      
+    <!-- Cato: Accounting Settings (Not sure we need one for now, leaving it commented -->
+    <!-- <view-map name="settings" type="screen" page="component://accounting/widget/CommonScreens.xml#settings"/> -->
     <!-- end of view mappings -->
 </site-conf>
 

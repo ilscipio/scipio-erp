@@ -55,7 +55,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
-                <set field="activeMainMenuItem" value="companies"/>
+                <!-- <set field="activeMainMenuItem" value="settings"/> -->
+                <set field="activeSubMenuItem" value="settings"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingAvailableInternalOrganizations}"/>
                 <entity-condition entity-name="PartyAcctgPreference" list="parties"/>
                 <service service-name="acctgPrefPermissionCheck" result-map="permResult">
@@ -68,7 +69,7 @@ under the License.
                 <set field="hasBasicPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet navigation-menu-name="newAccountOrganization">
                             <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationSubTabBar"/>

@@ -371,6 +371,43 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CommonSettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="settings" />                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>                            
+                            <widgets>
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="SettingsSideBar" />
+                            </widgets>                            
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>                            
+                            <widgets>
+                                <section>                                   
+                                    <widgets>
+                                        <label style="heading"></label>
+                                        <section>                                           
+                                        </section>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body" />
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
+                                </label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="main">
         <section>
@@ -450,6 +487,22 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="settings">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="companies"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">                    
+                   <decorator-section name="body"></decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+     </screen>
+    
 
     <screen name="creditCardFields">
         <section>

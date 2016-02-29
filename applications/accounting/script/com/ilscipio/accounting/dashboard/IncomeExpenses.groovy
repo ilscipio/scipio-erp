@@ -34,7 +34,6 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
     mainAndExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
     mainAndExprs.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.NOT_EQUAL, "PERIOD_CLOSING"));
-    Debug.log("context ============> " + context);
     mainAndExprs.add(EntityCondition.makeCondition("currencyUomId", EntityOperator.EQUALS, context.currencyUomId));
     
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;

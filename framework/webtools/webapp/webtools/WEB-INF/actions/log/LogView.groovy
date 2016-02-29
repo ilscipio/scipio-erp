@@ -24,6 +24,7 @@ try {
     File logFile = FileUtil.getFile(logFileName);
     type = '';
     logFile.eachLine { line ->
+        // Cato: All of these checks modified to be more strict and precise
         if (line.startsWith("[INFO]")) {
             type = 'INFO';
         } else if (line.startsWith("[WARN]")) {
@@ -34,9 +35,9 @@ try {
             type = 'DEBUG';
         } else if (line.startsWith("[TRACE]")) {
             type = 'TRACE';
-        }else if (line.startsWith("[FATAL]")) {
+        } else if (line.startsWith("[FATAL]")) {
             type = 'TRACE';
-        }else if (line.startsWith("[ALL]")) {
+        } else if (line.startsWith("[ALL]")) {
             type = '';
         }
         logLines.add([type: type, line:line.trim()]);

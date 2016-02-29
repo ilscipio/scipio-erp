@@ -132,6 +132,8 @@ public final class WebAppUtil {
         // FIXME: RETURN THIS TO VALIDATING ONCE ALL web.xml VALIDATION ISSUES ARE MERGED FROM UPSTREAM
         // The ofbiz team neglected to do it in this part of code, probably
         // because stock doesn't use it much yet... but we rely on it
+        // NOTE: it's also possible this code is missing something that is done in CatalinaContainer
+        // but not here... don't know... wait for upstream
         //return parseWebXmlFile(webXmlFileLocation, true);
         return parseWebXmlFile(webXmlFileLocation, false);
     }

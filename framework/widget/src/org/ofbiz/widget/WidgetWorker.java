@@ -421,13 +421,15 @@ public final class WidgetWorker {
     
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
-        if (UtilValidate.isNotEmpty(modelFormField))
+        // Cato: make sure model form field not empty
+        if (UtilValidate.isNotEmpty(modelFormField)) {
             modelForm = modelFormField.getModelForm();
+        }
         Integer itemIndex = (Integer) context.get("itemIndex");
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) {
+        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // Cato: make sure modelForm not empty
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {

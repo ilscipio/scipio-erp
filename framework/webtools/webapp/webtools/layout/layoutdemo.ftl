@@ -151,12 +151,20 @@
   <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
     <!-- nested menu item comment -->
   </@menuitem>
+  <@menuitem type="generic">
+    <!-- NOTE: this will only look right if the outer menu is a button menu of some sort -->
+    <@menu type="button-dropdown" title="Sub-menu, as button-dropdown">
+      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 2" />
+      <@menuitem type="link" text="Menu Button 3" />
+    </@menu>
+  </@menuitem>
 </@menu>
 
 <@menu type="button-dropdown" title="Single dropdown button menu">
   <@menuitem type="link" text="Menu Button 1" />
-  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}"/>
+  <@menuitem type="link" text="Menu Button 2" />
+  <@menuitem type="link" text="Menu Button 3" />
 </@menu>
 
 </@section>                                     

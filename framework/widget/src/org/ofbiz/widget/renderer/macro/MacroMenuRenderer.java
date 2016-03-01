@@ -425,11 +425,17 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         parameters.put("containsNestedMenus", containsNestedMenus);
         
+        // Cato: menu context role
         String menuCtxRole = (String) context.get("menuStringRender_menuCtxRole");
         if (menuCtxRole == null) {
             menuCtxRole = "";
         }
         parameters.put("menuCtxRole", menuCtxRole);
+        
+        // Cato: sub menu style
+        // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
+        String subMenuStyle = menuItem.getSubMenuStyle();
+        parameters.put("subMenuStyle", subMenuStyle);
         
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);

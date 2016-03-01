@@ -91,8 +91,10 @@ public class ModelMenuItem extends ModelWidget {
     private final String widgetStyle;
     private final String linkStyle;
     
-    private final String overrideMode;
-    private final String sortMode;
+    private final String overrideMode; // Cato: override mode
+    private final String sortMode; // Cato: sort mode
+    
+    private final String subMenuStyle;  // Cato: sub-menu style (no relation to subMenu)
 
     // ===== CONSTRUCTORS =====
 
@@ -178,6 +180,7 @@ public class ModelMenuItem extends ModelWidget {
             this.actions = Collections.emptyList();
         }
         this.overrideName = "";
+        this.subMenuStyle = menuItemElement.getAttribute("sub-menu-style");
     }
 
     // Portal constructor
@@ -210,6 +213,7 @@ public class ModelMenuItem extends ModelWidget {
         this.sortMode = "";
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
+        this.subMenuStyle = "";
     }
 
     // Merge constructor
@@ -270,6 +274,11 @@ public class ModelMenuItem extends ModelWidget {
             this.sortMode = overrideMenuItem.sortMode;
         } else {
             this.sortMode = existingMenuItem.sortMode;
+        }
+        if (overrideMenuItem.subMenuStyle != null) {
+            this.subMenuStyle = overrideMenuItem.subMenuStyle;
+        } else {
+            this.subMenuStyle = existingMenuItem.subMenuStyle;
         }
         this.actions = existingMenuItem.actions;
         this.align = existingMenuItem.align;
@@ -524,6 +533,10 @@ public class ModelMenuItem extends ModelWidget {
     
     public String getSortMode() {
         return this.sortMode;
+    }
+    
+    public String getSubMenuStyle() {
+        return this.subMenuStyle;
     }
 
     public boolean isSelected(Map<String, Object> context) {

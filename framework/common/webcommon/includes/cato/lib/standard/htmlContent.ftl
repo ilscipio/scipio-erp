@@ -982,9 +982,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     ylabel         = y-axis label
     label1         = dataset 1 label
     label2         = dataset 2 label
+    labelUom1      = dataset 1 currency symbol (automatically added to the tooltips)
+    labelUom2      = dataset 2 currency symbol (automatically added to the tooltips)
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","passArgs":{}
+  "type":"pie", "library":"foundation", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
@@ -1000,12 +1002,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartDataIndex = 0/>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
-    xlabel=xlabel ylabel=ylabel label1=label1 label2=label2
+    xlabel=xlabel ylabel=ylabel label1=label1 label2=label2 labelUom1=labelUom1 labelUom2=labelUom2
     renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" labelUom1="" labelUom2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#local nestedContent><#nested /></#local>
   <#if chartLibrary=="foundation">
     <#if nestedContent?has_content>
@@ -1045,16 +1047,22 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     },
                     maintainAspectRatio: true,
                     tooltips: {
-                        mode: 'label',
+                        mode: 'label'<#if labelUom1?has_content ||labelUom2?has_content>,
                         callbacks: {
-                            label: function(tooltipItem, data) {
-                                console.log("tooltipItem ====================> " + tooltipItem);
-                                // Returns "datasetLabel: tooltipItem.yLabel"
-                                //return tooltipItem.ylabel + '$';
-                                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                return datasetLabel + ': ' + tooltipItem.yLabel + '$';
+                            label: function(tooltipItems, data) {
+                                <#if labelUom1?has_content> 
+                                    if(tooltipItems.datasetIndex == 0){
+                                        return tooltipItems.yLabel + ' ${labelUom1!}';
+                                    }
+                                </#if>
+                                <#if labelUom2?has_content> 
+                                    if(tooltipItems.datasetIndex == 0){
+                                        return tooltipItems.yLabel + ' ${labelUom2!}';
+                                    }
+                                </#if>
                             }
                         }
+                        </#if>
                     },
                     hover: {
                         mode: 'label'
@@ -1070,10 +1078,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize
-                    },
-                    scaleLabel: function (valueObject) {
-                        return '$' + valueObject.value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                    }                   
+                    }                 
                     <#if type=="line" || type=="bar">,
                     scales: {
                         type: chartData.scaleType,
@@ -1113,17 +1118,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 autoSkip: true,                            
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize,
-                                callback: function(tickValue, index, ticks) {
-                                    console.log("tickValue ===========> " + tickValue + "  index ============> " + index + "   ticks ============> " + ticks);
-                                    return tickValue + '$';                                    
-                                }
+                                fontSize: chartData.scaleLabelFontSize
                             },
                             afterUpdate: function (valueObject) {
-                                //for (o in valueObject)
-                                    //console.log("obj ====> " + o);
-                                //console.log("id ===========> " + valueObject.id);
-                                //return valueObject.label + ': $' + valueObject.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                             }
                         }]
                     }

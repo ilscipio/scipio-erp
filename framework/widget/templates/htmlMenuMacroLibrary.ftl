@@ -55,6 +55,8 @@ TODO/FIXME:
   The "menu-type-xxx" name will only be included in the resulting class attribute if it is specified as a style in the styles hash; otherwise is automatically removed.
   See @menu macro and style hash for possible types.
   
+  NOTE: This may be called recursively. In stock Ofbiz, @renderMenuBegin was never called recursively.
+  
   TODO?: menu-container-style does not currently fully support the standard Cato +/= class prefix; generally, "+" will be assumed.
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
@@ -62,6 +64,7 @@ TODO/FIXME:
 <!-- ${boundaryComment} -->
 </#if>
 <#--<p><@objectAsScript lang="raw" object=items /></p>-->
+  <#local topLevel = !readRequestStack("renderMenuStack")??>
 
   <#-- Extract menu types from style string, remove, and get global style -->
   <#local type = "">
@@ -100,7 +103,8 @@ TODO/FIXME:
   <#local mainButtonClass = "">
   <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
   
-  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, "menuIdNum":menuIdNum, "inlineEntires":inlineEntries, "htmlwrap":htmlwrap}>
+  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
+    "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap}>
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
     <#list items as item>
@@ -119,7 +123,7 @@ TODO/FIXME:
   </#if>
   <#local dummy = popRequestStack("renderMenuStack")>
   
-  <#if !readRequestStack("renderMenuStack")??> <#-- if top-level menu (in stock Ofbiz this is always true for @renderMenuBegin) -->
+  <#if topLevel>
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#if renderMenuHiddenFormContent?has_content>
       ${renderMenuHiddenFormContent}
@@ -162,14 +166,16 @@ TODO/FIXME:
       ${linkStr}
     </#if><#t>
     <#if containsNestedMenus>
-      <#-- TODO?: this does not have the full power or markup of the top-level menu element... -->
+      <#-- NEW IN CATO: Use recursion to render sub-menu... must be careful... -->
+      <@renderMenuFull boundaryComment="" id="" style=subMenuStyle title=subMenuTitle inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=items />
+      <#-- Previous code (manual, no recursion)...
       <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
             subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle menuInfo=menuInfo />
       </#list>
-      <#if menuInfo.htmlwrap?has_content></${menuInfo.htmlwrap}></#if>
+      <#if menuInfo.htmlwrap?has_content></${menuInfo.htmlwrap}></#if>-->
     </#if>
   </@menuitem_markup>
 </#macro>

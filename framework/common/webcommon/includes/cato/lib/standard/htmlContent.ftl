@@ -1045,7 +1045,16 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     },
                     maintainAspectRatio: true,
                     tooltips: {
-                        mode: 'label'
+                        mode: 'label',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                console.log("tooltipItem ====================> " + tooltipItem);
+                                // Returns "datasetLabel: tooltipItem.yLabel"
+                                //return tooltipItem.ylabel + '$';
+                                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                                return datasetLabel + ': ' + tooltipItem.yLabel + '$';
+                            }
+                        }
                     },
                     hover: {
                         mode: 'label'
@@ -1061,7 +1070,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize
-                    }<#if type=="line" || type=="bar">,
+                    },
+                    scaleLabel: function (valueObject) {
+                        return '$' + valueObject.value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }                   
+                    <#if type=="line" || type=="bar">,
                     scales: {
                         type: chartData.scaleType,
                         display: chartData.scaleDisplay,
@@ -1075,6 +1088,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
                                 fontSize: chartData.scaleLabelFontSize
+                                
                             },
                             ticks: {
                                 display: true,
@@ -1084,7 +1098,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
                                 fontSize: chartData.scaleLabelFontSize
-                            }
+                            }                            
                           }],
                         yAxes: [{
                             scaleLabel : {
@@ -1099,11 +1113,22 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 autoSkip: true,                            
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize
+                                fontSize: chartData.scaleLabelFontSize,
+                                callback: function(tickValue, index, ticks) {
+                                    console.log("tickValue ===========> " + tickValue + "  index ============> " + index + "   ticks ============> " + ticks);
+                                    return tickValue + '$';                                    
+                                }
+                            },
+                            afterUpdate: function (valueObject) {
+                                //for (o in valueObject)
+                                    //console.log("obj ====> " + o);
+                                //console.log("id ===========> " + valueObject.id);
+                                //return valueObject.label + ': $' + valueObject.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                             }
                         }]
                     }
                     </#if>
+
                 };
             var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
             var data = {

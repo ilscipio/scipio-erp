@@ -443,9 +443,7 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
-                <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
-                    use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... 
-                    TODO: need a sub-menu-model attribute that allows fetching the styles from another menu, but needs java work -->
+                <!-- Cato: NOTE: see notes below in LayoutDemoButton2 -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">
@@ -479,6 +477,50 @@ under the License.
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
                 <image src="/images/products/GZ-1000/small.png" />
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- Cato: button menu with nested button-dropdown test -->
+    <menu name="LayoutDemoButton2" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="top1" title="Toplevel1">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+        <menu-item name="top2" title="Toplevel2">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+        <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
+            use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... 
+            TODO: need a sub-menu-model attribute that allows fetching the styles from another menu, but needs java work -->
+        <menu-item name="top3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Sub-menu, as button-dropdown">
+            <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+                <link target="${demoTargetUrl}">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+            <menu-item name="nestednestednested2" title="Nestednestednested2" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+                <link target="${demoTargetUrl}" link-type="hidden-form">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+        </menu-item>
+        <menu-item name="top4" title="Toplevel4">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
     </menu>

@@ -268,7 +268,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
         <#if navigation?has_content><h2>${navigation!}</h2></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${mainButtonClass}">${title}</button><br>
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false"<@compiledClassAttribStr class=mainButtonClass />>${title}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>

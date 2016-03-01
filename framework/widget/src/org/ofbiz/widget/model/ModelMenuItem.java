@@ -358,8 +358,7 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getAlignStyle() {
-        return getStyle("align", this.alignStyle, 
-                parentMenuItem != null ? parentMenuItem.getAlignStyle() : null, 
+        return getStyle("align", this.alignStyle,
                 modelMenu.getDefaultAlignStyle());
     }
 
@@ -391,8 +390,7 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getDisabledTitleStyle() {
-        return getStyle("disabled", this.disabledTitleStyle, 
-                parentMenuItem != null ? parentMenuItem.getDisabledTitleStyle() : null, 
+        return getStyle("disabled", this.disabledTitleStyle,
                 modelMenu.getDefaultDisabledTitleStyle());
     }
 
@@ -463,8 +461,7 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getSelectedStyle() {
-        return getStyle("selected", this.selectedStyle, 
-                parentMenuItem != null ? parentMenuItem.getSelectedStyle() : null, 
+        return getStyle("selected", this.selectedStyle,
                 modelMenu.getDefaultSelectedStyle());
     }
 
@@ -481,8 +478,7 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getTitleStyle() {
-        return getStyle("title", this.titleStyle, 
-                parentMenuItem != null ? parentMenuItem.getTitleStyle() : null, 
+        return getStyle("title", this.titleStyle,
                 modelMenu.getDefaultTitleStyle());
     }
 
@@ -499,14 +495,12 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getTooltipStyle() {
-        return getStyle("tooltip", this.tooltipStyle, 
-                parentMenuItem != null ? parentMenuItem.getTooltipStyle() : null, 
+        return getStyle("tooltip", this.tooltipStyle,
                 modelMenu.getDefaultTooltipStyle());
     }
 
     public String getWidgetStyle() {
-        return getStyle("widget", this.widgetStyle, 
-                parentMenuItem != null ? parentMenuItem.getWidgetStyle() : null, 
+        return getStyle("widget", this.widgetStyle,
                 modelMenu.getDefaultWidgetStyle());
     }
     
@@ -522,7 +516,6 @@ public class ModelMenuItem extends ModelWidget {
             style = this.linkStyle;
         }
         return getStyle("link", style, 
-                parentMenuItem != null ? parentMenuItem.getLinkStyle() : null, 
                 modelMenu.getDefaultLinkStyle());
     }
     
@@ -532,8 +525,8 @@ public class ModelMenuItem extends ModelWidget {
      * TODO?: this could probably cache based on passed name for faster access, but not certain
      * if safe.
      */
-    String getStyle(String name, String style, String parentStyle, String defaultStyle) {
-        return ModelMenu.buildStyle(style, parentStyle, defaultStyle);
+    String getStyle(String name, String style, String defaultStyle) {
+        return ModelMenu.buildStyle(style, null, defaultStyle);
     }
     
     public String getOverrideMode() {

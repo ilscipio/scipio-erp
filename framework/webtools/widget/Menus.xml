@@ -443,6 +443,24 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
+                <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
+                    use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... -->
+                <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
+                    <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+                        <link target="${demoTargetUrl}">
+                            <parameter param-name="demoParam1"/>
+                            <parameter param-name="demoParam2"/>
+                            <parameter param-name="demoParam3"/>
+                        </link>
+                    </menu-item>
+                    <menu-item name="nestednestednested2" title="Nestednestednested2" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+                        <link target="${demoTargetUrl}" link-type="hidden-form">
+                            <parameter param-name="demoParam1"/>
+                            <parameter param-name="demoParam2"/>
+                            <parameter param-name="demoParam3"/>
+                        </link>
+                    </menu-item>
+                </menu-item>
             </menu-item>
             <menu-item name="nested3" title="Nested3"></menu-item>
             <menu-item name="nested4" title="Nested4"></menu-item>

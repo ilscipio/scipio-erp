@@ -55,7 +55,7 @@ under the License.
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-field="quote"/>
                 
-                <set field="titleProperty" value="${uiLabelMap.OrderOrderQuote}: ${quote.quoteId} - ${quote.quoteName}"/>
+                <set field="title" value="${uiLabelMap.OrderOrderQuote}: ${quote.quoteId} - ${quote.quoteName}"/>
                 
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
@@ -719,7 +719,8 @@ under the License.
     <screen name="EditQuoteTerm">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrderQuoteEditTerm}"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.OrderOrderQuoteEditTerm}"/>
                 <set field="activeSubMenuItem" value="QuoteTerms"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <set field="termTypeId" from-field="parameters.termTypeId"/>
@@ -743,7 +744,7 @@ under the License.
     <screen name="EditQuoteTermItem">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrderQuoteEditTerm}"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditTerm"/>
                 <set field="activeSubMenuItem" value="ListQuoteItems"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <set field="termTypeId" from-field="parameters.termTypeId"/>
@@ -767,7 +768,7 @@ under the License.
     <screen name="ListQuoteTerms">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrderQuoteEditTerm}"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditTerm"/>
                 <set field="activeSubMenuItem" value="QuoteTerms"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <set field="termTypeId" from-field="parameters.termTypeId"/>

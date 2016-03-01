@@ -23,7 +23,7 @@ under the License.
     <screen name="ebayStores">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.EbayStore}"/>
+                <set field="titleProperty" value="EbayStore"/>
                 <set field="activeMainMenuItem" value="ebayStore"/>
             </actions>
             <widgets>
@@ -41,7 +41,7 @@ under the License.
     <screen name="ebayStoreDetail">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.EbayStoreSetting}"/>
+                <set field="titleProperty" value="EbayStoreSetting"/>
                 <set field="activeMainMenuItem" value="ebayStore"/>
                 <set field="activeSubMenuItem" value="ebayStoreSetting"/>
                 <script  location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/RetrieveStoreOptions.groovy"/>

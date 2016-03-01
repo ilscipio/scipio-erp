@@ -62,7 +62,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-                <set field="titleProperty" value="${uiLabelMap.OrderOrder}: ${parameters.orderId}"/>
+                <set field="title" value="${uiLabelMap.OrderOrder}: ${parameters.orderId}"/>
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="Summary"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/order.js" global="true"/>
@@ -527,7 +527,7 @@ under the License.
                 <set field="activeMainMenuItem" value="findorders"/>
                 <set field="activeSubMenuItem" value="OrderShipping"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
-                <set field="titleProperty" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
+                <set field="title" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>

@@ -318,7 +318,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="${uiLabelMap.AccountingPaymentType}/${uiLabelMap.FormFieldTitle_glAccountTypeId}"/>
+                <set field="title" value="${uiLabelMap.AccountingPaymentType}/${uiLabelMap.FormFieldTitle_glAccountTypeId}"/>
                 <set field="activeSubMenuItem" value="GlAccountAssignment"/>
                 <set field="activeSubMenuItem2" value="GlAccountTypePaymentType"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
@@ -339,7 +339,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="${uiLabelMap.AccountingPaymentMethodId}/${uiLabelMap.AccountingGlAccountId}"/>
+                <set field="title" value="${uiLabelMap.AccountingPaymentMethodId}/${uiLabelMap.AccountingGlAccountId}"/>
                 <set field="activeSubMenuItem" value="GlAccountAssignment"/>
                 <set field="activeSubMenuItem2" value="GlAccountNrPaymentMethod"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>

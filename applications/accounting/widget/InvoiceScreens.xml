@@ -169,7 +169,7 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="${uiLabelMap.AccountingInvoice}: ${parameters.invoiceId}"/>
+                <set field="title" value="${uiLabelMap.AccountingInvoice}: ${parameters.invoiceId}"/>
                 <set field="activeSubMenuItem" value="invoiceOverview"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>

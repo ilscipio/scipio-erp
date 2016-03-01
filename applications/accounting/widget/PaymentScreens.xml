@@ -347,7 +347,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="titleProperty" value="${uiLabelMap.AccountingPayment}: ${parameters.paymentId}"/>
+                <set field="title" value="${uiLabelMap.AccountingPayment}: ${parameters.paymentId}"/>
                 <set field="activeSubMenuItem" value="paymentOverview"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <entity-one entity-name="Payment" value-field="payment"/>

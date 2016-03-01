@@ -37,13 +37,8 @@
                 </entity-one>
                 <entity-and list="partyContentList" entity-name="PartyContent">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
-                    <field-map field-name="partyContentTypeId" value="LGOIMGURL"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>
-                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
-                <set field="partyContent" value="${groovy: partyContentId!=null?'/content/control/stream?contentId=' + partyContentId + externalKeyParam : ''}"/>
-                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
-                <set field="personalImage" from-field="partyContent"/>
             </actions>
             <widgets>
                 <section>
@@ -52,6 +47,12 @@
                     </condition>
                     <widgets>
                         <section>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="CatoPartyInfo"/>
+                                </screenlet>
+                            </widgets>
+                            <!--  
                             <condition>
                                 <or>
                                     <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
@@ -60,7 +61,7 @@
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyPersonalInformation}" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
-                                    <include-menu name="PersonUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-menu name="PersonUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>                                    
                                     <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
                                     <section>
                                         <condition>
@@ -84,7 +85,7 @@
                                         </widgets>
                                     </section>
                                 </screenlet>
-                            </fail-widgets>
+                            </fail-widgets>-->
                         </section>
                     </widgets>
                 </section>
@@ -629,6 +630,27 @@
                         <html-template location="component://party/webapp/partymgr/party/profileblocks/ProductStores.ftl"/>
                     </html>
                 </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form migration -->
+    <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson -->
+    <screen name="CatoPartyInfo">
+        <section>
+            <actions>
+            </actions>
+            <condition>
+                <not>
+                    <if-empty field="partyId"/>
+                </not>
+            </condition>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://party/webapp/partymgr/party/profileblocks/CatoPartyInfo.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
             </widgets>
         </section>
     </screen>

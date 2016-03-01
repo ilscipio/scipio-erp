@@ -65,10 +65,10 @@ under the License.
     <screen name="viewprofile">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
-                <set field="activeSubMenuItem" value="viewprofile"/>
-                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="partyId" from-field="parameters.partyId"/>
+                <set field="titleProperty" value="${uiLabelMap.PartyProfile}: ${partyId}"/>
+                <set field="activeSubMenuItem" value="viewprofile"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <!--<set field="widePage" type="Boolean" value="true" />-->

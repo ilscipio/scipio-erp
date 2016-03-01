@@ -158,6 +158,7 @@ under the License.
         </sort-order>
     </form>
 
+    <!-- 
     <form name="ViewPartyPerson" type="single" default-map-name="lookupPerson">
         <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
         <field name="partyId"><display/></field>
@@ -166,6 +167,7 @@ under the License.
         <field name="externalId"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
     </form>
+     -->
 
     <form name="ViewPartyPersonHistory" type="list" list-name="partyNameHistoryList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

@@ -81,8 +81,7 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
-                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
-                
+                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>                
                 <service service-name="partyBasePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
@@ -107,23 +106,6 @@ under the License.
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
-                                        <container style="clear"/>
-                                        <container style="page-title">
-                                            <section>
-                                                <condition>
-                                                    <or>
-                                                        <not><if-empty field="lookupPerson"/></not>
-                                                        <not><if-empty field="lookupGroup"/></not>
-                                                    </or>
-                                                </condition>
-                                                <widgets>
-                                                    <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label text="${uiLabelMap.PartyNewUser}"/>
-                                                </fail-widgets>
-                                            </section>
-                                        </container>
                                     </widgets>
                                 </section>
 

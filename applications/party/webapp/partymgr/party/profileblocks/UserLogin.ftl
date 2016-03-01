@@ -30,6 +30,12 @@ under the License.
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>
+              <@td class="${styles.grid_large!}2">${uiLabelMap.PartyUserLogin}
+              </@td>
+              <@td colspan="3">${userUserLogin.userLoginId}</@td>
+            </@tr>
+          
+            <@tr>
               <@td>${uiLabelMap.PartyUserLogin}</@td>
               <@td>${userUserLogin.userLoginId}</@td>
               <@td>

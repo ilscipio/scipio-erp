@@ -288,8 +288,18 @@ under the License.
                                     <condition>
                                         <not><if-empty field="paymentGroupId"/></not>
                                     </condition>
-                                    <widgets>                                        
-                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                    <widgets>     
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                            </fail-widgets>
+                                        </section>                                   
                                     </widgets>                                  
                                 </section> -->
                                 <decorator-section-include name="body"/>

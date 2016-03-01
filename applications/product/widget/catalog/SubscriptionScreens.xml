@@ -95,7 +95,17 @@ under the License.
                                         <container style="button-bar">
                                             <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
-                                        <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${subscription.description} [${subscriptionId}]</label>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading">${title} ${uiLabelMap.CommonFor} ${subscription.description} [${subscriptionId}]</label>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${subscription.description} [${subscriptionId}]</label>
+                                            </fail-widgets>
+                                        </section>
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -237,10 +247,30 @@ under the License.
                                                 <parameter param-name="subscriptionResourceId"/>
                                             </link>
                                         </container>
-                                        <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${subscriptionResource.description}" [${subscriptionResourceId}]</label>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading">${title} ${uiLabelMap.CommonFor} "${subscriptionResource.description}" [${subscriptionResourceId}]</label>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${subscriptionResource.description}" [${subscriptionResourceId}]</label>
+                                            </fail-widgets>
+                                        </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="heading">${uiLabelMap[titleProperty]}</label>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading">${title}</label>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading">${uiLabelMap[titleProperty]}</label>
+                                            </fail-widgets>
+                                        </section>
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

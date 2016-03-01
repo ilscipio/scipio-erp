@@ -56,7 +56,19 @@ under the License.
                                             <link target="editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="${styles.link_nav} ${styles.action_add}"/>
                                             <link target="/ordermgr/control/orderentry?partyId=${partyInvitation.partyIdFrom}" text="${uiLabelMap.PartyInvitationNewOrder}" style="${styles.link_nav} ${styles.action_add}" url-mode="inter-app"/>
                                         </container>
-                                        <container style="button-bar"><label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label></container>
+                                        <container style="button-bar">
+                                            <section>
+                                                <condition>
+                                                    <not><if-empty field="title"/></not>
+                                                </condition>
+                                                <widgets>
+                                                    <label>${title} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                                </fail-widgets>
+                                            </section>
+                                        </container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

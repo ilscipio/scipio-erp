@@ -108,7 +108,17 @@ under the License.
                                         <not><if-empty field="example"/></not><!-- This is a check useful when only seed data are loaded -->
                                     </condition>
                                     <widgets>
-                                        <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="h2">${title} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
+                                            </fail-widgets>
+                                        </section>
                                         <container style="button-bar">
                                             <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_add}">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
@@ -178,7 +188,17 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="h2">
-                                            <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
+                                            <section>
+                                                <condition>
+                                                    <not><if-empty field="title"/></not>
+                                                </condition>
+                                                <widgets>
+                                                    <label>${title} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
+                                                </fail-widgets>
+                                            </section>
                                         </container>
                                         <container style="button-bar">
                                             <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_nav} ${styles.action_add}">

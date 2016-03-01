@@ -141,7 +141,17 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading">${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
+                                            </fail-widgets>
+                                        </section>
                                     </widgets>
                                     <fail-widgets>
                                         <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>

@@ -112,7 +112,17 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="h2">
-                                            <label>${uiLabelMap[titleProperty]} - ${workEffort.workEffortName} [${workEffortId}]</label>
+                                            <section>
+                                                <condition>
+                                                    <not><if-empty field="title"/></not>
+                                                </condition>
+                                                <widgets>
+                                                    <label>${title} - ${workEffort.workEffortName} [${workEffortId}]</label>
+                                                </widgets>
+                                                <fail-widgets>
+                                                    <label>${uiLabelMap[titleProperty]} - ${workEffort.workEffortName} [${workEffortId}]</label>
+                                                </fail-widgets>
+                                            </section>
                                         </container>
                                     </widgets>
                                 </section>

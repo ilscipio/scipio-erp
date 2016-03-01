@@ -131,10 +131,31 @@ under the License.
                                         <not><if-empty field="fixedAssetId"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                            </fail-widgets>
+                                        </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <!-- Cato: duplicate <label style="heading" text="${uiLabelMap[titleProperty]}"/>-->
+                                        <!-- Cato: duplicate 
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading" text="${title}"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading" text="${uiLabelMap[titleProperty]}"/>
+                                            </fail-widgets>
+                                        </section>-->
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

@@ -27,36 +27,42 @@ Since this is very foundation specific, this function may be dropped in future i
     <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
-    type            = (inline|magellan|breadcrumbs) (default:inline)
-    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
+    type            = [inline|magellan|breadcrumbs] (default: inline)
+    class           = CSS classes
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)   
 -->
 <#assign nav_defaultArgs = {
-  "type":"inline", "passArgs":{}
+  "type":"inline", "class":"", "passArgs":{}
 }>
 <#macro nav args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@nav_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@nav_markup>
+  <@nav_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@nav_markup>
 </#macro>
 
 <#-- @nav main markup - theme override -->
-<#macro nav_markup type="" origArgs={} passArgs={} catchArgs...>
+<#macro nav_markup type="" class="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "magellan">
       <div data-magellan-expedition="fixed">
-        <dl class="sub-nav">
+        <#local class = addClassArg(class, styles.nav_subnav!)>
+        <dl<@compiledClassAttribStr class=class />>
           <#nested>
         </dl>
       </div>
     <#break>
     <#case "breadcrumbs">
-      <ul class="${styles.nav_breadcrumbs!}">
-          <#nested>
+      <#local class = addClassArg(class, styles.nav_breadcrumbs!)>
+      <ul<@compiledClassAttribStr class=class />>
+        <#nested>
       </ul>
     <#break>
     <#default>
-      <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
+      <#local class = addClassArg(class, styles.list_inline! + " " + styles.nav_subnav!)>
+      <ul<@compiledClassAttribStr class=class />>
         <#nested>
       </ul>
     <#break>

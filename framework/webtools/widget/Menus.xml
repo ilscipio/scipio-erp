@@ -423,7 +423,7 @@ under the License.
                     <parameter param-name="demoParam3"/>
                 </link>
             </menu-item>
-            <menu-item name="nested2" title="Nested2">
+            <menu-item name="nested2" title="Nested2" sub-menu-style="+my-sub-menu" sub-menu-title="My Sub Menu Title">
                 <link target="${demoTargetUrl}">
                     <parameter param-name="demoParam1"/>
                     <parameter param-name="demoParam2"/>

@@ -95,6 +95,7 @@ public class ModelMenuItem extends ModelWidget {
     private final String sortMode; // Cato: sort mode
     
     private final String subMenuStyle;  // Cato: sub-menu style (no relation to subMenu)
+    private final String subMenuTitle;  // Cato: sub-menu title (no relation to subMenu)
 
     // ===== CONSTRUCTORS =====
 
@@ -181,6 +182,7 @@ public class ModelMenuItem extends ModelWidget {
         }
         this.overrideName = "";
         this.subMenuStyle = menuItemElement.getAttribute("sub-menu-style");
+        this.subMenuTitle = menuItemElement.getAttribute("sub-menu-title");
     }
 
     // Portal constructor
@@ -214,6 +216,7 @@ public class ModelMenuItem extends ModelWidget {
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
         this.subMenuStyle = "";
+        this.subMenuTitle = "";
     }
 
     // Merge constructor
@@ -275,10 +278,16 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.sortMode = existingMenuItem.sortMode;
         }
+        // Cato: TODO? there is no +/= combination logic here for now...
         if (overrideMenuItem.subMenuStyle != null) {
             this.subMenuStyle = overrideMenuItem.subMenuStyle;
         } else {
             this.subMenuStyle = existingMenuItem.subMenuStyle;
+        }
+        if (overrideMenuItem.subMenuTitle != null) {
+            this.subMenuTitle = overrideMenuItem.subMenuTitle;
+        } else {
+            this.subMenuTitle = existingMenuItem.subMenuTitle;
         }
         this.actions = existingMenuItem.actions;
         this.align = existingMenuItem.align;
@@ -537,6 +546,10 @@ public class ModelMenuItem extends ModelWidget {
     
     public String getSubMenuStyle() {
         return this.subMenuStyle;
+    }
+    
+    public String getSubMenuTitle() {
+        return this.subMenuTitle;
     }
 
     public boolean isSelected(Map<String, Object> context) {

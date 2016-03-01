@@ -437,6 +437,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         String subMenuStyle = menuItem.getSubMenuStyle();
         parameters.put("subMenuStyle", subMenuStyle);
         
+        // Cato: sub menu title
+        String subMenuTitle = menuItem.getSubMenuTitle();
+        parameters.put("subMenuTitle", subMenuTitle);
+        
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
         } catch (TemplateException e) {

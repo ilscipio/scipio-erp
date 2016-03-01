@@ -313,6 +313,12 @@ under the License.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="sub-menu-title">
+                <xs:annotation>
+                    <xs:documentation>Cato: Title for the sub-menu within this menu item.
+                        NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="link" type="link"/>

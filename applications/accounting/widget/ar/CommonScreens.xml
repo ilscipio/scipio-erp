@@ -189,7 +189,7 @@ under the License.
                         </not>
                     </condition>
                     <widgets>
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.AccountingPastDueInvoices}">
                             <include-screen name="CatoInvoices" location="component://accounting/widget/InvoiceScreens.xml"/>
                         </screenlet>
                     </widgets>              

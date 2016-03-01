@@ -455,7 +455,7 @@ under the License.
                         </screenlet>
                     </decorator-section>
                     <decorator-section name="bottomLeft">
-                        <screenlet title="${uiLabelMap.AccountingApMenu}">
+                        <screenlet>
                             <section>
                                 <actions>
                                     <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
@@ -469,10 +469,9 @@ under the License.
                         </screenlet>
                     </decorator-section>                
                     <decorator-section name="bottomRight">
-                        <screenlet title="${uiLabelMap.AccountingArMenu}">
+                        <screenlet>
                             <section>
                                 <actions>
-                                    
                                     <set field="invoiceTypeId" value="SALES_INVOICE"/>
                                     <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
                                     <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>

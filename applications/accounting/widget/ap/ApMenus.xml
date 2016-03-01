@@ -23,10 +23,10 @@ under the License.
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="/accounting/control/main" link-type="anchor" url-mode="inter-app" />
         </menu-item>         
-        <menu-item name="main" title="${uiLabelMap.AccountingApMenu}" sort-mode="off" override-mode="remove-replace"> 
+        <menu-item name="main" title="${uiLabelMap.AccountingAccountsPayable}" sort-mode="off" override-mode="remove-replace"> 
             <link target="/ap/control/main" url-mode="inter-app"/>
         </menu-item>
-        <menu-item name="ar" title="${uiLabelMap.AccountingArMenu}" sort-mode="off">
+        <menu-item name="ar" title="${uiLabelMap.AccountingAccountsReceivable}" sort-mode="off">
             <link target="/ar/control/main" url-mode="inter-app" />
         </menu-item>
         <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}" >

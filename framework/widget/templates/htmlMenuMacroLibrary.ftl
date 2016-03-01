@@ -113,7 +113,7 @@ TODO/FIXME:
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-            menuInfo=menuInfo />
+            subMenuStyle=item.subMenuStyle menuInfo=menuInfo />
       </#list>
     </@menu_markup>
   </#if>
@@ -135,7 +135,7 @@ TODO/FIXME:
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] menuInfo={}>
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" menuInfo={}>
   <#local class = style>
   <#local id = "">
   <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
@@ -162,11 +162,12 @@ TODO/FIXME:
       ${linkStr}
     </#if><#t>
     <#if containsNestedMenus>
-      <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}></#if>
+      <#-- TODO?: this does not have the full power or markup of the top-level menu element... -->
+      <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-            menuInfo=menuInfo />
+            subMenuStyle=item.subMenuStyle menuInfo=menuInfo />
       </#list>
       <#if menuInfo.htmlwrap?has_content></${menuInfo.htmlwrap}></#if>
     </#if>

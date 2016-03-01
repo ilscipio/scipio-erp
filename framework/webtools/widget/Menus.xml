@@ -444,7 +444,8 @@ under the License.
                     </link>
                 </menu-item>
                 <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
-                    use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... -->
+                    use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... 
+                    TODO: need a sub-menu-model attribute that allows fetching the styles from another menu, but needs java work -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">

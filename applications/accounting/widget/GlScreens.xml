@@ -89,8 +89,12 @@ under the License.
             <actions> 
                 <set field="chartType" value="bar"/>
                 <set field="chartValue" value="total"/>
-                <set field="chartData" value="C"/>
-                <set field="chartLibrary" value="foundation"/>
+               <!--  <set field="chartData" value="C"/> -->
+                <set field="chartLibrary" value="chart"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.CommonTotal}"/> <!-- 1st dataset label -->
+                <!-- <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> 2nd dataset label -->  
                 <set field="title" value="Total Transactions per Type"/>            
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">

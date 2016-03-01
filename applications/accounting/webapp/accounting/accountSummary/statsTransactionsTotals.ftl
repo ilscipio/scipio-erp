@@ -14,7 +14,7 @@
                 [${fromDate?string("MM/dd/yyyy")!} - ${thruDate?string("MM/dd/yyyy")!}]
             </@heading>            
             <#if ((currData.isEmpty())!true) == false>
-            <@chart type=chartType library=library>
+            <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"">
                 <#list currData.keySet() as key>
                 <#if chartType=="line">
                     <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title="${key}"/>

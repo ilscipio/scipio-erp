@@ -432,17 +432,18 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">                    
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml"/>
-                            
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                 <include-screen name="CatoIncomesExpenses" location="component://accounting/widget/CommonScreens.xml"/>
+ 
                             </container>
-                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                        </container>
+                    
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                 <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml"/>      
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml"/>
-                            
-                            </container>
-                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                <include-screen name="CatoIncomesExpenses" location="component://accounting/widget/CommonScreens.xml"/>
-                            
                             </container>
                         </container>
                         

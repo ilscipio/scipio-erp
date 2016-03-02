@@ -17,14 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+  <#-- CATO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
       <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>
     </@menu>
-  </#macro>
-  <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuContent=menuContent>
+  </#macro>-->
+  <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}">
       <#if contactMeches?has_content>
         <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

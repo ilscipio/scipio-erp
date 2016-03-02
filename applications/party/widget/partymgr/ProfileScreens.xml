@@ -53,40 +53,6 @@
                             <widgets>
                                 <include-screen name="CatoPartyInfo"/>
                             </widgets>
-                            <!--  
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
-                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PartyPersonalInformation}" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
-                                    <include-menu name="PersonUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>                                    
-                                    <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                    <section>
-                                        <condition>
-                                            <not><if-empty field="partyNameHistoryList"/></not>
-                                        </condition>
-                                        <widgets>
-                                            <include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                            </widgets>
-                                    </section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <screenlet title="${uiLabelMap.PartyPersonalInformation}" id="PartyPersonalInformationPanel">
-                                    <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                    <section>
-                                        <condition>
-                                            <not><if-empty field="partyNameHistoryList"/></not>
-                                        </condition>
-                                        <widgets>
-                                            <include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                        </widgets>
-                                    </section>
-                                </screenlet>
-                            </fail-widgets>-->
                         </section>
                     </widgets>
                 </section>
@@ -105,34 +71,6 @@
                             <widgets>
                                 <include-screen name="CatoPartyInfo"/>
                             </widgets>
-                            <!--  
-                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
-                                    <include-menu name="GroupUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
-                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                    <section>
-                                        <condition>
-                                            <not><if-empty field="partyNameHistoryList"/></not>
-                                        </condition>
-                                        <widgets>
-                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                        </widgets>
-                                    </section>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
-                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                    <section>
-                                        <condition>
-                                            <not><if-empty field="partyNameHistoryList"/></not>
-                                        </condition>
-                                        <widgets>
-                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                        </widgets>
-                                    </section>
-                                </screenlet>
-                            </fail-widgets>
-                            -->
                         </section>
                     </widgets>
                 </section>
@@ -163,11 +101,24 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="partyId" from-field="parameters.partyId"/>
+                <entity-and list="listIt" entity-name="PartyIdentificationAndParty">
+                    <field-map field-name="partyId" from-field="partyId"/>
+                </entity-and>
+
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.PartyPartyIdentifications}">
-                    <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
-                </screenlet>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="listIt"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.PartyPartyIdentifications}">
+                            <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -231,11 +182,20 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetLoyaltyPoints.groovy"/>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/LoyaltyPoints.ftl"/>
-                    </html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-compare field="totalSubRemainingAmount" operator="equals" value="0"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/LoyaltyPoints.ftl"/>
+                            </html>
+                        </platform-specific>    
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

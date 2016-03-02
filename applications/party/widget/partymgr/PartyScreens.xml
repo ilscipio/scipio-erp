@@ -150,17 +150,16 @@ under the License.
                                                     <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 -->
                                                 <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
-
                                         </container>
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                            
+                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                         
                                              </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>

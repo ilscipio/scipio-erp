@@ -252,6 +252,15 @@
             </link>
         </menu-item>
         
+        <menu-item name="editcontactmech" title="${uiLabelMap.PartyCreateNewContact}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+            </condition>
+            <link target="editcontactmech">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+        
         
         <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>

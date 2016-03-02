@@ -11,16 +11,16 @@
         </@tr>
     </@thead>
     <#list PastDueInvoices as item>
-        <#assign total =  Static["java.text.NumberFormat"].getNumberInstance(locale).format(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(delegator, item.invoiceId)) />
-        <#assign outstandingAmount =  Static["java.text.NumberFormat"].getNumberInstance(locale).format(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceNotApplied(delegator, item.invoiceId)) />
+        <#assign total = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(delegator, item.invoiceId) />
+        <#assign outstandingAmount = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceNotApplied(delegator, item.invoiceId) />       
         <#assign itemType = item.getRelatedOne("InvoiceType", false)/>
         <@tr>
             <@td><a href="<@ofbizUrl>/invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
             <@td>${itemType.get("description",locale)!}</@td>
             <#-- <@td>${item.partyIdFrom}</@td> -->
             <@td><@formattedDateTime date=item.dueDate /></@td>
-            <@td><@ofbizCurrency isoCode=item.currencyUomId amount=total!/></@td>              
-            <@td><strong><@ofbizCurrency isoCode=item.currencyUomId amount=outstandingAmount!/></strong></@td>
+            <@td><@ofbizCurrency isoCode=item.currencyUomId amount=total!0/></@td>              
+            <@td><strong><@ofbizCurrency isoCode=item.currencyUomId amount=outstandingAmount!0/></strong></@td>
         </@tr>
     </#list>
 </@table>

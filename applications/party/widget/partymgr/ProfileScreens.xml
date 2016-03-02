@@ -630,6 +630,9 @@
     
     <!-- CATO: Form migration -->
     <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson 
+                                        component://party/widget/partymgr/PartyForms.xml#ViewPartyGroup
+                                        component://party/widget/partymgr/PartyForms.xml#ViewPartyPersonHistory
+                                        component://party/widget/partymgr/PartyForms.xml#ViewPartyGroupHistory
          
                Replaces: component://party/widget/partymgr/ProfileScreens.xml#AvsSettings
     -->    

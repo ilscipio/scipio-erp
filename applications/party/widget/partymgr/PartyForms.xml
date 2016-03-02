@@ -132,53 +132,6 @@ under the License.
         </field>
     </form>
 
-    <!-- CATO: Remove
-    <form name="ViewPartyGroup" type="single" default-map-name="lookupGroup">
-        <auto-fields-entity entity-name="PartyGroup" default-field-type="display"/>
-        <field name="logo" use-when="partyGroupLogoLinkUrl!=null" title="${uiLabelMap.CommonOrganizationLogo}"><image alternate="${uiLabelMap.CommonOrganizationLogo}" value="${partyGroupLogoLinkUrl}" style="cssImgStandard"/></field>
-        <field name="partyTypeId"><ignored/></field>
-        <field name="comments"><ignored/></field>
-        <field name="logoImageUrl"><ignored/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="preferredCurrencyUomId" title="${uiLabelMap.CommonCurrency}"><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field>
-        <field name="externalId"><display/></field>
-        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-        <sort-order>
-            <sort-field name="logo"/>
-            <sort-field name="partyId"/>
-            <sort-field name="groupName"/>
-            <sort-field name="groupNameLocal"/>
-            <sort-field name="officeSiteName"/>
-            <sort-field name="annualRevenue"/>
-            <sort-field name="numEmployees"/>
-            <sort-field name="tickerSymbol"/>
-            <sort-field name="description"/>
-            <sort-field name="preferredCurrencyUomId"/>
-            <sort-field name="externalId"/>
-            <sort-field name="statusId"/>
-        </sort-order>
-    </form> 
-    <form name="ViewPartyPerson" type="single" default-map-name="lookupPerson">
-        <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
-        <field name="partyId"><display/></field>
-        <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
-        <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
-        <field name="externalId"><display/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-    </form>
-    <form name="ViewPartyPersonHistory" type="list" list-name="partyNameHistoryList"
-        odd-row-style="alternate-row">
-        <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix}"/></field>
-        <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
-    </form> -->
-
-    <!--
-    <form name="ViewPartyGroupHistory" type="list" list-name="partyNameHistoryList"
-        odd-row-style="alternate-row">
-        <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${groupName}"/></field>
-        <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
-    </form>-->
-
     <form name="AddUserLogin" type="single" target="createUserLogin"
         focus-field-name="userLoginId" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createUserLogin"/>

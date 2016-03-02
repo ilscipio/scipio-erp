@@ -60,7 +60,6 @@ under the License.
     <!-- CATO: Changelist
                * Removed portal page reference
                * Removed "showOld buttons
-               * 
      -->
     <screen name="viewprofile">
         <section>

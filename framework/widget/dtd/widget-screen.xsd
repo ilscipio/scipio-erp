@@ -18,14 +18,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Cato: In Cato, the screen widget language is modified from stock Ofbiz with new elements and
-modifying existing elements. Changes are prefixed with the string "Cato:" in annotations.
+Cato: In Cato, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "Cato:" in annotations.
 
 Features and Modifications:
 * Decorator sections have extended controls to allow auto-inclusion, delegation and
-  conditional definitions.
+  conditional definitions. (auto-decorator-section-include, override-by-auto-include, use-when)
 * In our standard implementation, label and section title styles support an advanced
-  syntax.
+  syntax. (label's style, title-style)
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />

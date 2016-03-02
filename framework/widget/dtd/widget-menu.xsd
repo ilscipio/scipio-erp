@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- 
-Cato: In Cato, the menu widget language is modified from stock Ofbiz with new elements and
-modifying existing elements. Changes are prefixed with the string "Cato:" in annotations.
+Cato: In Cato, the form widget language is modified from stock Ofbiz with new elements and
+modifications to existing elements. Changes are prefixed with the string "Cato:" in annotations.
 
 Features and Modifications:
 * All default-xxx-style and xxx-style attributes now support an extended "+/=" prefix.
@@ -36,12 +36,12 @@ Features and Modifications:
   In stock Ofbiz, this behavior is inconsistent; earlier versions used replacement by default.
   The new appending behavior is the same as used in the Cato Freemarker @menu macro.
   It is simpler to use, but has some limitations (can't replace the widget-style).
-* Menus can include each other's elements (include-elements, include-actions, include-menu-items),
-  independently of "extends".
-* Menu items can be sorted.
-* Menu items can completely override parent ("extends") menu items.
-* Nested sub-menu items can be styled using different defaults than the top-level menu 
-  (functional, but currently limited to styling purposes only).
+* Menus can include each other's elements, independently of "extends".
+  (include-elements, include-actions, include-menu-items)
+* Menu items can be sorted. (items-sort-mode, sort-mode)
+* Menu items can completely override parent ("extends") menu items. (override-mode)
+* Nested sub-menu items can be styled using different defaults than the top-level menu. 
+  (functional, but currently limited to styling purposes only) (sub-menu-model)
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />

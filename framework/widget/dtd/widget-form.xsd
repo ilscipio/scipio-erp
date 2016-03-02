@@ -19,18 +19,19 @@ under the License.
 -->
 <!-- 
 Cato: In Cato, the form widget language is modified from stock Ofbiz with new elements and
-modifying existing elements. Changes are prefixed with the string "Cato:" in annotations.
+modifications to existing elements. Changes are prefixed with the string "Cato:" in annotations.
 
 Features and Modifications:
 * In our renderer implementation, the field positions are treated like a true grid of
   configurable units. "position-span" attribute allows to control the span of an element (with 0=auto available),
   with default-position-span available for the whole forms. Number of grid units
   are usually inferred, but may be explicitly specified per-form.
+  (position, positions, position-span, default-position-span)
 * Our renderer implementation allows hiding table headers and entire forms when lists are empty
-  and substituting with text.
+  and substituting with text. (hide-header-when, hide-table-when, use-alternate-text-when)
 * Some elements support a generic "attribs" attribute which contains a JSON-like map
   of extra attributes to be passed to the underlying macro implementation.
-  This allows customization without renderer modification.
+  This allows customization without renderer modification. (attribs)
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />

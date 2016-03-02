@@ -427,7 +427,7 @@ under the License.
     <screen name="leftbar">
         <section>
             <widgets>
-                <include-screen name="keywordsearchbox"/>
+                <!-- <include-screen name="keywordsearchbox"/> -->
                 <!--<include-screen name="sidecatalogs"/>
                 <include-screen name="sidedeepcategory"/>
                 <include-screen name="categorytree"/>

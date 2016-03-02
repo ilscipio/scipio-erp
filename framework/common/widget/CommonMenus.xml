@@ -17,24 +17,37 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- Cato: NOTES: 
-    * As of 06/07/2015 the ofbiz standard Menu-widget has been expanded by a default-link-style attribute.
-    * The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
-      This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. 
-    * menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and recognized 
-      plain "menu-type-xxx" style names are already mapped to "menu_xxx" entries in styles hash.
-      * The "menu-type-xxx" value is automatically removed from the final style (class attrib).
-        If alone, it should currently be prefixed with "+".
-        FIXME: may need more tweaks to get right
-    * All menu widget xxx-style attributes now support the "+/=" (class arg) prefix, where 
-      "+" means add class, and "=" generally means "use only this value and replace all others".
-      In most cases, best to prefix with "+" unless want to replace other values.
-      Replacing ("=") is currently the DEFAULT (as currently standard in Cato templates), so
-      "+" is now often necessary.
-    * The base class choice may affect more than only styling; may affect some functionality, such as choice of selected-menuitem-context-field-name.
-      Watch out for selected-menuitem-context-field-name, or active/selected entries may not work.
-      For selected-menuitem-context-field-name, individual menu can override if base value is no good.
-    * See standard Cato global styles hash for other notes. -->
+<!-- 
+Cato Common Menu Widgets
+
+This file provides base menu widgets for extending. They provide common styles and functionality.
+Most menu widgets should extend one of these definitions using 
+  <menu name="..." extends="CommonXxx" extends-resource="component://common/widget/CommonMenus.xml" ...>
+
+Menu widget language is modified in Cato with new additions. Please see
+  component://widget/dtd/widget-menu.xsd
+for documentation.
+
+Also see Cato Freemarker global styles hash.
+
+Common menus NOTES:
+* The widget attribute "selected" (default-selected-style) usually translates to "active" in 
+  Cato Freemarker standard macros terminology (@menu) ("selected" may have another meaning there).
+  This is because there's only one highlight option for widgets and by convention the "selected" widget 
+  attribute should practically always be used to select the active menu item. 
+* menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and
+  recognized names in the format "menu-type-xxx" as special values. These are used to identify
+  the menu type, where "menu-type-xxx" is equivalent to <@menu type="xxx"...> in Cato Freemarker
+  standard macros, and where the menu type is defined in the global styles hash.
+  * These names are stripped from the style string and not included in the file class.
+    Instead, the implementing macro (htmlMenuMacroLibrary.ftl) will substitute them with
+    classes looked up in the global styles hash, if any.
+  * If "menu-type-xxx" is alone in a style string, it MUST be prefixed with "+" to prevent issues.
+* All menu widget xxx-style attributes now support the "+/=" (class arg) prefix.
+  See widget-menu.xsd for details.
+* Be aware that the choice of base widget to extend affects more than style.
+  For example, selected-menuitem-context-field-name controls the selected items.
+-->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <!-- Cato: Original stock Ofbiz base app bar menu, modified. -->

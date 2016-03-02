@@ -17,7 +17,9 @@ import org.ofbiz.base.util.HttpClientException;
 
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -141,6 +143,38 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
                 fields.add(description);
                 fields.add(longDescription);
                 fields.add(price);
+            } else if (returnObjectClass.equals(DemoDataPerson.class)) {
+                Map<String, Object> title = FastMap.newInstance();
+                title.put("name", "title");
+                title.put("type", "Title");
+
+                Map<String, Object> firstName = FastMap.newInstance();
+                firstName.put("name", "firstName");
+                firstName.put("type", "First Name");
+
+                Map<String, Object> lastName = FastMap.newInstance();
+                lastName.put("name", "lastName");
+                lastName.put("type", "Last Name");
+
+                Map<String, Object> gender = FastMap.newInstance();
+                gender.put("name", "gender");
+                gender.put("type", "Gender");
+
+                fields.add(title);
+                fields.add(firstName);
+                fields.add(lastName);
+                fields.add(gender);
+            } else if (returnObjectClass.equals(DemoDataUserLogin.class)) {
+                Map<String, Object> userLoginId = FastMap.newInstance();
+                userLoginId.put("name", "userLoginId");
+                userLoginId.put("type", "Username");
+
+                Map<String, Object> password = FastMap.newInstance();
+                password.put("name", "currentPassword");
+                password.put("type", "Password");
+
+                fields.add(userLoginId);
+                fields.add(password);
             }
             return fields;
         }

@@ -92,11 +92,11 @@ public Map createDemoProduct(DispatcherContext ) {
         String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
         int num = context.num;
 
-        // Let's distribute the products into categories evenly
-        int factor = 0;
-        Debug.log("productCategoryIds size ========> " + productCategoryIds.size());
-        if (num > 1 && num > productCategoryIds.size())
-            factor = productCategoryIds.size() / num;
+        // TODO: Let's distribute the products into categories evenly
+//        int factor = 0;
+//        Debug.log("productCategoryIds size ========> " + productCategoryIds.size());
+//        if (num > 1 && num > productCategoryIds.size())
+//            factor = productCategoryIds.size() / num;
 
         List<DemoDataProduct> generatedProducts = DemoSuiteDataWorker.generateProduct(num, MockarooDataGenerator.class);
 

@@ -19,6 +19,15 @@ import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
 
 import javolution.util.FastMap;
 
+@Deprecated
+/**
+ * This service doesn't has a proper API to interact with (ie: REST) so it's
+ * very hard to get the results. Must be dropped or replaced by something else.
+ * 
+ * @author jsoto
+ *
+ * @param <T>
+ */
 public class DatabaseTestDataDataGenerator<T extends DemoDataObject> extends ThirdPartyDataGenerator<T> {
     private static String DATABASETESTDATA_DATA_GENERATOR = "databaseTestData";
 

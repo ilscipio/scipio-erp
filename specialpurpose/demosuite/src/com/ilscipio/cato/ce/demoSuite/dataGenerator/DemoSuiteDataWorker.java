@@ -7,7 +7,9 @@ import org.ofbiz.base.util.Debug;
 
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
 
 public class DemoSuiteDataWorker {
 
@@ -45,6 +47,58 @@ public class DemoSuiteDataWorker {
             List<?> data = (List<?>) generator.retrieveData(count);
 //            Debug.log("retreived products ==============> " + data);
             return (List<DemoDataProduct>) data;
+        } catch (IllegalAccessException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (IllegalArgumentException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (NoSuchMethodException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (SecurityException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (InvocationTargetException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (Exception e) {
+            Debug.logError(e, e.getMessage(), "");
+        }
+
+        return null;
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static List<DemoDataPerson> generatePerson(int count, Class<? extends ThirdPartyDataGenerator<DemoDataPerson>> dataGeneratorClass) {
+        try {
+            ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
+                    .newInstance(DemoDataPerson.class);
+            List<?> data = (List<?>) generator.retrieveData(count);
+//            Debug.log("retreived party ==============> " + data);
+            return (List<DemoDataPerson>) data;
+        } catch (IllegalAccessException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (IllegalArgumentException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (NoSuchMethodException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (SecurityException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (InvocationTargetException e) {
+            Debug.logError(e, e.getMessage(), "");
+        } catch (Exception e) {
+            Debug.logError(e, e.getMessage(), "");
+        }
+
+        return null;
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static List<DemoDataUserLogin> generateUserLogin(int count, Class<? extends ThirdPartyDataGenerator<DemoDataUserLogin>> dataGeneratorClass) {
+        try {
+            ThirdPartyDataGenerator<?> generator = (ThirdPartyDataGenerator<?>) dataGeneratorClass.getConstructor(Class.class)
+                    .newInstance(DemoDataUserLogin.class);
+            List<?> data = (List<?>) generator.retrieveData(count);
+            Debug.log("retreived party ==============> " + data);
+            return (List<DemoDataUserLogin>) data;
         } catch (IllegalAccessException e) {
             Debug.logError(e, e.getMessage(), "");
         } catch (IllegalArgumentException e) {

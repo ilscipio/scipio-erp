@@ -44,4 +44,13 @@
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/>
     </service>
+    
+     <service name="createPartyData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/PartyData.groovy" 
+        invoke="createDemoParty" transaction-timeout="7200">
+        <description>Creates a number of demo data</description>
+        <attribute name="num" type="Integer" mode="IN" optional="false"/>
+        <attribute name="generatePassword" type="Boolean" mode="IN" optional="false" default-value="true"/>
+        <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>

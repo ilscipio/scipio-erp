@@ -72,8 +72,8 @@ TODO/FIXME:
   <#local menuTypeStyles = getStyleNamesByPrefix(class, "menu-type-")>
   <#if menuTypeStyles?has_content>
     <#local class = removeStyleNames(class, menuTypeStyles)>
-    <#-- Use only the first, we only support one -->
-    <#local type = menuTypeStyles[0]?substring(10)>
+    <#-- Use only the LAST type entry, so last overrides the first, without java having to do anything special -->
+    <#local type = menuTypeStyles?last?substring(10)>
   </#if>
   <#local styleName = type?replace("-","_")>
   <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>

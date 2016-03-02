@@ -17,10 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.WebtoolsImportToDataSource}">
+<@section>
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
-<hr />
-
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">
     <@field type="input" size="60" name="filename" value="${filename!}" label="${uiLabelMap.WebtoolsAbsoluteFileNameOrUrl}"/>
     <@field type="input" size="40" name="fmfilename" value="${fmfilename!}" label="${uiLabelMap.WebtoolsAbsoluteFTLFilename}"/>
@@ -32,13 +30,12 @@ under the License.
     <@field type="input" size="6" value="${txTimeoutStr!'7200'}" name="txTimeout" label="${uiLabelMap.WebtoolsTimeoutSeconds}"/>
     <@field type="submit" text="${uiLabelMap.WebtoolsImportFile}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
-<hr />
+
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">
     <@field type="textarea" rows="20" cols="85" name="fulltext" label="${uiLabelMap.WebtoolsCompleteXMLDocument}">${fulltext!"<entity-engine-xml>\n</entity-engine-xml>"}</@field>
     <@field type="submit" text="${uiLabelMap.WebtoolsImportText}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
   <#if messages??>
-      <hr />
     <@section title="${uiLabelMap.WebtoolsResults}:">
       <#list messages as message>
           <p>${message}</p>

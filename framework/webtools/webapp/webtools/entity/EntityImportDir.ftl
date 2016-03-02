@@ -17,10 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.WebtoolsImportToDataSource}">
+<@section>
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
-<hr />
-
   <form method="post" action="<@ofbizUrl>entityImportDir</@ofbizUrl>">
     ${uiLabelMap.WebtoolsAbsolutePath}:<br />
     <input type="text" size="60" name="path" value="${path!}"/><br />
@@ -34,7 +32,6 @@ under the License.
     <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
   </form>
   <#if messages??>
-    <hr />
     <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
     <#list messages as message>
         <p>${message}</p>

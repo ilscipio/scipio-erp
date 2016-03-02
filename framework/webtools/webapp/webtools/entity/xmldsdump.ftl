@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if tobrowser?? && tobrowser>
-<@heading>${uiLabelMap.WebtoolsExportFromDataSource}</@heading>
-
+<@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
 <p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
@@ -37,7 +36,6 @@ under the License.
   </@menu>
 </#macro>
 
-<@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <hr />
 

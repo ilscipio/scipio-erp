@@ -17,16 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.WebtoolsExportFromDataSource}">
+<@section>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <#if results?has_content>
-    <hr />
     <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
     <#list results as result>
         <p>${result}</p>
     </#list>
 </#if>
-<hr />
 
 <form method="post" action="<@ofbizUrl>entityExportAll</@ofbizUrl>">
     ${uiLabelMap.WebtoolsOutputDirectory}: <input type="text" size="60" name="outpath" value="${outpath!}" /><br />

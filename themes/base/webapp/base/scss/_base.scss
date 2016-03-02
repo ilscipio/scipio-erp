@@ -68,7 +68,8 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
         
     li {
         &.disabled {
-            padding: $side-nav-link-padding;
+            // This comes out wrong now...?
+            //padding: $side-nav-link-padding;
             color: $aluminum;
             cursor: $input-disabled-cursor;
         }

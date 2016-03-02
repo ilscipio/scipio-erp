@@ -1013,7 +1013,8 @@ under the License.
                                 <script location="component://common/webcommon/WEB-INF/actions/includes/cato/DashboardLayout.groovy" />                         
                             </actions>
                             <widgets>
-                                <screenlet title="${uiLabelMap.CommonDashboard}">
+                                <label style="h1">${uiLabelMap.CommonDashboard}</label>
+                                <screenlet>
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/cato/dashboard.ftl"/></html></platform-specific>                                 
                                 </screenlet>
                             </widgets>

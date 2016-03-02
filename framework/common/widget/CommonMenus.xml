@@ -21,7 +21,16 @@ under the License.
     * As of 06/07/2015 the ofbiz standard Menu-widget has been expanded by a default-link-style attribute.
     * The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
       This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. 
-    * menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and recognized plain "menu-type-xxx" style names are already mapped to "menu_xxx" entries in styles hash.
+    * menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and recognized 
+      plain "menu-type-xxx" style names are already mapped to "menu_xxx" entries in styles hash.
+      * The "menu-type-xxx" value is automatically removed from the final style (class attrib).
+        If alone, it should currently be prefixed with "+".
+        FIXME: may need more tweaks to get right
+    * All menu widget xxx-style attributes now support the "+/=" (class arg) prefix, where 
+      "+" means add class, and "=" generally means "use only this value and replace all others".
+      In most cases, best to prefix with "+" unless want to replace other values.
+      Replacing ("=") is currently the DEFAULT (as currently standard in Cato templates), so
+      "+" is now often necessary.
     * The base class choice may affect more than only styling; may affect some functionality, such as choice of selected-menuitem-context-field-name.
       Watch out for selected-menuitem-context-field-name, or active/selected entries may not work.
       For selected-menuitem-context-field-name, individual menu can override if base value is no good.
@@ -30,11 +39,11 @@ under the License.
 
     <!-- Cato: Original stock Ofbiz base app bar menu, modified. -->
     <menu name="CommonEmptyAppBarMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-type-main" default-link-style="${styles.menu_main_item_link}" 
+        menu-container-style="+menu-type-main" default-widget-style="${styles.menu_main_item}" default-selected-style="+${styles.menu_main_itemactive}" default-disabled-title-style="+${styles.menu_main_itemdisabled}" default-link-style="${styles.menu_main_item_link}" 
         selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppBarMenu" extends="CommonEmptyAppBarMenu">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
@@ -42,20 +51,23 @@ under the License.
     
     <!-- Cato: New dashboard app bar menu. -->
     <menu name="CommonEmptyAppBarDashboardMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-type-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
+        menu-container-style="+menu-type-main" default-widget-style="${styles.menu_main_item}" default-selected-style="+${styles.menu_main_itemactive}" default-disabled-title-style="+${styles.menu_main_itemdisabled}" default-link-style="${styles.menu_main_item_link}" 
+        selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppBarDashboardMenu" extends="CommonEmptyAppBarDashboardMenu">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
     </menu>
     
     <!-- Cato: New menu for sidebars derived from main app bar menus. Should have mostly minor differences with CommonSideBarMenu. -->
-    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="menu-type-sidebar" default-link-style="${styles.menu_sidebar_item_link}" selected-menuitem-context-field-name="activeMainMenuItem" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
+    <menu name="CommonEmptyAppSideBarMenu" type="simple" 
+        menu-container-style="+menu-type-sidebar" default-widget-style="${styles.menu_sidebar_item}" default-selected-style="+${styles.menu_sidebar_itemactive}" default-disabled-title-style="+${styles.menu_sidebar_itemdisabled}" default-link-style="${styles.menu_sidebar_item_link}" 
+        selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonAppSideBarMenu" extends="CommonEmptyAppSideBarMenu">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}" >
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}" >
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
@@ -63,35 +75,39 @@ under the License.
 
     <!-- Cato: Original stock Ofbiz base tab bar menu, modified. 
         NOTE: Despite individual menu names, some "*ButtonBar"-named menus belong more as extending this CommonTabBarMenu instead of CommonButtonBarMenu. -->
-    <menu name="CommonEmptyTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple"
-          menu-container-style="menu-type-tab" default-selected-style="${styles.menu_tab_itemactive}" default-link-style="${styles.menu_tab_item_link}"/>
+    <menu name="CommonEmptyTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple" 
+        menu-container-style="+menu-type-tab" default-widget-style="${styles.menu_tab_item}" default-selected-style="+${styles.menu_tab_itemactive}" default-disabled-title-style="+${styles.menu_tab_itemdisabled}" default-link-style="${styles.menu_tab_item_link}"/>
     <menu name="CommonTabBarMenu" extends="CommonEmptyTabBarMenu"/>
     
     <!-- Cato: New menu for sub-tar bars. 
         NOTE: I'm not sure if activeSubMenuItem is appropriate in all cases, but individual menus can always override... -->
-    <menu name="CommonEmptySubTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple"
-          menu-container-style="menu-type-tab" default-selected-style="${styles.menu_subtab_itemactive}" default-link-style="${styles.menu_subtab_item_link}"/>
+    <menu name="CommonEmptySubTabBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple" 
+        menu-container-style="+menu-type-tab" default-widget-style="${styles.menu_subtab_item}" default-selected-style="+${styles.menu_subtab_itemactive}" default-disabled-title-style="+${styles.menu_subtab_itemdisabled}" default-link-style="${styles.menu_subtab_item_link}" />
     <menu name="CommonSubTabBarMenu" extends="CommonEmptySubTabBarMenu"/>
     
     <!-- Cato: Original stock Ofbiz base button bar menu, modified. 
         NOTE: Not all stock Ofbiz menus named "*ButtonBar" should extend CommonButtonBarMenu!
         WARN: This does not include a selected-menuitem-context-field-name. Menus must specify it themselves! -->
-    <menu name="CommonEmptyButtonBarMenu" type="simple" menu-container-style="menu-type-button" default-widget-style="" default-link-style="${styles.menu_button_item_link}" default-selected-style="${styles.menu_button_itemactive}" />    
+    <menu name="CommonEmptyButtonBarMenu" type="simple" 
+        menu-container-style="+menu-type-button" default-widget-style="${styles.menu_button_item}" default-selected-style="+${styles.menu_button_itemactive}" default-disabled-title-style="+${styles.menu_button_itemdisabled}" default-link-style="${styles.menu_button_item_link}" />    
     <menu name="CommonButtonBarMenu" extends="CommonEmptyButtonBarMenu" />    
     
     <!-- Cato: New menu for sidebars, usually derived from tar bar menus. 
         NOTE: Screens expect this to be similar in function as CommonTabBarMenu. For sidebars that deviate, use/make another Common* base menu class. For menus whose contents derive from main app menus, use CommonAppSideBarMenu. -->
-    <menu name="CommonEmptySideBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple" menu-container-style="menu-type-sidebar" default-link-style="${styles.menu_sidebar_item_link}" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase">
+    <menu name="CommonEmptySideBarMenu" selected-menuitem-context-field-name="activeSubMenuItem" type="simple" 
+        menu-container-style="+menu-type-sidebar" default-widget-style="${styles.menu_sidebar_item}" default-selected-style="+${styles.menu_sidebar_itemactive}" default-disabled-title-style="+${styles.menu_sidebar_itemdisabled}" default-link-style="${styles.menu_sidebar_item_link}" 
+        items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonSideBarMenu" extends="CommonEmptySideBarMenu">
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}">
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
     </menu>
     
     <!-- Cato: Experimental new menu type. Makes a single drop-down button menu. -->
-    <menu name="CommonEmptyButtonDropdownMenu" type="simple" menu-container-style="menu-type-button-dropdown" default-widget-style="" default-link-style="${styles.menu_button_dropdown_item_link}" default-selected-style="${styles.menu_button_dropdown_itemactive}" />    
+    <menu name="CommonEmptyButtonDropdownMenu" type="simple" 
+        menu-container-style="+menu-type-button-dropdown" default-widget-style="${styles.menu_button_dropdown_item}" default-selected-style="+${styles.menu_button_dropdown_itemactive}" default-disabled-title-style="+${styles.menu_button_dropdown_itemdisabled}" default-link-style="${styles.menu_button_dropdown_item_link}" />    
     <menu name="CommonButtonDropdownMenu" extends="CommonEmptyButtonDropdownMenu" />    
     
 </menus>

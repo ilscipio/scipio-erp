@@ -998,11 +998,11 @@ under the License.
     </screen>
     
     <!-- 
-        Cato: Common decorator for dashboards 
+        Cato: WIP - Common decorator for dashboards 
         Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
         Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
         in order to force screens that use this decorator to look like as a dashboard.           
-    -->
+    
     <screen name="main-decorator-dashboard">
         <section>
             <widgets>
@@ -1024,5 +1024,6 @@ under the License.
             </widgets>
          </section>
     </screen>
+    -->
     
 </screens>

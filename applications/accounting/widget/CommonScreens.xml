@@ -429,68 +429,30 @@ under the License.
             </actions>
             <widgets>
                 <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
-                <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">                    
-                    <decorator-section name="topLeft">
-                        <screenlet>
-                            <section>
-                                <widgets><include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" /></widgets>
-                            </section>
-                        </screenlet>
-                    </decorator-section>
-                    <decorator-section name="topRight">
-                        <screenlet title="${uiLabelMap.AccountingIncomesExpenses}">
-                            <section>
-                                <actions> 
-                                    <set field="chartType" value="bar"/>                                    
-                                    <set field="chartLibrary" value="chart"/>
-                                    <set field="chartIntervalScope" value="month"/>
-                                    <set field="chartIntervalCount" value="6"/>
-                                    <set field="chartDatasets" value="2"/>                                                                        
-                                    <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                         
-                                    <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
-                                    <set field="xlabel" value=""/> <!-- x-axis label -->
-                                    <set field="ylabel" value=""/> <!-- y-axis label -->
-                                    <set field="label1" value="${uiLabelMap.AccountingIncome}"/> <!-- 1st dataset label -->
-                                    <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> <!-- 2nd dataset label -->  
-                                    <!-- IMPORTANT NOTE: This script only retrieves the existing (income/expense) transactions for the default 
-                                    currency defined in general.properties - currency.uom.id.default -->                                 
-                                    <script location="component://accounting/script/com/ilscipio/accounting/dashboard/IncomeExpenses.groovy"/>
-                                </actions>
-                                <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/dashboard/incomeExpenses.ftl"/></html>
-                                    </platform-specific>
-                                </widgets>
-                            </section>
-                        </screenlet>
-                    </decorator-section>
-                    <decorator-section name="bottomLeft">
-                        <screenlet>
-                            <section>
-                                <actions>
-                                    <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
-                                    <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                                    <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
-                                </actions>
-                                <widgets>
-                                   <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" />
-                                </widgets>
-                            </section>
-                        </screenlet>
-                    </decorator-section>                
-                    <decorator-section name="bottomRight">
-                        <screenlet>
-                            <section>
-                                <actions>
-                                    <set field="invoiceTypeId" value="SALES_INVOICE"/>
-                                    <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                                    <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
-                                </actions>
-                               <widgets>
-                                    <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" />
-                               </widgets>
-                            </section>                            
-                        </screenlet>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">                    
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml"/>
+                            
+                            </container>
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml"/>
+                            
+                            </container>
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <include-screen name="CatoIncomesExpenses" location="component://accounting/widget/CommonScreens.xml"/>
+                            
+                            </container>
+                        </container>
+                        
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
+                            
+                            </container>
+                            
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -544,6 +506,45 @@ under the License.
             <widgets>
                 <include-screen name="CommonInvoiceDecorator" location="component://accounting/widget/InvoiceScreens.xml"/>
             </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- CATO: Widget implementation -->
+    <screen name="CatoIncomesExpenses">
+        <section>
+            <actions>
+                <set field="chartType" value="bar"/>                                    
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/>
+                <set field="chartIntervalCount" value="6"/>
+                <set field="chartDatasets" value="2"/>                                                                        
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                         
+                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.AccountingIncome}"/> <!-- 1st dataset label -->
+                <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> <!-- 2nd dataset label -->  
+                <!-- IMPORTANT NOTE: This script only retrieves the existing (income/expense) transactions for the default 
+                currency defined in general.properties - currency.uom.id.default -->                                 
+                <script location="component://accounting/script/com/ilscipio/accounting/dashboard/IncomeExpenses.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="totalMap"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.AccountingIncomesExpenses}">
+                           <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/dashboard/incomeExpenses.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
         </section>
     </screen>
 

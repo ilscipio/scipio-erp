@@ -566,64 +566,38 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>            
-                <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="topRight">
-                       <section>
-                            <actions>
-                                <script location="component://product/script/com/ilscipio/product/dashboard/NewProducts.groovy"/>
-                            </actions>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.ProductRecentProductsAdded}">
-                                    <include-form name="newProducts" location="component://product/widget/catalog/CatalogForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    
-                    <decorator-section name="topLeft">
-                       <section>
-                            <actions>
-                                 <set field="userEntered" from-field="parameters.userEntered"/>
-				                <entity-condition entity-name="ProductPromo" list="productPromos">
-				                    <condition-expr field-name="userEntered" from-field="userEntered" ignore-if-empty="true"/>
-				                    <order-by field-name="-createdDate"/>
-				                </entity-condition>                               
-                            </actions>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.ProductProductPromotionsList}">
-		                            <include-form name="ListProductPromos" location="component://product/widget/catalog/PromoForms.xml"/>
-		                        </screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    
-                    <decorator-section name="bottomLeft">
-                           <section>
-                               <actions>
-                                   <set field="productStoreId" value="CATO_FOUNDATION_1"/>
-                                   <entity-one value-field="productStore" entity-name="ProductStore"/>
-                                   <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
-                               </actions>
-                               <widgets>
-                                   <screenlet title="${productStore.storeName}">
-                                       <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                                   </screenlet>
-                               </widgets>
-                           </section>
-                    </decorator-section>
-                    <decorator-section name="bottomRight">
-                           <section>
-                               <actions>
-                                   <set field="productStoreId" value="CATO_FOUNDATION_2"/>
-                                   <entity-one value-field="productStore" entity-name="ProductStore"/>
-                                   <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
-                               </actions>
-                               <widgets>
-                                   <screenlet title="${productStore.storeName}">
-                                       <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                                   </screenlet>     
-                               </widgets>
-                           </section>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <section>
+                                   <actions>
+                                       <set field="productStoreId" value="9000" global="true"/>
+                                   </actions>
+                                   <widgets>
+                                       <include-screen name="CatoStoreCatalogTree"/>   
+                                   </widgets>
+                               </section>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <section>
+                                   <actions>
+                                       <set field="productStoreId" value="RentalStore" global="true"/>
+                                   </actions>
+                                   <widgets>
+                                       <include-screen name="CatoStoreCatalogTree"/>   
+                                   </widgets>
+                               </section>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoRecentProductsAdded"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -703,6 +677,79 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- CATO: Widget implementation -->
+    <screen name="CatoStoreCatalogTree">
+        <section>
+            <actions>
+               <entity-one value-field="productStore" entity-name="ProductStore"/>
+               <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="treeMenuData"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${productStore.storeName}">
+                           <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoRecentProductsAdded">
+        <section>
+            <actions>
+                <script location="component://product/script/com/ilscipio/product/dashboard/NewProducts.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="products"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                        <screenlet title="${uiLabelMap.ProductRecentProductsAdded}">
+                            <include-form name="newProducts" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoPromotionsList">
+        <section>
+            <actions>
+                <set field="userEntered" from-field="parameters.userEntered"/>
+                <entity-condition entity-name="ProductPromo" list="productPromos">
+                    <condition-expr field-name="userEntered" from-field="userEntered" ignore-if-empty="true"/>
+                    <order-by field-name="-createdDate"/>
+                </entity-condition>     
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="productPromos"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                        <screenlet title="${uiLabelMap.ProductProductPromotionsList}">
+                            <include-form name="ListProductPromos" location="component://product/widget/catalog/PromoForms.xml"/>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

@@ -148,7 +148,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
             </actions>
             <widgets>
-                 <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
+                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <!-- TODO: Cato: This is going to be removed -->
                     <!-- <decorator-section name="topLeft">
                         <section>
@@ -170,52 +170,52 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section> -->
-                    <!-- Cato: This is going to be removed -->
                     
-                    <decorator-section name="topRight">
-                        <screenlet title="${uiLabelMap.PartyNewRegistrations}">
-                            <section>
-                                <actions> 
-                                    <set field="chartType" value="bar"/>                                    
-                                    <set field="chartLibrary" value="chart"/>
-                                    <set field="chartIntervalScope" value="month"/>
-                                    <set field="chartIntervalCount" value="6"/>
-                                    <set field="chartDatasets" value="1"/>
-                                    <set field="xlabel" value=""/> <!-- x-axis label -->
-                                    <set field="ylabel" value=""/> <!-- y-axis label -->
-                                    <set field="label1" value="${uiLabelMap.PartyRegistered}"/> <!-- 1st dataset label -->                                  
-                                    <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
-                                </actions>
-                                <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
-                                    </platform-specific>
-                                </widgets>
-                            </section>
-                        </screenlet>
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
+                            </container>
+                        </container>
                     </decorator-section>
-                    
-                    
-                    <decorator-section name="bottomRight">
-                        <screenlet title="${uiLabelMap.PartyCurrentlyOnline}">
-                            <section>
-                                <actions>     
-                                    <!-- <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/> -->
-                                </actions>
-                                <widgets>
-                                  <!--   <platform-specific>
-                                        <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
-                                      
-                                    </platform-specific> -->
-                                    <include-form name="ListLoggedInUsers"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
-                                </widgets>
-                            </section>
-                        </screenlet>
-                    </decorator-section>
-                    
-                    
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Widget implementation -->
+    <screen name="CatoNewRegistrations">
+        <section>
+            <actions>
+                <set field="chartType" value="bar"/>                                    
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/>
+                <set field="chartIntervalCount" value="6"/>
+                <set field="chartDatasets" value="1"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.PartyRegistered}"/> <!-- 1st dataset label -->                                  
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="totalMap"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.PartyNewRegistrations}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
         </section>
     </screen>
 </screens>

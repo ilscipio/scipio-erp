@@ -149,9 +149,10 @@ under the License.
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="topLeft">
+                    <!-- TODO: Cato: This is going to be removed -->
+                    <!-- <decorator-section name="topLeft">
                         <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            do check for PARTYMGR, _VIEW permission
                             <condition>
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
@@ -168,7 +169,51 @@ under the License.
                                 <label style="common-msg-error-perm" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
                             </fail-widgets>
                         </section>
+                    </decorator-section> -->
+                    <!-- Cato: This is going to be removed -->
+                    
+                    <decorator-section name="topRight">
+                        <screenlet title="${uiLabelMap.PartyNewRegistrations}">
+                            <section>
+                                <actions> 
+                                    <set field="chartType" value="bar"/>                                    
+                                    <set field="chartLibrary" value="chart"/>
+                                    <set field="chartIntervalScope" value="month"/>
+                                    <set field="chartIntervalCount" value="6"/>
+                                    <set field="chartDatasets" value="1"/>
+                                    <set field="xlabel" value=""/> <!-- x-axis label -->
+                                    <set field="ylabel" value=""/> <!-- y-axis label -->
+                                    <set field="label1" value="${uiLabelMap.PartyRegistered}"/> <!-- 1st dataset label -->                                  
+                                    <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
+                                </actions>
+                                <widgets>
+                                    <platform-specific>
+                                        <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                                    </platform-specific>
+                                </widgets>
+                            </section>
+                        </screenlet>
                     </decorator-section>
+                    
+                    
+                    <decorator-section name="bottomRight">
+                        <screenlet title="${uiLabelMap.PartyCurrentlyOnline}">
+                            <section>
+                                <actions>     
+                                    <!-- <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/> -->
+                                </actions>
+                                <widgets>
+                                  <!--   <platform-specific>
+                                        <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                                      
+                                    </platform-specific> -->
+                                    <include-form name="ListLoggedInUsers"  location="component://party/widget/partymgr/PartyVisitForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                    
+                    
                 </decorator-screen>
             </widgets>
         </section>

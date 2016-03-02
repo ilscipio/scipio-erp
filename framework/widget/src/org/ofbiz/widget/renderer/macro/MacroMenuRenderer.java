@@ -404,13 +404,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             if (UtilValidate.isEmpty(selectedStyle)) {
                 selectedStyle = "+selected";
             } 
-            style = ModelMenu.combineStyles(style, selectedStyle);
+            style = ModelMenu.combineExtraStyle(style, selectedStyle);
         }
         boolean disabled = this.isDisableIfEmpty(menuItem, context);
         if (disabled) {
             // Cato: Must use new combination logic
             //style = menuItem.getDisabledTitleStyle();
-            style = ModelMenu.combineStyles(style, menuItem.getDisabledTitleStyle());
+            style = ModelMenu.combineExtraStyle(style, menuItem.getDisabledTitleStyle());
         }
         if (style == null) {
             style = "";
@@ -419,7 +419,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(alignStyle)) {
             // Cato: Must use new combination logic
             //style = style.concat(" ").concat(alignStyle);
-            style = ModelMenu.combineStyles(style, alignStyle);
+            style = ModelMenu.combineExtraStyle(style, alignStyle);
         }
         
         // Cato: expand the style here (not done previously, and _may_ expand on its own through FTL, but

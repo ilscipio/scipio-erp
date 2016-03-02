@@ -803,28 +803,50 @@ public class ModelMenu extends ModelWidget {
     }
     
     /**
-     * Cato: This now MUST be used to combine menu styles. 
-     * Do NOT try to combine style strings manually with addition!
+     * Cato: Combines an extra style (like selected-style) to a main style 
+     * string (like widget-style).
+     * <p>
+     * NOTE: currently, the extra style is always added as an extra, and
+     * never replaces. The extra's prefix (+/=) is stripped.
+     * <p>
+     * ALWAYS USE THIS METHOD TO CONCATENATE EXTRA STYLES.
      */
-    public static String combineStyles(String... styles) {
-        String res = "";
-        for(String style : styles) {
-            if (style != null) {
-                style = style.trim();
-                if (!style.isEmpty()) {
-                    if (style.startsWith("+")) {
-                        res += " " + style.substring(1);
-                    }
-                    else if (style.startsWith("=")) {
-                        res = style.substring(1);
-                    }
-                    else {
-                        res = style;
-                    }
-                }
+    public static String combineExtraStyle(String style, String extraStyle) {
+        String res;
+        if (style == null) {
+            style = "";
+        }
+        else {
+            style = style.trim();
+        }
+        if (extraStyle == null) {
+            extraStyle = "";
+        }
+        else {
+            extraStyle = extraStyle.trim();
+        }
+        
+        if (style.isEmpty()) {
+            // In this case, prefix the result with "+" to be sure we don't
+            // turn the string into a "replacing" string
+            if (extraStyle.startsWith("=") || extraStyle.startsWith("+")) {
+                res = "+" + extraStyle.substring(1);
+            }
+            else {
+                res = "+" + extraStyle;
             }
         }
-        return res.trim();
+        else {
+            // Here, resulting string prefix is left to the input style
+            if (extraStyle.startsWith("=") || extraStyle.startsWith("+")) {
+                res = style + " " + extraStyle.substring(1);
+            }
+            else {
+                res = style + " " + extraStyle;
+            }
+        }
+        
+        return res;
     }
     
     public List<ModelMenuItem> getMenuItemList() {

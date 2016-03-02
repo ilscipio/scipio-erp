@@ -6,8 +6,6 @@
     <@mli arrival="panel"><a href="#panel">Panel</a></@mli>
 </@nav>-->
 
-<p><@ofbizInterWebappUrl "sadfasdf"/></p>
-
 <div ${mtarget("breadcrumbs")} id="breadcrumbs"></div>
 <@nav type="breadcrumbs">
     <li class="${styles.nav_breadcrumb!}"><a href="#" class="${styles.nav_breadcrumb_link!}">Home</a></li>

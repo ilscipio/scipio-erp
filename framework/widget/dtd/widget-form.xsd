@@ -23,10 +23,14 @@ modifying existing elements. Changes are prefixed with the string "Cato:" in ann
 
 Features and Modifications:
 * In our renderer implementation, the field positions are treated like a true grid of
-  configurable units. "position-span" attribute allows to control the span of an element,
+  configurable units. "position-span" attribute allows to control the span of an element (with 0=auto available),
   with default-position-span available for the whole forms. Number of grid units
   are usually inferred, but may be explicitly specified per-form.
-* Our renderer implementation allows hiding table headers and entire forms when lists are empty.
+* Our renderer implementation allows hiding table headers and entire forms when lists are empty
+  and substituting with text.
+* Some elements support a generic "attribs" attribute which contains a JSON-like map
+  of extra attributes to be passed to the underlying macro implementation.
+  This allows customization without renderer modification.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
@@ -328,12 +332,12 @@ Features and Modifications:
             </xs:attribute>
             <xs:attribute name="positions" type="xs:integer">
                 <xs:annotation>
-                    <xs:documentation>Cato: explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
+                    <xs:documentation>Cato: Explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-position-span" type="xs:integer" default="1">
                 <xs:annotation>
-                    <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
+                    <xs:documentation>Cato: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="default-combine-action-fields" default="true">

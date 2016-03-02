@@ -87,11 +87,21 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/Contact.ftl"/>
-                    </html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="contactMeches"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/Contact.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                
             </widgets>
         </section>
     </screen>
@@ -131,11 +141,21 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetPaymentMethods.groovy"/>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/PaymentMethods.ftl"/>
-                    </html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="paymentMethodValueMaps"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/PaymentMethods.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                
             </widgets>
         </section>
     </screen>
@@ -211,11 +231,20 @@
                 </entity-and>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/UserLogin.ftl"/>
-                    </html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="userLogins"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/UserLogin.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

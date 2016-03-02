@@ -159,16 +159,15 @@ under the License.
                                         </container>
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                         
+                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                              </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                         </container>
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                
-                                            
+                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
                                              </container>
                                         </container>
                                     </widgets>

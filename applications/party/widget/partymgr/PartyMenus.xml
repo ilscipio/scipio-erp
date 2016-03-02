@@ -237,7 +237,7 @@
             </link>
         </menu-item>
         
-        <menu-item name="createProfile" title="${uiLabelMap.CreateUserLogin}" widget-style="+${styles.action_nav} ${styles.action_create}">
+        <menu-item name="createUserLogin" title="${uiLabelMap.CreateUserLogin}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
@@ -261,7 +261,41 @@
             </link>
         </menu-item>
         
+        <menu-item name="createNewEftAccount" title="${uiLabelMap.AccountingCreateNewEftAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <if-has-permission permission="PAY_INFO" action="_CREATE"/>
+                    <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="editeftaccount">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="createNewGiftCard" title="${uiLabelMap.AccountingCreateNewGiftCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <if-has-permission permission="PAY_INFO" action="_CREATE"/>
+                    <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="editgiftcard">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="createNewCreditCard" title="${uiLabelMap.AccountingCreateNewCreditCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <if-has-permission permission="PAY_INFO" action="_CREATE"/>
+                    <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="editcreditcard">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
         
+        <!-- CATO: Remove - Already covered by Quotes & Orders menu
         <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
@@ -279,7 +313,7 @@
                 <parameter param-name="partyId"/>
                 <parameter param-name="externaLoginKey" from-field="externalLoginKey"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="create-new-party" type="simple" menu-container-style="+basic-nav">
         <menu-item name="create-party-group" title="${uiLabelMap.PartyCreateNewPartyGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">

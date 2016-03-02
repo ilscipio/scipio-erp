@@ -7,18 +7,21 @@
 * Intended to be swappable.
 * Includes all other default Cato macros.
 *
-* NOTE: currently targeted toward Foundation CSS.
+* NOTES:
+* * Currently targeted toward Foundation CSS.
+* * Macros expect to be called using named arguments, except where otherwise noted.
+* * Functions in Freemarker only support positional arguments, but some Cato functions support
+*   an "args" argument as a map, which emulates named arguments.
 *
-* NOTE: In general, macros expect to be called using named arguments (not supported for functions),
-*     except where otherwise noted.
+* IMPLEMENTATION NOTES: 
+* * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
 *
-* IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
-*
-* DEV NOTE: some macros use attribs and inlineAttribs args to specify extra HTML attribs.
-*     even though it would be convenient, we can't allow a "attribString" arg because no way
-*     for macro to get attribs out of it if it needs them, cause problems.
-*     FIXME: not all macros currently properly check attribMap for duplicate attribs
-*         of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
+* DEV NOTES: 
+* * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
+*   Even though it would be convenient, we can't allow a "attribString" arg because no way
+*   for macro to get attribs out of it if it needs them, cause problems.
+*   FIXME: Not all macros currently properly check attribMap for duplicate attribs
+*       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
 *
 *
 * MACRO INTERFACES

@@ -4,7 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -26,10 +27,13 @@ An HTML form element.
     </@form>            
                     
   * Parameters *
-    type                = [input|display], default input
+    type                = (input|display) (default: input)
                           DEV NOTE: "display" is special for time being, probably rare or unused;
                                     maybe it should cause to omit <form> element
-    class               = classes on form element itself 
+    class               = CSS classes on form element itself
+                          Supports prefixes:
+                            "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                            "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
@@ -145,24 +149,26 @@ for getFileUploadProgressStatus AJAX calls.
 *************
 * Progress Bar 
 ************
+A progress bar.
+
+Can be animated using Javascript manually or by using progressOptions argument.  
+Presence of progressOptions activates use of CatoUploadProgress script for this progress bar by linking it 
+to a form submit.
 
   * Usage Example *  
     <@progress value=40/>             
     
-   Can be animated using js, example: 
-   
-   $('#${id}_meter').css("width", "78%");
-    
-   Can also be animated automatically using progressOptions which activates use of CatoUploadProgress
-   script for this progress bar by linking it to a form submit.
-                    
+    Javascript animation (manual):
+    $('#${id}_meter').css("width", "78%");
+                     
   * Parameters *
     value          = Percentage done
-    id             = custom id; can also be specified as progressOptions.progBarId instead
-                     if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
-    type           = (alert|info|success) default: info
-    class          = Adds classes - please use "(small|medium|large)-block-grid-#"
-                     supports prefixes:
+    id             = custom ID; can also be specified as progressOptions.progBarId instead.
+                     The meter will get an id of "${id}_meter".
+                     If omitted, no progress bar per se will be created, but script will still be generated for progressOptions.progTextBoxId.
+    type           = (alert|info|success) (default: info)
+    class          = Adds or sets classes - please use "(small|medium|large)-block-grid-#"
+                     Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     containerClass = classes added only on container
@@ -313,8 +319,8 @@ A visible fieldset, including the HTML element.
     </@fieldset>            
                     
   * Parameters *
-    class           = css classes 
-                      supports prefixes:
+    class           = CSS classes 
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     containerClass  = class for wrapper 
@@ -435,7 +441,7 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type            = [default|default-nolabels|default-compact|default-manual|generic], default default. the type of fields arrangement. affects layout and styling of contained fields.
+    type            = (default|default-nolabels|default-compact|default-manual|generic), (default: default). The type of fields arrangement. Affects layout and styling of contained fields.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
                       default-nolabels: default cato field arrangement for common sets of fields with no labels.
@@ -452,10 +458,10 @@ or even multiple per fieldset.
                           This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
                           generally, @field specifies label as pure data and theme decides where and how to display it.
                           In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
-    labelType       = [horizontal|vertical|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
+    labelType       = (horizontal|vertical|none), (default: -type-specific-). Override for type of the field labels themselves.
                       horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
                           the implementation decides how to do this.
-                          DEV NOTE: previously this was called "gridarea". but in the bootstrap code, this no longer makes sense.
+                          DEV NOTE: previously this was called "gridarea". But in the bootstrap code, this no longer makes sense.
                               It would be perfectly valid for us to add an extra type here called "gridarea" that specifically requires
                               a grid (TODO?). "horizontal" simply delegates the choice to the implementation.
                       vertical: a label area added before (or potentially after) a field, vertically. 
@@ -464,7 +470,7 @@ or even multiple per fieldset.
                       TODO: we should have types here that specifically request that either "gridarea" or "inline" are used for markup:
                           gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
                           The current implementation is unspecific.
-    labelPosition   = [left|right|top|bottom|none], defaults specified in styles variables based on fields type. override for layout/positioning of the labels.
+    labelPosition   = (left|right|top|bottom|none) (default: -type-specific-). override for layout/positioning of the labels.
                       some values only make sense for some arrangements.
     labelArea       = boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted. 
                       logic is influenced by other arguments.
@@ -781,8 +787,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     columns         = number of grid columns to use as size for widget + postfix area (combined)
                       DEV NOTE: this value now includes the postfix area because this usually easier
                           to use this way and because the widget + postfix configuration is variable
-    class           = css classes for the field element (NOT the cell container!)
-                      supports prefixes:
+    class           = CSS classes for the field element (NOT the cell container!)
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     containerClass  = optional class for outer container (prefix with +)
@@ -797,7 +803,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     onFocus         = shortcut for: events={"focus": onChange}
     disabled        = field disabled
     placeholder     = field placeholder
-    alert           = adds additional css alert class
+    alert           = adds additional CSS alert class
     mask            = toggles jQuery mask plugin
     size            = size attribute (default: 20)
     collapse        = should the whole field (including label and postfix) be collapsing? (default: false)
@@ -837,9 +843,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     text/value      = text/value, alternate to #nested
     
     * datetime *
-    dateType        = [date-time|date|time] (default: date-time) type of datetime
-                      NOTE: Also accepts "timestamp" instead of "date-time". date-time is equivalent to "timestamp" in form widgets.
-    dateDisplayType = [default|date|...] (default: same as dateType). The visual display format of the date. Optional.
+    dateType        = (date-time|timestamp|date|time) (default: date-time) type of datetime
+                      "date-time" and "timestamp" are synonymous.
+    dateDisplayType = (default|date|...) (default: -same as dateType-). The visual display format of the date. Optional.
                       If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
                       This means the user will be presented with a short date only, but the data sent to the server
                       will be a full timestamp.
@@ -904,7 +910,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     value           = Y/N
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
-    checkboxType    = [default|...], default default
+    checkboxType    = (default|...) (default: default)
                       Generic:
                         default: default theme checkbox
                       Cato standard theme:
@@ -926,9 +932,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     value           = Y/N, only used if single radio item mode (items not specified)
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
-    radioType       = [default], default default
+    radioType       = (default|...) (default: default)
                       Generic:
                         default: default theme radio
+                      Cato standard theme:
+                        See global styles hash.
     
     * radio (multi mode) *
     items           = if specified, multiple-items radio generated; 
@@ -955,7 +963,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                       progressArgs={"enabled":true, "progressOptions":progressOptions}      
                       
     * submit *
-    submitType      = [submit|link|button|image|input-button], default submit (<input type="submit"/>)  
+    submitType      = (submit|link|button|image|input-button) (default: submit)
                       submit: <input type="submit" ... />
                       input-button: <input type="button" ... />
                       link: <a href="..." ...>...</a>
@@ -975,7 +983,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     text            = label to show on reset button
                       
     * display *
-    valueType       = [image|text|currency|date|date-time|accounting-number|generic], default generic (treated as text)
+    valueType       = (image|text|currency|date|date-time|timestamp|accounting-number|generic) (default: generic)
+                      "date-time" and "timestamp" are synonymous.
+                      generic: treated as arbitrary content, but text may still be interpreted
                       TODO: currently all are handled as text/generic (because formatting done in java in stock ofbiz)
     value           = display value or image URL
     description     = for image type: image alt

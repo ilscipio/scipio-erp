@@ -4,7 +4,8 @@
 *
 * Included by htmlForm.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -1061,7 +1062,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 
 <#-- migrated from @renderSubmitField form widget macro 
   * Parameters*
-    buttonType    = [text-link|image|button], default button - logical button type (based on ofbiz form widget types)
+    buttonType    = (text-link|image|button) (default: button) Logical button type (based on ofbiz form widget types)
     inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
 <#assign field_submit_widget_defaultArgs = {
   "buttonType":"", "class":"", "alert":"", "formName":"", "name":"", "events":{}, "imgSrc":"", "confirmation":"", 

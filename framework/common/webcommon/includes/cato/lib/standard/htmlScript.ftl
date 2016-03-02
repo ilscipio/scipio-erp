@@ -4,10 +4,12 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
-* DEV NOTE: This currently contains some theme- and platform-specific utilites... could have own file, but
-*     this is somewhat generic.
+* DEV NOTES: 
+* * This currently contains some theme- and platform-specific utilites... could have own file, but
+*   this is somewhat generic.
 -->
 
 <#--

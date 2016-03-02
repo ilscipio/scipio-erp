@@ -6,18 +6,17 @@
 * Automatically included at all times, unless overridden by properties or themes.
 * Intended to be swappable.
 *
-* NOTE: currently targeted toward Foundation CSS.
-*
-* NOTE: variables must now be defined using #assign, not #global (treat this file as if it were being
-*   included in its own namespace, even if it is not).
-* 
+* NOTES: 
+* * Currently targeted toward Foundation CSS.
+* * Variables must be defined using #assign directive, not #global; please treat this file as if it were being
+*   included in its own namespace, even if it is not.
 -->
 
 <#-- 
 *************************************
 * MAIN STYLES *
 *************************************
-* Cato automatically recognizes the "styles" global hash.
+* Cato automatically recognizes the "styles" hash variable and makes it available.
 -->
 
 <#assign styles = {
@@ -473,7 +472,7 @@
     OTHER TYPES:
       * NON-TEXT LINKS, MENU ITEMS, CUSTOM LINKS AND OTHER ELEMENTS: Image and other non-text links as well as non-link elements that trigger actions or identify with an action even without causing one (such as menu item <li> elements or any other UI element),
         should NOT receive link_xxx classes. Links that need custom styles can also use something other than link_xxx if they're not appropriate. For these or any other action-related UI element, 
-        use the main action_xxx styles directly instead of link_xxx, which have analogous categories (the only difference is they can't factor out styling decisions as directly as link_xxx styles do, and must rely more on css/sass).
+        use the main action_xxx styles directly instead of link_xxx, which have analogous categories (the only difference is they can't factor out styling decisions as directly as link_xxx styles do, and must rely more on CSS/sass).
         For image links, it's a good idea to add link_type_image as well, to help with limitations of CSS selectors, even if it makes it more verbose.
         * Main Types:
           * action_run_xxx: Run-action (with scope).
@@ -585,7 +584,7 @@
     "text_color_alert" : "colored-text alert",
     "text_color_error" : "colored-text alert",
     
-    <#-- colors for any other element that supports coloring ("color" css attribute) -->
+    <#-- colors for any other element that supports coloring ("color" CSS attribute) -->
     "elem_color_primary" : "colored-elem primary",
     "elem_color_secondary" : "colored-elem secondary",
     "elem_color_info" : "colored-elem info",
@@ -679,7 +678,7 @@
     <#-- tiles-type-based args and styles
          as always, default is also used for individual value fallbacks when missing from specific types. 
          NOTE: currently most of these values are macro args, which may not be straight stylenames (they get mapped to individual styles further below) 
-            see @tile macro interface. it's perfectly possible to ignore them and delegate styling to css by addressing the right classes.
+            see @tile macro interface. it's perfectly possible to ignore them and delegate styling to CSS by addressing the right classes.
             for example, the *bgcolor can be set to the value "none" to prevent setting a color class.
          DEV NOTE: the bg colors may seem like overkill, but they avoid redundancy in the CSS maybe? whatever, more configurable this way -->
     "tile_default_containerclass" : "tile-container-default", 

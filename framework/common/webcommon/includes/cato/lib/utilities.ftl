@@ -8,21 +8,20 @@
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times.
 *
-* NOTE: In general, macros expect to be called using named arguments (not supported for functions),
-*     except where otherwise noted.
-* NOTE: Default markup-producing macros are found in htmlTemplate.ftl.
-*     Utilities found in utilities.ftl should not contain their logic in general (TODO?: there could be a template helpers file to isolate logic from markup).
+* NOTES: 
+* * Macros expect to be called using named arguments, except where otherwise noted.
+* * Functions in Freemarker only support positional arguments, but some Cato functions support
+*   an "args" argument as a map, which emulates named arguments.
+* * Default markup-producing macros are found in htmlTemplate.ftl.
+*   Utilities found in utilities.ftl should not contain their logic in general.
 *  
-* IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
+* IMPLEMENTATION NOTES: 
+* * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
+* * It's important that these macros remain generic (and that the include for these utilities remains
+*   completely static) so that any macro or function here can easily be interchanged with a transform (Java class).
 *
-* DEV NOTE: for performance, some of these could probably later be turned into freemarker transforms (java) or
-*     delegate to java methods.
-* DEV NOTE: freemarker functions (and java calls) don't support named arguments so in some cases 
-*     macros are easier/better to use even in this file (but macro calls don't inline well in other macro/function calls, 
-*     so give and take).
-* DEV NOTE: It's important that these macros remain generic and the include for these utilities is
-*     completely static so that any macro or function here can easily be interchanged with java-based transforms.
-*
+* TODO:
+* * Turn more of these into transforms.
 -->
 
 <#assign catoUtilitiesDefined = true> <#-- this one must use #assign, not #global -->
@@ -40,7 +39,7 @@
 * ofbizUrl
 ************
 Wraps a controller-based Ofbiz URL.
-THIS IS THE MAIN STOCK OFBIZ URL MACRO, implemented as Java transform. It may be modified with enhanced
+THIS IS THE MAIN STOCK OFBIZ URL MACRO. It may be modified with enhanced
 capabilities for Cato.
 
 With Cato, Boolean arguments can be given as booleans, string representation of booleans
@@ -69,10 +68,11 @@ DEV NOTES:
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     encode          = boolean (default: true) or string boolean repr. If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizUrl uri="" webSiteId="" fullPath=false secure=true encode=true>
-- implemented as java transform -
-</#macro>-->
+</#macro>
+-->
 
 <#-- 
 *************
@@ -174,15 +174,16 @@ Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/c
 * ofbizContentUrl
 ************
 Wraps a Ofbiz content/resource URL.
-THIS IS THE STOCK OFBIZ CONTENT URL MACRO, implemented as Java transform. It may be modified with enhanced
+THIS IS THE STOCK OFBIZ CONTENT URL MACRO. It may be modified with enhanced
 capabilities for Cato.
 
   * Parameters *
     ...
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
-- implemented as java transform -
-</#macro>-->
+</#macro>
+-->
 
 <#-- 
 *************
@@ -259,7 +260,8 @@ Returns empty string if no label is found
 ************
 Gets property or void/null if missing or has no content.
 NOTE: always use default value ("!") or other test operator!
-Now implemented as java transform.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function getPropertyValue resource name>
   <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
   <#if value?has_content>
@@ -277,7 +279,7 @@ uses locales. meant for resource bundles / ui labels.
 will use context locale if none specified.
 if msgArgs not specified, property has access to context (occasionally this is used in screens).
 if msgArgs is a sequence, they are passed instead of context to the property.
-TODO: java transform.
+TODO: implement as transform.
 -->
 <#function getPropertyMsg resource name msgArgs=false specLocale=true>
   <#if specLocale?is_boolean>
@@ -502,7 +504,6 @@ Joins style names in a nice string
 ************
 Returns all style names with given prefix, as sequence.
 NOTE: now recognizes special syntax cato class args.
-Now implemented as java transform.
          
   * Parameters *
     styleString     = style string containing classes
@@ -510,10 +511,10 @@ Now implemented as java transform.
     
   * Return Value *
     true if class/style string contains given style, false otherwise.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function getStyleNamesByPrefix styleString className>
-- implemented as java transform -
-</#function> 
+</#function>
 -->
 
 <#-- 
@@ -645,19 +646,18 @@ Converts camelCase to camel-case.
 Checks the given FTL object against a set of logical types.
 Perform special logical type checks because ?is_string and ?is_hash are insufficient for BeanModel-based
 widget context vars.
-Implemented as java transform.
 
   * Parameters *
-    type        = [string|map|simplemap|complexmap]
+    type        = (string|map|simplemap|complexmap) (required)
                   string: Anything meant to be a string WITHOUT being a more complex type.
                   map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map) 
                        (simplemap or complexmap)
                   simplemap: Simple hash only (?keys to get elems).
                   complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).
     object      = the object to test
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function isObjectType type object>
-- implemented as java transform -
 </#function>
 -->
 
@@ -667,10 +667,9 @@ Implemented as java transform.
 ************
 Performs a shallow copy of an object (map or list). Usually not needed in FTL; for advanced usage.
 The resulting underlying type may differ from the original, but by default will be similar.
-Implemented as java transform.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function copyObject object>
-- implemented as java transform -
 </#function>
 -->
 
@@ -681,7 +680,6 @@ Implemented as java transform.
 Performs a shallow copy of a map. Usually not needed in FTL; for advanced usage.
 The resulting underlying type may differ from the original; in principle tries to preserve, but in most
 cases will create a simple hash.
-Implemented as java transform.
 
 NOTE: copyObject will also work fine on maps, but this has more map-specific options.
 
@@ -693,9 +691,9 @@ NOTE: This can only copy maps without ?keys support if mode is include ("i") and
                   "e": exclude listed keys
                   "i": include only listed keys
     inExKeys    = optional list or wrapped set of keys to include or exclude    
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function copyMap map mode inExKeys>
-- implemented as java transform -
 </#function>
 -->
 
@@ -705,10 +703,9 @@ NOTE: This can only copy maps without ?keys support if mode is include ("i") and
 ************
 Takes a bean-wrapped map and gives it a simple map adapter instead. Does not perform a copy.
 If it is not a complex map but already another type of map, returns it as-is. Other types throw errors.
-Implemented as java transform.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>
-- implemented as java transform -
 </#function>
 -->
 
@@ -718,10 +715,9 @@ Implemented as java transform.
 ************
 Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
-Implemented as java transform.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function mapKeys object>
-- implemented as java transform -
 </#function> 
 -->
 
@@ -808,9 +804,9 @@ Returns a bean-wrapped java Set for a sequence or collection.
 If already a bean-wrapped Set, returns as-is; does not create a copy (this is analogous to toSimpleMap
 and also org.ofbiz.base.util.UtilMisc.toSet).
 If no parameters, creates new empty set.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function toSet object=[]>
-- implemented as java transform -
 </#function>
 -->
 
@@ -914,8 +910,8 @@ DEV NOTE: This is complicated in Ofbiz because Maps and objects from
 TODO: doesn't handle dates (ambiguous?)
                     
   * Parameters *
-    object          = the FTL or context object
-    lang            = [js|json]
+    object          = (required) the FTL or context object
+    lang            = (js|json) (required)
     wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
     hasMore         = boolean, default false, if true, always include trailing separator in hashes and arrays
     escape          = escape characters in strings
@@ -1104,15 +1100,15 @@ This is a helper function which should be functionally identical to doing:
     ...
   </#macro>
   where defaultArgs and overrideArgs are valid maps.
-
+-->
+<#-- NOT IMPLEMENTED
 <#function mergeArgMapsToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
-TODO: implement as transform
 </#function>
 -->
 
-<#-- Same as mergeArgMapsToLocals but calls mergeArgMapsBasic instead of mergeArgMaps
+<#-- Same as mergeArgMapsToLocals but calls mergeArgMapsBasic instead of mergeArgMaps -->
+<#-- NOT IMPLEMENTED
 <#function mergeArgMapsToLocalsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
-TODO: implement as transform
 </#function>
 -->
 
@@ -1507,15 +1503,14 @@ see compileClassArg, results of getElemSpecFromStyleStr.
 * pushRequestStack
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
-Now implemented as java transform.
 
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
-    
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function pushRequestStack name val>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1524,14 +1519,13 @@ Now implemented as java transform.
 * popRequestStack
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
-Now implemented as java transform.
 
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
-    
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function popRequestStack name>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1541,15 +1535,14 @@ Now implemented as java transform.
 ************
 Same as doing popRequestStack + pushRequestStack, but will never fail if stack is empty - will simply
 do a pushRequestStack, and much more efficient.
-Now implemented as java transform.
 
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
-    
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function setLastRequestStack name val>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1559,14 +1552,13 @@ Now implemented as java transform.
 ************
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
-Now implemented as java transform.
 
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function readRequestStack name>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1575,19 +1567,18 @@ Now implemented as java transform.
 * getRequestStackAsList
 ************
 Gets a copy of the named request stack as a list (read-only).
-Now implemented as java transform.
 
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
-    listType    = [copy|orig], default copy.
-                  caller may specify "orig" to avoid a list copy.
+    listType    = (copy|orig) (default: copy)
+                  Caller may specify "orig" to avoid a list copy.
                   WARN: "orig" means the caller must ditch the list as soon as possible, before any
                       more modifications to the stack; otherwise results will be unpredictable.
                       It should only be used for optimization.
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function getRequestStackAsList name listType>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1597,7 +1588,6 @@ Now implemented as java transform.
 ************
 Sets a global var in request scope (request attributes, or if no request, globals).
 Values set by this method must be read using getRequestVar.
-Now implemented as java transform.
 
   * Parameters *
     name        = global request var name; must be unique 
@@ -1607,9 +1597,9 @@ Now implemented as java transform.
                   "u": always unwrap the TemplateModel before storing (where possible)
                   "w": always keep TemplateModel as-is (wrapped) when storing
                   "u" and "w" are usually unnecessary and should be avoided in most template and macro code.
-    
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function setRequestVar name val mode="">
-- implemented as java transform -
 </#function>
 -->
 
@@ -1620,14 +1610,13 @@ Now implemented as java transform.
 Gets a global var from request scope (request attributes, or if no request, globals).
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
-Now implemented as java transform.
 
   * Parameters *
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function getRequestVar name>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1636,7 +1625,6 @@ Now implemented as java transform.
 * varsPutAll
 ************
 Puts all key-value pairs from given map into FTL current namespace variables (#assign).
-Now implemented as java transform.
 
   * Parameters *
     map         = the source map
@@ -1644,9 +1632,9 @@ Now implemented as java transform.
                   "e": exclude listed keys
                   "i": include only listed keys
     inExKeys    = optional list or wrapped set of keys to include or exclude      
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function varsPutAll map mode="" inExKeys=[]>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1655,13 +1643,12 @@ Now implemented as java transform.
 * globalsPutAll
 ************
 Puts all key-value pairs from given map into FTL globals (#global).
-Now implemented as java transform.
 
   * Parameters *
   @see varsPutAll     
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function globalsPutAll map mode="" inExKeys=[]>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1670,13 +1657,12 @@ Now implemented as java transform.
 * localsPutAll
 ************
 Puts all key-value pairs from given map into FTL globals (#local).
-Now implemented as java transform.
 
   * Parameters *
     @see varsPutAll        
-
+-->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function localsPutAll map mode="" inExKeys=[]>
-- implemented as java transform -
 </#function>
 -->
 
@@ -1686,7 +1672,7 @@ Now implemented as java transform.
 * elemAttribStr
 ************
 Prints a string of element attributes. (HTML, FO, XML)
-TODO: implement directly as transform instead.
+TODO: implement as transform.
 NOTE: this is a very generic function; for common implementation, see commonElemAttribStr.
 
   * Parameters *
@@ -1730,8 +1716,8 @@ See also function versions below (helpful when inlining).
 
   * Parameters *
    date         = the date
-   dateType     = [date-time|date|time], default date (macro name is indicative).
-                  Also accepts "timestamp" for date-time.   
+   dateType     = (date-time|timestamp|date|time) (default: date)
+                  "timestamp" and "date-time" are synonymous.  
    defaultVal   = if no output is produced (empty), this value (string) will be shown instead.
 -->
 <#macro formattedDate date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="" dateType="date">
@@ -2161,7 +2147,7 @@ note: this is currently render context-unaware
 returns void if nothing.
 
   * Parameters *
-    libName             = [variables|template]
+    libName             = (variables|template) (required)
     renderPlatformType  = just call getRenderPlatformType()
     renderContextType   = just call getRenderContextType()
 -->
@@ -2226,7 +2212,8 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
                     
   * Parameters *
     var           = Custom var to be printed (default:context)
-    platform      = [html], default is do lookup
+    platform      = ((boolean)|html|...) (default: true)
+                    true: lookup in current render
     maxDepth      = default 5, to prevent endless recursion
 -->
 <#macro printVars var=context platform=true maxDepth=5>

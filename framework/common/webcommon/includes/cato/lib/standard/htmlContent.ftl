@@ -4,7 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -16,15 +17,16 @@
     <@heading>My Title</@heading>         
                                  
   * Parameters *
-    elemType       = [heading|h|p|span|div|raw], default heading (note: do not specify h1-h6 here - use level)
-                     boolean true means use default, false same as raw (none)
+    elemType       = (heading|h|p|span|div|raw) (default: heading)
+                     boolean true means use default; false means none (same as "raw").
+                     NOTE: do not specify h1-h6 here; use level argument instead.
     level          = specific level (1-6). If not specified, current heading level returned by
                      getCurrentHeadingLevel() function is used. 
                      note: does not consume a level.
     relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
                      plus this number of levels. default: 0 (current level)
     class          = heading elem classes (simple)
-                     supports prefixes:
+                     Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     levelClassPrefix = default "heading-level-", prefix for class that will be appended level number
@@ -32,7 +34,7 @@
     consumeLevel   = boolean, default currently always false (DEV NOTE: could be made to depend on calculated level).
                      if true, the global heading level is set to (calculated level for this heading) + 1.
                      note this is better handled through use of the @section macro. mostly useful for h1.
-    containerElemType = [div|] default empty. if present, adds container around title or this elem type
+    containerElemType = (div|) (default: -empty-). if present, adds container around title or this elem type
     containerClass    = container elem classes (simple)       
     containerId       = container id  
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
@@ -276,7 +278,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                     
   * Parameters *
     * General *
-    type            = [generic|(theme-specific)], default generic
+    type            = (generic|(theme-specific)) (default: generic)
                       * STANDARD TYPES *
                       These types must always be recognized by all styles themes:
                       generic: generic html table (free-form, complex); no features enabled by default.
@@ -302,7 +304,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                           TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
     class           = manual classes to add, as string, default depends on table type
                       if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
-                      supports prefixes:
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
                       defaults are looked up in the styles hash using:
@@ -682,7 +684,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                      
   * Parameters *
-    type            = [generic|content|meta|util], default depends on table type and styles hash; 
+    type            = (generic|content|meta|util), (default: -dependent on table type-); 
                           in complete absence of styles hash, default is "generic";
                           in default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
                       generic: free-form row with no assumptions on content.
@@ -694,8 +696,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                       util: indicates this is a special utility-only row meant to hold no real data, 
                             such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
                             TODO: this isn't handled yet but SHOULD be used in templates anyhow.
-    class           = css classes
-                      supports prefixes:
+    class           = CSS classes
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = row id
@@ -821,8 +823,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 Helps define table cells.
                     
   * Parameters *
-    class           = css classes 
-                      supports prefixes:
+    class           = CSS classes 
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = cell id
@@ -875,8 +877,8 @@ Usage discouraged: use @table, @tr macros instead.
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
                     
   * Parameters *
-    class           = css classes 
-                      supports prefixes:
+    class           = CSS classes 
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     alt             = boolean, if true is alternate row (odd), if false regular (even)

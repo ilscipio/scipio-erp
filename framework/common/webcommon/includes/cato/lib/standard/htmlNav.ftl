@@ -4,7 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -27,9 +28,9 @@ Since this is very foundation specific, this function may be dropped in future i
     <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
-    type            = [inline|magellan|breadcrumbs] (default: inline)
+    type            = (inline|magellan|breadcrumbs) (default: inline)
     class           = CSS classes
-                      supports prefixes:
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)   
 -->
@@ -121,11 +122,13 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     should use set/getRequestVar and/or stack.            
                     
   * Parameters *
-    type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
-    inlineItems     = boolean, if true, generate only items, not menu container
-    class           = menu class style, default based on menu type. 
-                      can be boolean true/false or string, if string
-                      starts with "+" the classes are in addition to defaults, otherwise replace defaults.
+    type            = (generic|section|section-inline|main|tab|subtab|button|...) (default: generic) The menu type.
+                      generic: any content, but specific type should be preferred.
+    inlineItems     = boolean (default: false) If true, generate only items, not menu container
+    class           = class (default: -based on menu type-) Menu class.
+                      Supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
                       defaults are based on:
                       styles["menu_" + type?replace("-","_")], or if missing from hash, falls back to
                       styles["menu_default"]
@@ -154,7 +157,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
     htmlwrap        = wrapping HTML element (ul|div|span, default: ul)
-    specialType     = [|button-dropdown]
+    specialType     = (button-dropdown|) (default: -none-)
                       DEV NOTE: each specialType could have its own styles hash menu_special_xxx entries
 -->
 <#assign menu_defaultArgs = {
@@ -300,8 +303,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if need to generate items only).
              
   * Parameters *
-    type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
-    class           = menu item class (for <li> element)
+    type            = (generic|link|text|submit) (default: generic) Menu item (content) type.
+                      generic: any generic content, but specific types should be preferred.
+    class           = class (default: -based on menu type-) Menu item class (for <li> element).
+                      Supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
                       NOTE: for this macro, the inline "class" args is now logically combined with the "class"
                           arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     id              = menu item id
@@ -493,28 +500,29 @@ menu item element must override this and provide a proper check.
     </@paginate>            
                     
   * Parameters *
-   mode            = [content|single], default single, but content preferred
+   mode            = (content|single) (default: single)
                      content: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
-                     single: produces a single pagination menu (layout has no effect)
-   type            = [default], default default, type of the pagination menu itself
+                       NOTE: in overwhelmingly most cases, this mode should be preferred, as it offers more control to the theme.
+                     single: produces a single pagination menu (layout argument has no effect)
+   type            = (default) (default: default) Type of the pagination menu itself
                      default: default cato pagination menu
-   layout          = [default|top|bottom|both], default default, type of layout, only meaningful for "content" mode
+   layout          = (default|top|bottom|both) (default: default) Type of layout, only meaningful for "content" mode
                      default: "pagination_layout" from styles hash, otherwise both
                      top: no more than one menu, always at top
                      bottom: no more than one menu, always at bottom
                      both: always two menus, top and bottom
-   position        = [top|bottom|], default empty; optional position indicator, only makes sense in single mode.
+   position        = (top|bottom|) (default: -empty-) Optional position indicator, only makes sense in single mode.
                      if specified, it may lead to the pagination not rendering depending on resolved value of layout.
                      in content mode (preferred), this is handled automatically.
-   noResultsMode   = [default|hide|disable], default default (default may depend on mode)
-                     default: "pagination_noresultsmode" from styles hash, otherwise hide
+   noResultsMode   = (default|hide|disable) (default: default)
+                     default: "pagination_noresultsmode" from styles hash, otherwise hide. may depend on mode argument.
                      hide: hide menu when no results
                      disable: disable but show controls when no results (TODO?: not implemented)
-   enabled         = [true|false], default true; manual control to disable the entire macro, sometimes needed to work around FTL language.
-                     for "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
+   enabled         = boolean (default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.
+                     For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url             = Base Url to be used for pagination
-   class           = css classes 
-                     supports prefixes:
+   class           = CSS classes 
+                     Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
    listSize        = size of the list in total

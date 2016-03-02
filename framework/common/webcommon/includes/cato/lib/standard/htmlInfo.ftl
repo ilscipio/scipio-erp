@@ -4,7 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -21,7 +22,10 @@
     id              = set id (required)
     label           = set anchor text (required)
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
-    class           = classes or additional classes for anchor
+    class           = CSS classes or additional classes for anchor
+                      Supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
 -->
 <#assign modal_defaultArgs = {
   "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
@@ -58,8 +62,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
                     
   * Parameters *
     type           = (info|success|warning|secondary|alert|error), default info
-    class          = classes or additional classes for nested container
-                     supports prefixes:
+    class          = CSS classes or additional classes for nested container
+                     Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
@@ -155,7 +159,7 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
     <@commonMsg type="result-norecord"/>            
              
   * Parameters *
-    type        = [default|generic|...], default default - the type of message contained.
+    type        = (default|generic|...) (default: default) The type of message contained.
                   Basic types:
                     default: default. in standard Cato markup, same as generic.
                     generic: no type specified (avoid using - prefer more specific)
@@ -170,9 +174,11 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
                     error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
                     error-perm: permission error
                     error-security: security error
-    id          = id
-    class       = classes or additional classes for message container (innermost containing element)
-                  (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    id          = ID
+    class       = CSS classes or additional classes for message container (innermost containing element)
+                  Supports prefixes:
+                    "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                    "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
     text        = text. If string not specified, uses #nested instead.
 -->
 <#assign commonMsg_defaultArgs = {

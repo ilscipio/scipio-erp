@@ -4,7 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
-* NOTE: May have implicit dependencies on other parts of Cato API.
+* NOTES: 
+* * May have implicit dependencies on other parts of Cato API.
 *
 -->
 
@@ -21,7 +22,10 @@ used instead of div if the div contains grid size classes (but conversely, @cell
 to this one.
                     
   * Parameters *
-    class                 = css classes (supports prefixed/extended syntax, but normally no classes will be added)
+    class                 = CSS classes (supports prefixed/extended syntax, but normally no classes will be added)
+                            Supports prefixes:
+                              "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
     id                    = id
     attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
@@ -71,8 +75,8 @@ to this one.
     </@row>              
                     
   * Parameters *
-    class           = css classes 
-                      supports prefixes:
+    class           = CSS classes 
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     alt             = boolean, if true alternate row (odd), if false regular (even)
@@ -153,8 +157,8 @@ to this one.
     </@row>            
                     
   * Parameters *
-    class           = css classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
-                      supports prefixes:
+    class           = CSS classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     columns         = expected number of columns to be rendered (specify as number, default 12, default only used if class empty and no column sizes specified)
@@ -329,12 +333,12 @@ Since this is very foundation specific, this function may be dropped in future i
     </@grid>            
                     
   * Parameters *
-    class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
-                      supports prefixes:
+    class           = Adds or sets classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     columns         = Number of columns (default 5)
-    type            = (tiles|list|) default:empty (list)
+    type            = (tiles|list|) (default: list)
     tilesType       = default tiles type for tiles inside this element.
                       this same value is used as default for the @tile macro "type" attrib.
                       however, in addition, type when specified here may also influence tile arrangement.
@@ -434,36 +438,43 @@ It is loosely based on http://metroui.org.ua/tiles.html
     </@tile>
                     
   * Parameters *
-    type            = [default|generic|(theme-specific)], default inherited from "tilesType" on @grid element, or otherwise, "default".
-                      this provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as "tile_xxx" where xxx is type).
-                      cato standard by default adds the following types:
-                        gallery1 - tile with settings tailored to image gallery of normal-sized thumb images.
-    size            = [small|normal|wide|large|big|super]. default: normal.
+    type            = (default|generic|(theme-specific)) (default: -inherited from tilesType on @grid element-)
+                      Provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as "tile_xxx" where xxx is type).
+                      Cato standard adds the following types by default:
+                        gallery1: tile with settings tailored to image gallery of normal-sized thumb images.
+    size            = (small|normal|wide|large|big|super) (default: normal) Tile size specifier.
     title           = Title
-    titleType       = [|default|...] title type. currently only default supported.
-                      type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
-    titleBgColor      = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
-    class           = css classes 
-                      supports prefixes:
+    titleType       = (|default|...) (default: default) Title type. Used to determine style.
+                      Currently only "default" supported.
+                      Type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
+    titleBgColor    = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: 0). 
+                      none: prevents color class.
+    class           = CSS classes 
+                      Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     link            = Link URL around nested content
                       WARN: can only use if no other links inside nested content
-    linkTarget      = [|_blank|...] link <a> target, default from global styles hash, otherwise none (same page)
-                      also accepts boolean true/false (false prevents any, true will allow global styles hash lookup)
-    id              = field id
-    color           = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
-    icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
-    image           = Set a background image-url (icon won't be shown if not empty)
-    imageType       = [|default|...] image type for styling. default supported types (extensible by theme) are:
-                      cover: this is currently the default. fills tile.
-                      contain: show whole image in tile.
-                      type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
-    imageBgColor    = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise "none". "none" prevents color class.
-    overlayType     = [|default|...] overlay type. default supported types (extensible by theme) are:
-                      slide-up: this is currently the default.
-                      type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
-    overlayBgColor  = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
+    linkTarget      = (|_blank|(boolean)|...) (default: -from global styles-) (fallback default: -empty-) Target for link element.
+                      If boolean, false prevents any; true will allow global styles hash lookup.
+    id              = field ID
+    color           = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles) (fallback default: 0). 
+                      none: prevents color class.
+    icon            = Icon code (http://zurb.com/playground/foundation-icon-fonts-3)
+    image           = Background image URL (icon won't be shown if not empty)
+    imageType       = (|default|...) (default: default) Image type for styling. 
+                      Cato standard supported types (extensible by theme):
+                        cover: this is currently the default. fills tile.
+                        contain: show whole image in tile.
+                      Type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
+    imageBgColor    = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles) (fallback default: none). 
+                      none: prevents color class.
+    overlayType     = (|default|...) (default: default) Overlay type. 
+                      Cato standard supported types (extensible by theme):
+                        slide-up: this is currently the default.
+                      Type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
+    overlayBgColor  = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: 0). 
+                      none: prevents color class.
 -->
 <#assign tile_defaultArgs = {
   "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", "link":"", 
@@ -637,9 +648,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     </@section>            
                     
   * Parameters *
-    type                = [generic], default generic
-    class               = css classes, on outer columns element (affects title)
-                          supports prefixes:
+    type                = (generic) (default: generic)
+    class               = CSS classes, on outer columns element (affects title)
+                          Supports prefixes:
                             "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                             "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
                           note: boolean false has no effect here
@@ -671,12 +682,19 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                             WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                             assumed to be "section" or "section-inline".
     optional menu data or markup, li elements only (ul auto added)
-    menuLayout          = [post-title|pre-title|inline-title], default post-title. this is a low-level control; avoid where possible.
-    menuRole            = "nav-menu" (default), "paginate-menu"
-    menuClass           = optional extra menu classes. this is a low-level control; avoid where possible.
-    requireMenu         = if true, add menu elem even if empty
-    forceEmptyMenu      = if true, always add menu and must be empty
-    hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
+    menuLayout          = (post-title|pre-title|inline-title) (default: post-title) 
+                          This is a low-level control; avoid where possible.
+    menuRole            = (nav-menu|paginate-menu) (default: nav-menu)
+    menuClass           = Optional extra menu CSS classes. 
+                          Supports prefixes:
+                            "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                            "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
+                          This is a low-level control; avoid where possible.
+    requireMenu         = boolean (default: false) If true, add menu elem even if empty
+    forceEmptyMenu      = boolean (default: false) If true, always add menu and must be empty
+    hasContent          = boolean (default: true) Optional content hint; 
+                          when false, will add classes to indicate content is empty or treat as logically empty 
+                          (workaround for lack of CSS :blank and possibly other browser limitations)
 -->
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 

@@ -123,11 +123,14 @@ public Map createDemoTransaction() {
                 Debug.log("credit acctg entry - glAccountId ===> " + glAccountId);
             }
 
+            
+            
             if (glAccount) {
+                currencyUomId = UtilProperties.getProperties("general.properties").getProperty("currency.uom.id.default", "USD");
                 Debug.log("glAccountId ========> " + glAccount.glAccountId + " amount ========> " + amount);
                 fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId", "0000" + acctgTransEntrySeqId, "acctgTransEntryTypeId", "_NA_", "description",
                     "Automatically generated transaction (for demo purposes)", "glAccountId", glAccount.glAccountId, "glAccountTypeId", glAccount.glAccountTypeId, "organizationPartyId", "Company",
-                    "reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId", "USD", "debitCreditFlag", debitCreditFlag);                
+                    "reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId", currencyUomId, "debitCreditFlag", debitCreditFlag);                
                 GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
                 acctgTransEntrys.add(acctgTransEntry);
             }

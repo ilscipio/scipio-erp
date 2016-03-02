@@ -269,9 +269,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = new HashMap<String, Object>();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
-        if (isDisableIfEmpty(menuItem, context)) {
-            target = null;
-        }
+        // Cato: Let macro decide what to do when disabled.
+        //if (isDisableIfEmpty(menuItem, context)) {
+        //    target = null;
+        //}
+        boolean disabled = isDisableIfEmpty(menuItem, context);
+        // Cato: tell macro which selected and disabled
+        boolean selected = menuItem.isSelected(context);
         parameters.put("id", link.getId(context));
         parameters.put("style", link.getStyle(context));
         parameters.put("name", link.getName(context));
@@ -337,6 +341,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("menuCtxRole", menuCtxRole);
         
+        // Cato: add disabled and selected
+        parameters.put("disabled", disabled);
+        parameters.put("selected", selected);
+        
         try {
             executeMacro(writer, "renderLink", parameters);
         } catch (TemplateException e) {
@@ -381,25 +389,37 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             return;
         Map<String, Object> parameters = new HashMap<String, Object>();
         String style = menuItem.getWidgetStyle();
-        if (menuItem.isSelected(context)) {
+        // Cato: tell macro which selected and disabled
+        boolean selected = menuItem.isSelected(context);
+        if (selected) {
             String selectedStyle = menuItem.getSelectedStyle();
+            // Cato: Must use new combination logic
+            //if (UtilValidate.isEmpty(selectedStyle)) {
+            //    selectedStyle = "selected";
+            //}
+            //if (UtilValidate.isNotEmpty(style)) {
+            //    style += " " ;
+            //}
+            //style += selectedStyle ;
             if (UtilValidate.isEmpty(selectedStyle)) {
-                selectedStyle = "selected";
-            }
-            if (UtilValidate.isNotEmpty(style)) {
-                style += " " ;
-            }
-            style += selectedStyle ;
+                selectedStyle = "+selected";
+            } 
+            style = ModelMenu.combineStyles(style, selectedStyle);
         }
-        if (this.isDisableIfEmpty(menuItem, context)) {
-            style = menuItem.getDisabledTitleStyle();
+        boolean disabled = this.isDisableIfEmpty(menuItem, context);
+        if (disabled) {
+            // Cato: Must use new combination logic
+            //style = menuItem.getDisabledTitleStyle();
+            style = ModelMenu.combineStyles(style, menuItem.getDisabledTitleStyle());
         }
         if (style == null) {
             style = "";
         }
         String alignStyle = menuItem.getAlignStyle();
         if (UtilValidate.isNotEmpty(alignStyle)) {
-            style = style.concat(" ").concat(alignStyle);
+            // Cato: Must use new combination logic
+            //style = style.concat(" ").concat(alignStyle);
+            style = ModelMenu.combineStyles(style, alignStyle);
         }
         
         // Cato: expand the style here (not done previously, and _may_ expand on its own through FTL, but
@@ -434,12 +454,16 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         
         // Cato: sub menu style
         // NOTE: there is another "getSubMenu" (for "sub-menu" attribute), but I don't know what it was intended for.
-        String subMenuStyle = menuItem.getSubMenuStyle();
+        String subMenuStyle = menuItem.getSubMenuStyle(context);
         parameters.put("subMenuStyle", subMenuStyle);
         
         // Cato: sub menu title
-        String subMenuTitle = menuItem.getSubMenuTitle();
+        String subMenuTitle = menuItem.getSubMenuTitle(context);
         parameters.put("subMenuTitle", subMenuTitle);
+        
+        // Cato: disabled and selected
+        parameters.put("selected", selected);
+        parameters.put("disabled", disabled);
         
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);

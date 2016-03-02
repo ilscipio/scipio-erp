@@ -319,6 +319,15 @@ under the License.
                         NOTE: Currently this has no relation to the (unused) "sub-menu" attribute.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="sub-menu-model">
+                <xs:annotation>
+                    <xs:documentation>Cato: Location in resource#name format of a menu to use as model for this item's sub-menu sub-items some of the
+                        attribute defaults such as styles, instead of this top-level menu's default attributes.
+                        Can be used to implement sub-menus of different types than the top-level menu.
+                        If no # separator, assumes name lookup in current file.
+                        NOTE (2016-03-01): This currently (intentionally) only works for style attributes; others still taken from top-level containing menu.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="link" type="link"/>

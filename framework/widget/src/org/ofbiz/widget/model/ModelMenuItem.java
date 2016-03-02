@@ -94,16 +94,19 @@ public class ModelMenuItem extends ModelWidget {
     private final String overrideMode; // Cato: override mode
     private final String sortMode; // Cato: sort mode
     
-    private final String subMenuStyle;  // Cato: sub-menu style (no relation to subMenu)
-    private final String subMenuTitle;  // Cato: sub-menu title (no relation to subMenu)
+    private final FlexibleStringExpander subMenuStyle;  // Cato: sub-menu style (no relation to subMenu)
+    private final FlexibleStringExpander subMenuTitle;  // Cato: sub-menu title (no relation to subMenu)
+    private final ModelMenu subMenuModel;  // Cato: sub-menu model (no relation to subMenu), for child items
+    private final ModelMenu altModelMenu; // Cato: alt model menu to (for some attributes) use in place of modelMenu to query defaults, for THIS item
 
     // ===== CONSTRUCTORS =====
 
     public ModelMenuItem(Element menuItemElement, ModelMenu modelMenu) {
-        this(menuItemElement, modelMenu, null);
+        this(menuItemElement, modelMenu, null, null);
     }
 
-    private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelMenuItem parentMenuItem) {
+    // Cato: constructor modified to take subMenuModel
+    private ModelMenuItem(Element menuItemElement, ModelMenu modelMenu, ModelMenuItem parentMenuItem, ModelMenu altModelMenu) {
         super(menuItemElement);
         this.modelMenu = modelMenu;
         this.parentMenuItem = parentMenuItem;
@@ -151,13 +154,33 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.link = null;
         }
+        
+        // Cato: sub-menu-model lookup for child menu-items of this menu-item (NOT for _this_ menu-item!)
+        String subMenuModelLocation = menuItemElement.getAttribute("sub-menu-model");
+        ModelMenu subMenuModel = altModelMenu;
+        if (!subMenuModelLocation.isEmpty()) {
+            String menuResource;
+            String menuName;
+            // TODO: probably another method to split this somewhere...
+            if (subMenuModelLocation.contains("#")) {
+                String[] parts = subMenuModelLocation.split("#", 2);
+                menuResource = parts[0];
+                menuName = parts[1];
+            }
+            else {
+                menuName = subMenuModelLocation;
+                menuResource = null;
+            }
+            subMenuModel = ModelMenu.getMenuDefinition(menuResource, menuName, modelMenu.getMenuLocation(), menuItemElement);
+        }
+        
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
         List<? extends Element> itemElements = UtilXml.childElementList(menuItemElement, "menu-item");
         if (!itemElements.isEmpty()) {
             ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
             Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
             for (Element itemElement : itemElements) {
-                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, modelMenu, this);
+                ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, modelMenu, this, subMenuModel);
                 addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap);
             }
             menuItemList.trimToSize();
@@ -181,8 +204,10 @@ public class ModelMenuItem extends ModelWidget {
             this.actions = Collections.emptyList();
         }
         this.overrideName = "";
-        this.subMenuStyle = menuItemElement.getAttribute("sub-menu-style");
-        this.subMenuTitle = menuItemElement.getAttribute("sub-menu-title");
+        this.subMenuStyle = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("sub-menu-style"));
+        this.subMenuTitle = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("sub-menu-title"));
+        this.subMenuModel = subMenuModel;
+        this.altModelMenu = altModelMenu;
     }
 
     // Portal constructor
@@ -215,8 +240,10 @@ public class ModelMenuItem extends ModelWidget {
         this.sortMode = "";
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
-        this.subMenuStyle = "";
-        this.subMenuTitle = "";
+        this.subMenuStyle = FlexibleStringExpander.getInstance("");
+        this.subMenuTitle = FlexibleStringExpander.getInstance("");
+        this.subMenuModel = null;
+        this.altModelMenu = null;
     }
 
     // Merge constructor
@@ -289,6 +316,16 @@ public class ModelMenuItem extends ModelWidget {
         } else {
             this.subMenuTitle = existingMenuItem.subMenuTitle;
         }
+        if (overrideMenuItem.subMenuModel != null) {
+            this.subMenuModel = overrideMenuItem.subMenuModel;
+        } else {
+            this.subMenuModel = existingMenuItem.subMenuModel;
+        }
+        if (overrideMenuItem.altModelMenu != null) {
+            this.altModelMenu = overrideMenuItem.altModelMenu;
+        } else {
+            this.altModelMenu = existingMenuItem.altModelMenu;
+        }
         this.actions = existingMenuItem.actions;
         this.align = existingMenuItem.align;
         this.alignStyle = existingMenuItem.alignStyle;
@@ -359,7 +396,7 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getAlignStyle() {
         return getStyle("align", this.alignStyle,
-                modelMenu.getDefaultAlignStyle());
+                altModelMenu != null ? altModelMenu.getDefaultAlignStyle() : modelMenu.getDefaultAlignStyle());
     }
 
     public FlexibleStringExpander getAssociatedContentId() {
@@ -391,7 +428,7 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getDisabledTitleStyle() {
         return getStyle("disabled", this.disabledTitleStyle,
-                modelMenu.getDefaultDisabledTitleStyle());
+                altModelMenu != null ? altModelMenu.getDefaultDisabledTitleStyle() : modelMenu.getDefaultDisabledTitleStyle());
     }
 
     public String getDisableIfEmpty() {
@@ -462,7 +499,7 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getSelectedStyle() {
         return getStyle("selected", this.selectedStyle,
-                modelMenu.getDefaultSelectedStyle());
+                altModelMenu != null ? altModelMenu.getDefaultSelectedStyle() : modelMenu.getDefaultSelectedStyle());
     }
 
     public String getSubMenu() {
@@ -479,7 +516,7 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getTitleStyle() {
         return getStyle("title", this.titleStyle,
-                modelMenu.getDefaultTitleStyle());
+                altModelMenu != null ? altModelMenu.getDefaultTitleStyle() : modelMenu.getDefaultTitleStyle());
     }
 
     public FlexibleStringExpander getTooltip() {
@@ -496,12 +533,12 @@ public class ModelMenuItem extends ModelWidget {
 
     public String getTooltipStyle() {
         return getStyle("tooltip", this.tooltipStyle,
-                modelMenu.getDefaultTooltipStyle());
+                altModelMenu != null ? altModelMenu.getDefaultTooltipStyle() : modelMenu.getDefaultTooltipStyle());
     }
 
     public String getWidgetStyle() {
         return getStyle("widget", this.widgetStyle,
-                modelMenu.getDefaultWidgetStyle());
+                altModelMenu != null ? altModelMenu.getDefaultWidgetStyle() : modelMenu.getDefaultWidgetStyle());
     }
     
     /**
@@ -516,14 +553,15 @@ public class ModelMenuItem extends ModelWidget {
             style = this.linkStyle;
         }
         return getStyle("link", style, 
-                modelMenu.getDefaultLinkStyle());
+                altModelMenu != null ? altModelMenu.getDefaultLinkStyle() : modelMenu.getDefaultLinkStyle());
     }
     
     /**
      * Cato: Gets style.
      * <p>
      * TODO?: this could probably cache based on passed name for faster access, but not certain
-     * if safe.
+     * if safe. OR it could be integrated into constructor,
+     * but I'm not sure that safe either (because of the "link" element).
      */
     String getStyle(String name, String style, String defaultStyle) {
         return ModelMenu.buildStyle(style, null, defaultStyle);
@@ -537,12 +575,32 @@ public class ModelMenuItem extends ModelWidget {
         return this.sortMode;
     }
     
-    public String getSubMenuStyle() {
-        return this.subMenuStyle;
+    public String getSubMenuStyle(Map<String, Object> context) {
+        String style = getSubMenuStyle();
+        return FlexibleStringExpander.expandString(style, context).trim();
     }
     
-    public String getSubMenuTitle() {
-        return this.subMenuTitle;
+    public String getSubMenuStyle() {
+        return getStyle("subMenuStyle", this.subMenuStyle.getOriginal(), 
+                subMenuModel != null ? subMenuModel.getMenuContainerStyle() : "");
+    }
+    
+    public String getSubMenuTitle(Map<String, Object> context) {
+        return this.subMenuTitle.expandString(context);
+    }
+    
+    /**
+     * Cato: Returns the alt model menu for this item's CHILDREN.
+     */
+    public ModelMenu getSubMenuModel() {
+        return this.subMenuModel;
+    }
+    
+    /**
+     * Cato: Returns THIS item's alt model menu.
+     */
+    public ModelMenu getAltModelMenu() {
+        return this.altModelMenu;
     }
 
     public boolean isSelected(Map<String, Object> context) {

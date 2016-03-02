@@ -129,6 +129,8 @@ public class ModelMenu extends ModelWidget {
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
+        // Cato: This MUST be set early so the menu item constructor can get the location!
+        this.menuLocation = menuLocation;
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         String defaultAlign = "";
         String defaultAlignStyle = "";
@@ -167,28 +169,7 @@ public class ModelMenu extends ModelWidget {
         String parentResource = menuElement.getAttribute("extends-resource");
         String parentMenu = menuElement.getAttribute("extends");
         if (!parentMenu.isEmpty()) {
-            if (!parentResource.isEmpty()) {
-                try {
-                    parent = MenuFactory.getMenuFromLocation(parentResource, parentMenu);
-                } catch (Exception e) {
-                    Debug.logError(e, "Failed to load parent menu definition '" + parentMenu + "' at resource '" + parentResource
-                            + "'", module);
-                }
-            } else {
-                parentResource = menuLocation;
-                // try to find a menu definition in the same file
-                Element rootElement = menuElement.getOwnerDocument().getDocumentElement();
-                List<? extends Element> menuElements = UtilXml.childElementList(rootElement, "menu");
-                for (Element menuElementEntry : menuElements) {
-                    if (menuElementEntry.getAttribute("name").equals(parentMenu)) {
-                        parent = new ModelMenu(menuElementEntry, parentResource);
-                        break;
-                    }
-                }
-                if (parent == null) {
-                    Debug.logError("Failed to find parent menu definition '" + parentMenu + "' in same document.", module);
-                }
-            }
+            parent = getMenuDefinition(parentResource, parentMenu, menuLocation, menuElement);
             if (parent != null) {
                 type = parent.type;
                 itemsSortMode = parent.itemsSortMode;
@@ -241,16 +222,17 @@ public class ModelMenu extends ModelWidget {
             tooltip = menuElement.getAttribute("tooltip");
         if (!menuElement.getAttribute("default-entity-name").isEmpty())
             defaultEntityName = menuElement.getAttribute("default-entity-name");
+        // Cato: MUST pass all the -style attributes through buildStyle to combine with parent values
         if (!menuElement.getAttribute("default-title-style").isEmpty())
-            defaultTitleStyle = menuElement.getAttribute("default-title-style");
+            defaultTitleStyle = buildStyle(menuElement.getAttribute("default-title-style"), parent != null ? parent.defaultTitleStyle : null, "");
         if (!menuElement.getAttribute("default-selected-style").isEmpty())
-            defaultSelectedStyle = menuElement.getAttribute("default-selected-style");
+            defaultSelectedStyle = buildStyle(menuElement.getAttribute("default-selected-style"), parent != null ? parent.defaultSelectedStyle : null, "");
         if (!menuElement.getAttribute("default-widget-style").isEmpty())
-            defaultWidgetStyle = menuElement.getAttribute("default-widget-style");
+            defaultWidgetStyle = buildStyle(menuElement.getAttribute("default-widget-style"), parent != null ? parent.defaultWidgetStyle : null, "");
         if (!menuElement.getAttribute("default-link-style").isEmpty())
-            defaultLinkStyle = menuElement.getAttribute("default-link-style");
+            defaultLinkStyle = buildStyle(menuElement.getAttribute("default-link-style"), parent != null ? parent.defaultLinkStyle : null, "");
         if (!menuElement.getAttribute("default-tooltip-style").isEmpty())
-            defaultTooltipStyle = menuElement.getAttribute("default-tooltip-style");
+            defaultTooltipStyle = buildStyle(menuElement.getAttribute("default-tooltip-style"), parent != null ? parent.defaultTooltipStyle : null, "");
         if (!menuElement.getAttribute("default-menu-item-name").isEmpty())
             defaultMenuItemName = menuElement.getAttribute("default-menu-item-name");
         if (!menuElement.getAttribute("default-permission-operation").isEmpty())
@@ -269,19 +251,19 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("default-hide-if-selected").isEmpty())
             defaultHideIfSelected = "true".equals(menuElement.getAttribute("default-hide-if-selected").isEmpty());
         if (!menuElement.getAttribute("default-disabled-title-style").isEmpty())
-            defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
+            defaultDisabledTitleStyle = buildStyle(menuElement.getAttribute("default-disabled-title-style"), parent != null ? parent.defaultDisabledTitleStyle : null, "");
         if (!menuElement.getAttribute("selected-menuitem-context-field-name").isEmpty()) {
             selectedMenuItemContextFieldNameStr = menuElement.getAttribute("selected-menuitem-context-field-name");
             selectedMenuItemContextFieldName = makeAccessorList(selectedMenuItemContextFieldNameStr);
         }
         if (!menuElement.getAttribute("menu-container-style").isEmpty())
-            menuContainerStyleExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("menu-container-style"));
+            menuContainerStyleExdr = FlexibleStringExpander.getInstance(buildStyle(menuElement.getAttribute("menu-container-style"), parent != null ? parent.menuContainerStyleExdr.getOriginal(): null, ""));
         if (!menuElement.getAttribute("default-align").isEmpty())
             defaultAlign = menuElement.getAttribute("default-align");
         if (!menuElement.getAttribute("default-align-style").isEmpty())
-            defaultAlignStyle = menuElement.getAttribute("default-align-style");
+            defaultAlignStyle = buildStyle(menuElement.getAttribute("default-align-style"), parent != null ? parent.defaultAlignStyle : null, "");
         if (!menuElement.getAttribute("fill-style").isEmpty())
-            fillStyle = menuElement.getAttribute("fill-style");
+            fillStyle = buildStyle(menuElement.getAttribute("fill-style"), parent != null ? parent.fillStyle : null, "");
         if (!menuElement.getAttribute("extra-index").isEmpty())
             extraIndex = FlexibleStringExpander.getInstance(menuElement.getAttribute("extra-index"));
         
@@ -318,7 +300,8 @@ public class ModelMenu extends ModelWidget {
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
-        this.menuLocation = menuLocation;
+        // Cato: This MUST be set early so the menu item constructor can get the location!
+        //this.menuLocation = menuLocation;
         this.menuWidth = menuWidth;
         this.orientation = orientation;
         this.parentMenu = parent;
@@ -331,6 +314,38 @@ public class ModelMenu extends ModelWidget {
         this.itemsSortMode = itemsSortMode;
     }
 
+    /**
+     * Cato: Menu loading factored out of main constructor and modified for reuse.
+     */
+    static ModelMenu getMenuDefinition(String resource, String name, String menuLocation, Element anyMenuElement) {
+        ModelMenu modelMenu = null;
+        // Cato: Added a superficial check for same-location to prevent some endless loops.
+        // WARN: this is only a superficial check to prevent endless loops while refactoring menus.
+        if (resource != null && !resource.isEmpty() && !(menuLocation.equals(resource))) {
+            try {
+                modelMenu = MenuFactory.getMenuFromLocation(resource, name);
+            } catch (Exception e) {
+                Debug.logError(e, "Failed to load menu definition '" + name + "' at resource '" + resource
+                        + "'", module);
+            }
+        } else {
+            resource = menuLocation;
+            // try to find a menu definition in the same file
+            Element rootElement = anyMenuElement.getOwnerDocument().getDocumentElement();
+            List<? extends Element> menuElements = UtilXml.childElementList(rootElement, "menu");
+            for (Element menuElementEntry : menuElements) {
+                if (menuElementEntry.getAttribute("name").equals(name)) {
+                    modelMenu = new ModelMenu(menuElementEntry, resource);
+                    break;
+                }
+            }
+            if (modelMenu == null) {
+                Debug.logError("Failed to find menu definition '" + name + "' in same document.", module);
+            }
+        }
+        return modelMenu;
+    }
+        
     /**
      * Cato: implements include-actions and actions reading (moved here).
      * Also does include-elements.
@@ -639,9 +654,7 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultAlignStyle() {
-        return getStyle("defaultAlign", this.defaultAlignStyle, 
-                parentMenu != null ? parentMenu.defaultAlignStyle : null, 
-                "");
+        return this.defaultAlignStyle;
     }
 
     public FlexibleStringExpander getDefaultAssociatedContentId() {
@@ -657,9 +670,7 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultDisabledTitleStyle() {
-        return getStyle("defaultDisabledTitle", this.defaultDisabledTitleStyle, 
-                parentMenu != null ? parentMenu.defaultDisabledTitleStyle : null, 
-                "");
+        return this.defaultDisabledTitleStyle;
     }
 
     public String getDefaultEntityName() {
@@ -683,33 +694,23 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultSelectedStyle() {
-        return getStyle("defaultSelected", this.defaultSelectedStyle, 
-                parentMenu != null ? parentMenu.defaultSelectedStyle : null, 
-                "");
+        return this.defaultSelectedStyle;
     }
 
     public String getDefaultTitleStyle() {
-        return getStyle("defaultTitle", this.defaultTitleStyle, 
-                parentMenu != null ? parentMenu.defaultTitleStyle : null, 
-                "");
+        return this.defaultTitleStyle;
     }
 
     public String getDefaultTooltipStyle() {
-        return getStyle("defaultTooltip", this.defaultTooltipStyle, 
-                parentMenu != null ? parentMenu.defaultTooltipStyle : null, 
-                "");
+        return this.defaultTooltipStyle;
     }
 
     public String getDefaultWidgetStyle() {
-        return getStyle("defaultWidget", this.defaultWidgetStyle, 
-                parentMenu != null ? parentMenu.defaultWidgetStyle : null, 
-                "");
+        return this.defaultWidgetStyle;
     }
     
     public String getDefaultLinkStyle() {
-        return getStyle("defaultLink", this.defaultLinkStyle, 
-                parentMenu != null ? parentMenu.defaultLinkStyle : null, 
-                "");
+        return this.defaultLinkStyle;
     }
 
     public FlexibleStringExpander getExtraIndex() {
@@ -725,9 +726,7 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getFillStyle() {
-        return getStyle("fill", this.fillStyle, 
-                parentMenu != null ? parentMenu.fillStyle : null, 
-                "");
+        return this.fillStyle;
     }
 
     public String getId() {
@@ -735,24 +734,17 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getMenuContainerStyle(Map<String, Object> context) {
-        return getStyle("container", this.menuContainerStyleExdr.expandString(context), 
-                parentMenu != null ? parentMenu.getMenuContainerStyle(context) : null, 
-                "");
+        return this.menuContainerStyleExdr.expandString(context);
+    }
+    
+    public String getMenuContainerStyle() {
+        return this.menuContainerStyleExdr.getOriginal();
     }
 
     public FlexibleStringExpander getMenuContainerStyleExdr() {
         return menuContainerStyleExdr;
     }
 
-    /**
-     * Cato: Gets style.
-     * <p>
-     * TODO?: this could probably cache based on passed name for faster access, but not certain
-     * if safe.
-     */
-    String getStyle(String name, String style, String parentStyle, String defaultStyle) {
-        return buildStyle(style, parentStyle, defaultStyle);
-    }
     
     /**
      * Cato: Builds a style string from current, parent, and default, based on "+"/"="
@@ -787,13 +779,16 @@ public class ModelMenu extends ModelWidget {
                     }
                 }
                 else {
-                    res = addStyles;
+                    // PRESERVE the original "+" so it may tricle down to FTL macros...
+                    //res = addStyles;
+                    res = style;
                 }
             }
             else {
-                if (style.startsWith("=")) {
-                    style = style.substring(1);
-                }
+                // DON'T remove this anymore... let it trickle down to FTL macro for further interpretation
+                //if (style.startsWith("=")) {
+                //    style = style.substring(1);
+                //}
                 res = style;
             }
         } else if (parentStyle != null) {
@@ -805,6 +800,31 @@ public class ModelMenu extends ModelWidget {
             res = res.trim();
         }
         return res;
+    }
+    
+    /**
+     * Cato: This now MUST be used to combine menu styles. 
+     * Do NOT try to combine style strings manually with addition!
+     */
+    public static String combineStyles(String... styles) {
+        String res = "";
+        for(String style : styles) {
+            if (style != null) {
+                style = style.trim();
+                if (!style.isEmpty()) {
+                    if (style.startsWith("+")) {
+                        res += " " + style.substring(1);
+                    }
+                    else if (style.startsWith("=")) {
+                        res = style.substring(1);
+                    }
+                    else {
+                        res = style;
+                    }
+                }
+            }
+        }
+        return res.trim();
     }
     
     public List<ModelMenuItem> getMenuItemList() {

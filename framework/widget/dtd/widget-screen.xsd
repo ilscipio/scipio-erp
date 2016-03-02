@@ -17,6 +17,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<!-- 
+Cato: In Cato, the screen widget language is modified from stock Ofbiz with new elements and
+modifying existing elements. Changes are prefixed with the string "Cato:" in annotations.
+
+Features and Modifications:
+* Decorator sections have extended controls to allow auto-inclusion, delegation and
+  conditional definitions.
+* In our standard implementation, label and section title styles support an advanced
+  syntax.
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
     <xs:element name="screens">
@@ -303,7 +313,18 @@ under the License.
             <xs:attribute type="xs:string" name="id" />
             <xs:attribute type="xs:string" name="style" default="p">
                 <xs:annotation>
-                    <xs:documentation>Label style. Cato: default currently p for paragraph because almost always a paragraph in screens rather than an inline text elem (span).</xs:documentation>
+                    <xs:documentation>Label style. 
+                        Cato: This is a STOCK element.
+                        In our standard implementation, the label style string is modified to support
+                        some advanced syntax in the format "elem:[+=]?class" or "h[+]?:[+=]?class"
+                        where "elem" may be one of: div, container, span, h, heading, p, raw.
+                        If only basic string specified (no [:;] delimiters), the string is checked for
+                        those elements and if matching, is treated as element-specifying (elem); otherwise,
+                        assumed to be a class for the title (class).
+                        For "h", the elem may be succeeded by a number giving the heading level ("h2").
+                        If a "+" is in between ("h+2"), the level is relative to the current global heading level. 
+                        NOTE/FIXME?: The default is currently "p" for paragraph because almost always used as a paragraph in stock screens 
+                        rather than an inline text elem (span).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -311,6 +332,12 @@ under the License.
     <xs:element name="link" type="link" substitutionGroup="AllWidgets"/>
 
     <xs:element name="screenlet" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>Screenlet element.
+                Cato: This is a STOCK element. 
+                In our standard implementation, it is interpreted as a basic section, 
+                corresponding to the Cato Freemarker macro @section.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllWidgets" />
@@ -322,7 +349,16 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="title-style">
                 <xs:annotation>
-                    <xs:documentation>Cato: style for the title (may be h1-h6).</xs:documentation>
+                    <xs:documentation>Cato: Style for the title.
+                        In our standard implementation, it supports
+                        some advanced syntax in the format "elem:[+=]?class" or "containerelem:[+=]?containerclass;elem:[+=]?class" or "h[+]?:[+=]?class",
+                        where "elem" may be one of: div, container, span, h, heading, p, raw.
+                        "containerelem" may be: div, container.
+                        If only basic string specified (no [:;] delimiters), the string is checked for
+                        those elements and if matching, is treated as element-specifying (elem); otherwise,
+                        assumed to be a class for the title (class).
+                        For "h", the elem may be succeeded by a number giving the heading level.
+                        If a "+" is in between ("h+2"), the level is relative to the current global heading level.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="id" type="xs:string" />

@@ -32,7 +32,7 @@
         <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item>
         <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
-        <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="${styles.menu_default_itemactive}"><link target="globalHRSettings"/></menu-item>
+        <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}"><link target="globalHRSettings"/></menu-item>
     </menu>    
     <menu name="HumanResAppSideBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="HumanResAppBar" recursive="full" />

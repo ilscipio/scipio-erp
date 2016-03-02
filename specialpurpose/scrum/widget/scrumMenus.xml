@@ -21,7 +21,7 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="ScrumAppBar" title="${uiLabelMap.ScrumApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-menu-item-name="products">
-        <menu-item name="main" title="${uiLabelMap.ScrumProductBacklog}" override-mode="replace" widget-style="${styles.menu_sidebar_itemdashboard}">
+        <menu-item name="main" title="${uiLabelMap.ScrumProductBacklog}" override-mode="replace" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <condition>
                 <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
             </condition>
@@ -606,7 +606,7 @@ under the License.
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
             </link>
         </menu-item>
-        <menu-item name="addNewTask" title="${uiLabelMap.ScrumNewTask}" title-style="hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="addNewTask" title="${uiLabelMap.ScrumNewTask}" title-style="+hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="product"/></not>
@@ -620,7 +620,7 @@ under the License.
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
-        <menu-item name="addNewErrorTask" title="${uiLabelMap.ScrumNewErrorTask}" title-style="hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="addNewErrorTask" title="${uiLabelMap.ScrumNewErrorTask}" title-style="+hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TEST"/>

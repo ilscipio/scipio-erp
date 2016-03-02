@@ -387,7 +387,12 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="${styles.menu_default_itemdisabled}">
+        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" disable-if-empty="nonExistentVar">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
         </menu-item>
     </menu>
     
@@ -443,7 +448,7 @@ under the License.
                         <parameter param-name="demoParam3"/>
                     </link>
                 </menu-item>
-                <!-- Cato: NOTE: see notes below in LayoutDemoButton2 -->
+                <!-- Cato: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
                 <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
                     <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
                         <link target="${demoTargetUrl}">
@@ -481,16 +486,22 @@ under the License.
         </menu-item>
     </menu>
     
+    <!-- Cato: Just here to demonstrate sub-menu-model local lookup -->
+    <menu name="LayoutDemoButtonDropdownMenuModel" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-link-style="+my-dropdown-item-link">
+    </menu>
+    
     <!-- Cato: button menu with nested button-dropdown test -->
-    <menu name="LayoutDemoButton2" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="top1" title="Toplevel1">
+    <menu name="LayoutDemoButton2" menu-container-style="+my-special-button-menu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-widget-style="+my-list-item">
+        <menu-item name="top1" title="Toplevel1" widget-style="my-list-item-override-style">
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="top2" title="Toplevel2">
+        <menu-item name="top2" title="Toplevel2" widget-style="+my-list-item-extra-style">
             <link target="${demoTargetUrl}" link-type="hidden-form">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
@@ -498,17 +509,17 @@ under the License.
             </link>
         </menu-item>
         <!-- Cato: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
-            use sub-menu-title instead), but all the styles have to be forced to override the parent, so a bit ugly... 
-            TODO: need a sub-menu-model attribute that allows fetching the styles from another menu, but needs java work -->
-        <menu-item name="top3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Sub-menu, as button-dropdown">
-            <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+            use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
+            instead of this top-level menu. -->
+        <menu-item name="top3" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown">
+            <menu-item name="nestednestednested1" title="Nestednestednested1">
                 <link target="${demoTargetUrl}">
                     <parameter param-name="demoParam1"/>
                     <parameter param-name="demoParam2"/>
                     <parameter param-name="demoParam3"/>
                 </link>
             </menu-item>
-            <menu-item name="nestednestednested2" title="Nestednestednested2" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
+            <menu-item name="nestednestednested2" title="Nestednestednested2">
                 <link target="${demoTargetUrl}" link-type="hidden-form">
                     <parameter param-name="demoParam1"/>
                     <parameter param-name="demoParam2"/>
@@ -516,15 +527,30 @@ under the License.
                 </link>
             </menu-item>
         </menu-item>
-        <menu-item name="top4" title="Toplevel4">
+        <menu-item name="top4" title="Toplevel4" disable-if-empty="nonExistentVar">
             <link target="${demoTargetUrl}" link-type="hidden-form">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
+        <menu-item name="top5" sub-menu-model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" sub-menu-title="Sub-menu, as button-dropdown">
+            <menu-item name="nestednestednested1" title="Nestednestednested1">
+                <link target="${demoTargetUrl}">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+            <menu-item name="nestednestednested2" title="Nestednestednested2">
+                <link target="${demoTargetUrl}" link-type="hidden-form">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+        </menu-item>
     </menu>
-    
     
     <menu name="LayoutDemoButtonDropdown" title="Dropdown button menu" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">

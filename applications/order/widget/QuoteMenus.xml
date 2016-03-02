@@ -119,9 +119,9 @@ under the License.
         <menu-item name="EditQuoteItem" title="${uiLabelMap.OrderCreateOrderQuoteItem}" >
             <condition>
                 <and>
-                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
-                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
-                        <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_REJECTED"/>
+                    <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
                 </and>
             </condition>
             <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}">

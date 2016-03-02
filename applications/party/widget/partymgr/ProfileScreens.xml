@@ -30,10 +30,10 @@
                     <order-by field-name="-changeDate"/>
                 </entity-and>
                 <entity-one entity-name="PartyAndGroup" value-field="lookupGroup">
-                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
                 </entity-one>
                 <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
-                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
                 </entity-one>
                 <entity-and list="partyContentList" entity-name="PartyContent">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -45,6 +45,9 @@
                     <condition>
                         <not><if-empty field="lookupPerson"/></not>
                     </condition>
+                    <actions>
+                        <set field="lookupParty" from-field="lookupPerson" />
+                    </actions>
                     <widgets>
                         <section>
                             <widgets>
@@ -91,12 +94,18 @@
                     <condition>
                         <not><if-empty field="lookupGroup"/></not>
                     </condition>
+                    <actions>
+                        <set field="lookupParty" from-field="lookupGroup" />
+                    </actions>
                     <widgets>
                         <section>
                             <condition>
                                 <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
                                </condition>
                             <widgets>
+                                <include-screen name="CatoPartyInfo"/>
+                            </widgets>
+                            <!--  
                                 <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
                                     <include-menu name="GroupUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                                     <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
@@ -123,6 +132,7 @@
                                     </section>
                                 </screenlet>
                             </fail-widgets>
+                            -->
                         </section>
                     </widgets>
                 </section>
@@ -622,8 +632,7 @@
     <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson 
          
                Replaces: component://party/widget/partymgr/ProfileScreens.xml#AvsSettings
-    -->
-    
+    -->    
     <screen name="CatoPartyInfo">
         <section>
             <actions>

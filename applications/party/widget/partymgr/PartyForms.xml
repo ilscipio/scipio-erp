@@ -132,6 +132,7 @@ under the License.
         </field>
     </form>
 
+    <!-- CATO: Remove
     <form name="ViewPartyGroup" type="single" default-map-name="lookupGroup">
         <auto-fields-entity entity-name="PartyGroup" default-field-type="display"/>
         <field name="logo" use-when="partyGroupLogoLinkUrl!=null" title="${uiLabelMap.CommonOrganizationLogo}"><image alternate="${uiLabelMap.CommonOrganizationLogo}" value="${partyGroupLogoLinkUrl}" style="cssImgStandard"/></field>
@@ -156,9 +157,7 @@ under the License.
             <sort-field name="externalId"/>
             <sort-field name="statusId"/>
         </sort-order>
-    </form>
-
-    <!-- 
+    </form> 
     <form name="ViewPartyPerson" type="single" default-map-name="lookupPerson">
         <field name="personalImage" use-when="partyContentId!=null" title="${uiLabelMap.FormFieldTitle_personalImage}"><image value="${personalImage}" style="cssImgStandard"/></field>
         <field name="partyId"><display/></field>
@@ -167,20 +166,18 @@ under the License.
         <field name="externalId"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
     </form>
-     -->
-
-    <!-- 
     <form name="ViewPartyPersonHistory" type="list" list-name="partyNameHistoryList"
         odd-row-style="alternate-row">
         <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix}"/></field>
         <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
     </form> -->
 
+    <!--
     <form name="ViewPartyGroupHistory" type="list" list-name="partyNameHistoryList"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row">
         <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${groupName}"/></field>
         <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
-    </form>
+    </form>-->
 
     <form name="AddUserLogin" type="single" target="createUserLogin"
         focus-field-name="userLoginId" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->

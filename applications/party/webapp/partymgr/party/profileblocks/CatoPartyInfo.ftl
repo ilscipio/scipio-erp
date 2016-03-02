@@ -4,7 +4,7 @@
         <#if partyContentList?has_content>
             <#list partyContentList as pc>
                 <@tr>
-                  <@td class="${styles.grid_large!}2"><#--${uiLabelMap.FormFieldTitle_personalImage}-->
+                  <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_personalImage}
                   </@td>
                   <#--CATO: The inline styles should probably be replaced by the th and img-thumgnail classes for foundation/bootstrap -->
                   <@td colspan="3"><img src="<@ofbizInterWebappUrl>/content/control/stream?contentId=${pc.contentId!}</@ofbizInterWebappUrl>" style="max-width: 100%; height: auto" width="100"/></@td>
@@ -13,55 +13,89 @@
             </#list> 
         </#if>
 
+        <#if lookupGroup?has_content && lookupParty.logoImageUrl?has_content>
+                <@tr>
+                  <@td class="${styles.grid_large!}2">${uiLabelMap.CommonOrganizationLogo}</@td>
+                  <#--CATO: The inline styles should probably be replaced by the th and img-thumgnail classes for foundation/bootstrap -->
+                  <@td colspan="3"><img src="${lookupParty.logoImageUrl!}" style="max-width: 100%; height: auto" width="100"/></@td>
+                </@tr>
+        </#if>
+
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}</@td>
             <@td colspan="3">
-                    <#assign partyName><#if lookupPerson.salutation?has_content> ${lookupPerson.salutation!}</#if>
-                                          <#if lookupPerson.personalTitle?has_content> ${lookupPerson.personalTitle!}</#if>
-                                          <#if lookupPerson.firstName?has_content> ${lookupPerson.firstName!}</#if>
-                                          <#if lookupPerson.middleName?has_content> ${lookupPerson.middleName!}</#if>
-                                          <#if lookupPerson.lastName?has_content> ${lookupPerson.lastName!}</#if></#assign>
-                    <@modal id="modal_info_${parameters.partyId!}" label="${partyName!}">
-                        <#if partyNameHistoryList?has_content>
-                          <@heading>${uiLabelMap.PartyHistoryWas}</@heading>
-                          <ul class="no-bullet">
-                            <#list partyNameHistoryList as pHistory>
-                              <li>"<#if pHistory.personalTitle?has_content> ${pHistory.personalTitle!}</#if>
-                                          <#if pHistory.firstName?has_content> ${pHistory.firstName!}</#if>
-                                          <#if pHistory.middleName?has_content> ${pHistory.middleName!}</#if>
-                                          <#if pHistory.lastName?has_content> ${pHistory.lastName!}</#if>" <#if pHistory.changeDate?has_content>- <@formattedDateTime date=pHistory.changeDate defaultVal="0000-00-00 00:00:00"/></#if></li>
-                            </#list>
-                          </ul>
+                    <#assign partyName>
+                        <#if lookupPerson?has_content>
+                          <#if lookupParty.salutation?has_content> ${lookupParty.salutation!}</#if>
+                          <#if lookupParty.personalTitle?has_content> ${lookupParty.personalTitle!}</#if>
+                          <#if lookupParty.firstName?has_content> ${lookupParty.firstName!}</#if>
+                          <#if lookupParty.middleName?has_content> ${lookupParty.middleName!}</#if>
+                          <#if lookupParty.lastName?has_content> ${lookupParty.lastName!}</#if>
                         </#if>
-                    </@modal>
+                        <#if lookupGroup?has_content>
+                          <#if lookupParty.groupName?has_content> ${lookupParty.groupName!}</#if>
+                        </#if>
+                    </#assign>
+                    <#if partyNameHistoryList?has_content>
+                        <@modal id="modal_info_${parameters.partyId!}" label="${partyName!}">
+                            <#if partyNameHistoryList?has_content>
+                              <@heading>${uiLabelMap.PartyHistoryWas}</@heading>
+                              <ul class="no-bullet">
+                                <#list partyNameHistoryList as pHistory>
+                                  <li>"<#if lookupPerson?has_content>
+                                              <#if pHistory.personalTitle?has_content> ${pHistory.personalTitle!}</#if>
+                                              <#if pHistory.firstName?has_content> ${pHistory.firstName!}</#if>
+                                              <#if pHistory.middleName?has_content> ${pHistory.middleName!}</#if>
+                                              <#if pHistory.lastName?has_content> ${pHistory.lastName!}</#if>
+                                       </#if>
+                                       <#if lookupGroup?has_content>
+                                            <#if pHistory.groupName?has_content> ${pHistory.groupName!}</#if>
+                                       </#if>
+                                       " <#if pHistory.changeDate?has_content>- <@formattedDateTime date=pHistory.changeDate defaultVal="0000-00-00 00:00:00"/></#if>
+                                  </li>
+                                </#list>
+                              </ul>
+                            </#if>
+                        </@modal>
+                    <#else>
+                        ${partyName!}
+                    </#if>
                 </@td>
         </@tr>
 
-        <#if lookupPerson.nickname?has_content>
+        <#if lookupGroup?has_content && lookupParty.tickerSymbol?has_content>
+            <@tr>
+              <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_tickerSymbol}
+              </@td>
+              <@td colspan="3">${lookupParty.tickerSymbol!}</@td>
+            </@tr>    
+        </#if>
+
+        <#if lookupPerson?has_content && lookupParty.nickname?has_content>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyNickName!}
               </@td>
-              <@td colspan="3">${lookupPerson.nickname!}</@td>
+              <@td colspan="3">${lookupParty.nickname!}</@td>
             </@tr>    
         </#if>
 
-        <#if lookupPerson.birthDate?has_content>
+        <#if lookupPerson?has_content && lookupParty.birthDate?has_content>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyBirthDate!}
               </@td>
-              <@td colspan="3"><@formattedDate date=lookupPerson.birthDate! /><#if lookupPerson.deceasedDate?has_content> - <@formattedDate date=lookupPerson.deceasedDate! /></#if></@td>
+              <@td colspan="3"><@formattedDate date=lookupParty.birthDate! /><#if lookupParty.deceasedDate?has_content> - <@formattedDate date=lookupParty.deceasedDate! /></#if></@td>
             </@tr>    
         </#if>
 
-        <#if lookupPerson.gender?has_content>
+        <#if lookupPerson?has_content && lookupParty.gender?has_content>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyGender}
               </@td>
-              <@td colspan="3">${lookupPerson.gender!}</@td>
+              <@td colspan="3">${lookupParty.gender!}</@td>
             </@tr>    
         </#if>
 
-        <#if lookupPerson.statusId?has_content>
+        <#if lookupParty.statusId?has_content>
             <#assign status = party.getRelatedOne("StatusItem", false)/>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.CommonStatus}
@@ -70,11 +104,11 @@
             </@tr>    
         </#if>
 
-        <#if lookupPerson.comments?has_content>
+        <#if lookupParty.comments?has_content>
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyComments}
               </@td>
-              <@td colspan="3">${lookupPerson.comments!}</@td>
+              <@td colspan="3">${lookupParty.comments!}</@td>
             </@tr>    
         </#if>
 

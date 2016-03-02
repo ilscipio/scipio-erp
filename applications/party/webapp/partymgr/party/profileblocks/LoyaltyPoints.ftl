@@ -19,7 +19,7 @@ under the License.
 
     <@section id="totalOrders" title="${uiLabelMap.PartyLoyaltyPoints}">
         <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>    
-          ${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
+          ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
         </#if>
     </@section>
 

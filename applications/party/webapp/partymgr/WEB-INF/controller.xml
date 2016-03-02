@@ -307,12 +307,11 @@ under the License.
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
-    <request-map uri="editAvsOverride"><security https="true" auth="true"/><response name="success" type="view" value="editavsoverride"/></request-map>
     <request-map uri="updateAvsOverride">
         <security https="true" auth="true"/>
         <event type="simple" path="component://party/script/org/ofbiz/party/party/PartySimpleMethods.xml" invoke="updateAVSOverride"/>
-        <response name="success" type="view" value="editavsoverride"/>
-        <response name="error" type="view" value="editavsoverride"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
     </request-map>
     <request-map uri="resetAvsOverride">
         <security https="true" auth="true"/>
@@ -1299,7 +1298,6 @@ under the License.
     <view-map name="editcreditcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editcreditcard"/>
     <view-map name="editgiftcard" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editgiftcard"/>
     <view-map name="editeftaccount" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editeftaccount"/>
-    <view-map name="editavsoverride" type="screen" page="component://party/widget/partymgr/PaymentMethodScreens.xml#editavsoverride"/>
 
     <view-map name="ListCommContent" type="screen" page="component://party/widget/partymgr/CommunicationEventScreens.xml#ListCommContent"/>
     <view-map name="PendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationEventScreens.xml#PendingCommunications"/>

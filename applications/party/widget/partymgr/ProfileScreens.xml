@@ -48,9 +48,7 @@
                     <widgets>
                         <section>
                             <widgets>
-                                <screenlet>
-                                    <include-screen name="CatoPartyInfo"/>
-                                </screenlet>
+                                <include-screen name="CatoPartyInfo"/>
                             </widgets>
                             <!--  
                             <condition>
@@ -157,8 +155,7 @@
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.PartyPartyIdentifications}" navigation-menu-name="newPartyIdentification" id="PartyIdentificationPanel">
-                    <include-menu name="PartyIdentificationSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>                
+                <screenlet title="${uiLabelMap.PartyPartyIdentifications}">
                     <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
                 </screenlet>
             </widgets>
@@ -196,26 +193,6 @@
                 <platform-specific>
                     <html>
                         <html-template location="component://party/webapp/partymgr/party/profileblocks/Attributes.ftl"/>
-                    </html>
-                </platform-specific>
-            </widgets>
-        </section>
-    </screen>
-
-    <screen name="AvsSettings">
-        <section>
-            <actions>
-                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
-                <entity-one entity-name="Party" value-field="party"/>
-                <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride">
-                    <field-map field-name="partyId"/>
-                </entity-one>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/AvsSettings.ftl"/>
                     </html>
                 </platform-specific>
             </widgets>
@@ -285,11 +262,18 @@
                 </entity-and>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/Visits.ftl"/>
-                    </html>
-                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="visits"/>
+                        </not>
+                    </condition>
+                    <platform-specific>
+                        <html>
+                            <html-template location="component://party/webapp/partymgr/party/profileblocks/Visits.ftl"/>
+                        </html>
+                    </platform-specific>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -635,10 +619,17 @@
     </screen>
     
     <!-- CATO: Form migration -->
-    <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson -->
+    <!-- CATO: Form widget replacement: component://party/widget/partymgr/PartyForms.xml#ViewPartyPerson 
+         
+               Replaces: component://party/widget/partymgr/ProfileScreens.xml#AvsSettings
+    -->
+    
     <screen name="CatoPartyInfo">
         <section>
             <actions>
+                <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride">
+                    <field-map field-name="partyId"/>
+                </entity-one>
             </actions>
             <condition>
                 <not>
@@ -646,11 +637,9 @@
                 </not>
             </condition>
             <widgets>
-                <screenlet>
-                    <platform-specific>
-                        <html><html-template location="component://party/webapp/partymgr/party/profileblocks/CatoPartyInfo.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
+                <platform-specific>
+                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/CatoPartyInfo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

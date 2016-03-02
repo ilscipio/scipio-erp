@@ -17,27 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("ProfileCreateNewLogin?partyId=${party.partyId}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}"/>
-    </#if>
-    </@menu>
-  </#macro>
-  <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuContent=menuContent>
+  <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}">
       <#if userLogins?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>
-              <@td class="${styles.grid_large!}2">${uiLabelMap.PartyUserLogin}
-              </@td>
-              <@td colspan="3">${userUserLogin.userLoginId}</@td>
-            </@tr>
-          
-            <@tr>
               <@td>${uiLabelMap.PartyUserLogin}</@td>
-              <@td>${userUserLogin.userLoginId}</@td>
+              <@td>
+                  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+                    <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.action_update!}">${userUserLogin.userLoginId}</a>
+                <#else>
+                    ${userUserLogin.userLoginId}
+                </#if>
+              </@td>
               <@td>
                 <#assign enabled = uiLabelMap.PartyEnabled>
                 <#if (userUserLogin.enabled)?default("Y") == "N">
@@ -51,11 +44,8 @@ under the License.
                 ${enabled}
               </@td>
               <@td class="button-col">
-                <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
-                </#if>
                 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.SecurityGroups}</a>
+                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.SecurityGroups}</a>
                 </#if>
               </@td>
             </@tr>

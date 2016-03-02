@@ -145,7 +145,8 @@ under the License.
     <screen name="ListPartyCommEvents">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListCommunications"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="${uiLabelMap.PartyCommunications}: ${parameters.partyId}"/>
                 <set field="activeSubMenuItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="CommunicationEvent"/>
                 <service service-name="findPartyInSalesOpportunityRole" result-map="leadPartyResult">
@@ -176,7 +177,6 @@ under the License.
                                 <if-service-permission service-name="partyCommunicationEventPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <label style="heading" text="${uiLabelMap.PageTitleListCommunications} ${partyId}"/>
                                 <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                 <section>
                                     <condition>

@@ -162,7 +162,6 @@ under the License.
                 <set field="titleProperty" value="UserLoginUpdateSecuritySettings"/>
                 <set field="activeSubMenuItem" value="EditUserLogin"/>
                 <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="FindUserLogin"/>
-                <set field="updateUserLoginSecurityURI" value="updateUserLoginSecurity"/>
                 <set field="updatePasswordURI" value="updatePassword"/>
                 <set field="userLoginId" from-field="parameters.userLoginId"/>
                 <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
@@ -170,15 +169,28 @@ under the License.
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.UserLoginUpdateSecuritySettings} - ${userLoginId}"/>
-                        </container>
-                        <include-form name="updateUserLoginSecurity" location="component://common/widget/SecurityForms.xml"/>
+                        <include-screen name="updateUserLoginSecurity"/>
                         <screenlet title="${uiLabelMap.UserLoginChangePassword}">
                             <include-form name="updatePassword" location="component://common/widget/SecurityForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Placeholder for the form rendering - previously part of component://common/widget/SecurityScreens.xml#EditUserLogin -->
+    <screen name="updateUserLoginSecurity">
+        <section>
+            <actions>
+                <set field="updateUserLoginSecurityURI" value="updateUserLoginSecurity"/>
+                 <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
+                 <set field="userLoginId" from-field="editUserLogin.userLoginId"/>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.UserLoginUpdateSecuritySettings}">
+                    <include-form name="updateUserLoginSecurity" location="component://common/widget/SecurityForms.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

@@ -115,6 +115,8 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
+                                              
+                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
                                 <!--
                                 <section>
                                     <condition>
@@ -138,9 +140,7 @@ under the License.
                                 </section>-->
                                 <section>
                                     <widgets>
-                                        <!-- 
-                                        <include-portal-page id="PartyProfile"/>AvsSettings
-                                         -->
+
                                          <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
@@ -165,7 +165,6 @@ under the License.
                                              </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                 <include-screen name="AvsSettings" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                         </container>
                                         <container style="${styles.grid_row}">
@@ -560,6 +559,8 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- CATO: Remove - This is a duplicate of component://common/widget/SecurityScreens.xml#EditUserLogin -->
     <screen name="EditUserLogin">
         <section>
             <actions>
@@ -576,10 +577,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="page-title">
-                            <label text="${uiLabelMap.UserLoginUpdateSecuritySettings} - ${userLoginId}"/>
-                        </container>
-                        <include-form name="updateUserLoginSecurity" location="component://common/widget/SecurityForms.xml"/>
+                        <screenlet>
+                            <include-screen name="component://common/widget/SecurityScreens.xml#updateUserLoginSecurity"/>
+                        </screenlet>
                         <screenlet title="${uiLabelMap.UserLoginChangePassword}">
                             <include-form name="updatePassword" location="component://common/widget/SecurityForms.xml"/>
                         </screenlet>

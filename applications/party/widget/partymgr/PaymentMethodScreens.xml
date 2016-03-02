@@ -117,6 +117,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- CATO: Remove
     <screen name="editavsoverride">
         <section>
             <actions>
@@ -131,7 +132,6 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
                             <condition>
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
@@ -149,6 +149,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+     -->
     
     <screen name="EditBillingAccount">
         <section>

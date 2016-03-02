@@ -102,13 +102,6 @@ under the License.
                                 <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="partyId"/></not></condition>
-                                    <widgets>
-                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
-                                    </widgets>
-                                </section>
-
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

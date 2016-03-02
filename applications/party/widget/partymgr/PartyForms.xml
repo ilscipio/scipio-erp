@@ -169,11 +169,12 @@ under the License.
     </form>
      -->
 
+    <!-- 
     <form name="ViewPartyPersonHistory" type="list" list-name="partyNameHistoryList"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row">
         <field name="was" title="${uiLabelMap.PartyHistoryWas}"><display description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix}"/></field>
         <field name="changed" title="${uiLabelMap.PartyHistoryChanged}"><display description="${changeDate}"/></field>
-    </form>
+    </form> -->
 
     <form name="ViewPartyGroupHistory" type="list" list-name="partyNameHistoryList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

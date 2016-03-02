@@ -2,9 +2,10 @@
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=chartDatasets?number!1 />
 
-<#if totalMap?has_content>    
+<#if totalMap?has_content> 
     <#if chartType == "line" || chartType == "bar">
-        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
+        <#-- FIXME: I don't know how to pass currency symbol, Freemarker doesn't let me get the symbol as is, either it transforms to unicode (ie: dollar) or to html entity (ie: euro)  -->
+        <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"" labelUom1=currencyUomId!"" labelUom2=currencyUomId!"">
             <#list totalMap.keySet() as key>        
                 <#assign currData = totalMap[key] />
                 <#if currData?has_content>

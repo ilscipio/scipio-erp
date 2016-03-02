@@ -1049,15 +1049,22 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     tooltips: {
                         mode: 'label'<#if labelUom1?has_content ||labelUom2?has_content>,
                         callbacks: {
-                            label: function(tooltipItems, data) {
+                            label: function(tooltipItem, data) {
                                 <#if labelUom1?has_content> 
-                                    if(tooltipItems.datasetIndex == 0){
-                                        return tooltipItems.yLabel + ' ${labelUom1!}';
+                                    if(tooltipItem.datasetIndex == 0) {
+                                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                                        <#escape x as x?html>
+                                             <#noescape>${Static["org.ofbiz.base.util.Debug"].log("labelUom1 ====================> " + labelUom1?string)}</#noescape>
+                                        </#escape>
+                                      
+                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom1!}';
                                     }
                                 </#if>
                                 <#if labelUom2?has_content> 
-                                    if(tooltipItems.datasetIndex == 0){
-                                        return tooltipItems.yLabel + ' ${labelUom2!}';
+                                    if(tooltipItem.datasetIndex == 1) {
+                                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                                        ${Static["org.ofbiz.base.util.Debug"].log("labelUom2 ====================> " + labelUom2)}
+                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom2!}';
                                     }
                                 </#if>
                             }
@@ -1092,8 +1099,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 <#if xlabel?has_content>labelString: '${xlabel!}',</#if>
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize
-                                
+                                fontSize: chartData.scaleLabelFontSize                                
                             },
                             ticks: {
                                 display: true,
@@ -1119,8 +1125,6 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
                                 fontSize: chartData.scaleLabelFontSize
-                            },
-                            afterUpdate: function (valueObject) {
                             }
                         }]
                     }

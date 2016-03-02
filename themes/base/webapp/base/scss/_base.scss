@@ -72,6 +72,11 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
             //padding: $side-nav-link-padding;
             color: $aluminum;
             cursor: $input-disabled-cursor;
+            
+            > a, > button {
+                color: $aluminum;
+                cursor: $input-disabled-cursor;
+            }
         }
         &.dashboard {
             background-color: $white-smoke;

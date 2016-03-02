@@ -75,11 +75,6 @@ TODO/FIXME:
     <#-- Use only the first, we only support one -->
     <#local type = menuTypeStyles[0]?substring(10)>
   </#if>
-  <#-- FIXME?: we don't fully support +/= syntax here, non-standard; treat empty as "+" for now...
-      We may not even receive a +/= sign at all; see ModelMenu.java, may get stripped; should maybe be changed... -->
-  <#if !class?starts_with("=")>
-    <#local class = "+" + class>
-  </#if>
   <#local styleName = type?replace("-","_")>
   <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
@@ -117,7 +112,8 @@ TODO/FIXME:
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-            subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle menuInfo=menuInfo />
+            subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle 
+            disabled=item.disabled selected=item.selected menuInfo=menuInfo />
       </#list>
     </@menu_markup>
   </#if>
@@ -139,13 +135,10 @@ TODO/FIXME:
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" menuInfo={}>
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" menuInfo={} disabled=false selected=false>
   <#local class = style>
   <#local id = "">
   <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
-  <#local disabled = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
-  <#local active = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
-  <#local selected = false>  <#-- TODO: this should be set to real value (but markup doesn't currently use)... -->
   <#local htmlwrap = styles["menu_" + menuInfo.styleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
   <#if htmlwrap?is_boolean>
     <#local htmlwrap = htmlwrap?string("li", "")>
@@ -154,21 +147,22 @@ TODO/FIXME:
   <#if toolTip?has_content>
     <#local attribs = attribs + {"title":toolTip}>
   </#if>
+  <#-- NOTE: our "selected" actually means "active" to the Cato macros -->
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
-      disabled=disabled selected=selected active=active><#rt>
+      disabled=disabled active=selected><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
           style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=linkArgs.imgArgs!{} imgStr=linkArgs.imgStr!""
-          menuCtxRole=linkArgs.menuCtxRole menuInfo=menuInfo /><#t>
+          menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected menuInfo=menuInfo /><#t>
     <#elseif linkStr?has_content>
       ${linkStr}
     </#if><#t>
     <#if containsNestedMenus>
       <#-- NEW IN CATO: Use recursion to render sub-menu... must be careful... -->
       <@renderMenuFull boundaryComment="" id="" style=subMenuStyle title=subMenuTitle inlineEntries=false menuCtxRole=menuInfo.menuCtxRole items=items />
-      <#-- Previous code (manual, no recursion)...
+      <#-- Previous code (manual, no recursion, unmaintained)...
       <#if menuInfo.htmlwrap?has_content><${menuInfo.htmlwrap}<@compiledClassAttribStr class=subMenuStyle />></#if>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
@@ -341,22 +335,16 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 
 <#-- Cato: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} menuInfo={}>
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false menuInfo={}>
+  <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
        because can't centralize these menus easily anywhere else. -->
   <#if menuCtxRole == "screenlet-nav-menu">
-    <#if !style?has_content && isLink>
-      <#local style = "${styles.menu_section_item_link!}">
+    <#if !class?has_content && isLink>
+      <#local class = "${styles.menu_section_item_link!}">
     </#if>
   </#if>
-  <#-- Cato: treat "none" keyword as requesting empty style, as workaround -->
-  <#if style == "none" || style == "=">
-    <#local style = "">
-  </#if>
-  <#local disabled = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
-  <#local selected = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
-  <#local active = false> <#-- Cato: TODO: should be determined if possible, so markup may know -->
   <#if linkType?has_content && "hidden-form" == linkType>
     <#local hiddenFormContent>
       <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#t>
@@ -379,13 +367,24 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       ${text}<#t>
     </#if>
   </#local>
+  <#-- NOTE: our "selected" actually means "active" to the Cato macros -->
   <#if isLink>
     <#local href><#if linkType == "hidden-form">javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if></#local>
-    <@menuitem_link_markup class=style id=id style="" name=name href=href onClick="" target=targetWindow title="" 
-        attribs={} excludeAttribs=[] disabled=disabled selected=selected active=active>${innerContent}</@menuitem_link_markup><#t>
+    <#-- FIXME? We have inconsistent kludge lookup here for extra contentClass because the widgets currently don't support
+        special styles on links (only on the menu item). not currently a big deal... -->
+    <#if disabled>
+      <#local class = addClassArg(class, (styles["menu_" + menuInfo.styleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
+      <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable -->
+      <#local href = "javascript:void(0);">
+    </#if>
+    <#if selected>
+      <#local class = addClassArg(class, (styles["menu_" + menuInfo.styleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
+    </#if>
+    <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" 
+        attribs={} excludeAttribs=[] disabled=disabled active=selected>${innerContent}</@menuitem_link_markup><#t>
   <#else>
-    <@menuitem_generic_markup class=style id=id style="" onClick="" title="" 
-        attribs={} excludeAttribs=[] disabled=disabled selected=selected active=active>${innerContent}</@menuitem_generic_markup><#t>
+    <@menuitem_generic_markup class=class id=id style="" onClick="" title="" 
+        attribs={} excludeAttribs=[] disabled=disabled active=selected>${innerContent}</@menuitem_generic_markup><#t>
   </#if>
 </#macro>
 

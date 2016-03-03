@@ -185,6 +185,7 @@
 
 <@section>
     <@heading attribs=makeMagTargetAttribMap("charts") id="charts" level=2>Charts</@heading>
+    <#-- CATO: Deprecated
     <@heading level=3>Foundation</@heading>
     <@row>
         <@cell columns="4">
@@ -214,7 +215,7 @@
                 <@chartdata value="27" value2="5" title="Other"/>  
             </@chart>
         </@cell>
-    </@row>
+    </@row>-->
     <@heading level=3>Chart.js (default)</@heading>
     <@row>
         <@cell columns="4">

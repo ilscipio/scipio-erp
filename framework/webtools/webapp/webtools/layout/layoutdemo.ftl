@@ -6,8 +6,6 @@
     <@mli arrival="panel"><a href="#panel">Panel</a></@mli>
 </@nav>-->
 
-<p>${(test!(3)) - (asdf!(5)) - 33}</p>
-
 <div ${mtarget("breadcrumbs")} id="breadcrumbs"></div>
 <@nav type="breadcrumbs">
     <li class="${styles.nav_breadcrumb!}"><a href="#" class="${styles.nav_breadcrumb_link!}">Home</a></li>

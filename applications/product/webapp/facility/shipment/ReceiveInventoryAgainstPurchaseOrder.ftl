@@ -130,7 +130,7 @@ under the License.
                             <@td>${orderItem.quantity}</@td>
                             <@td>${orderItem.cancelQuantity!0}</@td>
                             <@td>
-                                <div ${(backOrderedQuantity &gt; 0)?string(" errorMessage","")}">
+                                <div ${(backOrderedQuantity > 0)?string(" errorMessage","")}">
                                     ${backOrderedQuantity}
                                 </div>
                             </@td>

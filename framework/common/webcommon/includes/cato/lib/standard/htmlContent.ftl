@@ -1034,7 +1034,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <#else>
         <#assign chartDatasets=0/>
     </#if>
-    <#if chartDatasets &lt; 1><#local chartDatasets = 1 /></#if>
+    <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
     
     <canvas id="${chartId!}" class="chart-data" height="300" width="500"></canvas>
     <@script>
@@ -1167,7 +1167,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       </#if>
                       data: []
                     }
-                    <#if chartDatasets &gt; 1>
+                    <#if (chartDatasets > 1)>
                     ,{
                       <#if (type=="line" || type=="bar")>
                       label: '${label2!}',
@@ -1232,7 +1232,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
             
             <#list res as m>
                     <#local num_found=m?groups[1]/>
-                    <#if num_found?has_content && num_found?number &gt; num_of_values_found>
+                    <#if num_found?has_content && (num_found?number > num_of_values_found)>
                         <#local num_of_values_found = num_found?number />
                     </#if>
             </#list>

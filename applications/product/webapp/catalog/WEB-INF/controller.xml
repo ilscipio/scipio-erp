@@ -3176,6 +3176,7 @@ under the License.
     <view-map name="EditProdCatalogParties" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogParties"/>
     <view-map name="EditProdCatalogSection" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogSection"/>
 
+    <!-- CATO: The following is duplicated in component://marketing/webapp/marketing/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
     <view-map name="EditProductPromoRules" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromoRules"/>

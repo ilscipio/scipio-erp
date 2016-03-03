@@ -337,11 +337,21 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="EditProductPromoRules" title="${uiLabelMap.ProductRules}">
+            <condition>
+                <not>
+                    <if-empty field="productPromoId"/>
+                </not>
+            </condition>
             <link target="EditProductPromoRules">
                 <parameter param-name="productPromoId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductPromoStores" title="${uiLabelMap.ProductStores}">
+            <condition>
+                <not>
+                    <if-empty field="productPromoId"/>
+                </not>
+            </condition>
             <link target="EditProductPromoStores">
                 <parameter param-name="productPromoId"/>
             </link>
@@ -352,10 +362,25 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="EditProductPromoContent" title="${uiLabelMap.CommonContent}">
+            <condition>
+                <not>
+                    <if-empty field="productPromoId"/>
+                </not>
+            </condition>
             <link target="EditProductPromoContent">
                 <parameter param-name="productPromoId"/>
             </link>
         </menu-item>
+    </menu>
+    
+    <!-- CATO: new Promo Sidebar -->
+    <menu name="PromoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="PromoTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="PromoSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        
     </menu>
 
     <menu name="ProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

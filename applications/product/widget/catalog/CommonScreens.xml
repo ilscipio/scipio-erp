@@ -278,6 +278,48 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonPromoDecorator">
+        <section>
+            <actions>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
+                    <!-- Cato: delegator to main-decorator -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-menu name="PromoSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                    </decorator-section>                   
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="productPromoId"/></not></condition>
+                                    <widgets>
+                                        <include-menu name="PromoTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                        <!--
+                                        <container style="button-bar">
+                                            <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>-->
+                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
+                                    </widgets>
+                                </section>
+
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonProductStoreDecorator">
         <section>
             <actions>

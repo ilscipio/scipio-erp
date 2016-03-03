@@ -20,53 +20,12 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CommonPromoDecorator">
-        <section>
-            <actions>
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <!-- Cato: delegator to main-decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field="productPromoId"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="PromoTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <container style="button-bar">
-                                            <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
-                                    </widgets>
-                                </section>
-
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="FindProductPromo">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromos"/>
-                <set field="activeMainMenuItem" value="promos"/>
-                <set field="activeSubMenuItem" value="ProductPromo"/>
+                <set field="activeMainMenuItem" value="promos" global="true"/>
+                <set field="activeSubMenuItem" value="EditProductPromo" global="true"/>
 
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <entity-condition entity-name="ProductPromo" list="productPromos">
@@ -75,32 +34,25 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
-                            <container style="button-bar">
-                                <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}8 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.ProductProductPromotionsList}">
+                                    <include-form name="ListProductPromos" location="component://product/widget/catalog/PromoForms.xml"/>
+                                </screenlet>
                             </container>
-                            <container>
-                                <label style="span">${uiLabelMap.CommonView}</label>
-                                <link target="FindProductPromo" text="${uiLabelMap.CommonAll}" style="${styles.link_run_sys} ${styles.action_find}"/>
-                                <link target="FindProductPromo" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_run_sys} ${styles.action_find}">
-                                    <parameter param-name="userEntered" value="Y"/>
-                                </link>
-                                <link target="FindProductPromo" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_run_sys} ${styles.action_find}">
-                                    <parameter param-name="userEntered" value="N"/>
-                                </link>
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
+                                    <section>
+                                        <widgets>
+                                            <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
                             </container>
-                            <section>
-                                <widgets>
-                                    <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
-                                </widgets>
-                            </section>
-                        </screenlet>
-                    
-                        <screenlet title="${uiLabelMap.ProductProductPromotionsList}">
-                            <include-form name="ListProductPromos" location="component://product/widget/catalog/PromoForms.xml"/>
-                        </screenlet>
+                        </container>
+                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -118,7 +70,7 @@ under the License.
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditProductPromo" location="component://product/widget/catalog/PromoForms.xml"/>
@@ -192,7 +144,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/promo/EditProductPromoRules.ftl"/></html>
@@ -223,7 +175,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/promo/EditProductPromoStores.ftl"/></html>
@@ -254,7 +206,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
                             <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}">
@@ -304,7 +256,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/promo/EditProductPromoCode.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
                             <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}"/>
@@ -338,7 +290,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPromoDecorator">
+                <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProductPromoContent}">
                             <include-form name="EditProductPromoContentImage" location="component://product/widget/catalog/PromoForms.xml"/>

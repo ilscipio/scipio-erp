@@ -1153,7 +1153,8 @@ Render menu in a tree fashion way
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content>
                            , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
-                        </#if>
+                        </#if>,
+                        "check_callback" : true
                      }
                      
                      <#if treeMenuPlugins?has_content>
@@ -1162,13 +1163,17 @@ Render menu in a tree fashion way
                         </#list>
                         
                         , "plugins" : [
+                            "unique",
+                            "dnd",
                             <#list treeMenuPlugins as plugin>
                                 "${plugin.pluginName()}"                               
                                 <#if treeMenuPlugins?last.pluginName() != plugin.pluginName()>, </#if> 
                             </#list>
                         ]
                      </#if>
-                });
+                }).on('delete_node.jstree', function(e, data) {
+                    alert('delete');
+                });;
             });
         </script>
     </#if>

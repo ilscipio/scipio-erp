@@ -37,5 +37,7 @@ for (productStoreCatalog in productStoreCatalogs) {
             treeMenuData = treeMenuData + result.get("treeList");
     }
 }
+
 JsTreeHelper.preventDataItemsSameId(treeMenuData);
+Debug.logInfo("treeMenuData "+treeMenuData,"");
 context.treeMenuData = treeMenuData;

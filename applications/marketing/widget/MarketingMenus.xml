@@ -25,6 +25,7 @@ under the License.
         <menu-item name="Segment" title="${uiLabelMap.MarketingSegment}"><link target="FindSegmentGroup"/></menu-item>
         <menu-item name="ContactList" title="${uiLabelMap.MarketingContactList}"><link target="FindContactLists"/></menu-item>
         <menu-item name="Reports" title="${uiLabelMap.MarketingReports}"><link target="MarketingReport"/></menu-item>
+        <menu-item name="promos" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromo"/></menu-item>
     </menu>
     <menu name="MarketingAppSideBar" title="${uiLabelMap.MarketingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="MarketingAppBar" recursive="full" />

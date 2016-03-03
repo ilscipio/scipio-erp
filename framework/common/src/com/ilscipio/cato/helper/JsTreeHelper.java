@@ -588,16 +588,17 @@ public class JsTreeHelper {
      */
     public static List<JsTreeDataItem> preventDataItemsSameId(List<JsTreeDataItem> list) {
         Map<String, List<JsTreeDataItem>> repeatedDataItems = getAllRepeatedItems(list);
-        // Debug.log("repeated data item size ===========> " +
-        // repeatedDataItems.size());
+//        Debug.log("repeated data item size ===========> " + repeatedDataItems.size());
 
         for (String idKey : repeatedDataItems.keySet()) {
-            // Debug.log("repeated data item id ===========> " + idKey);
+//             Debug.log("repeated data item id ===========> " + idKey);
             int count = 0;
-            for (TreeDataItem dataItem : repeatedDataItems.get(idKey)) {
-                dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
-                updateDataItemsParentReference(idKey, count, list);
-                count++;
+            for (JsTreeDataItem dataItem : repeatedDataItems.get(idKey)) {
+                if (dataItem.getId().equals(dataItem.getOriginalId())) {
+                    dataItem.setId(dataItem.getId() + JSTREE_FIELD_ID_SEPARATOR + count);
+                    updateDataItemsParentReference(idKey, count, list);
+                    count++;
+                }
             }
         }
         return list;
@@ -606,9 +607,10 @@ public class JsTreeHelper {
     private static void updateDataItemsParentReference(String idKey, int count, List<JsTreeDataItem> resultList) {
         for (JsTreeDataItem dataItem : resultList) {
             if (dataItem.getParent().equals(idKey)) {
-                if (dataItem.getId().equals(dataItem.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count)) {
+//                if (dataItem.getId().equals(dataItem.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count)) {
+//                    Debug.log("parent ============> " + dataItem.getParent());
                     dataItem.setParent(dataItem.getParent() + JSTREE_FIELD_ID_SEPARATOR + count);
-                }
+//                }
             }
         }
     }

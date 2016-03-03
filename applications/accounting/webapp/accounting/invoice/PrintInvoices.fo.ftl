@@ -239,10 +239,10 @@ under the License.
                           <fo:block text-align="center"> <#if invoiceItem.quantity??>${invoiceItem.quantity?string.number}</#if> </fo:block>
                         </fo:table-cell>
                         <fo:table-cell text-align="right">
-                          <fo:block> <#if invoiceItem.quantity??><@ofbizCurrency amount=invoiceItem.amount!"" isoCode=invoice.currencyUomId!""/></#if> </fo:block>
+                          <fo:block> <#if invoiceItem.quantity??><@ofbizCurrency amount=invoiceItem.amount! isoCode=invoice.currencyUomId!/></#if> </fo:block>
                         </fo:table-cell>
                         <fo:table-cell text-align="right">
-                          <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId!""/> </fo:block>
+                          <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId!/> </fo:block>
                         </fo:table-cell>
                       </fo:table-row>
                     </#list>
@@ -259,7 +259,7 @@ under the License.
                         <fo:block font-weight="bold">
                           <#if invoiceDetail.invoiceTotal?has_content>
                             <#assign invoiceTotal = invoiceDetail.invoiceTotal! />
-                            <@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId!""/>
+                            <@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId!/>
                           </#if>
                         </fo:block>
                       </fo:table-cell>
@@ -280,7 +280,7 @@ under the License.
                         <fo:block>
                           <#if invoiceDetail.invoiceNoTaxTotal?has_content>
                             <#assign invoiceNoTaxTotal = invoiceDetail.invoiceNoTaxTotal! />
-                            <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=invoice.currencyUomId!""/>
+                            <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=invoice.currencyUomId!/>
                           </#if>
                         </fo:block>
                       </fo:table-cell>

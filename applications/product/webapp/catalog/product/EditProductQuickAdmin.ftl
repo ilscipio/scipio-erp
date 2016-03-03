@@ -68,7 +68,7 @@ function doPublish() {
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
             <@field type="display">${productId!}</@field>
-            <@field type="input" name="productName" size="40" maxlength="40" value=product.productName!"" />
+            <@field type="input" name="productName" size="40" maxlength="40" value=product.productName! />
             <@field type="submit" text=uiLabelMap.ProductUpdateName class="+${styles.link_run_sys!} ${styles.action_update!}"/>
           </@fields>
         </form>
@@ -119,7 +119,7 @@ function doPublish() {
                 </@td>
                 <@td nowrap="nowrap"><a class="${styles.link_nav_info_name!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
                 <@td colspan="2">
-                    <@field type="input" name="description${idx}" size="70" maxlength="100" value=selFeatureDesc[assocProduct.productId]!""/>
+                    <@field type="input" name="description${idx}" size="70" maxlength="100" value=selFeatureDesc[assocProduct.productId]!/>
                 </@td>
                 <#assign checked=false/>
                 <#if ((assocProduct.smallImageUrl! != "") && (assocProduct.smallImageUrl! == product.smallImageUrl!) &&
@@ -215,14 +215,14 @@ function doPublish() {
             <#assign idx=0/>
             <#list assocProducts as assocProduct>
                 <@tr valign="middle">
-                    <@td><@field type="input" name="productHeight${idx}" size="6" maxlength="20" value=assocProduct.productHeight!""/></@td>
-                    <@td><@field type="input" name="productWidth${idx}" size="6" maxlength="20" value=assocProduct.productWidth!""/></@td>
-                    <@td><@field type="input" name="productDepth${idx}" size="6" maxlength="20" value=assocProduct.productDepth!""/></@td>
-                    <@td><@field type="input" name="weight${idx}" size="6" maxlength="20" value=assocProduct.weight!""/></@td>
-                    <@td><@field type="input" name="~floz${idx}" size="6" maxlength="20" value=featureFloz.get(assocProduct.productId)!""/></@td>
-                    <@td><@field type="input" name="~ml${idx}" size="6" maxlength="20" value=featureMl.get(assocProduct.productId)!""/></@td>
-                    <@td><@field type="input" name="~ntwt${idx}" size="6" maxlength="20" value=featureNtwt.get(assocProduct.productId)!""/></@td>
-                    <@td><@field type="input" name="~grams${idx}" size="6" maxlength="20" value=featureGrams.get(assocProduct.productId)!""/></@td>
+                    <@td><@field type="input" name="productHeight${idx}" size="6" maxlength="20" value=assocProduct.productHeight!/></@td>
+                    <@td><@field type="input" name="productWidth${idx}" size="6" maxlength="20" value=assocProduct.productWidth!/></@td>
+                    <@td><@field type="input" name="productDepth${idx}" size="6" maxlength="20" value=assocProduct.productDepth!/></@td>
+                    <@td><@field type="input" name="weight${idx}" size="6" maxlength="20" value=assocProduct.weight!/></@td>
+                    <@td><@field type="input" name="~floz${idx}" size="6" maxlength="20" value=featureFloz.get(assocProduct.productId)!/></@td>
+                    <@td><@field type="input" name="~ml${idx}" size="6" maxlength="20" value=featureMl.get(assocProduct.productId)!/></@td>
+                    <@td><@field type="input" name="~ntwt${idx}" size="6" maxlength="20" value=featureNtwt.get(assocProduct.productId)!/></@td>
+                    <@td><@field type="input" name="~grams${idx}" size="6" maxlength="20" value=featureGrams.get(assocProduct.productId)!/></@td>
                     <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></@td>
@@ -237,14 +237,14 @@ function doPublish() {
               </@tfoot>
         <#else>
                 <@tr>
-                    <@td><@field type="input" name="productHeight" size="6" maxlength="20" value=product.productHeight!"" /></@td>
-                    <@td><@field type="input" name="productWidth" size="6" maxlength="20" value=product.productWidth!"" /></@td>
-                    <@td><@field type="input" name="productDepth" size="6" maxlength="20" value=product.productDepth!"" /></@td>
-                    <@td><@field type="input" name="weight" size="6" maxlength="20" value=product.weight!"" /></@td>
-                    <@td><@field type="input" name="~floz" size="6" maxlength="20" value=floz!"" /></@td>
-                    <@td><@field type="input" name="~ml" size="6" maxlength="20" value=ml!"" /></@td>
-                    <@td><@field type="input" name="~ntwt" size="6" maxlength="20" value=ntwt!"" /></@td>
-                    <@td><@field type="input" name="~grams" size="6" maxlength="20" value=grams!"" /></@td>
+                    <@td><@field type="input" name="productHeight" size="6" maxlength="20" value=product.productHeight! /></@td>
+                    <@td><@field type="input" name="productWidth" size="6" maxlength="20" value=product.productWidth! /></@td>
+                    <@td><@field type="input" name="productDepth" size="6" maxlength="20" value=product.productDepth! /></@td>
+                    <@td><@field type="input" name="weight" size="6" maxlength="20" value=product.weight! /></@td>
+                    <@td><@field type="input" name="~floz" size="6" maxlength="20" value=floz! /></@td>
+                    <@td><@field type="input" name="~ml" size="6" maxlength="20" value=ml! /></@td>
+                    <@td><@field type="input" name="~ntwt" size="6" maxlength="20" value=ntwt! /></@td>
+                    <@td><@field type="input" name="~grams" size="6" maxlength="20" value=grams! /></@td>
                     <@td><a class="${styles.link_nav_info_value!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></@td>

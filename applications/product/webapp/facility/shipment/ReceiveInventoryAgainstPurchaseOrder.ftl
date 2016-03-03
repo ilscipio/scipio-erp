@@ -69,9 +69,9 @@ under the License.
 <form name="ReceiveInventoryAgainstPurchaseOrder" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
     <input type="hidden" name="clearAll" value="Y"/>
     <div>
-        <@field type="input" size="20" name="shipmentId" value=shipmentId!"" label=uiLabelMap.ProductShipmentId />
-        <@field type="lookup" value=orderId!"" label=uiLabelMap.ProductOrderId formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
-        <@field type="input" size="20" label=uiLabelMap.ProductOrderShipGroupId name="shipGroupSeqId" value=shipGroupSeqId!""/>
+        <@field type="input" size="20" name="shipmentId" value=shipmentId! label=uiLabelMap.ProductShipmentId />
+        <@field type="lookup" value=orderId! label=uiLabelMap.ProductOrderId formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
+        <@field type="input" size="20" label=uiLabelMap.ProductOrderShipGroupId name="shipGroupSeqId" value=shipGroupSeqId!/>
         <@field type="submit" text=uiLabelMap.CommonSelect class="${styles.link_run_sys!} ${styles.action_select!}"/>
     </div>
 </form>

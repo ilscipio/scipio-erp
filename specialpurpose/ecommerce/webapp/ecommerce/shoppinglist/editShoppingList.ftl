@@ -250,12 +250,12 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonStartDate}</div></@td>
                 <@td>
-                  <@field type="datetime" name="startDateTime" value=(recurrenceInfo.startDateTime)!"" size="25" maxlength="30" id="startDateTime1" />
+                  <@field type="datetime" name="startDateTime" value=(recurrenceInfo.startDateTime)! size="25" maxlength="30" id="startDateTime1" />
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonEndDate}</div></@td>
                 <@td>
-                  <@field type="datetime" name="endDateTime" class="+textBox" value=(recurrenceRule.untilDateTime)!"" size="25" maxlength="30" id="endDateTime1" />
+                  <@field type="datetime" name="endDateTime" class="+textBox" value=(recurrenceRule.untilDateTime)! size="25" maxlength="30" id="endDateTime1" />
                 </@td>
                 <@td>&nbsp;</@td>
               </@tr>
@@ -459,7 +459,7 @@ under the License.
                               
                                 <@tr>
                                     <@td width="1%">&nbsp;</@td>
-                                    <@td><@field type="datetime" name="reservStartStr" class="+inputBox" value=shoppingListItem.reservStart!"" size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
+                                    <@td><@field type="datetime" name="reservStartStr" class="+inputBox" value=shoppingListItem.reservStart! size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
                                     <@td><input type="text" class="inputBox" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
                                 </@tr>
                                 <@tr open=true close=false />

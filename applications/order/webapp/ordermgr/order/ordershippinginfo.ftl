@@ -153,7 +153,7 @@ under the License.
                          <@td>
                              <div style="display:none" id="shipByDate${index}">
                                  <div class="label">${uiLabelMap.OrderShipBeforeDate} : </div>
-                                 <div><@field type="datetime" name="shipByDate" value=requestParameters.maxDate!"" size="25" maxlength="30" id="shipByDate_${index}" /></div>
+                                 <div><@field type="datetime" name="shipByDate" value=requestParameters.maxDate! size="25" maxlength="30" id="shipByDate_${index}" /></div>
                              </div>
                          </@td>
                      </@tr>
@@ -536,7 +536,7 @@ under the License.
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                     <@row>
                         <@cell columns=6>
-                            <@field type="datetime" dateType="date" name="shipByDate" value=shipGroup.shipByDate!"" size="25" maxlength="30" id="shipByDate_${shipGroup.shipGroupSeqId}" />
+                            <@field type="datetime" dateType="date" name="shipByDate" value=shipGroup.shipByDate! size="25" maxlength="30" id="shipByDate_${shipGroup.shipGroupSeqId}" />
                         </@cell>
                         <@cell columns=6>
                             <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
@@ -555,7 +555,7 @@ under the License.
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                     <@row>
                         <@cell columns=6>
-                            <@field type="datetime" dateType="date" name="shipAfterDate" value=shipGroup.shipAfterDate!"" size="25" maxlength="30" id="shipAfterDate_${shipGroup.shipGroupSeqId}" />
+                            <@field type="datetime" dateType="date" name="shipAfterDate" value=shipGroup.shipAfterDate! size="25" maxlength="30" id="shipAfterDate_${shipGroup.shipGroupSeqId}" />
                         </@cell>
                         <@cell columns=6>
                             <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    

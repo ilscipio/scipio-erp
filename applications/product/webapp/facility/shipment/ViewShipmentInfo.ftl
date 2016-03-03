@@ -65,7 +65,7 @@ under the License.
             <@td width="20%" align="right">${uiLabelMap.ProductAdditionalShippingCharge}</@td>
             <@td width="80%">
                 <#if shipment.additionalShippingCharge??>
-                    <@ofbizCurrency amount=shipment.additionalShippingCharge isoCode=shipment.currencyUomId!"" />
+                    <@ofbizCurrency amount=shipment.additionalShippingCharge isoCode=shipment.currencyUomId! />
                 </#if>
             </@td>
           </@tr>

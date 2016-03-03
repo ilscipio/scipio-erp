@@ -52,7 +52,7 @@ under the License.
           <#if returnInfo.entryDate??>
             <#assign entryDate = returnInfo.get("entryDate").toString()>
           </#if>
-          <@field type="datetime" label=uiLabelMap.OrderEntryDate name="entryDate" value=entryDate!"" size="25" maxlength="30" id="entryDate1"/>
+          <@field type="datetime" label=uiLabelMap.OrderEntryDate name="entryDate" value=entryDate! size="25" maxlength="30" id="entryDate1"/>
           <@field type="lookup" label=uiLabelMap.OrderReturnFromParty value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
           <@field type="select" name="destinationFacilityId" label=uiLabelMap.OrderReturnToFacility>
             <#if currentFacility??>
@@ -101,7 +101,7 @@ under the License.
                   </#if>
                 </@field>
               <#else>
-                <@field type="input" size="20" name="paymentMethodId" value=(returnHeader.paymentMethodId)!""/>
+                <@field type="input" size="20" name="paymentMethodId" value=(returnHeader.paymentMethodId)!/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
                 <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
@@ -159,7 +159,7 @@ under the License.
             <#if postalAddress?has_content>
                 <div>
                   <#if (editable)>
-                    <@field type="radio" name="originContactMechId" value=postalAddress.contactMechId!"" checked=(postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId) />
+                    <@field type="radio" name="originContactMechId" value=postalAddress.contactMechId! checked=(postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId) />
                   </#if>
                   <#if postalAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${postalAddress.toName}<br /></#if>
                   <#if postalAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span>&nbsp;${postalAddress.attnName}<br /></#if>

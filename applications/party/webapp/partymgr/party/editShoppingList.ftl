@@ -69,7 +69,7 @@ under the License.
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
         <#assign isAutoSave = ((shoppingList.listName!"") == "auto-save")>
         <@field type="input" label=uiLabelMap.PartyListName size="25" name="listName" value=shoppingList.listName disabled=isAutoSave />
-        <@field type="input" label=uiLabelMap.CommonDescription size="70" name="description" value=shoppingList.description!"" disabled=isAutoSave />
+        <@field type="input" label=uiLabelMap.CommonDescription size="70" name="description" value=shoppingList.description! disabled=isAutoSave />
         <@field type="select" label=uiLabelMap.PartyListType name="shoppingListTypeId" disabled=isAutoSave>
               <#if shoppingListType??>
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>

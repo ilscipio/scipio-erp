@@ -21,8 +21,8 @@
                 <@td>${item.productId!}</@td>
                 <@td>${item.orderId!}</@td>
                 <@td class="${styles.text_right!}">${item.quantity!1}</@td>
-                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.amount!""/></@td>
-                <@td class="${styles.text_right!}"><strong><@ofbizCurrency isoCode=invoice.currencyUomId amount=iTotal!""/></strong></@td>
+                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.amount!/></@td>
+                <@td class="${styles.text_right!}"><strong><@ofbizCurrency isoCode=invoice.currencyUomId amount=iTotal!/></strong></@td>
             </@tr>
         </#list>
     </@table>

@@ -45,18 +45,18 @@ under the License.
                     <@field type="radio" name="extInfo" value="T" onClick="javascript:refreshInfo();" checked=(extInfo == "T") label=uiLabelMap.PartyTelecom/>
                     <@field type="radio" name="extInfo" value="O" onClick="javascript:refreshInfo();" checked=(extInfo == "O") label=uiLabelMap.CommonOther/>
                 </@field>
-                <@field type="input" label=uiLabelMap.PartyLastName name="lastName" value=parameters.lastName!""/>
-                <@field type="input" label=uiLabelMap.PartyFirstName name="firstName" value=parameters.firstName!""/>
-                <@field type="lookup" label=uiLabelMap.PartyPartyId value=requestParameters.partyId!"" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
-                <@field type="input" label=uiLabelMap.PartyUserLogin name="userLoginId" value=parameters.userLoginId!""/>
+                <@field type="input" label=uiLabelMap.PartyLastName name="lastName" value=parameters.lastName!/>
+                <@field type="input" label=uiLabelMap.PartyFirstName name="firstName" value=parameters.firstName!/>
+                <@field type="lookup" label=uiLabelMap.PartyPartyId value=requestParameters.partyId! formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                <@field type="input" label=uiLabelMap.PartyUserLogin name="userLoginId" value=parameters.userLoginId!/>
                 <input type="hidden" name="groupName" value="${parameters.groupName!}"/>
                 <input type="hidden" name="roleTypeId" value="EMPLOYEE"/>
                 
             <#if extInfo == "P">
                 <hr />
-                <@field type="input" label=uiLabelMap.CommonAddress1 name="address1" value=parameters.address1!""/>
-                <@field type="input" label=uiLabelMap.CommonAddress2 name="address2" value=parameters.address2!""/>
-                <@field type="input" label=uiLabelMap.CommonCity name="city" value=parameters.city!""/>
+                <@field type="input" label=uiLabelMap.CommonAddress1 name="address1" value=parameters.address1!/>
+                <@field type="input" label=uiLabelMap.CommonAddress2 name="address2" value=parameters.address2!/>
+                <@field type="input" label=uiLabelMap.CommonCity name="city" value=parameters.city!/>
                 <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId">
                   <#if currentStateGeo?has_content>
                     <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName!currentStateGeo.geoId}</option>
@@ -65,17 +65,17 @@ under the License.
                     <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
                     ${screens.render("component://common/widget/CommonScreens.xml#states")}
                 </@field>
-                <@field type="input" label=uiLabelMap.PartyPostalCode name="postalCode" value=parameters.postalCode!""/>
+                <@field type="input" label=uiLabelMap.PartyPostalCode name="postalCode" value=parameters.postalCode!/>
             </#if>
             <#if extInfo == "T">
                 <hr />
-                <@field type="input" label=uiLabelMap.CommonCountryCode name="countryCode" value=parameters.countryCode!""/>
-                <@field type="input" label=uiLabelMap.PartyAreaCode name="areaCode" value=parameters.areaCode!""/>
-                <@field type="input" label=uiLabelMap.PartyContactNumber name="contactNumber" value=parameters.contactNumber!""/>
+                <@field type="input" label=uiLabelMap.CommonCountryCode name="countryCode" value=parameters.countryCode!/>
+                <@field type="input" label=uiLabelMap.PartyAreaCode name="areaCode" value=parameters.areaCode!/>
+                <@field type="input" label=uiLabelMap.PartyContactNumber name="contactNumber" value=parameters.contactNumber!/>
             </#if>
             <#if extInfo == "O">
                 <hr />
-                <@field type="input" label=uiLabelMap.PartyContactInformation name="infoString" value=parameters.infoString!""/>
+                <@field type="input" label=uiLabelMap.PartyContactInformation name="infoString" value=parameters.infoString!/>
             </#if>
                 <#--<hr />-->
                 <@field type="submitarea">

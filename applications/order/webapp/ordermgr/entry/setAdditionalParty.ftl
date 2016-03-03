@@ -66,7 +66,7 @@ under the License.
     <@section>
       <@heading>2) ${uiLabelMap.PartyFindParty}</@heading>
   
-      <@field type="lookup" label=uiLabelMap.CommonIdentifier value=additionalPartyId!"" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
+      <@field type="lookup" label=uiLabelMap.CommonIdentifier value=additionalPartyId! formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
       <@field type="submit" submitType="link" href="javascript:document.quickAddPartyForm.submit()" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonApply />
     </@section>
 

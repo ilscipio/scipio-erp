@@ -20,8 +20,8 @@ under the License.
 <@section title=uiLabelMap.PageTitleAddItemsFromOrder>
     <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-        <@field type="lookup" value=orderId!"" label=uiLabelMap.ProductOrderId formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
-        <@field type="text" label=uiLabelMap.ProductOrderShipGroupId size="20" name="shipGroupSeqId" value=shipGroupSeqId!""/>
+        <@field type="lookup" value=orderId! label=uiLabelMap.ProductOrderId formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
+        <@field type="text" label=uiLabelMap.ProductOrderShipGroupId size="20" name="shipGroupSeqId" value=shipGroupSeqId!/>
         <@field type="submit" text=uiLabelMap.CommonSelect class="${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>

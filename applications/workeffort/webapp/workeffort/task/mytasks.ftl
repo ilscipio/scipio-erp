@@ -25,7 +25,7 @@ under the License.
 
 <#if tasks?has_content && (tasks.size() > 0)>
     <#--<@section title=uiLabelMap.WorkEffortAssignedTasks>-->
-    <#--<@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>-->
+    <#--<@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex! listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
             <@thead>
                 <@tr class="header-row-2">

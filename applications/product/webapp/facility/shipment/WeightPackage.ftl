@@ -75,7 +75,7 @@ under the License.
           <@section>
           <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
-              <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=picklistBinId!""/>
+              <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=picklistBinId!/>
               <@field type="submitarea">
                   <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('PackOrder')}';document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
                   <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
@@ -251,7 +251,7 @@ under the License.
     </@section>
   <#else>
     <@section title=uiLabelMap.WebtoolsWarningLogLevel>
-        <@alert type="warning">${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=estimatedShippingCost!"" isoCode=shipment.currencyUomId!""/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=newEstimatedShippingCost!"" isoCode=shipment.currencyUomId!""/>]</@alert>
+        <@alert type="warning">${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=estimatedShippingCost! isoCode=shipment.currencyUomId!/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=newEstimatedShippingCost! isoCode=shipment.currencyUomId!/>]</@alert>
         <form name="shipNowForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>

@@ -86,7 +86,7 @@ under the License.
               <@td><span style="white-space: nowrap;">${orderHeaderAndRole.getString("orderDate")}</span></@td>
               <@td>${statusItem.get("description",locale)!(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
               <@td align="right">${orh.getTotalOrderItemsQuantity()?string.number}</@td>
-              <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.currencyUom!""/></@td>
+              <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.currencyUom!/></@td>
               <@td width="1">&nbsp;&nbsp;</@td>
               <@td align='right'>
                 <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>

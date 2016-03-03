@@ -53,7 +53,7 @@ under the License.
               <#if shipmentId?has_content>
                 <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=""/>
               <#else>
-                <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=orderId!""/>
+                <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=orderId!/>
               </#if>
               /
               <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
@@ -66,7 +66,7 @@ under the License.
       <#-- select picklist bin form -->
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-          <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=picklistBinId!""/>
+          <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=picklistBinId!/>
           <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>

@@ -64,11 +64,11 @@ under the License.
                 </#list>
 
     </@field>
-    <@field type="input" label=uiLabelMap.CommonArea name="areaId" value=(facilityLocation.areaId)!"" size="19" maxlength="20" />
-    <@field type="input" label=uiLabelMap.ProductAisle name="aisleId" value=(facilityLocation.aisleId)!"" size="19" maxlength="20" />
-    <@field type="input" label=uiLabelMap.ProductSection name="sectionId" value=(facilityLocation.sectionId)!"" size="19" maxlength="20" />
-    <@field type="input" label=uiLabelMap.ProductLevel name="levelId" value=(facilityLocation.levelId)!"" size="19" maxlength="20" />
-    <@field type="input" label=uiLabelMap.ProductPosition name="positionId" value=(facilityLocation.positionId)!"" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.CommonArea name="areaId" value=(facilityLocation.areaId)! size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductAisle name="aisleId" value=(facilityLocation.aisleId)! size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductSection name="sectionId" value=(facilityLocation.sectionId)! size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductLevel name="levelId" value=(facilityLocation.levelId)! size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductPosition name="positionId" value=(facilityLocation.positionId)! size="19" maxlength="20" />
     <#if locationSeqId??>
       <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
     <#else>

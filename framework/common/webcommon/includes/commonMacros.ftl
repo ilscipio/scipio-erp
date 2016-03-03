@@ -33,9 +33,9 @@ your template file:
 <#macro DateField formName="" fieldName="" fieldValue="" fieldClass="">
   <@fields type="default-manual-widgetonly">
     <#if javaScriptEnabled>
-      <@field type="datetime" required=containsStyleName(fieldClass, "required") name=fieldName event=event!"" action=action!"" class="+${fieldClass}" value=fieldValue!'' size="25" maxlength="30" id="${fieldName}1" />
+      <@field type="datetime" required=containsStyleName(fieldClass, "required") name=fieldName event=event! action=action! class="+${fieldClass}" value=fieldValue!'' size="25" maxlength="30" id="${fieldName}1" />
     <#else>
-      <@field type="input" required=containsStyleName(fieldClass, "required") name="${fieldName}" value=fieldValue!"" class="+${fieldClass}" maxlength="25" size="25"/>
+      <@field type="input" required=containsStyleName(fieldClass, "required") name="${fieldName}" value=fieldValue! class="+${fieldClass}" maxlength="25" size="25"/>
     </#if>
   </@fields>
 </#macro>

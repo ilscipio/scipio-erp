@@ -98,8 +98,8 @@ under the License.
                             </@td>
                             <@td align="right">${(inventoryItemDetailFirst.quantityOnHandDiff)!}</@td>
                             <#if inventoryItem.inventoryItemTypeId! == "NON_SERIAL_INV_ITEM">
-                                <@td align="right">${(inventoryItem.availableToPromiseTotal)?default("NA")}
-                                    / ${(inventoryItem.quantityOnHandTotal)?default("NA")}
+                                <@td align="right">${(inventoryItem.availableToPromiseTotal)!"NA"}
+                                    / ${(inventoryItem.quantityOnHandTotal)!"NA"}
                                 </@td>
                             <#elseif inventoryItem.inventoryItemTypeId! == "SERIALIZED_INV_ITEM">
                                 <@td align="right">&nbsp;${(inventoryItem.serialNumber)!}</@td>

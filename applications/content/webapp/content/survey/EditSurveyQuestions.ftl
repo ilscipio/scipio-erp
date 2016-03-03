@@ -102,8 +102,8 @@ under the License.
               </#if>
               <@td>
                 <select name="requiredField">
-                  <option>${surveyQuestionAndAppl.requiredField?default("N")}</option>
-                  <option value="${surveyQuestionAndAppl.requiredField?default("N")}">----</option>
+                  <option>${surveyQuestionAndAppl.requiredField!"N"}</option>
+                  <option value="${surveyQuestionAndAppl.requiredField!"N"}">----</option>
                   <option>Y</option><option>N</option>
                 </select>
               </@td>

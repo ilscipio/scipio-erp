@@ -23,7 +23,7 @@ under the License.
 <br />
 
 <form name="gclink" method="post" action="<@ofbizUrl>linkgiftcard</@ofbizUrl>">
-  <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}" />
+  <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
   <#if userLogin?has_content>
     <input type="hidden" name="partyId" value="${userLogin.partyId}" />
   </#if>

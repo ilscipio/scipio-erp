@@ -133,7 +133,7 @@ under the License.
                       <#if postalAddress?exists >
                         <span>${uiLabelMap.ProductShipToAddress}</span>
                         <br />
-                        ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
+                        ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}
                         <br />
                         <#if postalAddress.attnName?has_content>
                             ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}
@@ -279,7 +279,7 @@ under the License.
                               </#if>
                           </@td>
                           <@td align="right">${orderItemQuantity}</@td>
-                          <@td align="right">${shippedQuantity?default(0)}</@td>
+                          <@td align="right">${shippedQuantity!0}</@td>
                           <@td align="right">${packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId, itemInfo.productId)}</@td>
                           <@td>&nbsp;</@td>
                           <@td align="center">
@@ -340,7 +340,7 @@ under the License.
                   <input type="hidden" name="orderId" value="${orderId!}"/>
                   <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                  <input type="hidden" name="forceComplete" value="${forceComplete?default('false')}"/>
+                  <input type="hidden" name="forceComplete" value="${forceComplete!'false'}"/>
                   <input type="hidden" name="weightUomId" value="${defaultWeightUomId}"/>
                   <input type="hidden" name="showInput" value="N"/>
                   <hr/>
@@ -373,7 +373,7 @@ under the License.
                                       <option value=""></option>
                                     <#list carrierShipmentBoxTypes as carrierShipmentBoxType>
                                       <#assign shipmentBoxType = carrierShipmentBoxType.getRelatedOne("ShipmentBoxType", false) />
-                                      <option value="${shipmentBoxType.shipmentBoxTypeId}">${shipmentBoxType.description?default(shipmentBoxType.shipmentBoxTypeId)}</option>
+                                      <option value="${shipmentBoxType.shipmentBoxTypeId}">${shipmentBoxType.description!shipmentBoxType.shipmentBoxTypeId}</option>
                                     </#list>
                                   </@field>
                                   <br/>
@@ -444,7 +444,7 @@ under the License.
                       <@td align="right">${line.getQuantity()}</@td>
                       <@td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</@td>
                       <@td align="right">${line.getPackageSeq()}</@td>
-                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
+                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()!""}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
                     </@tr>
                   </#list>
                 </@table>
@@ -480,7 +480,7 @@ under the License.
                       <@td align="right">${line.getQuantity()}</@td>
                       <@td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</@td>
                       <@td align="right">${line.getPackageSeq()}</@td>
-                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
+                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()!""}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
                   </@tr>
               </#list>
             </@table>

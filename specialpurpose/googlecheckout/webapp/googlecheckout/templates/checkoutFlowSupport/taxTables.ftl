@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<tax-tables merchant-calculated=${flowSupport.taxTables.merchantCalculated?default("false")}>
+<tax-tables merchant-calculated=${flowSupport.taxTables.merchantCalculated!"false"}>
     <default-tax-table>
         <tax-rules>
             <#list flowSupport.taxTables.default.rules as rule>

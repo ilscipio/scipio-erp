@@ -126,7 +126,7 @@ under the License.
     <select name="${questionFieldName}">
     <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
     <#list states as state>
-        <option value="${state.geoId}">${state.geoName?default(state.geoId)}</option>
+        <option value="${state.geoId}">${state.geoName!state.geoId}</option>
     </#list>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY">

@@ -33,7 +33,7 @@ under the License.
       
         <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
             <#if currentStateGeo?has_content>
-              <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
+              <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName!currentStateGeo.geoId}</option>
               <option value="${currentStateGeo.geoId}">---</option>
             </#if>
             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>

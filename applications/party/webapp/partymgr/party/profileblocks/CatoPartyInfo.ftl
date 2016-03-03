@@ -117,7 +117,7 @@
               </@td>
               <@td colspan="3">
                   <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-                      <@modal id="modal_avsstring_${parameters.partyId}" label="${(avsOverride.avsDeclineString)?default(uiLabelMap.CommonGlobal)}">
+                      <@modal id="modal_avsstring_${parameters.partyId}" label="${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}">
                          <@heading>${uiLabelMap.PartyAvsOver}</@heading>
                          <form name="updateAvsOverride" method="post" action="<@ofbizUrl>updateAvsOverride</@ofbizUrl>">
                          <input type="hidden" name="partyId" value="${parameters.partyId}"/>
@@ -137,7 +137,7 @@
                       <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.action_reset!}">${uiLabelMap.CommonReset}</a>
                     </#if>
                 <#else>
-                    ${(avsOverride.avsDeclineString)?default(uiLabelMap.CommonGlobal)}
+                    ${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}
                 </#if>
             </@td>
             </@tr>    

@@ -188,10 +188,10 @@ function setServiceName(selection) {
                       <@tr>
                         <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
                         <@td>
-                          ${payment.paymentTypeDesc?default(payment.paymentTypeId)}
+                          ${payment.paymentTypeDesc!payment.paymentTypeId}
                         </@td>
                         <@td>
-                          ${payment.statusDesc?default(payment.statusId)}
+                          ${payment.statusDesc!payment.statusId}
                         </@td>
                         <@td>${(payment.comments)!}</@td>
                         <@td>
@@ -208,7 +208,7 @@ function setServiceName(selection) {
                         </@td>
                         <@td>
                           <#assign creditCard = (delegator.findOne("CreditCard", {"paymentMethodId" : payment.paymentMethodId}, false))! />
-                          ${payment.paymentMethodTypeDesc?default(payment.paymentMethodTypeId)}
+                          ${payment.paymentMethodTypeDesc!payment.paymentMethodTypeId}
                           <#if creditCard?has_content>/${(creditCard.cardType)!}</#if>
                         </@td>
                         <@td>

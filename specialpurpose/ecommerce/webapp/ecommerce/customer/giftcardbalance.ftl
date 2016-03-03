@@ -47,7 +47,7 @@ under the License.
   </#if>
   <form method="post" action="<@ofbizUrl>querygcbalance</@ofbizUrl>">
     <input type="hidden" name="currency" value="USD" />
-    <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}" />
+    <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
     <@tr>
       <@td><div class="tableheadtext">${uiLabelMap.AccountingCardNumber}</div></@td>
       <@td><input type="text" class="inputBox" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>

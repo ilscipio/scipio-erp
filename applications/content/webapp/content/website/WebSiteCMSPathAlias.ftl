@@ -67,11 +67,11 @@
     <form name="cmspathform" method="post" action="<@ofbizUrl>/createWebSitePathAliasJson</@ofbizUrl>">
             <input type="hidden" name="webSiteId" value="${webSiteId}"/>
             <@field type="display" label="Web Site">
-                ${webSite.siteName?default(webSite.webSiteId)}
+                ${webSite.siteName!webSite.webSiteId}
             </@field>
             <input type="hidden" name="contentId" value="${contentId}"/>
             <@field type="display" label="Content">
-                ${content.contentName?default(content.contentId)}
+                ${content.contentName!content.contentId}
             </@field>
             <@field type="input" label="Path Alias" name="pathAlias" value="" />
             <@field type="input" label="Map Key" name="mapKey" value="" />

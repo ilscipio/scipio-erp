@@ -43,7 +43,7 @@ under the License.
                 ${starSchemaField.name}
             </@td>
             <@td>
-                ${starSchemaField.description?default("")}
+                ${starSchemaField.description!""}
             </@td>
         </@tr>
         </#list>

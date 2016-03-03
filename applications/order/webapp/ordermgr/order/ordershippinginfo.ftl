@@ -252,13 +252,13 @@ under the License.
                                         <@cell columns=6>
                                             
                                               <select name="contactMechId">
-                                                    <option selected="selected" value="${shipGroup.contactMechId!}">${(shipGroupAddress.address1)?default("")} - ${shipGroupAddress.city?default("")}</option>
+                                                    <option selected="selected" value="${shipGroup.contactMechId!}">${(shipGroupAddress.address1)!""} - ${shipGroupAddress.city!""}</option>
                                                   <#if shippingContactMechList?has_content>
                                                     <option disabled="disabled" value=""></option>
                                                   <#list shippingContactMechList as shippingContactMech>
                                                     <#assign shippingPostalAddress = shippingContactMech.getRelatedOne("PostalAddress", false)!>
                                                     <#if shippingContactMech.contactMechId?has_content>
-                                                      <option value="${shippingContactMech.contactMechId!}">${(shippingPostalAddress.address1)?default("")} - ${shippingPostalAddress.city?default("")}</option>
+                                                      <option value="${shippingContactMech.contactMechId!}">${(shippingPostalAddress.address1)!""} - ${shippingPostalAddress.city!""}</option>
                                                     </#if>
                                                   </#list>
                                                   </#if>
@@ -271,7 +271,7 @@ under the License.
                                         </@cell>
                                     </@row>
                                 <#else>
-                                    ${(shipGroupAddress.address1)?default("")}
+                                    ${(shipGroupAddress.address1)!""}
                                 </#if>
                             </@td>
                         </@tr>

@@ -25,7 +25,7 @@ under the License.
 </#if>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
     font-family="${(layoutSettings.defaultFontFamily)?default("Helvetica, sans-serif")}"
-    font-size="${(layoutSettings.defaultFontSize)?default("12pt")}">
+    font-size="${(layoutSettings.defaultFontSize)!"12pt"}">
   <fo:layout-master-set>
 <#if layoutSettings.pageMasters?has_content>
   <#--layoutSettings.pageMasters is a list of fo page master element ftl templates -->

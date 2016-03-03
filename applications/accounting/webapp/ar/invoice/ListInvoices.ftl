@@ -169,11 +169,11 @@ under the License.
             
               <@td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
-                ${invoiceType.description?default(invoice.invoiceTypeId)}
+                ${invoiceType.description!invoice.invoiceTypeId}
               </@td>
               <@td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
-                ${statusItem.description?default(invoice.statusId)}
+                ${statusItem.description!invoice.statusId}
               </@td>
               <@td>${(invoice.description)!}</@td>
               <@td><a class="${styles.link_nav_info_idname!}" href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}]</a></@td>

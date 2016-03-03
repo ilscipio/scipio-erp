@@ -44,7 +44,7 @@ under the License.
           <#else>
             <#assign parentCategoryId = ""/>
           </#if>
-          <a href="<@ofbizCatalogAltUrl productCategoryId=category.productCategoryId previousCategoryId=parentCategoryId/>" class="${browseCategoryButtonClass}"><#if categoryName?has_content>${categoryName}<#else>${categoryDescription?default("")}</#if></a>
+          <a href="<@ofbizCatalogAltUrl productCategoryId=category.productCategoryId previousCategoryId=parentCategoryId/>" class="${browseCategoryButtonClass}"><#if categoryName?has_content>${categoryName}<#else>${categoryDescription!""}</#if></a>
 
   <#if (Static["org.ofbiz.product.category.CategoryWorker"].checkTrailItem(request, category.getString("productCategoryId"))) || (curCategoryId?? && curCategoryId == category.productCategoryId)>
     <#local subCatList = Static["org.ofbiz.product.category.CategoryWorker"].getRelatedCategoriesRet(request, "subCatList", category.getString("productCategoryId"), true)>
@@ -59,7 +59,7 @@ under the License.
   </li>
   </#local>
   <#if wrapInBox == "Y">
-    <#assign sectionTitle><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></#assign>
+    <#assign sectionTitle><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName!""}</#if></#assign>
     <@section title=sectionTitle id="sidedeepcategory" class="+screenlet">
       <ul class="browsecategorylist">
         ${listEntries}

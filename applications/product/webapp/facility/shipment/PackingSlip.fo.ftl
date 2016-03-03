@@ -124,18 +124,18 @@ under the License.
                                     </#if>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${line.quantityRequested?default(0)}</fo:block>
+                                    <fo:block>${line.quantityRequested!0}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${line.quantityInPackage?default(0)}</fo:block>
+                                    <fo:block>${line.quantityInPackage!0}</fo:block>
                                 </fo:table-cell>
                                 <#if (packages?size > 1)>
                                     <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                        <fo:block>${line.quantityInShipment?default(0)}</fo:block>
+                                        <fo:block>${line.quantityInShipment!0}</fo:block>
                                     </fo:table-cell>
                                 </#if>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${line.quantityShipped?default(0)}</fo:block>
+                                    <fo:block>${line.quantityShipped!0}</fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
                     </#list>

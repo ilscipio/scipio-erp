@@ -32,7 +32,7 @@ under the License.
   </@tr>
   <@tr>
       <@td align="right"><div class="tableheadtext">Status:</div></@td>
-      <@td>${(finAccountStatusItem.description)?default("Active")}</@td>
+      <@td>${(finAccountStatusItem.description)!"Active"}</@td>
   </@tr>
   <#if ownedFinAccount.replenishLevel??>
   <@tr>

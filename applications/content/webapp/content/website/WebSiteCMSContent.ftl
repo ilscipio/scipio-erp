@@ -89,7 +89,7 @@
 <#-- content info -->
 <#if (!content?has_content)>
     <div style="margin-bottom: 8px;">
-        ${uiLabelMap.CommonNew} <span>${contentAssocTypeId?default("SUBSITE")}</span> ${uiLabelMap.ContentWebSiteAttachedToContent} ${contentIdFrom?default(contentRoot)}
+        ${uiLabelMap.CommonNew} <span>${contentAssocTypeId!"SUBSITE"}</span> ${uiLabelMap.ContentWebSiteAttachedToContent} ${contentIdFrom!contentRoot}
     </div>
 </#if>
 
@@ -119,7 +119,7 @@
                 </@tr>
                 <@tr>
                     <@td align="center" colspan="2">
-                        <a href="javascript:void(0);" onclick="javascript:selectDataType('${contentIdFrom?default(contentRoot)}');" class="${styles.link_run_sys!} ${styles.action_select!}">${uiLabelMap.CommonContinue}</a>
+                        <a href="javascript:void(0);" onclick="javascript:selectDataType('${contentIdFrom!contentRoot}');" class="${styles.link_run_sys!} ${styles.action_select!}">${uiLabelMap.CommonContinue}</a>
                     </@td>
                 </@tr>
                 <#list 0..15 as x>
@@ -172,9 +172,9 @@
                 </#if>
             </#list>
         <#else>
-            <input type="hidden" name="contentAssocTypeId" value="${contentAssocTypeId?default('SUBSITE')}"/>
-            <input type="hidden" name="ownerContentId" value="${contentIdFrom?default(contentRoot)}"/>
-            <input type="hidden" name="contentIdFrom" value="${contentIdFrom?default(contentRoot)}"/>
+            <input type="hidden" name="contentAssocTypeId" value="${contentAssocTypeId!'SUBSITE'}"/>
+            <input type="hidden" name="ownerContentId" value="${contentIdFrom!contentRoot}"/>
+            <input type="hidden" name="contentIdFrom" value="${contentIdFrom!contentRoot}"/>
         </#if>
         <#if (dataResourceTypeId != 'IMAGE_OBJECT' && dataResourceTypeId != 'OTHER_OBJECT' && dataResourceTypeId != 'LOCAL_FILE' &&
             dataResourceTypeId != 'OFBIZ_FILE' && dataResourceTypeId != 'VIDEO_OBJECT' && dataResourceTypeId != 'AUDIO_OBJECT')>
@@ -222,7 +222,7 @@
                 <select name="contentPurposeTypeId">
                     <#if (currentPurpose?has_content)>
                         <#assign purpose = currentPurpose.getRelatedOne("ContentPurposeType", false)/>
-                        <option value="${purpose.contentPurposeTypeId}">${purpose.description?default(purpose.contentPurposeTypeId)}</option>
+                        <option value="${purpose.contentPurposeTypeId}">${purpose.description!purpose.contentPurposeTypeId}</option>
                         <option value="${purpose.contentPurposeTypeId}">----</option>
                     <#else>
                         <option value="SECTION">Section</option>

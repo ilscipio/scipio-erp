@@ -144,13 +144,13 @@ under the License.
           <fo:block>${line.orderItem.itemDescription!}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}">
-          <fo:block text-align="right">${line.quantityInGroup?default(0)}</fo:block>
+          <fo:block text-align="right">${line.quantityInGroup!0}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}">
-          <fo:block text-align="right">${line.quantityShipped?default(0)}</fo:block>
+          <fo:block text-align="right">${line.quantityShipped!0}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}">
-          <fo:block text-align="right">${line.quantityOpen?default(0)}</fo:block>
+          <fo:block text-align="right">${line.quantityOpen!0}</fo:block>
         </fo:table-cell>
 
       </fo:table-row>
@@ -164,13 +164,13 @@ under the License.
           <fo:block margin-left="20pt">${expandedLine.product.internalName}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}" font-style="italic">
-          <fo:block text-align="right">${expandedLine.quantityInGroup?default(0)}</fo:block>
+          <fo:block text-align="right">${expandedLine.quantityInGroup!0}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}" font-style="italic">
-          <fo:block text-align="right">${expandedLine.quantityShipped?default(0)}</fo:block>
+          <fo:block text-align="right">${expandedLine.quantityShipped!0}</fo:block>
         </fo:table-cell>
         <fo:table-cell background-color="${rowColor}" font-style="italic">
-          <fo:block text-align="right">${expandedLine.quantityOpen?default(0)}</fo:block>
+          <fo:block text-align="right">${expandedLine.quantityOpen!0}</fo:block>
         </fo:table-cell>
       </fo:table-row>
       </#list>

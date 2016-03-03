@@ -81,7 +81,7 @@ standard order confirmation page and to be re-usable by other screens.
 
         <@td rowspan="${numberOfItems}" valign="top">
           <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":cartShipInfo.getSupplierPartyId()}, false)! />
-          <#if supplier?has_content>${supplier.groupName?default(supplier.partyId)}</#if>
+          <#if supplier?has_content>${supplier.groupName!supplier.partyId}</#if>
         </@td>
 
         <#-- carrier column (also spans rows = number of items) -->
@@ -89,15 +89,15 @@ standard order confirmation page and to be re-usable by other screens.
         <@td rowspan="${numberOfItems}" valign="top">
           <#assign carrier =  delegator.findOne("PartyGroup", {"partyId":cartShipInfo.getCarrierPartyId()}, false)! />
           <#assign method =  delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":cartShipInfo.getShipmentMethodTypeId()}, false)! />
-          <#if carrier?has_content>${carrier.groupName?default(carrier.partyId)}</#if>
-          <#if method?has_content>${method.description?default(method.shipmentMethodTypeId)}</#if>
+          <#if carrier?has_content>${carrier.groupName!carrier.partyId}</#if>
+          <#if method?has_content>${method.description!method.shipmentMethodTypeId}</#if>
         </@td>
 
         <#-- list each ShoppingCartItem in this group -->
 
       <#macro cartItemCells shoppingCartItem cartShipInfo>
-        <@td valign="top"> ${shoppingCartItem.getProductId()?default("")} - ${shoppingCartItem.getName()?default("")} </@td>
-        <@td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()?default("0")} </@td>
+        <@td valign="top"> ${shoppingCartItem.getProductId()!""} - ${shoppingCartItem.getName()!""} </@td>
+        <@td valign="top"> ${cartShipInfo.getShipItemInfo(shoppingCartItem).getItemQuantity()!"0"} </@td>
       </#macro>
 
         <@cartItemCells shoppingCartItem=shipItems?first cartShipInfo=cartShipInfo/>

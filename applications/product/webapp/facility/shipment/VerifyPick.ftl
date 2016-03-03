@@ -87,7 +87,7 @@ under the License.
               <@cell columns=4>
                 <span>${uiLabelMap.ProductShipToAddress}</span>
                 <br />
-                ${uiLabelMap.CommonTo}: ${postalAddress.toName?default("")}
+                ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}
                 <br />
                 <#if postalAddress.attnName?has_content>
                   ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}

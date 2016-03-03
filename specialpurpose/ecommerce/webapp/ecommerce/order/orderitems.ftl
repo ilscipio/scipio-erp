@@ -117,12 +117,12 @@ under the License.
       <@tr>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <@td>
-            ${orderItem.itemDescription?default("")}
+            ${orderItem.itemDescription!""}
           </@td>
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
-            <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
+            <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}">${orderItem.productId} - ${orderItem.itemDescription!""}</a>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
             <#if orderItemAttributes?has_content>
                 <ul>

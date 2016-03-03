@@ -20,7 +20,7 @@ under the License.
 <#if flowSupport.merchantCalculations??>
 <merchant-calculations>
     <merchant-calculations-url>${flowSupport.merchantCalulations.url}</merchant-calculations-url>
-    <accept-merchant-coupons>${flowSupport.merchantCalculations.acceptCoupons?default("false")}</accept-merchant-coupons>
-    <accept-gift-certificates>${flowSupport.merchantCalculations.acceptGC?default("false")}</accept-gift-certificates>
+    <accept-merchant-coupons>${flowSupport.merchantCalculations.acceptCoupons!"false"}</accept-merchant-coupons>
+    <accept-gift-certificates>${flowSupport.merchantCalculations.acceptGC!"false"}</accept-gift-certificates>
 </merchant-calculations>
 </#if>

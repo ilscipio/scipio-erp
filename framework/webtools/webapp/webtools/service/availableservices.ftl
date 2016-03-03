@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#--Dispatcher Name: ${dispatcherName?default(uiLabelMap.CommonNA)} -->
+<#--Dispatcher Name: ${dispatcherName!uiLabelMap.CommonNA} -->
 
 <#assign url='ServiceList'>
 <#assign popupUrl='serviceEcaDetail'>
@@ -120,9 +120,9 @@ under the License.
          </@thead> 
           <#list selectedServiceMap.permissionGroups as permGrp>
             <@tr>
-              <@td>${permGrp.nameOrRole?default(uiLabelMap.CommonNA)}</@td>
-              <@td>${permGrp.permType?default(uiLabelMap.CommonNA)}</@td>
-              <@td>${permGrp.action?default(uiLabelMap.CommonNA)}</@td>
+              <@td>${permGrp.nameOrRole!uiLabelMap.CommonNA}</@td>
+              <@td>${permGrp.permType!uiLabelMap.CommonNA}</@td>
+              <@td>${permGrp.action!uiLabelMap.CommonNA}</@td>
             </@tr>
           </#list>
         </@table>
@@ -190,22 +190,22 @@ under the License.
                   <#list ecaMap.actions as action>
                     <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
-                        <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
+                        <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName!uiLabelMap.CommonNA}</a></@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsSecasIgnoreFailure}</b> ${action.ignoreFailure?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasIgnoreFailure}</b> ${action.ignoreFailure!uiLabelMap.CommonNA}</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsSecasPersist}</b> ${action.persist?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsSecasResultMapName}</b> ${action.resultMapName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasPersist}</b> ${action.persist!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasResultMapName}</b> ${action.resultMapName!uiLabelMap.CommonNA}</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsSecasResultToContext}</b> ${action.resultToContext?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsSecasResultToResult}</b> ${action.resultToResult?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasResultToContext}</b> ${action.resultToContext!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasResultToResult}</b> ${action.resultToResult!uiLabelMap.CommonNA}</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsSecasServiceMode}</b> ${action.serviceMode?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsSecasServiceMode}</b> ${action.serviceMode!uiLabelMap.CommonNA}</@td>
                         <@td colspan="2">&nbsp;</@td>
                       </@tr>
                     </@table>
@@ -217,30 +217,30 @@ under the License.
                   <#list ecaMap.conditions as condition>
                     <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType!uiLabelMap.CommonNA}</@td>
                         <@td>
                           <b>${uiLabelMap.WebtoolsConditionService}</b>
                           <#if condition.conditionService?has_content>
-                            <a href="<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>">${condition.conditionService?default(uiLabelMap.CommonNA)}</a>
+                            <a href="<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>">${condition.conditionService!uiLabelMap.CommonNA}</a>
                           <#else>
-                            ${condition.conditionService?default(uiLabelMap.CommonNA)}
+                            ${condition.conditionService!uiLabelMap.CommonNA}
                           </#if>
                         </@td>
-                        <@td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format!uiLabelMap.CommonNA}</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator!uiLabelMap.CommonNA}</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName!uiLabelMap.CommonNA}</@td>
                         <@td>&nbsp;</@td>
                       </@tr>
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName?default(uiLabelMap.CommonNA)}</@td>
-                        <@td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName!uiLabelMap.CommonNA}</@td>
+                        <@td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName!uiLabelMap.CommonNA}</@td>
                         <@td>&nbsp;</@td>
                       </@tr>
                     </@table><br />
@@ -252,7 +252,7 @@ under the License.
                   <#list ecaMap.sets as set>
                     <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
-                        <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</@td>
+                        <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName!uiLabelMap.CommonNA}</@td>
                         <@td>&nbsp;</@td>
                       </@tr>
                       <@tr>
@@ -365,7 +365,7 @@ under the License.
   </#macro>
   <@section menuContent=menuContent>
       <#--
-      ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
+      ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName!uiLabelMap.CommonNA} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
       <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>
         <@tr class="header-row">
@@ -389,10 +389,10 @@ under the License.
           </#if>
           <@tr>
             <@td id=anchorId attribs=anchorAttribs><a href="<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>">${service.serviceName}</a></@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.engineName}</a></@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.defaultEntityName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${service.engineName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.engineName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.defaultEntityName}</a></@td>
             <@td>${service.invoke}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=location@${service.location?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.location}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=location@${service.location!uiLabelMap.CommonNA}</@ofbizUrl>">${service.location}</a></@td>
             <@td><a href="<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>">${service.definitionLocation}</a></@td>
           </@tr>
           <#assign lastChar = firstChar>

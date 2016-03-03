@@ -74,7 +74,7 @@ under the License.
                                 </fo:table-cell>
                             </#if>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${productReport.internalName?default("")} (${productReport.productId!})</fo:block>
+                                <fo:block>${productReport.internalName!""} (${productReport.productId!})</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <fo:block>${productReport.quantityOrdered!}</fo:block>

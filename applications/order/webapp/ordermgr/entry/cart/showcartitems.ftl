@@ -23,7 +23,7 @@ under the License.
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
     <@td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
-    <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></@td>
+    <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)!"Unknown"})</i></@td>
   </#if>
 </#macro>
 
@@ -49,7 +49,7 @@ under the License.
                     <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                     <#if allgiftWraps?has_content>
                       <#list allgiftWraps as option>
-                        <option value="${option.productFeatureId?default("")}">${option.description?default("")} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
+                        <option value="${option.productFeatureId!""}">${option.description!""} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
                       </#list>
                     </#if>
                   </select>

@@ -127,8 +127,8 @@ under the License.
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
@@ -217,7 +217,7 @@ under the License.
                                                     <@td><b>${uiLabelMap.OrderInvoiced}</b></@td>
                                                     <@td>${orderReadHelper.getOrderItemInvoicedQuantity(orderItem)}</@td>
                                                     <@td><b>${uiLabelMap.OrderReturned}</b></@td>
-                                                    <@td>${returnQuantityMap.get(orderItem.orderItemSeqId)?default(0)}</@td>
+                                                    <@td>${returnQuantityMap.get(orderItem.orderItemSeqId)!0}</@td>
                                                 </@tr>
                                             </@table>
                                         </@modal>
@@ -268,7 +268,7 @@ under the License.
                               <@tr>
                                   <@td>
                                       ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}&nbsp;
-                                      ${orderItemAdjustment.get("description",locale)!} (${orderItemAdjustment.comments?default("")})
+                                      ${orderItemAdjustment.get("description",locale)!} (${orderItemAdjustment.comments!""})
 
                                   <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                     <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -332,7 +332,7 @@ under the License.
                                         ${uiLabelMap.OrderQtyShipped}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}
                                     </@td>
                                     <@td align="center">
-                                        ${shippedQuantity?default(0)}<input type="hidden" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shippedQuantity?string.number}"/>
+                                        ${shippedQuantity!0}<input type="hidden" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shippedQuantity?string.number}"/>
                                     </@td>
                                     <@td colspan="5">&nbsp;</@td>
                                 </@tr>

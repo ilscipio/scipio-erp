@@ -170,7 +170,7 @@ under the License.
                             <@td>
                                     ${orderItemShipGrpInvRes.inventoryItemId}
                                     <#if inventoryItem.facilityId?has_content>
-                                        <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> class="${styles.text_color_alert!}"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
+                                        <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> class="${styles.text_color_alert!}"</#if>>[${(inventoryItemFacility.facilityName)!inventoryItem.facilityId}]</span>
                                     <#else>
                                         <span class="${styles.text_color_alert!}">[${uiLabelMap.ProductNoFacility}]</span>
                                     </#if>
@@ -185,7 +185,7 @@ under the License.
                                     <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${orderItemShipGrpInvRes.shipGroupSeqId}"/>
                                     <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemShipGrpInvRes.orderItemSeqId}"/>
                                     <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemShipGrpInvRes.inventoryItemId}"/>
-                                    <input type="text" size="5" name="quantity_o_${rowCount}" value="${(orderItemShipGrpInvResData.shipmentPlanQuantity)?default(availableQuantity)}"/>
+                                    <input type="text" size="5" name="quantity_o_${rowCount}" value="${(orderItemShipGrpInvResData.shipmentPlanQuantity)!availableQuantity}"/>
                                 </@td>
                                 <@td align="right">
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />

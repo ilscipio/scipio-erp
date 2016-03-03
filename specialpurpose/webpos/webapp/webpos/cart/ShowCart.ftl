@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<input type="hidden" id="selectedItem" name="selectedItem" value="${selectedItem?default(0)}"/>
-<input type="hidden" id="cartSize" name="cartSize" value="${shoppingCartSize?default(0)}"/>
+<input type="hidden" id="selectedItem" name="selectedItem" value="${selectedItem!0}"/>
+<input type="hidden" id="cartSize" name="cartSize" value="${shoppingCartSize!0}"/>
 
 <#if (shoppingCartSize > 0)>
 <div id="CartHeader">
@@ -34,7 +34,7 @@ under the License.
     <input type="hidden" id="totalCreditFormatted" value="<@ofbizCurrency amount=creditAmount isoCode=shoppingCart.getCurrency()/>"/>
     <@tr>
       <@td>${uiLabelMap.WebPosTransactionId}</@td>
-      <@td><b>${transactionId?default("NA")}</b></@td>
+      <@td><b>${transactionId!"NA"}</b></@td>
       <@td>${(paymentCash.get("description", locale))!}</@td>
       <@td align="right"><b><@ofbizCurrency amount=cashAmount isoCode=shoppingCart.getCurrency()/></b></@td>
       <@td>${uiLabelMap.WebPosTotalItemSubTotal}</@td>
@@ -42,7 +42,7 @@ under the License.
     </@tr>
     <@tr>
       <@td>${uiLabelMap.WebPosDrawer}</@td>
-      <@td><b>${drawerNumber?default(0)}</b></@td>
+      <@td><b>${drawerNumber!0}</b></@td>
       <@td>${(paymentCheck.get("description", locale))!}</@td>
       <@td align="right"><b><@ofbizCurrency amount=checkAmount isoCode=shoppingCart.getCurrency()/></b></@td>
       <@td>${uiLabelMap.WebPosTotalPromotions}</@td>
@@ -133,8 +133,8 @@ under the License.
         <@td colspan="6"><b><hr/></b></@td>
       </@tr>
       <@tr id="CartTotal">
-        <@td align="left"><b>${shoppingCartSize?default(0)}</b></@td>
-        <@td align="center"><b>${totalQuantity?default(0)}</b></@td>
+        <@td align="left"><b>${shoppingCartSize!0}</b></@td>
+        <@td align="center"><b>${totalQuantity!0}</b></@td>
         <@td align="right">&nbsp;</@td>
         <@td align="right">&nbsp;</@td>
         <@td align="right"><b><@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/></b></@td>

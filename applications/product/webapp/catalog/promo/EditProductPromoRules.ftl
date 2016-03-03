@@ -143,7 +143,7 @@ under the License.
                 <div>
                   ${(condProductCategory.get("description",locale))!} [${condProductPromoCategory.productCategoryId}]
                   - ${(condApplEnumeration.get("description",locale))?default(condProductPromoCategory.productPromoApplEnumId)}
-                  - ${uiLabelMap.ProductSubCats}? ${condProductPromoCategory.includeSubCategories?default("N")}
+                  - ${uiLabelMap.ProductSubCats}? ${condProductPromoCategory.includeSubCategories!"N"}
                   - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${condProductPromoCategory.andGroupId}
                   <form name="deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}" method="post" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(condProductPromoCategory.productPromoId)!}" />
@@ -326,7 +326,7 @@ under the License.
                 <div>
                   ${(actionProductCategory.description)!} [${actionProductPromoCategory.productCategoryId}]
                   - ${(actionApplEnumeration.get("description",locale))?default(actionProductPromoCategory.productPromoApplEnumId)}
-                  - ${uiLabelMap.ProductSubCats}? ${actionProductPromoCategory.includeSubCategories?default("N")}
+                  - ${uiLabelMap.ProductSubCats}? ${actionProductPromoCategory.includeSubCategories!"N"}
                   - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${actionProductPromoCategory.andGroupId}
                   <form name="deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>" method="post">
                     <input type="hidden" name="productPromoId" value="${(actionProductPromoCategory.productPromoId)!}" />
@@ -474,7 +474,7 @@ under the License.
     <div>
       ${(promoProductCategory.description)!} [${promoProductPromoCategory.productCategoryId}]
       - ${(promoApplEnumeration.get("description",locale))?default(promoProductPromoCategory.productPromoApplEnumId)}
-      - ${uiLabelMap.ProductSubCats}? ${promoProductPromoCategory.includeSubCategories?default("N")}
+      - ${uiLabelMap.ProductSubCats}? ${promoProductPromoCategory.includeSubCategories!"N"}
       - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${promoProductPromoCategory.andGroupId}
       <form name="deleteProductPromoCategoryAction_${promoProductPromoCategory_index}" method="post" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>">
         <input type="hidden" name="productPromoId" value="${(promoProductPromoCategory.productPromoId)!}" />

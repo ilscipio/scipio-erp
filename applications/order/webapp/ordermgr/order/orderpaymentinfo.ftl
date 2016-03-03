@@ -206,9 +206,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@row>
                         <@cell columns=6>
                             <#if (finAccountType?has_content)>
-                                ${finAccountType.description?default(finAccountType.finAccountTypeId)}&nbsp;
+                                ${finAccountType.description!finAccountType.finAccountTypeId}&nbsp;
                               </#if>
-                              #${finAccount.finAccountCode?default(finAccount.finAccountId)} (<a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${finAccount.finAccountId}</a>)
+                              #${finAccount.finAccountCode!finAccount.finAccountId} (<a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${finAccount.finAccountId}</a>)
                               <br />
                               ${finAccount.finAccountName!}
                         </@cell>

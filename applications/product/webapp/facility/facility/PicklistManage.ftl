@@ -47,7 +47,7 @@ under the License.
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
           <div style="margin-left: 15px;">
-            <span>${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType}</span> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
+            <span>${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType}</span> ${picklistInfo.shipmentMethodType.description!picklistInfo.shipmentMethodType.shipmentMethodTypeId}
           </div>
         </#if>
 

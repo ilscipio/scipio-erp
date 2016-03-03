@@ -17,4 +17,4 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<request-buyer-phone-number>${flowSupport.requestPhone?default("false")}</request-buyer-phone-number>
+<request-buyer-phone-number>${flowSupport.requestPhone!"false"}</request-buyer-phone-number>

@@ -128,7 +128,7 @@ under the License.
                                 </#if>
                             </@td>
                             <@td>${orderItem.quantity}</@td>
-                            <@td>${orderItem.cancelQuantity?default(0)}</@td>
+                            <@td>${orderItem.cancelQuantity!0}</@td>
                             <@td>
                                 <div ${(backOrderedQuantity &gt; 0)?string(" errorMessage","")}">
                                     ${backOrderedQuantity}
@@ -151,8 +151,8 @@ under the License.
                                     <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
                                     <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${itemShipGroupSeqId!}"/>
                                     <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
-                                    <input type="hidden" name="unitCost_o_${rowCount}" value="${orderItem.unitPrice?default(0)}"/>
-                                    <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId?default("")}"/>
+                                    <input type="hidden" name="unitCost_o_${rowCount}" value="${orderItem.unitPrice!0}"/>
+                                    <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!""}"/>
                                     <input type="hidden" name="ownerPartyId_o_${rowCount}" value="${(facility.ownerPartyId)!}"/>
                                     <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}"/>
                                     <input type="hidden" name="quantityRejected_o_${rowCount}" value="0"/>

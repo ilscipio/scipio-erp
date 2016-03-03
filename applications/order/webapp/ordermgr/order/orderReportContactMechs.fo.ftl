@@ -109,7 +109,7 @@ under the License.
     <fo:block font-weight="bold">${uiLabelMap.OrderOrderTerms}:</fo:block>
     <#list orderTerms as orderTerm>
         <fo:block text-indent="0.2in">
-            ${orderTerm.getRelatedOne("TermType", false).get("description",locale)} ${orderTerm.termValue?default("")} ${orderTerm.termDays?default("")} ${orderTerm.textValue?default("")}
+            ${orderTerm.getRelatedOne("TermType", false).get("description",locale)} ${orderTerm.termValue!""} ${orderTerm.termDays!""} ${orderTerm.textValue!""}
         </fo:block>
     </#list>
 </#if>

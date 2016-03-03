@@ -131,7 +131,7 @@ under the License.
     <#if picklistInfo?has_content>
         <fo:block font-size="12pt">${uiLabelMap.ProductPickList} ${picklistInfo.picklist.picklistId} ${uiLabelMap.CommonIn} ${uiLabelMap.ProductFacility} ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
         <#if picklistInfo.shipmentMethodType?has_content>
-            <fo:block font-size="10pt">${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType} ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}</fo:block>
+            <fo:block font-size="10pt">${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType} ${picklistInfo.shipmentMethodType.description!picklistInfo.shipmentMethodType.shipmentMethodTypeId}</fo:block>
         </#if>
         <fo:block><fo:leader/></fo:block>
     </#if>
@@ -269,7 +269,7 @@ under the License.
                                     <fo:block>${quantityAvailable}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${orderItemShipGrpInvRes.quantityNotAvailable?default(0)}</fo:block>
+                                    <fo:block>${orderItemShipGrpInvRes.quantityNotAvailable!0}</fo:block>
                                 </fo:table-cell>
                             <#else>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}" number-columns-spanned="3">

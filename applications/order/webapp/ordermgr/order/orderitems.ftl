@@ -92,8 +92,8 @@ under the License.
                                 <@td class="${styles.text_right!}">
                                     <#assign productItemStatus>
                                          <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
@@ -209,7 +209,7 @@ under the License.
                                                     <@td><b>${uiLabelMap.OrderInvoiced}</b></@td>
                                                     <@td>${orderReadHelper.getOrderItemInvoicedQuantity(orderItem)}</@td>
                                                     <@td><b>${uiLabelMap.OrderReturned}</b></@td>
-                                                    <@td>${returnQuantityMap.get(orderItem.orderItemSeqId)?default(0)}</@td>
+                                                    <@td>${returnQuantityMap.get(orderItem.orderItemSeqId)!0}</@td>
                                                 </@tr>
                                             </@table>
                                         </@modal>
@@ -320,7 +320,7 @@ under the License.
                                             ${uiLabelMap.CommonFrom}
                                             : <#if workEffort.estimatedStartDate?has_content><@formattedDate date=workEffort.estimatedStartDate /></#if> ${uiLabelMap.CommonTo}
                                             : <#if workEffort.estimatedCompletionDate?has_content><@formattedDate date=workEffort.estimatedCompletionDate /></#if> ${uiLabelMap.OrderNumberOfPersons}
-                                            : ${workEffort.reservPersons?default("")}
+                                            : ${workEffort.reservPersons!""}
                                         </#if>
                                     </@td>
                                 </@tr>
@@ -396,7 +396,7 @@ under the License.
                                         ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}
                                         ${StringUtil.wrapString(orderItemAdjustment.get("description",locale)!)}
                                         <#if orderItemAdjustment.comments?has_content>
-                                            (${orderItemAdjustment.comments?default("")})
+                                            (${orderItemAdjustment.comments!""})
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
                                             <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>

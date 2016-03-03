@@ -26,7 +26,7 @@ under the License.
           <input type="hidden" name="fromPartyId" value="${partyId!}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId!}"/>
           <input type="hidden" name="orderId" value="${orderId}"/>
-          <input type="hidden" name="needsInventoryReceive" value="${parameters.needsInventoryReceive?default("Y")}"/>
+          <input type="hidden" name="needsInventoryReceive" value="${parameters.needsInventoryReceive!"Y"}"/>
           <input type="hidden" name="destinationFacilityId" value="${destinationFacilityId!}"/>
           <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId}"/>
         <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>

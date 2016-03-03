@@ -24,7 +24,7 @@ under the License.
     ${postalAddress.city!},
     <#if postalAddress.stateProvinceGeoId?has_content>
       <#assign stateProvince = postalAddress.getRelatedOne("StateProvinceGeo", true)>
-      ${stateProvince.abbreviation?default(stateProvince.geoName)}
+      ${stateProvince.abbreviation!stateProvince.geoName}
     </#if>
     <#if postalAddress.postalCodeGeoId?has_content>
       <#assign postalCodeGeo = postalAddress.getRelatedOne("PostalCodeGeo", true)>

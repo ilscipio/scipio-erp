@@ -35,7 +35,7 @@ under the License.
         "error":"color=\"red\""}/>
     <#list style?split(' ') as styleItem>
         <#assign foStyle = foStyles[styleItem]?default("")/>
-        ${foStyle?default("")}
+        ${foStyle!""}
     </#list>
 </#macro>
 
@@ -76,7 +76,7 @@ under the License.
 <#macro renderIgnoredField></#macro>
 
 <#macro renderFieldTitle style title id fieldHelpText="" for="">${title?default("")?replace("&nbsp;", " ")}</#macro>
-<#macro renderSingleFormFieldTitle title>${title?default("")}</#macro>
+<#macro renderSingleFormFieldTitle title>${title!""}</#macro>
     
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method=""></#macro>
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField></#macro>

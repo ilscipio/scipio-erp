@@ -193,7 +193,7 @@ function runAction() {
             <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
             <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date?string.short}</#if></@td>
             <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
-            <@td>${statusItem.description?default(invoice.statusId)}</@td>
+            <@td>${statusItem.description!invoice.statusId}</@td>
             <@td>${invoice.get("referenceNumber")!}</@td>
             <@td>${(invoice.description)!}</@td>
             <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>

@@ -50,7 +50,7 @@ under the License.
             <span>${uiLabelMap.CommonNA}</span>
           </#if>
         </@td>
-        <@td><#if facility??>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></@td>
+        <@td><#if facility??>${facility.facilityName!facility.facilityId}<#else>${uiLabelMap.CommonNone}</#if></@td>
         <@td>${statusItem.get("description",locale)}</@td>
       </@tr>
       </#list>

@@ -58,7 +58,7 @@ under the License.
             <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description!productFeature.productFeatureId}</option>
               </#list>
             </select>
         </@td>
@@ -77,7 +77,7 @@ under the License.
             <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
             <#if productFeatureTypes?? && productFeatureTypes?has_content>
               <#list productFeatureTypes as productFeatureType>
-                <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description?default(productFeatureType.productFeatureTypeId)}</option>
+                <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
               </#list>
             </#if>
           </select>

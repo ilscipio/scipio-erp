@@ -22,7 +22,7 @@ under the License.
     </head>
     <body>
         <div>Shipment #${shipment.shipmentId} <#if shipment.primaryOrderId?has_content>(from primary Order #${shipment.primaryOrderId})</#if> has been scheduled for shipment.</div>
-        <div>The Estimated Ship Date is: ${(shipment.estimatedShipDate)?default("Unknown")}</div>
-        <div>The Estimated Arrival Date is: ${(shipment.estimatedArrivalDate)?default("Unknown")}</div>
+        <div>The Estimated Ship Date is: ${(shipment.estimatedShipDate)!"Unknown"}</div>
+        <div>The Estimated Arrival Date is: ${(shipment.estimatedArrivalDate)!"Unknown"}</div>
     </body>
 </html>

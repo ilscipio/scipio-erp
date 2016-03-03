@@ -117,10 +117,10 @@ under the License.
                     <fo:block>${javaName.type}</fo:block>
                   </fo:table-cell>
                   <fo:table-cell padding="2pt">
-                    <fo:block>${javaName.javaType?default(uiLabelMap.WebtoolsNotFound)}</fo:block>
+                    <fo:block>${javaName.javaType!uiLabelMap.WebtoolsNotFound}</fo:block>
                   </fo:table-cell>
                   <fo:table-cell padding="2pt">
-                    <fo:block>${javaName.sqlType?default(uiLabelMap.WebtoolsNotFound)}</fo:block>
+                    <fo:block>${javaName.sqlType!uiLabelMap.WebtoolsNotFound}</fo:block>
                   </fo:table-cell>
                 </fo:table-row>
               </#list>

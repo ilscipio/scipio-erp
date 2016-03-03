@@ -27,7 +27,7 @@ under the License.
     <p>
         <b>${uiLabelMap.AccountingCurrency}:</b> ${(accountCurrencyUom.description)!} [${ownedFinAccount.currencyUomId!}]
         <b>${uiLabelMap.AccountingDateOpened}:</b> ${ownedFinAccount.fromDate!}
-        <b>${uiLabelMap.CommonStatus}:</b> ${(finAccountStatusItem.description)?default("Active")}
+        <b>${uiLabelMap.CommonStatus}:</b> ${(finAccountStatusItem.description)!"Active"}
         <#if ownedFinAccount.replenishLevel??>
             <b>${uiLabelMap.FormFieldTitle_replenishLevel}:</b> <@ofbizCurrency amount=ownedFinAccount.replenishLevel isoCode=ownedFinAccount.currencyUomId/>
         </#if>

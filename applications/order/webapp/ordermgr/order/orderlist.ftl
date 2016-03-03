@@ -124,7 +124,7 @@ under the License.
               <#--<@td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</@td>-->
               <#--<@td>${billFrom!}</@td>-->
               <@td>${billTo!}</@td>
-              <@td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></@td>
+              <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
               <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
               <@td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</@td>
               <@td>

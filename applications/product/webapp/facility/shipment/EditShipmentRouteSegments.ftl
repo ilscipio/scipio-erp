@@ -203,7 +203,7 @@ under the License.
                             <#-- Todo: implement closeout with Fedex -->
                             <#-- Todo: implement shipment cancellation with Fedex -->
                             <#-- Todo: implement shipment tracking with Fedex -->
-                            ${shipmentRouteSegment.homeDeliveryType?default(uiLabelMap.ProductShipmentNone)}
+                            ${shipmentRouteSegment.homeDeliveryType!uiLabelMap.ProductShipmentNone}
                             <#if shipmentRouteSegment.homeDeliveryDate??>
                                 &nbsp;(${shipmentRouteSegment.homeDeliveryDate?string("yyyy-MM-dd")})
                             </#if>

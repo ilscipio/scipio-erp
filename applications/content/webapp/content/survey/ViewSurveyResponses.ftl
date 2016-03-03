@@ -90,7 +90,7 @@ under the License.
                     <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
                       <div>${(answer.textResponse)!}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
-                      <div>${answer.currencyResponse?default(0)}</div>
+                      <div>${answer.currencyResponse!0}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
                       <div>${answer.floatResponse?default(0)?string("#")}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">

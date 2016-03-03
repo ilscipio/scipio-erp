@@ -39,7 +39,7 @@ under the License.
   </#if>
   <#if wrapInBox == "Y">
   <div id="sidedeepcategory">
-    <@heading><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></@heading>
+    <@heading><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName!""}</#if></@heading>
     <div>
       <div class="browsecategorylist">
   </#if>
@@ -50,7 +50,7 @@ under the License.
           <#assign parentCategoryId = ""/>
         </#if>
         <#assign categoryUrl = "javascript:selectCategory('" + category.productCategoryId + "');"/>
-        <a href="${categoryUrl}" class="${browseCategoryButtonClass}"><#if categoryName?has_content>${categoryName}<#else>${categoryDescription?default("")}</#if></a>
+        <a href="${categoryUrl}" class="${browseCategoryButtonClass}"><#if categoryName?has_content>${categoryName}<#else>${categoryDescription!""}</#if></a>
   <#if (Static["org.ofbiz.product.category.CategoryWorker"].checkTrailItem(request, category.getString("productCategoryId"))) || (curCategoryId?? && curCategoryId == category.productCategoryId)>
     <#local subCatList = Static["org.ofbiz.product.category.CategoryWorker"].getRelatedCategoriesRet(request, "subCatList", category.getString("productCategoryId"), true)>
     <#if subCatList??>

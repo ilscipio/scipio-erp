@@ -33,7 +33,7 @@ under the License.
         "error":"color=\"red\""}/>
     <#list style?split(' ') as styleItem>
         <#assign foStyle = foStyles[styleItem]?default("")/>
-        ${foStyle?default("")}
+        ${foStyle!""}
     </#list>
 </#macro>
 

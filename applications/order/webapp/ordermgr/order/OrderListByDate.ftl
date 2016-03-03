@@ -53,7 +53,7 @@ under the License.
           <@tr>
             <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderHeader.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
             <@td>${billTo!}</@td>
-            <@td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></@td>
+            <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
             <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
             <@td>
               <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>

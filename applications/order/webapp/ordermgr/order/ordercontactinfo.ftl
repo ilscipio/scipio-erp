@@ -28,14 +28,14 @@ under the License.
                 <@cell columns=6>
                       <select name="contactMechId">
                         <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
-                          <option value="${contactMechAddress.contactMechId}">${(contactMechAddress.address1)?default("")} - ${contactMechAddress.city?default("")}</option>
+                          <option value="${contactMechAddress.contactMechId}">${(contactMechAddress.address1)!""} - ${contactMechAddress.city!""}</option>
                           <option value="${contactMechAddress.contactMechId}"></option>
                           <#list contactMechList as contactMech>
                             <#assign postalAddress = contactMech.getRelatedOne("PostalAddress", false)! />
                             <#assign partyContactPurposes = postalAddress.getRelated("PartyContactMechPurpose", null, null, false)! />
                             <#list partyContactPurposes as partyContactPurpose>
                               <#if contactMech.contactMechId?has_content && partyContactPurpose.contactMechPurposeTypeId == contactMechPurposeTypeId>
-                                <option value="${contactMech.contactMechId!}">${(postalAddress.address1)?default("")} - ${postalAddress.city?default("")}</option>
+                                <option value="${contactMech.contactMechId!}">${(postalAddress.address1)!""} - ${postalAddress.city!""}</option>
                               </#if>
                             </#list>
                           </#list>
@@ -52,7 +52,7 @@ under the License.
                              </#list>
                           </#list>
                         <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
-                          <option value="${contactMechAddress.contactMechId}">${(contactMechAddress.infoString)?default("")}</option>
+                          <option value="${contactMechAddress.contactMechId}">${(contactMechAddress.infoString)!""}</option>
                           <option value="${contactMechAddress.contactMechId}"></option>
                           <#list contactMechList as contactMech>
                              <#assign partyContactPurposes = contactMech.getRelated("PartyContactMechPurpose", null, null, false)! />

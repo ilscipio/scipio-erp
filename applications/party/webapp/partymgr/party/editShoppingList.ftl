@@ -88,15 +88,15 @@ under the License.
         <@field type="generic" label=uiLabelMap.PartyParentList>
             <@field type="select" name="parentShoppingListId" disabled=isAutoSave>
               <#if parentShoppingList??>
-                <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName?default(parentShoppingList.shoppingListId)}</option>
+                <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName!parentShoppingList.shoppingListId}</option>
               </#if>
               <option value="">${uiLabelMap.PartyNoParent}</option>
               <#list allShoppingLists as newParShoppingList>
-                <option value="${newParShoppingList.shoppingListId}">${newParShoppingList.listName?default(newParShoppingList.shoppingListId)}</option>
+                <option value="${newParShoppingList.shoppingListId}">${newParShoppingList.listName!newParShoppingList.shoppingListId}</option>
               </#list>
             </@field>
             <#if parentShoppingList??>
-              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName!parentShoppingList.shoppingListId})</a>
             </#if>
         </@field>
         <#if !isAutoSave>
@@ -123,7 +123,7 @@ under the License.
       <#list childShoppingListDatas as childShoppingListData>
         <#assign childShoppingList = childShoppingListData.childShoppingList>
         <@tr>
-          <@td class="button-col"><a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a></li></@td>
+          <@td class="button-col"><a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${childShoppingList.listName!childShoppingList.shoppingListId}</a></li></@td>
           <@td class="button-col align-float">
             <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyGotoList}</a>
             <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyAddListToCart}</a>

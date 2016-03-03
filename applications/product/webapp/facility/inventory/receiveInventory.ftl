@@ -61,7 +61,7 @@ under the License.
                   <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${item.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a></@td>
                   <@td>${item.orderItemSeqId}</@td>
                   <@td>${item.productId?default("Not Found")}</@td>
-                  <@td>${item.lotId?default("")}</@td>
+                  <@td>${item.lotId!""}</@td>
                   <@td>${item.unitCost?default(0)?string("##0.00")}</@td>
                   <@td>${item.quantityRejected?default(0)?string.number}</@td>
                   <@td>${item.quantityAccepted?string.number}</@td>

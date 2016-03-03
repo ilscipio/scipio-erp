@@ -31,7 +31,7 @@ under the License.
               <@tr>
                 <@td>${partyNameFrom}</@td>
                 <@td>${partyNameTo}</@td>
-                <@td>${communicationEvent.subject?default("")}</@td>
+                <@td>${communicationEvent.subject!""}</@td>
                 <@td>${communicationEvent.entryDate}</@td>
                 <@td align="right">
                   <form method="post" action="<@ofbizUrl>readmessage</@ofbizUrl>" name="ecomm_read_mess${index}">

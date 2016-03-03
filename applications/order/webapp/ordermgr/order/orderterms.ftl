@@ -33,10 +33,10 @@ under the License.
       <#list orderTerms as orderTerm>
         <@tr>
           <@td width="35%">${orderTerm.getRelatedOne("TermType", false).get("description", locale)}</@td>
-          <@td width="10%" align="center">${orderTerm.termValue?default("")}</@td>
-          <@td width="10%" align="center">${orderTerm.termDays?default("")}</@td>
-          <@td width="10%" align="center">${orderTerm.textValue?default("")}</@td>
-          <@td width="35%" align="center">${orderTerm.description?default("")}</@td>
+          <@td width="10%" align="center">${orderTerm.termValue!""}</@td>
+          <@td width="10%" align="center">${orderTerm.termDays!""}</@td>
+          <@td width="10%" align="center">${orderTerm.textValue!""}</@td>
+          <@td width="35%" align="center">${orderTerm.description!""}</@td>
         </@tr>
       </#list>
       </@tbody>

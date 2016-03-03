@@ -56,12 +56,12 @@ under the License.
           <@field type="lookup" label=uiLabelMap.OrderReturnFromParty value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
           <@field type="select" name="destinationFacilityId" label=uiLabelMap.OrderReturnToFacility>
             <#if currentFacility??>
-              <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
+              <option value="${currentFacility.facilityId}">${currentFacility.facilityName!currentFacility.facilityId}</option>
               <option value="${currentFacility.facilityId}">---</option>
             </#if>
             <option value="">${uiLabelMap.FacilityNoFacility}</option>
             <#list facilityList as facility>
-              <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected="selected"</#if>>${facility.facilityName?default(facility.facilityId)}</option>
+              <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected="selected"</#if>>${facility.facilityName!facility.facilityId}</option>
             </#list>
           </@field>
         <#if billingAccountList?has_content>

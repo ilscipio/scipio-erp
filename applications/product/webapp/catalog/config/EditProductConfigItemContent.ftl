@@ -58,7 +58,7 @@ function insertImageName(size,nameValue) {
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
         <@tr valign="middle">
             <@td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</@td>
-            <@td>${productContentType.description?default(productContent.confItemContentTypeId)}</@td>
+            <@td>${productContentType.description!productContent.confItemContentTypeId}</@td>
             <@td>${productContent.fromDate!(uiLabelMap.CommonNA)}</@td>
             <@td>${productContent.thruDate!(uiLabelMap.CommonNA)}</@td>
             <@td>

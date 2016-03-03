@@ -1451,22 +1451,22 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#assign field_display_widget_defaultArgs = {
   "type":"", "imageLocation":"", "idName":"", "description":"", "title":"", "class":"", "id":"", "alert":"", "inPlaceEditorUrl":"", 
   "inPlaceEditorParams":"", "imageAlt":"", "collapse":false, "fieldTitleBlank":false, "tooltip":"", "inlineLabel":false, 
-  "interpretText":"", "passArgs":{}
+  "formatText":"", "passArgs":{}
 }>
 <#macro field_display_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#if !interpretText?is_boolean>
-    <#local interpretText = true>
+  <#if !formatText?is_boolean>
+    <#local formatText = true>
   </#if>
   <@field_display_markup_widget type=type imageLocation=imageLocation id=id idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel interpretText=interpretText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel formatText=formatText origArgs=origArgs passArgs=passArgs><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false interpretText=true origArgs={} passArgs={} catchArgs...>
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_display_tooltip!styles.field_default_tooltip!"")>
@@ -1487,7 +1487,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     </#if>
     -->
     <#if description?has_content>
-      <#if interpretText>
+      <#if formatText>
         ${description?replace("\n", "<br />")}<#t/>
       <#else>
         ${description}<#t/>

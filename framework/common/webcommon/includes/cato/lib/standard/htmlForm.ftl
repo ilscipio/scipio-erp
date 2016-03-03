@@ -990,7 +990,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     value           = display value or image URL
     description     = for image type: image alt
     tooltip         = tooltip, may result in extra wrapping container for tooltip
-    interpretText   = boolean (default: true). If true, translates newlines to <br/>; else untouched.
+    formatText      = boolean (default: false). If true, translates newlines to <br/> (and potentially other transformations); else untouched.
+                      WARN: The default for @field macro is now FALSE, which differs from the Ofbiz form widget default, which is true.
+                      WARN: TODO? It is possible the default may be changed to true for specific valueType.
+                          However, the default for "generic" will always be false.   
     
     * generic *
     tooltip         = tooltip, may result in extra wrapping container for tooltip
@@ -1011,7 +1014,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
   "inline":"", "ignoreParentField":"",
   "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
-  "titleClass":"", "interpretText":"",
+  "titleClass":"", "formatText":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1577,8 +1580,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
             can also partially detect type of value with ?is_, but is not enough... -->
-        <#if !valueType?has_content || (valueType=="generic")>
+        <#if !valueType?has_content || (valueType == "generic")>
           <#local displayType = "text">
+          <#if !formatText?is_boolean>
+            <#local formatText = true>
+          </#if>
         <#else>
           <#local displayType = valueType>
         </#if>
@@ -1594,7 +1600,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
           title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-          imageAlt=description tooltip=tooltip interpretText=interpretText inlineLabel=effInlineLabel passArgs=passArgs/>
+          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>

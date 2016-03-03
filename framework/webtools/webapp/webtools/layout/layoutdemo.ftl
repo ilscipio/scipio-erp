@@ -588,14 +588,14 @@
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple=true 
         asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
      
-      <@field type="display" label="Display Field 1" tooltip="This is a tooltip text" interpretText=true>
+      <@field type="display" label="Display Field 1" tooltip="This is a tooltip text" formatText=true>
         This 
         is 
         text 
         with 
         newlines
       </@field>
-      <@field type="display" label="Display Field 1" interpretText=false>
+      <@field type="display" label="Display Field 1" formatText=false>
         This 
         is 
         text 

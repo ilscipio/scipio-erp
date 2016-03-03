@@ -69,25 +69,23 @@ under the License.
 <form name="ReceiveInventoryAgainstPurchaseOrder" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
     <input type="hidden" name="clearAll" value="Y"/>
     <div>
-        <span>${uiLabelMap.ProductShipmentId}</span>&nbsp;<input type="text" size="20" name="shipmentId" value="${shipmentId!}"/>
-        <span>${uiLabelMap.ProductOrderId}</span>&nbsp;
-        <span>
-            <@htmlTemplate.lookupField value="${orderId!}" formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
-        </span>
-        <span>${uiLabelMap.ProductOrderShipGroupId}</span>&nbsp;<input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-        <input type="submit" value="${uiLabelMap.CommonSelect}" class="${styles.link_run_sys!} ${styles.action_select!}"/>
+        <@field type="input" size="20" name="shipmentId" value=shipmentId! label=uiLabelMap.ProductShipmentId />
+        <@field type="lookup" value=orderId! label=uiLabelMap.ProductOrderId formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
+        <@field type="input" size="20" label=uiLabelMap.ProductOrderShipGroupId name="shipGroupSeqId" value=shipGroupSeqId!/>
+        <@field type="submit" text=uiLabelMap.CommonSelect class="${styles.link_run_sys!} ${styles.action_select!}"/>
     </div>
 </form>
 
 <#if shipment??>
     <#if isPurchaseShipment>
 
-        <#assign itemsAvailableToReceive = totalAvailableToReceive?default(0) &gt; 0/>
+        <#assign itemsAvailableToReceive = ((totalAvailableToReceive!0) > 0)/>
         <#if orderItemDatas??>
             <br />
             <#assign rowCount = 0>
             <#assign totalReadyToReceive = 0/>
             <form action="<@ofbizUrl>issueOrderItemToShipmentAndReceiveAgainstPO?clearAll=Y</@ofbizUrl>" method="post" name="selectAllForm">
+              <@fields type="default-manual-widgetonly">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <input type="hidden" name="shipmentId" value="${shipmentId}" />
@@ -123,11 +121,11 @@ under the License.
                         <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
                             <@td>${(product.internalName)!} [${orderItem.productId!(uiLabelMap.CommonNA)}]</@td>
                             <@td>
-                                    <#assign upcaLookup = {"productId":product.productId, "goodIdentificationTypeId":"UPCA"}/>
-                                    <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>
-                                    <#if upca?has_content>
-                                        ${upca.idValue!}
-                                    </#if>
+                                <#assign upcaLookup = {"productId":product.productId, "goodIdentificationTypeId":"UPCA"}/>
+                                <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>
+                                <#if upca?has_content>
+                                    ${upca.idValue!}
+                                </#if>
                             </@td>
                             <@td>${orderItem.quantity}</@td>
                             <@td>${orderItem.cancelQuantity?default(0)}</@td>
@@ -139,11 +137,11 @@ under the License.
                             <@td>${totalQuantityReceived}</@td>
                             <@td>${orderItem.quantity - orderItem.cancelQuantity?default(0) - totalQuantityReceived}</@td>
                             <@td>
-                                    <#if fulfilledReservations?has_content>
-                                        <#list fulfilledReservations?sort_by("orderId") as fulfilledReservation>
-                                            ${fulfilledReservation.orderId}<br />
-                                        </#list>
-                                    </#if>
+                                <#if fulfilledReservations?has_content>
+                                    <#list fulfilledReservations?sort_by("orderId") as fulfilledReservation>
+                                        ${fulfilledReservation.orderId}<br />
+                                    </#list>
+                                </#if>
                             </@td>
                             <#if (availableToReceive > 0)>
                                 <@td>
@@ -166,24 +164,22 @@ under the License.
                                         <#assign quantityToReceive = 0>
                                     </#if>
                                     <#assign totalReadyToReceive = totalReadyToReceive + quantityToReceive/>
-                                    <input type="text" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value="${quantityToReceive}"/>
+                                    <@field type="input" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value="${quantityToReceive}"/>
                                 </@td>
                                 <@td>
-                                    <select name="inventoryItemTypeId_o_${rowCount}">
+                                    <@field type="select" name="inventoryItemTypeId_o_${rowCount}">
                                       <#list inventoryItemTypes as inventoryItemType>
-                                      <option value="${inventoryItemType.inventoryItemTypeId}"
-                                          <#if (facility.defaultInventoryItemTypeId?has_content) && (inventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
-                                              selected="selected"
-                                          </#if>
-                                      >${inventoryItemType.get("description",locale)?default(inventoryItemType.inventoryItemTypeId)}</option>
+                                      <option value="${inventoryItemType.inventoryItemTypeId}"<#rt>
+                                          <#if (facility.defaultInventoryItemTypeId?has_content) && (inventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)> selected="selected"</#if>><#t>
+                                        ${inventoryItemType.get("description",locale)?default(inventoryItemType.inventoryItemTypeId)}</option><#lt>
                                       </#list>
-                                    </select>
+                                    </@field>
                                 </@td>
                                 <@td align="right">
-                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                                    <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
                                 </@td>
                                 <@td align="right">
-                                  <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
+                                  <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
                                 </@td>
                                 <#assign rowCount = rowCount + 1>
                             </#if>
@@ -193,40 +189,42 @@ under the License.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClearAll}</a>
+                                <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
                             </@td>
                             <@td align="right">
-                                <a class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
+                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();" text=uiLabelMap.ProductReceiveItem />
                             </@td>
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <a class="${styles.link_run_sys!} ${styles.action_update!}" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
+                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makeOfbizUrl("completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
                             </@td>
                         </@tr>
                       </@tfoot>
                     </#if>
                 </@table>
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
+              </@fields>
             </form>
             <@script>selectAll('selectAllForm');</@script>
         </#if>
-        <#if itemsAvailableToReceive && totalReadyToReceive < totalAvailableToReceive>
-            <@heading>${uiLabelMap.ProductReceiveInventoryAddProductToReceive}</@heading>
+        <#if itemsAvailableToReceive && (totalReadyToReceive < totalAvailableToReceive)>
+            <@section title=uiLabelMap.ProductReceiveInventoryAddProductToReceive>
             <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                <div>
-                    <span>${uiLabelMap.ProductProductId}/${uiLabelMap.ProductGoodIdentification}</span>
-                    <input type="text" size="20" id="productId" name="productId" value=""/>
+                <@field type="generic" label="${uiLabelMap.ProductProductId}/${uiLabelMap.ProductGoodIdentification}">
+                    <@field type="input" inline=true size="20" id="productId" name="productId" value=""/>
                         @
-                    <input type="text"  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-                </div>
+                    <@field type="input" inline=true  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>
+                </@field>
+                <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}"/>
+
             </form>
             <@script>
                 document.getElementById('productId').focus();
             </@script>
+            </@section>
         </#if>
     </#if>
 <#elseif parameters.shipmentId?has_content>

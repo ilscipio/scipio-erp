@@ -22,6 +22,7 @@ under the License.
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductGlobalPriceRule menuContent=menuContent>
+  <@fields type="default-manual-widgetonly">
     <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
@@ -38,18 +39,18 @@ under the License.
             <@td>
                 <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
-                    <input type="text" size="15" name="ruleName" value="${productPriceRule.ruleName}" />
-                    <input type="text" size="15" name="description" value="${productPriceRule.description!}" />
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${productPriceRule.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@field type="input" size="15" name="ruleName" value="${productPriceRule.ruleName}" />
+                    <@field type="input" size="15" name="description" value="${productPriceRule.description!}" />
+                    <@field type="datetime" name="fromDate" value=productPriceRule.fromDate! size="25" maxlength="30" id="fromDate1" />
+                    <@field type="datetime" name="thruDate" value=productPriceRule.thruDate! size="25" maxlength="30" id="thruDate1" />
                     &nbsp;&nbsp;
                     <#assign saleRule = productPriceRule.isSale?? && productPriceRule.isSale == "Y">
                     <div>
-                    <span><b>${uiLabelMap.ProductNotifySale}</b></span>&nbsp;
-                    <input type="radio" name="isSale" value="Y" <#if saleRule>checked="checked"</#if> />${uiLabelMap.CommonYes}&nbsp;
-                    <input type="radio" name="isSale" value="N" <#if !saleRule>checked="checked"</#if> />${uiLabelMap.CommonNo}
-                    &nbsp;&nbsp;
-                    <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                      <span><b>${uiLabelMap.ProductNotifySale}</b></span>&nbsp;
+                      <@field type="radio" name="isSale" value="Y" checked=saleRule label=uiLabelMap.CommonYes />
+                      <@field type="radio" name="isSale" value="N" checked=!saleRule label=uiLabelMap.CommonNo />
+                      &nbsp;&nbsp;
+                      <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </div>
                 </form>
             </@td>
@@ -57,7 +58,7 @@ under the License.
               <#if !productPriceConds?has_content && !productPriceActions?has_content>
                   <form method="post" action="<@ofbizUrl>deleteProductPriceRule</@ofbizUrl>" name="deleteProductPriceRule">
                       <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
-                      <input type="submit" value="${uiLabelMap.CommonDelete}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
+                      <@field type="submit" text=uiLabelMap.CommonDelete class="${styles.link_run_sys!} ${styles.action_remove!}" />
                   </form>
               </#if>
             </@td>
@@ -84,7 +85,7 @@ under the License.
                             <form method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                                 <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
-                                <select name="inputParamEnumId" size="1">
+                                <@field type="select" name="inputParamEnumId" size="1">
                                     <#if productPriceCond.inputParamEnumId?has_content>
                                       <#assign inputParamEnum = productPriceCond.getRelatedOne("InputParamEnumeration", true)!>
                                       <option value="${productPriceCond.inputParamEnumId}"><#if inputParamEnum??>${inputParamEnum.get("description",locale)}<#else>[${productPriceCond.inputParamEnumId}]</#if></option>
@@ -95,8 +96,8 @@ under the License.
                                     <#list inputParamEnums as inputParamEnum>
                                       <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                                     </#list>
-                                </select>
-                                <select name="operatorEnumId" size="1">
+                                </@field>
+                                <@field type="select" name="operatorEnumId" size="1">
                                     <#if productPriceCond.operatorEnumId?has_content>
                                       <#assign operatorEnum = productPriceCond.getRelatedOne("OperatorEnumeration", true)!>
                                       <option value="${productPriceCond.operatorEnumId}"><#if operatorEnum??>${operatorEnum.get("description",locale)}<#else>[${productPriceCond.operatorEnumId}]</#if></option>
@@ -107,16 +108,16 @@ under the License.
                                     <#list condOperEnums as condOperEnum>
                                       <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                                     </#list>
-                                </select>
-                                <input type="text" size="20" name="condValue" value="${productPriceCond.condValue!}" />
-                                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                                </@field>
+                                <@field type="input" size="20" name="condValue" value="${productPriceCond.condValue!}" />
+                                <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>
                         <@td align="center">
                          <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
-                           <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                           <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
                          </form>
                         </@td>
                       </@tr>
@@ -127,18 +128,18 @@ under the License.
                         <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                            <select name="inputParamEnumId" size="1">
+                            <@field type="select" name="inputParamEnumId" size="1">
                                 <#list inputParamEnums as inputParamEnum>
                                   <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                                 </#list>
-                            </select>
-                            <select name="operatorEnumId" size="1">
+                            </@field>
+                            <@field type="select" name="operatorEnumId" size="1">
                                 <#list condOperEnums as condOperEnum>
                                   <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                                 </#list>
-                            </select>
-                            <input type="text" size="20" name="condValue" />
-                            <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+                            </@field>
+                            <@field type="input" size="20" name="condValue" />
+                            <@field type="submit" text=uiLabelMap.CommonCreate class="${styles.link_run_sys!} ${styles.action_add!}" />
                         </form>
                     </@td>
                   </@tr>
@@ -162,7 +163,7 @@ under the License.
                             <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                                 <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
-                                <select name="productPriceActionTypeId" size="1">
+                                <@field type="select" name="productPriceActionTypeId" size="1">
                                     <#if productPriceAction.productPriceActionTypeId?has_content>
                                       <#assign productPriceActionType = productPriceAction.getRelatedOne("ProductPriceActionType", true)>
                                       <option value="${productPriceAction.productPriceActionTypeId}"><#if productPriceActionType??>${productPriceActionType.get("description",locale)}<#else>[${productPriceAction.productPriceActionTypeId}]</#if></option>
@@ -173,16 +174,16 @@ under the License.
                                     <#list productPriceActionTypes as productPriceActionType>
                                       <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                                     </#list>
-                                </select>
-                                <input type="text" size="8" name="amount" value="${productPriceAction.amount!}" />
-                                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                                </@field>
+                                <@field type="input" size="8" name="amount" value=productPriceAction.amount! />
+                                <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>
                         <@td align="center">
                           <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
-                            <a href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                            <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
                           </form>
                         </@td>
                       </@tr>
@@ -193,13 +194,13 @@ under the License.
                         <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                            <select name="productPriceActionTypeId" size="1">
+                            <@field type="select" name="productPriceActionTypeId" size="1">
                                 <#list productPriceActionTypes as productPriceActionType>
                                   <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                                 </#list>
-                            </select>
-                            <input type="text" size="8" name="amount" />
-                            <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+                            </@field>
+                            <@field type="text" size="8" name="amount" />
+                            <@field type="submit" text=uiLabelMap.CommonCreate class="${styles.link_run_sys!} ${styles.action_add!}" />
                         </form>
                     </@td>
                   </@tr>
@@ -209,4 +210,5 @@ under the License.
           </@tr>
         </#if>
     </@table>
+  </@fields>
 </@section>

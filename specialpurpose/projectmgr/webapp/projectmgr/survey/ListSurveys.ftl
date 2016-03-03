@@ -18,6 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.CommonList} ${uiLabelMap.EcommerceSurveys}">
+  <@fields type="default-manual-widgetonly">
     <#if workEffortSurveyAppls?has_content>
       <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
       <@thead>
@@ -37,25 +38,26 @@ under the License.
               <#if productStoreSurveyAppl?has_content>
                 <#assign survey = productStoreSurveyAppl.getRelatedOne("Survey", false)>
                 <@tr>
-                  <form method="post" action="<@ofbizUrl>updateWorkEffortSurveyAppl</@ofbizUrl>" name="editWorkEffortSurveyAppl_${workEffortSurveyAppl_index}">
+                <#-- Cato: FIXME: invalid form within table -->
+                <form method="post" action="<@ofbizUrl>updateWorkEffortSurveyAppl</@ofbizUrl>" name="editWorkEffortSurveyAppl_${workEffortSurveyAppl_index}">
                   <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></@td>
                   <@td>${workEffortSurveyAppl.fromDate!}</@td>
                   <@td>
-                    <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(workEffortSurveyAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </@td>
+                    <@field type="datetime" name="thruDate" value=(workEffortSurveyAppl.thruDate)! size="25" maxlength="30" id="thruDate1" />
+                  </@td>
                   <@td><a href="<@ofbizUrl>testWorkEffortSurvey?productStoreSurveyId=${productStoreSurveyAppl.productStoreSurveyId!}&amp;workEffortId=${workEffortSurveyAppl.workEffortId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.EcommerceTakeSurvey}</a></@td>
                   <#if !isReadable??>
                     <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}"/>
                     <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}"/>
                     <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}"/>
-                    <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" /> </@td>
-                  </form>
+                    <@td><@field type="submit" name="submitBtn" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" /></@td>
+                </form>
                     <@td>
                       <form id="deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}" method="post" action="<@ofbizUrl>deleteWorkEffortSurveyAppl</@ofbizUrl>">
                         <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}" />
                         <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}" />
                         <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}" />
-                        <a href="javascript:document.getElementById('deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}').submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                        <@field type="submit" submitType="link" href="javascript:document.getElementById('deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}').submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text="${uiLabelMap.CommonDelete}" />
                       </form>
                     </@td>
                   </#if>
@@ -66,4 +68,5 @@ under the License.
         </#list>
       </@table>
     </#if>
+  </@fields>
 </@section>

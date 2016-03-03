@@ -17,8 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
+  <#-- Cato: FIXME: this entire template is invalid forms within tables... -->
+
   <@section title=uiLabelMap.PageTitleEditShipmentRouteSegments>
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@fields type="default-manual-widgetonly">
+    <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead> 
         <@tr class="header-row">
             <@th valign="top">${uiLabelMap.ProductSegment}</@th>
@@ -194,7 +197,7 @@ under the License.
                                     <option${(shipmentRouteSegment.homeDeliveryType?default("")=="EVENING")?string(" selected=\"selected\"","")} value="EVENING">${uiLabelMap.ProductShipmentFedexHomeEvening}</option>
                                     <option${(shipmentRouteSegment.homeDeliveryType?default("")=="APPOINTMENT")?string(" selected=\"selected\"","")} value="APPOINTMENT">${uiLabelMap.ProductShipmentFedexHomeAppointment}</option>
                                 </select>
-                                <@htmlTemplate.renderDateTimeField name="homeDeliveryDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.homeDeliveryDate.toString())!}" size="25" maxlength="30" id="homeDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                                <@field type="datetime" name="homeDeliveryDate" value=(shipmentRouteSegment.homeDeliveryDate.toString())! size="25" maxlength="30" id="homeDeliveryDate1" />
                             </#if>
                         <#else>
                             <#-- Todo: implement closeout with Fedex -->
@@ -222,11 +225,11 @@ under the License.
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value="${shipmentRouteSegment.trackingIdNumber!}"/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedStartDate.toString())!}" size="25" maxlength="30" id="estimatedStartDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.estimatedArrivalDate.toString())!}" size="25" maxlength="30" id="estimatedArrivalDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@field type="datetime" name="estimatedStartDate" value=(shipmentRouteSegment.estimatedStartDate.toString())! size="25" maxlength="30" id="estimatedStartDate1" />
+                    <@field type="datetime" name="estimatedArrivalDate" value=(shipmentRouteSegment.estimatedArrivalDate.toString())! size="25" maxlength="30" id="estimatedArrivalDate1" />
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualStartDate.toString())!}" size="25" maxlength="30" id="actualStartDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.actualArrivalDate.toString())!}" size="25" maxlength="30" id="actualArrivalDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@field type="datetime" name="actualStartDate" value=(shipmentRouteSegment.actualStartDate.toString())! size="25" maxlength="30" id="actualStartDate2" />
+                    <@field type="datetime" name="actualArrivalDate" value=(shipmentRouteSegment.actualArrivalDate.toString())! size="25" maxlength="30" id="actualArrivalDate2" />
             </@td>
             <@td valign="top">
                 <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight!}"/>
@@ -349,12 +352,14 @@ under the License.
         <#assign alt_row = !alt_row>
     </#list>
     </@table>
-</@section>
+    </@fields>
+  </@section>
 
-<@section title=uiLabelMap.PageTitleAddShipmentRouteSegment>
+  <@section title=uiLabelMap.PageTitleAddShipmentRouteSegment>
+    <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
+      <@fields type="default-manual-widgetonly">
+        <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-            <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
-            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <@tr>
                 <@td valign="top">
                         <span>${uiLabelMap.ProductNewSegment}</span>
@@ -403,11 +408,11 @@ under the License.
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value=""/>
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="estimatedStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedStartDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="estimatedArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="estimatedArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@field type="datetime" name="estimatedStartDate" value="" size="25" maxlength="30" id="estimatedStartDate3" />
+                    <@field type="datetime" name="estimatedArrivalDate" value="" size="25" maxlength="30" id="estimatedArrivalDate3" />
                     <br />
-                    <@htmlTemplate.renderDateTimeField name="actualStartDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    <@htmlTemplate.renderDateTimeField name="actualArrivalDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualArrivalDate3" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <@field type="datetime" name="actualStartDate" value="" size="25" maxlength="30" id="actualArrivalDate3" />
+                    <@field type="datetime" name="actualArrivalDate" value="" size="25" maxlength="30" id="actualArrivalDate3" />
                 </@td>
                 <@td valign="top">
                     <input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)!}"/>
@@ -434,8 +439,9 @@ under the License.
                     <input type="text" size="8" name="actualCost"/>
                 </@td>
             </@tr>
-            </form>
         </@table>
+      </@fields>
+    </form>
   </@section>
 <#else>
   <@section>

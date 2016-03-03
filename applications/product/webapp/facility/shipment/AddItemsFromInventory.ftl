@@ -18,6 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.ProductIssueInventoryItemsToShipment}: [${shipmentId!}]">
+  <@fields type="default-manual">
     <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
      <@thead>
       <@tr class="header-row">
@@ -52,15 +53,14 @@ under the License.
                   <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                   <input type="hidden" name="shipmentItemSeqId" value="${item.shipmentItemSeqId}"/>
                   <input type="hidden" name="totalIssuedQty" value="${item.totalQtyIssued}"/>
-                  <span>
-                    <@htmlTemplate.lookupField formName="issueInventoryItemToShipment_${item_index}" name="inventoryItemId" id="inventoryItemId" fieldFormName="LookupInventoryItem?orderId=${item.orderId}&amp;partyId=${item.partyId}&amp;productId=${item.productId}"/>
-                  </span>
-                  <input type="text" size="5" name="quantity"/>
-                  <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+                  <@field type="lookup" formName="issueInventoryItemToShipment_${item_index}" name="inventoryItemId" id="inventoryItemId" fieldFormName="LookupInventoryItem?orderId=${item.orderId}&amp;partyId=${item.partyId}&amp;productId=${item.productId}"/>
+                  <@field type="input" size="5" name="quantity"/>
+                  <@field type="submit" value=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_update!}"/>
                 </form>
             </@td>
           </#if>
         </@tr>
       </#list>
     </@table>
+  </@fields>
 </@section>

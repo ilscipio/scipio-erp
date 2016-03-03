@@ -141,25 +141,10 @@ under the License.
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>
-    <#if shoppingListItemDatas?has_content>
-        <#-- Pagination -->
-        <#include "component://common/webcommon/includes/htmlTemplate.ftl"/>
-        <#assign commonUrl = "editShoppingList?partyId=" + partyId + "&shoppingListId="+(shoppingListId!)+"&"/>
-        <#assign viewIndexFirst = 0/>
-        <#assign viewIndexPrevious = viewIndex - 1/>
-        <#assign viewIndexNext = viewIndex + 1/>
-        <#assign viewIndexLast = Static["org.ofbiz.base.util.UtilMisc"].getViewLastIndex(listSize, viewSize) />
-        <#assign messageMap = {"lowCount":lowIndex, "highCount":highIndex, "total":listSize}/>
-        <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
-        <#macro paginateShoppingListItems position>
-          <@nextPrev position=position commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
-        </#macro>
-        <#assign paginated = true>
-        
-        <#if paginated>
-          <@paginateShoppingListItems position="top"/>
-        </#if>
-        
+  <#if shoppingListItemDatas?has_content>
+
+    <#assign paramStr = "partyId=" + partyId + "&amp;shoppingListId=" + (shoppingListId!)/>
+    <@paginate mode="content" url=makeOfbizUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
         <@tr class="header-row">
@@ -211,13 +196,10 @@ under the License.
         </#list>
         </@tbody>
       </@table>
-
-      <#if paginated>
-        <@paginateShoppingListItems position="bottom"/>
-      </#if> 
-    <#else>
-      <@commonMsg type="result-norecord">${uiLabelMap.PartyShoppingListEmpty}.</@commonMsg>
-    </#if>
+    </@paginate>
+  <#else>
+    <@commonMsg type="result-norecord">${uiLabelMap.PartyShoppingListEmpty}.</@commonMsg>
+  </#if>
 </@section>
 
 <@section title=uiLabelMap.PartyQuickAddList>

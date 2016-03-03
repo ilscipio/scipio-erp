@@ -30,7 +30,6 @@ under the License.
 </#macro>
 
 <@section title=uiLabelMap.PageTitleEditCategoryProducts menuContent=menuContent>
-
       <#if (listSize > 0)>
         <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
             <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
@@ -70,7 +69,7 @@ under the License.
                         <input type="hidden" name="productCategoryId${suffix}" value="${(productCategoryMember.productCategoryId)!}" />
                         <input type="hidden" name="fromDate${suffix}" value="${(productCategoryMember.fromDate)!}" />
                         <#if hasExpired><#assign class="alert"></#if>
-                        <@htmlTemplate.renderDateTimeField name="thruDate${suffix}" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productCategoryMember.thruDate)!}" size="25" maxlength="30" id="thruDate${suffix}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        <@field type="datetime" name="thruDate${suffix}" class=class!'' value="${(productCategoryMember.thruDate)!}" size="25" maxlength="30" id="thruDate${suffix}" />
                         <@field type="input" size="5" name="sequenceNum${suffix}" value="${(productCategoryMember.sequenceNum)!}" />
                         <@field type="input" size="5" name="quantity${suffix}" value="${(productCategoryMember.quantity)!}" />
                         <br />

@@ -221,6 +221,7 @@ under the License.
     </div>
     <div class="screenlet-body">
         <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
+        <@fields type="default-manual-widgetonly">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <@table width="100%" cellspacing="0" cellpadding="1" border="0">
               <@tr>
@@ -249,12 +250,12 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonStartDate}</div></@td>
                 <@td>
-                  <@htmlTemplate.renderDateTimeField name="startDateTime" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(recurrenceInfo.startDateTime)!}" size="25" maxlength="30" id="startDateTime1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                  <@field type="datetime" name="startDateTime" value=(recurrenceInfo.startDateTime)! size="25" maxlength="30" id="startDateTime1" />
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonEndDate}</div></@td>
                 <@td>
-                  <@htmlTemplate.renderDateTimeField name="endDateTime" className="textBox" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(recurrenceRule.untilDateTime)!}" size="25" maxlength="30" id="endDateTime1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                  <@field type="datetime" name="endDateTime" class="+textBox" value=(recurrenceRule.untilDateTime)! size="25" maxlength="30" id="endDateTime1" />
                 </@td>
                 <@td>&nbsp;</@td>
               </@tr>
@@ -362,6 +363,7 @@ under the License.
                 </@tr>
               </#if>
             </@table>
+        </@fields>
         </form>
     </div>
 </div>
@@ -447,6 +449,7 @@ under the License.
                     </@td>
                     <@td nowrap="nowrap" align="center">
                       <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
+                      <@fields type="default-manual-widgetonly">
                         <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                         <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                         <input type="hidden" name="reservStart"/>
@@ -456,7 +459,7 @@ under the License.
                               
                                 <@tr>
                                     <@td width="1%">&nbsp;</@td>
-                                    <@td><@htmlTemplate.renderDateTimeField event="" action="" name="reservStartStr" className="inputBox"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${shoppingListItem.reservStart!}" size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></@td>
+                                    <@td><@field type="datetime" name="reservStartStr" class="+inputBox" value=shoppingListItem.reservStart! size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
                                     <@td><input type="text" class="inputBox" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
                                 </@tr>
                                 <@tr open=true close=false />
@@ -480,6 +483,7 @@ under the License.
                         <input size="6" class="inputBox" type="text" name="quantity" value="${shoppingListItem.quantity?string.number}"/>
                         <@td close=true open=false /></@tr close=true open=false /></@table>
                         </div>
+                      </@fields>
                       </form>
                     </@td>
                     <#--

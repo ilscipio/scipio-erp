@@ -121,16 +121,8 @@ under the License.
     <#if paginateEcommerceStyle??>
         <@paginationControls/>
     <#else>
-        <#include "component://common/webcommon/includes/htmlTemplate.ftl"/>
-        <#assign commonUrl = "category?category_id="+ (parameters.category_id!) + "&"/>
-        <#--assign viewIndex = viewIndex - 1/-->
-        <#assign viewIndexFirst = 0/>
-        <#assign viewIndexPrevious = viewIndex - 1/>
-        <#assign viewIndexNext = viewIndex + 1/>
-        <#assign viewIndexLast = Static["org.ofbiz.base.util.UtilMisc"].getViewLastIndex(listSize, viewSize) />
-        <#assign messageMap = {"lowCount":lowIndex, "highCount":highIndex, "total":listSize}/>
-        <#assign commonDisplaying = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)/>
-        <@nextPrev position="top" commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
+        <#assign paramStr = "category_id="+ (parameters.category_id!)/>
+        <@paginate mode="single" position="top" url=makeOfbizUrl("category") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1  />
     </#if>
       <#assign numCol = numCol?default(1)>
       <#assign numCol = numCol?number>
@@ -161,7 +153,7 @@ under the License.
     <#if paginateEcommerceStyle??>
         <@paginationControls/>
     <#else>
-        <@nextPrev position="bottom" commonUrl=commonUrl ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying=commonDisplaying paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" />
+        <@paginate mode="single" position="bottom" url=makeOfbizUrl("category") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1  />
     </#if>
 <#else>
     <hr />

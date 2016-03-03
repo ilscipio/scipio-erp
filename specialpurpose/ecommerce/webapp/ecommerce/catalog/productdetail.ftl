@@ -548,6 +548,7 @@ ${virtualVariantJavaScript!}
     
         <div id="addItemForm">
           <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform" >
+          <@fields type="default-manual-widgetonly">
           <fieldset>
             <#assign inStock = true />
             <#assign commentEnable = getPropertyValue("order.properties", "order.item.comment.enable")!"">
@@ -645,7 +646,7 @@ ${virtualVariantJavaScript!}
                 </div>
                 <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
                   <div>
-                    <label>Start Date(yyyy-mm-dd)</label><@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30" id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                    <label>Start Date(yyyy-mm-dd)</label><@field type="datetime" name="reservStart" value=startDate size="25" maxlength="30" id="reservStart1" dateType="date" dateDisplayType="date" />
                   </div>
                   <div>
                     <#--td nowrap="nowrap" align="right">Number<br />of days</@td><@td><input type="textt" size="4" name="reservLength"/></@td></@tr><@tr><@td>&nbsp;</@td><@td align="right" nowrap="nowrap">&nbsp;</td-->
@@ -683,12 +684,14 @@ ${virtualVariantJavaScript!}
                <div>minimum order quantity for ${productContentWrapper.get("PRODUCT_NAME", "html")!} is ${minimumQuantity!}</div>
             </#if>
             </fieldset>
+          </@fields>
           </form>
         </div>
         <div>
           <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
             <hr />
             <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+            <@fields type="default-manual-widgetonly">
               <fieldset>
               <input type="hidden" name="productId" value="${product.productId}" />
               <input type="hidden" name="product_id" value="${product.productId}" />
@@ -706,16 +709,20 @@ ${virtualVariantJavaScript!}
               &nbsp;&nbsp;
               <#--assign nowDate = Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("yyyy-MM-dd")-->
               <#if product.productTypeId! == "ASSET_USAGE">
-                  &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" />&nbsp;<br/>Number of&nbsp;persons&nbsp;&nbsp;<input type="text" size="4" name="reservPersons" value="1" />&nbsp;&nbsp;Qty&nbsp;&nbsp;<input type="text" size="5" name="quantity" value="1" />
+                  &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)<@field type="datetime" name="reservStartStr" value=startDate size="15" maxlength="30" id="reservStartStr"/>&nbsp;
+                  Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" />&nbsp;<br/>Number of&nbsp;persons&nbsp;&nbsp;<input type="text" size="4" name="reservPersons" value="1" />&nbsp;&nbsp;
+                  Qty&nbsp;&nbsp;<input type="text" size="5" name="quantity" value="1" />
               <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">
-                &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)&nbsp;&nbsp;&nbsp;<@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30" id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>&nbsp;&nbsp;Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" /><input type="hidden" size="4" name="reservPersons" value="1" /><br/>
-                Qty&nbsp;<input type="text" size="5" name="quantity" value="1" />
+                  &nbsp;${uiLabelMap.CommonStartDate} (yyyy-mm-dd)&nbsp;&nbsp;&nbsp;<@field type="datetime" name="reservStartStr" value=startDate size="15" maxlength="30" id="reservStartStr" />&nbsp;&nbsp;
+                  Number of&nbsp;days&nbsp;&nbsp;<input type="text" size="4" name="reservLength" /><input type="hidden" size="4" name="reservPersons" value="1" /><br/>
+                  Qty&nbsp;<input type="text" size="5" name="quantity" value="1" />
               <#else>
                   <input type="text" size="5" name="quantity" value="1" />
                   <input type="hidden" name="reservStartStr" value="" />
               </#if>
               <a href="javascript:addShoplistSubmit();" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>
+            </@fields>
             </form>
           <#else> <br />
             ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>

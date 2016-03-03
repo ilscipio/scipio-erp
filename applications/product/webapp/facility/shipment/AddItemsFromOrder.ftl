@@ -18,18 +18,12 @@ under the License.
 -->
 <#if shipment??>
 <@section title=uiLabelMap.PageTitleAddItemsFromOrder>
-        <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
-            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-            <div>
-                <span>${uiLabelMap.ProductOrderId}</span>
-                <span>
-                  <@htmlTemplate.lookupField value="${orderId!}" formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
-                </span>
-                <span>${uiLabelMap.ProductOrderShipGroupId}</span>
-                <input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-                <input type="submit" value="${uiLabelMap.CommonSelect}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-            </div>
-        </form>
+    <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
+        <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+        <@field type="lookup" value=orderId! label=uiLabelMap.ProductOrderId formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
+        <@field type="text" label=uiLabelMap.ProductOrderShipGroupId size="20" name="shipGroupSeqId" value=shipGroupSeqId!/>
+        <@field type="submit" text=uiLabelMap.CommonSelect class="${styles.link_run_sys!} ${styles.action_add!}"/>
+    </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductAddItemsShipment}: [${shipmentId!}]; ${uiLabelMap.ProductFromAnOrder}: [${orderId!}], ${uiLabelMap.ProductOrderShipGroupId}: [${shipGroupSeqId!}]">

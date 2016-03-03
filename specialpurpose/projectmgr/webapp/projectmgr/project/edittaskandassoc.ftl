@@ -126,17 +126,17 @@ under the License.
           </#if>
         </@field>
         <#if task??>
-          <@htmlTemplate.renderDateTimeField name="estimatedStartDate" label="${uiLabelMap.WorkEffortEstimatedStartDate}" value="${task.estimatedStartDate!}" size="25" maxlength="30" id="estimatedStartDate1" />
+          <@field type="datetime" name="estimatedStartDate" label=uiLabelMap.WorkEffortEstimatedStartDate value=task.estimatedStartDate! size="25" maxlength="30" id="estimatedStartDate1" />
         <#else>
-          <@htmlTemplate.renderDateTimeField name="estimatedStartDate" label="${uiLabelMap.WorkEffortEstimatedStartDate}" value="" size="25" maxlength="30" id="estimatedStartDate1" />
+          <@field type="datetime" name="estimatedStartDate" label=uiLabelMap.WorkEffortEstimatedStartDate value="" size="25" maxlength="30" id="estimatedStartDate1" />
         </#if>
          <#if task??>
-           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" />
+           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value=task.estimatedCompletionDate! size="25" maxlength="30" id="estimatedCompletionDate1" />
          <#else>
            <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value="" size="25" maxlength="30" id="estimatedCompletionDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="${task.actualStartDate!}" size="25" maxlength="30" id="actualStartDate1" />
+           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value=task.actualStartDate! size="25" maxlength="30" id="actualStartDate1" />
          <#else>
            <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="" size="25" maxlength="30" id="actualStartDate1" />
          </#if>

@@ -31,45 +31,36 @@ under the License.
 </@script>
 
 <form name="keywordsearchform" id="keywordSearchForm" method="post" action="<@ofbizUrl>keywordsearch?VIEW_SIZE=25&amp;PAGING=Y</@ofbizUrl>">
+  <@fields type="default-compact">
   <fieldset>
-    <div>
-      <label for="keywordSearchString">${uiLabelMap.ProductKeywords}:</label>
-      <input type="text" name="SEARCH_STRING" id="keywordSearchString" size="20" maxlength="50" value="${requestParameters.SEARCH_STRING!}" />
-    </div>
-    <div>
-      <label for="keywordSearchCategoryId">${uiLabelMap.ProductCategoryId}:</label>
-      <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="keywordsearchform" name="SEARCH_CATEGORY_ID" id="keywordSearchCategoryId" fieldFormName="LookupProductCategory"/>
-    </div>
-    <div>
-      <label for="keywordSearchCointains">${uiLabelMap.CommonNoContains}</label>
-      <input type="checkbox" name="SEARCH_CONTAINS" id="keywordSearchCointains" value="N" <#if requestParameters.SEARCH_CONTAINS! == "N">checked="checked"</#if> />
-      <label for="keywordSearchOperatorOr">${uiLabelMap.CommonAny}</label>
-      <input type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorOr" value="OR" <#if requestParameters.SEARCH_OPERATOR! != "AND">checked="checked"</#if> />
-      <label for="keywordSearchOperatorAnd">${uiLabelMap.CommonAll}</label>
-      <input type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorAnd" value="AND" <#if requestParameters.SEARCH_OPERATOR! == "AND">checked="checked"</#if> />
-    </div>
-    <div>
-      <input type="submit" name="find" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
-    </div>
-    </fieldset>
+    <@field type="input" label=uiLabelMap.ProductKeywords name="SEARCH_STRING" id="keywordSearchString" size="20" maxlength="50" value=requestParameters.SEARCH_STRING! />
+    <@field type="lookup" label=uiLabelMap.ProductCategoryId value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="keywordsearchform" name="SEARCH_CATEGORY_ID" id="keywordSearchCategoryId" fieldFormName="LookupProductCategory"/>
+
+    <@field type="generic">
+      <@field type="checkbox" name="SEARCH_CONTAINS" id="keywordSearchCointains" value="N" checked=((requestParameters.SEARCH_CONTAINS!) == "N") label=uiLabelMap.CommonNoContains />
+      <@field type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorOr" value="OR" checked=((requestParameters.SEARCH_OPERATOR!) != "AND") label=uiLabelMap.CommonAny />
+      <@field type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorAnd" value="AND" checked=((requestParameters.SEARCH_OPERATOR!) == "AND") label=uiLabelMap.CommonAll />
+    </@field>
+
+    <@field type="submit" name="find" text=uiLabelMap.CommonFind class="${styles.link_run_sys!} ${styles.action_find!}" />
+  </fieldset>
+  </@fields>
 </form>
 <form name="advancedsearchform" id="advancedSearchForm" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
+  <@fields type="default-compact">
   <fieldset>
-    <div>
-      <label for="searchCategoryId">${uiLabelMap.ProductCategoryId}:</label>
-      <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
-    </div>
-    <div>
-    <a href="javascript:document.getElementById('advancedSearchForm').submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.ProductAdvancedSearch}</a>
-    </div>
+    <@field type="lookup" label=uiLabelMap.ProductCategoryId value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
+    <@field type="submit" submitType="link" href="javascript:document.getElementById('advancedSearchForm').submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ProductAdvancedSearch />
   </fieldset>
+  </@fields>
 </form>
 <form name="productjumpform" id="productJumpForm" method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>">
+  <@fields type="default-compact">
   <fieldset>
     <input type="hidden" name="viewSize" value="20" />
     <input type="hidden" name="viewIndex" value="1" />
-    <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
-    <select name="DUMMYPAGE" id="dummyPage" onchange="submitProductJump()">
+    <@field type="lookup" value="${requestParameters.productId!}" formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
+    <@field type="select" name="DUMMYPAGE" id="dummyPage" onChange="submitProductJump()">
         <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-${uiLabelMap.ProductProductJump}-</option>
         <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>
         <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">${uiLabelMap.ProductProduct}</option>
@@ -98,6 +89,7 @@ under the License.
         <option value="<@ofbizUrl>EditProductConfigs</@ofbizUrl>">${uiLabelMap.ProductConfigs}</option>
         <option value="<@ofbizUrl>viewProductOrder</@ofbizUrl>">${uiLabelMap.OrderOrders}</option>
         <option value="<@ofbizUrl>EditProductCommunicationEvents</@ofbizUrl>">${uiLabelMap.PartyCommunications}</option>
-    </select>
+    </@field>
   </fieldset>
+  </@fields>
 </form>

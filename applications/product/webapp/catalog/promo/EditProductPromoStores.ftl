@@ -18,6 +18,7 @@ under the License.
 -->
 <#if productPromoId?? && productPromo??>
     <@section title=uiLabelMap.PageTitleEditProductPromoStores>
+      <@fields type="default-manual-widgetonly">
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
              <@thead>
                 <@tr class="header-row">
@@ -46,7 +47,7 @@ under the License.
                             <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                             <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productStorePromoAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                            <@field type="datetime" name="thruDate" class=class!'' value="${(productStorePromoAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" />
                             <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)!}" />
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
@@ -63,19 +64,22 @@ under the License.
                 </#list>
               </@tbody>
         </@table>
+      </@fields>
     </@section>
     
     <@section title=uiLabelMap.ProductAddStorePromo>
-            <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
-                <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                <input type="hidden" name="tryEntity" value="true"/>
-                <select name="productStoreId">
-                <#list productStores as productStore>
-                    <option value="${(productStore.productStoreId)!}">${(productStore.storeName)!} [${(productStore.productStoreId)!}]</option>
-                </#list>
-                </select>
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-            </form>
+        <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
+          <@fields type="default-compact">
+            <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+            <input type="hidden" name="tryEntity" value="true"/>
+            <@field type="select" name="productStoreId">
+              <#list productStores as productStore>
+                <option value="${(productStore.productStoreId)!}">${(productStore.storeName)!} [${(productStore.productStoreId)!}]</option>
+              </#list>
+            </@field>
+            <@field type="datetime" name="fromDate" value="" size="25" maxlength="30" id="fromDate1" />
+            <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}"/>
+          </@fields>
+        </form>
     </@section>
 </#if>

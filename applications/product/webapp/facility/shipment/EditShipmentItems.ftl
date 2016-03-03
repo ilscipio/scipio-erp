@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shipment??>
-<@section title=uiLabelMap.PageTitleEditShipmentItems>
+    <@section title=uiLabelMap.PageTitleEditShipmentItems>
         <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr class="header-row">
@@ -94,7 +94,7 @@ under the License.
             </#list>
             <#if (totalQuantityToPackage > 0)>
                 <@tr valign="middle" alt=alt_row>
-                    <form action="<@ofbizUrl>createShipmentItemPackageContent</@ofbizUrl>" method="post" name="createShipmentPackageContentForm${shipmentItemData_index}">
+                  <form action="<@ofbizUrl>createShipmentItemPackageContent</@ofbizUrl>" method="post" name="createShipmentPackageContentForm${shipmentItemData_index}">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
                     <@td>&nbsp;</@td>
@@ -112,7 +112,7 @@ under the License.
                     </@td>
                     <@td colspan="2">&nbsp;</@td>
                     <@td>&nbsp;</@td>
-                    </form>
+                  </form>
                 </@tr>
             </#if>
             <#-- toggle the row color -->
@@ -122,16 +122,22 @@ under the License.
             <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <@td>${uiLabelMap.ProductNewItem}</@td>
-                <@td colspan="2"><span>${uiLabelMap.ProductProductId}</span> 
-                  <@htmlTemplate.lookupField formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
+                <@td colspan="2">
+                  <@field type="lookup" label=uiLabelMap.ProductProductId formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 </@td>
-                <@td><span>${uiLabelMap.CommonQty}</span> <input type="text" name="quantity" size="5" value="0"/></@td>
-                <@td colspan="2"><span>${uiLabelMap.ProductProductDescription}</span> <input name="shipmentContentDescription" size="30" maxlength="255"/></@td>
-                <@td><a href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a></@td>
+                <@td>
+                  <@field type="input" label=uiLabelMap.CommonQty name="quantity" size="5" value="0"/>
+                </@td>
+                <@td colspan="2">
+                  <@field label=uiLabelMap.ProductProductDescription name="shipmentContentDescription" size="30" maxlength="255"/>
+                </@td>
+                <@td>
+                  <@field type="submit" submitType="link" href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
+                </@td>
             </form>
         </@tr>
-        </@table>
-</@section>
+      </@table>
+  </@section>
 <#else>
   <@section>
     <@commonMsg type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@commonMsg>

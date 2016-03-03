@@ -61,7 +61,7 @@ function insertImageName(type,nameValue) {
             <@cell columns=6>
               <#if !productCategory?has_content>
                 <#if productCategoryId?has_content>
-                  <@field type="input" label=uiLabelMap.CommonId name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
+                  <@field type="input" label=uiLabelMap.CommonId name="productCategoryId" size="20" maxlength="40" value=productCategoryId/>
                 <#else>
                   <@field type="input" label=uiLabelMap.CommonId name="productCategoryId" size="20" maxlength="40" value=""/>
                 </#if>
@@ -87,10 +87,10 @@ function insertImageName(type,nameValue) {
         </@row>
         <@row>
             <@cell columns=6>
-              <@field type="input" label=uiLabelMap.CommonName value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
+              <@field type="input" label=uiLabelMap.CommonName value=(productCategory.categoryName)! name="categoryName" size="60" maxlength="60"/>
             </@cell>
             <@cell columns=6>
-              <@field type="lookup" label=uiLabelMap.CommonParent value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
+              <@field type="lookup" label=uiLabelMap.CommonParent value=(productCategory.primaryParentCategoryId)?default('') formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
             </@cell>
         </@row>
         <@row>

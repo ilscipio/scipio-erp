@@ -132,7 +132,7 @@ under the License.
                   </#if>
               </@field>
               <@field type="generic" label=uiLabelMap.ProductDateReceived>
-                  <@field type="input" name="datetimeReceived" size="24" value="${nowTimestamp}" />
+                  <@field type="input" name="datetimeReceived" size="24" value=nowTimestamp />
                   <#-- <a href="#" onclick="setNow('datetimeReceived')" class="${styles.link_run_local!} ${styles.action_update!}">[Now]</a> -->
               </@field>
               
@@ -168,10 +168,10 @@ under the License.
                   </#list>
               </@field>
               <@field type="input" label=uiLabelMap.ProductQuantityRejected name="quantityRejected" size="5" value="0" />
-              <@field type="input" label=uiLabelMap.ProductQuantityAccepted name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
+              <@field type="input" label=uiLabelMap.ProductQuantityAccepted name="quantityAccepted" size="5" value=defaultQuantity?default(1)?string.number/>
               <#-- get the default unit cost -->
               <#if (!unitCost?? || unitCost == 0.0)><#assign unitCost = standardCosts.get(product.productId)?default(0)/></#if>
-              <@field type="input" label=uiLabelMap.ProductPerUnitPrice name="unitCost" size="10" value="${unitCost}"/>
+              <@field type="input" label=uiLabelMap.ProductPerUnitPrice name="unitCost" size="10" value=unitCost/>
               <@field type="submit" text=uiLabelMap.CommonReceive class="+${styles.link_run_sys!} ${styles.action_receive!}" />
             <@script>
               document.selectAllForm.quantityAccepted.focus();
@@ -358,7 +358,7 @@ under the License.
                             </#if>
                             <@td align="right">${uiLabelMap.OrderQtyOrdered} :</@td>
                             <@td align="right">
-                              <@field type="input" class="+inputBox" name="quantityOrdered" value="${orderItem.quantity}" size="6" maxlength="20" disabled="disabled" />
+                              <@field type="input" class="+inputBox" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled" />
                             </@td>
                           </@tr>
                         </@tr>
@@ -370,20 +370,20 @@ under the License.
                             <@td>${uiLabelMap.ProductPerUnitPriceOrder}:</@td>
                             <@td>
                               <input type="hidden" name="orderCurrencyUomId_o_${rowCount}" value="${orderCurrencyUomId!}" />
-                              <@field type="input" id="orderCurrencyUnitPrice_${rowCount}" name="orderCurrencyUnitPrice_o_${rowCount}" value="${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}" onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${rowCount}, '${orderCurrencyUomId}', '${currencyUomId}', '${rowCount}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />
+                              <@field type="input" id="orderCurrencyUnitPrice_${rowCount}" name="orderCurrencyUnitPrice_o_${rowCount}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${rowCount}, '${orderCurrencyUomId}', '${currencyUomId}', '${rowCount}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />
                               ${orderCurrencyUomId!}
                             </@td>
                             <@td>${uiLabelMap.ProductPerUnitPriceFacility}:</@td>
                             <@td>
                               <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
-                              <@field type="input" id="unitCost_${rowCount}" name="unitCost_o_${rowCount}" value="${itemCost}" readonly="readonly" size="6" maxlength="20" />
+                              <@field type="input" id="unitCost_${rowCount}" name="unitCost_o_${rowCount}" value=itemCost readonly="readonly" size="6" maxlength="20" />
                               ${currencyUomId!}
                             </@td>
                           <#else>
                             <@td align="right">${uiLabelMap.ProductPerUnitPrice}:</@td>
                             <@td align="right">
                               <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
-                              <@field type="input" name="unitCost_o_${rowCount}" value="${itemCost}" size="6" maxlength="20" />
+                              <@field type="input" name="unitCost_o_${rowCount}" value=itemCost size="6" maxlength="20" />
                               ${currencyUomId!}
                             </@td>
                           </#if>
@@ -431,8 +431,8 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-              <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
-              <@field type="lookup" label=uiLabelMap.ProductProductId tooltip=uiLabelMap.ProductLeaveEntirePoReceiving value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
+              <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value=requestParameters.purchaseOrderId! formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
+              <@field type="lookup" label=uiLabelMap.ProductProductId tooltip=uiLabelMap.ProductLeaveEntirePoReceiving value=requestParameters.productId! formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
               <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
           </form>
           </@section>

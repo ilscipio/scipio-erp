@@ -59,7 +59,7 @@ under the License.
               <#assign hasCurrent = true>
               <@tr>
                 <@td class="button-col">
-                  <@field type="radio" inline=true name="contactMechId" value="${curContactMechId}" checked=true />
+                  <@field type="radio" inline=true name="contactMechId" value=curContactMechId checked=true />
                 </@td>
                 <@td>
                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
@@ -103,7 +103,7 @@ under the License.
                 <#assign partyContactMech = postalAddressInfo.partyContactMech>
                 <@tr>
                   <@td class="button-col">
-                    <@field type="radio" inline=true name="contactMechId" value="${contactMech.contactMechId}" />
+                    <@field type="radio" inline=true name="contactMechId" value=contactMech.contactMechId />
                   </@td>
                   <@td>
                     <#list partyContactMechPurposes as partyContactMechPurpose>

@@ -69,9 +69,9 @@ under the License.
                         <input type="hidden" name="productCategoryId${suffix}" value="${(productCategoryMember.productCategoryId)!}" />
                         <input type="hidden" name="fromDate${suffix}" value="${(productCategoryMember.fromDate)!}" />
                         <#if hasExpired><#assign class="alert"></#if>
-                        <@field type="datetime" name="thruDate${suffix}" class=class!'' value="${(productCategoryMember.thruDate)!}" size="25" maxlength="30" id="thruDate${suffix}" />
-                        <@field type="input" size="5" name="sequenceNum${suffix}" value="${(productCategoryMember.sequenceNum)!}" />
-                        <@field type="input" size="5" name="quantity${suffix}" value="${(productCategoryMember.quantity)!}" />
+                        <@field type="datetime" name="thruDate${suffix}" class=class!'' value=(productCategoryMember.thruDate)! size="25" maxlength="30" id="thruDate${suffix}" />
+                        <@field type="input" size="5" name="sequenceNum${suffix}" value=(productCategoryMember.sequenceNum)! />
+                        <@field type="input" size="5" name="quantity${suffix}" value=(productCategoryMember.quantity)! />
                         <br />
                         <@field type="textarea" name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</@field>
                     </@td>

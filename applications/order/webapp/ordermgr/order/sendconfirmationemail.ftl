@@ -42,9 +42,9 @@ under the License.
         
         <#assign fieldValue>${productStoreEmailSetting.subject!(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}</#assign>
         <@field type="input" size="40" name="subject" value=fieldValue label=uiLabelMap.OrderSendConfirmationEmailSubject />
-        <@field type="input" size="40" name="sendTo" value="${sendTo}" label=uiLabelMap.OrderSendConfirmationEmailSendTo />
-        <@field type="input" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress!''}" label=uiLabelMap.OrderSendConfirmationEmailCCTo />
-        <@field type="input" size="40" name="sendBcc" value="${productStoreEmailSetting.bccAddress!''}" label=uiLabelMap.OrderSendConfirmationEmailBCCTo />
+        <@field type="input" size="40" name="sendTo" value=sendTo label=uiLabelMap.OrderSendConfirmationEmailSendTo />
+        <@field type="input" size="40" name="sendCc" value=productStoreEmailSetting.ccAddress!'' label=uiLabelMap.OrderSendConfirmationEmailCCTo />
+        <@field type="input" size="40" name="sendBcc" value=productStoreEmailSetting.bccAddress!'' label=uiLabelMap.OrderSendConfirmationEmailBCCTo />
       <#if productStoreEmailSetting.fromAddress??>
         <input type="hidden" name="sendFrom" value="${productStoreEmailSetting.fromAddress}" />
       <#else>

@@ -34,7 +34,7 @@ under the License.
   <@fields type="default-compact">
   <fieldset>
     <@field type="input" label=uiLabelMap.ProductKeywords name="SEARCH_STRING" id="keywordSearchString" size="20" maxlength="50" value=requestParameters.SEARCH_STRING! />
-    <@field type="lookup" label=uiLabelMap.ProductCategoryId value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="keywordsearchform" name="SEARCH_CATEGORY_ID" id="keywordSearchCategoryId" fieldFormName="LookupProductCategory"/>
+    <@field type="lookup" label=uiLabelMap.ProductCategoryId value=requestParameters.SEARCH_CATEGORY_ID! formName="keywordsearchform" name="SEARCH_CATEGORY_ID" id="keywordSearchCategoryId" fieldFormName="LookupProductCategory"/>
 
     <@field type="generic">
       <@field type="checkbox" name="SEARCH_CONTAINS" id="keywordSearchCointains" value="N" checked=((requestParameters.SEARCH_CONTAINS!) == "N") label=uiLabelMap.CommonNoContains />
@@ -49,7 +49,7 @@ under the License.
 <form name="advancedsearchform" id="advancedSearchForm" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
   <@fields type="default-compact">
   <fieldset>
-    <@field type="lookup" label=uiLabelMap.ProductCategoryId value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
+    <@field type="lookup" label=uiLabelMap.ProductCategoryId value=requestParameters.SEARCH_CATEGORY_ID! formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
     <@field type="submit" submitType="link" href="javascript:document.getElementById('advancedSearchForm').submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ProductAdvancedSearch />
   </fieldset>
   </@fields>
@@ -59,7 +59,7 @@ under the License.
   <fieldset>
     <input type="hidden" name="viewSize" value="20" />
     <input type="hidden" name="viewIndex" value="1" />
-    <@field type="lookup" value="${requestParameters.productId!}" formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
+    <@field type="lookup" value=requestParameters.productId! formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
     <@field type="select" name="DUMMYPAGE" id="dummyPage" onChange="submitProductJump()">
         <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-${uiLabelMap.ProductProductJump}-</option>
         <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>

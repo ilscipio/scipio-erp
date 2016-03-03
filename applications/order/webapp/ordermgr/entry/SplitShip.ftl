@@ -207,7 +207,7 @@ function submitForm(form, mode, value) {
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td align="center">
-                  <@field type="input" size="6" class="+inputBox" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
+                  <@field type="input" size="6" class="+inputBox" name="quantity" value=cartLine.getQuantity()?string.number/>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td>

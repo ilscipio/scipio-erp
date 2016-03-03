@@ -87,8 +87,8 @@ under the License.
         <form method="post" action="" name="searchShowParams">
           <input type="hidden" name="clearSearch" value="N" />
           <#assign searchParams = Static["org.ofbiz.product.product.ProductSearchSession"].makeSearchParametersString(session)>
-          <@field type="input" label=uiLabelMap.ProductPlainSearchParameters size="60" name="searchParameters" readonly=true value="${StringUtil.wrapString(searchParams)}" />
-          <@field type="input" label=uiLabelMap.ProductHtmlSearchParameters size="60" name="searchParameters" readonly=true value="${StringUtil.wrapString(searchParams)?html}" />
+          <@field type="input" label=uiLabelMap.ProductPlainSearchParameters size="60" name="searchParameters" readonly=true value=StringUtil.wrapString(searchParams) />
+          <@field type="input" label=uiLabelMap.ProductHtmlSearchParameters size="60" name="searchParameters" readonly=true value=StringUtil.wrapString(searchParams)?html />
         </form>
     </@section>
 

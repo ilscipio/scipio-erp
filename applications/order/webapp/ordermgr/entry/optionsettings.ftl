@@ -66,7 +66,7 @@ under the License.
                         </#if>
                       </#if>
                     </#assign>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="${shippingMethod}" id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=radioText checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=radioText checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>
@@ -74,15 +74,15 @@ under the License.
                 </@field>  
             <#else>
                 <input type="hidden" name="${shipGroupIndex!'0'}_shipping_method" value="STANDARD@_NA_" />
-                <@field type="input" label=uiLabelMap.OrderOrderShipEstimate name="${shipGroupIndex!'0'}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex!'0')!}" />
+                <@field type="input" label=uiLabelMap.OrderOrderShipEstimate name="${shipGroupIndex!'0'}_ship_estimate" value=cart.getItemShipGroupEstimate(shipGroupIndex!'0')! />
             </#if>
 
                 <@field type="generic" label=uiLabelMap.FacilityShipOnceOrAvailable>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="false" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "N") label=uiLabelMap.FacilityWaitEntireOrderReady/>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="true" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "Y") label=uiLabelMap.FacilityShipAvailable/>
                 </@field>
-                <@field type="datetime" label=uiLabelMap.OrderShipBeforeDate name="sgi${shipGroupIndex!'0'}_shipBeforeDate" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipBeforeDate"/>
-                <@field type="datetime" label=uiLabelMap.OrderShipAfterDate name="sgi${shipGroupIndex!'0'}_shipAfterDate" value="${(cart.getShipAfterDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipAfterDate"/>
+                <@field type="datetime" label=uiLabelMap.OrderShipBeforeDate name="sgi${shipGroupIndex!'0'}_shipBeforeDate" value=(cart.getShipBeforeDate(shipGroupIndex))! size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipBeforeDate"/>
+                <@field type="datetime" label=uiLabelMap.OrderShipAfterDate name="sgi${shipGroupIndex!'0'}_shipAfterDate" value=(cart.getShipAfterDate(shipGroupIndex))! size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipAfterDate"/>
                 <@field type="textarea" label=uiLabelMap.FacilitySpecialInstructions cols="30" rows="3" name="${shipGroupIndex!'0'}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</@field>
 
             <#if cart.getOrderType() == 'PURCHASE_ORDER'>

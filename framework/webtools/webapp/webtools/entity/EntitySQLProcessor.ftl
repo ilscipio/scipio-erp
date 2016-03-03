@@ -23,7 +23,7 @@ under the License.
                 </#list>
         </@field>
         <@field type="textarea" label=uiLabelMap.WebtoolsSqlCommand name="sqlCommand" cols="100" rows="5">${sqlCommand!}</@field>
-        <@field type="input" label=uiLabelMap.WebtoolsLimitRowsTo name="rowLimit" size="5" value="${rowLimit?default(200)}"/>
+        <@field type="input" label=uiLabelMap.WebtoolsLimitRowsTo name="rowLimit" size="5" value=rowLimit?default(200)/>
         <@field type="submit" name="submitButton" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_begin!}"/>
     </form>
 

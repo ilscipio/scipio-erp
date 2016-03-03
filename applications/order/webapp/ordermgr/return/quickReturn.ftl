@@ -71,7 +71,7 @@ under the License.
                 <@tr>
                   <@td align="right" width="1%" valign="top" nowrap="nowrap">
                     <#-- FIXME? labelArea=false is somewhat hardcode -->
-                    <@field type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}" checked=(shippingContactMechList?size == 1) labelArea=false />
+                    <@field type="radio" name="originContactMechId" value=shippingAddress.contactMechId checked=(shippingContactMechList?size == 1) labelArea=false />
                   </@td>
                   <@td width="99%" valign="top" nowrap="nowrap">
                       <#if shippingAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>

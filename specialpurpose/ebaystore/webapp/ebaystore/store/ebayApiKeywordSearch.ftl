@@ -71,13 +71,13 @@ under the License.
                   </#list>
                 </@field>
               <#else>
-                <@field type="lookup" value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
+                <@field type="lookup" value=requestParameters.SEARCH_CATEGORY_ID! formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
               </#if>
           </@field>
-          <@field type="input" label=uiLabelMap.ProductProductName name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
-          <@field type="input" label=uiLabelMap.ProductInternalName name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
+          <@field type="input" label=uiLabelMap.ProductProductName name="SEARCH_PRODUCT_NAME" size="20" value=requestParameters.SEARCH_PRODUCT_NAME! />
+          <@field type="input" label=uiLabelMap.ProductInternalName name="SEARCH_INTERNAL_PROD_NAME" size="20" value=requestParameters.SEARCH_INTERNAL_PROD_NAME! />
           <@field type="generic" label=uiLabelMap.ProductKeywords>
-              <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />
+              <@field type="input" name="SEARCH_STRING" size="40" value=requestParameters.SEARCH_STRING! />
               <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
               <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
           </@field>

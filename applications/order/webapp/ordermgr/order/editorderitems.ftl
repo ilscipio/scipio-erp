@@ -356,9 +356,9 @@ under the License.
                             <input type="text" name="icm_${orderItem.orderItemSeqId}" value="${orderItem.comments!}" size="30" maxlength="60"/>
                             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
                               ${uiLabelMap.OrderEstimatedShipDate}
-                              <@field type="datetime" name="isdm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedShipDate!}" size="25" maxlength="30" id="isdm_${orderItem.orderItemSeqId}" />
+                              <@field type="datetime" name="isdm_${orderItem.orderItemSeqId}" value=orderItem.estimatedShipDate! size="25" maxlength="30" id="isdm_${orderItem.orderItemSeqId}" />
                               ${uiLabelMap.OrderOrderQuoteEstimatedDeliveryDate}
-                              <@field type="datetime" name="iddm_${orderItem.orderItemSeqId}" value="${orderItem.estimatedDeliveryDate!}" size="25" maxlength="30" id="iddm_${orderItem.orderItemSeqId}" />
+                              <@field type="datetime" name="iddm_${orderItem.orderItemSeqId}" value=orderItem.estimatedDeliveryDate! size="25" maxlength="30" id="iddm_${orderItem.orderItemSeqId}" />
                     </#if>
                         </@td>
                         <@td colspan="2"></@td>

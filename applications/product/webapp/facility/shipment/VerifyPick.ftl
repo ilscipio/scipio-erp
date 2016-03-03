@@ -66,7 +66,7 @@ under the License.
       <#-- select picklist bin form -->
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-          <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
+          <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=picklistBinId!/>
           <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>

@@ -36,7 +36,7 @@ under the License.
     </div>
     <@section id="login-box-content">
         <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
-            <@field type="input" name="USERNAME" value="${username}" size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label="${labelUsername!}"/>
+            <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=labelUsername!/>
             <@row>
                 <@cell columns=12 >
                     <a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>

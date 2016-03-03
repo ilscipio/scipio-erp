@@ -25,7 +25,7 @@ under the License.
                         <option<#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                     </#list>
                 </@field>
-                <@field type="input" label=uiLabelMap.ProductName value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
+                <@field type="input" label=uiLabelMap.ProductName value=(productCategory.categoryName)! name="categoryName" size="60" maxlength="60"/>
                 <@field type="textarea" label=uiLabelMap.ProductCategoryDescription name="description" cols="60" rows="2">${(productCategory.description)!}</@field>
                 <@field type="textarea" label=uiLabelMap.ProductLongDescription name="longDescription" cols="60" rows="7">${(productCategory.longDescription)!}</@field>
                 <#assign fieldValue><#if productCategory?has_content>${productCategory.detailScreen!}</#if></#assign>

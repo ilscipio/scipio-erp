@@ -164,7 +164,7 @@ under the License.
                                         <#assign quantityToReceive = 0>
                                     </#if>
                                     <#assign totalReadyToReceive = totalReadyToReceive + quantityToReceive/>
-                                    <@field type="input" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value="${quantityToReceive}"/>
+                                    <@field type="input" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value=quantityToReceive/>
                                 </@td>
                                 <@td>
                                     <@field type="select" name="inventoryItemTypeId_o_${rowCount}">

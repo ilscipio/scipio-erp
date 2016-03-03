@@ -56,7 +56,7 @@ under the License.
           <@field type="input" required=true name="workEffortName" label=uiLabelMap.CommonName value=""/>
         </#if>
         <#if task??>
-          <@field type="input" name="description" label=uiLabelMap.CommonDescription value="${task.description!}"/>
+          <@field type="input" name="description" label=uiLabelMap.CommonDescription value=task.description!/>
         <#else>
           <@field type="input" name="description" label=uiLabelMap.CommonDescription value=""/>
         </#if>
@@ -141,7 +141,7 @@ under the License.
            <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="" size="25" maxlength="30" id="actualStartDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" />
+           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value=task.actualCompletionDate! size="25" maxlength="30" id="actualCompletionDate2" />
          <#else>
            <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value="" size="25" maxlength="30" id="actualCompletionDate2" />
          </#if>

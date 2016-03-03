@@ -74,7 +74,7 @@ under the License.
         <#else>
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
-        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_sales" value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_sales" value=parameters.userLogin.userLoginId formName="salesentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
         <@field type="lookup" label=uiLabelMap.OrderCustomer id="partyId" value='${thisPartyId!}' formName="salesentryform" name="partyId" fieldFormName="LookupCustomerName"/>
       </form>
     </@section>
@@ -110,7 +110,7 @@ under the License.
                 </#if>
             </#list>
         </@field>
-        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_purchase" value="${parameters.userLogin.userLoginId}" formName="poentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_purchase" value=parameters.userLogin.userLoginId formName="poentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
         <@field type="select" label=uiLabelMap.PartySupplier name="supplierPartyId">
             <option value="">${uiLabelMap.OrderSelectSupplier}</option>
             <#list suppliers as supplier>

@@ -34,7 +34,7 @@ under the License.
         </@field>
     </#if>
     <@field type="generic" label=uiLabelMap.ProductKeywords>
-        <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />&nbsp;
+        <@field type="input" name="SEARCH_STRING" size="40" value=requestParameters.SEARCH_STRING! />&nbsp;
         <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
         <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll />
     </@field>

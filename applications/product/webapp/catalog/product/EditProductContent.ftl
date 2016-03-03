@@ -42,11 +42,11 @@ under the License.
     <@section>
         <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" name="productForm">
             <input type="hidden" name="productId" value="${productId!}"/>
-            <@field type="input" label=uiLabelMap.ProductProductName name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
+            <@field type="input" label=uiLabelMap.ProductProductName name="productName" value=(product.productName?html)! size="30" maxlength="60"/>
             <@field type="textarea" label=uiLabelMap.ProductProductDescription name="description" cols="60" rows="2">${(product.description)!}</@field>
             <@field type="textarea" label=uiLabelMap.ProductLongDescription class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
             <#assign fieldTooltip>${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</#assign>
-            <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" value="${(product.detailScreen)!}" size="60" maxlength="250" tooltip=fieldTooltip/>
+            <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" value=(product.detailScreen)! size="60" maxlength="250" tooltip=fieldTooltip/>
             <#-- Cato: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>
               <#if (product.smallImageUrl)??>
@@ -54,7 +54,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductSmallImage labelDetail=labelDetail>
-                <@field type="input" name="smallImageUrl" value="${(product.smallImageUrl)!''}" size="60" maxlength="255"/>
+                <@field type="input" name="smallImageUrl" value=(product.smallImageUrl)!'' size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -70,7 +70,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductMediumImage labelDetail=labelDetail>
-                <@field type="input" name="mediumImageUrl" value="${(product.mediumImageUrl)!''}" size="60" maxlength="255"/>
+                <@field type="input" name="mediumImageUrl" value=(product.mediumImageUrl)!'' size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -86,7 +86,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductLargeImage labelDetail=labelDetail>
-                <@field type="input" name="largeImageUrl" value="${(product.largeImageUrl)!''}" size="60" maxlength="255"/>
+                <@field type="input" name="largeImageUrl" value=(product.largeImageUrl)!'' size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -102,7 +102,7 @@ under the License.
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductDetailImage labelDetail=labelDetail>
-                <@field type="input" name="detailImageUrl" value="${(product.detailImageUrl)!''}" size="60" maxlength="255"/>
+                <@field type="input" name="detailImageUrl" value=(product.detailImageUrl)!'' size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -118,7 +118,7 @@ under the License.
                   </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductOriginalImage labelDetail=labelDetail>
-                <@field type="input" name="originalImageUrl" value="${(product.originalImageUrl)!''}" size="60" maxlength="255"/>
+                <@field type="input" name="originalImageUrl" value=(product.originalImageUrl)!'' size="60" maxlength="255"/>
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>

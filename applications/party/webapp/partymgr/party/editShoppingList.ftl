@@ -68,8 +68,8 @@ under the License.
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
         <#assign isAutoSave = ((shoppingList.listName!"") == "auto-save")>
-        <@field type="input" label=uiLabelMap.PartyListName size="25" name="listName" value="${shoppingList.listName}" disabled=isAutoSave />
-        <@field type="input" label=uiLabelMap.CommonDescription size="70" name="description" value="${shoppingList.description!}" disabled=isAutoSave />
+        <@field type="input" label=uiLabelMap.PartyListName size="25" name="listName" value=shoppingList.listName disabled=isAutoSave />
+        <@field type="input" label=uiLabelMap.CommonDescription size="70" name="description" value=shoppingList.description! disabled=isAutoSave />
         <@field type="select" label=uiLabelMap.PartyListType name="shoppingListTypeId" disabled=isAutoSave>
               <#if shoppingListType??>
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
@@ -207,7 +207,7 @@ under the License.
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
       <@field type="input" name="productId" label=uiLabelMap.PartyProduct value="" />
-      <@field type="input" size="5" name="quantity" label=uiLabelMap.CommonQuantity value="${requestParameters.quantity?default('1')}" />
+      <@field type="input" size="5" name="quantity" label=uiLabelMap.CommonQuantity value=requestParameters.quantity?default('1') />
       <@field type="submit" text=uiLabelMap.PartyAddToShoppingList class="+${styles.link_run_sys!} ${styles.action_add!}" />
     </form>
 </@section>

@@ -35,9 +35,9 @@ under the License.
     </@field>
 <#--
     <@field type="generic" label="Feature IDs">
-        <@field type="input" class="+inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
-        <@field type="input" class="+inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
-        <@field type="input" class="+inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
+        <@field type="input" class="+inputBox" name="SEARCH_FEAT" size="15" value=requestParameters.SEARCH_FEAT!/>
+        <@field type="input" class="+inputBox" name="SEARCH_FEAT2" size="15" value=requestParameters.SEARCH_FEAT!/>
+        <@field type="input" class="+inputBox" name="SEARCH_FEAT3" size="15" value=requestParameters.SEARCH_FEAT!/>
     </@field>
 -->
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>

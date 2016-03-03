@@ -69,9 +69,9 @@ under the License.
             <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="generic" label=uiLabelMap.ProductOrderId>
-                    <@field type="input" inline=true name="orderId" size="20" maxlength="20" value="${orderId!}"/>
+                    <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=orderId!/>
                     <span>/</span>
-                    <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId!'00001'}"/>
+                    <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!'00001'/>
                     <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label=uiLabelMap.ProductHideGrid />
                 </@field>
                 <@field type="submitarea">
@@ -87,7 +87,7 @@ under the License.
             <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
-                    <@field type="input" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
+                    <@field type="input" name="picklistBinId" size="29" maxlength="60" value=picklistBinId!/>
                     <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label=uiLabelMap.ProductHideGrid/>
                 </@field>
                 <@field type="submitarea">
@@ -283,7 +283,7 @@ under the License.
                           <@td align="right">${packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId, itemInfo.productId)}</@td>
                           <@td>&nbsp;</@td>
                           <@td align="center">
-                            <@field type="input" size="7" name="qty_${rowKey}" value="${inputQty}" />
+                            <@field type="input" size="7" name="qty_${rowKey}" value=inputQty />
                           </@td>
                           <@td align="center">
                             <@field type="input" size="7" name="wgt_${rowKey}" value="" />
@@ -353,7 +353,7 @@ under the License.
                                 <br />
                                 <#list packageSeqIds as packageSeqId>
                                     ${uiLabelMap.ProductPackage} ${packageSeqId}
-                                    <@field type="input" size="7" name="packageWeight_${packageSeqId}" value="${packingSession.getPackageWeight(packageSeqId?int)!}" />
+                                    <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=packingSession.getPackageWeight(packageSeqId?int)! />
                                     <br />
                                 </#list>
                                 <#if orderItemShipGroup?has_content>
@@ -384,7 +384,7 @@ under the License.
                         <@td nowrap="nowrap">
                             <span>${uiLabelMap.ProductAdditionalShippingCharge}:</span>
                             <br />
-                            <@field type="input" name="additionalShippingCharge" value="${packingSession.getAdditionalShippingCharge()!}" size="20"/>
+                            <@field type="input" name="additionalShippingCharge" value=packingSession.getAdditionalShippingCharge()! size="20"/>
                             <#if packageSeqIds?has_content>
                                 <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductEstimateShipCost}</a>
                                 <br />

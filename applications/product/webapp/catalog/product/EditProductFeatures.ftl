@@ -67,7 +67,7 @@ under the License.
     <#assign hasExpired = false>
     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
             <#if hasExpired><#assign class="alert"><#else><#assign class=""></#if>
-            <@field type="datetime" name="thruDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.thruDate)!}" size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" />
+            <@field type="datetime" name="thruDate_o_${productFeatureAndAppl_index}" value=(productFeatureAndAppl.thruDate)! size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" />
             <input type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />
             <input type="text" size="5" name="sequenceNum_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.sequenceNum)!}" />
             <select name="productFeatureApplTypeId_o_${productFeatureAndAppl_index}" size="1">

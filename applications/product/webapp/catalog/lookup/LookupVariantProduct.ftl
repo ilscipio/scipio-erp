@@ -73,7 +73,7 @@ under the License.
         <@fields type="default-nolabels">
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
-        <@field type="input" name="productVariantId" value="${productVariantId}" />
+        <@field type="input" name="productVariantId" value=productVariantId />
         <@field type="submit" text=uiLabelMap.ProductQuickAddVariants class="+${styles.link_run_session!} ${styles.action_add!}" />
         </@fields>
       </form>

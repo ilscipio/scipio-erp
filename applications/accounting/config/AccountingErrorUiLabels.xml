@@ -632,7 +632,7 @@
         <value xml:lang="hi_IN">सर्विस createPaymentFromPreference पर अमल(execute) करने में असफल</value>
         <value xml:lang="it">Fallita esecuzione del servizio createPaymentFromPreference</value>
         <value xml:lang="ja">参照から支払作成サービスの実行に失敗しました</value>
-        <value xml:lang="nl">CATO --service 'createPaymentFromPreference' is niet uitgevoerd.</value>
+        <value xml:lang="nl">CATO -service 'createPaymentFromPreference' is niet uitgevoerd.</value>
         <value xml:lang="pt">Falha ao executar o serviço createPaymentFromPreference</value>
         <value xml:lang="th">การดำเนินการผิดพลาด createPaymentFromPreference</value>
         <value xml:lang="zh">执行服务createPaymentFromPreference时失败</value>

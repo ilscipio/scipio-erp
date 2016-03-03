@@ -128,6 +128,7 @@ under the License.
                                 <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">

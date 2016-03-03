@@ -62,8 +62,16 @@ under the License.
             <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/dashboard/Test.groovy"/>          -->  
         </actions>
         <row-actions>
-            <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>            
+            <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
+            <entity-one value-field="partyFrom" entity-name="PartyNameView">
+                <field-map field-name="partyId" value="${partyIdFrom}" />
+            </entity-one>
+            <entity-one value-field="partyTo" entity-name="PartyNameView">
+                <field-map field-name="partyId" value="${partyIdTo}" />
+            </entity-one>
+            
         </row-actions>
+        <field name="effectiveDate"><display type="date"/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
@@ -72,28 +80,20 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
         <!--<field name="comments" use-when="isReduced==false"><display/></field> -->
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
-                <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_nav_info_id}">
-                    <parameter param-name="partyId" from-field="partyIdFrom"/>
-                </sub-hyperlink>
-                 -->
-            </display-entity>
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyFrom.groupName} ${partyFrom.firstName} ${partyFrom.lastName}" link-style="${styles.link_nav_info_id}">
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink>
         </field>
+        <!--
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
-                <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_nav_info_id}">
+                <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyTo.groupName} ${partyTo.firstName} ${partyTo.lastName}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
-                </sub-hyperlink>
-                 -->
-            </display-entity>
-        </field>
-        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="PaymentType"/></field>
-        <field name="effectiveDate"><display type="date"/></field>
+                </hyperlink>
+        </field>-->
+        <!-- <field name="paymentTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="PaymentType"/></field> -->
         <field name="currencyUomId"><hidden/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
-        <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <!-- <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field> -->
     </form>
     
     

@@ -9814,7 +9814,7 @@ div.form-field-entry div.field-entry-widget {
   cursor: default;
 }
 /* line 76, ../scss/_base.scss */
-.side-nav li.disabled > a, .side-nav li.disabled > button {
+.side-nav li.disabled > a {
   color: #999999;
   cursor: default;
 }

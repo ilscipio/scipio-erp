@@ -27,7 +27,7 @@ under the License.
 <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
 <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
 <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
-<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
+<#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
 
 <@row>
   <@cell class="${styles.grid_large!}3 ${styles.grid_large!}centered login-box" last=true id="login">

@@ -51,8 +51,8 @@ under the License.
               <option <#if parameters.labelLocaleName?? && parameters.labelLocaleName == localeFound>selected="selected"</#if> value="${localeFound}" lang="${langAttr}" dir="${langDir}"><#if locale?? && locale?has_content>${locale.getDisplayName(locale)}<#else>${localeFound}</#if></option>
             </#list>
         </@field>
-        <@field type="checkbox" name="onlyNotUsedLabels" value="Y" checked=requestParameters.onlyNotUsedLabels?default("N") label=uiLabelMap.WebtoolsLabelManagerOnlyNotUsedLabels/>
-        <@field type="checkbox" name="onlyMissingTranslations" value="Y" checked=requestParameters.onlyMissingTranslations?default("N") label=uiLabelMap.WebtoolsLabelManagerOnlyMissingTranslations/>
+        <@field type="checkbox" name="onlyNotUsedLabels" value="Y" checked=requestParameters.onlyNotUsedLabels!"N" label=uiLabelMap.WebtoolsLabelManagerOnlyNotUsedLabels/>
+        <@field type="checkbox" name="onlyMissingTranslations" value="Y" checked=requestParameters.onlyMissingTranslations!"N" label=uiLabelMap.WebtoolsLabelManagerOnlyMissingTranslations/>
           <#if (duplicatedLocalesLabels > 0)>
             <@row>
                 <@cell>${uiLabelMap.WebtoolsLabelManagerWarningMessage} (${duplicatedLocalesLabels})

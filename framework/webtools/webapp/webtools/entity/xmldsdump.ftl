@@ -85,7 +85,7 @@ under the License.
 
     <@grid>
           <#assign entCount = 0>
-          <#assign checkAll = parameters.checkAll?default("false")>
+          <#assign checkAll = parameters.checkAll!"false">
           <#list modelEntities as modelEntity>
             <#assign entCount = entCount + 1>
             <#assign check = checkAll/>

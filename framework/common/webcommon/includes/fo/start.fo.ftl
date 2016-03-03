@@ -24,7 +24,7 @@ under the License.
   </#list>
 </#if>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    font-family="${(layoutSettings.defaultFontFamily)?default("Helvetica, sans-serif")}"
+    font-family="${(layoutSettings.defaultFontFamily)!"Helvetica, sans-serif"}"
     font-size="${(layoutSettings.defaultFontSize)!"12pt"}">
   <fo:layout-master-set>
 <#if layoutSettings.pageMasters?has_content>
@@ -39,6 +39,6 @@ under the License.
   <#include "component://common/webcommon/includes/fo/pm-letter.fo.ftl"/>
 </#if>
   </fo:layout-master-set>
-  <#assign masterReference = (layoutSettings.masterReference)?default("letter-portrait")/>
+  <#assign masterReference = (layoutSettings.masterReference)!"letter-portrait"/>
   <fo:page-sequence master-reference="${masterReference}">
 </#escape>

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign enableEdit = parameters.enableEdit?default("false")>
+<#assign enableEdit = parameters.enableEdit!"false">
 <#--
 <@script>
 var numTabs=${(entity.getRelationsSize()+1)};

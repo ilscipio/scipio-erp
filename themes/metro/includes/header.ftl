@@ -20,7 +20,7 @@ under the License.
 <#-- Applications -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey!></#if>
 <#if (externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey!></#if>
-<#assign ofbizServerName = application.getAttribute("_serverId")?default("default-server")>
+<#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
 <#assign contextPath = request.getContextPath()>
 <#assign displayApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "main")>
 <#assign displaySecondaryApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")>

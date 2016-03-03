@@ -32,7 +32,7 @@ under the License.
         "h3":"font-weight=\"bold\" font-style=\"italic\"",
         "error":"color=\"red\""}/>
     <#list style?split(' ') as styleItem>
-        <#assign foStyle = foStyles[styleItem]?default("")/>
+        <#assign foStyle = foStyles[styleItem]!""/>
         ${foStyle!""}
     </#list>
 </#macro>

@@ -22,7 +22,7 @@ under the License.
     <#assign langDir = "rtl">
 </#if>
 <#assign forstatic = false/>
-<#if (parameters.forstatic)?default("false") == "true">
+<#if ((parameters.forstatic)!"false") == "true">
   <#assign forstatic = true/>
 </#if>
 <html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">

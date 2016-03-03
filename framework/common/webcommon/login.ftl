@@ -26,7 +26,7 @@ under the License.
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
 <#assign logo><img src="<@ofbizContentUrl><#if headerImageUrl?has_content>${StringUtil.wrapString(headerImageUrl)}<#else>/images/cato/cato-logo-small.png</#if></@ofbizContentUrl>"/></#assign>
-<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
+<#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
 <#if username != "">
   <#assign focusName = false>
 <#else>

@@ -46,7 +46,7 @@ under the License.
         </fo:simple-page-master>
     </fo:layout-master-set>
 
-    <fo:page-sequence master-reference="${pageLayoutName?default("main-page")}">
+    <fo:page-sequence master-reference="${pageLayoutName!"main-page"}">
 
         <#-- Header -->
         <#-- The elements it it are positioned using a table composed by one row

@@ -40,7 +40,7 @@ under the License.
         </fo:simple-page-master>
     </fo:layout-master-set>
 
-    <fo:page-sequence master-reference="${pageLayoutName?default("simple-portrait")}" font-size="8pt">
+    <fo:page-sequence master-reference="${pageLayoutName!"simple-portrait"}" font-size="8pt">
         <#-- Header -->
         <#-- The elements it it are positioned using a table composed by one row
              composed by two cells (each 50% of the total table that is 100% of the page):

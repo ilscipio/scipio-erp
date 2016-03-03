@@ -54,7 +54,7 @@ function makeExpDate() {
 
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
-           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
          </@menu>
         
           <#-- initial screen when we have a associated party -->
@@ -106,7 +106,7 @@ function makeExpDate() {
                           CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label><br/>
-                        <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip="${uiLabelMap.OrderCardSecurityCode}"/>
+                        <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip=uiLabelMap.OrderCardSecurityCode/>
                     </#assign>
                     <#assign actionContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
                     <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
@@ -187,12 +187,12 @@ function makeExpDate() {
 
             <#-- generic address information -->
             <#assign fieldDisabled = requestParameters.useShipAddr??>
-            <@field type="input" label="${uiLabelMap.CommonToName}" size="30" maxlength="60" name="toName" value="${toName}" disabled=fieldDisabled />
-            <@field type="input" label="${uiLabelMap.CommonAttentionName}" size="30" maxlength="60" name="attnName" value="${postalFields.attnName!}" disabled=fieldDisabled />
+            <@field type="input" label=uiLabelMap.CommonToName size="30" maxlength="60" name="toName" value="${toName}" disabled=fieldDisabled />
+            <@field type="input" label=uiLabelMap.CommonAttentionName size="30" maxlength="60" name="attnName" value="${postalFields.attnName!}" disabled=fieldDisabled />
             <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value="${postalFields.address1!}" disabled=fieldDisabled />
             <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value="${postalFields.address2!}" disabled=fieldDisabled />
-            <@field type="input" label="${uiLabelMap.CommonCity}" required=true size="30" maxlength="30" name="city" value="${postalFields.city!}" disabled=fieldDisabled />
-            <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId" disabled=fieldDisabled>
+            <@field type="input" label=uiLabelMap.CommonCity required=true size="30" maxlength="30" name="city" value="${postalFields.city!}" disabled=fieldDisabled />
+            <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" disabled=fieldDisabled>
               <#if postalFields.stateProvinceGeoId??>
                 <option>${postalFields.stateProvinceGeoId}</option>
                 <option value="${postalFields.stateProvinceGeoId}">---</option>
@@ -200,8 +200,8 @@ function makeExpDate() {
                 <option value=""></option>
                 ${screens.render("component://common/widget/CommonScreens.xml#states")}
             </@field>
-            <@field type="input" label="${uiLabelMap.CommonZipPostalCode}" required=true size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode!}" disabled=fieldDisabled />
-            <@field type="select" label="${uiLabelMap.CommonCountry}" required=true name="countryGeoId" disabled=fieldDisabled>
+            <@field type="input" label=uiLabelMap.CommonZipPostalCode required=true size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode!}" disabled=fieldDisabled />
+            <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" disabled=fieldDisabled>
               <#if postalFields.countryGeoId??>
                 <option>${postalFields.countryGeoId}</option>
                 <option value="${postalFields.countryGeoId}">---</option>
@@ -218,18 +218,18 @@ function makeExpDate() {
               
               <hr />
 
-              <@field type="input" label="${uiLabelMap.AccountingCompanyNameCard}" class="+inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
-              <@field type="select" label="${uiLabelMap.AccountingPrefixCard}" name="titleOnCard">
+              <@field type="input" label=uiLabelMap.AccountingCompanyNameCard class="+inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
+              <@field type="select" label=uiLabelMap.AccountingPrefixCard name="titleOnCard">
                   <option value="">${uiLabelMap.CommonSelectOne}</option>
                   <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMr}</option>
                   <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMrs}</option>
                   <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMs}</option>
                   <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleDr}</option>
               </@field>
-              <@field type="input" label="${uiLabelMap.AccountingFirstNameCard}" required=true size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
-              <@field type="input" label="${uiLabelMap.AccountingMiddleNameCard}" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
-              <@field type="input" label="${uiLabelMap.AccountingLastNameCard}" required=true size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
-              <@field type="select" label="${uiLabelMap.AccountingSuffixCard}" name="suffixOnCard">
+              <@field type="input" label=uiLabelMap.AccountingFirstNameCard required=true size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
+              <@field type="input" label=uiLabelMap.AccountingMiddleNameCard size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
+              <@field type="input" label=uiLabelMap.AccountingLastNameCard required=true size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
+              <@field type="select" label=uiLabelMap.AccountingSuffixCard name="suffixOnCard">
                   <option value="">${uiLabelMap.CommonSelectOne}</option>
                   <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> checked="checked"</#if>>Jr.</option>
                   <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> checked="checked"</#if>>Sr.</option>
@@ -240,16 +240,16 @@ function makeExpDate() {
                   <option<#if ((creditCard.suffixOnCard)?default("") == "V")> checked="checked"</#if>>V</option>
               </@field>
 
-              <@field type="select" label="${uiLabelMap.AccountingCardType}" required=true name="cardType">
+              <@field type="select" label=uiLabelMap.AccountingCardType required=true name="cardType">
                 <#if creditCard.cartType??>
                   <option>${creditCard.cardType}</option>
                   <option value="${creditCard.cardType}">---</option>
                 </#if>
                   ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
               </@field>
-              <@field type="input" label="${uiLabelMap.AccountingCardNumber}" required=true size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
+              <@field type="input" label=uiLabelMap.AccountingCardNumber required=true size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
 
-              <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}" required=true>
+              <@field type="generic" label=uiLabelMap.AccountingExpirationDate required=true>
                   <#assign expMonth = "">
                   <#assign expYear = "">
                   <#if creditCard?? && creditCard.expDate??>
@@ -274,7 +274,7 @@ function makeExpDate() {
                     ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
                   </@field>
               </@field>
-              <@field type="input" label="${uiLabelMap.CommonDescription}" size="20" maxlength="30" name="description" value="${creditCard.description!}"/>
+              <@field type="input" label=uiLabelMap.CommonDescription size="20" maxlength="30" name="description" value="${creditCard.description!}"/>
                 </#if>
 
                 <#-- eft fields -->
@@ -285,18 +285,18 @@ function makeExpDate() {
              
               <hr />
            
-              <@field type="input" label="${uiLabelMap.AccountingNameAccount}" required=true size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
-              <@field type="input" label="${uiLabelMap.AccountingCompanyNameAccount}" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
-              <@field type="input" label="${uiLabelMap.AccountingBankName}" required=true size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
-              <@field type="input" label="${uiLabelMap.AccountingRoutingNumber}" required=true size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
-              <@field type="select" label="${uiLabelMap.AccountingAccountType}" required=true name="accountType">
+              <@field type="input" label=uiLabelMap.AccountingNameAccount required=true size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
+              <@field type="input" label=uiLabelMap.AccountingCompanyNameAccount size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
+              <@field type="input" label=uiLabelMap.AccountingBankName required=true size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
+              <@field type="input" label=uiLabelMap.AccountingRoutingNumber required=true size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
+              <@field type="select" label=uiLabelMap.AccountingAccountType required=true name="accountType">
                   <option>${eftAccount.accountType!}</option>
                   <option></option>
                   <option>Checking</option>
                   <option>Savings</option>
               </@field>
-              <@field type="input" label="${uiLabelMap.AccountingAccountNumber}" required=true size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
-              <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
+              <@field type="input" label=uiLabelMap.AccountingAccountNumber required=true size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
+              <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
             </#if>
 
         <#else>

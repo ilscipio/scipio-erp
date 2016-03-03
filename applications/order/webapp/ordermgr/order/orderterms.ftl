@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if orderTerms?has_content>
-  <@section title="${uiLabelMap.OrderOrderTerms}">
+  <@section title=uiLabelMap.OrderOrderTerms>
     <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead> 
         <@tr class="header-row">

@@ -80,29 +80,29 @@ under the License.
                     </#if>
                 </@field>
                 </#list>
-                <@field type="display" label="${uiLabelMap.ProductInternalName}">
+                <@field type="display" label=uiLabelMap.ProductInternalName>
                     <input type="hidden" name="internalName" value="${requestParameters.internalName!}"/>
                         <div>&nbsp;${requestParameters.internalName?default("&nbsp;")}</div>
                 </@field>
-                <@field type="display" label="${uiLabelMap.ProductProductName}">
+                <@field type="display" label=uiLabelMap.ProductProductName>
                     <input type="hidden" name="productName" value="${requestParameters.productName!}"/>
                         <div>&nbsp;${requestParameters.productName?default("&nbsp;")}</div>
                 </@field>
-                <@field type="display" label="${uiLabelMap.ProductShortDescription}">
+                <@field type="display" label=uiLabelMap.ProductShortDescription>
                     <input type="hidden" name="description" value="${requestParameters.description!}"/>
                         <div>&nbsp;${requestParameters.description?default("&nbsp;")}</div>
                 </@field>
-                <@field type="display" label="${uiLabelMap.ProductDefaultPrice}">
+                <@field type="display" label=uiLabelMap.ProductDefaultPrice>
                     <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice!}"/>
                         <input type="hidden" name="currencyUomId" value="${requestParameters.currencyUomId!}"/>
                         <div>&nbsp;${requestParameters.defaultPrice?default("&nbsp;")}&nbsp;${requestParameters.currencyUomId?default("&nbsp;")}</div>
                 </@field>
-                <@field type="display" label="${uiLabelMap.ProductAverageCost}">
+                <@field type="display" label=uiLabelMap.ProductAverageCost>
                     <input type="hidden" name="averageCost" value="${requestParameters.averageCost!}"/>
                         <div>&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
                 </@field>
-                <@field type="input" label="${uiLabelMap.ProductNewProductId}" name="productId" value="" />
-                <@field type="submit" text="${uiLabelMap.ProductCreateNewProduct}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+                <@field type="input" label=uiLabelMap.ProductNewProductId name="productId" value="" />
+                <@field type="submit" text=uiLabelMap.ProductCreateNewProduct class="+${styles.link_run_sys!} ${styles.action_add!}"/>
         </form>
         </@cell>
       </@row>

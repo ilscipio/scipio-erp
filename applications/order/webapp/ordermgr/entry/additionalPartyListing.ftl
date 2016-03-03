@@ -19,7 +19,7 @@ under the License.
 
 <#-- ==================== Party Listing dialog box ========================= -->
 <#if additionalPartyRoleMap?has_content>
-<@section title="${uiLabelMap.PartyAdditionalPartyListing}">
+<@section title=uiLabelMap.PartyAdditionalPartyListing>
       <@table type="data-complex" width="100%"> <#-- orig: class="" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
         <#list roleList as role>
           <@tr>

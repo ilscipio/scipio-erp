@@ -41,9 +41,9 @@ under the License.
         </#if>
       </#list>
       <#if isLastStep == "N">
-        <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
+        <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       <#else>
-        <@menuitem type="link" href=makeOfbizUrl("processorder") text="${uiLabelMap.OrderCreateOrder}" class="+${styles.action_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
+        <@menuitem type="link" href=makeOfbizUrl("processorder") text=uiLabelMap.OrderCreateOrder class="+${styles.action_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
       </#if>
     </@menu>
 </@section>

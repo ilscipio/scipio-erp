@@ -331,13 +331,13 @@ function getConfigDetails() {
               <#assign hiddenStyle = styles.hidden!>
             </#if>
             <#-- Cato: NOTE: amount is kg or either; quantity is the number of units buying -->
-            <@field type="input" containerId="add_amount" label="${uiLabelMap.OrderAmount}" containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
+            <@field type="input" containerId="add_amount" label=uiLabelMap.OrderAmount containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
               <@field type="input" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
-              <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
-              <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToCart}" />
+              <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
+              <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddToCart />
             </#if>
           </#if>
           <#if requestParameters.category_id??>
@@ -359,7 +359,7 @@ function getConfigDetails() {
           <input type="hidden" name="productId" value="${product.productId}" />
           <input type="hidden" name="product_id" value="${product.productId}" />
           <input type="hidden" name="configId" value="${configId!}" />
-          <@field type="select" label="${uiLabelMap.PageTitleShoppingList}" name="shoppingListId">
+          <@field type="select" label=uiLabelMap.PageTitleShoppingList name="shoppingListId">
               <#if shoppingLists?has_content>
                 <#list shoppingLists as shoppingList>
                   <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -368,7 +368,7 @@ function getConfigDetails() {
               <option value="">---</option>
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
-          <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
+          <@field type="input" label=uiLabelMap.ProductQuantity size="5" name="quantity" value="1" />
           <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
         </form>
       <#else> 
@@ -482,7 +482,7 @@ function getConfigDetails() {
                 <@field type="display">
                     ${option.description} <#if !option.isAvailable()> (*)</#if>
                 </@field>
-                <@field type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label="${uiLabelMap.CommonComments}" />
+                <@field type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label=uiLabelMap.CommonComments />
               </#list>
             <#else>
               <#if question.isSingleChoice()>
@@ -544,7 +544,7 @@ function getConfigDetails() {
                     </#if>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
-                  <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label="${uiLabelMap.CommonComments}" />
+                  <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label=uiLabelMap.CommonComments />
                 <#else>
                 <#-- And this is the select box implementation -->
                 <@field type="select" name="${counter}">
@@ -573,7 +573,7 @@ function getConfigDetails() {
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
                 </@field>
-                <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label="${uiLabelMap.CommonComments}" />
+                <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label=uiLabelMap.CommonComments />
                 </#if>
               <#else>
                 <#-- Multi choice question -->
@@ -604,7 +604,7 @@ function getConfigDetails() {
                       <#assign fieldLabel>${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
                       <@field type="checkbox" name="${counter}" value="${optionCounter}" checked=option.isSelected() label=fieldLabel />
                     </#if>
-                    <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label="${uiLabelMap.CommonComments}"/>
+                    <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label=uiLabelMap.CommonComments/>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
               </#if>

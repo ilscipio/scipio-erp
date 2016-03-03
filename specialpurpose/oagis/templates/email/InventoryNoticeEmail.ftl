@@ -30,7 +30,7 @@
     <h1>${title}</h1>
     <#-- custom logo or text can be inserted here -->
     <br />
-    <@section title="${uiLabelMap.OagisInventoryDescription}">
+    <@section title=uiLabelMap.OagisInventoryDescription>
       <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
         <@tr valign="bottom" class="header-row">

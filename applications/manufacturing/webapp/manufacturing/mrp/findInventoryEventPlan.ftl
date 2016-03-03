@@ -25,22 +25,22 @@ function lookupInventory() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
       <#if requestParameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}" />
       <#else>
         <#if inventoryList??>
-            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}" />
+            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}" />
         </#if>
       </#if>
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PageTitleFindInventoryEventPlan}" menuContent=menuContent>
+<@section title=uiLabelMap.PageTitleFindInventoryEventPlan menuContent=menuContent>
     <form method="post" name="lookupinventory" action="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>">
     <input type="hidden" name="lookupFlag" value="Y"/>
     <input type="hidden" name="hideFields" value="Y"/>
       <#if requestParameters.hideFields?default("N") != "Y">
-          <@field type="lookup" label="${uiLabelMap.ManufacturingProductId}" value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
-          <@field type="datetime" label="${uiLabelMap.CommonFromDate}" name="eventDate" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2"/>
-          <@field type="submit" submitType="link" href="javascript:lookupInventory();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
+          <@field type="lookup" label=uiLabelMap.ManufacturingProductId value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
+          <@field type="datetime" label=uiLabelMap.CommonFromDate name="eventDate" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2"/>
+          <@field type="submit" submitType="link" href="javascript:lookupInventory();" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
       </#if>
     </form>
 </@section>

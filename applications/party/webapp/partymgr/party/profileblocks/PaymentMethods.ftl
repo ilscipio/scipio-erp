@@ -38,14 +38,14 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}") text="${uiLabelMap.AccountingCreateNewEftAccount}" class="+${styles.action_nav!} ${styles.action_add!}"/>
-      <@menuitem type="link" href=makeOfbizUrl("editgiftcard?partyId=${partyId}") text="${uiLabelMap.AccountingCreateNewGiftCard}" class="+${styles.action_nav!} ${styles.action_add!}"/>
-      <@menuitem type="link" href=makeOfbizUrl("editcreditcard?partyId=${partyId}") text="${uiLabelMap.AccountingCreateNewCreditCard}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewEftAccount class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makeOfbizUrl("editgiftcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewGiftCard class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makeOfbizUrl("editcreditcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewCreditCard class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>  
     </@menu>
   </#macro>
   -->
-  <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}">
+  <@section id="partyPaymentMethod" title=uiLabelMap.PartyPaymentMethodInformation>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
         <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tbody>

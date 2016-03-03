@@ -24,7 +24,7 @@ under the License.
 </#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text="${uiLabelMap.ManufacturingNewCalendar}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text=uiLabelMap.ManufacturingNewCalendar class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent>
@@ -42,17 +42,17 @@ under the License.
   </#if>
 
   <#if techDataCalendar?has_content>
-    <@field type="display" label="${uiLabelMap.ManufacturingCalendarId}" tooltip="(${uiLabelMap.CommonNotModifRecreat})" value="${techDataCalendar.calendarId!}" />
+    <@field type="display" label=uiLabelMap.ManufacturingCalendarId tooltip="(${uiLabelMap.CommonNotModifRecreat})" value="${techDataCalendar.calendarId!}" />
   <#else>
-    <@field type="input" label="${uiLabelMap.ManufacturingCalendarId}" size="12" name="calendarId" value="${calendarData.calendarId!}" />
+    <@field type="input" label=uiLabelMap.ManufacturingCalendarId size="12" name="calendarId" value="${calendarData.calendarId!}" />
   </#if>
-    <@field type="input" label="${uiLabelMap.CommonDescription}" size="40" name="description" value="${calendarData.description!}" />
-    <@field type="select" label="${uiLabelMap.ManufacturingCalendarWeekId}" name="calendarWeekId">
+    <@field type="input" label=uiLabelMap.CommonDescription size="40" name="description" value="${calendarData.description!}" />
+    <@field type="select" label=uiLabelMap.ManufacturingCalendarWeekId name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
     </@field>
-    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+    <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
 
   </form>
 </@section>

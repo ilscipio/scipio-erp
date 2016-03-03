@@ -30,17 +30,17 @@ function lookupShipments() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if requestParameters.facilityId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" class="+${styles.action_nav!} ${styles.action_send!}" />
+    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text=uiLabelMap.ProductQuickShipOrder class="+${styles.action_nav!} ${styles.action_send!}" />
   </#if>
-    <@menuitem type="link" href=makeOfbizUrl("EditShipment") text="${uiLabelMap.ProductNewShipment}" class="+${styles.action_nav!} ${styles.action_add!}" />
-    <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" class="+${styles.action_nav!} ${styles.action_find!}" />-->
+    <@menuitem type="link" href=makeOfbizUrl("EditShipment") text=uiLabelMap.ProductNewShipment class="+${styles.action_nav!} ${styles.action_add!}" />
+    <#--<@menuitem type="link" href="javascript:lookupShipments();" text=uiLabelMap.ProductFindShipment class="+${styles.action_nav!} ${styles.action_find!}" />-->
   </@menu>
 </#macro>
 <@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
-              <@field type="input" label="${uiLabelMap.ProductShipmentId}" name="shipmentId" value="${shipmentId!}" />
-              <@field type="select" label="${uiLabelMap.ProductShipmentType}" name="shipmentTypeId">
+              <@field type="input" label=uiLabelMap.ProductShipmentId name="shipmentId" value="${shipmentId!}" />
+              <@field type="select" label=uiLabelMap.ProductShipmentType name="shipmentTypeId">
                     <#if currentShipmentType?has_content>
                     <option value="${currentShipmentType.shipmentTypeId}">${currentShipmentType.get("description",locale)}</option>
                     <option value="${currentShipmentType.shipmentTypeId}">---</option>
@@ -50,7 +50,7 @@ function lookupShipments() {
                       <option value="${shipmentType.shipmentTypeId}">${shipmentType.get("description",locale)}</option>
                     </#list>
               </@field>
-              <@field type="select" label="${uiLabelMap.ProductOriginFacility}" name="originFacilityId">
+              <@field type="select" label=uiLabelMap.ProductOriginFacility name="originFacilityId">
                     <#if currentOriginFacility?has_content>
                     <option value="${currentOriginFacility.facilityId}">${currentOriginFacility.facilityName} [${currentOriginFacility.facilityId}]</option>
                     <option value="${currentOriginFacility.facilityId}">---</option>
@@ -60,7 +60,7 @@ function lookupShipments() {
                       <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                     </#list>
               </@field>
-              <@field type="select" label="${uiLabelMap.ProductDestinationFacility}" name="destinationFacilityId">
+              <@field type="select" label=uiLabelMap.ProductDestinationFacility name="destinationFacilityId">
                     <#if currentDestinationFacility?has_content>
                     <option value="${currentDestinationFacility.facilityId}">${currentDestinationFacility.facilityName} [${currentDestinationFacility.facilityId}]</option>
                     <option value="${currentDestinationFacility.facilityId}">---</option>
@@ -70,7 +70,7 @@ function lookupShipments() {
                       <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                     </#list>
               </@field>
-              <@field type="select" label="${uiLabelMap.CommonStatus}" name="statusId">
+              <@field type="select" label=uiLabelMap.CommonStatus name="statusId">
                     <#if currentStatus?has_content>
                     <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
                     <option value="${currentStatus.statusId}">---</option>
@@ -93,17 +93,17 @@ function lookupShipments() {
                     </#list>
               </@field>
 
-              <@field type="generic" label="${uiLabelMap.ProductDateFilter}">
-                  <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1"/>
-                  <@field type="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1"/>
+              <@field type="generic" label=uiLabelMap.ProductDateFilter>
+                  <@field type="datetime" label=uiLabelMap.CommonFrom name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1"/>
+                  <@field type="datetime" label=uiLabelMap.CommonThru name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1"/>
               </@field>
               
-              <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ProductFindShipment}" />
+              <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ProductFindShipment />
         </form>
 </@section>
 
 <#if shipmentList??>
-  <@section id="findOrders_2" title="${uiLabelMap.ProductShipments}">
+  <@section id="findOrders_2" title=uiLabelMap.ProductShipments>
     <#if shipmentList?has_content>  
       <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
       <@paginate mode="content" url=makeOfbizUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>

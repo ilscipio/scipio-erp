@@ -26,11 +26,11 @@ under the License.
         <#else>
           <#assign listParam = "">
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("editShoppingList?partyId=${partyId}${listParam}") text="${uiLabelMap.CommonEdit}" class="+${styles.action_nav!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("editShoppingList?partyId=${partyId}${listParam}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
       </#if>
       </@menu>
     </#macro>
-    <@section id="partyShoppingCart" title="${uiLabelMap.PartyCurrentShoppingCart}">
+    <@section id="partyShoppingCart" title=uiLabelMap.PartyCurrentShoppingCart>
         <#if savedCartItems?has_content>
           <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
            <@thead>

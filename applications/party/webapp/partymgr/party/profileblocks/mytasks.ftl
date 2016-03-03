@@ -22,12 +22,12 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text="${uiLabelMap.WorkEffortNewTask}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizInterWebappUrl("/workeffort/control/EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text=uiLabelMap.WorkEffortNewTask class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.WorkEffortMyCurrentTaskList}" menuContent=menuContent>
+<@section title=uiLabelMap.WorkEffortMyCurrentTaskList menuContent=menuContent>
 
-  <@section title="${uiLabelMap.WorkEffortAssignedTasks}">
+  <@section title=uiLabelMap.WorkEffortAssignedTasks>
   <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
    <@thead>
     <@tr class="header-row">
@@ -53,7 +53,7 @@ under the License.
   </@section>
   
   <#if (activities.size() > 0)>
-    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUser}">
+    <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUser>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
       <@thead>
       <@tr class="header-row">
@@ -85,7 +85,7 @@ under the License.
     </@section>
   </#if>
   <#if (roleActivities.size() > 0)>
-    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}">
+    <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserRole>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
       <@thead>
       <@tr class="header-row">
@@ -117,7 +117,7 @@ under the License.
     </@section>
   </#if>
   <#if (groupActivities.size() > 0)>
-    <@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}">
+    <@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserGroup>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
      <@thead>
       <@tr class="header-row">

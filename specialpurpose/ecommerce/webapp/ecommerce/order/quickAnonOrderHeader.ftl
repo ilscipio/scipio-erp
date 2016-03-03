@@ -95,7 +95,7 @@ under the License.
     <@td width="50%" valign="top">
       <#if orderItemShipGroups?has_content>
 
-    <@section title="${uiLabelMap.OrderShippingInformation}" class="+screenlet">
+    <@section title=uiLabelMap.OrderShippingInformation class="+screenlet">
         <#-- shipping address -->
             <#assign groupIdx = 0>
             <#list orderItemShipGroups as shipGroup>

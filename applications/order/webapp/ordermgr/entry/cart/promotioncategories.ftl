@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
-    <@section title="${uiLabelMap.OrderPromotionCategories}">
+    <@section title=uiLabelMap.OrderPromotionCategories>
         <#if productPromoCategoryIncludeList?has_content>
           <div>${uiLabelMap.OrderPromotionProductsInCategories}:</div>
           <#list productPromoCategoryIncludeList as productPromoCategory>

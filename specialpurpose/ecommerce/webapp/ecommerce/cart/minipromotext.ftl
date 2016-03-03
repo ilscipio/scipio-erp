@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if showPromoText>
-  <@section title="${uiLabelMap.OrderSpecialOffers}" id="minipromotext" class="+screenlet">
+  <@section title=uiLabelMap.OrderSpecialOffers id="minipromotext" class="+screenlet">
   <#-- show promotions text -->
     <ul>
       <#list productPromos as productPromo>

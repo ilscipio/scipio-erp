@@ -26,18 +26,18 @@ under the License.
 </#if>
 
 <@fieldset>
-    <@field type="input" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}" label="${uiLabelMap.AccountingCompanyNameCard}"/>     
-    <@field type="select" name="titleOnCard" label="${uiLabelMap.AccountingPrefixCard}">
+    <@field type="input" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}" label=uiLabelMap.AccountingCompanyNameCard/>     
+    <@field type="select" name="titleOnCard" label=uiLabelMap.AccountingPrefixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "${uiLabelMap.CommonTitleMr}")> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
     </@field>    
-    <@field type="input" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}" label="${uiLabelMap.AccountingFirstNameCard}" required=true/>     
-    <@field type="input" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}" label="${uiLabelMap.AccountingMiddleNameCard}" />    
-    <@field type="input" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}" label="${uiLabelMap.AccountingLastNameCard}" required=true />  
-    <@field type="select" name="suffixOnCard" label="${uiLabelMap.AccountingSuffixCard}">
+    <@field type="input" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}" label=uiLabelMap.AccountingFirstNameCard required=true/>     
+    <@field type="input" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}" label=uiLabelMap.AccountingMiddleNameCard />    
+    <@field type="input" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}" label=uiLabelMap.AccountingLastNameCard required=true />  
+    <@field type="select" name="suffixOnCard" label=uiLabelMap.AccountingSuffixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> selected="selected"</#if>>Jr.</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> selected="selected"</#if>>Sr.</option>
@@ -47,7 +47,7 @@ under the License.
         <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> selected="selected"</#if>>IV</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "V")> selected="selected"</#if>>V</option>
     </@field>
-    <@field type="select" name="cardType" label="${uiLabelMap.AccountingCardType}" required=true>
+    <@field type="select" name="cardType" label=uiLabelMap.AccountingCardType required=true>
         <#if creditCard.cardType??>
           <option>${creditCard.cardType}</option>
           <option value="${creditCard.cardType}">---</option>
@@ -72,12 +72,12 @@ under the License.
                     <#assign cardNumberDisplay = cardNumber>
                 </#if>
             </#if>
-            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${cardNumberDisplay!}" label="${uiLabelMap.AccountingCardNumber}" required=true />
+            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${cardNumberDisplay!}" label=uiLabelMap.AccountingCardNumber required=true />
         <#else>
-            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" required=true/>
+            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label=uiLabelMap.AccountingCardNumber required=true/>
         </#if>
     <#else>
-        <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" required=true/>
+        <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
   <#--<@tr>
@@ -97,7 +97,7 @@ under the License.
         </#if>
     </#if>
       
-    <@field type="select" name="expMonth" label="${uiLabelMap.AccountingExpirationDate}" required=true>
+    <@field type="select" name="expMonth" label=uiLabelMap.AccountingExpirationDate required=true>
         <#if creditCard?has_content && expMonth?has_content>
         <#assign ccExprMonth = expMonth>
         <#else>
@@ -121,5 +121,5 @@ under the License.
         ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
     </@field>
 
-    <@field type="input" size="20" maxlength="30" name="description" value="${paymentMethod.description!}" label="${uiLabelMap.CommonDescription}"/>
+    <@field type="input" size="20" maxlength="30" name="description" value="${paymentMethod.description!}" label=uiLabelMap.CommonDescription/>
 </@fieldset>

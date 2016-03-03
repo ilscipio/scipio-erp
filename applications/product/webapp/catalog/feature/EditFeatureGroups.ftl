@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.PageTitleEditProductFeatureGroups}">
+<@section title=uiLabelMap.PageTitleEditProductFeatureGroups>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
@@ -44,9 +44,9 @@ under the License.
     </@table>
 </@section>
 
-<@section title="${uiLabelMap.ProductCreateProductFeatureGroup}">
+<@section title=uiLabelMap.ProductCreateProductFeatureGroup>
         <form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>">
-            <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" name="description" value="" />
-            <@field type="submit" text="${uiLabelMap.CommonCreate}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
+            <@field type="input" label=uiLabelMap.CommonDescription size="30" name="description" value="" />
+            <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
 </@section>

@@ -135,27 +135,27 @@ under the License.
       <fieldset>
       
       <@fields type="default">
-            <@field type="input" label="${uiLabelMap.EbayStoreStoreName}">
+            <@field type="input" label=uiLabelMap.EbayStoreStoreName>
                 <@field type="input" name="storeName" value="${ebayStore.storeName!}" events={"keydown":"countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));",
                     "keyup":"countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));"} />
                 <div id="charsleft1"></div>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreDesc}">
+            <@field type="generic" label=uiLabelMap.EbayStoreStoreDesc>
                 <@field type="textarea" rows="4" cols="80" name="storeDesc"
                     events={"keydown":"countAreaChars(document.StoreSettingForm.storeDesc,300,document.getElementById('charsleft2'));", 
                     "keyup":"countAreaChars(document.StoreSettingForm.storeDesc,300,document.getElementById('charsleft2'));"}>${ebayStore.storeDesc!}</@field>
                 <div id="charsleft2"></div>
             </@field>
-            <@field type="display" label="${uiLabelMap.EbayStoreStoreURL}">
+            <@field type="display" label=uiLabelMap.EbayStoreStoreURL>
                 <a href="${ebayStore.storeUrl!}" target="_blank">${ebayStore.storeUrl!}</a>
             </@field>
-            <@field type="input" label="${uiLabelMap.EbayStoreStoreLogoURL}" name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
+            <@field type="input" label=uiLabelMap.EbayStoreStoreLogoURL name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
             <@field type="generic" label="">
                <@field type="radio" name="storeThemeType" checked=(themeType! == "Basic") value="Basic" onClick="javascript:switchTheme();" label="Basic Theme" /> <#-- default="default" -->
                <@field type="radio"  name="storeThemeType" checked=(themeType! == "Advanced") value="Advanced" onClick="javascript:switchTheme();" label="Advanced Theme" /> 
             </@field>
             <#-- advance Theme -->
-             <@field type="select" label="${uiLabelMap.EbayStoreStoreAdvancedTheme}" id="storeAdvancedTheme" name="storeAdvancedTheme">
+             <@field type="select" label=uiLabelMap.EbayStoreStoreAdvancedTheme id="storeAdvancedTheme" name="storeAdvancedTheme">
                <#if storeAdvanceThemeOptList?has_content>
                  <#list storeAdvanceThemeOptList as storeAdvanceThemeOpt>
                     <option value="${storeAdvanceThemeOpt.storeThemeId!}"
@@ -165,7 +165,7 @@ under the License.
                </#if>
              </@field>
             <#if storeAdvancedThemeColorOptList?has_content>
-            <@field type="select" label="${uiLabelMap.EbayStoreStoreAdvancedThemeColor}" name="storeAdvancedThemeColor">
+            <@field type="select" label=uiLabelMap.EbayStoreStoreAdvancedThemeColor name="storeAdvancedThemeColor">
               <#list storeAdvancedThemeColorOptList as storeAdvancedThemeColorOpt>
                 <option value="${storeAdvancedThemeColorOpt.storeColorSchemeId!}"
                 <#if ebayStore.storeColorSchemeId.equals(storeAdvancedThemeColorOpt.storeColorSchemeId!)>selected="selected"</#if>>
@@ -174,7 +174,7 @@ under the License.
             </@field>
             </#if>
             <#-- Basic Theme -->
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreBasicTheme}">
+            <@field type="generic" label=uiLabelMap.EbayStoreStoreBasicTheme>
                 <#assign currentStoreThemeIdAndSchemeId = ebayStore.storeThemeId?string+"-"+ebayStore.storeColorSchemeId?string>
                 <@field type="select" id="storeBasicTheme" name="storeBasicTheme" onchange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
                   <#if storeThemeOptList?has_content>
@@ -192,13 +192,13 @@ under the License.
             <@field type="display" label="">
                 <b>${uiLabelMap.EbayStoreStoreColorTheme}</b>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStorePrimaryColor}">
+            <@field type="generic" label=uiLabelMap.EbayStoreStorePrimaryColor>
                 ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storePrimaryColor" name="storePrimaryColor" size="10" value="${ebayStore.storeColorPrimary!}"/>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreSecondColor}">
+            <@field type="generic" label=uiLabelMap.EbayStoreStoreSecondColor>
                 ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeSecondaryColor" name="storeSecondaryColor" size="10" value="${ebayStore.storeColorSecondary!}"/>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreAccentColor}">
+            <@field type="generic" label=uiLabelMap.EbayStoreStoreAccentColor>
                 ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeAccentColor" name="storeAccentColor" size="10" value="${ebayStore.storeColorAccent!}"/>
             </@field>
       </@fields>
@@ -321,13 +321,13 @@ under the License.
       </@fields>
 
       <@fields type="default">
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreHeaderDisplay}" id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreHeaderDisplay id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
             <#list ebayStore.storeCustomHeaderLayoutList as storeCustomHeaderLayout>
                <option <#if storeCustomHeaderLayout.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomHeaderLayout)>selected="selected"</#if> value="${storeCustomHeaderLayout.storeCustomHeaderLayoutName!}">${storeCustomHeaderLayout.storeCustomHeaderLayoutValue!}</option>
             </#list>
         </@field>
         <@field type="textarea" label="" rows="8" cols="40" name="storeCustomHeader">${ebayStore.storeCustomHeader!}</@field>
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreHeaderStyle}" id="storeHeaderStyle" name="storeHeaderStyle">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreHeaderStyle id="storeHeaderStyle" name="storeHeaderStyle">
             <#list ebayStore.storeHeaderStyleList as storeHeaderStyle>
                <option <#if storeHeaderStyle.storeHeaderStyleValue.equals(ebayStore.storeHeaderStyle)>selected="selected"</#if> value="${storeHeaderStyle.storeHeaderStyleName!}">${storeHeaderStyle.storeHeaderStyleValue!}</option>
             </#list>
@@ -338,12 +338,12 @@ under the License.
                 <input type="text" id="homePage" name="homePage" value="${ebayStore.storeHomePage!}"/>
           </@td>
         </tr-->
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreItemListDesplay}" id="storeItemLayout" name="storeItemLayout">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreItemListDesplay id="storeItemLayout" name="storeItemLayout">
             <#list ebayStore.storeItemLayoutList as storeItemLayout>
                <option <#if storeItemLayout.storeItemLayoutValue.equals(ebayStore.storeItemLayoutSelected)>selected="selected"</#if> value="${storeItemLayout.storeItemLayoutName!}">${storeItemLayout.storeItemLayoutValue!}</option>
             </#list>
         </@field>
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreItemSortOrder}" id="storeItemSortOrder" name="storeItemSortOrder">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreItemSortOrder id="storeItemSortOrder" name="storeItemSortOrder">
             <#list ebayStore.storeItemSortOrderList as storeItemSortOrder>
                <option <#if storeItemSortOrder.storeItemSortLayoutValue.equals(ebayStore.storeItemSortOrderSelected)>selected="selected"</#if> value="${storeItemSortOrder.storeItemSortLayoutName!}">${storeItemSortOrder.storeItemSortLayoutValue!}</option>
             </#list>
@@ -358,17 +358,17 @@ under the License.
             </select>
           </@td>
         </tr-->
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreMerchDisplay}" id="storeMerchDisplay" name="storeMerchDisplay">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreMerchDisplay id="storeMerchDisplay" name="storeMerchDisplay">
             <#list ebayStore.storeMerchDisplayList as storeMerchDisplay>
                <option <#if storeMerchDisplay.merchDisplayCodeValue.equals(ebayStore.storeMerchDisplay)>selected="selected"</#if> value="${storeMerchDisplay.merchDisplayCodeName!}">${storeMerchDisplay.merchDisplayCodeValue!}</option>
             </#list>
         </@field>
-        <@field type="select" label="${uiLabelMap.EbayStoreStoreSubscriptionLevel}" id="storeMerchDisplay" name="storeSubscriptionDisplay">
+        <@field type="select" label=uiLabelMap.EbayStoreStoreSubscriptionLevel id="storeMerchDisplay" name="storeSubscriptionDisplay">
             <#list ebayStore.storeSubscriptionLevelList as storeSubscriptionLevel>
                <option <#if storeSubscriptionLevel.storeSubscriptionLevelCodeValue.equals(ebayStore.storeSubscriptionLevel)>selected="selected"</#if> value="${storeSubscriptionLevel.storeSubscriptionLevelCodeName!}">${storeSubscriptionLevel.storeSubscriptionLevelCodeValue!}</option>
             </#list>
         </@field>
-        <@field type="submit" text="${uiLabelMap.CommonSubmit}" name="submitButton" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+        <@field type="submit" text=uiLabelMap.CommonSubmit name="submitButton" class="+${styles.link_run_sys!} ${styles.action_update!}" />
 
         <@script>
             document.getElementById('charsleft1').innerHTML =  (35 - document.StoreSettingForm.storeName.value.length)  + " charactors left.";

@@ -1,5 +1,5 @@
 <#-- CATO -->
-<@section title="${uiLabelMap.CommonOverview}">
+<@section title=uiLabelMap.CommonOverview>
     <@table type="fields">
         <#if partyContentList?has_content>
             <#list partyContentList as pc>

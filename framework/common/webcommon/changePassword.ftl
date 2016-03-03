@@ -30,12 +30,12 @@ under the License.
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <input type="hidden" name="userTenantId" value="${tenantId!}"/>
-      <@field type="display" label="${uiLabelMap.CommonUsername}">${username}</@field>
-      <@field type="password" label="${uiLabelMap.CommonCurrentPassword}" name="PASSWORD" value="" size="20" />
-      <@field type="password" label="${uiLabelMap.CommonNewPassword}" name="newPassword" value="" size="20" />
-      <@field type="password" label="${uiLabelMap.CommonNewPasswordVerify}" name="newPasswordVerify" value="" size="20" />
+      <@field type="display" label=uiLabelMap.CommonUsername>${username}</@field>
+      <@field type="password" label=uiLabelMap.CommonCurrentPassword name="PASSWORD" value="" size="20" />
+      <@field type="password" label=uiLabelMap.CommonNewPassword name="newPassword" value="" size="20" />
+      <@field type="password" label=uiLabelMap.CommonNewPasswordVerify name="newPasswordVerify" value="" size="20" />
       
-      <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+      <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_update!}"/>
     </form>
 </@section>
 </@cell>

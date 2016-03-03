@@ -32,7 +32,7 @@ under the License.
 
     <#assign productId = parameters.productId!/>
 
-<@section title="${uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrder}">
+<@section title=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrder>
 
 <#if shipment??>
     <#if !isPurchaseShipment>

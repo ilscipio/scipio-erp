@@ -66,8 +66,8 @@ under the License.
     <@section>
       <@heading>2) ${uiLabelMap.PartyFindParty}</@heading>
   
-      <@field type="lookup" label="${uiLabelMap.CommonIdentifier}" value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
-      <@field type="submit" submitType="link" href="javascript:document.quickAddPartyForm.submit()" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonApply}" />
+      <@field type="lookup" label=uiLabelMap.CommonIdentifier value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
+      <@field type="submit" submitType="link" href="javascript:document.quickAddPartyForm.submit()" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonApply />
     </@section>
 
   </form>
@@ -80,7 +80,7 @@ under the License.
         <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
           <@fields type="default-nolabels">
           <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
-          <@field type="select" label="${uiLabelMap.CommonRole}" name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>
+          <@field type="select" label=uiLabelMap.CommonRole name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>
               <#list roles as role>
               <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
               </#list>

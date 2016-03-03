@@ -39,7 +39,7 @@ under the License.
         
     <@section>
         <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
-          <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
+          <@field type="generic" label=uiLabelMap.FormFieldTitle_paymentMethodId>
               <#if creditCardList?? || eftAccountList??>
                 <@field type="select" name="paymentMethodId">
                   <option value=""></option>

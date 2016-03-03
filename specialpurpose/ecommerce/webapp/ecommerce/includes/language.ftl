@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section id="choose-language" title="${uiLabelMap.CommonLanguageTitle}" class="+screenlet">
+<@section id="choose-language" title=uiLabelMap.CommonLanguageTitle class="+screenlet">
     <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>">
       <select name="newLocale" class="selectBox" style="width:95%" onchange="submit()">
         <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>

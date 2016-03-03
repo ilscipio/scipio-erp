@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductBrowseBlogs}" id="browse-blogs" class="+screenlet">
+<@section title=uiLabelMap.ProductBrowseBlogs id="browse-blogs" class="+screenlet">
     <ul class="browsecategorylist">
       <#list blogs as blog>
         <li class="browsecategorytext">

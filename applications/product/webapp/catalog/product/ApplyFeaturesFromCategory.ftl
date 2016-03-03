@@ -19,13 +19,13 @@ under the License.
 
 <@menu type="button">
 <#if curProductFeatureCategory??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" class="+${styles.action_nav!} ${styles.action_add!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
   <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
-  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProduct}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProductFeatures}" class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text=uiLabelMap.ProductReturnToEditProductFeatures class="+${styles.action_nav!} ${styles.action_cancel!}"/>
 </#if>
 </@menu>
 

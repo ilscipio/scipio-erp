@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductSubscriptions}" id="subscription-summary" class="+screenlet">
+<@section title=uiLabelMap.ProductSubscriptions id="subscription-summary" class="+screenlet">
         <@table width="100%" cellspacing="0" cellpadding="2">
             <@thead>
                 <@tr class="header-row">

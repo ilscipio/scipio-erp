@@ -25,11 +25,11 @@ under the License.
     ${listCalendarExceptionDayWrapper.renderFormString(context)}
 </@section>
 <#if calendarExceptionDay?has_content>
-<@section title="${uiLabelMap.PageTitleEditCalendarExceptionWeek}">
+<@section title=uiLabelMap.PageTitleEditCalendarExceptionWeek>
     ${updateCalendarExceptionDayWrapper.renderFormString(context)}
 </@section>
 </#if>
-<@section title="${uiLabelMap.PageTitleAddCalendarExceptionWeek}">
+<@section title=uiLabelMap.PageTitleAddCalendarExceptionWeek>
     ${addCalendarExceptionDayWrapper.renderFormString(context)}
 </@section>
 </#if>

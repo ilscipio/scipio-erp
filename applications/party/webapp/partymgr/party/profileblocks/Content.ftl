@@ -16,32 +16,32 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <@section id="partyContent" title="${uiLabelMap.PartyContent}">
+  <@section id="partyContent" title=uiLabelMap.PartyContent>
     
     ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       
-    <@section title="${uiLabelMap.PartyAttachContent}" id="partyAttachContent">
+    <@section title=uiLabelMap.PartyAttachContent id="partyAttachContent">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
 
-        <@field type="file" label="${uiLabelMap.PartyAttachFile}" name="uploadedFile" required=true class="+error" size=25 />
+        <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
-        <@field type="select" label="${uiLabelMap.PartyContentType}" name="partyContentTypeId" required=true class="+error">
+        <@field type="select" label=uiLabelMap.PartyContentType name="partyContentTypeId" required=true class="+error">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
           </#list> 
         </@field>
 
-        <@field type="select" label="${uiLabelMap.PartyIsPublic}" name="isPublic">
+        <@field type="select" label=uiLabelMap.PartyIsPublic name="isPublic">
           <option value="N">${uiLabelMap.CommonNo}</option>
           <option value="Y">${uiLabelMap.CommonYes}</option>
         </@field>
        
-        <@field type="select" label="${uiLabelMap.PartySelectRole}" name="roleTypeId">
+        <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">
           <#list roles as role>
             <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>

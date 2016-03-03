@@ -37,12 +37,12 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!} ${styles.expanded!}" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!} ${styles.expanded!}" />
   </#if>
 </#if>  
   </@menu>
@@ -66,12 +66,12 @@ under the License.
         
        
         
-        <@field type="input" label="${uiLabelMap.PartyPartyId}" name="partyId" value="${parameters.partyId!}"/>
-        <@field type="input" label="${uiLabelMap.PartyUserLogin}" name="userLoginId" value="${parameters.userLoginId!}"/>
-        <@field type="input" label="${uiLabelMap.PartyLastName}" name="lastName" value="${parameters.lastName!}"/>
-        <@field type="input" label="${uiLabelMap.PartyFirstName}" name="firstName" value="${parameters.firstName!}"/>
-        <@field type="input" label="${uiLabelMap.PartyPartyGroupName}" name="groupName" value="${parameters.groupName!}"/>
-        <@field type="select" label="${uiLabelMap.PartyRoleType}" name="roleTypeId" currentValue="${(currentRole.roleTypeId)!}">
+        <@field type="input" label=uiLabelMap.PartyPartyId name="partyId" value="${parameters.partyId!}"/>
+        <@field type="input" label=uiLabelMap.PartyUserLogin name="userLoginId" value="${parameters.userLoginId!}"/>
+        <@field type="input" label=uiLabelMap.PartyLastName name="lastName" value="${parameters.lastName!}"/>
+        <@field type="input" label=uiLabelMap.PartyFirstName name="firstName" value="${parameters.firstName!}"/>
+        <@field type="input" label=uiLabelMap.PartyPartyGroupName name="groupName" value="${parameters.groupName!}"/>
+        <@field type="select" label=uiLabelMap.PartyRoleType name="roleTypeId" currentValue="${(currentRole.roleTypeId)!}">
           <#if currentRole?has_content>
             <option value="${currentRole.roleTypeId}">${currentRole.get("description",locale)}</option>
             <option value="${currentRole.roleTypeId}">---</option>
@@ -81,7 +81,7 @@ under the License.
             <option value="${roleType.roleTypeId}">${roleType.get("description",locale)}</option>
           </#list>        
         </@field>
-        <@field type="select" label="${uiLabelMap.PartyType}" name="partyTypeId" currentValue="${(currentPartyType.partyTypeId)!}">
+        <@field type="select" label=uiLabelMap.PartyType name="partyTypeId" currentValue="${(currentPartyType.partyTypeId)!}">
           <#if currentPartyType?has_content>
             <option value="${currentPartyType.partyTypeId}">${currentPartyType.get("description",locale)}</option>
             <option value="${currentPartyType.partyTypeId}">---</option>
@@ -93,10 +93,10 @@ under the License.
         </@field>        
     <#if extInfo == "P">
         <hr />
-        <@field type="input" label="${uiLabelMap.CommonAddress1}" name="address1" value="${parameters.address1!}"/>
-        <@field type="input" label="${uiLabelMap.CommonAddress2}" name="address2" value="${parameters.address2!}"/>
-        <@field type="input" label="${uiLabelMap.CommonCity}" name="city" value="${parameters.city!}"/>
-        <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
+        <@field type="input" label=uiLabelMap.CommonAddress1 name="address1" value="${parameters.address1!}"/>
+        <@field type="input" label=uiLabelMap.CommonAddress2 name="address2" value="${parameters.address2!}"/>
+        <@field type="input" label=uiLabelMap.CommonCity name="city" value="${parameters.city!}"/>
+        <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
           <#if currentStateGeo?has_content>
             <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName!(currentStateGeo.geoId)}</option>
             <option value="${currentStateGeo.geoId}">---</option>
@@ -104,21 +104,21 @@ under the License.
             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
             ${screens.render("component://common/widget/CommonScreens.xml#states")}     
         </@field>
-        <@field type="input" label="${uiLabelMap.PartyPostalCode}" name="postalCode" value="${parameters.postalCode!}"/>
+        <@field type="input" label=uiLabelMap.PartyPostalCode name="postalCode" value="${parameters.postalCode!}"/>
         
     </#if>
     <#if extInfo == "T">
         <hr />
-        <@field type="input" label="${uiLabelMap.CommonCountryCode}" name="countryCode" value="${parameters.countryCode!}"/>
-        <@field type="input" label="${uiLabelMap.PartyAreaCode}" name="areaCode" value="${parameters.areaCode!}"/>
-        <@field type="input" label="${uiLabelMap.PartyContactNumber}" name="contactNumber" value="${parameters.contactNumber!}"/>
+        <@field type="input" label=uiLabelMap.CommonCountryCode name="countryCode" value="${parameters.countryCode!}"/>
+        <@field type="input" label=uiLabelMap.PartyAreaCode name="areaCode" value="${parameters.areaCode!}"/>
+        <@field type="input" label=uiLabelMap.PartyContactNumber name="contactNumber" value="${parameters.contactNumber!}"/>
     </#if>
     <#if extInfo == "O">
         <hr />
-        <@field type="input" label="${uiLabelMap.PartyContactInformation}" name="infoString" value="${parameters.infoString!}"/>
+        <@field type="input" label=uiLabelMap.PartyContactInformation name="infoString" value="${parameters.infoString!}"/>
     </#if>
 
-        <@field type="submit" text="${uiLabelMap.CommonFind}" onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
+        <@field type="submit" text=uiLabelMap.CommonFind onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
       </form>
     </div>
     <@script>
@@ -133,7 +133,7 @@ under the License.
 
 <#if (searchPerformed!false)==true>
 
-  <@section title="${uiLabelMap.CommonSearchResults}" id="findPartyResults">
+  <@section title=uiLabelMap.CommonSearchResults id="findPartyResults">
     <@row>
       <@cell>
       
@@ -269,9 +269,9 @@ under the License.
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
           <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text="${uiLabelMap.CommonDetails}" class="+${styles.action_nav!}" />
+          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-          <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text="${uiLabelMap.OrderOrders}" class="+${styles.action_run_sys!} ${styles.action_find!}">
+          <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">
           <form name="searchorders_o_${rowCount}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/searchorders</@ofbizInterWebappUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
             <input type="hidden" name="hideFields" value="Y" />
@@ -280,11 +280,11 @@ under the License.
             <input type="hidden" name="viewSize" value="20" />
           </form>
           </@menuitem>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}") text="${uiLabelMap.OrderOrderQuotes}" class="+${styles.action_nav!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}") text="${uiLabelMap.OrderNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}") text="${uiLabelMap.OrderNewQuote}" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
           </@menu>
         </@td>

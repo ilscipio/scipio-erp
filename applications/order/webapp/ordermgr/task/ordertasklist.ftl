@@ -38,11 +38,11 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
   <#assign tasksFound = false>
-  <@section title="${uiLabelMap.OrderOrderNeedingAttention}">
+  <@section title=uiLabelMap.OrderOrderNeedingAttention>
 
     <#if poList?has_content>
       <#assign tasksFound = true>
-      <@section title="${uiLabelMap.OrderOrderPurchaseToBeScheduled}">
+      <@section title=uiLabelMap.OrderOrderPurchaseToBeScheduled>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
          <@thead>
           <@tr class="header-row">
@@ -99,7 +99,7 @@ under the License.
 
     <#if partyTasks?has_content>
       <#assign tasksFound = true>
-      <@section title="${uiLabelMap.OrderWorkflow}">
+      <@section title=uiLabelMap.OrderWorkflow>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
          <@thead>
           <@tr class="header-row">
@@ -155,7 +155,7 @@ under the License.
 
     <#if roleTasks?has_content>
       <#assign tasksFound = true>
-      <@section title="${uiLabelMap.CommonWorkflowActivityUserRole}">
+      <@section title=uiLabelMap.CommonWorkflowActivityUserRole>
         <@fields type="default-manual">
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
          <@thead>

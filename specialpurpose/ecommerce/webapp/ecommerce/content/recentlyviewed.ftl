@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if mrvList?has_content>
-  <@section title="${uiLabelMap.EcommerceLastContent}" id="recentlyviewed" class="+screenlet">
+  <@section title=uiLabelMap.EcommerceLastContent id="recentlyviewed" class="+screenlet">
       <#list mrvList as mrvArr>
         <div class="browsecategorytext">
           <a href="<@ofbizUrl>viewcontent?contentId=${mrvArr[0]}</@ofbizUrl>" class="browsecategorybutton">${mrvArr[1]}</a>

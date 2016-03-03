@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductPicklistManage}">
+<@section title=uiLabelMap.ProductPicklistManage>
   
   <#if picklistInfoList?has_content>
     <@paginate mode="content" url=makeOfbizUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>

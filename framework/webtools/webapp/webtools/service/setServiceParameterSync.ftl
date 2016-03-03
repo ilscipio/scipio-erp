@@ -30,6 +30,6 @@ under the License.
     </#list>
   </@fields>
 
-    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}" />
+    <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_begin!}" />
 
 </form>

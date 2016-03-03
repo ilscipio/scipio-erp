@@ -41,7 +41,7 @@ under the License.
             </#if>
           
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${uiLabelMap.OrderCreateShipGroup}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text=uiLabelMap.OrderCreateShipGroup class="+${styles.action_run_session!} ${styles.action_add!}" />
         </@menu>         
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -111,7 +111,7 @@ under the License.
 
 <#-- Foundation: New in OFbiz 14.12 branch (was outside list, as extra rows in a table; now need new table) -->
 <#if shipToPartyShippingContactMechList?has_content>  
-  <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+  <@section title=uiLabelMap.OrderShipToAnotherParty>
     <@row>
       <@cell columns=6>
         <@table type="data-complex"> <#-- orig: class="basic-table" -->
@@ -164,7 +164,7 @@ under the License.
             
     <@menu type="button">
         <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${uiLabelMap.CommonNew} ${uiLabelMap.OrderShipGroup}" class="+${styles.action_run_session!} ${styles.action_add!}" />
-        <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text="${uiLabelMap.OrderCreateShippingAddress}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
     </@menu> 
     
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -279,17 +279,17 @@ under the License.
 </#if>
 
     <#-- select a party id to ship to instead -->
-    <@section title="${uiLabelMap.OrderShipToAnotherParty}">
+    <@section title=uiLabelMap.OrderShipToAnotherParty>
       <form method="post" action="setShipping" name="partyshipform">
         <@fields type="default-manual">
           <@row>
             <@cell columns=6>
               <@row>
                 <@cell columns=9>
-                    <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
+                    <@field type="lookup" label=uiLabelMap.PartyPartyId value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
                 </@cell>
                 <@cell columns=3>                 
-                    <@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
+                    <@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue />
                 </@cell>
               </@row>
             </@cell>

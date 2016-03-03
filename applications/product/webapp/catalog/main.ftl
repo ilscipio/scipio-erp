@@ -26,7 +26,7 @@ under the License.
       <@fields type="default-manual">
         <li>
           <form method="post" action="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" name="EditProdCatalogForm">
-            <@pul title="${uiLabelMap.ProductEditCatalogWithCatalogId}"> 
+            <@pul title=uiLabelMap.ProductEditCatalogWithCatalogId> 
                 <@pli><@field type="input" size="20" maxlength="20" name="prodCatalogId" value="" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>EditProdCatalog</@ofbizUrl>" class="${styles.tiny!} ${styles.action_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateNewCatalog}</a></@pli>
             </@pul>
@@ -34,7 +34,7 @@ under the License.
         </li>
         <li>
           <form method="post" action="<@ofbizUrl>EditCategory</@ofbizUrl>" name="EditCategoryForm">
-            <@pul title="${uiLabelMap.ProductEditCategoryWithCategoryId}">
+            <@pul title=uiLabelMap.ProductEditCategoryWithCategoryId>
                 <@pli><@field type="lookup" name="productCategoryId" id="productCategoryId" formName="EditCategoryForm" fieldFormName="LookupProductCategory" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>EditCategory</@ofbizUrl>" class="${styles.tiny!} ${styles.action_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateNewCategory}</a></@pli>
             </@pul>
@@ -43,7 +43,7 @@ under the License.
           
         <li>
           <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" name="EditProductForm">
-            <@pul title="${uiLabelMap.ProductEditProductWithProductId}">
+            <@pul title=uiLabelMap.ProductEditProductWithProductId>
                 <@pli><@field type="lookup" name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.tiny!} ${styles.action_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
                 <@pli><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="${styles.tiny!}">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></@pli>
@@ -52,7 +52,7 @@ under the License.
         </li>
         <li>
           <form method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
-            <@pul title="${uiLabelMap.ProductFindProductWithIdValue}">
+            <@pul title=uiLabelMap.ProductFindProductWithIdValue>
                 <@pli><@field type="input" size="20" maxlength="20" name="idValue" value="" postfix=true/></@pli>
                 <@pli><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>"> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></@pli>
                 <@pli><a href="<@ofbizUrl>FastLoadCache</@ofbizUrl>"> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></@pli>

@@ -30,7 +30,7 @@ under the License.
   <#assign telecomNumber = fulfillContactMech.getRelatedOne("TelecomNumber", true)!>
 </#if>
 
-  <@section title="${uiLabelMap.PartyContactInformation}">
+  <@section title=uiLabelMap.PartyContactInformation>
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <@tr>
                 <@td align="right" valign="top" width="25%">

@@ -92,7 +92,7 @@ under the License.
     </#if>
     </@section>
     
-    <@section title="${uiLabelMap.ProductProducts}">
+    <@section title=uiLabelMap.ProductProducts>
     <#if productsData?has_content>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>

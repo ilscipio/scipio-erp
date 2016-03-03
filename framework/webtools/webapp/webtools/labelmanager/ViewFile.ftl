@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-    <@field type="display" label="${uiLabelMap.WebtoolsLabelManagerKey}">${parameters.sourceKey!}</@field>
-    <@field type="display" label="${uiLabelMap.WebtoolsLabelManagerFileName}">${parameters.fileName!}</@field>
+    <@field type="display" label=uiLabelMap.WebtoolsLabelManagerKey>${parameters.sourceKey!}</@field>
+    <@field type="display" label=uiLabelMap.WebtoolsLabelManagerFileName>${parameters.fileName!}</@field>
     <@field type="textarea" rows="${rows}" cols="150" disabled=true>${fileString}</@field>
 </@section>

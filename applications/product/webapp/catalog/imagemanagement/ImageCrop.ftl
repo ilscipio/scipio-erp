@@ -40,7 +40,7 @@ jQuery(document).ready(function(){
     
     if (imageName) {
         <#assign jsHtmlString>
-          '<@field type="generic" label="${uiLabelMap.CommonPreview}">
+          '<@field type="generic" label=uiLabelMap.CommonPreview>
             <div> <#-- extra div required, do not remove unless having alternate fix -->
               <div style="width:100px; height:100px; overflow:hidden;">
                 <img src="' + imageUrl + '" id="preview" />
@@ -52,8 +52,8 @@ jQuery(document).ready(function(){
         
         <#assign jsHtmlString>
           '<@field type="submitarea">
-            <@field type="submit" text="${uiLabelMap.CommonSubmit}" name="submitButton"/> 
-            <@field type="submit" submitType="link" class="+${styles.link_nav_cancel!}" title=" " href=makeOfbizInterWebappUrl("/catalog/control/ListImageManage?productId=' + productId + '") text="${uiLabelMap.CommonCancel}" />
+            <@field type="submit" text=uiLabelMap.CommonSubmit name="submitButton"/> 
+            <@field type="submit" submitType="link" class="+${styles.link_nav_cancel!}" title=" " href=makeOfbizInterWebappUrl("/catalog/control/ListImageManage?productId=' + productId + '") text=uiLabelMap.CommonCancel />
           </@field>'
         </#assign>
         jQuery('#ImageCropping').append(${compressStringBlankspace(jsHtmlString)});
@@ -101,7 +101,7 @@ function showPreview(coords){
   
   <@container class="crop-fields">
 
-    <@field type="generic" name="imageCropp" label="${uiLabelMap.CommonImage}">
+    <@field type="generic" name="imageCropp" label=uiLabelMap.CommonImage>
       <@container class="cropbox">
         <img src="<@ofbizContentUrl><#if imageURL?has_content>${imageURL!}<#else>/images/defaultImage.jpg</#if></@ofbizContentUrl>" 
           alt="${uiLabelMap.CommonImage}" title="${uiLabelMap.CommonImage}"<#if !imageURL?has_content> class="cssImgXLarge"</#if> />

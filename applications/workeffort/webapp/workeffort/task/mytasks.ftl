@@ -18,13 +18,13 @@ under the License.
 -->
 <#-- macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text="${uiLabelMap.WorkEffortNewTask}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text=uiLabelMap.WorkEffortNewTask class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PageTitleViewActivityAndTaskList}" menuContent=menuContent -->
+<@section title=uiLabelMap.PageTitleViewActivityAndTaskList menuContent=menuContent -->
 
 <#if tasks?has_content && (tasks.size() > 0)>
-    <#--<@section title="${uiLabelMap.WorkEffortAssignedTasks}">-->
+    <#--<@section title=uiLabelMap.WorkEffortAssignedTasks>-->
     <#--<@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex! listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
             <@thead>
@@ -49,7 +49,7 @@ under the License.
 </#if>
   
 <#if activities?has_content && (activities.size() > 0)>
-    <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUser}">-->
+    <#--<@section title=uiLabelMap.WorkEffortWorkflowActivitiesUser>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>
@@ -78,7 +78,7 @@ under the License.
 </#if>
   
 <#if roleActivities?has_content && (roleActivities.size() > 0)>
-    <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}">-->
+    <#--<@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserRole>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>
@@ -107,7 +107,7 @@ under the License.
 </#if>
 
 <#if groupActivities?has_content && (groupActivities.size() > 0)>
-    <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}">-->
+    <#--<@section title=uiLabelMap.WorkEffortWorkflowActivitiesUserGroup>-->
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>

@@ -20,10 +20,10 @@ under the License.
   <#-- CATO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text="${uiLabelMap.CommonListAll}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
+      <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
     </@menu>
   </#macro>-->
-  <@section id="partyVisits" title="${uiLabelMap.PartyVisits}">
+  <@section id="partyVisits" title=uiLabelMap.PartyVisits>
       <#if visits?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
          <@thead>

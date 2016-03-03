@@ -124,7 +124,7 @@ under the License.
             </@tbody>
           </@table>
 
-          <@field type="submit" text="${uiLabelMap.CommonSubmit}"/>
+          <@field type="submit" text=uiLabelMap.CommonSubmit/>
         </#if>
 </form>
 </@section>

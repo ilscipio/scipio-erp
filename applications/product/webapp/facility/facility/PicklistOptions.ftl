@@ -17,33 +17,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.FacilitySelectOptionsToGroupBy}">
+<@section title=uiLabelMap.FacilitySelectOptionsToGroupBy>
   <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
   <@row>
     <@cell columns=4>
-      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByShippingMethod}" name="groupByShippingMethod" value="Y" checked=("${requestParameters.groupByShippingMethod!}" == "Y") />
+      <@field type="checkbox" label=uiLabelMap.FacilityGroupByShippingMethod name="groupByShippingMethod" value="Y" checked=("${requestParameters.groupByShippingMethod!}" == "Y") />
     </@cell>
     <@cell columns=4>
-      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByWarehouseArea}" name="groupByWarehouseArea" value="Y" checked=("${requestParameters.groupByWarehouseArea!}" == "Y") />
+      <@field type="checkbox" label=uiLabelMap.FacilityGroupByWarehouseArea name="groupByWarehouseArea" value="Y" checked=("${requestParameters.groupByWarehouseArea!}" == "Y") />
     </@cell>
     <@cell columns=4>
-      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByNoOfOrderItems}" name="groupByNoOfOrderItems" value="Y" checked=("${requestParameters.groupByNoOfOrderItems!}" == "Y") />
+      <@field type="checkbox" label=uiLabelMap.FacilityGroupByNoOfOrderItems name="groupByNoOfOrderItems" value="Y" checked=("${requestParameters.groupByNoOfOrderItems!}" == "Y") />
     </@cell>
   </@row>
  
     <#-- TODO: these two were align=right... -->
-    <@field type="input" label="${uiLabelMap.FacilityGroupFirst}" size="4" name="maxNumberOfOrders" value="50"/>      
-    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
+    <@field type="input" label=uiLabelMap.FacilityGroupFirst size="4" name="maxNumberOfOrders" value="50"/>      
+    <@field type="submit" text=uiLabelMap.CommonSubmit class="+${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
   </form>
 </@section>  
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}" class="+${styles.action_nav!} ${styles.action_view!}" />
+    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text=uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.ProductFindOrdersToPick}" menuContent=menuContent>
+<@section title=uiLabelMap.ProductFindOrdersToPick menuContent=menuContent>
   <#if pickMoveInfoList?has_content>
     <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
@@ -248,7 +248,7 @@ under the License.
 </#if>
 
 <#if toPickList?has_content>
-  <@section title="${uiLabelMap.ProductPickingDetail}">
+  <@section title=uiLabelMap.ProductPickingDetail>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">

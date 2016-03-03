@@ -114,10 +114,10 @@ function clickAll(e) {
 <#else>
     <@commonMsg type="result-norecord">${uiLabelMap.ProductNoSelectableFeaturesFound}</@commonMsg>
 </#if>
-<@section title="${uiLabelMap.ProductVariantAdd}">
+<@section title=uiLabelMap.ProductVariantAdd>
     <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">
         <input type="hidden" name="productId" value="${productId}"/>
-        <@field type="textarea" label="${uiLabelMap.ProductVariantProductIds}" name="variantProductIdsBag" rows="6" cols="20"></@field>
-        <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductVariantAdd}"/>
+        <@field type="textarea" label=uiLabelMap.ProductVariantProductIds name="variantProductIdsBag" rows="6" cols="20"></@field>
+        <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.ProductVariantAdd/>
     </form>
 </@section>

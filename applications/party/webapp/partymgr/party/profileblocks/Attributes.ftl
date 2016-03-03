@@ -20,11 +20,11 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("editPartyAttribute?partyId=${party.partyId!}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makeOfbizUrl("editPartyAttribute?partyId=${party.partyId!}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>
     </@menu>
   </#macro>
-  <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuContent=menuContent>
+  <@section id="partyAttributes" title=uiLabelMap.PartyAttributes menuContent=menuContent>
       <#if attributes?has_content>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
           <@thead>

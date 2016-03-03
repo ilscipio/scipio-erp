@@ -29,7 +29,7 @@ under the License.
         </#if>
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.EcommerceLastProducts}" menuContent=menuContent id="minilastviewedproducts" class="+screenlet">
+  <@section title=uiLabelMap.EcommerceLastProducts menuContent=menuContent id="minilastviewedproducts" class="+screenlet">
       <ul>
         <#list lastViewedProducts[0..limit] as productId>
           <li>

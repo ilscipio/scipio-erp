@@ -43,39 +43,39 @@ under the License.
             Needs to be sorted out globally... -->
       <@fields type="default-alt1" checkboxType="simple-standard"> 
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
-        <@field type="generic" label="${uiLabelMap.CommonStatus}">
-            <@field type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" checked=(state.hasAllStatus()) label="${uiLabelMap.CommonAll}"/>
-            <@field type="checkbox" name="viewcreated" value="Y" checked=(state.hasStatus('viewcreated')) label="${uiLabelMap.CommonCreated}"/>
-            <@field type="checkbox" name="viewprocessing" value="Y" checked=(state.hasStatus('viewprocessing')) label="${uiLabelMap.CommonProcessing}"/>
-            <@field type="checkbox" name="viewapproved" value="Y" checked=(state.hasStatus('viewapproved')) label="${uiLabelMap.CommonApproved}"/>
-            <@field type="checkbox" name="viewhold" value="Y" checked=(state.hasStatus('viewhold')) label="${uiLabelMap.CommonHeld}"/>
-            <@field type="checkbox" name="viewcompleted" value="Y" checked=(state.hasStatus('viewcompleted')) label="${uiLabelMap.CommonCompleted}"/>
+        <@field type="generic" label=uiLabelMap.CommonStatus>
+            <@field type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" checked=(state.hasAllStatus()) label=uiLabelMap.CommonAll/>
+            <@field type="checkbox" name="viewcreated" value="Y" checked=(state.hasStatus('viewcreated')) label=uiLabelMap.CommonCreated/>
+            <@field type="checkbox" name="viewprocessing" value="Y" checked=(state.hasStatus('viewprocessing')) label=uiLabelMap.CommonProcessing/>
+            <@field type="checkbox" name="viewapproved" value="Y" checked=(state.hasStatus('viewapproved')) label=uiLabelMap.CommonApproved/>
+            <@field type="checkbox" name="viewhold" value="Y" checked=(state.hasStatus('viewhold')) label=uiLabelMap.CommonHeld/>
+            <@field type="checkbox" name="viewcompleted" value="Y" checked=(state.hasStatus('viewcompleted')) label=uiLabelMap.CommonCompleted/>
             <#--@field type="checkbox" name="viewsent" value="Y" checked=(state.hasStatus('viewsent')) label="${uiLabelMap.CommonSent}"/>-->
-            <@field type="checkbox" name="viewrejected" value="Y" checked=(state.hasStatus('viewrejected')) label="${uiLabelMap.CommonRejected}"/>
-            <@field type="checkbox" name="viewcancelled" value="Y" checked=(state.hasStatus('viewcancelled')) label="${uiLabelMap.CommonCancelled}"/>
+            <@field type="checkbox" name="viewrejected" value="Y" checked=(state.hasStatus('viewrejected')) label=uiLabelMap.CommonRejected/>
+            <@field type="checkbox" name="viewcancelled" value="Y" checked=(state.hasStatus('viewcancelled')) label=uiLabelMap.CommonCancelled/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonType}">
+        <@field type="generic" label=uiLabelMap.CommonType>
             <@field type="checkbox" name="view_SALES_ORDER" value="Y" checked=(state.hasType('view_SALES_ORDER')) label="${descr_SALES_ORDER}"/>
             <@field type="checkbox" name="view_PURCHASE_ORDER" value="Y" checked=(state.hasType('view_PURCHASE_ORDER')) label="${descr_PURCHASE_ORDER}"/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonFilter}">
-            <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=(state.hasFilter('filterInventoryProblems')) label="${uiLabelMap.OrderFilterInventoryProblems}"/>
-            <@field type="checkbox" name="filterAuthProblems" value="Y" checked=(state.hasFilter('filterAuthProblems')) label="${uiLabelMap.OrderFilterAuthProblems}"/>
+        <@field type="generic" label=uiLabelMap.CommonFilter>
+            <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=(state.hasFilter('filterInventoryProblems')) label=uiLabelMap.OrderFilterInventoryProblems/>
+            <@field type="checkbox" name="filterAuthProblems" value="Y" checked=(state.hasFilter('filterAuthProblems')) label=uiLabelMap.OrderFilterAuthProblems/>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})">
-            <@field type="checkbox" name="filterPartiallyReceivedPOs" value="Y" checked=(state.hasFilter('filterPartiallyReceivedPOs')) label="${uiLabelMap.OrderFilterPartiallyReceivedPOs}"/>
-            <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=(state.hasFilter('filterPOsOpenPastTheirETA')) label="${uiLabelMap.OrderFilterPOsOpenPastTheirETA}"/>
-            <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=(state.hasFilter('filterPOsWithRejectedItems')) label="${uiLabelMap.OrderFilterPOsWithRejectedItems}"/>
+            <@field type="checkbox" name="filterPartiallyReceivedPOs" value="Y" checked=(state.hasFilter('filterPartiallyReceivedPOs')) label=uiLabelMap.OrderFilterPartiallyReceivedPOs/>
+            <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=(state.hasFilter('filterPOsOpenPastTheirETA')) label=uiLabelMap.OrderFilterPOsOpenPastTheirETA/>
+            <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=(state.hasFilter('filterPOsWithRejectedItems')) label=uiLabelMap.OrderFilterPOsWithRejectedItems/>
         </@field>
 
-        <@field type="submit" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
+        <@field type="submit" text=uiLabelMap.CommonFind class="${styles.link_run_sys!} ${styles.action_find!}"/>
       </@fields>
       </form>
 </@section>
  
 
 <#if hasPermission>
-  <@section title="${uiLabelMap.OrderOrderList}" id="findOrderList">        
+  <@section title=uiLabelMap.OrderOrderList id="findOrderList">        
       <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true>
         <@table type="data-list" autoAltRows=true> <#-- orig: cellspacing="0" -->
           <@thead>

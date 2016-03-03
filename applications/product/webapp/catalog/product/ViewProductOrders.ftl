@@ -25,7 +25,7 @@ under the License.
     }
 </@script>
 
-<@section title="${uiLabelMap.OrderOrderFound}">
+<@section title=uiLabelMap.OrderOrderFound>
     <#-- Cato: using @paginate, but loop still relevant
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
       <input type="hidden" name="viewSize"/>

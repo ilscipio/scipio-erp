@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.PageTitleReturnHeader}">
+<@section title=uiLabelMap.PageTitleReturnHeader>
         <#if returnHeader??>
             <form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
             <input type="hidden" name="returnId" value="${returnHeader.returnId}" />
@@ -29,12 +29,12 @@ under the License.
         </#if>
 
         <#if returnHeader??>
-          <@field type="display" label="${uiLabelMap.OrderReturnId}">${returnHeader.returnId}</@field>
+          <@field type="display" label=uiLabelMap.OrderReturnId>${returnHeader.returnId}</@field>
         </#if>
         <#if returnHeader??>
-          <@field type="display" label="${uiLabelMap.CommonCurrency}">${returnHeader.currencyUomId!}</@field>
+          <@field type="display" label=uiLabelMap.CommonCurrency>${returnHeader.currencyUomId!}</@field>
         <#else>
-          <@field type="select" name="currencyUomId" label="${uiLabelMap.CommonCurrency}">
+          <@field type="select" name="currencyUomId" label=uiLabelMap.CommonCurrency>
             <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
               <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom", false).getString("description",locale)}</option>
               <option value="${orderHeader.currencyUom}">---</option>
@@ -52,9 +52,9 @@ under the License.
           <#if returnInfo.entryDate??>
             <#assign entryDate = returnInfo.get("entryDate").toString()>
           </#if>
-          <@field type="datetime" label="${uiLabelMap.OrderEntryDate}" name="entryDate" value="${entryDate!}" size="25" maxlength="30" id="entryDate1"/>
-          <@field type="lookup" label="${uiLabelMap.OrderReturnFromParty}" value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
-          <@field type="select" name="destinationFacilityId" label="${uiLabelMap.OrderReturnToFacility}">
+          <@field type="datetime" label=uiLabelMap.OrderEntryDate name="entryDate" value="${entryDate!}" size="25" maxlength="30" id="entryDate1"/>
+          <@field type="lookup" label=uiLabelMap.OrderReturnFromParty value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
+          <@field type="select" name="destinationFacilityId" label=uiLabelMap.OrderReturnToFacility>
             <#if currentFacility??>
               <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
               <option value="${currentFacility.facilityId}">---</option>
@@ -65,7 +65,7 @@ under the License.
             </#list>
           </@field>
         <#if billingAccountList?has_content>
-          <@field type="select" name="billingAccountId" label="${uiLabelMap.AccountingBillingAccount}">
+          <@field type="select" name="billingAccountId" label=uiLabelMap.AccountingBillingAccount>
               <#if currentAccount??>
                 <option value="${currentAccount.billingAccountId}">${currentAccount.billingAccountId}: ${currentAccount.description!}</option>
                 <option value="${currentAccount.billingAccountId}">---</option>
@@ -76,9 +76,9 @@ under the License.
               </#list>
           </@field>
         <#else>
-          <@field type="input" label="${uiLabelMap.AccountingBillingAccount}" size="20" name="billingAccountId" />
+          <@field type="input" label=uiLabelMap.AccountingBillingAccount size="20" name="billingAccountId" />
         </#if>
-          <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
+          <@field type="generic" label=uiLabelMap.FormFieldTitle_paymentMethodId>
               <#if creditCardList?? || eftAccountList??>
                 <@field type="select" name="paymentMethodId">
                   <#if currentCreditCard??>
@@ -107,7 +107,7 @@ under the License.
                 <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
-          <@field type="select" label="${uiLabelMap.OrderReturnNeedsAutoReceive}" name="needsInventoryReceive">
+          <@field type="select" label=uiLabelMap.OrderReturnNeedsAutoReceive name="needsInventoryReceive">
             <#if needsInventoryReceive??>
               <#if "Y" == needsInventoryReceive>
                 <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>
@@ -120,7 +120,7 @@ under the License.
               <option value="N">${uiLabelMap.CommonNo}</option>
           </@field>
         <#if returnHeader?has_content>
-          <@field type="select" label="${uiLabelMap.CommonReturnStatus}" name="statusId">
+          <@field type="select" label=uiLabelMap.CommonReturnStatus name="statusId">
             <#if currentStatus??>
               <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
               <option value="${currentStatus.statusId}">---</option>
@@ -129,13 +129,13 @@ under the License.
               <option value="${status.statusIdTo}">${status.get("transitionName",locale)}</option>
             </#list>
           </@field>
-          <@field type="display" label="${uiLabelMap.FormFieldTitle_createdBy}">${returnHeader.createdBy!"Unknown"}</@field>
-          <@field type="generic" label="${uiLabelMap.OrderReturnFromAddress}">
+          <@field type="display" label=uiLabelMap.FormFieldTitle_createdBy>${returnHeader.createdBy!"Unknown"}</@field>
+          <@field type="generic" label=uiLabelMap.OrderReturnFromAddress>
               <#if (addressEditable)>
                 <#list addresses as address >
                   <@displayAddress postalAddress = address.postalAddress editable = true/>
                 </#list>
-                <@field type="radio" name="originContactMechId" value="" checked=(!postalAddressFrom?has_content) label="${uiLabelMap.CommonNoAddress}" />
+                <@field type="radio" name="originContactMechId" value="" checked=(!postalAddressFrom?has_content) label=uiLabelMap.CommonNoAddress />
               <#else>
                  <#if (postalAddressFrom?has_content)>
                    <@displayAddress postalAddress = postalAddressFrom editable = false />
@@ -144,15 +144,15 @@ under the License.
                  </#if>
               </#if>
           </@field>
-          <@field type="generic" label="${uiLabelMap.OrderReturnToAddress}">
+          <@field type="generic" label=uiLabelMap.OrderReturnToAddress>
             <#if (postalAddressTo?has_content)>
               <@displayAddress postalAddress = postalAddressTo editable=false />
             </#if>
           </@field>
-          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+          <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
         <#else>
           <input type="hidden" name="statusId" value="RETURN_REQUESTED" />
-          <@field type="submit" text="${uiLabelMap.CommonNew}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+          <@field type="submit" text=uiLabelMap.CommonNew class="+${styles.link_run_sys!} ${styles.action_add!}"/>
         </#if>
 
         <#macro displayAddress postalAddress editable>

@@ -21,7 +21,7 @@ under the License.
 <#if (requestParameters.certString?has_content)>
     <#assign cert = Static["org.ofbiz.base.util.KeyStoreUtil"].pemToCert(requestParameters.certString)/>
 </#if>-->
-<@section title="${uiLabelMap.CertDetails}">
+<@section title=uiLabelMap.CertDetails>
     <#if (cert?has_content)>
       <@row>
         <@cell columns=2 small=2><label>${uiLabelMap.CertType}</label></@cell>
@@ -40,7 +40,7 @@ under the License.
     </#if>
 </@section>
 <#if (cert?has_content)>
-<@section title="${uiLabelMap.CertSaveToKeyStore}">
+<@section title=uiLabelMap.CertSaveToKeyStore>
     <@script>
         jQuery(document).ready(function() {
             jQuery('form.savecertform').submit(function(event) {

@@ -36,12 +36,12 @@ under the License.
     </div>
     <@section id="login-box-content">
         <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
-            <@field type="input" name="USERNAME" value="${username}" size="20" collapse=true placeholder="${uiLabelMap.CommonUsername}" tooltip="${uiLabelMap.CommonUsername}" label="${labelUsername!}"/>
+            <@field type="input" name="USERNAME" value="${username}" size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label="${labelUsername!}"/>
             <@row>
                 <@cell columns=12 >
                     <a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
-                    <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}" container=false/>
-                    <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}" container=false/>
+                    <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint container=false/>
+                    <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword container=false/>
                     <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 </@cell>
             </@row>

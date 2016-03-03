@@ -191,7 +191,7 @@ under the License.
         </@table>
     </@section>
 </#if>
-<@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory}">
+<@section title=uiLabelMap.ContentSurveyApplyQuestionFromCategory>
       <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
         <select name="surveyQuestionCategoryId">

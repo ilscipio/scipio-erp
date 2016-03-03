@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderRequestItems}">
+<@section title=uiLabelMap.OrderRequestItems>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr valign="bottom" class="header-row">

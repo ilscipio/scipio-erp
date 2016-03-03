@@ -20,11 +20,11 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("AddPartyNote?partyId=${partyId}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeOfbizUrl("AddPartyNote?partyId=${partyId}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>
   </#macro>
-  <@section id="partyNotes" title="${uiLabelMap.CommonNotes}" menuContent=menuContent>
+  <@section id="partyNotes" title=uiLabelMap.CommonNotes menuContent=menuContent>
       <#if notes?has_content>
         <@table type="data-complex" autoAltRows=false>
         <@tbody>

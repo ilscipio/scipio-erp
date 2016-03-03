@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ProductCarrierShipmentMethod}">
+<@section title=uiLabelMap.ProductCarrierShipmentMethod>
     <form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
       <@fields type="default-nolabels">
         <input type="hidden" name="newShipMethod" value="Y"/>
@@ -27,7 +27,7 @@ under the License.
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.shipmentMethodTypeId} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
         </@field>
-        <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
+        <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd/>
       </@fields>
     </form>
 </@section>

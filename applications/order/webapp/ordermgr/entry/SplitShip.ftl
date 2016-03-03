@@ -43,7 +43,7 @@ function submitForm(form, mode, value) {
 }
 </@script>
 
-<@section title="${uiLabelMap.OrderItemGroups}">
+<@section title=uiLabelMap.OrderItemGroups>
     <@fields type="default-manual">
         <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
           <#assign shipGroups = cart.getShipGroups()>
@@ -129,7 +129,7 @@ function submitForm(form, mode, value) {
                     <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <@field type="textarea" class="+textAreaBox" cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</@field>
                   </@td>
-                  <@td><@field type="submit" submitType="button" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" onClick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
+                  <@td><@field type="submit" submitType="button" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonSave onClick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
                 </@tr>
                 <#assign groupIdx = groupIdx + 1>
                 <#if group_has_next>
@@ -146,7 +146,7 @@ function submitForm(form, mode, value) {
     </@fields>
 </@section>
 
-<@section title="${uiLabelMap.OrderAssignItems}">
+<@section title=uiLabelMap.OrderAssignItems>
     <@fields type="default-manual">
         <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
           <@tr>
@@ -231,7 +231,7 @@ function submitForm(form, mode, value) {
                     </@field>
                   </div>
                 </@td>
-                <@td><@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonSubmit}"/></@td>
+                <@td><@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonSubmit/></@td>
               </form>
             </@tr>
           </#list>
@@ -240,7 +240,7 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@menu type="button">
-  <@menuitem type="link" href=makeOfbizUrl("updateCheckoutOptions/showcart") text="${uiLabelMap.OrderBacktoShoppingCart}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  <@menuitem type="link" href=makeOfbizUrl("setBilling") text="${uiLabelMap.CommonContinue}" class="+${styles.action_nav!} ${styles.action_continue!}" />
+  <@menuitem type="link" href=makeOfbizUrl("updateCheckoutOptions/showcart") text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makeOfbizUrl("setBilling") text=uiLabelMap.CommonContinue class="+${styles.action_nav!} ${styles.action_continue!}" />
 </@menu>
 

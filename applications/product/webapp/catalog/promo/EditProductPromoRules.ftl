@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
-<@section title="${uiLabelMap.PageTitleEditProductPromoRules}">
+<@section title=uiLabelMap.PageTitleEditProductPromoRules>
   <#-- ======================= Rules ======================== -->
     <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
@@ -454,7 +454,7 @@ under the License.
   -->
 </@section>
 
-<@section title="${uiLabelMap.ProductAddPromoRule}">
+<@section title=uiLabelMap.ProductAddPromoRule>
     <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
       <span>${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
@@ -505,7 +505,7 @@ under the License.
     </div>
 </@section>
 
-<@section title="${uiLabelMap.ProductPromotionProducts}">
+<@section title=uiLabelMap.ProductPromotionProducts>
   <#-- ======================= Products ======================== -->
   <#list promoProductPromoProducts as promoProductPromoProduct>
     <#assign promoProduct = promoProductPromoProduct.getRelatedOne("Product", true)!>

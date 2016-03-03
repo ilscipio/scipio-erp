@@ -21,7 +21,7 @@ under the License.
 <#if (requestParameters.certString?has_content)>
     <#assign cert = Static["org.ofbiz.base.util.KeyStoreUtil"].pemToCert(requestParameters.certString)/>
 </#if>-->
-<@section id="findPartyParameters" title="${uiLabelMap.PageTitleImportCertificate}">
+<@section id="findPartyParameters" title=uiLabelMap.PageTitleImportCertificate>
     <#if (cert?has_content)>
         <span>${uiLabelMap.PartyCertType}</span>&nbsp;${cert.getType()} : ${cert.getSubjectX500Principal()}
         <span>${uiLabelMap.PartyCertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
@@ -30,7 +30,7 @@ under the License.
         <@commonMsg type="warning">${uiLabelMap.PartyCertInvalid}</@commonMsg>
     </#if>
 </@section>
-<@section title="${uiLabelMap.PartyCertSaveToKeyStore}">
+<@section title=uiLabelMap.PartyCertSaveToKeyStore>
   <@table type="data-list"> <#-- orig: cellspacing="0" -->
     <@thead>
       <@tr class="header-row">

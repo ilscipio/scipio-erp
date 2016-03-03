@@ -19,16 +19,16 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("findAddressMatch") text="${uiLabelMap.PageTitleFindMatches}" class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href=makeOfbizUrl("findAddressMatch") text=uiLabelMap.PageTitleFindMatches class="+${styles.action_nav!} ${styles.action_find!}" />
   </@menu>
 </#macro>
-<@section id="address-match-map" title="${uiLabelMap.PageTitleCreateAddressMatchMap}" menuContent=menuContent>
+<@section id="address-match-map" title=uiLabelMap.PageTitleCreateAddressMatchMap menuContent=menuContent>
   <@section id="addressmatchmap_create">
   <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
-    <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
-    <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
-    <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
-    <@field type="submit" submitType="link" href="javascript:document.addaddrmap.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
+    <@field type="input" name="mapKey" label=uiLabelMap.PartyAddressMatchKey />
+    <@field type="input" name="mapValue" label=uiLabelMap.PartyAddressMatchValue />
+    <@field type="input" name="sequenceNum" label=uiLabelMap.CommonSequence value="0" size=5/>
+    <@field type="submit" submitType="link" href="javascript:document.addaddrmap.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
   </form>
   </@section>
   
@@ -57,7 +57,7 @@ under the License.
   </form>
   </@section>
 </@section>
-<@section title="${uiLabelMap.PageTitleAddressMatches}">
+<@section title=uiLabelMap.PageTitleAddressMatches>
       <#if addressMatchMaps?has_content>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
           <@thead>

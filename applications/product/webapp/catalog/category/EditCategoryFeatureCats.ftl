@@ -21,11 +21,11 @@ under the License.
 </form>
 
 <@menu type="button">
-  <@menuitem type="link" href="javascript:document.attachProductFeaturesToCategory.submit()" text="${uiLabelMap.ProductFeatureCategoryAttach}" class="+${styles.action_run_sys!} ${styles.action_update!}"/>
+  <@menuitem type="link" href="javascript:document.attachProductFeaturesToCategory.submit()" text=uiLabelMap.ProductFeatureCategoryAttach class="+${styles.action_run_sys!} ${styles.action_update!}"/>
 </@menu>
 
 <#if productCategoryId?? && productCategory??>
-    <@section title="${uiLabelMap.PageTitleEditCategoryFeatureCategories}">
+    <@section title=uiLabelMap.PageTitleEditCategoryFeatureCategories>
         <#if productFeatureCatGrpAppls?has_content>
             <#-- Feature Groups -->
             <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -76,7 +76,7 @@ under the License.
     </@section>
     
   <#if productFeatureGroups?has_content>
-    <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
+    <@section title=uiLabelMap.ProductApplyFeatureGroupFromCategory>
         <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
           <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
@@ -86,13 +86,13 @@ under the License.
                 </#list>
             </@field>
             <@field type="datetime" name="fromDate" value="" size="25" maxlength="30" id="fromDate2"/>
-            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
+            <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}" />
           </@fields>
         </form> 
     </@section>
   </#if>
   
-    <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
+    <@section title=uiLabelMap.ProductApplyFeatureGroupFromCategory>
         <#if productFeatureCategoryAppls?has_content>
             <#-- Feature Categories -->
             <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->

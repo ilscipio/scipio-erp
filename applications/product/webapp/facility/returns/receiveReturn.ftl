@@ -19,7 +19,7 @@ under the License.
 <#assign sectionTitle>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text=uiLabelMap.ProductNewFacility class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent>
@@ -237,12 +237,12 @@ under the License.
           </@section>
           <#-- Initial Screen -->
         <#else>
-          <@section title="${uiLabelMap.ProductReceiveReturn}">
+          <@section title=uiLabelMap.ProductReceiveReturn>
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
-              <@field type="input" label="${uiLabelMap.ProductReturnNumber}" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
+              <@field type="input" label=uiLabelMap.ProductReturnNumber name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
           </form>
           </@section>
         </#if>

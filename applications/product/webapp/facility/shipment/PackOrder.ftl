@@ -68,16 +68,16 @@ under the License.
             <@section>
             <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-                <@field type="generic" label="${uiLabelMap.ProductOrderId}">
+                <@field type="generic" label=uiLabelMap.ProductOrderId>
                     <@field type="input" inline=true name="orderId" size="20" maxlength="20" value="${orderId!}"/>
                     <span>/</span>
                     <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId!'00001'}"/>
-                    <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label="${uiLabelMap.ProductHideGrid}" />
+                    <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label=uiLabelMap.ProductHideGrid />
                 </@field>
                 <@field type="submitarea">
                     <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
-                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
-                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
+                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
                 </@field>
             </form>
             </@section>
@@ -86,14 +86,14 @@ under the License.
             <@section>
             <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
-                <@field type="generic" label="${uiLabelMap.FormFieldTitle_picklistBinId}">
+                <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
                     <@field type="input" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-                    <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label="${uiLabelMap.ProductHideGrid}"/>
+                    <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label=uiLabelMap.ProductHideGrid/>
                 </@field>
                 <@field type="submitarea">
                     <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectPicklistBinForm.submit();" />
-                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
-                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
+                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
                 </@field>
             </form>
             </@section>
@@ -199,16 +199,16 @@ under the License.
                   <input type="hidden" name="hideGrid" value="${hideGrid}"/>
                   <@row>
                     <@cell columns=6>
-                        <@field type="input" name="productId" size="20" maxlength="20" value="" label="${uiLabelMap.ProductProductNumber}"/>
+                        <@field type="input" name="productId" size="20" maxlength="20" value="" label=uiLabelMap.ProductProductNumber/>
                         <span>@</span>
                         <@field type="input"  name="quantity" size="6" maxlength="6" value="1"/>
-                        <@field type="submit" submitType="link" href="javascript:document.singlePackForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackItem}" />
+                        <@field type="submit" submitType="link" href="javascript:document.singlePackForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackItem />
                     </@cell>
                     <@cell columns=6>
-                        <@field type="display" label="${uiLabelMap.ProductCurrentPackageSequence}">
+                        <@field type="display" label=uiLabelMap.ProductCurrentPackageSequence>
                             ${packingSession.getCurrentPackageSeq()}
                         </@field>
-                        <@field type="submit" submitType="input-button" text="${uiLabelMap.ProductNextPackage}" onClick="javascript:document.incPkgSeq.submit();" />
+                        <@field type="submit" submitType="input-button" text=uiLabelMap.ProductNextPackage onClick="javascript:document.incPkgSeq.submit();" />
                     </@cell>
                   </@row>
                   </@fields>
@@ -319,7 +319,7 @@ under the License.
                     <@tr>
                       <@td colspan="12" align="right">
                         <@field type="submitarea">
-                            <@field type="submit" text="${uiLabelMap.ProductPackItem}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+                            <@field type="submit" text=uiLabelMap.ProductPackItem class="+${styles.link_run_sys!} ${styles.action_update!}" />
                             <@field type="submit" type="input-button" text="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onClick="javascript:document.clearPackForm.submit();"/>
                         </@field>
                       </@td>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}">
+  <@section id="partyUserLogins" title=uiLabelMap.PartyUserName>
       <#if userLogins?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@tbody>

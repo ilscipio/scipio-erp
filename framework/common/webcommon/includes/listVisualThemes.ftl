@@ -44,7 +44,7 @@ margin: 1em;
 </@script>
 <@panel type="callout">${uiLabelMap.CommonVisualThemeUsage}</@panel>
 
-<@section title="${uiLabelMap.CommonVisualThemes}">
+<@section title=uiLabelMap.CommonVisualThemes>
   
   <#if visualThemes?has_content>
     <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("visualThemeId")/>

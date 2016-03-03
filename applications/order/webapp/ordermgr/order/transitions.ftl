@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if inProcess??>
-  <@section title="${uiLabelMap.OrderProcessingStatus}">
+  <@section title=uiLabelMap.OrderProcessingStatus>
           <#-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
             <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
@@ -31,7 +31,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderRelease}" />
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.OrderRelease />
               </@cell>
             </@row>
             </@fields>
@@ -49,7 +49,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderHold}" />
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.OrderHold />
               </@cell>
             </@row>
             </@fields>
@@ -59,7 +59,7 @@ under the License.
 </#if>
 
 <#if wfTransitions?? && wfTransitions?has_content>
-  <@section title="${uiLabelMap.OrderProcessingTransitions}">
+  <@section title=uiLabelMap.OrderProcessingTransitions>
           <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
           <@fields type="default-manual">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
@@ -80,7 +80,7 @@ under the License.
               </@field>
             </@cell>
             <@cell columns=3>
-              <@field type="submit" submitType="link" href="javascript:document.transitionForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
+              <@field type="submit" submitType="link" href="javascript:document.transitionForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonContinue />
             </@cell>
           </@row>
           </@fields>

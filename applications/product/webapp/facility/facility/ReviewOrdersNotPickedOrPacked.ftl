@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderOrderList}">
+<@section title=uiLabelMap.OrderOrderList>
       <#if orders?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
           <@thead>

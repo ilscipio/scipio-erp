@@ -19,13 +19,13 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <#--if project?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text=uiLabelMap.ProjectMgrNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
       <#else>
-        <@menuitem type="link" href=makeOfbizUrl("newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makeOfbizUrl("newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y") text=uiLabelMap.ProjectMgrNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if-->
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.WorkEffortNotes}" menuContent=menuContent>
+  <@section title=uiLabelMap.WorkEffortNotes menuContent=menuContent>
     <#if workEffortNoteandDetails?has_content>
     <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
       <#list workEffortNoteandDetails as note>
@@ -70,7 +70,7 @@ under the License.
   </@section>
   
   <#if parameters.showForm??>
-    <@section title="${uiLabelMap.OrderAddNote}">
+    <@section title=uiLabelMap.OrderAddNote>
       <#if project?has_content>
         <#assign formAction = makeOfbizUrl("createNewNotesForProject")>
       <#else>
@@ -82,8 +82,8 @@ under the License.
             <#else>
               <input type="hidden" name="workEffortId" value="${task.workEffortId}" />
             </#if>
-          <@field type="textarea" label="${uiLabelMap.OrderNote}" name="noteInfo" rows="5" cols="70"></@field>
-          <@field type="select" label="${uiLabelMap.OrderInternalNote}" name="internalNote" size="1">
+          <@field type="textarea" label=uiLabelMap.OrderNote name="noteInfo" rows="5" cols="70"></@field>
+          <@field type="select" label=uiLabelMap.OrderInternalNote name="internalNote" size="1">
               <option value=""></option>
               <option value="Y" selected>${uiLabelMap.CommonYes}</option>
               <option value="N">${uiLabelMap.CommonNo}</option>
@@ -92,9 +92,9 @@ under the License.
             <i>${uiLabelMap.OrderInternalNoteMessage}</i>
           </@field>
           <#if project?has_content>
-            <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+            <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonSave />
           <#else>
-            <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+            <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonSave />
           </#if>
       </form>
     </@section>

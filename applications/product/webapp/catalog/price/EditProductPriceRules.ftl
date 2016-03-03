@@ -18,10 +18,10 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("FindProductPriceRules") text="${uiLabelMap.ProductFindRule}" class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href=makeOfbizUrl("FindProductPriceRules") text=uiLabelMap.ProductFindRule class="+${styles.action_nav!} ${styles.action_find!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.ProductGlobalPriceRule}" menuContent=menuContent>
+<@section title=uiLabelMap.ProductGlobalPriceRule menuContent=menuContent>
     <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">

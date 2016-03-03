@@ -29,7 +29,7 @@ function lookupBom() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if product?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}") text="${uiLabelMap.ManufacturingBomSimulation}" class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}") text=uiLabelMap.ManufacturingBomSimulation class="+${styles.action_nav!}" />
   </#if>
   </@menu>
 </#macro>
@@ -41,7 +41,7 @@ function lookupBom() {
     <@row>
         <@cell columns=6>
             <a name="topform"></a>
-            <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
+            <@field type="select" label=uiLabelMap.ManufacturingBomType name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", {"productAssocTypeId":productAssocTypeId}, false)>
                     <#if curAssocType??>
@@ -55,14 +55,14 @@ function lookupBom() {
             </@field>
         </@cell>
         <@cell columns=6>
-            <@field type="lookup" label="${uiLabelMap.ProductProductId}" value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-            <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ManufacturingShowBOMAssocs}" />
+            <@field type="lookup" label=uiLabelMap.ProductProductId value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
+            <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ManufacturingShowBOMAssocs />
         </@cell>
     </@row>
     <@row>
         <@cell columns=6 offset=6>
-            <@field type="lookup" label="${uiLabelMap.ManufacturingCopyToProductId}" formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
-            <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyBOMAssocs}" />
+            <@field type="lookup" label=uiLabelMap.ManufacturingCopyToProductId formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
+            <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_copy!}" text=uiLabelMap.ManufacturingCopyBOMAssocs />
         </@cell>
     </@row>
   </form>
@@ -85,7 +85,7 @@ function lookupBom() {
     
 
     <#if !(productAssoc??)>
-          <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
+          <@field type="select" label=uiLabelMap.ManufacturingBomType name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", {"productAssocTypeId":productAssocTypeId}, false)>
                     <#if curAssocType??>
@@ -97,14 +97,14 @@ function lookupBom() {
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
           </@field>
-          <@field type="lookup" label="${uiLabelMap.ProductProductId}" value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
-          <@field type="lookup" label="${uiLabelMap.ManufacturingProductIdTo}" value="${productIdTo!}" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
-          <@field type="datetime" label="${uiLabelMap.CommonFromDate}" tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
+          <@field type="lookup" label=uiLabelMap.ProductProductId value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
+          <@field type="lookup" label=uiLabelMap.ManufacturingProductIdTo value="${productIdTo!}" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
+          <@field type="datetime" label=uiLabelMap.CommonFromDate tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
     <#else>
-          <@field type="display" label="${uiLabelMap.ProductProductId}">${productId!}</@field>
-          <@field type="display" label="${uiLabelMap.ManufacturingProductIdTo}">${productIdTo!}</@field>
-          <@field type="display" label="${uiLabelMap.ManufacturingBomType}"><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></@field>
-          <@field type="display" label="${uiLabelMap.CommonFromDate}">${fromDate?date?string.short!}</@field>
+          <@field type="display" label=uiLabelMap.ProductProductId>${productId!}</@field>
+          <@field type="display" label=uiLabelMap.ManufacturingProductIdTo>${productIdTo!}</@field>
+          <@field type="display" label=uiLabelMap.ManufacturingBomType><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></@field>
+          <@field type="display" label=uiLabelMap.CommonFromDate>${fromDate?date?string.short!}</@field>
     </#if>
     
     <#if useValues> 
@@ -112,13 +112,13 @@ function lookupBom() {
     <#else>
       <#assign value = request.getParameter("thruDate")!>
     </#if>
-    <@field type="datetime" label="${uiLabelMap.CommonThruDate}" value="${value!''}" name="thruDate" size="30" maxlength="30" id="fromDate_2"/>
-    <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
-    <@field type="input" label="${uiLabelMap.ManufacturingReason}" name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
-    <@field type="input" label="${uiLabelMap.ManufacturingInstruction}" name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
-    <@field type="input" label="${uiLabelMap.ManufacturingQuantity}" name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
-    <@field type="input" label="${uiLabelMap.ManufacturingScrapFactor}" name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
-    <@field type="select" label="${uiLabelMap.ManufacturingFormula}" name="estimateCalcMethod">
+    <@field type="datetime" label=uiLabelMap.CommonThruDate value="${value!''}" name="thruDate" size="30" maxlength="30" id="fromDate_2"/>
+    <@field type="input" label=uiLabelMap.CommonSequenceNum name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
+    <@field type="input" label=uiLabelMap.ManufacturingReason name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
+    <@field type="input" label=uiLabelMap.ManufacturingInstruction name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
+    <@field type="input" label=uiLabelMap.ManufacturingQuantity name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
+    <@field type="input" label=uiLabelMap.ManufacturingScrapFactor name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
+    <@field type="select" label=uiLabelMap.ManufacturingFormula name="estimateCalcMethod">
         <option value="">&nbsp;</option>
         <#assign selectedFormula = "">
         <#if useValues>
@@ -136,15 +136,15 @@ function lookupBom() {
       <#assign value = request.getParameter("routingWorkEffortId")!>
     </#if>
   <#if value?has_content>
-    <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTask}" value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
   <#else>
-    <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTask}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
   </#if>
     
     <#if !(productAssoc??)>
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
+      <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}" />
     <#else>
-      <@field type="submit" text="${uiLabelMap.CommonEdit}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+      <@field type="submit" text=uiLabelMap.CommonEdit class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </#if>
     </form>
     </@cell>
@@ -152,7 +152,7 @@ function lookupBom() {
 </@section>
 
 <#if productId?? && product??>
-  <@section title="${uiLabelMap.ManufacturingProductComponents}">
+  <@section title=uiLabelMap.ManufacturingProductComponents>
     <a name="components"></a>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
      <@thead>
@@ -197,7 +197,7 @@ function lookupBom() {
     </#list>
     </@table>
   </@section>
-  <@section title="${uiLabelMap.ManufacturingProductComponentOf}">
+  <@section title=uiLabelMap.ManufacturingProductComponentOf>
     <#if assocToProducts?has_content>
     <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>

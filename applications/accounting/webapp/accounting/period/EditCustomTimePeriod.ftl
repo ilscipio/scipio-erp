@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.AccountingEditCustomTimePeriods}">
+<@section title=uiLabelMap.AccountingEditCustomTimePeriods>
 
     <#if security.hasPermission("PERIOD_MAINT", session)>
-        <@section title="${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}">
+        <@section title=uiLabelMap.AccountingShowOnlyPeriodsWithOrganization>
             <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">
                 <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
                 <span>${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}</span>
@@ -33,7 +33,7 @@ under the License.
         <#if currentCustomTimePeriod?has_content>
             <#macro menuContent menuArgs={}>
                 <@menu args=menuArgs>
-                    <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text="${uiLabelMap.CommonClearCurrent}" class="+${styles.action_run_local!} ${styles.action_clear!}" />
+                    <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text=uiLabelMap.CommonClearCurrent class="+${styles.action_run_local!} ${styles.action_clear!}" />
                 </@menu>
             </#macro>
         <#else>
@@ -42,7 +42,7 @@ under the License.
                 </@menu>
             </#macro>
         </#if>
-        <@section title="${uiLabelMap.AccountingCurrentCustomTimePeriod}" menuContent=menuContent>
+        <@section title=uiLabelMap.AccountingCurrentCustomTimePeriod menuContent=menuContent>
             <#if currentCustomTimePeriod?has_content>
                 <#assign alertClass="" />
                 <#if hasntStarted><#assign alertClass="alert"></#if>
@@ -136,7 +136,7 @@ under the License.
             </#if>
         </@section>
   
-        <@section title="${uiLabelMap.AccountingChildPeriods}">
+        <@section title=uiLabelMap.AccountingChildPeriods>
             <#if customTimePeriods?has_content>
                 <@table type="data-list"> <#-- orig: class="basic-table" -->
                     <@thead>
@@ -217,7 +217,7 @@ under the License.
                                     <@field type="input" size="13" name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="+${alertHasExpiredClass}" />
                                 </@td>
                                 <@td class="button-col">
-                                    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                                    <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                                     <a href="<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;currentCustomTimePeriodId=${currentCustomTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
                                     ${uiLabelMap.CommonDelete}</a>
                                     <a href="<@ofbizUrl>EditCustomTimePeriod?currentCustomTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
@@ -232,13 +232,13 @@ under the License.
             </#if>
         </@section>
   
-        <@section title="${uiLabelMap.AccountingAddCustomTimePeriod}">
+        <@section title=uiLabelMap.AccountingAddCustomTimePeriod>
             <form method="post" action="<@ofbizUrl>createCustomTimePeriod</@ofbizUrl>" name="createCustomTimePeriodForm">
                 <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
                 <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
                 <input type="hidden" name="useValues" value="true" />
                 <div>
-                    <@field type="select" name="parentPeriodId" label="${uiLabelMap.CommonParent}">
+                    <@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent>
                         <option value="">&nbsp;</option>
                         <#list allCustomTimePeriods as allCustomTimePeriod>
                             <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
@@ -259,8 +259,8 @@ under the License.
                     </@field>
                 </div>
                 <div>                      
-                    <@field type="input" size="20" name="organizationPartyId" label="${uiLabelMap.AccountingOrgPartyId}" />                      
-                    <@field type="select" name="periodTypeId" label="${uiLabelMap.AccountingPeriodType}">
+                    <@field type="input" size="20" name="organizationPartyId" label=uiLabelMap.AccountingOrgPartyId />                      
+                    <@field type="select" name="periodTypeId" label=uiLabelMap.AccountingPeriodType>
                         <#list periodTypes as periodType>
                             <#assign isDefault = false>
                             <#if newPeriodTypeId??>
@@ -271,13 +271,13 @@ under the License.
                             <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
                         </#list>
                     </@field>                  
-                    <@field type="input" size="4" name="periodNum" label="${uiLabelMap.AccountingPeriodNumber}" />                      
-                    <@field type="input" size="10" name="periodName" label="${uiLabelMap.AccountingPeriodName}" />
+                    <@field type="input" size="4" name="periodNum" label=uiLabelMap.AccountingPeriodNumber />                      
+                    <@field type="input" size="10" name="periodName" label=uiLabelMap.AccountingPeriodName />
                     </div>
                 <div>                      
-                    <@field type="input" size="14" name="fromDate" label="${uiLabelMap.CommonFromDate}" />                      
-                    <@field type="input" size="14" name="thruDate" label="${uiLabelMap.CommonThruDate}" />
-                    <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+                    <@field type="input" size="14" name="fromDate" label=uiLabelMap.CommonFromDate />                      
+                    <@field type="input" size="14" name="thruDate" label=uiLabelMap.CommonThruDate />
+                    <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                 </div>
             </form>
         </@section>

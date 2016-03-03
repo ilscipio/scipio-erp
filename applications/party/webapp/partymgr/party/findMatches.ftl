@@ -19,19 +19,19 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text="${uiLabelMap.PageTitleAddressMatchMap}" class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text=uiLabelMap.PageTitleAddressMatchMap class="+${styles.action_nav!}" />
   </@menu>
 </#macro>
 <@section id="address-match-map" menuContent=menuContent>
 
       <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
-        <@field type="input" name="lastName" label="${uiLabelMap.PartyLastName}" value="${parameters.lastName!}" required=true />
-        <@field type="input" name="firstName" label="${uiLabelMap.PartyFirstName}" value="${parameters.firstName!}" required=true />
-        <@field type="input" name="address1" label="${uiLabelMap.CommonAddress1}" value="${parameters.address1!}" required=true />
-        <@field type="input" name="address2" label="${uiLabelMap.CommonAddress2}" value="${parameters.address2!}" />
-        <@field type="input" name="city" label="${uiLabelMap.CommonCity}" value="${parameters.city!}" required=true />
+        <@field type="input" name="lastName" label=uiLabelMap.PartyLastName value="${parameters.lastName!}" required=true />
+        <@field type="input" name="firstName" label=uiLabelMap.PartyFirstName value="${parameters.firstName!}" required=true />
+        <@field type="input" name="address1" label=uiLabelMap.CommonAddress1 value="${parameters.address1!}" required=true />
+        <@field type="input" name="address2" label=uiLabelMap.CommonAddress2 value="${parameters.address2!}" />
+        <@field type="input" name="city" label=uiLabelMap.CommonCity value="${parameters.city!}" required=true />
       
-        <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
+        <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" currentValue="${(currentStateGeo.geoId)!}">
             <#if currentStateGeo?has_content>
               <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
               <option value="${currentStateGeo.geoId}">---</option>
@@ -40,9 +40,9 @@ under the License.
             ${screens.render("component://common/widget/CommonScreens.xml#states")}
         </@field>
         
-        <@field type="input" name="postalCode" label="${uiLabelMap.PartyZipCode}" value="${parameters.postalCode!}" required=true />
+        <@field type="input" name="postalCode" label=uiLabelMap.PartyZipCode value="${parameters.postalCode!}" required=true />
       
-        <@field type="submit" text="${uiLabelMap.PageTitleFindMatches}" class="+${styles.link_run_sys!} ${styles.action_find!}" />
+        <@field type="submit" text=uiLabelMap.PageTitleFindMatches class="+${styles.link_run_sys!} ${styles.action_find!}" />
         
       </form>
       <@script>

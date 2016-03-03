@@ -19,12 +19,12 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if facilityId?? && locationSeqId??>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" class="+${styles.action_nav!} ${styles.action_add!}" />
-    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text="${uiLabelMap.ProductNewFacilityLocation}" class="+${styles.action_nav!} ${styles.action_add!}" />
-    <@menuitem type="link" href=makeOfbizUrl("EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text="${uiLabelMap.ProductNewInventoryItem}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text=uiLabelMap.ProductNewFacility class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text=uiLabelMap.ProductNewFacilityLocation class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditInventoryItem?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text=uiLabelMap.ProductNewInventoryItem class="+${styles.action_nav!} ${styles.action_add!}" />
     <#assign latestGeoPoint= Static["org.ofbiz.common.geo.GeoWorker"].findLatestGeoPoint(delegator, "FacilityLocationAndGeoPoint", "facilityId", facilityId, "locationSeqId", locationSeqId)!/>
     <#if latestGeoPoint?has_content>
-      <@menuitem type="link" href=makeOfbizUrl("FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text="${uiLabelMap.CommonGeoLocation}" class="+${styles.action_nav!} ${styles.action_find!}" />
+      <@menuitem type="link" href=makeOfbizUrl("FacilityLocationGeoLocation?facilityId=${facilityId}&amp;locationSeqId=${locationSeqId}") text=uiLabelMap.CommonGeoLocation class="+${styles.action_nav!} ${styles.action_find!}" />
     </#if>
   </#if>
   </@menu>
@@ -45,15 +45,15 @@ under the License.
 <#if facilityId?? || facilityLocation??>
 
 <#if facilityLocation??>
-    <@field type="display" label="${uiLabelMap.ProductFacilityId}">
+    <@field type="display" label=uiLabelMap.ProductFacilityId>
         ${facilityId!}
     </@field>
-    <@field type="display" label="${uiLabelMap.ProductLocationSeqId}">
+    <@field type="display" label=uiLabelMap.ProductLocationSeqId>
         ${locationSeqId}
     </@field>
 </#if>
 
-    <@field type="select" label="${uiLabelMap.ProductType}" name="locationTypeEnumId">
+    <@field type="select" label=uiLabelMap.ProductType name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
                     <#assign locationTypeEnum = facilityLocation.getRelatedOne("TypeEnumeration", true)!>
                     <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.get("description",locale))?default(facilityLocation.locationTypeEnumId)}</option>
@@ -64,15 +64,15 @@ under the License.
                 </#list>
 
     </@field>
-    <@field type="input" label="${uiLabelMap.CommonArea}" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />
-    <@field type="input" label="${uiLabelMap.ProductAisle}" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" />
-    <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" />
-    <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
-    <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.CommonArea name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductAisle name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductSection name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductLevel name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
+    <@field type="input" label=uiLabelMap.ProductPosition name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
     <#if locationSeqId??>
-      <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+      <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
     <#else>
-      <@field type="submit" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
+      <@field type="submit" text=uiLabelMap.CommonSave class="+${styles.link_run_sys!} ${styles.action_add!}" />
     </#if>
   </form>
   
@@ -114,10 +114,10 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />
-            <@field type="input" label="${uiLabelMap.ProductProductId}" size="10" name="productId" />
-            <@field type="input" label="${uiLabelMap.ProductMinimumStock}" size="10" name="minimumStock" />
-            <@field type="input" label="${uiLabelMap.ProductMoveQuantity}" size="10" name="moveQuantity" />
-            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
+            <@field type="input" label=uiLabelMap.ProductProductId size="10" name="productId" />
+            <@field type="input" label=uiLabelMap.ProductMinimumStock size="10" name="minimumStock" />
+            <@field type="input" label=uiLabelMap.ProductMoveQuantity size="10" name="moveQuantity" />
+            <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
   </@section>
   

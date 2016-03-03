@@ -22,10 +22,10 @@ under the License.
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-       <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" class="+${styles.action_nav!} ${styles.action_view!}" />
+       <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}") text=uiLabelMap.OrderShipmentInformationByOISG class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   </#macro>
-  <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
+  <@section title=uiLabelMap.OrderShipmentInformation menuContent=menuContent>
     <@fields type="default-manual">
       <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
@@ -159,7 +159,7 @@ under the License.
                      </@tr>
                      <@tr>
                          <@td>
-                             <@field type="submit" submitType="link" href="javascript:document.addOISGForm${index}.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
+                             <@field type="submit" submitType="link" href="javascript:document.addOISGForm${index}.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd/>
                          </@td>
                      </@tr>
                  </@table>
@@ -186,7 +186,7 @@ under the License.
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" class="+${styles.action_run_sys!} ${styles.action_view!}" />
+           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&amp;view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
        </@menu>
     </#macro>
@@ -227,7 +227,7 @@ under the License.
                                             </@cell>
                                             <@cell columns=6>
                                                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
-                                                    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                                                    <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                                                 </#if>
                                             </@cell>
                                         </@row>
@@ -266,7 +266,7 @@ under the License.
                                         </@cell>
                                         <@cell columns=6>
                                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
-                                                <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                                                <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                                             </#if>
                                         </@cell>
                                     </@row>
@@ -304,17 +304,17 @@ under the License.
           <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
           <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-          <@field type="input" required=true name="shipToAddress1" id="address1" value="" size="30" maxlength="30" label="${uiLabelMap.PartyAddressLine1}"/>
-          <@field type="input" name="shipToAddress2" id="address2" value="" size="30" maxlength="30" label="${uiLabelMap.PartyAddressLine2}"/>
-          <@field type="input" required=true name="shipToCity" id="city" value="" size="30" maxlength="30" label="${uiLabelMap.PartyCity}" />
-          <@field type="input" required=true class="+number" name="shipToPostalCode" id="postalCode" value="" size="30" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
-          <@field type="select" required=true name="shipToCountryGeoId" id="countryGeoId" label="${uiLabelMap.CommonCountry}">
+          <@field type="input" required=true name="shipToAddress1" id="address1" value="" size="30" maxlength="30" label=uiLabelMap.PartyAddressLine1/>
+          <@field type="input" name="shipToAddress2" id="address2" value="" size="30" maxlength="30" label=uiLabelMap.PartyAddressLine2/>
+          <@field type="input" required=true name="shipToCity" id="city" value="" size="30" maxlength="30" label=uiLabelMap.PartyCity />
+          <@field type="input" required=true class="+number" name="shipToPostalCode" id="postalCode" value="" size="30" maxlength="10" label=uiLabelMap.PartyZipCode/>
+          <@field type="select" required=true name="shipToCountryGeoId" id="countryGeoId" label=uiLabelMap.CommonCountry>
             <#if countryGeoId??>
               <option value="${countryGeoId}">${countryGeoId}</option>
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#countries")}
           </@field>
-          <@field type="select" name="shipToStateProvinceGeoId" id="stateProvinceGeoId" label="${uiLabelMap.PartyState}">
+          <@field type="select" name="shipToStateProvinceGeoId" id="stateProvinceGeoId" label=uiLabelMap.PartyState>
             <#if stateProvinceGeoId?has_content>
               <option value="${stateProvinceGeoId}">${stateProvinceGeoId}</option>
             <#else>
@@ -323,9 +323,9 @@ under the License.
           </@field>
 
           <@field type="submitarea">
-            <@field type="submit" submitType="input-button" id="submitAddShippingAddress" text="${uiLabelMap.CommonSubmit}" style="display:none"/>
+            <@field type="submit" submitType="input-button" id="submitAddShippingAddress" text=uiLabelMap.CommonSubmit style="display:none"/>
             <form action="">
-              <@field type="submit" submitType="input-button" class="+popup_closebox ${styles.link_run_local!} ${styles.action_close!}" text="${uiLabelMap.CommonClose}" style="display:none"/>
+              <@field type="submit" submitType="input-button" class="+popup_closebox ${styles.link_run_local!} ${styles.action_close!}" text=uiLabelMap.CommonClose style="display:none"/>
             </form>
           </@field>
           </@fields>
@@ -489,7 +489,7 @@ under the License.
                         <@field type="textarea" name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</@field>
                     </@cell>
                     <@cell columns=6>
-                        <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
+                        <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
                     </@cell>
                 </@row>
               </form>
@@ -518,7 +518,7 @@ under the License.
                         <@field type="textarea" name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</@field>
                     </@cell>
                     <@cell columns=6>
-                        <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
+                        <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
                     </@cell>
               </@row>
             </form>
@@ -539,7 +539,7 @@ under the License.
                             <@field type="datetime" dateType="date" name="shipByDate" value="${shipGroup.shipByDate!}" size="25" maxlength="30" id="shipByDate_${shipGroup.shipGroupSeqId}" />
                         </@cell>
                         <@cell columns=6>
-                            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
+                            <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
                         </@cell>
                     </@row>
                 </form>
@@ -558,7 +558,7 @@ under the License.
                             <@field type="datetime" dateType="date" name="shipAfterDate" value="${shipGroup.shipAfterDate!}" size="25" maxlength="30" id="shipAfterDate_${shipGroup.shipGroupSeqId}" />
                         </@cell>
                         <@cell columns=6>
-                            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
+                            <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
                         </@cell>
                     </@row>
                 </form>

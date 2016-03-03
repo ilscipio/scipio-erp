@@ -30,7 +30,7 @@ under the License.
   </#if>
 </#if>
 
-<@section title="${uiLabelMap.ProductBrowseContent}" id="content_catagories" class="+screenlet">
+<@section title=uiLabelMap.ProductBrowseContent id="content_catagories" class="+screenlet">
     <ul class="browsecategorylist">
       <#assign count_1=0/>
       <@loopSubContent contentId=contentRootId viewIndex=0 viewSize=9999 orderBy="contentName">

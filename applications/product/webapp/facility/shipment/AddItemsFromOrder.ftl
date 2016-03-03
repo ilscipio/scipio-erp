@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-<@section title="${uiLabelMap.PageTitleAddItemsFromOrder}">
+<@section title=uiLabelMap.PageTitleAddItemsFromOrder>
         <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <div>

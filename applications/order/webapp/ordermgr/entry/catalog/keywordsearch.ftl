@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductProductSearch}">
+<@section title=uiLabelMap.ProductProductSearch>
 
 <@row>
     <@cell>

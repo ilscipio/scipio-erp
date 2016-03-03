@@ -22,14 +22,14 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if activeOnly>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text="${uiLabelMap.ProductActiveAndInactive}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text=uiLabelMap.ProductActiveAndInactive class="+${styles.action_run_sys!} ${styles.action_show!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true") text="${uiLabelMap.ProductActiveOnly}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true") text=uiLabelMap.ProductActiveOnly class="+${styles.action_run_sys!} ${styles.action_show!}" />
   </#if>
   </@menu>
 </#macro>
 
-<@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuContent=menuContent>
+<@section title=uiLabelMap.PageTitleEditCategoryProducts menuContent=menuContent>
 
       <#if (listSize > 0)>
         <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
@@ -82,7 +82,7 @@ under the License.
                   </@tr>
                   <@tr valign="middle" groupLast=true>
                       <@td colspan="4" align="center">
-                          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+                          <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
                           <input type="hidden" value="${productCategoryMembers.size()}" name="_rowCount" />
                       </@td>
                   </@tr>

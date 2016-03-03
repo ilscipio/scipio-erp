@@ -225,8 +225,8 @@ function submitForm(form, mode, value) {
                   <@tr>
                     <@td colspan="2">
                         <span><b>${uiLabelMap.OrderIsThisGift}</b></span>
-                        <@field type="radio" checked=((shoppingCart.getIsGift()!"Y") == "Y") name="is_gift" value="true" label="${uiLabelMap.CommonYes}" />
-                        <@field type="radio" checked=((shoppingCart.getIsGift()!"N") == "N") name="is_gift" value="false" label="${uiLabelMap.CommonNo}" />
+                        <@field type="radio" checked=((shoppingCart.getIsGift()!"Y") == "Y") name="is_gift" value="true" label=uiLabelMap.CommonYes />
+                        <@field type="radio" checked=((shoppingCart.getIsGift()!"N") == "N") name="is_gift" value="false" label=uiLabelMap.CommonNo />
                       </@td>
                   </@tr>
                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
@@ -482,8 +482,8 @@ function submitForm(form, mode, value) {
 <@row>
   <@cell>
     <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text="${uiLabelMap.OrderBacktoShoppingCart}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text="${uiLabelMap.OrderContinueToFinalOrderReview}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.OrderContinueToFinalOrderReview class="+${styles.action_run_session!} ${styles.action_continue!}" />
     </@menu>
   </@cell>
 </@row>

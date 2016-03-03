@@ -19,7 +19,7 @@ under the License.
 
 <form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@ofbizUrl>addImageForProduct</@ofbizUrl>" enctype="multipart/form-data">
 
-  <@field type="lookup" label="${uiLabelMap.ProductProductId}" name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value="${productId!}"/>
+  <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value="${productId!}"/>
 
   <@fields type="default-nolabels">
     <@field type="select" name="imageResize">
@@ -42,6 +42,6 @@ under the License.
     <@imageField name=namePrefix + "Eight" />
     <@imageField name=namePrefix + "Nine" />
     <@imageField name=namePrefix + "Ten" />
-    <@field type="submit" text="${uiLabelMap.CommonUpload}"/>
+    <@field type="submit" text=uiLabelMap.CommonUpload/>
   </@fields>
 </form>

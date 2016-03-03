@@ -22,14 +22,14 @@ under the License.
 <@cell columns=6>
        <@heading relLevel=+1>${uiLabelMap.CommonGroup}</@heading>
        <form action="<@ofbizUrl>/entitymaint</@ofbizUrl>">
-        <@field type="select" name="filterByGroupName" label="${uiLabelMap.WebtoolsGroupName}">
+        <@field type="select" name="filterByGroupName" label=uiLabelMap.WebtoolsGroupName>
              <option value="">${uiLabelMap.CommonAll}</option>
              <#list entityGroups as group>
                 <option value="${group}" <#if filterByGroupName??><#if group = filterByGroupName>selected="selected"</#if></#if>>${group}</option>
              </#list>
         </@field>
-        <@field type="input" name= "filterByEntityName" value="${parameters.filterByEntityName!}" label="${uiLabelMap.WebtoolsEntityName}"/>
-        <@field type="submit" text="${uiLabelMap.CommonApply}" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
+        <@field type="input" name= "filterByEntityName" value="${parameters.filterByEntityName!}" label=uiLabelMap.WebtoolsEntityName/>
+        <@field type="submit" text=uiLabelMap.CommonApply class="+${styles.link_run_sys!} ${styles.action_find!}"/>
        </form>
 </@cell>
 </@row> 

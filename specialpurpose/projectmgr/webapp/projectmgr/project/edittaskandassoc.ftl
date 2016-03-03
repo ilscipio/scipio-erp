@@ -44,23 +44,23 @@ under the License.
             
         <@heading>${uiLabelMap.ProjectMgrTaskDetails}</@heading>    
 
-        <@field type="lookup" label="${uiLabelMap.ProjectMgrQuickAssignPartyId}" formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
+        <@field type="lookup" label=uiLabelMap.ProjectMgrQuickAssignPartyId formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
         
         <#if task??>
-          <@field type="display" label="${uiLabelMap.ProjectMgrWorkEffortId}">${task.workEffortId!}</@field>
+          <@field type="display" label=uiLabelMap.ProjectMgrWorkEffortId>${task.workEffortId!}</@field>
         </#if>
         
         <#if task??>
-          <@field type="display" required=true label="${uiLabelMap.CommonName}">${task.workEffortName!}</@field>
+          <@field type="display" required=true label=uiLabelMap.CommonName>${task.workEffortName!}</@field>
         <#else>
-          <@field type="input" required=true name="workEffortName" label="${uiLabelMap.CommonName}" value=""/>
+          <@field type="input" required=true name="workEffortName" label=uiLabelMap.CommonName value=""/>
         </#if>
         <#if task??>
-          <@field type="input" name="description" label="${uiLabelMap.CommonDescription}" value="${task.description!}"/>
+          <@field type="input" name="description" label=uiLabelMap.CommonDescription value="${task.description!}"/>
         <#else>
-          <@field type="input" name="description" label="${uiLabelMap.CommonDescription}" value=""/>
+          <@field type="input" name="description" label=uiLabelMap.CommonDescription value=""/>
         </#if>
-        <@field type="select" label="${uiLabelMap.CommonStatus}" name="currentStatusId">
+        <@field type="select" label=uiLabelMap.CommonStatus name="currentStatusId">
           <#if task??>
             <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
             <option selected="selected" value="${currentStatus.currentStatusId}">${currentStatus.description}</option>
@@ -86,7 +86,7 @@ under the License.
         <#if task?has_content>
           <#assign priority = task.priority!>
         </#if>
-        <@field type="select" name="priority" size="1" label="${uiLabelMap.CommonPriority}">
+        <@field type="select" name="priority" size="1" label=uiLabelMap.CommonPriority>
           <#if priority??>
             <option selected="selected" value="${priority}">${priority}</option>
             <option></option>
@@ -113,7 +113,7 @@ under the License.
           </#if>
         </@field>
         <#assign enumerations = delegator.findByAnd("Enumeration", {"enumTypeId":"WORK_EFF_SCOPE"}, null, false)>
-        <@field type="select" label="${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}" name="scopeEnumId">
+        <@field type="select" label=uiLabelMap.ProjectMgrWorkEffortScopeEnumId name="scopeEnumId">
           <#if task??>
             <#assign scopeEnumId = task.scopeEnumId!>
             <#list enumerations as enumeration>
@@ -131,20 +131,20 @@ under the License.
           <@htmlTemplate.renderDateTimeField name="estimatedStartDate" label="${uiLabelMap.WorkEffortEstimatedStartDate}" value="" size="25" maxlength="30" id="estimatedStartDate1" />
         </#if>
          <#if task??>
-           <@field type="datetime" name="estimatedCompletionDate" label="${uiLabelMap.WorkEffortEstimatedCompletionDate}" value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" />
+           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value="${task.estimatedCompletionDate!}" size="25" maxlength="30" id="estimatedCompletionDate1" />
          <#else>
-           <@field type="datetime" name="estimatedCompletionDate" label="${uiLabelMap.WorkEffortEstimatedCompletionDate}" value="" size="25" maxlength="30" id="estimatedCompletionDate1" />
+           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value="" size="25" maxlength="30" id="estimatedCompletionDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualStartDate" label="${uiLabelMap.FormFieldTitle_actualStartDate}" value="${task.actualStartDate!}" size="25" maxlength="30" id="actualStartDate1" />
+           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="${task.actualStartDate!}" size="25" maxlength="30" id="actualStartDate1" />
          <#else>
-           <@field type="datetime" name="actualStartDate" label="${uiLabelMap.FormFieldTitle_actualStartDate}" value="" size="25" maxlength="30" id="actualStartDate1" />
+           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="" size="25" maxlength="30" id="actualStartDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualCompletionDate" label="${uiLabelMap.FormFieldTitle_actualCompletionDate}" value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" />
+           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value="${task.actualCompletionDate!}" size="25" maxlength="30" id="actualCompletionDate2" />
          <#else>
-           <@field type="datetime" name="actualCompletionDate" label="${uiLabelMap.FormFieldTitle_actualCompletionDate}" value="" size="25" maxlength="30" id="actualCompletionDate2" />
+           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value="" size="25" maxlength="30" id="actualCompletionDate2" />
          </#if>
-         <@field type="submit" name="submit" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+         <@field type="submit" name="submit" text=uiLabelMap.CommonSave class="+${styles.link_run_sys!} ${styles.action_update!}"/>
      </form>
 </@section>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#if productId??>
 
-<@section title="${uiLabelMap.PageTitleEditProductFeatures}">
+<@section title=uiLabelMap.PageTitleEditProductFeatures>
   <#if productFeatureAndAppls?has_content>
     <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -110,25 +110,25 @@ under the License.
   </#if>
 </@section>
 
-<@section title="${uiLabelMap.ProductAddProductFeatureFromCategory}">
+<@section title=uiLabelMap.ProductAddProductFeatureFromCategory>
     <form method="post" action="<@ofbizUrl>ApplyFeaturesFromCategory</@ofbizUrl>">
       <input type="hidden" name="productId" value="${productId}"/>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureCategory}" size=1 name="productFeatureCategoryId">
+      <@field type="select" label=uiLabelMap.ProductFeatureCategory size=1 name="productFeatureCategoryId">
         <option value="" selected="selected">${uiLabelMap.ProductChooseFeatureCategory}</option>
       <#list productFeatureCategories as productFeatureCategory>
         <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
       </#list>
       </@field>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureGroup}" size=1 name="productFeatureGroupId">
+      <@field type="select" label=uiLabelMap.ProductFeatureGroup size=1 name="productFeatureGroupId">
         <option value="" selected="selected">${uiLabelMap.ProductChooseFeatureGroup}</option>
       <#list productFeatureGroups as productFeatureGroup>
         <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
       </#list>
       </@field>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" size=1 name="productFeatureApplTypeId">
+      <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
           <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
@@ -137,23 +137,23 @@ under the License.
       </#list>
       </@field>
       
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 
-<@section title="${uiLabelMap.ProductAddProductFeatureTypeId}">
+<@section title=uiLabelMap.ProductAddProductFeatureTypeId>
     <form method="post" action="<@ofbizUrl>ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" name="addFeatureByTypeIdCode">
       <input type="hidden" name="productId" value="${productId}"/>
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureType}" size=1 name="productFeatureTypeId">
+      <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
       <#list productFeatureTypes as productFeatureType>
         <option value="${(productFeatureType.productFeatureTypeId)!}">${(productFeatureType.get("description",locale))!} </option>
       </#list>
       </@field>
       
-      <@field type="input" label="${uiLabelMap.CommonIdCode}" size=10 name="idCode" value="" />
+      <@field type="input" label=uiLabelMap.CommonIdCode size=10 name="idCode" value="" />
     
-      <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" size=1 name="productFeatureApplTypeId">
+      <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
           <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
@@ -162,21 +162,21 @@ under the License.
       </#list>
       </@field>
    
-      <@field type="datetime" dateType="date" label="${uiLabelMap.CommonFrom}" name="fromDate" size="25" maxlength="30" id="fromDate1" />
-      <@field type="datetime" dateType="date" label="${uiLabelMap.CommonThru}" name="thruDate" size="25" maxlength="30" id="thruDate1" />
-      <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
+      <@field type="datetime" dateType="date" label=uiLabelMap.CommonFrom name="fromDate" size="25" maxlength="30" id="fromDate1" />
+      <@field type="datetime" dateType="date" label=uiLabelMap.CommonThru name="thruDate" size="25" maxlength="30" id="thruDate1" />
+      <@field type="input" label=uiLabelMap.CommonSequence size=5 name="sequenceNum" value="" />
     
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 
-<@section title="${uiLabelMap.ProductAddProductFeatureID}">
+<@section title=uiLabelMap.ProductAddProductFeatureID>
     <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
       <input type="hidden" name="productId" value="${productId}"/>
       
-      <@field type="lookup" label="${uiLabelMap.CommonId}" formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature" />
+      <@field type="lookup" label=uiLabelMap.CommonId formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature" />
       
-      <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" size=1 name="productFeatureApplTypeId">
+      <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
           <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
@@ -185,11 +185,11 @@ under the License.
       </#list>
       </@field>
    
-      <@field type="datetime" dateType="date" label="${uiLabelMap.CommonFrom}" name="fromDate" size="25" maxlength="30" id="fromDate2" />
-      <@field type="datetime" dateType="date" label="${uiLabelMap.CommonThru}" name="thruDate" size="25" maxlength="30" id="thruDate2" />
-      <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
+      <@field type="datetime" dateType="date" label=uiLabelMap.CommonFrom name="fromDate" size="25" maxlength="30" id="fromDate2" />
+      <@field type="datetime" dateType="date" label=uiLabelMap.CommonThru name="thruDate" size="25" maxlength="30" id="thruDate2" />
+      <@field type="input" label=uiLabelMap.CommonSequence size=5 name="sequenceNum" value="" />
     
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 

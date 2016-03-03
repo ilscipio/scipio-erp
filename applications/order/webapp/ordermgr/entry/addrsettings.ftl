@@ -19,7 +19,7 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 
-  <@section title="${uiLabelMap.OrderSelectAShippingAddress}"> <#-- class="boxoutside" -->
+  <@section title=uiLabelMap.OrderSelectAShippingAddress> <#-- class="boxoutside" -->
     <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="ship"/>
     

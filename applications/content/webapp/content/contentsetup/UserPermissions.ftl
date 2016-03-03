@@ -59,7 +59,7 @@ function call_fieldlookup3(view_name) {
      <input type="hidden" name="partyId" value="${partyId!}"/>
      <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
      <@field type="input" name="webSitePublishPoint" size="20" value="${webSitePublishPoint!}" />
-     <@field type="submit" text="${uiLabelMap.CommonRefresh}" class="${styles.link_run_sys!} ${styles.action_reload!}"/>
+     <@field type="submit" text=uiLabelMap.CommonRefresh class="${styles.link_run_sys!} ${styles.action_reload!}"/>
   </form>
 </@section>
 
@@ -91,7 +91,7 @@ function call_fieldlookup3(view_name) {
         <@tfoot>
           <@tr>
             <@td>
-              <@field type="submit" submitType="link" href="javascript:submitRows('${rowCount!}')" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonUpdate}" />
+              <@field type="submit" submitType="link" href="javascript:submitRows('${rowCount!}')" class="${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
             </@td>
           </@tr>
         </@tfoot>

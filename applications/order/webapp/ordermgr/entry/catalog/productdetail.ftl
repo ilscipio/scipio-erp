@@ -695,7 +695,7 @@ ${setRequestAttribute("productValue", productValue)}
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
-    <@section title="${uiLabelMap.ProductSimilarProducts}" class="productsummary-container">
+    <@section title=uiLabelMap.ProductSimilarProducts class="productsummary-container">
  
         <#list commonFeatureResultIds as commonFeatureResultId>
             ${setRequestAttribute("optProductId", commonFeatureResultId)}

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
-    <@section title="${uiLabelMap.PageTitleEditProductPromoStores}">
+    <@section title=uiLabelMap.PageTitleEditProductPromoStores>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
              <@thead>
                 <@tr class="header-row">
@@ -65,7 +65,7 @@ under the License.
         </@table>
     </@section>
     
-    <@section title="${uiLabelMap.ProductAddStorePromo}">
+    <@section title=uiLabelMap.ProductAddStorePromo>
             <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <input type="hidden" name="tryEntity" value="true"/>

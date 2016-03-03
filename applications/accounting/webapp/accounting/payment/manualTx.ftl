@@ -25,19 +25,19 @@ under the License.
         </#if>
         
         <#if paymentMethodType?has_content>
-            <@field type="display" label="${uiLabelMap.CommonPaymentMethodType}">${paymentMethodType.get("description",locale)}</@field>
+            <@field type="display" label=uiLabelMap.CommonPaymentMethodType>${paymentMethodType.get("description",locale)}</@field>
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
         <#else>
-            <@field type="select" name="paymentMethodTypeId" label="${uiLabelMap.CommonPaymentMethodType}">
+            <@field type="select" name="paymentMethodTypeId" label=uiLabelMap.CommonPaymentMethodType>
                 <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
             </@field>
         </#if>
         
         <#if currentStore?has_content>
-            <@field type="display" label="${uiLabelMap.ProductProductStore}"><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></@field>
+            <@field type="display" label=uiLabelMap.ProductProductStore><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></@field>
             <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
         <#else>
-            <@field type="select" name="productStoreId" label="${uiLabelMap.ProductProductStore}">
+            <@field type="select" name="productStoreId" label=uiLabelMap.ProductProductStore>
                 <#list productStores as productStore>
                     <option value="${productStore.productStoreId}"><#if productStore.storeName??>${productStore.storeName}<#else>${productStore.productStoreId}</#if></option>
                 </#list>
@@ -45,7 +45,7 @@ under the License.
         </#if>
       
         <#if currentTx?has_content>
-            <@field type="display" label="${uiLabelMap.AccountingTransactionType}">${currentTx.get("description",locale)}</@field>
+            <@field type="display" label=uiLabelMap.AccountingTransactionType>${currentTx.get("description",locale)}</@field>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
         <#else>
             <!-- TODO: Clarify how to handle JS events -->            
@@ -75,9 +75,9 @@ under the License.
         <#if requestAttributes.validTx?default("false") == "true">
             <hr/>
             <#-- amount field -->
-            <@field type="input" label="${uiLabelMap.CommonAmount}" size="20" maxlength="30" name="amount" required=true/>
+            <@field type="input" label=uiLabelMap.CommonAmount size="20" maxlength="30" name="amount" required=true/>
             <#-- submit button -->
-            <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+            <@field type="submit" text=uiLabelMap.CommonSubmit class="+${styles.link_run_sys!} ${styles.action_add!}"/>
         <#elseif txType?has_content>
             <@commonMsg type="warning">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@commonMsg>
         </#if>

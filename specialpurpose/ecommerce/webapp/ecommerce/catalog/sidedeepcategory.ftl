@@ -71,7 +71,7 @@ under the License.
 </#macro>
 
 <#if topLevelList?has_content>
-  <@section title="${uiLabelMap.ProductBrowseCategories}" id="sidedeepcategory" class="+screenlet">
+  <@section title=uiLabelMap.ProductBrowseCategories id="sidedeepcategory" class="+screenlet">
     <ul class="browsecategorylist">
       <#list topLevelList as category>
         <@categoryList parentCategory="" category=category wrapInBox="N"/>

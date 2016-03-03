@@ -38,8 +38,8 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.PartyFindParty}" class="+${styles.action_nav!} ${styles.action_find!}" />
-        <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
     <@section class="${styles.grid_large!}9" title=sectionTitle menuContent=menuContent>
@@ -47,7 +47,7 @@ under the License.
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="SALES_ORDER"/>
-        <@field type="select" label="${uiLabelMap.ProductProductStore}" name="productStoreId" >
+        <@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId" >
             <#assign currentStore = shoppingCartProductStore>
             <#if defaultProductStore?has_content>
                <option value="${defaultProductStore.productStoreId}">${defaultProductStore.storeName!}</option>
@@ -58,7 +58,7 @@ under the License.
             </#list>
             <#--<#if sessionAttributes.orderMode??>${uiLabelMap.OrderCannotBeChanged}</#if>-->
         </@field>
-        <@field type="select" label="${uiLabelMap.OrderSalesChannel}" name="salesChannelEnumId">
+        <@field type="select" label=uiLabelMap.OrderSalesChannel name="salesChannelEnumId">
             <#assign currentChannel = shoppingCartChannelType>
             <#if defaultSalesChannel?has_content>
                <option value="${defaultSalesChannel.enumId}">${defaultSalesChannel.description!}</option>
@@ -74,8 +74,8 @@ under the License.
         <#else>
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
-        <@field type="lookup" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_sales" value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
-        <@field type="lookup" label="${uiLabelMap.OrderCustomer}" id="partyId" value='${thisPartyId!}' formName="salesentryform" name="partyId" fieldFormName="LookupCustomerName"/>
+        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_sales" value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        <@field type="lookup" label=uiLabelMap.OrderCustomer id="partyId" value='${thisPartyId!}' formName="salesentryform" name="partyId" fieldFormName="LookupCustomerName"/>
       </form>
     </@section>
   </#if>
@@ -89,8 +89,8 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.PartyFindParty}" class="+${styles.action_nav!} ${styles.action_find!}" />
-        <@menuitem type="link" href="javascript:document.poentryform.submit();" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>
@@ -102,7 +102,7 @@ under the License.
         <#else>
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
-        <@field type="select" label="${uiLabelMap.OrderOrderEntryInternalOrganization}" name="billToCustomerPartyId">
+        <@field type="select" label=uiLabelMap.OrderOrderEntryInternalOrganization name="billToCustomerPartyId">
             <#list organizations as organization>
               <#assign organizationName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(organization, true)/>
                 <#if (organizationName.length() != 0)>
@@ -110,8 +110,8 @@ under the License.
                 </#if>
             </#list>
         </@field>
-        <@field type="lookup" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_purchase" value="${parameters.userLogin.userLoginId}" formName="poentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
-        <@field type="select" label="${uiLabelMap.PartySupplier}" name="supplierPartyId">
+        <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_purchase" value="${parameters.userLogin.userLoginId}" formName="poentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        <@field type="select" label=uiLabelMap.PartySupplier name="supplierPartyId">
             <option value="">${uiLabelMap.OrderSelectSupplier}</option>
             <#list suppliers as supplier>
               <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected="selected"</#if>>[${supplier.partyId}] - ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>

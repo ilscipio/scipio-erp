@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.OrderRequestRoles}" class="+screenlet">
+<@section title=uiLabelMap.OrderRequestRoles class="+screenlet">
         <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
          <#assign row = 1>
          <#list requestParties as requestParty>

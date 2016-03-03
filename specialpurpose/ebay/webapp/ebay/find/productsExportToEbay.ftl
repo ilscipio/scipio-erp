@@ -44,7 +44,7 @@ under the License.
     <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>PostProductsToEbay</@ofbizUrl>" name="ProductsExportToEbay">
         <input type="hidden" name="productStoreId" value="${productStoreId!}" />
         <input type="hidden" name="selectResult" value="${selectResult!}"/>
-             <@field type="select" label="${uiLabelMap.FormFieldTitle_ebayCategory}" name="ebayCategory" onChange="javascript:changeEbayCategory(this.value)">
+             <@field type="select" label=uiLabelMap.FormFieldTitle_ebayCategory name="ebayCategory" onChange="javascript:changeEbayCategory(this.value)">
                 <option value=""> </option>
                 <#if categories??>
                   <#list categories as category>
@@ -53,23 +53,23 @@ under the License.
                 </#if>
              </@field>
             <#if hideExportOptions?has_content && hideExportOptions == "N">
-            <@field type="select" label="${uiLabelMap.CommonCountry}" name="country">
+            <@field type="select" label=uiLabelMap.CommonCountry name="country">
                 <#if countries??>
                     <#list countries as country>
                         <option value="${country.geoCode}" <#if countryCode?? && countryCode == country.geoCode>selected="selected"</#if>>${country.get("geoName",locale)}</option>
                     </#list>
                 </#if>
             </@field>
-            <@field type="input" label="${uiLabelMap.FormFieldTitle_location}" name="location" size="50" maxlength="50" value="${parameters.location!}" />
-            <@field type="select" label="${uiLabelMap.FormFieldTitle_listingDuration}" name="listingDuration">
+            <@field type="input" label=uiLabelMap.FormFieldTitle_location name="location" size="50" maxlength="50" value="${parameters.location!}" />
+            <@field type="select" label=uiLabelMap.FormFieldTitle_listingDuration name="listingDuration">
                 <option value="Days_1">1 ${uiLabelMap.CommonDay}</option>
                 <option value="Days_3">3 ${uiLabelMap.CommonDays}</option>
                 <option value="Days_7">7 ${uiLabelMap.CommonDays}</option>
             </@field>
-            <@field type="input" label="${uiLabelMap.FormFieldTitle_startPrice}" name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
+            <@field type="input" label=uiLabelMap.FormFieldTitle_startPrice name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
             <#assign fieldValue><#if parameters.quantity??>${parameters.quantity!}<#else>1</#if></#assign>
-            <@field type="input" label="${uiLabelMap.CommonQuantity}" name="quantity" size="12" maxlength="12" value=fieldValue />
-            <@field type="select" label="${uiLabelMap.CommonWebsite}" name="webSiteId" onChange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
+            <@field type="input" label=uiLabelMap.CommonQuantity name="quantity" size="12" maxlength="12" value=fieldValue />
+            <@field type="select" label=uiLabelMap.CommonWebsite name="webSiteId" onChange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
                 <#list webSiteList as webSite>
                   <#assign displayDesc = webSite.siteName?default("${uiLabelMap.ProductNoDescription}")>
                   <#if (18 < displayDesc?length)>
@@ -78,8 +78,8 @@ under the License.
                   <option value="${webSite.webSiteId}" <#if selectedWebSiteId! == webSite.webSiteId> selected="selected"</#if>>${displayDesc} [${webSite.webSiteId}]</option>
                 </#list>
             </@field>
-            <@field type="input" label="${uiLabelMap.FormFieldTitle_webSiteUrl}" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodsAccepted}">
+            <@field type="input" label=uiLabelMap.FormFieldTitle_webSiteUrl name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
+            <@field type="generic" label=uiLabelMap.FormFieldTitle_paymentMethodsAccepted>
                 <@fields type="default-manual" ignoreParentField=true fieldArgs={"inline":true}>
                     <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@tr>
@@ -115,9 +115,9 @@ under the License.
                     </@table>
                 </@fields>
             </@field>
-            <@field type="input" label="${uiLabelMap.FormFieldTitle_payPalEmail}" name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
-            <@field type="textarea" label="${uiLabelMap.FormFieldTitle_customXml}" cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</@field>
-            <@field type="submit" text="${uiLabelMap.EbayExportToEbay}" name="submitButton" class="+${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}" />
+            <@field type="input" label=uiLabelMap.FormFieldTitle_payPalEmail name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
+            <@field type="textarea" label=uiLabelMap.FormFieldTitle_customXml cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</@field>
+            <@field type="submit" text=uiLabelMap.EbayExportToEbay name="submitButton" class="+${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}" />
             </#if>
     </form>
     <@script>

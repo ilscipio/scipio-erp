@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.CommonLanguageTitle}">
+<@section title=uiLabelMap.CommonLanguageTitle>
 
   <ul class="no-bullet">
     <#assign altRow = true>

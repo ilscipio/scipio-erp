@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section id="partyProductStores" title="${uiLabelMap.ProductStores}">
+<@section id="partyProductStores" title=uiLabelMap.ProductStores>
     <#if productStoreRoles?has_content>
       <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>

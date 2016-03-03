@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-    <@section id="totalOrders" title="${uiLabelMap.PartyLoyaltyPoints}">
+    <@section id="totalOrders" title=uiLabelMap.PartyLoyaltyPoints>
         <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>    
           ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.
         </#if>

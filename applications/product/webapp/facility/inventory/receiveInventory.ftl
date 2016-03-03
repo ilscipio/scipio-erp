@@ -22,7 +22,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text=uiLabelMap.ProductNewFacility class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section menuContent=menuContent>
@@ -91,7 +91,7 @@ under the License.
               <#assign unitCost = firstOrderItem.unitPrice?default(standardCosts.get(firstOrderItem.productId)?default(0))/>
               <input type="hidden" name="orderId" value="${purchaseOrder.orderId}"/>
               <input type="hidden" name="orderItemSeqId" value="${firstOrderItem.orderItemSeqId}"/>
-              <@field type="display" label="${uiLabelMap.ProductPurchaseOrder}">
+              <@field type="display" label=uiLabelMap.ProductPurchaseOrder>
                   <b>${purchaseOrder.orderId}</b>&nbsp;/&nbsp;<b>${firstOrderItem.orderItemSeqId}</b>
                   <#if 1 < purchaseOrderItems.size()>
                     (${uiLabelMap.ProductMultipleOrderItemsProduct} - ${purchaseOrderItems.size()}:1 ${uiLabelMap.ProductItemProduct})
@@ -100,17 +100,17 @@ under the License.
                   </#if>
               </@field>
               </#if>
-              <@field type="display" label="${uiLabelMap.ProductProductId}">
+              <@field type="display" label=uiLabelMap.ProductProductId>
                   <b>${requestParameters.productId!}</b>
               </@field>
-              <@field type="display" label="${uiLabelMap.ProductProductName}">
+              <@field type="display" label=uiLabelMap.ProductProductName>
                   <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
               </@field>
-              <@field type="display" label="${uiLabelMap.ProductProductDescription}">
+              <@field type="display" label=uiLabelMap.ProductProductDescription>
                   ${product.description!}
               </@field>
-              <@field type="input" label="${uiLabelMap.ProductItemDescription}" name="itemDescription" size="30" maxlength="60"/>
-              <@field type="select" label="${uiLabelMap.ProductInventoryItemType}" name="inventoryItemTypeId" size="1">
+              <@field type="input" label=uiLabelMap.ProductItemDescription name="itemDescription" size="30" maxlength="60"/>
+              <@field type="select" label=uiLabelMap.ProductInventoryItemType name="inventoryItemTypeId" size="1">
                   <#list inventoryItemTypes as nextInventoryItemType>
                     <option value="${nextInventoryItemType.inventoryItemTypeId}"<#rt>
                       <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)> selected="selected"</#if>><#t>
@@ -120,8 +120,8 @@ under the License.
 
               <hr />
               
-              <@field type="lookup" label="${uiLabelMap.ProductFacilityOwner}" formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
-              <@field type="select" label="${uiLabelMap.ProductSupplier}" name="partyId">
+              <@field type="lookup" label=uiLabelMap.ProductFacilityOwner formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
+              <@field type="select" label=uiLabelMap.ProductSupplier name="partyId">
                   <option value=""></option>
                   <#if supplierPartyIds?has_content>
                     <#list supplierPartyIds as supplierPartyId>
@@ -131,17 +131,17 @@ under the License.
                     </#list>
                   </#if>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
+              <@field type="generic" label=uiLabelMap.ProductDateReceived>
                   <@field type="input" name="datetimeReceived" size="24" value="${nowTimestamp}" />
                   <#-- <a href="#" onclick="setNow('datetimeReceived')" class="${styles.link_run_local!} ${styles.action_update!}">[Now]</a> -->
               </@field>
               
               
-              <@field type="input" label="${uiLabelMap.lotId}" name="lotId" size="10"/>
+              <@field type="input" label=uiLabelMap.lotId name="lotId" size="10"/>
 
               <#-- facility location(s) -->
               <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
-              <@field type="generic" label="${uiLabelMap.ProductFacilityLocation}">
+              <@field type="generic" label=uiLabelMap.ProductFacilityLocation>
                   <#if facilityLocations?has_content>
                     <@field type="select" name="locationSeqId">
                       <#list facilityLocations as productFacilityLocation>
@@ -161,18 +161,18 @@ under the License.
                     <@field type="lookup" formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
                   </#if>
               </@field>
-              <@field type="select" label="${uiLabelMap.ProductRejectedReason}" name="rejectionId" size="1">
+              <@field type="select" label=uiLabelMap.ProductRejectedReason name="rejectionId" size="1">
                   <option></option>
                   <#list rejectReasons as nextRejection>
                     <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                   </#list>
               </@field>
-              <@field type="input" label="${uiLabelMap.ProductQuantityRejected}" name="quantityRejected" size="5" value="0" />
-              <@field type="input" label="${uiLabelMap.ProductQuantityAccepted}" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
+              <@field type="input" label=uiLabelMap.ProductQuantityRejected name="quantityRejected" size="5" value="0" />
+              <@field type="input" label=uiLabelMap.ProductQuantityAccepted name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
               <#-- get the default unit cost -->
               <#if (!unitCost?? || unitCost == 0.0)><#assign unitCost = standardCosts.get(product.productId)?default(0)/></#if>
-              <@field type="input" label="${uiLabelMap.ProductPerUnitPrice}" name="unitCost" size="10" value="${unitCost}"/>
-              <@field type="submit" text="${uiLabelMap.CommonReceive}" class="+${styles.link_run_sys!} ${styles.action_receive!}" />
+              <@field type="input" label=uiLabelMap.ProductPerUnitPrice name="unitCost" size="10" value="${unitCost}"/>
+              <@field type="submit" text=uiLabelMap.CommonReceive class="+${styles.link_run_sys!} ${styles.action_receive!}" />
             <@script>
               document.selectAllForm.quantityAccepted.focus();
             </@script>
@@ -180,7 +180,7 @@ under the License.
           </@section>
         <#-- Select Shipment Screen -->
         <#elseif requestParameters.initialSelected?? && !requestParameters.shipmentId??>
-          <@section title="${uiLabelMap.ProductSelectShipmentReceive}">
+          <@section title=uiLabelMap.ProductSelectShipmentReceive>
           <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name="selectAllForm">
             <#-- general request fields -->
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
@@ -210,7 +210,7 @@ under the License.
                   <@td colspan="5"></@td>
                 </@tr>
             </@table>
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveSelectedShipment}" />
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveSelectedShipment />
           </form>
           </@section>
         <#-- Multi-Item PO Receiving -->
@@ -414,7 +414,7 @@ under the License.
                 <#else>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveSelectedProduct}"/>
+                      <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveSelectedProduct/>
                     </@td>
                   </@tr>
                 </#if>
@@ -427,13 +427,13 @@ under the License.
           </@section>
         <#-- Initial Screen -->
         <#else>
-          <@section title="${uiLabelMap.ProductReceiveItem}">
+          <@section title=uiLabelMap.ProductReceiveItem>
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-              <@field type="lookup" label="${uiLabelMap.ProductPurchaseOrderNumber}" tooltip="${uiLabelMap.ProductLeaveSingleProductReceiving}" value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
-              <@field type="lookup" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}" value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
+              <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
+              <@field type="lookup" label=uiLabelMap.ProductProductId tooltip=uiLabelMap.ProductLeaveEntirePoReceiving value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
           </form>
           </@section>
         </#if>

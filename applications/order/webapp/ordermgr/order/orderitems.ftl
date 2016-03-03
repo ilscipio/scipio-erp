@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if orderHeader?has_content>
-<@section title="${uiLabelMap.OrderOrderItems}">
+<@section title=uiLabelMap.OrderOrderItems>
             <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@thead>
                 <@tr valign="bottom" class="header-row">
@@ -231,7 +231,7 @@ under the License.
                                             <#assign unplannedQuantity = requiredQuantity - qohQuantity - inProductionQuantity - onOrderQuantity - mktgPkgQOH>
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
-                                            <@modal id="${productId}_i" label="${uiLabelMap.ProductInventory}">
+                                            <@modal id="${productId}_i" label=uiLabelMap.ProductInventory>
                                                     <@table type="fields"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
                                                         <@tr>
                                                             <@td>${uiLabelMap.OrderRequiredForSO}</@td>

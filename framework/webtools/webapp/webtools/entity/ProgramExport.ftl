@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.WebtoolsEntityXMLRepresentation}">
+<@section title=uiLabelMap.WebtoolsEntityXMLRepresentation>
       <p>
       <#if xmlDoc?has_content>
         ${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(xmlDoc)?replace("\n", "<br />")?replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;")}

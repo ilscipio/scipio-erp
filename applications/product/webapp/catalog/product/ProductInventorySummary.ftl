@@ -19,13 +19,13 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if parameters.showAllFacilities??>
-    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text=uiLabelMap.ProductShowProductFacilities class="+${styles.action_run_sys!} ${styles.action_find!}" />
   <#else>
-    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text="${uiLabelMap.ProductShowAllFacilities}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text=uiLabelMap.ProductShowAllFacilities class="+${styles.action_run_sys!} ${styles.action_find!}" />
   </#if>
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.ProductInventorySummary}" menuContent=menuContent>
+<@section title=uiLabelMap.ProductInventorySummary menuContent=menuContent>
   <#if product??>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

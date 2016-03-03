@@ -23,7 +23,7 @@ function uploadTrackingCode(orderId, productStoreId) {
     document.uploadTracking.submit();
 }
 </@script>
-<@section title="${uiLabelMap.EbayListOrderImported}">
+<@section title=uiLabelMap.EbayListOrderImported>
   <form name="uploadTracking" action="<@ofbizUrl>uploadTrackingCodeBack</@ofbizUrl>" method="post">
       <input type="hidden" name="orderId" value=""/>
       <input type="hidden" name="productStoreId" value=""/>

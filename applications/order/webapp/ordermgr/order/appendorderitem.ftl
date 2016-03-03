@@ -24,7 +24,7 @@ under the License.
 </@script>
 
 <#if orderHeader?has_content>
-  <@section title="${uiLabelMap.OrderAddToOrder}">
+  <@section title=uiLabelMap.OrderAddToOrder>
     <@row>
       <@cell columns=6>
         <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">

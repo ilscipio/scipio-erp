@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.OrderOrderHeaderInfo}">
+<@section title=uiLabelMap.OrderOrderHeaderInfo>
     <@table type="fields"> <#-- orig: class="basic-table" -->
         <#-- order name -->
         <#if (orderName?has_content)>

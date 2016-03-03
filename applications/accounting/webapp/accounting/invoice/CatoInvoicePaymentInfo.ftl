@@ -1,5 +1,5 @@
 <#-- CATO -->
-<@section title="${uiLabelMap.AccountingPaymentInformation!}">
+<@section title=uiLabelMap.AccountingPaymentInformation>
   <@table type="fields">
         <@thead>
             <@tr valign="bottom" class="header-row">

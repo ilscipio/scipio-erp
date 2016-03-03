@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.PartyVisitDetail}">
+<@section title=uiLabelMap.PartyVisitDetail>
       <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>
@@ -77,7 +77,7 @@ under the License.
         </@tr>
       </@table>
 </@section>
-<@section title="${uiLabelMap.PartyHitTracker}">
+<@section title=uiLabelMap.PartyHitTracker>
   <#if serverHits?has_content>
     <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
     <@paginate mode="content" url=makeOfbizUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
@@ -126,7 +126,7 @@ under the License.
 JIRA OFBIZ-4488: BEGIN
 https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
-<@section title="${uiLabelMap.PartyPagePushFollowing}">
+<@section title=uiLabelMap.PartyPagePushFollowing>
       <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
         <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
             <@tr>

@@ -62,7 +62,7 @@ under the License.
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
-                                    <@field type="select" label="${uiLabelMap.OrderOrderTermType}" name="termTypeId">
+                                    <@field type="select" label=uiLabelMap.OrderOrderTermType name="termTypeId">
                                             <option value=""></option>
                                             <#list termTypes! as termType>
                                                 <option value="${termType.termTypeId}"
@@ -70,11 +70,11 @@ under the License.
                                                 >${termType.get('description', locale)}</option>
                                             </#list>
                                     </@field>
-                                    <@field type="input" label="${uiLabelMap.OrderOrderTermValue}" size="30" maxlength="60" name="termValue" value="${termValue!}" />
-                                    <@field type="input" label="${uiLabelMap.OrderOrderTermDays}" size="30" maxlength="60" name="termDays" value="${termDays!}" />
-                                    <@field type="input" label="${uiLabelMap.OrderOrderTextValue}" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
-                                    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="255" name="description" value="${description?if_exists}" />
-                                    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
+                                    <@field type="input" label=uiLabelMap.OrderOrderTermValue size="30" maxlength="60" name="termValue" value="${termValue!}" />
+                                    <@field type="input" label=uiLabelMap.OrderOrderTermDays size="30" maxlength="60" name="termDays" value="${termDays!}" />
+                                    <@field type="input" label=uiLabelMap.OrderOrderTextValue size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
+                                    <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="255" name="description" value="${description?if_exists}" />
+                                    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd />
                             </form>
                         </#if>
             </@cell>

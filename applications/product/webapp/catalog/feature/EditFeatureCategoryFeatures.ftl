@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuContent=menuContent>
@@ -33,7 +33,7 @@ under the License.
     </form>
 </@section>
 
-<@section title="${uiLabelMap.ProductProductFeatureMaintenance}">
+<@section title=uiLabelMap.ProductProductFeatureMaintenance>
 
     <#assign productString = "">
     <#if productId?has_content>

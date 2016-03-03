@@ -18,7 +18,7 @@ under the License.
 -->
 
   <#if orderHeader?has_content>
-    <@section title="${uiLabelMap.PageTitleLookupBulkAddProduct}"/>
+    <@section title=uiLabelMap.PageTitleLookupBulkAddProduct/>
   <#else>
     <#assign sectionTitle>
         ${uiLabelMap.CommonCreate}
@@ -30,7 +30,7 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry") text="${uiLabelMap.OrderOrderItems}" class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderentry") text=uiLabelMap.OrderOrderItems class="+${styles.action_nav!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle menuContent=menuContent />

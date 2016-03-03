@@ -30,12 +30,12 @@ under the License.
     <#assign shoppingCartSize = 0>
 </#if>
 
-<@section title="${uiLabelMap.OrderOrderHeaderInfo}">
+<@section title=uiLabelMap.OrderOrderHeaderInfo>
         <@row>
             <@cell>
               <form method="post" action="setOrderName" name="setCartOrderNameForm">
-                  <@field type="input" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default('')}" label="${uiLabelMap.OrderOrderName}"/>
-                  <@field type="submit" text="${uiLabelMap.CommonSet}" class="+${styles.link_run_session!} ${styles.action_update!}" />
+                  <@field type="input" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default('')}" label=uiLabelMap.OrderOrderName/>
+                  <@field type="submit" text=uiLabelMap.CommonSet class="+${styles.link_run_session!} ${styles.action_update!}" />
               </form>
             </@cell>
         </@row>
@@ -43,8 +43,8 @@ under the License.
                 <@row>
                     <@cell>
                     <form method="post" action="setPoNumber" name="setCartPoNumberForm">
-                        <@field type="input" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default('')}" label="${uiLabelMap.OrderPONumber}"/>
-                        <@field type="submit" text="${uiLabelMap.CommonSet}" class="+${styles.link_run_session!} ${styles.action_update!}" />
+                        <@field type="input" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default('')}" label=uiLabelMap.OrderPONumber/>
+                        <@field type="submit" text=uiLabelMap.CommonSet class="+${styles.link_run_session!} ${styles.action_update!}" />
                     </form>
                     </@cell>
                 </@row>

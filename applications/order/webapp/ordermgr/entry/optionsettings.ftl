@@ -23,10 +23,10 @@ under the License.
   <@section>
     <@row>
       <@cell columns=columns>   
-        <@field type="textarea" label="${uiLabelMap.OrderInternalNote}" name="internal_order_notes" cols="30" rows="3"><#rt>
+        <@field type="textarea" label=uiLabelMap.OrderInternalNote name="internal_order_notes" cols="30" rows="3"><#rt>
           <#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if><#t>
         </@field><#lt>
-        <@field type="textarea" label="${uiLabelMap.OrderShippingNotes}" name="shippingNotes" cols="30" rows="3"><#rt>
+        <@field type="textarea" label=uiLabelMap.OrderShippingNotes name="shippingNotes" cols="30" rows="3"><#rt>
           <#if (cart.getOrderNotes().size()>0)>${(cart.getOrderNotes()[0])!}</#if><#t>
         </@field><#lt>
       </@cell>
@@ -47,7 +47,7 @@ under the License.
     <@row>
         <@cell columns=columns>
             <#if cart.getOrderType() != "PURCHASE_ORDER">
-                <@field type="generic" label="${uiLabelMap.ProductShipmentMethod}">
+                <@field type="generic" label=uiLabelMap.ProductShipmentMethod>
                 <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, 0)>
                 <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
                 <#list carrierShipmentMethods as carrierShipmentMethod>
@@ -69,32 +69,32 @@ under the License.
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="${shippingMethod}" id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=radioText checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label="${uiLabelMap.FacilityNoOtherShippingMethods}"/>
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>
                 </#if>
                 </@field>  
             <#else>
                 <input type="hidden" name="${shipGroupIndex!'0'}_shipping_method" value="STANDARD@_NA_" />
-                <@field type="input" label="${uiLabelMap.OrderOrderShipEstimate}" name="${shipGroupIndex!'0'}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex!'0')!}" />
+                <@field type="input" label=uiLabelMap.OrderOrderShipEstimate name="${shipGroupIndex!'0'}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex!'0')!}" />
             </#if>
 
-                <@field type="generic" label="${uiLabelMap.FacilityShipOnceOrAvailable}">
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="false" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "N") label="${uiLabelMap.FacilityWaitEntireOrderReady}"/>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="true" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "Y") label="${uiLabelMap.FacilityShipAvailable}"/>
+                <@field type="generic" label=uiLabelMap.FacilityShipOnceOrAvailable>
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="false" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "N") label=uiLabelMap.FacilityWaitEntireOrderReady/>
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_may_split" value="true" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "Y") label=uiLabelMap.FacilityShipAvailable/>
                 </@field>
-                <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="sgi${shipGroupIndex!'0'}_shipBeforeDate" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipBeforeDate"/>
-                <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="sgi${shipGroupIndex!'0'}_shipAfterDate" value="${(cart.getShipAfterDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipAfterDate"/>
-                <@field type="textarea" label="${uiLabelMap.FacilitySpecialInstructions}" cols="30" rows="3" name="${shipGroupIndex!'0'}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</@field>
+                <@field type="datetime" label=uiLabelMap.OrderShipBeforeDate name="sgi${shipGroupIndex!'0'}_shipBeforeDate" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipBeforeDate"/>
+                <@field type="datetime" label=uiLabelMap.OrderShipAfterDate name="sgi${shipGroupIndex!'0'}_shipAfterDate" value="${(cart.getShipAfterDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex!'0'}_shipAfterDate"/>
+                <@field type="textarea" label=uiLabelMap.FacilitySpecialInstructions cols="30" rows="3" name="${shipGroupIndex!'0'}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</@field>
 
             <#if cart.getOrderType() == 'PURCHASE_ORDER'>
                 <input type="hidden" name="${shipGroupIndex!'0'}_is_gift" value="false" />
             <#else>
               <#if ((productStore.showCheckoutGiftOptions)!'Y') != 'N'>
-                <@field type="generic" label="${uiLabelMap.OrderIsThisGift}">
-                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="true" checked=((cart.getIsGift(shipGroupIndex)!'Y') == 'Y') label="${uiLabelMap.CommonYes}"/>
-                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label="${uiLabelMap.CommonNo}"/>
+                <@field type="generic" label=uiLabelMap.OrderIsThisGift>
+                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="true" checked=((cart.getIsGift(shipGroupIndex)!'Y') == 'Y') label=uiLabelMap.CommonYes/>
+                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label=uiLabelMap.CommonNo/>
                 </@field>
               </#if>
-                <@field type="textarea" label="${uiLabelMap.OrderGiftMessage}" cols="30" rows="3" name="${shipGroupIndex!'0'}_gift_message">${cart.getGiftMessage(shipGroupIndex)!}</@field>
+                <@field type="textarea" label=uiLabelMap.OrderGiftMessage cols="30" rows="3" name="${shipGroupIndex!'0'}_gift_message">${cart.getGiftMessage(shipGroupIndex)!}</@field>
             </#if>
 
           </@cell>

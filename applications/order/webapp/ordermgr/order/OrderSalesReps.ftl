@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if salesReps?has_content>
-<@section title="${uiLabelMap.OrderSalesReps}">
+<@section title=uiLabelMap.OrderSalesReps>
       <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
       <@tr class="header-row">

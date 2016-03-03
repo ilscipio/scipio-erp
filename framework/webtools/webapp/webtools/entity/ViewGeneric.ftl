@@ -40,15 +40,15 @@ function ShowTab(lname) {
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
       <#if enableEdit = "false">
         <#if hasCreatePermission>
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&amp;enableEdit=true") text="${uiLabelMap.CommonCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${curFindString}&amp;enableEdit=true") text="${uiLabelMap.CommonEdit}" class="+${styles.action_nav!} ${styles.action_update!}" />
+          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&amp;enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${curFindString}&amp;enableEdit=true") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}") text="${uiLabelMap.WebtoolsDeleteThisValue}" class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&amp;${curFindString}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
       </#if>
@@ -212,7 +212,7 @@ function ShowTab(lname) {
                             <#assign button = "${uiLabelMap.CommonCreate}">
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text="${uiLabelMap.CommonCancel}"/>
+                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>
@@ -268,7 +268,7 @@ function ShowTab(lname) {
 
             <#if relation.valueRelated?has_content>
                             <@pli>
-                              <@modal id="rel_${relation.relatedTable}" label="${uiLabelMap.CommonValues}">                                
+                              <@modal id="rel_${relation.relatedTable}" label=uiLabelMap.CommonValues>                                
                                   <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12"> <#-- orig: cellspacing="0" -->
                                     <@thead>
                                         <@tr>

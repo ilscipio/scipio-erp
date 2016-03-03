@@ -1,5 +1,5 @@
 <#-- CATO -->
-<@section title="${uiLabelMap.AccountingAppliedPayments!}">
+<@section title=uiLabelMap.AccountingAppliedPayments>
     <@table type="data-complex" role="grid">
         <@thead>
             <@tr valign="bottom" class="header-row">

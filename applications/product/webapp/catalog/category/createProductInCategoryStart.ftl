@@ -43,10 +43,10 @@ under the License.
                     <@field type="checkbox" name="pftsel_${productFeatureTypeId}" label=uiLabelMap.ProductSelectable!/>
                 </@field>
             </#list>
-                <@field type="input" label="${uiLabelMap.ProductInternalName}" name="internalName" size="30" maxlength="60"/>
-                <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" size="30" maxlength="60"/>
-                <@field type="input" label="${uiLabelMap.ProductShortDescription}" name="description" size="60" maxlength="250"/>
-                <@field type="generic" label="${uiLabelMap.ProductDefaultPrice}">
+                <@field type="input" label=uiLabelMap.ProductInternalName name="internalName" size="30" maxlength="60"/>
+                <@field type="input" label=uiLabelMap.ProductProductName name="productName" size="30" maxlength="60"/>
+                <@field type="input" label=uiLabelMap.ProductShortDescription name="description" size="60" maxlength="250"/>
+                <@field type="generic" label=uiLabelMap.ProductDefaultPrice>
                     <@field type="input" name="defaultPrice" size="8"/>
                     <#assign findCurrenciesMap = {"uomTypeId":"CURRENCY_MEASURE"}>
                     <#assign currencies = delegator.findByAnd('Uom', findCurrenciesMap, null, true) />
@@ -59,7 +59,7 @@ under the License.
                         </@field>
                     </#if>
                 </@field>
-                <@field type="input" label="${uiLabelMap.ProductAverageCost}" name="averageCost" size="8"/>
-                <@field type="submit" submitType="link" href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductCheckExisting}" />
+                <@field type="input" label=uiLabelMap.ProductAverageCost name="averageCost" size="8"/>
+                <@field type="submit" submitType="link" href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.ProductCheckExisting />
         </form>
 </@section>

@@ -28,7 +28,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if showMessageLinks?default("false")?upper_case == "TRUE">
-          <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
+          <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
         </#if>
     </@menu>
 </#macro>

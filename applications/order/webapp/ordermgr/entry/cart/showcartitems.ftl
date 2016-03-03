@@ -27,7 +27,7 @@ under the License.
   </#if>
 </#macro>
 
-<@section title="${uiLabelMap.OrderOrderItems}">
+<@section title=uiLabelMap.OrderOrderItems>
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
       <input type="hidden" name="removeSelected" value="false"/>
@@ -186,8 +186,8 @@ under the License.
             <@tr>
               <@td colspan="2">
                 <@fields type="default-compact">
-                  <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()!''}" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date-time" />
-                  <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()!''}" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date-time" />
+                  <@field type="datetime" label=uiLabelMap.OrderShipAfterDate name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()!''}" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date-time" />
+                  <@field type="datetime" label=uiLabelMap.OrderShipBeforeDate name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()!''}" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date-time" />
                 </@fields>
               </@td>
             </@tr>

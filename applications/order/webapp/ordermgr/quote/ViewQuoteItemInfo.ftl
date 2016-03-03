@@ -19,12 +19,12 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if (maySelectItems!"N") == "Y">
-    <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+    <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text=uiLabelMap.OrderAddAllToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>
 
-<@section title="${uiLabelMap.OrderOrderQuoteItems}" menuContent=menuContent>
+<@section title=uiLabelMap.OrderOrderQuoteItems menuContent=menuContent>
 
     <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

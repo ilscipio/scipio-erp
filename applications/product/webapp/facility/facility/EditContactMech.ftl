@@ -19,9 +19,9 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text="${uiLabelMap.CommonGoBack}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text="${uiLabelMap.ProductNewContactMech}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text=uiLabelMap.ProductNewContactMech class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>
@@ -39,14 +39,14 @@ under the License.
       <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
       <@cell columns=9>
-        <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
+        <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
           <#list mechMap.contactMechTypes as contactMechType>
             <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
           </#list>
         </@field>
       </@cell>
       <@cell columns=3>
-        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
+        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
       </@cell>
     </@row>
     </form>
@@ -70,7 +70,7 @@ under the License.
 
         <#if paymentMethodId??><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
 
-        <@field type="select" label="${uiLabelMap.PartyContactPurposes}" name="contactMechPurposeTypeId" required=true>
+        <@field type="select" label=uiLabelMap.PartyContactPurposes name="contactMechPurposeTypeId" required=true>
             <option></option>
             <#list mechMap.purposeTypes as contactMechPurposeType>
               <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
@@ -78,7 +78,7 @@ under the License.
         </@field>
     <#else>
         <#if mechMap.purposeTypes?has_content>
-        <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
+        <@field type="generic" label=uiLabelMap.PartyContactPurposes>
           <@fields type="default-manual-widgetonly" ignoreParentField=true>
             <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <#if mechMap.facilityContactMechPurposes?has_content>
@@ -135,16 +135,16 @@ under the License.
     </#if>
 
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
-    <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="toName" value=(mechMap.postalAddress.toName)!(request.getParameter('toName')!) />
-    <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="attnName" value=(mechMap.postalAddress.attnName)!(request.getParameter('attnName')!) />
-    <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="address1" value=(mechMap.postalAddress.address1)!(request.getParameter('address1')!) />
-    <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="address2" value=(mechMap.postalAddress.address2)!(request.getParameter('address2')!) />
-    <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="city" value=(mechMap.postalAddress.city)!(request.getParameter('city')!) />
+    <@field type="input" label=uiLabelMap.PartyToName size="30" maxlength="60" name="toName" value=(mechMap.postalAddress.toName)!(request.getParameter('toName')!) />
+    <@field type="input" label=uiLabelMap.PartyAttentionName size="30" maxlength="60" name="attnName" value=(mechMap.postalAddress.attnName)!(request.getParameter('attnName')!) />
+    <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="30" maxlength="30" name="address1" value=(mechMap.postalAddress.address1)!(request.getParameter('address1')!) />
+    <@field type="input" label=uiLabelMap.PartyAddressLine2 size="30" maxlength="30" name="address2" value=(mechMap.postalAddress.address2)!(request.getParameter('address2')!) />
+    <@field type="input" label=uiLabelMap.PartyCity required=true size="30" maxlength="30" name="city" value=(mechMap.postalAddress.city)!(request.getParameter('city')!) />
 
-    <@field type="select" label="${uiLabelMap.PartyState}" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
+    <@field type="select" label=uiLabelMap.PartyState name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
     </@field>
-    <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="postalCode" value=(mechMap.postalAddress.postalCode)!(request.getParameter('postalCode')!) />
-    <@field type="select" label="${uiLabelMap.CommonCountry}" name="countryGeoId" id="editcontactmechform_countryGeoId">
+    <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="postalCode" value=(mechMap.postalAddress.postalCode)!(request.getParameter('postalCode')!) />
+    <@field type="select" label=uiLabelMap.CommonCountry name="countryGeoId" id="editcontactmechform_countryGeoId">
         ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
         <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
           <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
@@ -157,7 +157,7 @@ under the License.
         </option>
     </@field>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
-    <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
+    <@field type="generic" label=uiLabelMap.PartyPhoneNumber>
         <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(mechMap.telecomNumber.countryCode)!(request.getParameter('countryCode')!) />
         -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(mechMap.telecomNumber.areaCode)!(request.getParameter('areaCode')!) />
         -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="contactNumber" value=(mechMap.telecomNumber.contactNumber)!(request.getParameter('contactNumber')!) />
@@ -171,7 +171,7 @@ under the License.
   <#else>
     <@field type="input" label=mechMap.contactMechType.get('description',locale)! required=true size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
   </#if>
-    <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" />
+    <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </form>
   </#if>
 </#if>

@@ -19,9 +19,9 @@ under the License.
 <#assign selected = activeSubMenuItem?default("void")>
 <#if returnHeader??>
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("returnMain?returnId=${returnId!}") text="${uiLabelMap.OrderReturnHeader}" selected=(selected=="OrderReturnHeader") class="+${styles.action_nav!} ${styles.action_terminate!}" />
-      <@menuitem type="link" href=makeOfbizUrl("returnItems?returnId=${returnId!}") text="${uiLabelMap.OrderReturnItems}" selected=(selected=="OrderReturnItems") class="+${styles.action_nav!} ${styles.action_terminate!}" />
-      <@menuitem type="link" href=makeOfbizUrl("ReturnHistory?returnId=${returnId!}") text="${uiLabelMap.OrderReturnHistory}" selected=(selected=="OrderReturnHistory") class="+${styles.action_nav!} ${styles.action_view!}" />
+      <@menuitem type="link" href=makeOfbizUrl("returnMain?returnId=${returnId!}") text=uiLabelMap.OrderReturnHeader selected=(selected=="OrderReturnHeader") class="+${styles.action_nav!} ${styles.action_terminate!}" />
+      <@menuitem type="link" href=makeOfbizUrl("returnItems?returnId=${returnId!}") text=uiLabelMap.OrderReturnItems selected=(selected=="OrderReturnItems") class="+${styles.action_nav!} ${styles.action_terminate!}" />
+      <@menuitem type="link" href=makeOfbizUrl("ReturnHistory?returnId=${returnId!}") text=uiLabelMap.OrderReturnHistory selected=(selected=="OrderReturnHistory") class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   <#if selected != "OrderReturnHistory">
     <@menu type="button" class="+button-style-1">
@@ -45,7 +45,7 @@ under the License.
                 <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipGroupShipment.shipmentId}, null, false))>
                 <#if shipmentRouteSegment??>
                   <#if "UPS" == shipmentRouteSegment.carrierPartyId>
-                    <@menuitem type="link" href="javascript:document.upsEmailReturnLabel.submit();" text="${uiLabelMap.ProductEmailReturnShippingLabelUPS}" class="+${styles.action_run_sys!} ${styles.action_send!}">
+                    <@menuitem type="link" href="javascript:document.upsEmailReturnLabel.submit();" text=uiLabelMap.ProductEmailReturnShippingLabelUPS class="+${styles.action_run_sys!} ${styles.action_send!}">
                       <form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
                         <input type="hidden" name="returnId" value="${returnId}"/>
                         <input type="hidden" name="shipmentId" value="${shipGroupShipment.shipmentId}"/>

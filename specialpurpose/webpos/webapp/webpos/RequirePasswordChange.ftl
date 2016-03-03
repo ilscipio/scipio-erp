@@ -24,7 +24,7 @@ under the License.
 </#if>
 <@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 
-<@section title="${uiLabelMap.CommonPasswordChange}"> <#-- TODO: style="float: center; width: 49%; margin-right: 5px; text-align: center;" -->
+<@section title=uiLabelMap.CommonPasswordChange> <#-- TODO: style="float: center; width: 49%; margin-right: 5px; text-align: center;" -->
     <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>

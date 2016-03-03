@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.PageTitleRequestItems}">
+<@section title=uiLabelMap.PageTitleRequestItems>
     <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
     <@thead>
       <@tr class="header-row">

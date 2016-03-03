@@ -37,12 +37,12 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
-          <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text="${uiLabelMap.PartyReply}" />
+          <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text=uiLabelMap.PartyReply />
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
+        <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
     </@menu>
 </#macro>
-<@section title="${uiLabelMap.EcommerceReadMessage}" menuContent=menuContent menuLayout="inline-title" class="+screenlet">
+<@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <@tr><@td>&nbsp;</@td></@tr>
           <@tr>

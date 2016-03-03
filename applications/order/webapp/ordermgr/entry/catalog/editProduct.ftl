@@ -19,6 +19,6 @@ under the License.
 
 <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditProduct?productId=${productId}${externalKeyParam!}") target="catalog" text="${uiLabelMap.ProductEditProduct}" class="+${styles.action_nav!} ${styles.action_update!}" />
+    <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditProduct?productId=${productId}${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
   </@menu>
 </#if>

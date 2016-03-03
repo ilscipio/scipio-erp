@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoCode??>
-    <@section title="${uiLabelMap.ProductPromoCodeEmails}">
+    <@section title=uiLabelMap.ProductPromoCodeEmails>
             <#list productPromoCodeEmails as productPromoCodeEmail>
               <div>
                 <form name="deleteProductPromoCodeEmail_${productPromoCodeEmail_index}" method="post" action="<@ofbizUrl>deleteProductPromoCodeEmail</@ofbizUrl>">
@@ -47,7 +47,7 @@ under the License.
             </div>
     </@section>
     
-    <@section title="${uiLabelMap.ProductPromoCodeParties}">
+    <@section title=uiLabelMap.ProductPromoCodeParties>
             <#list productPromoCodeParties as productPromoCodeParty>
                 <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>

@@ -24,17 +24,17 @@ under the License.
   
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}") text="${uiLabelMap.CommonEdit}" class="+${styles.action_nav!} ${styles.action_update!}"/>
+            <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}"/>
             <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
             <#if finAcctTransCondList?has_content>
-                <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text="${uiLabelMap.AccountingCancelBankReconciliation}" class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+                <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text=uiLabelMap.AccountingCancelBankReconciliation class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
             </#if>
         </@menu>
     </#macro>
     
-    <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuContent=menuContent />
+    <@section title=uiLabelMap.AccountingCurrentBankReconciliation menuContent=menuContent />
     
-    <@section title="${uiLabelMap.AccountingPreviousBankReconciliation}">
+    <@section title=uiLabelMap.AccountingPreviousBankReconciliation>
         <#if previousGlReconciliation?has_content>
             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                 <@tr>
@@ -72,7 +72,7 @@ under the License.
         </#if>
     </@section>
 
-    <@section title="${uiLabelMap.AccountingFinAcctTransAssociatedToGlReconciliation}">
+    <@section title=uiLabelMap.AccountingFinAcctTransAssociatedToGlReconciliation>
         <#if finAccountTransList?has_content>
             <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
                 <@thead>   
@@ -146,7 +146,7 @@ under the License.
                         <#if finAccountTrans.paymentId?has_content>
                             <@td align="center">
                                 <#-- FIXME: the content doesn't fit in the modal window. Perhaps it should be wider depending on the content -->
-                                <@modal id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" label="${uiLabelMap.FormFieldTitle_glTransactions}">
+                                <@modal id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" label=uiLabelMap.FormFieldTitle_glTransactions>
                                     <#include "ShowGlTransactions.ftl"/>
                                 </@modal>
                             </@td>
@@ -158,7 +158,7 @@ under the License.
     
         <span>${uiLabelMap.AccountingTotalCapital} </span><@ofbizCurrency amount=transactionTotalAmount.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/>
         <#if isReconciled == false>
-            <@field type="submit" text="${uiLabelMap.AccountingReconcile}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+            <@field type="submit" text=uiLabelMap.AccountingReconcile class="+${styles.link_run_sys!} ${styles.action_update!}"/>
         </#if>
     </@section>
 </form>

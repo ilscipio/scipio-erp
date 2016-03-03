@@ -48,7 +48,7 @@ under the License.
             </#list>
         </#if>
     </@row>
-    <@field type="submitarea" label="${uiLabelMap.CommonAdd}">
+    <@field type="submitarea" label=uiLabelMap.CommonAdd>
         <input type="submit" value="Add" class="${styles.link_run_sys!} ${styles.action_add!}" />        
     </@field>
 </form>

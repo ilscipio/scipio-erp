@@ -270,6 +270,6 @@ var issuerId = "";
 </form>
 
 <@menu type="button">
-  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text="${uiLabelMap.OrderBacktoShoppingCart}" />
-  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text="${uiLabelMap.OrderContinueToFinalOrderReview}" />
+  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
+  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderContinueToFinalOrderReview />
 </@menu>

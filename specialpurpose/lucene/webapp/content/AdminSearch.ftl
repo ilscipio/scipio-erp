@@ -20,7 +20,7 @@ under the License.
 
   <form method="post" action="<@ofbizInterWebappUrl>/content/control/AdminSearch</@ofbizInterWebappUrl>" name="searchQuery">
 
-    <@field type="input" label="${uiLabelMap.ContentQueryLine}" class="+inputBox" name="queryLine" size="60"/>
+    <@field type="input" label=uiLabelMap.ContentQueryLine class="+inputBox" name="queryLine" size="60"/>
     
     <@field type="select" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}" name="lcSiteId">
         <option value=""></option>
@@ -29,9 +29,9 @@ under the License.
 
 <#-- category form -->
 
-    <@field type="generic" label="${uiLabelMap.ProductFeatures}">
-        <@field type="radio" name="any_or_all" value="all" checked=true label="${uiLabelMap.CommonAll}"/>
-        <@field type="radio" name="any_or_all" value="any" label="${uiLabelMap.CommonAny}"/>
+    <@field type="generic" label=uiLabelMap.ProductFeatures>
+        <@field type="radio" name="any_or_all" value="all" checked=true label=uiLabelMap.CommonAll/>
+        <@field type="radio" name="any_or_all" value="any" label=uiLabelMap.CommonAny/>
     </@field>
 <#--
     <@field type="generic" label="Feature IDs">
@@ -59,12 +59,12 @@ under the License.
             <div>${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
             <div>
               <@field type="radio" name="clearSearch" value="Y" checked=true label="${uiLabelMap.CommonNew} ${uiLabelMap.CommonSearch}"/>
-              <@field type="radio" name="clearSearch" value="N" label="${uiLabelMap.CommonRefineSearch}"/>
+              <@field type="radio" name="clearSearch" value="N" label=uiLabelMap.CommonRefineSearch/>
             </div>
       </@field>
     </#if>
 
-    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
+    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text=uiLabelMap.CommonFind/>
 </form>
 
 

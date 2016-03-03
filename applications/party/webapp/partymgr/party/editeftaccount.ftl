@@ -28,8 +28,8 @@ under the License.
       <@menu type="button">
         <#-- this was used at bottom in original FTL, is an error?
         <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text="${uiLabelMap.CommonCancelDone}" />
-        <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text=uiLabelMap.CommonCancelDone />
+        <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
     
@@ -43,11 +43,11 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
 
-        <@field type="input" required=true label="${uiLabelMap.AccountingNameAccount}" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
-        <@field type="input" label="${uiLabelMap.AccountingCompanyNameAccount}" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
-        <@field type="input" required=true label="${uiLabelMap.AccountingBankName}" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
-        <@field type="input" required=true label="${uiLabelMap.AccountingRoutingNumber}" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
-        <@field type="select" required=true label="${uiLabelMap.AccountingAccountType}" name="accountType">
+        <@field type="input" required=true label=uiLabelMap.AccountingNameAccount size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
+        <@field type="input" label=uiLabelMap.AccountingCompanyNameAccount size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
+        <@field type="input" required=true label=uiLabelMap.AccountingBankName size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
+        <@field type="input" required=true label=uiLabelMap.AccountingRoutingNumber size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
+        <@field type="select" required=true label=uiLabelMap.AccountingAccountType name="accountType">
             <option>${eftAccountData.accountType!}</option>
             <option></option>
             <option>${uiLabelMap.CommonChecking}</option>

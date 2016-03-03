@@ -22,10 +22,10 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if parameters.hideFields?default("N") == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!}"/>
+    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
   <#else>
-    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
-    <#--<@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" class="+${styles.action_run_sys!} ${styles.action_find!}" />-->
+    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
+    <#--<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />-->
   </#if>
   </@menu>
 </#macro>
@@ -39,25 +39,25 @@ under the License.
         <form method="post" name="lookupparty" action="<@ofbizUrl>findEmployees</@ofbizUrl>" class="basic-form">
             <input type="hidden" name="lookupFlag" value="Y"/>
             <input type="hidden" name="hideFields" value="Y"/>
-                <@field type="generic" label="${uiLabelMap.PartyContactInformation}">
-                    <@field type="radio" name="extInfo" value="N" onClick="javascript:refreshInfo();" checked=(extInfo == "N") label="${uiLabelMap.CommonNone}"/>
-                    <@field type="radio" name="extInfo" value="P" onClick="javascript:refreshInfo();" checked=(extInfo == "P") label="${uiLabelMap.PartyPostal}"/>
-                    <@field type="radio" name="extInfo" value="T" onClick="javascript:refreshInfo();" checked=(extInfo == "T") label="${uiLabelMap.PartyTelecom}"/>
-                    <@field type="radio" name="extInfo" value="O" onClick="javascript:refreshInfo();" checked=(extInfo == "O") label="${uiLabelMap.CommonOther}"/>
+                <@field type="generic" label=uiLabelMap.PartyContactInformation>
+                    <@field type="radio" name="extInfo" value="N" onClick="javascript:refreshInfo();" checked=(extInfo == "N") label=uiLabelMap.CommonNone/>
+                    <@field type="radio" name="extInfo" value="P" onClick="javascript:refreshInfo();" checked=(extInfo == "P") label=uiLabelMap.PartyPostal/>
+                    <@field type="radio" name="extInfo" value="T" onClick="javascript:refreshInfo();" checked=(extInfo == "T") label=uiLabelMap.PartyTelecom/>
+                    <@field type="radio" name="extInfo" value="O" onClick="javascript:refreshInfo();" checked=(extInfo == "O") label=uiLabelMap.CommonOther/>
                 </@field>
-                <@field type="input" label="${uiLabelMap.PartyLastName}" name="lastName" value="${parameters.lastName!}"/>
-                <@field type="input" label="${uiLabelMap.PartyFirstName}" name="firstName" value="${parameters.firstName!}"/>
-                <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
-                <@field type="input" label="${uiLabelMap.PartyUserLogin}" name="userLoginId" value="${parameters.userLoginId!}"/>
+                <@field type="input" label=uiLabelMap.PartyLastName name="lastName" value="${parameters.lastName!}"/>
+                <@field type="input" label=uiLabelMap.PartyFirstName name="firstName" value="${parameters.firstName!}"/>
+                <@field type="lookup" label=uiLabelMap.PartyPartyId value="${requestParameters.partyId!}" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                <@field type="input" label=uiLabelMap.PartyUserLogin name="userLoginId" value="${parameters.userLoginId!}"/>
                 <input type="hidden" name="groupName" value="${parameters.groupName!}"/>
                 <input type="hidden" name="roleTypeId" value="EMPLOYEE"/>
                 
             <#if extInfo == "P">
                 <hr />
-                <@field type="input" label="${uiLabelMap.CommonAddress1}" name="address1" value="${parameters.address1!}"/>
-                <@field type="input" label="${uiLabelMap.CommonAddress2}" name="address2" value="${parameters.address2!}"/>
-                <@field type="input" label="${uiLabelMap.CommonCity}" name="city" value="${parameters.city!}"/>
-                <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId">
+                <@field type="input" label=uiLabelMap.CommonAddress1 name="address1" value="${parameters.address1!}"/>
+                <@field type="input" label=uiLabelMap.CommonAddress2 name="address2" value="${parameters.address2!}"/>
+                <@field type="input" label=uiLabelMap.CommonCity name="city" value="${parameters.city!}"/>
+                <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId">
                   <#if currentStateGeo?has_content>
                     <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
                     <option value="${currentStateGeo.geoId}">---</option>
@@ -65,22 +65,22 @@ under the License.
                     <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
                     ${screens.render("component://common/widget/CommonScreens.xml#states")}
                 </@field>
-                <@field type="input" label="${uiLabelMap.PartyPostalCode}" name="postalCode" value="${parameters.postalCode!}"/>
+                <@field type="input" label=uiLabelMap.PartyPostalCode name="postalCode" value="${parameters.postalCode!}"/>
             </#if>
             <#if extInfo == "T">
                 <hr />
-                <@field type="input" label="${uiLabelMap.CommonCountryCode}" name="countryCode" value="${parameters.countryCode!}"/>
-                <@field type="input" label="${uiLabelMap.PartyAreaCode}" name="areaCode" value="${parameters.areaCode!}"/>
-                <@field type="input" label="${uiLabelMap.PartyContactNumber}" name="contactNumber" value="${parameters.contactNumber!}"/>
+                <@field type="input" label=uiLabelMap.CommonCountryCode name="countryCode" value="${parameters.countryCode!}"/>
+                <@field type="input" label=uiLabelMap.PartyAreaCode name="areaCode" value="${parameters.areaCode!}"/>
+                <@field type="input" label=uiLabelMap.PartyContactNumber name="contactNumber" value="${parameters.contactNumber!}"/>
             </#if>
             <#if extInfo == "O">
                 <hr />
-                <@field type="input" label="${uiLabelMap.PartyContactInformation}" name="infoString" value="${parameters.infoString!}"/>
+                <@field type="input" label=uiLabelMap.PartyContactInformation name="infoString" value="${parameters.infoString!}"/>
             </#if>
                 <#--<hr />-->
                 <@field type="submitarea">
-                    <@field type="submit" text="${uiLabelMap.PartyLookupParty}" onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonShowAllRecords}" />
+                    <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
                 </@field>
         </form>
     </#if>
@@ -93,7 +93,7 @@ under the License.
   </#if>
     
   <#if partyList??>
-    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}">
+    <@section id="findEmployeeResults" title=uiLabelMap.PartyPartiesFound>
     <#if lookupErrorMessage??>
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>

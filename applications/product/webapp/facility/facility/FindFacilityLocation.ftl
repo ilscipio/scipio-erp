@@ -19,8 +19,8 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" class="+${styles.action_nav!} ${styles.action_add!}" />
-    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text="${uiLabelMap.ProductNewFacilityLocation}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text=uiLabelMap.ProductNewFacility class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text=uiLabelMap.ProductNewFacilityLocation class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section menuContent=menuContent>
@@ -29,20 +29,20 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId}" />
         </#if>        
         <#if !(facilityId??)>
-            <@field type="input" label="${uiLabelMap.ProductFacility}" value="" size="19" maxlength="20" />
+            <@field type="input" label=uiLabelMap.ProductFacility value="" size="19" maxlength="20" />
         </#if>
         <#if parameters.facilityId??>
             <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
         <#else>
             <#assign LookupFacilityLocationView="LookupFacilityLocation">
         </#if>
-        <@field type="lookup" label="${uiLabelMap.ProductLocationSeqId}" formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
-        <@field type="input" label="${uiLabelMap.CommonArea}" name="areaId" value="" size="19" maxlength="20" />
-        <@field type="input" label="${uiLabelMap.ProductAisle}" name="aisleId" value="" size="19" maxlength="20" />
-        <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="" size="19" maxlength="20" />
-        <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="" size="19" maxlength="20" />
-        <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="" size="19" maxlength="20" />
-        <@field type="submit" name="look_up" text="${uiLabelMap.CommonFind}" class="+${styles.link_run_sys!} ${styles.action_find!}" />
+        <@field type="lookup" label=uiLabelMap.ProductLocationSeqId formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
+        <@field type="input" label=uiLabelMap.CommonArea name="areaId" value="" size="19" maxlength="20" />
+        <@field type="input" label=uiLabelMap.ProductAisle name="aisleId" value="" size="19" maxlength="20" />
+        <@field type="input" label=uiLabelMap.ProductSection name="sectionId" value="" size="19" maxlength="20" />
+        <@field type="input" label=uiLabelMap.ProductLevel name="levelId" value="" size="19" maxlength="20" />
+        <@field type="input" label=uiLabelMap.ProductPosition name="positionId" value="" size="19" maxlength="20" />
+        <@field type="submit" name="look_up" text=uiLabelMap.CommonFind class="+${styles.link_run_sys!} ${styles.action_find!}" />
     </form>
 
     <#if foundLocations??>

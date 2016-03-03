@@ -30,6 +30,6 @@ under the License.
 
 <#if productIds?has_content>
     <@menu type="button">
-      <@menuitem type="link" href="javascript:exportToEbay();" text="${uiLabelMap.EbayExportToEbay}" class="+${styles.action_run_sys!} ${styles.action_send!}" />
+      <@menuitem type="link" href="javascript:exportToEbay();" text=uiLabelMap.EbayExportToEbay class="+${styles.action_run_sys!} ${styles.action_send!}" />
     </@menu>
 </#if>

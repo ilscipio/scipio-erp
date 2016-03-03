@@ -20,7 +20,7 @@ under the License.
 <#if glAcctgTrialBalanceList?has_content>
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}") text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+            <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
         </@menu>
     </#macro>
     <@section menuContent=menuContent>

@@ -36,25 +36,25 @@ function addRoutingTask() {
     <input type="hidden" name="copyTask" value="N"/>
     <@row>
       <@cell columns=6>
-        <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTaskId}" formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
+        <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTaskId formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
       </@cell>
       <@cell columns=6>
-        <@field type="datetime" label="${uiLabelMap.CommonFromDate}" name="fromDate" value="" size="25" maxlength="30" id="fromDate_1"/>
+        <@field type="datetime" label=uiLabelMap.CommonFromDate name="fromDate" value="" size="25" maxlength="30" id="fromDate_1"/>
       </@cell>
     </@row>
     <@row>
       <@cell columns=6>
-        <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" size="10"/>
+        <@field type="input" label=uiLabelMap.CommonSequenceNum name="sequenceNum" size="10"/>
       </@cell>
       <@cell columns=6>
-        <@field type="datetime" label="${uiLabelMap.CommonThruDate}" name="thruDate" value="" size="25" maxlength="30" id="thruDate_1"/>
+        <@field type="datetime" label=uiLabelMap.CommonThruDate name="thruDate" value="" size="25" maxlength="30" id="thruDate_1"/>
       </@cell>
     </@row>
 
         <@field type="submitarea">
-            <@field type="submit" submitType="link" href="javascript:addRoutingTask();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ManufacturingAddExistingRoutingTask}" />
+            <@field type="submit" submitType="link" href="javascript:addRoutingTask();" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.ManufacturingAddExistingRoutingTask />
             <#-- &nbsp;-&nbsp; -->
-            <@field type="submit" submitType="link" href="javascript:copyAndAddRoutingTask();" class="+${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyAndAddRoutingTask}" />
+            <@field type="submit" submitType="link" href="javascript:copyAndAddRoutingTask();" class="+${styles.link_run_sys!} ${styles.action_copy!}" text=uiLabelMap.ManufacturingCopyAndAddRoutingTask />
         </@field>
 </form>
 </#if>

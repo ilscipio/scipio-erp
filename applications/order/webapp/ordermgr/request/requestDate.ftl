@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.CommonDate}">
+<@section title=uiLabelMap.CommonDate>
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <@tr>
                 <@td align="right" valign="top" width="25%">

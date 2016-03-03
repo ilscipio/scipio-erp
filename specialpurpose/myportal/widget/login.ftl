@@ -29,7 +29,7 @@ under the License.
 
 <@row>
 <@cell class="${styles.grid_large!}6 ${styles.grid_large!}centered" id="login">
-  <@section title="${uiLabelMap.CommonRegistered}" titleClass="h1" class="+login-screenlet">
+  <@section title=uiLabelMap.CommonRegistered titleClass="h1" class="+login-screenlet">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
 
       <@row>

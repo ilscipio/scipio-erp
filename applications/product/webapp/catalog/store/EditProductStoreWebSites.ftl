@@ -18,10 +18,10 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}") text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuContent=menuContent>
+<@section title=uiLabelMap.PageTitleEditProductStoreWebSites menuContent=menuContent>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr class="header-row">
@@ -52,7 +52,7 @@ under the License.
           </#if>
         </@table>
 </@section>
-<@section title="${uiLabelMap.ProductSetStoreOnWebSite}">
+<@section title=uiLabelMap.ProductSetStoreOnWebSite>
         <form name="addWebSite" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>" method="post">
             <input type="hidden" name="viewProductStoreId" value="${productStoreId}" />
             <input type="hidden" name="productStoreId" value="${productStoreId}" />

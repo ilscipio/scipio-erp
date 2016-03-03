@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@section title="${uiLabelMap.ProductCompareProducts}">
+<@section title=uiLabelMap.ProductCompareProducts>
   <#assign productCompareList = Static["org.ofbiz.product.product.ProductEvents"].getProductCompareList(request)/>
   <#if productCompareList?has_content>
     <@table type="data-list" autoAltRows=false> <#-- orig: class="" -->
@@ -35,9 +35,9 @@ under the License.
     </#list>
   </@table>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("clearCompareList") text="${uiLabelMap.CommonClearAll}" class="+${styles.action_run_session!} ${styles.action_clear!}" />
+    <@menuitem type="link" href=makeOfbizUrl("clearCompareList") text=uiLabelMap.CommonClearAll class="+${styles.action_run_session!} ${styles.action_clear!}" />
     <#assign compareProductsUrl><@ofbizUrl secure="${request.isSecure()?string}">compareProducts</@ofbizUrl></#assign>
-    <@menuitem type="link" href="javascript:popUp('${compareProductsUrl}', 'compareProducts', '650', '750')" text="${uiLabelMap.ProductCompareProducts}" class="+${styles.action_nav!} ${styles.action_view!}" />
+    <@menuitem type="link" href="javascript:popUp('${compareProductsUrl}', 'compareProducts', '650', '750')" text=uiLabelMap.ProductCompareProducts class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsToCompare}</@commonMsg>

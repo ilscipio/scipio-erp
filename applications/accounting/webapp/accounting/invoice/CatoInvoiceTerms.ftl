@@ -1,5 +1,5 @@
 <#-- CATO -->
-<@section title="${uiLabelMap.AccountingAgreementItemTerms}">
+<@section title=uiLabelMap.AccountingAgreementItemTerms>
     <@table type="fields">
         <@thead>
             <@tr valign="bottom" class="header-row">

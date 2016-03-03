@@ -33,7 +33,7 @@ under the License.
     <@section>
         <@grid columns=4>
             <li>
-              <@pul title="${uiLabelMap.WebtoolsCacheDebugTools}">
+              <@pul title=uiLabelMap.WebtoolsCacheDebugTools>
                 <@pli><a href="<@ofbizUrl>FindUtilCache</@ofbizUrl>">${uiLabelMap.WebtoolsCacheMaintenance}</a></@pli>
                 <@pli><a href="<@ofbizUrl>LogView</@ofbizUrl>">${uiLabelMap.WebtoolsViewLog}</a></@pli>
                 <@pli><a href="<@ofbizUrl>ViewComponents</@ofbizUrl>">${uiLabelMap.WebtoolsViewComponents}</a></@pli>
@@ -41,7 +41,7 @@ under the License.
             </li>
             <#if security.hasPermission("ARTIFACT_INFO_VIEW", session)>
             <li>
-              <@pul title="${uiLabelMap.WebtoolsGeneralArtifactInfoTools}">
+              <@pul title=uiLabelMap.WebtoolsGeneralArtifactInfoTools>
                 <@pli><a href="<@ofbizUrl>ViewComponents</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsArtifactInfo}</a></@pli>
                 <@pli><a href="<@ofbizUrl>entityref</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsEntityReference} - ${uiLabelMap.WebtoolsEntityReferenceInteractiveVersion}</a></@pli>
                 <@pli><a href="<@ofbizUrl>ServiceList</@ofbizUrl>">${uiLabelMap.WebtoolsServiceReference}</a></@pli>
@@ -50,14 +50,14 @@ under the License.
             </#if>
             <#if security.hasPermission("LABEL_MANAGER_VIEW", session)>
             <li>
-              <@pul title="${uiLabelMap.WebtoolsLabelManager}">
+              <@pul title=uiLabelMap.WebtoolsLabelManager>
                 <@pli><a href="<@ofbizUrl>SearchLabels</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManager}</a></@pli>
               </@pul>
             </li>
             </#if>
             <#if security.hasPermission("ENTITY_MAINT", session)>
             <li>
-                <@pul title="${uiLabelMap.WebtoolsEntityEngineTools}">
+                <@pul title=uiLabelMap.WebtoolsEntityEngineTools>
               <@pli><a href="<@ofbizUrl>entitymaint</@ofbizUrl>">${uiLabelMap.WebtoolsEntityDataMaintenance}</a></@pli>
               <@pli><a href="<@ofbizUrl>entityref</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsEntityReference} - ${uiLabelMap.WebtoolsEntityReferenceInteractiveVersion}</a></@pli>
               <@pli><a href="<@ofbizUrl>entityref?forstatic=true</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsEntityReference} - ${uiLabelMap.WebtoolsEntityReferenceStaticVersion}</a></@pli>
@@ -90,7 +90,7 @@ under the License.
             </#if>
             <#if security.hasPermission("SERVICE_MAINT", session)>
             <li>
-                <@pul title="${uiLabelMap.WebtoolsServiceEngineTools}">
+                <@pul title=uiLabelMap.WebtoolsServiceEngineTools>
                   <@pli><a href="<@ofbizUrl>ServiceList</@ofbizUrl>">${uiLabelMap.WebtoolsServiceReference}</a></@pli>
                   <@pli><a href="<@ofbizUrl>scheduleJob</@ofbizUrl>">${uiLabelMap.PageTitleScheduleJob}</a></@pli>
                   <@pli><a href="<@ofbizUrl>runService</@ofbizUrl>">${uiLabelMap.PageTitleRunService}</a></@pli>
@@ -102,13 +102,13 @@ under the License.
             </#if>         
             <#if security.hasPermission("DATAFILE_MAINT", session)>
             <li>
-              <@pul title="${uiLabelMap.WebtoolsDataFileTools}">
+              <@pul title=uiLabelMap.WebtoolsDataFileTools>
                 <@pli><a href="<@ofbizUrl>viewdatafile</@ofbizUrl>">${uiLabelMap.WebtoolsWorkWithDataFiles}</a></@pli>
               </@pul>
             </li>
             </#if>
             <li>
-            <@pul title="${uiLabelMap.WebtoolsMiscSetupTools}">
+            <@pul title=uiLabelMap.WebtoolsMiscSetupTools>
                 <#if security.hasPermission("PORTALPAGE_ADMIN", session)>
                 <@pli><a href="<@ofbizUrl>FindPortalPage</@ofbizUrl>">${uiLabelMap.WebtoolsAdminPortalPage}</a></@pli>
                 <@pli><a href="<@ofbizUrl>FindGeo</@ofbizUrl>">${uiLabelMap.WebtoolsGeoManagement}</a></@pli>
@@ -123,19 +123,19 @@ under the License.
             </@pul>
             </li>
             <li>
-            <@pul title="${uiLabelMap.WebtoolsPerformanceTests}">
+            <@pul title=uiLabelMap.WebtoolsPerformanceTests>
                 <@pli><a href="<@ofbizUrl>EntityPerformanceTest</@ofbizUrl>">${uiLabelMap.WebtoolsEntityEngine}</a></@pli>
             </@pul>
             </li>
             <#if security.hasPermission("SERVER_STATS_VIEW", session)>
             <li>
-              <@pul title="${uiLabelMap.WebtoolsServerHitStatisticsTools}">
+              <@pul title=uiLabelMap.WebtoolsServerHitStatisticsTools>
                     <@pli><a href="<@ofbizUrl>StatsSinceStart</@ofbizUrl>">${uiLabelMap.WebtoolsStatsSinceServerStart}</a></@pli>
               </@pul>
             </li>
             </#if>
             <li>
-            <@pul title="${uiLabelMap.WebtoolsCertsX509}">
+            <@pul title=uiLabelMap.WebtoolsCertsX509>
                 <@pli><a href="<@ofbizUrl>myCertificates</@ofbizUrl>">${uiLabelMap.WebtoolsMyCertificates}</a></@pli>
             </@pul>
             </li>

@@ -121,7 +121,7 @@ under the License.
           <@td width="10%"><@field type="checkbox" name="useEmail2" value="Y"/></@td>
         </@tr>
       </@table>
-      <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+      <@field type="submit" text=uiLabelMap.CommonSubmit class="+${styles.link_run_sys!} ${styles.action_update!}"/>
     <#else>
       <@commonMsg type="warning">${uiLabelMap.SfaNoLeadsSelectedToMerged}</@commonMsg>
     </#if>

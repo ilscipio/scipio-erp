@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${uiLabelMap.ProductBrowseForums}" id="browse-forums" class="+screenlet">
+<@section title=uiLabelMap.ProductBrowseForums id="browse-forums" class="+screenlet">
     <ul class="browsecategorylist">
       <#list forums as forum>
         <li class="browsecategorytext">

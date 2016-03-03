@@ -73,7 +73,7 @@ under the License.
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.OrderReceiveReturn}" class="+${styles.action_nav!} ${styles.action_receive!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
@@ -81,13 +81,13 @@ under the License.
              <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
            </#list>
          <#else>
-           <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN") text="${uiLabelMap.OrderCreateReturnShipment}" class="+${styles.action_nav!} ${styles.action_add!}" />
+           <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />
          </#if>
       </#if>
     </#if>
   </@menu>
 </#macro>
-<@section title="${uiLabelMap.PageTitleReturnItems}" menuContent=menuContent>
+<@section title=uiLabelMap.PageTitleReturnItems menuContent=menuContent>
   <#-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
   <#if !requestParameters.orderId?? && returnHeader?has_content>
           <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
@@ -340,11 +340,11 @@ under the License.
         </#if>
 
         <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
-        <@section title="${uiLabelMap.OrderReturnItems}">
+        <@section title=uiLabelMap.OrderReturnItems>
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
             <#if partyOrders?has_content>
-              <@field type="select" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}" name="orderId">
+              <@field type="select" label=uiLabelMap.OrderOrderId tooltip=uiLabelMap.OrderReturnLoadItems name="orderId">
                     <#list partyOrders as order>
                       <option value="${order.orderId}">${order.orderId} - ${order.orderDate}</option>
                     </#list>
@@ -353,9 +353,9 @@ under the License.
               <@tr>
                 <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
               </@tr>
-              <@field type="input" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}" name="orderId" size="20" maxlength="20" />
+              <@field type="input" label=uiLabelMap.OrderOrderId tooltip=uiLabelMap.OrderReturnLoadItems name="orderId" size="20" maxlength="20" />
             </#if>
-            <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderReturnLoadItems}" />
+            <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.OrderReturnLoadItems />
         </form>
         </@section>
         </#if>

@@ -20,7 +20,7 @@ under the License.
 <#-- Screenlet to add cart to shopping list. The shopping lists are presented in a dropdown box. -->
 
 <#if (shoppingLists??) && (shoppingCartSize > 0)>
-    <@section title="${uiLabelMap.OrderAddOrderToShoppingList}">
+    <@section title=uiLabelMap.OrderAddOrderToShoppingList>
         <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>">
           <#assign index = 0/>
           <#list shoppingCart.items() as cartLine>
@@ -30,7 +30,7 @@ under the License.
             <#assign index = index + 1/>
           </#list>
           
-          <@field type="select" label="${uiLabelMap.PageTitleShoppingList}" name="shoppingListId" currentValue="">
+          <@field type="select" label=uiLabelMap.PageTitleShoppingList name="shoppingListId" currentValue="">
           <#list shoppingLists as shoppingList>
             <option value="${shoppingList.shoppingListId}">${shoppingList.getString("listName")}</option>
           </#list>
@@ -38,7 +38,7 @@ under the License.
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
           
-          <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToShoppingList}"/>
+          <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderAddToShoppingList/>
         </form>
     </@section>
 </#if>

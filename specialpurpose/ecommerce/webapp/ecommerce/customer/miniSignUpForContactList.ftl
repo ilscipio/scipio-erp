@@ -42,7 +42,7 @@ under the License.
     }
 </@script>
 
-<@section title="${uiLabelMap.EcommerceSignUpForContactList}" id="miniSignUpForContactList" class="+screenlet">
+<@section title=uiLabelMap.EcommerceSignUpForContactList id="miniSignUpForContactList" class="+screenlet">
   <#if sessionAttributes.autoName?has_content>
   <#-- The visitor potentially has an account and party id -->
     <#if userLogin?has_content && userLogin.userLoginId != "anonymous">

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-  <@section title="${uiLabelMap.PageTitleEditShipmentRouteSegments}">
+  <@section title=uiLabelMap.PageTitleEditShipmentRouteSegments>
         <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead> 
         <@tr class="header-row">
@@ -351,7 +351,7 @@ under the License.
     </@table>
 </@section>
 
-<@section title="${uiLabelMap.PageTitleAddShipmentRouteSegment}">
+<@section title=uiLabelMap.PageTitleAddShipmentRouteSegment>
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>

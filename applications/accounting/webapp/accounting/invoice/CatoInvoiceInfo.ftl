@@ -1,5 +1,5 @@
 <#-- CATO -->
-<@section title="${uiLabelMap.CommonOverview}">
+<@section title=uiLabelMap.CommonOverview>
   <#assign invoiceType = invoice.getRelatedOne("InvoiceType", false)/>
   <#assign currentStatus = invoice.getRelatedOne("StatusItem", false)/>
   <@table type="fields">

@@ -30,9 +30,9 @@ under the License.
 <#else>
 <#macro displayButtonBar>
   <@menu type="button">
-    <@menuitem type="submit" text="${uiLabelMap.WebtoolsExport}" class="+${styles.action_run_sys!} ${styles.action_export!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text="${uiLabelMap.WebtoolsCheckAll}" class="+${styles.action_run_local!} ${styles.action_select!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text="${uiLabelMap.WebtoolsUnCheckAll}" class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="submit" text=uiLabelMap.WebtoolsExport class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text=uiLabelMap.WebtoolsCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
   </@menu>
 </#macro>
 
@@ -58,11 +58,11 @@ under the License.
   <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
   <@row>
     <@cell columns=6>
-    <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
-    <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/>
-    <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/>
-    <@field type="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" />
-    <@field type="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" />
+    <@field type="input" label=uiLabelMap.WebtoolsOutputDirectory size="60" name="outpath" value="${parameters.outpath!}"/>
+    <@field type="input" label=uiLabelMap.WebtoolsMaxRecordsPerFile size="10" name="maxrecords"/>
+    <@field type="input" label=uiLabelMap.WebtoolsSingleFilename size="60" name="filename" value="${parameters.filename!}"/>
+    <@field type="datetime" label=uiLabelMap.WebtoolsRecordsUpdatedSince name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" />
+    <@field type="datetime" label=uiLabelMap.WebtoolsRecordsUpdatedBefore name="entityThru" value="" size="25" maxlength="30" id="entityThru1" />
     <@field type="checkbox" name="tobrowser" value="N" label="${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}"/>
     </@cell>
   </@row>
@@ -71,8 +71,8 @@ under the License.
      <@row>
         <@cell columns=6>
           <@displayButtonBar/>
-          <@field type="input" name="entitySyncId" size="30" value="${entitySyncId!}" label="${uiLabelMap.WebtoolsEntitySyncDump}"/>
-          <@field type="select" label="${uiLabelMap.WebtoolsPreConfiguredSet}" name="preConfiguredSetName">
+          <@field type="input" name="entitySyncId" size="30" value="${entitySyncId!}" label=uiLabelMap.WebtoolsEntitySyncDump/>
+          <@field type="select" label=uiLabelMap.WebtoolsPreConfiguredSet name="preConfiguredSetName">
             <option value="">${uiLabelMap.CommonNone}</option>
             <option value="CatalogExport">${uiLabelMap.WebtoolsPreConfiguredSet1}</option>
             <option value="Product1">${uiLabelMap.WebtoolsPreConfiguredSet2}</option>

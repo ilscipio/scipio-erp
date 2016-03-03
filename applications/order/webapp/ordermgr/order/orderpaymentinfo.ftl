@@ -53,7 +53,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
   ${cardNumberDisplay!}
 </#macro>
 
-<@section title="${uiLabelMap.AccountingPaymentInformation}">
+<@section title=uiLabelMap.AccountingPaymentInformation>
    <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
 
   <#if orderTypeId == "PURCHASE_ORDER">
@@ -548,7 +548,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                  
               </@td>
               <@td colspan="3">
-                   <@modal label="${uiLabelMap.AccountingNewPayment}" id="modal_addPaymentMethodToOrder" class="${styles.link_run_sys!} ${styles.action_add!}">
+                   <@modal label=uiLabelMap.AccountingNewPayment id="modal_addPaymentMethodToOrder" class="${styles.link_run_sys!} ${styles.action_add!}">
                        <form name="addPaymentMethodToOrder" method="post" action="<@ofbizUrl>addPaymentMethodToOrder</@ofbizUrl>">
                            <input type="hidden" name="orderId" value="${orderId!}"/>
                              <@row>
@@ -580,7 +580,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                      </select>            
                                 </@cell>
                                 <@cell columns=3>
-                                    <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
+                                    <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_update!}"/>                    
                                 </@cell>
                             </@row>
                        </form>

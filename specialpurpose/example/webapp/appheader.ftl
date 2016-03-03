@@ -24,10 +24,10 @@ under the License.
       <@heading>${uiLabelMap.ExampleApplication}</@heading>
       <@menu type="main">
       <#if userLogin?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${uiLabelMap.ExampleExample}") text="${uiLabelMap.ExampleExample}" selected=(selected=="${uiLabelMap.ExampleExample}") class="+${styles.action_nav!} ${styles.action_find!}" />
-        <@menuitem type="link" href=makeOfbizUrl("FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}") text="${uiLabelMap.ExampleFeature}" selected=(selected=="${uiLabelMap.ExampleFeature}") class="+${styles.action_nav!}" />
-        <@menuitem type="link" href=makeOfbizUrl("FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}") text="${uiLabelMap.ExampleFormWidgetExamples}" selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") class="+${styles.action_nav!}" />
-        <@menuitem type="link" href=makeOfbizUrl("authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}") text="${uiLabelMap.ExampleAjaxExamples}" selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindExample?portalPageId=${uiLabelMap.ExampleExample}") text=uiLabelMap.ExampleExample selected=(selected=="${uiLabelMap.ExampleExample}") class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindExampleFeature?portalPageId=${uiLabelMap.ExampleFeature}") text=uiLabelMap.ExampleFeature selected=(selected=="${uiLabelMap.ExampleFeature}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FormWidgetExamples?portalPageId=${uiLabelMap.ExampleFormWidgetExamples}") text=uiLabelMap.ExampleFormWidgetExamples selected=(selected=="${uiLabelMap.ExampleFormWidgetExamples}") class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makeOfbizUrl("authview/findExampleAjax?portalPageId=${uiLabelMap.ExampleAjaxExamples}") text=uiLabelMap.ExampleAjaxExamples selected=(selected=="${uiLabelMap.ExampleAjaxExamples}") class="+${styles.action_nav!}" />
 
         <#if portalPages?has_content>
             <#list portalPages as page>
@@ -37,7 +37,7 @@ under the License.
               </#if>
             </#list>
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("ManagePortalPages?parentPortalPageId=EXAMPLE") text="${uiLabelMap.CommonDashboard}" class="+${styles.action_nav!} opposed" />
+        <@menuitem type="link" href=makeOfbizUrl("ManagePortalPages?parentPortalPageId=EXAMPLE") text=uiLabelMap.CommonDashboard class="+${styles.action_nav!} opposed" />
       </#if>
       </@menu>
     </li>

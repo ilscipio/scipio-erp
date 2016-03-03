@@ -41,9 +41,9 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
         
-        <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=giftCardData.cardNumber! />
-        <@field type="input" label="${uiLabelMap.AccountingPinNumber}" size="10" maxlength="60" name="pinNumber" value=giftCardData.pinNumber! />
-        <@field type="generic" label="${uiLabelMap.CommonExpireDate}">
+        <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=giftCardData.cardNumber! />
+        <@field type="input" label=uiLabelMap.AccountingPinNumber size="10" maxlength="60" name="pinNumber" value=giftCardData.pinNumber! />
+        <@field type="generic" label=uiLabelMap.CommonExpireDate>
             <#assign expMonth = "">
             <#assign expYear = "">
             <#if giftCardData?? && giftCardData.expireDate??>

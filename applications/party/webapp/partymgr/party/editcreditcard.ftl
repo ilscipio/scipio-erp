@@ -26,8 +26,8 @@ under the License.
 <@section title=sectionTitle menuContent=menuContent>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-        <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
     
@@ -46,7 +46,7 @@ under the License.
           </@cell>
         </@row>
 
-        <@field type="generic" label="${uiLabelMap.AccountingBillingAddress}">
+        <@field type="generic" label=uiLabelMap.AccountingBillingAddress>
           <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">

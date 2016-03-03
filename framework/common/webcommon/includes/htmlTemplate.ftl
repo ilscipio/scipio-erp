@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#-- Cato: THIS LIBRARY IS DEPRECATED AND OBSOLETE. DO NOT USE IN CATO-BASED TEMPLATES. -->
 
 <#-- Cato: use same ones loaded by renderer 
      WARN: ability to use same ones as renderer currently depends on rendering context;

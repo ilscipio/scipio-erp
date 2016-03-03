@@ -176,7 +176,7 @@ under the License.
             <#-- Basic Theme -->
             <@field type="generic" label=uiLabelMap.EbayStoreStoreBasicTheme>
                 <#assign currentStoreThemeIdAndSchemeId = ebayStore.storeThemeId?string+"-"+ebayStore.storeColorSchemeId?string>
-                <@field type="select" id="storeBasicTheme" name="storeBasicTheme" onchange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
+                <@field type="select" id="storeBasicTheme" name="storeBasicTheme" onChange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
                   <#if storeThemeOptList?has_content>
                     <#list storeThemeOptList as storeThemeOpt>
                       <#assign storeThemeIdAndSchemeId = storeThemeOpt.storeThemeId+"-"+storeThemeOpt.storeColorSchemeId>

@@ -67,7 +67,7 @@ under the License.
             </@field>
           <#else>
             <@field type="generic" label=uiLabelMap.ProductProductStore required=true>
-                <@field type="select" name="productStoreId" required=true id="searchProductStoreId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchProductStoreId'));">
+                <@field type="select" name="productStoreId" required=true id="searchProductStoreId" onChange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchProductStoreId'));">
                   <#if googleBaseConfigList?has_content>
                     <#list googleBaseConfigList as googleBaseConfig>
                       <#assign productStore = delegator.findOne("ProductStore", {"productStoreId" : googleBaseConfig.productStoreId}, true) />
@@ -82,7 +82,7 @@ under the License.
                 <span id="productStoreErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
             </@field>
             <@field type="generic" label=uiLabelMap.ProductCatalog required=true>
-                <@field type="select" name="SEARCH_CATALOG_ID" required=true id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
+                <@field type="select" name="SEARCH_CATALOG_ID" required=true id="searchCatalogId" onChange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
                     <#list prodCatalogList as prodCatalog>
                       <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
                       <#if (18 < displayDesc?length)>

@@ -44,7 +44,7 @@ under the License.
       <@fields type="default-alt1" checkboxType="simple-standard"> 
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
         <@field type="generic" label=uiLabelMap.CommonStatus>
-            <@field type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" checked=(state.hasAllStatus()) label=uiLabelMap.CommonAll/>
+            <@field type="checkbox" name="viewall" value="Y" onClick="javascript:setCheckboxes()" checked=(state.hasAllStatus()) label=uiLabelMap.CommonAll/>
             <@field type="checkbox" name="viewcreated" value="Y" checked=(state.hasStatus('viewcreated')) label=uiLabelMap.CommonCreated/>
             <@field type="checkbox" name="viewprocessing" value="Y" checked=(state.hasStatus('viewprocessing')) label=uiLabelMap.CommonProcessing/>
             <@field type="checkbox" name="viewapproved" value="Y" checked=(state.hasStatus('viewapproved')) label=uiLabelMap.CommonApproved/>

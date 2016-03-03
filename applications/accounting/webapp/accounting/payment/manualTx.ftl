@@ -49,7 +49,7 @@ under the License.
             <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
         <#else>
             <!-- TODO: Clarify how to handle JS events -->            
-            <#-- @field type="select" name="transactionType" onchange="javascript:document.manualTxForm.submit();" title="${uiLabelMap.AccountingTransactionType}" -->
+            <#--@field type="select" name="transactionType" onChange="javascript:document.manualTxForm.submit();" title="${uiLabelMap.AccountingTransactionType}"-->
             <@row>
                 <@cell small=3 large=2>${uiLabelMap.AccountingTransactionType}</@cell>
                 <@cell small=9 large=10>

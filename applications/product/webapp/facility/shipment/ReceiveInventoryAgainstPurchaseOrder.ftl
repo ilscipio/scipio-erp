@@ -179,7 +179,7 @@ under the License.
                                     <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
                                 </@td>
                                 <@td align="right">
-                                  <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
+                                  <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onClick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
                                 </@td>
                                 <#assign rowCount = rowCount + 1>
                             </#if>

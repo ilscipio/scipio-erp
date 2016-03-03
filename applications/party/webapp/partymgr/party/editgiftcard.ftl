@@ -64,7 +64,7 @@ under the License.
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
             </@field>
-            <@field type="select" inline=true name="expYear" onchange="javascript:makeExpDate();">
+            <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();">
               <#if giftCard?has_content && expYear?has_content>
                 <#assign ccExprYear = expYear>
               <#else>

@@ -197,7 +197,7 @@ under the License.
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
                 <set field="ylabel" value=""/> <!-- y-axis label -->
-                <set field="label1" value="${uiLabelMap.PartyRegistered}"/> <!-- 1st dataset label -->                                  
+                <set field="label1" value="${uiLabelMap.PartyRegistrations}"/> <!-- 1st dataset label -->                                  
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartyNewRegistrations.groovy"/>
            </actions>
            <widgets>
@@ -208,7 +208,7 @@ under the License.
                         </not>
                     </condition>
                      <widgets>
-                       <screenlet title="${uiLabelMap.PartyNewRegistrations}">
+                       <screenlet title="${uiLabelMap.PartyRegistrations}">
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
                             </platform-specific>

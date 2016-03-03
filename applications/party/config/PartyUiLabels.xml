@@ -10764,6 +10764,10 @@
         <value xml:lang="zh">相关的公司</value>
         <value xml:lang="zh_TW">相關的公司</value>
     </property>
+    <property key="PartyRegistrations">
+        <value xml:lang="de">Registrierungen</value>
+        <value xml:lang="en">Registrations</value>
+    </property>
     <property key="PartyRelationSecurity">
         <value xml:lang="cs">Vztah partnera k zabezpečení</value>
         <value xml:lang="de">Akteur Beziehung Sicherheit</value>

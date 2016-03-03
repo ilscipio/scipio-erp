@@ -51,18 +51,18 @@
         <value xml:lang="zh_TW">選擇終端</value>
     </property>
     <property key="WebPosCompanyName">
-        <value xml:lang="en">OFBiz: Web Pos Manager</value>
-        <value xml:lang="it">OFBiz: Gestione Pos Web</value>
-        <value xml:lang="ja">OFBiz: Web POS 管理</value>
-        <value xml:lang="zh">OFBiz：网页POS管理程序</value>
-        <value xml:lang="zh_TW">OFBiz:網頁POS管理程式</value>
+        <value xml:lang="en">CATO - Web Pos Manager</value>
+        <value xml:lang="it">CATO - Gestione Pos Web</value>
+        <value xml:lang="ja">CATO - Web POS 管理</value>
+        <value xml:lang="zh">CATO -：网页POS管理程序</value>
+        <value xml:lang="zh_TW">CATO -網頁POS管理程式</value>
     </property>
     <property key="WebPosCompanySubtitle">
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="it">Parte della famiglia Apache OFBiz di Open Source Software</value>
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz的組成部分</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="it">Parte della famiglia CATO di Open Source Software</value>
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件CATO -的组成部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -的組成部分</value>
     </property>
     <property key="WebPosCompleteSale">
         <value xml:lang="en">Press Finish To Complete Sale</value>

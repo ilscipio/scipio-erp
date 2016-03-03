@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://CATO -.apache.org/dtds/CATO --properties.xsd">
     <property key="AdminApplication">
         <value xml:lang="en">Admin</value>
         <value xml:lang="zh">Admin</value>
         <value xml:lang="zh_TW">Admin</value>
     </property>
     <property key="AdminCompanyName">
-        <value xml:lang="en">OFBiz: Admin</value>
-        <value xml:lang="zh_TW">OFBiz: Admin</value>
+        <value xml:lang="en">CATO - Admin</value>
+        <value xml:lang="zh_TW">CATO - Admin</value>
     </property>
     <property key="AdminCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
         <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
-        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz的組成部分</value>
+        <value xml:lang="zh">开源软件CATO -的组成部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -的組成部分</value>
     </property>
     <property key="AdminViewPermissionError">
         <value xml:lang="en">You are not allowed to view this page.</value>
@@ -99,7 +99,7 @@
     <property key="AdminTileIconscrum">
         <value xml:lang="en">fi-comment-quotes</value>
     </property>
-    <property key="AdminTileIconofbizsetup">
+    <property key="AdminTileIconCATO -setup">
         <value xml:lang="en">fi-widget</value>
     </property>
     <property key="AdminTileIconwebpos">
@@ -188,7 +188,7 @@
     <property key="AdminTileBackgroundscrum">
         <value xml:lang="en"></value>
     </property>
-    <property key="AdminTileBackgroundofbizsetup">
+    <property key="AdminTileBackgroundCATO -setup">
         <value xml:lang="en"></value>
     </property>
     <property key="AdminTileBackgroundwebpos">

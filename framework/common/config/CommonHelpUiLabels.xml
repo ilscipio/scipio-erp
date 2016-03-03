@@ -34,17 +34,17 @@
         <value xml:lang="zh_TW">說明主題沒有找到.</value>
     </property>
     <property key="PageTitleHelp">
-        <value xml:lang="da">Apache OFBiz hjælp</value>
-        <value xml:lang="de">Apache OFBiz Hilfe</value>
-        <value xml:lang="en">Apache OFBiz Help</value>
-        <value xml:lang="es">Ayuda de Apache OFBiz</value>
-        <value xml:lang="fr">Aide OFBiz (Apache OFBiz)</value>
+        <value xml:lang="da">CATO hjælp</value>
+        <value xml:lang="de">CATO Hilfe</value>
+        <value xml:lang="en">CATO Help</value>
+        <value xml:lang="es">Ayuda de CATO</value>
+        <value xml:lang="fr">Aide CATO - (CATO)</value>
         <value xml:lang="it">Aiuto</value>
-        <value xml:lang="ja">OFBizヘルプ</value>
-        <value xml:lang="pt_BR">Ajuda do OFBiz</value>
+        <value xml:lang="ja">CATO -ヘルプ</value>
+        <value xml:lang="pt_BR">Ajuda do CATO -</value>
         <value xml:lang="ru">Открыть для бизнес-помощи</value>
-        <value xml:lang="vi">Trợ giúp từ OFBiz</value>
-        <value xml:lang="zh">OFBiz帮助</value>
-        <value xml:lang="zh_TW">OFBiz說明</value>
+        <value xml:lang="vi">Trợ giúp từ CATO -</value>
+        <value xml:lang="zh">CATO -帮助</value>
+        <value xml:lang="zh_TW">CATO -說明</value>
     </property>
 </resource>

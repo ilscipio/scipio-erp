@@ -29,31 +29,31 @@
         <value xml:lang="zh_TW">商業智慧應用程式</value>
     </property>
     <property key="BusinessIntelligenceCompanyName">
-        <value xml:lang="en">OFBiz: Business Intelligence</value>
-        <value xml:lang="fr">OFBiz: Informatique décisionnelle</value>
-        <value xml:lang="it">OFBiz: Business Intelligence</value>
-        <value xml:lang="ja">OFBiz: ビジネスインテリジェンス</value>
-        <value xml:lang="th">OFBiz:การเรียนรู้ทางธุรกิจ</value>
-        <value xml:lang="zh">OFBiz：商业智能</value>
-        <value xml:lang="zh_TW">OFBiz:商業智慧</value>
+        <value xml:lang="en">CATO - Business Intelligence</value>
+        <value xml:lang="fr">CATO - Informatique décisionnelle</value>
+        <value xml:lang="it">CATO - Business Intelligence</value>
+        <value xml:lang="ja">CATO - ビジネスインテリジェンス</value>
+        <value xml:lang="th">CATO -การเรียนรู้ทางธุรกิจ</value>
+        <value xml:lang="zh">CATO -：商业智能</value>
+        <value xml:lang="zh_TW">CATO -商業智慧</value>
     </property>
     <property key="BusinessIntelligenceCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der Apache OFBiz Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="es">Parte de la familia de software Apache OFBiz de código abierto</value>
-        <value xml:lang="fr">Un module de la famille Apache OFBiz, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de Apache OFBiz-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família OfBiz de software de fonte aberta</value>
-        <value xml:lang="pt_PT">Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
+        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-        <value xml:lang="ru">Входит в состав семейства Apache OFBiz</value>
+        <value xml:lang="ru">Входит в состав семейства CATO</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
-        <value xml:lang="zh_CN">OFBiz的一部分</value>
-        <value xml:lang="zh_TW">OFBiz的一部分</value>
+        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
+        <value xml:lang="zh_CN">CATO -的一部分</value>
+        <value xml:lang="zh_TW">CATO -的一部分</value>
     </property>
     <property key="BusinessIntelligenceCurrentStatus">
         <value xml:lang="en">Current Status</value>
@@ -117,13 +117,13 @@
         <value xml:lang="zh_TW">資料倉儲的最佳慣例來自Ralph Kimball撰寫的偉大的書《資料倉儲工具箱:維度建模的完全指南(第二版)》.</value>
     </property>
     <property key="BusinessIntelligenceNote11">
-        <value xml:lang="en">The data for dimensions and facts are maintained and kept up to date using standard OFBiz services</value>
-        <value xml:lang="fr">Les données des dimensions et faits sont maintenues et tenues à jour à l'aide des services standard d'OFBiz</value>
-        <value xml:lang="it">I dati per dimensioni e fatti sono gestiti e mantenuti aggiornati usando servizi standard di OFBiz</value>
-        <value xml:lang="ja">ディメンジョンとファクトのデータを最新に保つために、標準OFBizサービス</value>
-        <value xml:lang="th">ข้อมูลสำหรับขอบเขตและข้อเท็จจริงคือการดูแลและรักษาวันที่ใช้บริการ OFBiz</value>
-        <value xml:lang="zh">数据维度和事实的维护和更新由标准的OFBiz服务负责</value>
-        <value xml:lang="zh_TW">資料維度和事實的維護和更新由標準的OFBiz服務負責</value>
+        <value xml:lang="en">The data for dimensions and facts are maintained and kept up to date using standard CATO - services</value>
+        <value xml:lang="fr">Les données des dimensions et faits sont maintenues et tenues à jour à l'aide des services standard d'CATO -</value>
+        <value xml:lang="it">I dati per dimensioni e fatti sono gestiti e mantenuti aggiornati usando servizi standard di CATO -</value>
+        <value xml:lang="ja">ディメンジョンとファクトのデータを最新に保つために、標準CATO -サービス</value>
+        <value xml:lang="th">ข้อมูลสำหรับขอบเขตและข้อเท็จจริงคือการดูแลและรักษาวันที่ใช้บริการ CATO -</value>
+        <value xml:lang="zh">数据维度和事实的维护和更新由标准的CATO -服务负责</value>
+        <value xml:lang="zh_TW">資料維度和事實的維護和更新由標準的CATO -服務負責</value>
     </property>
     <property key="BusinessIntelligenceNote12">
         <value xml:lang="en">(most of them written in minilang to facilitate customizations) and eca rules (easily customizable).</value>
@@ -198,13 +198,13 @@
         <value xml:lang="zh_TW">你能透過點選下面的連結來快速初始化資料倉儲:</value>
     </property>
     <property key="BusinessIntelligenceNote1">
-        <value xml:lang="en">This is a proof of concept for an OFBiz integrated framework for business intelligence analysis.</value>
+        <value xml:lang="en">This is a proof of concept for an CATO - integrated framework for business intelligence analysis.</value>
         <value xml:lang="fr">C'est une preuve de concept d'informatique décisionnelle intégrée au Framework</value>
-        <value xml:lang="it">Questo è un prototipo di un framework per analisi di dati (business intelligence) integrato in OFBiz.</value>
-        <value xml:lang="ja">OFBiz統合フレームワークにおけるビジネスインテリジェンス分析のコンセプト。</value>
-        <value xml:lang="th">การทดสอบความเข้าใจสำหรับ OFBiz framework เพื่อการวิเคราะห์ระบบการเรียนรู้ทางธุรกิจ</value>
-        <value xml:lang="zh">这是一个验证OFBiz集成框架能够用于商业智能的实现。</value>
-        <value xml:lang="zh_TW">這是一個驗證OFBiz整複合框架能夠用於商業智慧的實作.</value>
+        <value xml:lang="it">Questo è un prototipo di un framework per analisi di dati (business intelligence) integrato in CATO -.</value>
+        <value xml:lang="ja">CATO -統合フレームワークにおけるビジネスインテリジェンス分析のコンセプト。</value>
+        <value xml:lang="th">การทดสอบความเข้าใจสำหรับ CATO - framework เพื่อการวิเคราะห์ระบบการเรียนรู้ทางธุรกิจ</value>
+        <value xml:lang="zh">这是一个验证CATO -集成框架能够用于商业智能的实现。</value>
+        <value xml:lang="zh_TW">這是一個驗證CATO -整複合框架能夠用於商業智慧的實作.</value>
     </property>
     <property key="BusinessIntelligenceNote20">
         <value xml:lang="en">The CurrencyDimension, DateDimension, ProductDimension and the SalesInvoiceItemFact entities will be automatically populated.</value>
@@ -343,7 +343,7 @@
     </property>
     <property key="BusinessIntelligenceNote5">
         <value xml:lang="en">dimensions, facts and star schemas (that are view-entities).</value>
-        <value xml:lang="fr">dimensions, faits et schémas en étoile (ce sont des vues sur la base de données : view-entities au sens d'OFBiz).</value>
+        <value xml:lang="fr">dimensions, faits et schémas en étoile (ce sont des vues sur la base de données : view-entities au sens d'CATO -).</value>
         <value xml:lang="it">dimensioni, fatti e star schemas (view-entities).</value>
         <value xml:lang="ja">ディメンジョン、ファクト、そしてスタースキーマ (ビュー) です。</value>
         <value xml:lang="th">ขอบเขต,ข้อเท็จจริงและแผนผัง (เป็นการแสดงสิ่งที่มีอยู่)</value>
@@ -360,13 +360,13 @@
         <value xml:lang="zh_TW">維度、事實和星型模型定義參考了資料倉儲最佳慣例</value>
     </property>
     <property key="BusinessIntelligenceNote7">
-        <value xml:lang="en">and best practices for OFBiz: they are defined as standard entities using the xml entity defs;</value>
-        <value xml:lang="fr">et pour OFBiz. Ils sont définis comme des entités standards à l'aide de définitions d'entités dans des fichiers XML.</value>
-        <value xml:lang="it">e le migliori pratiche per OFBiz: sono definite come entità standard usando le definizioni xml entity;</value>
-        <value xml:lang="ja">およびOFBizのベストプラックティスに従って定義されています: それらはxmlエンティティ定義を使用して標準エンティティとして定義されています。</value>
-        <value xml:lang="th">และวิธีปฏิบัติที่ดีที่สุดสำหรับ OFBiz คือ: ต้องกำหนดมาตรฐานสิ่งที่มีอยู่ให้เหมือนกับที่ใช้ใน xml </value>
-        <value xml:lang="zh">以及OFBiz最佳实践：把它们用XML实体定义定义为标准实体；</value>
-        <value xml:lang="zh_TW">以及OFBiz最佳慣例:把它們用XML資料實體定義定義為標準資料實體;</value>
+        <value xml:lang="en">and best practices for CATO - they are defined as standard entities using the xml entity defs;</value>
+        <value xml:lang="fr">et pour CATO -. Ils sont définis comme des entités standards à l'aide de définitions d'entités dans des fichiers XML.</value>
+        <value xml:lang="it">e le migliori pratiche per CATO - sono definite come entità standard usando le definizioni xml entity;</value>
+        <value xml:lang="ja">およびCATO -のベストプラックティスに従って定義されています: それらはxmlエンティティ定義を使用して標準エンティティとして定義されています。</value>
+        <value xml:lang="th">และวิธีปฏิบัติที่ดีที่สุดสำหรับ CATO - คือ: ต้องกำหนดมาตรฐานสิ่งที่มีอยู่ให้เหมือนกับที่ใช้ใน xml </value>
+        <value xml:lang="zh">以及CATO -最佳实践：把它们用XML实体定义定义为标准实体；</value>
+        <value xml:lang="zh_TW">以及CATO -最佳慣例:把它們用XML資料實體定義定義為標準資料實體;</value>
     </property>
     <property key="BusinessIntelligenceNote8">
         <value xml:lang="en">clear and consistent naming conventions are used and they are documented</value>

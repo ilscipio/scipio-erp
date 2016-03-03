@@ -1137,17 +1137,17 @@
         <value xml:lang="zh_TW">應付帳款首頁</value>
     </property>
     <property key="AccountingApCompanyName">
-        <value xml:lang="de">OFBiz: Kreditorenbuchhaltung</value>
-        <value xml:lang="en">OFBiz: AP Manager</value>
-        <value xml:lang="fr">OFBiz: gestion des comptes fourn.</value>
-        <value xml:lang="hi_IN">OFBiz: खाता देय प्रबंधक</value>
-        <value xml:lang="it">OFBiz: Gestione conti debitori</value>
-        <value xml:lang="ja">OFBiz: 買掛管理</value>
-        <value xml:lang="nl">OFBiz: Credit Manager</value>
-        <value xml:lang="pt">OFBiz: Gestão de Contas a Pagar</value>
-        <value xml:lang="vi">OFBiz: Quản trị Phải Trả (AP)</value>
-        <value xml:lang="zh">OFBiz: 应付账户管理</value>
-        <value xml:lang="zh_TW">OFBiz: 應付帳款管理</value>
+        <value xml:lang="de">CATO - Kreditorenbuchhaltung</value>
+        <value xml:lang="en">CATO - AP Manager</value>
+        <value xml:lang="fr">CATO - gestion des comptes fourn.</value>
+        <value xml:lang="hi_IN">CATO - खाता देय प्रबंधक</value>
+        <value xml:lang="it">CATO - Gestione conti debitori</value>
+        <value xml:lang="ja">CATO - 買掛管理</value>
+        <value xml:lang="nl">CATO - Credit Manager</value>
+        <value xml:lang="pt">CATO - Gestão de Contas a Pagar</value>
+        <value xml:lang="vi">CATO - Quản trị Phải Trả (AP)</value>
+        <value xml:lang="zh">CATO - 应付账户管理</value>
+        <value xml:lang="zh_TW">CATO - 應付帳款管理</value>
     </property>
     <property key="AccountingApManager">
         <value xml:lang="de">Kreditorenbuchhaltung</value>
@@ -1458,17 +1458,17 @@
         <value xml:lang="zh_TW">應收帳款首頁</value>
     </property>
     <property key="AccountingArCompanyName">
-        <value xml:lang="de">OFBiz: Debitorenbuchhaltung</value>
-        <value xml:lang="en">OFBiz: AR Manager</value>
-        <value xml:lang="fr">OFBiz: gestion des comptes clients</value>
-        <value xml:lang="hi_IN">OFBiz: खाता प्राप्य प्रबंधक</value>
-        <value xml:lang="it">OFBiz: Gestione conti creditori</value>
-        <value xml:lang="ja">OFBiz: 売掛管理</value>
-        <value xml:lang="nl">OFBiz: Debiteuren Manager</value>
-        <value xml:lang="pt">OFBiz: Gestão de contas a receber</value>
-        <value xml:lang="vi">OFBiz: Quản trị Phải Thu (AR)</value>
-        <value xml:lang="zh">OFBiz: 应收账户管理</value>
-        <value xml:lang="zh_TW">OFBiz: 應收帳款管理</value>
+        <value xml:lang="de">CATO - Debitorenbuchhaltung</value>
+        <value xml:lang="en">CATO - AR Manager</value>
+        <value xml:lang="fr">CATO - gestion des comptes clients</value>
+        <value xml:lang="hi_IN">CATO - खाता प्राप्य प्रबंधक</value>
+        <value xml:lang="it">CATO - Gestione conti creditori</value>
+        <value xml:lang="ja">CATO - 売掛管理</value>
+        <value xml:lang="nl">CATO - Debiteuren Manager</value>
+        <value xml:lang="pt">CATO - Gestão de contas a receber</value>
+        <value xml:lang="vi">CATO - Quản trị Phải Thu (AR)</value>
+        <value xml:lang="zh">CATO - 应收账户管理</value>
+        <value xml:lang="zh_TW">CATO - 應收帳款管理</value>
     </property>
     <property key="AccountingArManager">
         <value xml:lang="de">Debitorenbuchhaltung</value>
@@ -3063,22 +3063,22 @@
     </property>
     <property key="AccountingCompanyName">
         <value xml:lang="ar">أوفبيز: مسير المحاسبة</value>
-        <value xml:lang="de">OFBiz: Buchhaltung</value>
-        <value xml:lang="en">OFBiz: Accounting Manager</value>
-        <value xml:lang="es">OFBiz: Administrador de cuentas</value>
-        <value xml:lang="fr">OFBiz: Gestion comptable</value>
-        <value xml:lang="hi_IN">OFBiz: लेखा प्रबंधक</value>
-        <value xml:lang="it">OFBiz: Gestione contabilità</value>
-        <value xml:lang="ja">OFBiz: 会計管理</value>
-        <value xml:lang="nl">OFBiz: Boekhouding</value>
-        <value xml:lang="pt_BR">OFBiz: Gerente de Contas</value>
-        <value xml:lang="pt_PT">&gt;OFBiz: Gerente de Contas</value>
-        <value xml:lang="ro">OFBiz: Gestiune Contabila </value>
-        <value xml:lang="ru">OFBiz: Менеджер учета</value>
-        <value xml:lang="th">OFBiz: การจัดการบัญชี</value>
-        <value xml:lang="vi">OFBiz: Quản trị kế toán</value>
-        <value xml:lang="zh">OFBiz: 财务管理</value>
-        <value xml:lang="zh_TW">OFBiz: 會計管理</value>
+        <value xml:lang="de">CATO - Buchhaltung</value>
+        <value xml:lang="en">CATO - Accounting Manager</value>
+        <value xml:lang="es">CATO - Administrador de cuentas</value>
+        <value xml:lang="fr">CATO - Gestion comptable</value>
+        <value xml:lang="hi_IN">CATO - लेखा प्रबंधक</value>
+        <value xml:lang="it">CATO - Gestione contabilità</value>
+        <value xml:lang="ja">CATO - 会計管理</value>
+        <value xml:lang="nl">CATO - Boekhouding</value>
+        <value xml:lang="pt_BR">CATO - Gerente de Contas</value>
+        <value xml:lang="pt_PT">&gt;CATO - Gerente de Contas</value>
+        <value xml:lang="ro">CATO - Gestiune Contabila </value>
+        <value xml:lang="ru">CATO - Менеджер учета</value>
+        <value xml:lang="th">CATO - การจัดการบัญชี</value>
+        <value xml:lang="vi">CATO - Quản trị kế toán</value>
+        <value xml:lang="zh">CATO - 财务管理</value>
+        <value xml:lang="zh_TW">CATO - 會計管理</value>
     </property>
     <property key="AccountingCompanyNameAccount">
         <value xml:lang="ar">اسم الموسسة على الحساب</value>
@@ -3156,22 +3156,22 @@
     </property>
     <property key="AccountingCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der Apache OFBiz Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="es">Parte de la familia de software Apache OFBiz de código abierto</value>
-        <value xml:lang="fr">Un module de la famille Apache OFBiz, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="hi-IN">Open Source Software के Apache OFBiz परिवार का हिस्सा</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-        <value xml:lang="nl">Deel van de Apache OFBiz-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família OfBiz de software livre</value>
-        <value xml:lang="pt_PT">&gt;Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="hi-IN">Open Source Software के CATO परिवार का हिस्सा</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
+        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família CATO - de software livre</value>
+        <value xml:lang="pt_PT">&gt;Parte da família CATO - de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-        <value xml:lang="ru">Входит в состав семейства Apache OFBiz</value>
+        <value xml:lang="ru">Входит в состав семейства CATO</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở OFBIZ</value>
-        <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
-        <value xml:lang="zh_CN">OFBiz的一部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz家族的一部分</value>
+        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở CATO -</value>
+        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
+        <value xml:lang="zh_CN">CATO -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
     </property>
     <property key="AccountingComparativeBalanceSheet">
         <value xml:lang="de">Vergleichsbilanz</value>
@@ -14898,7 +14898,7 @@
         <value xml:lang="hi_IN">authOrderPaymentPreference सर्विस कॉल करने में परेशानी</value>
         <value xml:lang="it">Problemi nell'esecuzione del servizio authOrderPaymentPreference</value>
         <value xml:lang="ja">注文支払設定認証サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'authOrderPaymentPreference'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'authOrderPaymentPreference'.</value>
         <value xml:lang="pt">Problema ao invocar serviço authOrderPaymentPreference</value>
         <value xml:lang="ru">Сбой вызова службы authOrderPaymentPreference</value>
         <value xml:lang="th">ปัญหาในการเรียกบริการ authOrderPaymentPreference</value>
@@ -14912,7 +14912,7 @@
         <value xml:lang="hi_IN">calcTaxService कॉल करने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio calcTaxService</value>
         <value xml:lang="ja">税務計算サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'calcTaxService'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'calcTaxService'.</value>
         <value xml:lang="pt">Problema invocand calcTaxService</value>
         <value xml:lang="ru">Сбой вызова calcTaxService</value>
         <value xml:lang="th">ปัญหาในการเรียก calcTaxService</value>
@@ -14926,7 +14926,7 @@
         <value xml:lang="hi_IN">calculateInvoicedAdjustmentTotal सर्विस कॉल करने में लेखांकन की परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio calculateInvoicedAdjustmentTotal</value>
         <value xml:lang="ja">請求調整合計計算サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'calculateInvoicedAdjustmentTotal'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'calculateInvoicedAdjustmentTotal'.</value>
         <value xml:lang="pt">Problema de Contabilidade invocando o serviço calculateInvoicedAdjustmentTotal</value>
         <value xml:lang="ru">Сбой вызова службы calculateInvoicedAdjustmentTotal </value>
         <value xml:lang="th">การบัญชีมีปัญหาในการเรียกบริการ calculateInvoicedAdjustmentTotal</value>
@@ -14941,7 +14941,7 @@
         <value xml:lang="hi_IN">createInvoiceForOrder सर्विस कॉल करने में परेशानी; माल-लदाई के लिए चालान नहीं बना</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createInvoiceForOrder ; fattura non creata per la spedizione</value>
         <value xml:lang="ja">注文に対する請求作成サービスの呼び出し時にエラー; 発送に対する請求書は作成されていません</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createInvoiceForOrder'; factuur niet aangemaakt voor de verzending.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createInvoiceForOrder'; factuur niet aangemaakt voor de verzending.</value>
         <value xml:lang="pt">Problema ao invocar serviço createInvoiceForOrder, fatura não foi criada para envio</value>
         <value xml:lang="ro">Probleme la chiamarea functiei createInvoiceForOrder ; Factura expediere ne-creata.</value>
         <value xml:lang="ru">Сбой вызова службы createInvoiceForOrder; накладная для поставки не создана</value>
@@ -14956,7 +14956,7 @@
         <value xml:lang="hi_IN">createInvoicesFromShipment सर्विस कॉल करने में परेशानी; माल-लदाई [${shipmentId}] के लिए चालान नहीं बना</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createInvoicesFromShipment; fattura non creata per la spedizione ${shipmentId}</value>
         <value xml:lang="ja">発送から請求作成サービスの呼び出し時にエラー; 発送 [${shipmentId}] に対する請求書は作成されていません</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createInvoicesFromShipment'; factuur niet gemaakt voor zending [${shipmentId}]</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createInvoicesFromShipment'; factuur niet gemaakt voor zending [${shipmentId}]</value>
         <value xml:lang="pt">Problemas invocando o serviço createInvoicesFromShipment; factura não foi criada para envio${shipmentId}]</value>
         <value xml:lang="ru">Сбой вызова службы createInvoicesFromShipment; накладная для поставки  [${shipmentId}] не создана</value>
         <value xml:lang="th">ปัญหาในการเรียก createInvoiceForOrder service; ไม่สามารถสร้างใบส่งของสำหรับการขนส่ง [${shipmentId}]</value>
@@ -14970,7 +14970,7 @@
         <value xml:lang="hi_IN">createInvoicesFromShipments सर्विस कॉल करने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createInvoicesFromShipments</value>
         <value xml:lang="ja">発送から請求作成サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createInvoicesFromShipments'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createInvoicesFromShipments'.</value>
         <value xml:lang="pt">Problemas invocando o serviço createInvoicesFromShipments</value>
         <value xml:lang="ru">Сбой вызова службы createInvoicesFromShipments</value>
         <value xml:lang="th">ปัญหาในการเรียก createInvoicesFromShipments service</value>
@@ -14984,7 +14984,7 @@
         <value xml:lang="hi_IN">createOrderAdjustment सर्विस कॉल करने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createOrderAdjustment</value>
         <value xml:lang="ja">注文調整作成サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createOrderAdjustment'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createOrderAdjustment'.</value>
         <value xml:lang="pt">Problemas invocando o serviço createOrderAdjustment</value>
         <value xml:lang="ru">Сбой вызова службы createOrderAdjustment</value>
         <value xml:lang="th">ปัญหาในการเรียก createOrderAdjustment service</value>
@@ -14998,7 +14998,7 @@
         <value xml:lang="hi_IN">createOrderPaymentPreference सर्विस कॉल करने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createOrderPaymentPreference</value>
         <value xml:lang="ja">注文支払設定作成サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createOrderPaymentPreference'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createOrderPaymentPreference'.</value>
         <value xml:lang="pt">Problemas invocando o serviço createOrderPaymentPreference</value>
         <value xml:lang="ru">Сбой вызова службы createOrderPaymentPreference</value>
         <value xml:lang="th">ปัญหาในการเรียก createOrderPaymentPreference service</value>
@@ -15021,7 +15021,7 @@
         <value xml:lang="hi_IN">releaseOrderPaymentPreference सर्विस कॉल करने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio releaseOrderPaymentPreference</value>
         <value xml:lang="ja">注文支払設定解除サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'releaseOrderPaymentPreference'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'releaseOrderPaymentPreference'.</value>
         <value xml:lang="pt">Problemas invocando o serviço releaseOrderPaymentPreference</value>
         <value xml:lang="ru">Сбой вызова службы releaseOrderPaymentPreference</value>
         <value xml:lang="th">ปัญหาในการเรียก releaseOrderPaymentPreference service</value>
@@ -15035,7 +15035,7 @@
         <value xml:lang="hi_IN">माल लदान सेवा से चालान बनाने में परेशानी</value>
         <value xml:lang="it">Problema nell'esecuzione del servizio createInvoicesFromShipments</value>
         <value xml:lang="ja">発送から請求作成サービスの呼び出し時にエラー</value>
-        <value xml:lang="nl">Probleem met aanroepen OFBiz-service 'createInvoicesFromShipments'.</value>
+        <value xml:lang="nl">Probleem met aanroepen CATO --service 'createInvoicesFromShipments'.</value>
         <value xml:lang="pt">Problemas ao criar Faturas a partir do serviço de envios</value>
         <value xml:lang="th">ปํญหาในการสร้างใบกำกับสินค้าจากบริการการขนส่งสินค้า</value>
         <value xml:lang="vi">Tạo Hóa đơn từ Chuyển vận không thành công</value>

@@ -1133,26 +1133,26 @@
         <value xml:lang="zh_TW">預算專案識別</value>
     </property>
     <property key="HumanResCompanyName">
-        <value xml:lang="en">OFBiz: Human Resources Manager</value>
-        <value xml:lang="fr">OFBiz : gestion de ressources humaines</value>
-        <value xml:lang="it">OFBiz: Gestione Risorse Umane</value>
-        <value xml:lang="ja">OFBiz: 人事管理</value>
-        <value xml:lang="pt_BR">OFBiz: Gestão de recursos humanos</value>
-        <value xml:lang="th">OFBiz: การจัดการบุคคล</value>
-        <value xml:lang="vi">OFBiz: Ứng dụng quản trị Nhân sự</value>
-        <value xml:lang="zh">OFBiz: 人力资源管理</value>
-        <value xml:lang="zh_TW">OFBiz: 人力資源管理</value>
+        <value xml:lang="en">CATO - Human Resources Manager</value>
+        <value xml:lang="fr">CATO - : gestion de ressources humaines</value>
+        <value xml:lang="it">CATO - Gestione Risorse Umane</value>
+        <value xml:lang="ja">CATO - 人事管理</value>
+        <value xml:lang="pt_BR">CATO - Gestão de recursos humanos</value>
+        <value xml:lang="th">CATO - การจัดการบุคคล</value>
+        <value xml:lang="vi">CATO - Ứng dụng quản trị Nhân sự</value>
+        <value xml:lang="zh">CATO - 人力资源管理</value>
+        <value xml:lang="zh_TW">CATO - 人力資源管理</value>
     </property>
     <property key="HumanResCompanySubtitle">
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
         <value xml:lang="fr">Partie de l'ouverture pour la famille d'affaires du logiciel libre</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da Família Apache OFBiz de Software livre</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da Família CATO de Software livre</value>
         <value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của gia đình mã nguồn mở Ofbiz</value>
-        <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz家族的一部分</value>
+        <value xml:lang="vi">Thành viên của gia đình mã nguồn mở CATO -</value>
+        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
     </property>
     <property key="HumanResCurrentEmploymentData">
         <value xml:lang="en">Current Employment information</value>

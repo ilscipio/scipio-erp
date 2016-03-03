@@ -45,12 +45,12 @@
         <value xml:lang="zh_TW">eBay整合</value>
     </property>
     <property key="EbayCompanyName">
-        <value xml:lang="en">OFBiz</value>
-        <value xml:lang="fr">OFBiz</value>
-        <value xml:lang="it">OFBiz</value>
-        <value xml:lang="th">OFBiz</value>
-        <value xml:lang="zh">OFBiz</value>
-        <value xml:lang="zh_TW">OFBiz</value>
+        <value xml:lang="en">CATO -</value>
+        <value xml:lang="fr">CATO -</value>
+        <value xml:lang="it">CATO -</value>
+        <value xml:lang="th">CATO -</value>
+        <value xml:lang="zh">CATO -</value>
+        <value xml:lang="zh_TW">CATO -</value>
     </property>
     <property key="EbayConfigurations">
         <value xml:lang="en">Ebay Configurations</value>

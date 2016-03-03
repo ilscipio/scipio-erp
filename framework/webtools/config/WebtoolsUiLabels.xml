@@ -834,11 +834,11 @@
         <value xml:lang="zh_TW">全部</value>
     </property>
     <property key="WebtoolsArtifactInfo">
-        <value xml:lang="de">OFBiz Elemente-Info</value>
+        <value xml:lang="de">CATO - Elemente-Info</value>
         <value xml:lang="en">Artifact Info</value>
-        <value xml:lang="fr">Information sur les éléments d'OFBiz</value>
+        <value xml:lang="fr">Information sur les éléments d'CATO -</value>
         <value xml:lang="it">Informazioni sugli artefatti</value>
-        <value xml:lang="ja">OFBiz要素情報</value>
+        <value xml:lang="ja">CATO -要素情報</value>
         <value xml:lang="pt">Info do Artefato</value>
         <value xml:lang="vi">Thông tin Nhân tạo</value>
         <value xml:lang="zh">人工程序信息</value>
@@ -985,11 +985,11 @@
         <value xml:lang="zh_TW">取消任務</value>
     </property>
     <property key="WebtoolsCannotViewArtifactInfoPages">
-        <value xml:lang="de">Für den Zugriff zu den OFBiz Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
+        <value xml:lang="de">Für den Zugriff zu den CATO - Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
         <value xml:lang="en">Cannot view Artifact Info pages without ARTIFACT_INFO_VIEW permission.</value>
-        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments d'OFBiz sans l'autorisation ARTIFACT_INFO_VIEW.</value>
+        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments d'CATO - sans l'autorisation ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="it">Non è possibile visualizzare le pagine senza avere il permesso ARTIFACT_INFO_VIEW.</value>
-        <value xml:lang="ja">OFBiz要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
+        <value xml:lang="ja">CATO -要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
         <value xml:lang="pt">NÃ£o Ã© possÃ­vel visualizar pÃ¡ginas de InformaÃ§Ãµes de Artefato sem autorizaÃ§Ã£o ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="vi">Bạn không thể xem Artifact nếu khống có quyền ARTIFACT_INFO_VIEW</value>
         <value xml:lang="zh">没有ARTIFACT_INFO_VIEW权限，无法浏览人工程序页面。</value>
@@ -1132,45 +1132,45 @@
         <value xml:lang="zh_TW">清除這個快取</value>
     </property>
     <property key="WebtoolsCompanyName">
-        <value xml:lang="de">OFBiz: Web Tools</value>
-        <value xml:lang="en">OFBiz: Web Tools</value>
-        <value xml:lang="es">OFBiz: Herramientas Web</value>
-        <value xml:lang="fr">OFBiz: outils web</value>
-        <value xml:lang="it">OFBiz: Strumenti web</value>
-        <value xml:lang="ja">OFBiz: Webツール</value>
-        <value xml:lang="pt">OFBiz: Web Tools</value>
-        <value xml:lang="ro">OFBiz: Instrumente Web</value>
-        <value xml:lang="th">OFBiz: เครื่องมือจัดการเว็บไซต์</value>
-        <value xml:lang="vi">OFBiz: Trung tâm Quản trị</value>
-        <value xml:lang="zh">OFBiz: Web工具</value>
-        <value xml:lang="zh_TW">OFBiz: Web工具</value>
+        <value xml:lang="de">CATO - Web Tools</value>
+        <value xml:lang="en">CATO - Web Tools</value>
+        <value xml:lang="es">CATO - Herramientas Web</value>
+        <value xml:lang="fr">CATO - outils web</value>
+        <value xml:lang="it">CATO - Strumenti web</value>
+        <value xml:lang="ja">CATO - Webツール</value>
+        <value xml:lang="pt">CATO - Web Tools</value>
+        <value xml:lang="ro">CATO - Instrumente Web</value>
+        <value xml:lang="th">CATO - เครื่องมือจัดการเว็บไซต์</value>
+        <value xml:lang="vi">CATO - Trung tâm Quản trị</value>
+        <value xml:lang="zh">CATO - Web工具</value>
+        <value xml:lang="zh_TW">CATO - Web工具</value>
     </property>
     <property key="WebtoolsCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der Apache OFBiz Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
+        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software Apache OFBiz de código abierto</value>
-        <value xml:lang="fr">Un module de la famille Apache OFBiz, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-    <!--value xml:lang="nl">Onderdeel van de Apache OFBiz'-suite</value-->
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de Apache OFBiz-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
+    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО Apache OFBiz</valuevalue xml:lang="ru">Часть семейства "Apache OFBiz Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства Apache OFBiz</value>
+    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства CATO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件OFBiz的组成部分</valuevalue xml:lang="zh">开源软件OFBiz的组成部分</value-->
-        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở OFBIZ</value>
-        <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
-        <value xml:lang="zh_CN">OFBiz的一部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz家族的一部分</value>
+    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
+        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở CATO -</value>
+        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
+        <value xml:lang="zh_CN">CATO -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
     </property>
     <property key="WebtoolsCompareType">
         <value xml:lang="de">Typ vergleichen</value>
@@ -2325,17 +2325,17 @@
         <value xml:lang="zh_TW">資料實體</value>
     </property>
     <property key="WebtoolsForSomethingInteresting">
-        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: ofbiz</value>
-        <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: ofbiz</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : ofbiz</value>
-        <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:ofbiz</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password Ofbiz でログインしてください</value>
-        <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: ofbiz</value>
-        <value xml:lang="ro">Daca  esti interesat, trebuie sa ai autentificare, incearca cu cu Nume utilizator :admin, Pasword :ofbiz</value>
-        <value xml:lang="th">เพื่อความแน่ใจคุณควรเข้าสู่ระบบโดยใช้ ชื่อผูใช้: admin, รหัสผ่าน: ofbiz</value>
-        <value xml:lang="vi">Để khám phá hãy chắc chắn bạn đã đăng nhập, bạn có thể thử với tài khoản admin / ofbiz</value>
-        <value xml:lang="zh">如果你对其中的某些功能感兴趣，请先登录，可以尝试使用用户名：admin、密码：ofbiz登录</value>
-        <value xml:lang="zh_TW">如果你對其中的某些功能感興趣,請先登入,可以嘗試使用使用者名:admin、密碼:ofbiz登入</value>
+        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: CATO -</value>
+        <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: CATO -</value>
+        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : CATO -</value>
+        <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:CATO -</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password CATO - でログインしてください</value>
+        <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: CATO -</value>
+        <value xml:lang="ro">Daca  esti interesat, trebuie sa ai autentificare, incearca cu cu Nume utilizator :admin, Pasword :CATO -</value>
+        <value xml:lang="th">เพื่อความแน่ใจคุณควรเข้าสู่ระบบโดยใช้ ชื่อผูใช้: admin, รหัสผ่าน: CATO -</value>
+        <value xml:lang="vi">Để khám phá hãy chắc chắn bạn đã đăng nhập, bạn có thể thử với tài khoản admin / CATO -</value>
+        <value xml:lang="zh">如果你对其中的某些功能感兴趣，请先登录，可以尝试使用用户名：admin、密码：CATO -登录</value>
+        <value xml:lang="zh_TW">如果你對其中的某些功能感興趣,請先登入,可以嘗試使用使用者名:admin、密碼:CATO -登入</value>
     </property>
     <property key="WebtoolsForUseWithFrequency">
         <value xml:lang="de">mit der Frequenz nutzen</value>
@@ -2392,7 +2392,7 @@
     <property key="WebtoolsGeneralArtifactInfoTools">
         <value xml:lang="de">Allgemeine Info</value>
         <value xml:lang="en">General Artifact Info Tools</value>
-        <value xml:lang="fr">Outils généraux pour les informations sur les éléments d'OFBiz</value>
+        <value xml:lang="fr">Outils généraux pour les informations sur les éléments d'CATO -</value>
         <value xml:lang="it">Strumento per informazioni generali su artifatti</value>
         <value xml:lang="ja">成果物情報ツール全般</value>
         <value xml:lang="pt">Ferramentas de InformaÃ§Ãµes Gerais do Artefato</value>
@@ -2929,7 +2929,7 @@
         <value xml:lang="zh_TW">解決重複標簽後清除快取</value>
     </property>
     <property key="WebtoolsLabelManagerComponentName">
-        <value xml:lang="de">OFBiz Komponente</value>
+        <value xml:lang="de">CATO - Komponente</value>
         <value xml:lang="en">Component Name</value>
         <value xml:lang="fr">Nom de composant</value>
         <value xml:lang="it">Nome componente</value>
@@ -3761,17 +3761,17 @@
         <value xml:lang="zh_TW">沒有出現</value>
     </property>
     <property key="WebtoolsNoteAntRunInstall">
-        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im OFBIZ_HOME Verzeichnis "ant load-demo" oder "java -jar ofbiz.jar load-data" ein.</value>
-        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the ofbiz home directory run "ant load-demo" or "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine d'ofbiz, exécutez "ant load-demo" ou "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di ofbiz "ant load-demo" o "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、ofbizホームディレクトリで"ant load-demo"または"java -jar ofbiz.jar load-data"を実行してください</value>
-        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do OFBiz executar "ant load-demo" ou "ofbiz.jar java-jar-install"</value>
-        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory ofbiz "ant load-demo" sau "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก ofbiz home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của Ofbiz bạn hãy chạy "ant load-demo" hoặc "java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在OFBiz目录下运行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
-        <value xml:lang="zh_TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在OFBiz目錄下執行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im CATO -_HOME Verzeichnis "ant load-demo" oder "java -jar CATO -.jar load-data" ein.</value>
+        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the CATO - home directory run "ant load-demo" or "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine d'CATO -, exécutez "ant load-demo" ou "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di CATO - "ant load-demo" o "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、CATO -ホームディレクトリで"ant load-demo"または"java -jar CATO -.jar load-data"を実行してください</value>
+        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do CATO - executar "ant load-demo" ou "CATO -.jar java-jar-install"</value>
+        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory CATO - "ant load-demo" sau "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก CATO - home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của CATO - bạn hãy chạy "ant load-demo" hoặc "java -jar CATO -.jar load-data"</value>
+        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在CATO -目录下运行"ant load-demo"或"java -jar CATO -.jar load-data"</value>
+        <value xml:lang="zh_TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在CATO -目錄下執行"ant load-demo"或"java -jar CATO -.jar load-data"</value>
     </property>
     <property key="WebtoolsNoteForeighKeysMayAlsoBeCreated">
         <value xml:lang="de">HINWEIS: Fremdschlüssel können mit der Datenbank-Check/-Update Funktion ebenfalls generiert werden, sofern die check-fks-on-start und andere Optionen auf der Datensource entsprechend gesetzt sind.</value>
@@ -5745,7 +5745,7 @@
         <value xml:lang="zh_TW">檢視度量</value>
     </property>
     <property key="WebtoolsViewPermissionError">
-        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder OFBIZTOOLS_ADMIN Berechtigung)</value>
+        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder CATO -TOOLS_ADMIN Berechtigung)</value>
         <value xml:lang="en">You do not have permission to view this page. ("OFBTOOLS_VIEW" or "OFBTOOLS_ADMIN" needed)</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation de voir cette page ("OFBTOOLS_VIEW" ou "OFBTOOLS_ADMIN" nécessaire)</value>
         <value xml:lang="it">Non sei autorizzato a vedere questa pagina. (Necessario permesso "OFBTOOLS_VIEW" o "OFBTOOLS_ADMIN")</value>

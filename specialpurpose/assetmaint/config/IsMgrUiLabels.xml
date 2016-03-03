@@ -29,13 +29,13 @@
         <value xml:lang="zh_TW">資訊系統管理應用程式</value>
     </property>
     <property key="IsMgrCompanyName">
-        <value xml:lang="en">OFBiz: Is Manager</value>
-        <value xml:lang="fr">OFBiz: application de gestion du parc informatique</value>
-        <value xml:lang="it">OFBiz: Gestione sistemi informativi</value>
-        <value xml:lang="ja">OFBiz: 情報システム管理者</value>
-        <value xml:lang="vi">OFBiz: Là Quản lý</value>
-        <value xml:lang="zh">OFBiz: 信息系统管理</value>
-        <value xml:lang="zh_TW">OFBiz: 資訊系統管理</value>
+        <value xml:lang="en">CATO - Is Manager</value>
+        <value xml:lang="fr">CATO - application de gestion du parc informatique</value>
+        <value xml:lang="it">CATO - Gestione sistemi informativi</value>
+        <value xml:lang="ja">CATO - 情報システム管理者</value>
+        <value xml:lang="vi">CATO - Là Quản lý</value>
+        <value xml:lang="zh">CATO - 信息系统管理</value>
+        <value xml:lang="zh_TW">CATO - 資訊系統管理</value>
     </property>
     <property key="IsMgrCompanySubtitle">
         <value xml:lang="en">Information Systems Department</value>

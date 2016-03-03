@@ -780,10 +780,10 @@ under the License.
         <value xml:lang="zh_TW">團隊和產品擁有者</value>
     </property>
     <property key="ScrumCompanyName">
-        <value xml:lang="en">OFBiz: SCRUM</value>
-        <value xml:lang="ja">OFBiz: SCRUM</value>
-        <value xml:lang="zh">OFBiz: Scrum</value>
-        <value xml:lang="zh_TW">OFBiz: Scrum</value>
+        <value xml:lang="en">CATO - SCRUM</value>
+        <value xml:lang="ja">CATO - SCRUM</value>
+        <value xml:lang="zh">CATO - Scrum</value>
+        <value xml:lang="zh_TW">CATO - Scrum</value>
     </property>
     <property key="ScrumCompanyNameShow">
         <value xml:lang="en">Company Name</value>
@@ -798,10 +798,10 @@ under the License.
         <value xml:lang="zh_TW">團隊團體識別</value>
     </property>
     <property key="ScrumCompanySubtitle">
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz的組成部分</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件CATO -的组成部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -的組成部分</value>
     </property>
     <property key="ScrumContentList">
         <value xml:lang="de">Projektinhaltsliste</value>

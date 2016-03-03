@@ -38,10 +38,10 @@
         <value xml:lang="zh_TW">谷歌支付应用程序</value>
     </property>
     <property key="GoogleCheckoutCompanyName">
-        <value xml:lang="en">OFBiz: Google Checkout</value>
-        <value xml:lang="it">OFBiz: Google Checkout</value>
-        <value xml:lang="zh">OFBiz: 谷歌支付</value>
-        <value xml:lang="zh_TW">OFBiz: 谷歌支付</value>
+        <value xml:lang="en">CATO - Google Checkout</value>
+        <value xml:lang="it">CATO - Google Checkout</value>
+        <value xml:lang="zh">CATO - 谷歌支付</value>
+        <value xml:lang="zh_TW">CATO - 谷歌支付</value>
     </property>
     <property key="GoogleCheckoutConfigurationError">
         <value xml:lang="en">Google checkout configuration error</value>

@@ -2282,46 +2282,46 @@
         <value xml:lang="zh_TW">評論</value>
     </property>
     <property key="WorkEffortCompanyName">
-        <value xml:lang="de">OFBiz: Arbeitseinsatz Manager</value>
-        <value xml:lang="en">OFBiz: WorkEffort Manager</value>
-        <value xml:lang="es">OFBiz: Administración de tareas</value>
-        <value xml:lang="fr">OFBiz: Gestion de tâches</value>
-        <value xml:lang="it">OFBiz: Gestione impegni di lavoro</value>
-        <value xml:lang="ja">OFBiz: 作業成果管理</value>
-        <value xml:lang="nl">OFBiz: WorkEffort Manager</value>
-        <value xml:lang="ro">OFBiz: Gestiune Sarcini de Lucru </value>
-        <value xml:lang="ru">OFBiz: WorkEffort Manager</value>
-        <value xml:lang="th">OFBiz: การจัดการความพยายามในการทำงาน</value>
-        <value xml:lang="vi">OFBiz: Quản lý công việc (Lượng giá nguồn lực)</value>
-        <value xml:lang="zh">OFBiz: 人工服务管理程序</value>
-        <value xml:lang="zh_TW">OFBiz: 工作投入管理程式</value>
+        <value xml:lang="de">CATO - Arbeitseinsatz Manager</value>
+        <value xml:lang="en">CATO - WorkEffort Manager</value>
+        <value xml:lang="es">CATO - Administración de tareas</value>
+        <value xml:lang="fr">CATO - Gestion de tâches</value>
+        <value xml:lang="it">CATO - Gestione impegni di lavoro</value>
+        <value xml:lang="ja">CATO - 作業成果管理</value>
+        <value xml:lang="nl">CATO - WorkEffort Manager</value>
+        <value xml:lang="ro">CATO - Gestiune Sarcini de Lucru </value>
+        <value xml:lang="ru">CATO - WorkEffort Manager</value>
+        <value xml:lang="th">CATO - การจัดการความพยายามในการทำงาน</value>
+        <value xml:lang="vi">CATO - Quản lý công việc (Lượng giá nguồn lực)</value>
+        <value xml:lang="zh">CATO - 人工服务管理程序</value>
+        <value xml:lang="zh_TW">CATO - 工作投入管理程式</value>
     </property>
     <property key="WorkEffortCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der Apache OFBiz Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
+        <value xml:lang="de">Teil der CATO Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the CATO Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software Apache OFBiz de código abierto</value>
-        <value xml:lang="fr">Un module de la famille Apache OFBiz, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-    <!--value xml:lang="nl">Onderdeel van de Apache OFBiz'-suite</value-->
-        <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de Apache OFBiz-suite van Open Source Software</value>
-        <value xml:lang="pt_BR">Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software CATO de código abierto</value>
+        <value xml:lang="fr">Un module de la famille CATO, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source CATO</value>
+    <!--value xml:lang="nl">Onderdeel van de CATO'-suite</value-->
+        <value xml:lang="ja">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de CATO-suite van Open Source Software</value>
+        <value xml:lang="pt_BR">Parte da família CATO - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt_PT">Parte da família OfBiz de software de fonte aberta</value>
+        <value xml:lang="pt_PT">Parte da família CATO - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО Apache OFBiz</valuevalue xml:lang="ru">Часть семейства "Apache OFBiz Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства Apache OFBiz</value>
+    <!--value xml:lang="ru">Часть семейства ПО CATO</valuevalue xml:lang="ru">Часть семейства "CATO Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства CATO</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件OFBiz的组成部分</valuevalue xml:lang="zh">开源软件OFBiz的组成部分</value-->
-        <value xml:lang="vi">Part of the Apache OFBiz Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
-        <value xml:lang="zh_CN">OFBiz的一部分</value>
-        <value xml:lang="zh_TW">開源軟體OFBiz家族的一部分</value>
+    <!--value xml:lang="zh">开源软件CATO -的组成部分</valuevalue xml:lang="zh">开源软件CATO -的组成部分</value-->
+        <value xml:lang="vi">Part of the CATO Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件CATO -家族的一部分</value>
+        <value xml:lang="zh_CN">CATO -的一部分</value>
+        <value xml:lang="zh_TW">開源軟體CATO -家族的一部分</value>
     </property>
     <property key="WorkEffortCompletionDate">
         <value xml:lang="de">Enddatum</value>
@@ -2916,7 +2916,7 @@
         <value xml:lang="zh_TW">iCal輔助</value>
     </property>
     <property key="WorkEffortICalendarHelpUrl">
-        <value xml:lang="en">http://docs.ofbiz.org/x/piE</value>
+        <value xml:lang="en">http://docs.CATO -.org/x/piE</value>
     </property>
     <property key="WorkEffortICalendarName">
         <value xml:lang="de">Kalendername</value>
@@ -2987,18 +2987,18 @@
         <value xml:lang="zh_TW">資訊</value>
     </property>
     <property key="WorkEffortInterestingSure">
-        <value xml:lang="en">For something interesting make sure, you are logged in try : Username;Admin;Password Ofbiz</value>
-        <value xml:lang="es">Para ingresar, Nombre de usuario: admin, contraseña: ofbiz</value>
-        <value xml:lang="fr">Pour que quelque chose d'intéressant, essayez de vous connecter. Identifiant de connexion : admin / Mot de passe : ofbiz</value>
-        <value xml:lang="it">Assicurati di essere autenticato, prova: Nome Utente;Admin; Password Ofbiz</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password Ofbiz でログインしてください</value>
-        <value xml:lang="nl">For something interesting make sure, you are logged in try : Username;Admin;Password Ofbiz</value>
-        <value xml:lang="ro">In orice caz tu trebuie sa fii sigur ca te-ai logat, incearca: Nume Utilizator;Admin;Password Ofbiz</value>
-        <value xml:lang="ru">Проверьте : Username;Admin;Password Ofbiz</value>
-        <value xml:lang="th">สำหรับการสนใจบางสิ่งทำให้มั่นใจ, คุณพยายามลอกอินเข้าสู่ระบบ : ชื่อผู้เข้าใช้;Admin;รหัสผ่าน Ofbiz</value>
-        <value xml:lang="vi">Ban có thể đăng nhập thử với tài khoản : Username;Admin;Password Ofbiz</value>
-        <value xml:lang="zh">如果你对某些内容感兴趣，你需要登录系统，可以尝试用户名：admin;密码：Ofbiz</value>
-        <value xml:lang="zh_TW">如果你對某些內容感興趣, 你需要登入系統, 可以嘗試使用者名: admin; 密碼: ofbiz</value>
+        <value xml:lang="en">For something interesting make sure, you are logged in try : Username;Admin;Password CATO -</value>
+        <value xml:lang="es">Para ingresar, Nombre de usuario: admin, contraseña: CATO -</value>
+        <value xml:lang="fr">Pour que quelque chose d'intéressant, essayez de vous connecter. Identifiant de connexion : admin / Mot de passe : CATO -</value>
+        <value xml:lang="it">Assicurati di essere autenticato, prova: Nome Utente;Admin; Password CATO -</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password CATO - でログインしてください</value>
+        <value xml:lang="nl">For something interesting make sure, you are logged in try : Username;Admin;Password CATO -</value>
+        <value xml:lang="ro">In orice caz tu trebuie sa fii sigur ca te-ai logat, incearca: Nume Utilizator;Admin;Password CATO -</value>
+        <value xml:lang="ru">Проверьте : Username;Admin;Password CATO -</value>
+        <value xml:lang="th">สำหรับการสนใจบางสิ่งทำให้มั่นใจ, คุณพยายามลอกอินเข้าสู่ระบบ : ชื่อผู้เข้าใช้;Admin;รหัสผ่าน CATO -</value>
+        <value xml:lang="vi">Ban có thể đăng nhập thử với tài khoản : Username;Admin;Password CATO -</value>
+        <value xml:lang="zh">如果你对某些内容感兴趣，你需要登录系统，可以尝试用户名：admin;密码：CATO -</value>
+        <value xml:lang="zh_TW">如果你對某些內容感興趣, 你需要登入系統, 可以嘗試使用者名: admin; 密碼: CATO -</value>
     </property>
     <property key="WorkEffortInternalNote">
         <value xml:lang="de">interne Notiz</value>

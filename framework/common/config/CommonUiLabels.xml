@@ -7496,7 +7496,7 @@
         <value xml:lang="zh_TW">沒有找到記錄</value>
     </property>
     <property key="CommonNoStatesProvinces">
-        <!-- CATO --5246 please use ": _NA_" at end, with a space between the colon and _NA_. getDependentDropdownValues relies on it -->
+        <!-- OFBIZ-5246 please use ": _NA_" at end, with a space between the colon and _NA_. getDependentDropdownValues relies on it -->
         <value xml:lang="ar">لا يوجد ولايات / مقاطعات: _NA_</value>
         <value xml:lang="cs">Neexistují žádné státy/provincie: _NA_</value>
         <value xml:lang="de">Kein exitierendes Bundesland: _NA_</value>
@@ -11557,24 +11557,24 @@
     </property>
     <property key="CommonTheOpenForBusinessProject">
         <value xml:lang="ar">مشروع اوفبيز</value>
-        <value xml:lang="cs">Projekt CATO</value>
-        <value xml:lang="de">Das CATO Projekt</value>
-        <value xml:lang="en">The CATO Project</value>
-        <value xml:lang="es">El proyecto CATO</value>
-        <value xml:lang="fr">Le projet CATO</value>
+        <value xml:lang="cs">Projekt Apache OFBiz</value>
+        <value xml:lang="de">Das Apache OFBiz Projekt</value>
+        <value xml:lang="en">The Apache OFBiz Project</value>
+        <value xml:lang="es">El proyecto Apache OFBiz</value>
+        <value xml:lang="fr">Le projet Apache OFBiz</value>
         <value xml:lang="hi_IN">द् ओपन फॉर बिसनेस प्रोजेक्ट</value>
-        <value xml:lang="it">Il progetto CATO</value>
-        <value xml:lang="ja">The CATO Project</value>
-        <value xml:lang="nl">Het CATO Project</value>
-        <value xml:lang="pt">The CATO Project</value>
-        <value xml:lang="pt-BR">O Projeto CATO</value>
-        <value xml:lang="ro">Proiectul CATO</value>
-        <value xml:lang="ru">Проект 'CATO'</value>
+        <value xml:lang="it">Il progetto Apache OFBiz</value>
+        <value xml:lang="ja">The Apache OFBiz Project</value>
+        <value xml:lang="nl">Het Apache OFBiz Project</value>
+        <value xml:lang="pt">The Apache OFBiz Project</value>
+        <value xml:lang="pt-BR">O Projeto Apache OFBiz</value>
+        <value xml:lang="ro">Proiectul Apache OFBiz</value>
+        <value xml:lang="ru">Проект 'Apache OFBiz'</value>
         <value xml:lang="th">เปิดโปรเจคธุรกิจ</value>
-        <value xml:lang="vi">Dự án mã mở cho kinh doanh vCloudBusiness CATO -</value>
-        <value xml:lang="zh">CATO -项目</value>
-        <value xml:lang="zh-CN">The CATO Project</value>
-        <value xml:lang="zh-TW">CATO -專案</value>
+        <value xml:lang="vi">Dự án mã mở cho kinh doanh vCloudBusiness OFBIZ</value>
+        <value xml:lang="zh">OFBiz项目</value>
+        <value xml:lang="zh-CN">The Apache OFBiz Project</value>
+        <value xml:lang="zh-TW">OFBiz專案</value>
     </property>
     <property key="CommonThis">
         <value xml:lang="ar">هذا</value>
@@ -12991,22 +12991,22 @@
         <value xml:lang="zh_CN">欢迎</value>
         <value xml:lang="zh_TW">歡迎</value>
     </property>
-    <property key="CommonWelcomeToTheCATO -Dashboard">
+    <property key="CommonWelcomeToTheOFBizDashboard">
         <value xml:lang="ar">مرحبا بك في لوحة تحكم أوفبيز</value>
-        <value xml:lang="cs">Vítejte v řídícím panelu CATO -u</value>
-        <value xml:lang="de">CATO - Dashboard - Willkommen</value>
-        <value xml:lang="en">Welcome to the CATO - dashboard</value>
-        <value xml:lang="es">Bienvenido al panel de control de CATO -</value>
-        <value xml:lang="fr">Bienvenue sur le tableau de bord d'CATO -</value>
-        <value xml:lang="hi_IN">CATO - डैशबोर्ड पर आपका स्वागत है</value>
-        <value xml:lang="it">Benvenuto al cruscotto di CATO -</value>
-        <value xml:lang="ja">CATO -ダッシュボードにようこそ</value>
-        <value xml:lang="nl">Welkom in het CATO - dashboard</value>
-        <value xml:lang="pt_BR">Bem-vindo ao painel do CATO -</value>
+        <value xml:lang="cs">Vítejte v řídícím panelu OFBizu</value>
+        <value xml:lang="de">OFBiz Dashboard - Willkommen</value>
+        <value xml:lang="en">Welcome to the OFBiz dashboard</value>
+        <value xml:lang="es">Bienvenido al panel de control de OFBiz</value>
+        <value xml:lang="fr">Bienvenue sur le tableau de bord d'OFBiz</value>
+        <value xml:lang="hi_IN">OFBiz डैशबोर्ड पर आपका स्वागत है</value>
+        <value xml:lang="it">Benvenuto al cruscotto di OFBiz</value>
+        <value xml:lang="ja">OFBizダッシュボードにようこそ</value>
+        <value xml:lang="nl">Welkom in het OFBiz dashboard</value>
+        <value xml:lang="pt_BR">Bem-vindo ao painel do OFBiz</value>
         <value xml:lang="ru">Добро пожаловать в Доску знаний Офбиза</value>
-        <value xml:lang="vi">Chào mừng đến với Giao diện điều khiển trung tâm của CATO -</value>
-        <value xml:lang="zh">欢迎使用CATO -个人主页</value>
-        <value xml:lang="zh_TW">歡迎使用CATO -儀表板</value>
+        <value xml:lang="vi">Chào mừng đến với Giao diện điều khiển trung tâm của OFBiz</value>
+        <value xml:lang="zh">欢迎使用OFBiz个人主页</value>
+        <value xml:lang="zh_TW">歡迎使用OFBiz儀表板</value>
     </property>
     <property key="CommonWhere">
         <value xml:lang="ar">أين</value>
@@ -14633,21 +14633,21 @@
         <value xml:lang="zh">我的门户</value>
         <value xml:lang="zh_TW">我的入口網站</value>
     </property>
-    <property key="CATO - Site">
+    <property key="OFBiz Site">
         <value xml:lang="ar">موقع أوفبيز</value>
-        <value xml:lang="cs">Domovská stránka CATO -</value>
-        <value xml:lang="de">CATO - Homepage</value>
-        <value xml:lang="en">CATO - Site</value>
-        <value xml:lang="es">Página web de CATO -</value>
-        <value xml:lang="fr">Site officiel d'CATO -</value>
-        <value xml:lang="hi_IN">CATO - साइट</value>
-        <value xml:lang="it">Sito di CATO -</value>
-        <value xml:lang="ja">CATO -サイト</value>
-        <value xml:lang="pt_BR">Site do CATO -</value>
+        <value xml:lang="cs">Domovská stránka OFBiz</value>
+        <value xml:lang="de">OFBiz Homepage</value>
+        <value xml:lang="en">OFBiz Site</value>
+        <value xml:lang="es">Página web de OFBiz</value>
+        <value xml:lang="fr">Site officiel d'OFBiz</value>
+        <value xml:lang="hi_IN">OFBiz साइट</value>
+        <value xml:lang="it">Sito di OFBiz</value>
+        <value xml:lang="ja">OFBizサイト</value>
+        <value xml:lang="pt_BR">Site do OFBiz</value>
         <value xml:lang="ru">Сайт Офбиза</value>
-        <value xml:lang="vi">Trang chủ CATO -</value>
-        <value xml:lang="zh">CATO -站点</value>
-        <value xml:lang="zh_TW">CATO -網站</value>
+        <value xml:lang="vi">Trang chủ Ofbiz</value>
+        <value xml:lang="zh">OFBiz站点</value>
+        <value xml:lang="zh_TW">OFBiz網站</value>
     </property>
     <property key="Oagis">
         <value xml:lang="en">Oagis</value>

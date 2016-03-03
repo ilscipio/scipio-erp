@@ -60,8 +60,8 @@ under the License.
                                 <@td align="left">${(acctgTransAndEntry.transDescription)!}</@td>
                                 <@td align="left">${(acctgTransAndEntry.currencyUomId)!}</@td>
                                 <@td align="left">${(acctgTransAndEntry.origCurrencyUomId)!}</@td>
-                                <@td class="align-center"><#if (acctgTransAndEntry.debitCreditFlag)! == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
-                                <@td class="align-right"><#if (acctgTransAndEntry.debitCreditFlag)! == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                <@td class=("align-center"><#if (acctgTransAndEntry.debitCreditFlag)!) == "D">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
+                                <@td class=("align-right"><#if (acctgTransAndEntry.debitCreditFlag)!) == "C">${(acctgTransAndEntry.amount)!}<#else>0</#if></@td>
                                 <@td class="align-right"></@td>
                                 <@td class="align-right"></@td>
                             </@tr>

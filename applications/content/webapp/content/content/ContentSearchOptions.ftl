@@ -22,11 +22,11 @@ under the License.
       <#-- Cato: don't hardcode this... use sys default -->
       <#--<input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label=uiLabelMap.ContentKeywords>
-            <@field type="input" label="hey" name="SEARCH_STRING" size="40" value=requestParameters.SEARCH_STRING!/>
+            <@field type="input" label="hey" name="SEARCH_STRING" size="40" value=(requestParameters.SEARCH_STRING!)/>
             <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
             <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll />
         </@field>
-        <@field type="lookup" label=uiLabelMap.FormFieldTitle_contentId value=requestParameters.SEARCH_CONTENT_ID! formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
+        <@field type="lookup" label=uiLabelMap.FormFieldTitle_contentId value=(requestParameters.SEARCH_CONTENT_ID!) formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
         <@field type="generic" label=uiLabelMap.FormFieldTitle_contentAssocTypeId>
             <@field type="select" name="contentAssocTypeId">
                 <option value="">- ${uiLabelMap.ContentAnyAssocType} -</option>
@@ -38,7 +38,7 @@ under the License.
             <@field type="radio" name="SEARCH_SUB_CONTENTS" value="Y" checked=true label=uiLabelMap.CommonYes />
             <@field type="radio" name="SEARCH_SUB_CONTENTS" value="N" label=uiLabelMap.CommonNo />
         </@field>
-        <@field type="lookup" label=uiLabelMap.PartyPartyId value=requestParameters.partyId! formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+        <@field type="lookup" label=uiLabelMap.PartyPartyId value=(requestParameters.partyId!) formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
         <@field type="select" label=uiLabelMap.PartyRoleTypeId name="partyRoleTypeId">
             <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
           <#list roleTypes as roleType>
@@ -46,8 +46,8 @@ under the License.
           </#list>
         </@field>
         <@field type="generic" label=uiLabelMap.ContentLastUpdatedDateFilter>
-            <@field type="datetime" label=uiLabelMap.CommonFrom name="fromDate" value=requestParameters.fromDate! size="25" maxlength="30" id="fromDate1"/>
-            <@field type="datetime" label=uiLabelMap.CommonThru name="thruDate" value=requestParameters.thruDate! size="25" maxlength="30" id="thruDate1"/>
+            <@field type="datetime" label=uiLabelMap.CommonFrom name="fromDate" value=(requestParameters.fromDate!) size="25" maxlength="30" id="fromDate1"/>
+            <@field type="datetime" label=uiLabelMap.CommonThru name="thruDate" value=(requestParameters.thruDate!) size="25" maxlength="30" id="thruDate1"/>
         </@field>
         <@field type="generic" label=uiLabelMap.CommonSortedBy>
             <@field type="select" name="sortOrder">

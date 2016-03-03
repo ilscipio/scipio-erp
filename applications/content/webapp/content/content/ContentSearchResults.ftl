@@ -30,7 +30,7 @@ under the License.
   <#if contentIds?has_content>
     <#-- Cato: FIXME: see ContentSearchEvents.java -->
     <p>NOTE: This search currently only shows the first ${listSize!0} results and supports no pagination.</p>
-    <@paginate mode="content" url=makeOfbizUrl("ContentSearchResults") paramStr="/~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
+    <@paginate mode="content" url=makeOfbizUrl("ContentSearchResults") paramStr="/~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->

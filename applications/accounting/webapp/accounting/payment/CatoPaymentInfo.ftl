@@ -21,8 +21,8 @@
       <#if payment.amount?has_content>
         <@tr>
           <@td class="${styles.grid_large!}2">${uiLabelMap.CommonAmount}</@td>
-          <@td colspan="3"><@ofbizCurrency isoCode=payment.currencyUomId amount=payment.amount!/>
-                <#if payment.actualCurrencyAmount?has_content && payment.actualCurrencyUomId != payment.currencyUomId>(<@ofbizCurrency isoCode=payment.actualCurrencyUomId! amount=payment.actualCurrencyAmount!/>)</#if>
+          <@td colspan="3"><@ofbizCurrency isoCode=payment.currencyUomId amount=(payment.amount!)/>
+                <#if payment.actualCurrencyAmount?has_content && payment.actualCurrencyUomId != payment.currencyUomId>(<@ofbizCurrency isoCode=(payment.actualCurrencyUomId!) amount=(payment.actualCurrencyAmount!)/>)</#if>
             </@td>
         </@tr>
       </#if>

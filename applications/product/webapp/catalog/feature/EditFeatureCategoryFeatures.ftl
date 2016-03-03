@@ -39,7 +39,7 @@ under the License.
     <#if productId?has_content>
       <#assign productString = "&amp;productId=" + productId>
     </#if>
-    <@paginate mode="content" url=makeOfbizUrl("EditFeatureCategoryFeatures") paramStr="productFeatureCategoryId=${productFeatureCategoryId!}${productString!}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
+    <@paginate mode="content" url=makeOfbizUrl("EditFeatureCategoryFeatures") paramStr="productFeatureCategoryId=${productFeatureCategoryId!}${productString!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <form method="post" action="<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />

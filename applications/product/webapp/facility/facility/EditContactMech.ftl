@@ -167,9 +167,9 @@ under the License.
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
     </@field>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
-    <@field type="input" label=uiLabelMap.PartyEmailAddress! required=true size="60" maxlength="255" name="emailAddress" value=(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!) />
+    <@field type="input" label=(uiLabelMap.PartyEmailAddress!) required=true size="60" maxlength="255" name="emailAddress" value=(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!) />
   <#else>
-    <@field type="input" label=mechMap.contactMechType.get('description',locale)! required=true size="60" maxlength="255" name="infoString" value=(mechMap.contactMech.infoString)! />
+    <@field type="input" label=(mechMap.contactMechType.get('description',locale)!) required=true size="60" maxlength="255" name="infoString" value=((mechMap.contactMech.infoString)!) />
   </#if>
     <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </form>

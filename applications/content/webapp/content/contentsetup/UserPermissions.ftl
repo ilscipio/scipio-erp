@@ -58,7 +58,7 @@ function call_fieldlookup3(view_name) {
   <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>">
      <input type="hidden" name="partyId" value="${partyId!}"/>
      <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
-     <@field type="input" name="webSitePublishPoint" size="20" value=webSitePublishPoint! />
+     <@field type="input" name="webSitePublishPoint" size="20" value=(webSitePublishPoint!) />
      <@field type="submit" text=uiLabelMap.CommonRefresh class="${styles.link_run_sys!} ${styles.action_reload!}"/>
   </form>
 </@section>

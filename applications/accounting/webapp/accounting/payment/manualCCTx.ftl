@@ -45,8 +45,8 @@ under the License.
             document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
         </@script>     
         <hr/>      
-        <@field type="input" size="30" maxlength="60" name="firstName" value=(person.firstName)! label=uiLabelMap.PartyFirstName required=true />        
-        <@field type="input" size="30" maxlength="60" name="lastName" value=(person.lastName)! label=uiLabelMap.PartyLastName required=true />   
+        <@field type="input" size="30" maxlength="60" name="firstName" value=((person.firstName)!) label=uiLabelMap.PartyFirstName required=true />        
+        <@field type="input" size="30" maxlength="60" name="lastName" value=((person.lastName)!) label=uiLabelMap.PartyLastName required=true />   
         <@field type="input" size="30" maxlength="60" name="infoString" value="" label=uiLabelMap.PartyEmailAddress required=true />       
         <hr/>
         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}      
@@ -55,13 +55,13 @@ under the License.
         
         <#assign disabled = false />
         <#if requestParameters.useShipAddr??><#assign disabled = true /></#if>
-        <@field type="input" size="30" maxlength="30" name="firstName" value=(person.firstName)! disabled=disabled label=uiLabelMap.PartyFirstName required=true/>
-        <@field type="input" size="30" maxlength="30" name="lastName" value=(person.lastName)! disabled=disabled label=uiLabelMap.PartyLastName required=true/>         
+        <@field type="input" size="30" maxlength="30" name="firstName" value=((person.firstName)!) disabled=disabled label=uiLabelMap.PartyFirstName required=true/>
+        <@field type="input" size="30" maxlength="30" name="lastName" value=((person.lastName)!) disabled=disabled label=uiLabelMap.PartyLastName required=true/>         
       
         <#-- credit card address -->     
-        <@field type="input" size="30" maxlength="30" name="address1" value=(postalFields.address1)! label=uiLabelMap.AccountingBillToAddress1 disabled=disabled required=true />
-        <@field type="input" size="30" maxlength="30" name="address2" value=(postalFields.address2)! label=uiLabelMap.AccountingBillToAddress2 disabled=disabled required=true />
-        <@field type="input" size="30" maxlength="30" name="city" value=(postalFields.city)! label=uiLabelMap.CommonCity disabled=disabled required=true />
+        <@field type="input" size="30" maxlength="30" name="address1" value=((postalFields.address1)!) label=uiLabelMap.AccountingBillToAddress1 disabled=disabled required=true />
+        <@field type="input" size="30" maxlength="30" name="address2" value=((postalFields.address2)!) label=uiLabelMap.AccountingBillToAddress2 disabled=disabled required=true />
+        <@field type="input" size="30" maxlength="30" name="city" value=((postalFields.city)!) label=uiLabelMap.CommonCity disabled=disabled required=true />
         <@field type="select" name="stateProvinceGeoId" label=uiLabelMap.CommonStateProvince disabled=disabled required=true>
             <#if (postalFields.stateProvinceGeoId)??>
               <option>${postalFields.stateProvinceGeoId}</option>
@@ -71,7 +71,7 @@ under the License.
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#states")}
         </@field>
-        <@field type="input" size="12" maxlength="10" name="postalCode" value=(postalFields.postalCode)! label=uiLabelMap.CommonZipPostalCode disabled=disabled required=true/>
+        <@field type="input" size="12" maxlength="10" name="postalCode" value=((postalFields.postalCode)!) label=uiLabelMap.CommonZipPostalCode disabled=disabled required=true/>
         <@field type="select" name="countryGeoId" disabled=disabled label=uiLabelMap.CommonCountry required=true>
             <#if postalFields.countryGeoId?has_content>
               <option>${postalFields.countryGeoId}</option>

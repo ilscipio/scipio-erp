@@ -23,7 +23,7 @@ under the License.
   <form action="<@ofbizUrl>SearchLabels</@ofbizUrl>" method="post">
    
     
-    <@field type="input" label=uiLabelMap.WebtoolsLabelManagerKey name="labelKey" size="30" maxlength="70" value=parameters.labelKey! />
+    <@field type="input" label=uiLabelMap.WebtoolsLabelManagerKey name="labelKey" size="30" maxlength="70" value=(parameters.labelKey!) />
     <@field type="select" label=uiLabelMap.WebtoolsLabelManagerComponentName name="labelComponentName">
             <option value="">${uiLabelMap.WebtoolsLabelManagerAllComponents}</option>
             <#list componentNamesFound as componentNameFound>

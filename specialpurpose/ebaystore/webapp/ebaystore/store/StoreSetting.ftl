@@ -136,7 +136,7 @@ under the License.
       
       <@fields type="default">
             <@field type="input" label=uiLabelMap.EbayStoreStoreName>
-                <@field type="input" name="storeName" value=ebayStore.storeName! events={"keydown":"countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));",
+                <@field type="input" name="storeName" value=(ebayStore.storeName!) events={"keydown":"countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));",
                     "keyup":"countAreaChars(document.StoreSettingForm.storeName,35,document.getElementById('charsleft1'));"} />
                 <div id="charsleft1"></div>
             </@field>
@@ -149,10 +149,10 @@ under the License.
             <@field type="display" label=uiLabelMap.EbayStoreStoreURL>
                 <a href="${ebayStore.storeUrl!}" target="_blank">${ebayStore.storeUrl!}</a>
             </@field>
-            <@field type="input" label=uiLabelMap.EbayStoreStoreLogoURL name="storeLogoURL" size="50" value=ebayStore.storeLogoURL!/>
+            <@field type="input" label=uiLabelMap.EbayStoreStoreLogoURL name="storeLogoURL" size="50" value=(ebayStore.storeLogoURL!)/>
             <@field type="generic" label="">
-               <@field type="radio" name="storeThemeType" checked=(themeType! == "Basic") value="Basic" onClick="javascript:switchTheme();" label="Basic Theme" /> <#-- default="default" -->
-               <@field type="radio"  name="storeThemeType" checked=(themeType! == "Advanced") value="Advanced" onClick="javascript:switchTheme();" label="Advanced Theme" /> 
+               <@field type="radio" name="storeThemeType" checked=((themeType!) == "Basic") value="Basic" onClick="javascript:switchTheme();" label="Basic Theme" /> <#-- default="default" -->
+               <@field type="radio"  name="storeThemeType" checked=((themeType!) == "Advanced") value="Advanced" onClick="javascript:switchTheme();" label="Advanced Theme" /> 
             </@field>
             <#-- advance Theme -->
              <@field type="select" label=uiLabelMap.EbayStoreStoreAdvancedTheme id="storeAdvancedTheme" name="storeAdvancedTheme">
@@ -193,13 +193,13 @@ under the License.
                 <b>${uiLabelMap.EbayStoreStoreColorTheme}</b>
             </@field>
             <@field type="generic" label=uiLabelMap.EbayStoreStorePrimaryColor>
-                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storePrimaryColor" name="storePrimaryColor" size="10" value=ebayStore.storeColorPrimary!/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storePrimaryColor" name="storePrimaryColor" size="10" value=(ebayStore.storeColorPrimary!)/>
             </@field>
             <@field type="generic" label=uiLabelMap.EbayStoreStoreSecondColor>
-                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeSecondaryColor" name="storeSecondaryColor" size="10" value=ebayStore.storeColorSecondary!/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeSecondaryColor" name="storeSecondaryColor" size="10" value=(ebayStore.storeColorSecondary!)/>
             </@field>
             <@field type="generic" label=uiLabelMap.EbayStoreStoreAccentColor>
-                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeAccentColor" name="storeAccentColor" size="10" value=ebayStore.storeColorAccent!/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeAccentColor" name="storeAccentColor" size="10" value=(ebayStore.storeColorAccent!)/>
             </@field>
       </@fields>
 
@@ -310,7 +310,7 @@ under the License.
                                 </@field>
                             </@td>
                             <@td>
-                                ${uiLabelMap.CommonNbr}<@field id="storeDescFontColor" container=false type="input" size="10" name="storeDescFontColor" value=storeDescColor!/>
+                                ${uiLabelMap.CommonNbr}<@field id="storeDescFontColor" container=false type="input" size="10" name="storeDescFontColor" value=(storeDescColor!)/>
                             </@td>
                         </@tr>
                     </@table>

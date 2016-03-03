@@ -47,14 +47,14 @@ under the License.
             </#list>
           </#if>
         </@td>
-        <@td><@ofbizCurrency amount = commissionReport.commissionAmount!/></@td>
-        <@td><@ofbizCurrency amount = commissionReport.netSale!/></@td>
+        <@td><@ofbizCurrency amount=(commissionReport.commissionAmount!)/></@td>
+        <@td><@ofbizCurrency amount=(commissionReport.netSale!)/></@td>
         <@td>
           <#if commissionReport.salesAgentAndTermAmtMap?has_content>
             <#list commissionReport.salesAgentAndTermAmtMap.values() as partyIdAndTermAmountMap>
               <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : partyIdAndTermAmountMap.partyId}, true))!>
               <p>[${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}(<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyIdAndTermAmountMap.partyId!}</@ofbizInterWebappUrl>">${partyIdAndTermAmountMap.partyId!}</a>)]
-                / <@ofbizCurrency amount = (partyIdAndTermAmountMap.termAmount)!/>
+                / <@ofbizCurrency amount = ((partyIdAndTermAmountMap.termAmount)!)/>
               </p>
             </#list>
           </#if>
@@ -68,8 +68,8 @@ under the License.
       <li><@heading>${uiLabelMap.CommonSummary} :</@heading></li>
       <li></li>
       <li>${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</li>
-      <li>${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></li>
-      <li>${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></li>
+      <li>${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount=(totalCommissionAmount!)/></li>
+      <li>${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount=(totalNetSales!)/></li>
       <li>${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</li>
     </ul>
   </@section>

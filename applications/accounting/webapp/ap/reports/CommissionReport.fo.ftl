@@ -63,17 +63,17 @@ under the License.
               <fo:block>${commissionReport.numberOfOrders!} / ${commissionReport.salesInvoiceIds!}</fo:block>
             </fo:table-cell>
             <fo:table-cell>
-              <fo:block><@ofbizCurrency amount = commissionReport.commissionAmount!/></fo:block>
+              <fo:block><@ofbizCurrency amount=(commissionReport.commissionAmount!)/></fo:block>
             </fo:table-cell>
             <fo:table-cell>
-              <fo:block><@ofbizCurrency amount = commissionReport.netSale!/></fo:block>
+              <fo:block><@ofbizCurrency amount=(commissionReport.netSale!)/></fo:block>
             </fo:table-cell>
             <fo:table-cell>
               <#if commissionReport.salesAgentAndTermAmtMap?has_content>
                 <#list commissionReport.salesAgentAndTermAmtMap.values() as partyIdAndTermAmountMap>
                   <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : partyIdAndTermAmountMap.partyId}, true))!>
                   <fo:block>
-                    [${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} (${partyIdAndTermAmountMap.partyId!})] / <@ofbizCurrency amount = (partyIdAndTermAmountMap.termAmount)!/>
+                    [${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} (${partyIdAndTermAmountMap.partyId!})] / <@ofbizCurrency amount=((partyIdAndTermAmountMap.termAmount)!)/>
                   </fo:block>
                 </#list>
               </#if>
@@ -99,8 +99,8 @@ under the License.
            <fo:block font-size="14pt" font-weight="bold">${uiLabelMap.CommonSummary} :</fo:block>
            <fo:block space-after="10pt"/>
            <fo:block font-weight="bold">${uiLabelMap.ManufacturingTotalQuantity} : ${totalQuantity!}</fo:block>
-           <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount = totalCommissionAmount!/></fo:block>
-           <fo:block font-weight="bold">${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount = totalNetSales!/></fo:block>
+           <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCommissionAmount} : <@ofbizCurrency amount=(totalCommissionAmount!)/></fo:block>
+           <fo:block font-weight="bold">${uiLabelMap.AccountingTotalNetSales} : <@ofbizCurrency amount=(totalNetSales!)/></fo:block>
            <fo:block font-weight="bold">${uiLabelMap.AccountingTotalNumberOfOrders} : ${totalNumberOfOrders!}</fo:block>
          </fo:table-cell>
        </fo:table-row>

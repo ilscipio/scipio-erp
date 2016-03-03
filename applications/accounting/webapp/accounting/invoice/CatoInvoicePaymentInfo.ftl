@@ -16,9 +16,9 @@
                 <@td>${itemType.get("description",locale)!}</@td>
                 <@td><@formattedDateTime date=item.dueDate /></@td>
                 
-                <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.amount!/></@td>
-                <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.paidAmount!/></@td>
-                <@td><strong><@ofbizCurrency isoCode=invoice.currencyUomId amount=item.outstandingAmount!/></strong></@td>
+                <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=(item.amount!)/></@td>
+                <@td><@ofbizCurrency isoCode=invoice.currencyUomId amount=(item.paidAmount!)/></@td>
+                <@td><strong><@ofbizCurrency isoCode=invoice.currencyUomId amount=(item.outstandingAmount!)/></strong></@td>
             </@tr>
         </#list>
   </@table>

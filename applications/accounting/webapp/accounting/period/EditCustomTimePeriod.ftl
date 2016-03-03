@@ -89,7 +89,7 @@ under the License.
                                     ${uiLabelMap.CommonSetAsCurrent}</a>
                                 </#if>
                                 </@td>
-                            <@td><@field type="input" size="12" name="currentCustomTimePeriod" value=currentCustomTimePeriod.organizationPartyId! /></@td>
+                            <@td><@field type="input" size="12" name="currentCustomTimePeriod" value=(currentCustomTimePeriod.organizationPartyId!) /></@td>
                             <@td>
                                 <@field type="select" name="periodTypeId">
                                     <#list periodTypes as periodType>
@@ -105,8 +105,8 @@ under the License.
                                     </#list>
                                 </@field>
                             </@td>
-                            <@td><@field type="input" size="4" name="periodNum" value=currentCustomTimePeriod.periodNum! /></@td>
-                            <@td><@field type="input" size="10" name="periodName" value=currentCustomTimePeriod.periodName! /></@td>
+                            <@td><@field type="input" size="4" name="periodNum" value=(currentCustomTimePeriod.periodNum!) /></@td>
+                            <@td><@field type="input" size="10" name="periodName" value=(currentCustomTimePeriod.periodName!) /></@td>
                             <@td>
                                 <#assign hasntStarted = false>
                                 <#assign compareDate = currentCustomTimePeriod.getDate("fromDate")>
@@ -184,7 +184,7 @@ under the License.
                                         </#list>
                                     </@field>
                                 </@td>
-                                <@td><@field type="input" size="12" name="organizationPartyId" value=customTimePeriod.organizationPartyId! /></@td>
+                                <@td><@field type="input" size="12" name="organizationPartyId" value=(customTimePeriod.organizationPartyId!) /></@td>
                                 <@td>
                                     <@field type="select" name="periodTypeId">
                                         <#list periodTypes as periodType>
@@ -198,8 +198,8 @@ under the License.
                                         </#list>
                                     </@field>
                                 </@td>
-                                <@td><@field type="input" size="4" name="periodNum" value=customTimePeriod.periodNum! /></@td>
-                                <@td><@field type="input" size="10" name="periodName" value=customTimePeriod.periodName! /></@td>
+                                <@td><@field type="input" size="4" name="periodNum" value=(customTimePeriod.periodNum!) /></@td>
+                                <@td><@field type="input" size="10" name="periodName" value=(customTimePeriod.periodName!) /></@td>
                                     <@td>
                                     <#assign hasntStarted = false>
                                     <#assign compareDate = customTimePeriod.getDate("fromDate")>

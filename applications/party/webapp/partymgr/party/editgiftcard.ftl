@@ -41,8 +41,8 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
         
-        <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=giftCardData.cardNumber! />
-        <@field type="input" label=uiLabelMap.AccountingPinNumber size="10" maxlength="60" name="pinNumber" value=giftCardData.pinNumber! />
+        <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(giftCardData.cardNumber!) />
+        <@field type="input" label=uiLabelMap.AccountingPinNumber size="10" maxlength="60" name="pinNumber" value=(giftCardData.pinNumber!) />
         <@field type="generic" label=uiLabelMap.CommonExpireDate>
             <#assign expMonth = "">
             <#assign expYear = "">
@@ -76,7 +76,7 @@ under the License.
               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
             </@field>
         </@field>
-        <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=paymentMethodData.description! />
+        <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
 
       </form>
       

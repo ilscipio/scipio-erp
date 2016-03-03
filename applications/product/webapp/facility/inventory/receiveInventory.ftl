@@ -431,8 +431,8 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-              <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value=requestParameters.purchaseOrderId! formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
-              <@field type="lookup" label=uiLabelMap.ProductProductId tooltip=uiLabelMap.ProductLeaveEntirePoReceiving value=requestParameters.productId! formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
+              <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value=(requestParameters.purchaseOrderId!) formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
+              <@field type="lookup" label=uiLabelMap.ProductProductId tooltip=uiLabelMap.ProductLeaveEntirePoReceiving value=(requestParameters.productId!) formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
               <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
           </form>
           </@section>

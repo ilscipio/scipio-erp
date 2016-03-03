@@ -75,7 +75,7 @@ under the License.
                   &nbsp;-&nbsp;
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
                     ${creditCard.cardType}
-                    <@maskSensitiveNumber cardNumber=creditCard.cardNumber!/>
+                    <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
                     ${creditCard.expireDate}
                   <#else>
                     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
@@ -103,7 +103,7 @@ under the License.
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
-                    <@maskSensitiveNumber cardNumber=giftCard.cardNumber!/>
+                    <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
                     <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>

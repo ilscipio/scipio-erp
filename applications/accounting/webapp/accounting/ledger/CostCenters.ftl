@@ -43,7 +43,7 @@ under the License.
                     <#list glAccountCategories as glAccountCategory>
                         <@td>
                             <#if (glAcctgAndAmountPercentage[glAccountCategory.glAccountCategoryId!])??>
-                                <@field type="input" id="cc_${glAcctgAndAmountPercentage.glAccountId}_${glAccountCategory.glAccountCategoryId}" size="5" name="amp_${glAccountCategory.glAccountCategoryId!}_o_${glAcctgAndAmountPercentage_index}" value=(glAcctgAndAmountPercentage[glAccountCategory.glAccountCategoryId!])!/>%
+                                <@field type="input" id="cc_${glAcctgAndAmountPercentage.glAccountId}_${glAccountCategory.glAccountCategoryId}" size="5" name="amp_${glAccountCategory.glAccountCategoryId!}_o_${glAcctgAndAmountPercentage_index}" value=((glAcctgAndAmountPercentage[glAccountCategory.glAccountCategoryId!])!)/>%
                             <#else>
                                 <@field type="input" id="cc_${glAcctgAndAmountPercentage.glAccountId}_${glAccountCategory.glAccountCategoryId}" size="5" name="amp_${glAccountCategory.glAccountCategoryId!}_o_${glAcctgAndAmountPercentage_index}" value=""/>%
                             </#if>

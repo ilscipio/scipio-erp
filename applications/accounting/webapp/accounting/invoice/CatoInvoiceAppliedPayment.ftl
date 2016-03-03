@@ -17,8 +17,8 @@
                 <#--<@td>${iApp.invoiceItemSeqId!}</@td>-->
                 <@td>${iApp.productId!}</@td>
                 <@td>${iApp.description!}</@td>
-                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=iApp.amountApplied!/></@td>
-                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=iApp.total!/></@td>
+                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=(iApp.amountApplied!)/></@td>
+                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=invoice.currencyUomId amount=(iApp.total!)/></@td>
             </@tr>
         </#list>        
     </@table>

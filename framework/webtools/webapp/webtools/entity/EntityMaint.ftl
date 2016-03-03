@@ -28,7 +28,7 @@ under the License.
                 <option value="${group}" <#if filterByGroupName??><#if group = filterByGroupName>selected="selected"</#if></#if>>${group}</option>
              </#list>
         </@field>
-        <@field type="input" name= "filterByEntityName" value=parameters.filterByEntityName! label=uiLabelMap.WebtoolsEntityName/>
+        <@field type="input" name= "filterByEntityName" value=(parameters.filterByEntityName!) label=uiLabelMap.WebtoolsEntityName/>
         <@field type="submit" text=uiLabelMap.CommonApply class="+${styles.link_run_sys!} ${styles.action_find!}"/>
        </form>
 </@cell>

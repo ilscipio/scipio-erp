@@ -41,7 +41,7 @@ ${menuWrapper.renderMenuString()}
 </@table>
 
 <#if currentValue?has_content>
-    <@renderTextData content=currentValue textData=textData! />
+    <@renderTextData content=currentValue textData=(textData!) />
 </#if>
 <#--
 <#if textList?has_content>

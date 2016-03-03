@@ -146,10 +146,10 @@ under the License.
                         <fo:block text-align="right"> <#if invoiceItem.quantity??>${invoiceItem.quantity?string.number}</#if> </fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right">
-                        <fo:block> <#if invoiceItem.quantity??><@ofbizCurrency amount=invoiceItem.amount! isoCode=invoice.currencyUomId!/></#if> </fo:block>
+                        <fo:block> <#if invoiceItem.quantity??><@ofbizCurrency amount=(invoiceItem.amount!) isoCode=(invoice.currencyUomId!)/></#if> </fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right">
-                        <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId!/> </fo:block>
+                        <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=(invoice.currencyUomId!)/> </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             <#else>
@@ -165,7 +165,7 @@ under the License.
                         <fo:block text-align="right">${description!}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right" number-columns-spanned="3">
-                        <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId!/> </fo:block>
+                        <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=(invoice.currencyUomId!)/> </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </#if>
@@ -185,7 +185,7 @@ under the License.
               <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCapital}</fo:block>
            </fo:table-cell>
            <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
-              <fo:block><@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId!/></fo:block>
+              <fo:block><@ofbizCurrency amount=invoiceTotal isoCode=(invoice.currencyUomId!)/></fo:block>
            </fo:table-cell>
         </fo:table-row>
         <fo:table-row height="7px">
@@ -202,7 +202,7 @@ under the License.
            </fo:table-cell>
            <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
               <fo:block>
-                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=invoice.currencyUomId!/>
+                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=(invoice.currencyUomId!)/>
               </fo:block>
            </fo:table-cell>
         </fo:table-row>
@@ -241,7 +241,7 @@ under the License.
             <fo:block>${taxRate.description}</fo:block>
         </fo:table-cell>
         <fo:table-cell number-columns-spanned="1" text-align="right">
-            <fo:block font-weight="bold"><@ofbizCurrency amount=vatTaxesByType[vatTaxId] isoCode=invoice.currencyUomId!/></fo:block>
+            <fo:block font-weight="bold"><@ofbizCurrency amount=vatTaxesByType[vatTaxId] isoCode=(invoice.currencyUomId!)/></fo:block>
         </fo:table-cell>
     </fo:table-row>
     </#list>

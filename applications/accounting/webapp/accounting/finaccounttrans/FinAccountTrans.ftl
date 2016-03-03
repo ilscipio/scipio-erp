@@ -228,7 +228,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                                                     <@td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId!}</a></#if></@td>
                                                     <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
                                                     <@td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></@td>
-                                                    <@td><@ofbizCurrency amount=payment.amount!/></@td>
+                                                    <@td><@ofbizCurrency amount=(payment.amount!)/></@td>
                                                     <@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${fromPartyName.partyId!}</a></#if></@td>
                                                     <@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${toPartyName.partyId!}</a></#if></@td>
                                                 </@tr>
@@ -342,8 +342,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                         </@td>
                         <@td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></@td>
                         <@td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></@td>
-                        <@td id="endingBalance"><@ofbizCurrency amount=glReconciliationApprovedGrandTotal!/></@td>
-                        <input type="hidden" id="endingBalanceInput" value="<@ofbizCurrency amount=glReconciliationApprovedGrandTotal!/>"/>
+                        <@td id="endingBalance"><@ofbizCurrency amount=(glReconciliationApprovedGrandTotal!)/></@td>
+                        <input type="hidden" id="endingBalanceInput" value="<@ofbizCurrency amount=(glReconciliationApprovedGrandTotal!)/>"/>
                     </@tr>
                 </@tbody>
             </@table>

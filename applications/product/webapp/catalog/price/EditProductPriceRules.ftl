@@ -40,9 +40,9 @@ under the License.
                 <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                     <@field type="input" size="15" name="ruleName" value=productPriceRule.ruleName />
-                    <@field type="input" size="15" name="description" value=productPriceRule.description! />
-                    <@field type="datetime" name="fromDate" value=productPriceRule.fromDate! size="25" maxlength="30" id="fromDate1" />
-                    <@field type="datetime" name="thruDate" value=productPriceRule.thruDate! size="25" maxlength="30" id="thruDate1" />
+                    <@field type="input" size="15" name="description" value=(productPriceRule.description!) />
+                    <@field type="datetime" name="fromDate" value=(productPriceRule.fromDate!) size="25" maxlength="30" id="fromDate1" />
+                    <@field type="datetime" name="thruDate" value=(productPriceRule.thruDate!) size="25" maxlength="30" id="thruDate1" />
                     &nbsp;&nbsp;
                     <#assign saleRule = productPriceRule.isSale?? && productPriceRule.isSale == "Y">
                     <div>
@@ -109,7 +109,7 @@ under the License.
                                       <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                                     </#list>
                                 </@field>
-                                <@field type="input" size="20" name="condValue" value=productPriceCond.condValue! />
+                                <@field type="input" size="20" name="condValue" value=(productPriceCond.condValue!) />
                                 <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>
@@ -175,7 +175,7 @@ under the License.
                                       <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                                     </#list>
                                 </@field>
-                                <@field type="input" size="8" name="amount" value=productPriceAction.amount! />
+                                <@field type="input" size="8" name="amount" value=(productPriceAction.amount!) />
                                 <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>

@@ -23,7 +23,7 @@ under the License.
         <#-- Cato: don't hardcode these
         <input type="hidden" name="VIEW_SIZE" value="10" />
         <input type="hidden" name="PAGING" value="Y" />-->
-        <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value=requestParameters.SEARCH_STRING! />
+        <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value=(requestParameters.SEARCH_STRING!) />
         
         <#if (0 < otherSearchProdCatalogCategories?size)>
           <@field type="select" label=uiLabelMap.ProductCategoryId name="SEARCH_CATEGORY_ID" size="1">

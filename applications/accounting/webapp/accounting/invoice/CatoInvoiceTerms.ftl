@@ -15,7 +15,7 @@
             <@tr>
                 <@td>${item.termDays!}</@td>
                 <@td>${itemType.get("description",locale)!}</@td>
-                <@td><@ofbizCurrency isoCode=item.uomId amount=item.termvalue!/></@td>
+                <@td><@ofbizCurrency isoCode=item.uomId amount=(item.termvalue!)/></@td>
                 <@td>${item.FormFieldTitle_textData!}</@td>
                 <@td>${item.FormFieldTitle_textValue!}</@td>
             </@tr>

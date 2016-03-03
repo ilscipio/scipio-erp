@@ -55,7 +55,7 @@ under the License.
                   </#if>
             </@field>
             <@field type="generic" label=uiLabelMap.OrderPrice>
-                <@field type="input" size="6" name="basePrice" value=requestParameters.price!/>
+                <@field type="input" size="6" name="basePrice" value=(requestParameters.price!)/>
                 <@field type="checkbox" name="overridePrice" value="Y" label=uiLabelMap.OrderOverridePrice/>
             </@field>
             <@field type="input" label=uiLabelMap.OrderQuantity size="6" name="quantity" value=requestParameters.quantity!"1"/>

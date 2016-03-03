@@ -264,7 +264,7 @@ function submitForm(form, mode, value) {
                         <#else><@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>"</#if> class="${styles.link_nav!}">${uiLabelMap.PartyProfile}</a>.</div>
                       <br />
                       <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                      <@field type="input" size="30" name="order_additional_emails" value=shoppingCart.getOrderAdditionalEmails()!/>
+                      <@field type="input" size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
                     </@td>
                   </@tr>
                 </@table>
@@ -455,21 +455,21 @@ function submitForm(form, mode, value) {
                   <@tr>
                     <@td width="1%">${uiLabelMap.AccountingNumber}</@td>
                     <@td width="50%">
-                      <@field type="input" size="15" name="giftCardNumber" value=(requestParameters.giftCardNumber)! onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@field type="input" size="15" name="giftCardNumber" value=((requestParameters.giftCardNumber)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </@td>
                   </@tr>
                   <#if shoppingCart.isPinRequiredForGC(delegator)>
                   <@tr>
                     <@td width="1%">${uiLabelMap.AccountingPIN}</@td>
                     <@td width="50%">
-                      <@field type="input" type="text" size="10" name="giftCardPin" value=(requestParameters.giftCardPin)! onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@field type="input" type="text" size="10" name="giftCardPin" value=((requestParameters.giftCardPin)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </@td>
                   </@tr>
                   </#if>
                   <@tr>
                     <@td width="1%">${uiLabelMap.AccountingAmount}</@td>
                     <@td width="50%">
-                      <@field type="input" size="6" name="giftCardAmount" value=(requestParameters.giftCardAmount)! onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@field type="input" size="6" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </@td>
                   </@tr>
                 </#if>

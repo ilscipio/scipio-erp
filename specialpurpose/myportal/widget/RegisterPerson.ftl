@@ -23,16 +23,16 @@ under the License.
     <div id="_G0_" class="fieldgroup">
       <div class="fieldgroup-body" id="_G0__body">
         <@field type="textarea" required=true label="Why Would You Like To Register" id="RegisterPerson_whyWouldYouLikeToRegister" rows="5" cols="60" name="whyWouldYouLikeToRegister"></@field>
-        <@field type="input" label="Salutation" autocomplete="off" id="RegisterPerson_salutation" maxlength="60" size="40" name="salutation" value=requestParameters.salutation!/>
-        <@field type="input" label="First name" required=true autocomplete="off" id="RegisterPerson_firstName" maxlength="60" size="40" name="firstName" value=requestParameters.firstName!/>
-        <@field type="input" label="Middle Name" autocomplete="off" id="RegisterPerson_middleName" maxlength="60" size="40" name="middleName" value=requestParameters.middleName!/>
-        <@field type="input" required=true label="Last name" autocomplete="off" id="RegisterPerson_lastName" maxlength="60" size="40" name="lastName" value=requestParameters.lastName!/>
-        <@field type="input" required=true label="Email" autocomplete="off" id="RegisterPerson_USER_EMAIL" maxlength="250" size="60" name="USER_EMAIL" value=requestParameters.USER_EMAIL!/>
+        <@field type="input" label="Salutation" autocomplete="off" id="RegisterPerson_salutation" maxlength="60" size="40" name="salutation" value=(requestParameters.salutation!)/>
+        <@field type="input" label="First name" required=true autocomplete="off" id="RegisterPerson_firstName" maxlength="60" size="40" name="firstName" value=(requestParameters.firstName!)/>
+        <@field type="input" label="Middle Name" autocomplete="off" id="RegisterPerson_middleName" maxlength="60" size="40" name="middleName" value=(requestParameters.middleName!)/>
+        <@field type="input" required=true label="Last name" autocomplete="off" id="RegisterPerson_lastName" maxlength="60" size="40" name="lastName" value=(requestParameters.lastName!)/>
+        <@field type="input" required=true label="Email" autocomplete="off" id="RegisterPerson_USER_EMAIL" maxlength="250" size="60" name="USER_EMAIL" value=(requestParameters.USER_EMAIL!)/>
     
         <@field type="display" label="User Login"></@field>
-        <@field type="input" required=true label="Username" autocomplete="off" id="RegisterPerson_USERNAME" maxlength="250" size="30" name="USERNAME" value=requestParameters.USERNAME!/>
-        <@field type="password" required=true label="Password" id="RegisterPerson_PASSWORD" maxlength="250" size="15" name="PASSWORD"  value=requestParameters.PASSWORD!/>
-        <@field type="password" required=true label="Password (Confirm)" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" value=requestParameters.CONFIRM_PASSWORD!/>
+        <@field type="input" required=true label="Username" autocomplete="off" id="RegisterPerson_USERNAME" maxlength="250" size="30" name="USERNAME" value=(requestParameters.USERNAME!)/>
+        <@field type="password" required=true label="Password" id="RegisterPerson_PASSWORD" maxlength="250" size="15" name="PASSWORD"  value=(requestParameters.PASSWORD!)/>
+        <@field type="password" required=true label="Password (Confirm)" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" value=(requestParameters.CONFIRM_PASSWORD!)/>
                     
         <@field type="generic" label="Verify captcha code">  
             <@field type="display" label="Code Captcha">

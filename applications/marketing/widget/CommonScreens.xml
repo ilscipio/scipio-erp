@@ -118,15 +118,52 @@ under the License.
             <actions>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="title" value="${uiLabelMap.MarketingManagerApplication}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.MarketingManagerApplication}">
-                            <container><label style="p" text="${uiLabelMap.MarketingManagerWelcome}"/></container>
-                        </screenlet>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoMarketingCampaigns"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Widget implementation -->
+    <screen name="CatoMarketingCampaigns">
+        <section>
+            <actions>
+                <set field="marketingCampaignId" from-field="parameters.marketingCampaignId" />
+                <set field="entityName" value="MarketingCampaign" />
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="entityName"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${uiLabelMap.PageTitleListMarketingCampaign}">
+                            <include-form name="ListMarketingCampaign" location="component://marketing/widget/MarketingCampaignForms.xml" />
+                        </screenlet>
+                    </widgets>
+                </section>                        
             </widgets>
         </section>
     </screen>

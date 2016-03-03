@@ -676,7 +676,7 @@ under the License.
                                                     </@tr>
                                                     <#if listingType.type.equals("FixedPriceItem") >
                                                     <@tr>
-                                                        <@td></@td><!-- use when fixed price and store fixed price -->
+                                                        <@td></@td><#-- use when fixed price and store fixed price -->
                                                         <@td><input type="checkbox" value="true" name="enableBestOffer_${id}" /><b>Enable Best Offer</b></@td>
                                                         <@td></@td>
                                                         <@td></@td>

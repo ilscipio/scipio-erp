@@ -48,7 +48,7 @@ under the License.
                     <div>
                       <span><b>${uiLabelMap.ProductNotifySale}</b></span>&nbsp;
                       <@field type="radio" name="isSale" value="Y" checked=saleRule label=uiLabelMap.CommonYes />
-                      <@field type="radio" name="isSale" value="N" checked=!saleRule label=uiLabelMap.CommonNo />
+                      <@field type="radio" name="isSale" value="N" checked=(!saleRule) label=uiLabelMap.CommonNo />
                       &nbsp;&nbsp;
                       <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </div>

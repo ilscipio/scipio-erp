@@ -46,12 +46,12 @@
         <#assign alt_row = false>
         <#list inventoryMapList as inventoryMap>
           <@tr valign="middle" alt=alt_row>
-            <@td valign="top"> ${inventoryMap.productId!}</@td>
-            <@td align="right" valign="top"> ${inventoryMap.timestamp!!}</@td>
-            <@td align="right" valign="top"> ${inventoryMap.statusId!!}</@td>
-            <@td align="center" valign="top"> ${inventoryMap.quantityOnHandTotal!!}</@td>
-            <@td align="center" valign="top"> ${inventoryMap.quantityFromMessage!!}</@td>
-            <@td align="right" valign="top"> ${inventoryMap.quantityDiff!!}</@td>
+            <@td valign="top">${inventoryMap.productId!}</@td>
+            <@td align="right" valign="top">${inventoryMap.timestamp!}</@td>
+            <@td align="right" valign="top">${inventoryMap.statusId!}</@td>
+            <@td align="center" valign="top">${inventoryMap.quantityOnHandTotal!}</@td>
+            <@td align="center" valign="top">${inventoryMap.quantityFromMessage!}</@td>
+            <@td align="right" valign="top">${inventoryMap.quantityDiff!}</@td>
           </@tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>

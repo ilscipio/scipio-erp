@@ -497,7 +497,7 @@ function getConfigDetails() {
                 <#if renderSingleChoiceWithRadioButtons?? && "Y" == renderSingleChoiceWithRadioButtons>
                 <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
-                  <@field type="radio" name="${counter}" value="" checked=!question.isSelected() label="No option" />
+                  <@field type="radio" name="${counter}" value="" checked=(!question.isSelected()) label="No option" />
                 </#if>
                 <#assign optionComment = "">
                 <#assign optionCounter = 0>

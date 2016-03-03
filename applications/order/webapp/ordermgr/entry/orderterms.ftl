@@ -43,7 +43,7 @@ under the License.
                                         <@td align="center">${orderTerm.termValue!}</@td>
                                         <@td align="center">${orderTerm.termDays!}</@td>
                                         <@td nowrap="nowrap">${orderTerm.textValue!}</@td>
-                                        <@td nowrap="nowrap">${orderTerm.description?if_exists}</@td>
+                                        <@td nowrap="nowrap">${orderTerm.description!}</@td>
                                         <@td align="right">
                                             <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                                             <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
@@ -72,8 +72,8 @@ under the License.
                                     </@field>
                                     <@field type="input" label=uiLabelMap.OrderOrderTermValue size="30" maxlength="60" name="termValue" value=termValue! />
                                     <@field type="input" label=uiLabelMap.OrderOrderTermDays size="30" maxlength="60" name="termDays" value=termDays! />
-                                    <@field type="input" label=uiLabelMap.OrderOrderTextValue size="30" maxlength="60" name="textValue" value=textValue?if_exists />
-                                    <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="255" name="description" value=description?if_exists />
+                                    <@field type="input" label=uiLabelMap.OrderOrderTextValue size="30" maxlength="60" name="textValue" value=textValue! />
+                                    <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="255" name="description" value=description! />
                                     <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd />
                             </form>
                         </#if>

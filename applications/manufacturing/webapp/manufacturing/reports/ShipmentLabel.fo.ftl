@@ -44,17 +44,17 @@ under the License.
                                     </fo:table-row>
                                     <fo:table-row>
                                         <fo:table-cell padding="2pt">
-                                            <fo:block font-size="18pt">${record.get("shippingAddressName")?if_exists}</fo:block>
+                                            <fo:block font-size="18pt">${record.get("shippingAddressName")!}</fo:block>
                                         </fo:table-cell>
                                     </fo:table-row>
                                     <fo:table-row>
                                         <fo:table-cell padding="2pt">
-                                            <fo:block>${record.get("shippingAddressAddress")?if_exists}</fo:block>
+                                            <fo:block>${record.get("shippingAddressAddress")!}</fo:block>
                                         </fo:table-cell>
                                     </fo:table-row>
                                     <fo:table-row>
                                         <fo:table-cell padding="2pt">
-                                            <fo:block>${record.get("shippingAddressCity")?if_exists}</fo:block>
+                                            <fo:block>${record.get("shippingAddressCity")!}</fo:block>
                                         </fo:table-cell>
                                     </fo:table-row>
                                 </fo:table-body>
@@ -92,22 +92,22 @@ under the License.
                                 <fo:table-row>
                                     <fo:table-cell padding="2pt">
                                         <fo:block>
-                                            ${record.get("orderId")?if_exists} ${record.get("orderItemSeqId")?if_exists}
+                                            ${record.get("orderId")!} ${record.get("orderItemSeqId")!}
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
                                         <fo:block>
-                                            ${record.get("productId")?if_exists}
+                                            ${record.get("productId")!}
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
                                         <fo:block>
-                                            ${record.get("productName")?if_exists}
+                                            ${record.get("productName")!}
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
                                         <fo:block text-align="right">
-                                            ${record.get("quantity")?if_exists}
+                                            ${record.get("quantity")!}
                                         </fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
@@ -138,17 +138,17 @@ under the License.
                             <fo:table-row>
                                 <fo:table-cell padding="2pt">
                                     <fo:block>
-                                        ${shipmentIdPar?if_exists}/${shipmentPackageSeqId?if_exists}
+                                        ${shipmentIdPar!}/${shipmentPackageSeqId!}
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt">
                                     <fo:block>
-                                        ${shipmentIdPar?if_exists}
+                                        ${shipmentIdPar!}
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt">
                                     <fo:block>
-                                        <#if shipDate?has_content>${shipDate?if_exists}</#if>
+                                        <#if shipDate?has_content>${shipDate!}</#if>
                                     </fo:block>
                                 </fo:table-cell>
                             </fo:table-row>

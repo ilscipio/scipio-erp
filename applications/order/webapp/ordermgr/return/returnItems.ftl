@@ -174,7 +174,7 @@ under the License.
                     <#if readOnly>
                         ${item.returnQuantity?string.number}
                     <#else>
-                        <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity?if_exists}" type="text" size="8" align="right" />
+                        <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity!}" type="text" size="8" align="right" />
                     </#if>
                     <#if item.receivedQuantity??>
                     <br />${uiLabelMap.OrderTotalQuantityReceive}: ${item.receivedQuantity}
@@ -187,7 +187,7 @@ under the License.
                     <#if readOnly>
                         <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
                     <#else>
-                        <input name="returnPrice_o_${rowCount}" value="${item.returnPrice?if_exists}" type="text" size="8" align="right" />
+                        <input name="returnPrice_o_${rowCount}" value="${item.returnPrice!}" type="text" size="8" align="right" />
                     </#if>
                     </@td>
                 <@td>

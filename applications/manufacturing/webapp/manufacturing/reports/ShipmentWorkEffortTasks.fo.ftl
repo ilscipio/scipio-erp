@@ -77,25 +77,25 @@ under the License.
                             <#list records as record>
                                 <fo:table-row>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block>${record.get("workEffortId")?if_exists}</fo:block>
+                                        <fo:block>${record.get("workEffortId")!}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block><#if estimatedReadyDatePar?has_content>${record.get("fixedAssetId")?if_exists}</#if></fo:block>
+                                        <fo:block><#if estimatedReadyDatePar?has_content>${record.get("fixedAssetId")!}</#if></fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block>${record.get("productId")?if_exists}</fo:block>
+                                        <fo:block>${record.get("productId")!}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block>${record.get("productName")?if_exists}</fo:block>
+                                        <fo:block>${record.get("productName")!}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block>${record.get("taskName")} ${record.get("taskDescription")?if_exists}</fo:block>
+                                        <fo:block>${record.get("taskName")} ${record.get("taskDescription")!}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt" text-align="right">
-                                        <fo:block>${record.get("taskEstimatedTime")?if_exists}</fo:block>
+                                        <fo:block>${record.get("taskEstimatedTime")!}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt" text-align="right">
-                                        <fo:block>${record.get("taskEstimatedSetup")?if_exists}</fo:block>
+                                        <fo:block>${record.get("taskEstimatedSetup")!}</fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
                             </#list>
@@ -106,7 +106,7 @@ under the License.
                         <fo:table-body>
                             <fo:table-row>
                                 <fo:table-cell padding="2pt" text-align="right">
-                                    <fo:block>${fixedAssetTime?if_exists}</fo:block>
+                                    <fo:block>${fixedAssetTime!}</fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
                         </fo:table-body>

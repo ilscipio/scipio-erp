@@ -159,7 +159,7 @@ under the License.
                 <#if postalAddress?has_content>
                      ${setContextField("postalAddress", postalAddress)}
                      ${screens.render("component://party/widget/partymgr/PartyScreens.xml#postalAddressHtmlFormatter")}
-                  <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=postalContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=postalAddress! />
+                  <@updateOrderContactMech orderHeader=orderHeader!"" contactMechTypeId=contactMech.contactMechTypeId contactMechList=postalContactMechList!"" contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId!"" contactMechAddress=postalAddress!"" />
                 </#if>
               <#elseif contactMech.contactMechTypeId == "TELECOM_NUMBER">
                 <#assign telecomNumber = orderContactMechValueMap.telecomNumber>
@@ -170,9 +170,9 @@ under the License.
                     <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                    <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                   </#if>
-                <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=telecomContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=telecomNumber! />
+                <@updateOrderContactMech orderHeader=orderHeader!"" contactMechTypeId=contactMech.contactMechTypeId contactMechList=telecomContactMechList!"" contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId!"" contactMechAddress=telecomNumber!"" />
               <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
-                ${contactMech.infoString} <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=emailContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=contactMech! />
+                ${contactMech.infoString} <@updateOrderContactMech orderHeader=orderHeader!"" contactMechTypeId=contactMech.contactMechTypeId contactMechList=emailContactMechList!"" contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId!"" contactMechAddress=contactMech!"" />
                   
                   <#-- ToDo: Validate usefulness
                       <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>

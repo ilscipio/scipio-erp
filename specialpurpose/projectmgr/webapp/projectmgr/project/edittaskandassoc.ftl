@@ -56,7 +56,7 @@ under the License.
           <@field type="input" required=true name="workEffortName" label=uiLabelMap.CommonName value=""/>
         </#if>
         <#if task??>
-          <@field type="input" name="description" label=uiLabelMap.CommonDescription value=task.description!/>
+          <@field type="input" name="description" label=uiLabelMap.CommonDescription value=task.description!""/>
         <#else>
           <@field type="input" name="description" label=uiLabelMap.CommonDescription value=""/>
         </#if>
@@ -126,22 +126,22 @@ under the License.
           </#if>
         </@field>
         <#if task??>
-          <@field type="datetime" name="estimatedStartDate" label=uiLabelMap.WorkEffortEstimatedStartDate value=task.estimatedStartDate! size="25" maxlength="30" id="estimatedStartDate1" />
+          <@field type="datetime" name="estimatedStartDate" label=uiLabelMap.WorkEffortEstimatedStartDate value=task.estimatedStartDate!"" size="25" maxlength="30" id="estimatedStartDate1" />
         <#else>
           <@field type="datetime" name="estimatedStartDate" label=uiLabelMap.WorkEffortEstimatedStartDate value="" size="25" maxlength="30" id="estimatedStartDate1" />
         </#if>
          <#if task??>
-           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value=task.estimatedCompletionDate! size="25" maxlength="30" id="estimatedCompletionDate1" />
+           <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value=task.estimatedCompletionDate!"" size="25" maxlength="30" id="estimatedCompletionDate1" />
          <#else>
            <@field type="datetime" name="estimatedCompletionDate" label=uiLabelMap.WorkEffortEstimatedCompletionDate value="" size="25" maxlength="30" id="estimatedCompletionDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value=task.actualStartDate! size="25" maxlength="30" id="actualStartDate1" />
+           <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value=task.actualStartDate!"" size="25" maxlength="30" id="actualStartDate1" />
          <#else>
            <@field type="datetime" name="actualStartDate" label=uiLabelMap.FormFieldTitle_actualStartDate value="" size="25" maxlength="30" id="actualStartDate1" />
          </#if>
          <#if task??>
-           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value=task.actualCompletionDate! size="25" maxlength="30" id="actualCompletionDate2" />
+           <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value=task.actualCompletionDate!"" size="25" maxlength="30" id="actualCompletionDate2" />
          <#else>
            <@field type="datetime" name="actualCompletionDate" label=uiLabelMap.FormFieldTitle_actualCompletionDate value="" size="25" maxlength="30" id="actualCompletionDate2" />
          </#if>

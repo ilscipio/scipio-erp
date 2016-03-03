@@ -56,7 +56,7 @@ under the License.
                             <input type="hidden" name="productFeatureGroupId" value="${(productFeatureCatGrpAppl.productFeatureGroupId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCatGrpAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@field type="datetime" name="thruDate" value=(productFeatureCatGrpAppl.thruDate)! class=class!'' size="22" maxlength="25" id="fromDate1" />
+                            <@field type="datetime" name="thruDate" value=(productFeatureCatGrpAppl.thruDate)!"" class=class!'' size="22" maxlength="25" id="fromDate1" />
                             <@field type="submit" value=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
                     </@td>
@@ -125,7 +125,7 @@ under the License.
                             <input type="hidden" name="productFeatureCategoryId" value="${(productFeatureCategoryAppl.productFeatureCategoryId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCategoryAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
-                            <@field type="datetime" name="thruDate" value=(productFeatureCategoryAppl.thruDate)! class=class!'' size="25" maxlength="30" id="thruDate2" />
+                            <@field type="datetime" name="thruDate" value=(productFeatureCategoryAppl.thruDate)!"" class=class!'' size="25" maxlength="30" id="thruDate2" />
                             <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
                     </@td>

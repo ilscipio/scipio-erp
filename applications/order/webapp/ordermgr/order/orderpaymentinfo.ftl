@@ -85,7 +85,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                [${partyId}]
              </#if>
              </@td>
-             <@td><@ofbizCurrency amount=payment.amount! isoCode=currencyUomId! /></@td>
+             <@td><@ofbizCurrency amount=payment.amount!"" isoCode=currencyUomId!"" /></@td>
              <@td>${statusItem.description}</@td>
            </@tr>
          </#list>
@@ -333,7 +333,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               <br />
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
                                 ${creditCard.cardType}
-                                <@maskSensitiveNumber cardNumber=creditCard.cardNumber!/>
+                                <@maskSensitiveNumber cardNumber=creditCard.cardNumber!""/>
                                 ${creditCard.expireDate}
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
@@ -451,7 +451,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                 ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
-                              <@maskSensitiveNumber cardNumber=giftCard.cardNumber!/>
+                              <@maskSensitiveNumber cardNumber=giftCard.cardNumber!""/>
                               <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
@@ -565,7 +565,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
                                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=creditCard.cardNumber!/> ${creditCard.expireDate!}
+                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=creditCard.cardNumber!""/> ${creditCard.expireDate!}
                                                <#else>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                                </#if>

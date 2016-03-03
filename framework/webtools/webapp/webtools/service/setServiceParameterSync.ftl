@@ -26,7 +26,7 @@ under the License.
   <@fields fieldArgs={"columns":8}>
     <#list serviceParameters as serviceParameter>
       <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if serviceParameter.defaultValue?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${serviceParameter.defaultValue?string}</em>)</#if></#assign>
-      <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value=serviceParameter.value! required=(serviceParameter.optional == "N")/>
+      <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value=serviceParameter.value!"" required=(serviceParameter.optional == "N")/>
     </#list>
   </@fields>
 

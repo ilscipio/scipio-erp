@@ -39,7 +39,7 @@ function lookupShipments() {
 <@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
-              <@field type="input" label=uiLabelMap.ProductShipmentId name="shipmentId" value=shipmentId! />
+              <@field type="input" label=uiLabelMap.ProductShipmentId name="shipmentId" value=shipmentId!"" />
               <@field type="select" label=uiLabelMap.ProductShipmentType name="shipmentTypeId">
                     <#if currentShipmentType?has_content>
                     <option value="${currentShipmentType.shipmentTypeId}">${currentShipmentType.get("description",locale)}</option>
@@ -94,8 +94,8 @@ function lookupShipments() {
               </@field>
 
               <@field type="generic" label=uiLabelMap.ProductDateFilter>
-                  <@field type="datetime" label=uiLabelMap.CommonFrom name="minDate" value=requestParameters.minDate! size="25" maxlength="30" id="minDate1"/>
-                  <@field type="datetime" label=uiLabelMap.CommonThru name="maxDate" value=requestParameters.maxDate! size="25" maxlength="30" id="maxDate1"/>
+                  <@field type="datetime" label=uiLabelMap.CommonFrom name="minDate" value=requestParameters.minDate!"" size="25" maxlength="30" id="minDate1"/>
+                  <@field type="datetime" label=uiLabelMap.CommonThru name="maxDate" value=requestParameters.maxDate!"" size="25" maxlength="30" id="maxDate1"/>
               </@field>
               
               <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ProductFindShipment />

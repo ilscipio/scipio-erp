@@ -83,7 +83,7 @@
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyBirthDate!}
               </@td>
-              <@td colspan="3"><@formattedDate date=lookupParty.birthDate! /><#if lookupParty.deceasedDate?has_content> - <@formattedDate date=lookupParty.deceasedDate! /></#if></@td>
+              <@td colspan="3"><@formattedDate date=lookupParty.birthDate!"" /><#if lookupParty.deceasedDate?has_content> - <@formattedDate date=lookupParty.deceasedDate!"" /></#if></@td>
             </@tr>    
         </#if>
 

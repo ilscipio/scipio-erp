@@ -168,7 +168,7 @@ function setWeight(weight) {
       <input type="hidden" name="facilityId" value="${facilityId!}" />
       <input type="hidden" name="originFacilityId" value="${facilityId!}" />
       <input type="hidden" name="setPackedOnly" value="Y" />
-        <@field type="input" label=uiLabelMap.ProductOrderNumber name="orderId" size="20" maxlength="20" value=requestParameters.orderId! />
+        <@field type="input" label=uiLabelMap.ProductOrderNumber name="orderId" size="20" maxlength="20" value=requestParameters.orderId!"" />
         <@field type="submitarea">
             <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
             <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductShipOrder />

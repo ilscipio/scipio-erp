@@ -87,7 +87,7 @@ function insertImageName(type,nameValue) {
         </@row>
         <@row>
             <@cell columns=6>
-              <@field type="input" label=uiLabelMap.CommonName value=(productCategory.categoryName)! name="categoryName" size="60" maxlength="60"/>
+              <@field type="input" label=uiLabelMap.CommonName value=(productCategory.categoryName)!"" name="categoryName" size="60" maxlength="60"/>
             </@cell>
             <@cell columns=6>
               <@field type="lookup" label=uiLabelMap.CommonParent value=(productCategory.primaryParentCategoryId)?default('') formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
@@ -106,7 +106,7 @@ function insertImageName(type,nameValue) {
                 </#if>
             </#assign>
               <@field type="generic" label=uiLabelMap.ProductCategoryImageUrl labelDetail=labelDetail>
-                <@field type="input" name="categoryImageUrl" value=(productCategory.categoryImageUrl)! size="60" maxlength="255"/>
+                <@field type="input" name="categoryImageUrl" value=(productCategory.categoryImageUrl)!"" size="60" maxlength="255"/>
                 <#if productCategory?has_content>
                     <div>
                     ${uiLabelMap.ProductInsertDefaultImageUrl}:
@@ -124,7 +124,7 @@ function insertImageName(type,nameValue) {
                 </#if>
             </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkOneImageUrl" value=(productCategory.linkOneImageUrl)! size="60" maxlength="255"/>
+                <@field type="input" name="linkOneImageUrl" value=(productCategory.linkOneImageUrl)!"" size="60" maxlength="255"/>
                 <#if productCategory?has_content>
                     <div>
                         ${uiLabelMap.ProductInsertDefaultImageUrl}:
@@ -144,7 +144,7 @@ function insertImageName(type,nameValue) {
                 </#if>
             </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkTwoImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkTwoImageUrl" value=(productCategory.linkTwoImageUrl)! size="60" maxlength="255"/>
+                <@field type="input" name="linkTwoImageUrl" value=(productCategory.linkTwoImageUrl)!"" size="60" maxlength="255"/>
                 <#if productCategory?has_content>
                     <div>
                         ${uiLabelMap.ProductInsertDefaultImageUrl}:

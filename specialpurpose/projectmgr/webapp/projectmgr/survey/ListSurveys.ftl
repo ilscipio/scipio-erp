@@ -43,7 +43,7 @@ under the License.
                   <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></@td>
                   <@td>${workEffortSurveyAppl.fromDate!}</@td>
                   <@td>
-                    <@field type="datetime" name="thruDate" value=(workEffortSurveyAppl.thruDate)! size="25" maxlength="30" id="thruDate1" />
+                    <@field type="datetime" name="thruDate" value=(workEffortSurveyAppl.thruDate)!"" size="25" maxlength="30" id="thruDate1" />
                   </@td>
                   <@td><a href="<@ofbizUrl>testWorkEffortSurvey?productStoreSurveyId=${productStoreSurveyAppl.productStoreSurveyId!}&amp;workEffortId=${workEffortSurveyAppl.workEffortId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.EcommerceTakeSurvey}</a></@td>
                   <#if !isReadable??>

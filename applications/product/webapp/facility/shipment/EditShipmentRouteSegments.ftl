@@ -197,7 +197,7 @@ under the License.
                                     <option${(shipmentRouteSegment.homeDeliveryType?default("")=="EVENING")?string(" selected=\"selected\"","")} value="EVENING">${uiLabelMap.ProductShipmentFedexHomeEvening}</option>
                                     <option${(shipmentRouteSegment.homeDeliveryType?default("")=="APPOINTMENT")?string(" selected=\"selected\"","")} value="APPOINTMENT">${uiLabelMap.ProductShipmentFedexHomeAppointment}</option>
                                 </select>
-                                <@field type="datetime" name="homeDeliveryDate" value=(shipmentRouteSegment.homeDeliveryDate.toString())! size="25" maxlength="30" id="homeDeliveryDate1" />
+                                <@field type="datetime" name="homeDeliveryDate" value=(shipmentRouteSegment.homeDeliveryDate.toString())!"" size="25" maxlength="30" id="homeDeliveryDate1" />
                             </#if>
                         <#else>
                             <#-- Todo: implement closeout with Fedex -->
@@ -225,11 +225,11 @@ under the License.
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value="${shipmentRouteSegment.trackingIdNumber!}"/>
                     <br />
-                    <@field type="datetime" name="estimatedStartDate" value=(shipmentRouteSegment.estimatedStartDate.toString())! size="25" maxlength="30" id="estimatedStartDate1" />
-                    <@field type="datetime" name="estimatedArrivalDate" value=(shipmentRouteSegment.estimatedArrivalDate.toString())! size="25" maxlength="30" id="estimatedArrivalDate1" />
+                    <@field type="datetime" name="estimatedStartDate" value=(shipmentRouteSegment.estimatedStartDate.toString())!"" size="25" maxlength="30" id="estimatedStartDate1" />
+                    <@field type="datetime" name="estimatedArrivalDate" value=(shipmentRouteSegment.estimatedArrivalDate.toString())!"" size="25" maxlength="30" id="estimatedArrivalDate1" />
                     <br />
-                    <@field type="datetime" name="actualStartDate" value=(shipmentRouteSegment.actualStartDate.toString())! size="25" maxlength="30" id="actualStartDate2" />
-                    <@field type="datetime" name="actualArrivalDate" value=(shipmentRouteSegment.actualArrivalDate.toString())! size="25" maxlength="30" id="actualArrivalDate2" />
+                    <@field type="datetime" name="actualStartDate" value=(shipmentRouteSegment.actualStartDate.toString())!"" size="25" maxlength="30" id="actualStartDate2" />
+                    <@field type="datetime" name="actualArrivalDate" value=(shipmentRouteSegment.actualArrivalDate.toString())!"" size="25" maxlength="30" id="actualArrivalDate2" />
             </@td>
             <@td valign="top">
                 <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight!}"/>

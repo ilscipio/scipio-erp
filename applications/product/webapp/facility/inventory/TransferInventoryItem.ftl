@@ -96,23 +96,23 @@ under the License.
             </#list>
         </@field>
         <@field type="generic" label=uiLabelMap.ProductTransferSendDate>
-            <@field type="input" name="sendDate" value=(inventoryTransfer.sendDate)! size="22" />
+            <@field type="input" name="sendDate" value=(inventoryTransfer.sendDate)!"" size="22" />
             <a href="#" onclick="javascript:setNow('sendDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
         </@field>
         <#if !(inventoryTransfer??)>
             <@field type="generic" label=uiLabelMap.ProductToFacilityContainer>
-                <@field type="select" name="facilityIdTo" tooltip=uiLabelMap.ProductSelectFacility!>
+                <@field type="select" name="facilityIdTo" tooltip=uiLabelMap.ProductSelectFacility>
                     <#list facilities as nextFacility>
                     <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
                     </#list>
                 </@field>
-                <@field type="input" name="containerIdTo" value=(inventoryTransfer.containerIdTo)! size="20" maxlength="20" tooltip=uiLabelMap.ProductOrEnterContainerId!/>
+                <@field type="input" name="containerIdTo" value=(inventoryTransfer.containerIdTo)!"" size="20" maxlength="20" tooltip=uiLabelMap.ProductOrEnterContainerId!""/>
             </@field>
-            <@field type="lookup" label=uiLabelMap.ProductToLocation value=(inventoryTransfer.locationSeqIdTo)! formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
+            <@field type="lookup" label=uiLabelMap.ProductToLocation value=(inventoryTransfer.locationSeqIdTo)!"" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
             <@field type="input" label=uiLabelMap.ProductComments name="comments" size="60" maxlength="250" />
             <@field type="generic" label=uiLabelMap.ProductQuantityToTransfer>
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                    <@field type="input" size="5" name="xferQty" value=(inventoryItem.availableToPromiseTotal)! />
+                    <@field type="input" size="5" name="xferQty" value=(inventoryItem.availableToPromiseTotal)!"" />
                 <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                     <input type="hidden" name="xferQty" value="1" />
                     1
@@ -122,15 +122,15 @@ under the License.
             </@field>
         <#else>
             <@field type="generic" label=uiLabelMap.ProductTransferReceiveDate>
-                <@field type="input" name="receiveDate" value=(inventoryTransfer.receiveDate)! size="22" />
+                <@field type="input" name="receiveDate" value=(inventoryTransfer.receiveDate)!"" size="22" />
                 <a href="#" onclick="javascript:setNow('receiveDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
             </@field>
             <@field type="display" label=uiLabelMap.ProductToFacilityContainer>
                 <#assign fac = delegator.findOne("Facility", {"facilityId":inventoryTransfer.facilityIdTo}, false)> 
                 ${(fac.facilityName)!}
             </@field>
-            <@field type="lookup" label=uiLabelMap.ProductToLocation value=(inventoryTransfer.locationSeqIdTo)! formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
-            <@field type="input" label=uiLabelMap.ProductComments name="comments" value=(inventoryTransfer.comments)! size="60" maxlength="250" />
+            <@field type="lookup" label=uiLabelMap.ProductToLocation value=(inventoryTransfer.locationSeqIdTo)!"" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
+            <@field type="input" label=uiLabelMap.ProductComments name="comments" value=(inventoryTransfer.comments)!"" size="60" maxlength="250" />
         </#if>
         <#if !(inventoryTransfer??)>
             <@field type="submit" text=uiLabelMap.ProductTransfer class="+${styles.link_run_sys!} ${styles.action_transfer!}" />

@@ -99,7 +99,7 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-                                    <@ofbizCurrency amount=payment.amount! isoCode=payment.currencyUomId!/>
+                                    <@ofbizCurrency amount=payment.amount!"" isoCode=payment.currencyUomId!""/>
                                     <#assign totalAmount = totalAmount + payment.amount!/>
                                     <#assign currencyUomId = payment.currencyUomId!/>
                                 </fo:block>
@@ -115,7 +115,7 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="4pt" background-color="#D4D0C8">
                             <fo:block text-align="right">
-                                <@ofbizCurrency amount=totalAmount! isoCode=currencyUomId!/>
+                                <@ofbizCurrency amount=totalAmount!"" isoCode=currencyUomId!""/>
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>

@@ -40,7 +40,7 @@ under the License.
                             <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
                         </#list>
                     </@field>
-                    <@field type="checkbox" name="pftsel_${productFeatureTypeId}" label=uiLabelMap.ProductSelectable!/>
+                    <@field type="checkbox" name="pftsel_${productFeatureTypeId}" label=uiLabelMap.ProductSelectable!""/>
                 </@field>
             </#list>
                 <@field type="input" label=uiLabelMap.ProductInternalName name="internalName" size="30" maxlength="60"/>

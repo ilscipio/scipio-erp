@@ -55,7 +55,7 @@ function lookupBom() {
             </@field>
         </@cell>
         <@cell columns=6>
-            <@field type="lookup" label=uiLabelMap.ProductProductId value=productId! formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
+            <@field type="lookup" label=uiLabelMap.ProductProductId value=productId!"" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.ManufacturingShowBOMAssocs />
         </@cell>
     </@row>
@@ -97,8 +97,8 @@ function lookupBom() {
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
           </@field>
-          <@field type="lookup" label=uiLabelMap.ProductProductId value=productId! formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
-          <@field type="lookup" label=uiLabelMap.ManufacturingProductIdTo value=productIdTo! formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
+          <@field type="lookup" label=uiLabelMap.ProductProductId value=productId!"" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
+          <@field type="lookup" label=uiLabelMap.ManufacturingProductIdTo value=productIdTo!"" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
           <@field type="datetime" label=uiLabelMap.CommonFromDate tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
     <#else>
           <@field type="display" label=uiLabelMap.ProductProductId>${productId!}</@field>

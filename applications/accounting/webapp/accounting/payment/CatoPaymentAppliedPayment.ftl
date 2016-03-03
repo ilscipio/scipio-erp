@@ -21,7 +21,7 @@
                     <#else>
                         <@td></@td>
                 </#if>
-                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=payment.currencyUomId amount=iApp.amountApplied!/></@td>
+                <@td class="${styles.text_right!}"><@ofbizCurrency isoCode=payment.currencyUomId amount=iApp.amountApplied!""/></@td>
             </@tr>
         </#list>        
     </@table>

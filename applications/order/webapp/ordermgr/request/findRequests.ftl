@@ -26,8 +26,8 @@ under the License.
       <@field type="input" label=uiLabelMap.OrderOrderId name="orderId"/>
 
       <@field type="generic" label=uiLabelMap.CommonDateFilter>
-          <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonFrom name="minDate" value=requestParameters.minDate! size="25" maxlength="30" id="minDate1" collapse=true/>
-          <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonThru name="maxDate" value=requestParameters.maxDate! size="25" maxlength="30" id="maxDate" collapse=true/>
+          <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonFrom name="minDate" value=requestParameters.minDate!"" size="25" maxlength="30" id="minDate1" collapse=true/>
+          <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonThru name="maxDate" value=requestParameters.maxDate!"" size="25" maxlength="30" id="maxDate" collapse=true/>
       </@field>
       
         <@fieldset title=uiLabelMap.CommonAdvancedSearch collapsed=true>

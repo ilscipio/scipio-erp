@@ -31,7 +31,7 @@ under the License.
 
 <@section title=uiLabelMap.PageTitleEditCategoryProducts menuContent=menuContent>
       <#if (listSize > 0)>
-        <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
+        <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
             <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
               <@fields type="default-manual">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
@@ -69,9 +69,9 @@ under the License.
                         <input type="hidden" name="productCategoryId${suffix}" value="${(productCategoryMember.productCategoryId)!}" />
                         <input type="hidden" name="fromDate${suffix}" value="${(productCategoryMember.fromDate)!}" />
                         <#if hasExpired><#assign class="alert"></#if>
-                        <@field type="datetime" name="thruDate${suffix}" class=class!'' value=(productCategoryMember.thruDate)! size="25" maxlength="30" id="thruDate${suffix}" />
-                        <@field type="input" size="5" name="sequenceNum${suffix}" value=(productCategoryMember.sequenceNum)! />
-                        <@field type="input" size="5" name="quantity${suffix}" value=(productCategoryMember.quantity)! />
+                        <@field type="datetime" name="thruDate${suffix}" class=class!'' value=(productCategoryMember.thruDate)!"" size="25" maxlength="30" id="thruDate${suffix}" />
+                        <@field type="input" size="5" name="sequenceNum${suffix}" value=(productCategoryMember.sequenceNum)!"" />
+                        <@field type="input" size="5" name="quantity${suffix}" value=(productCategoryMember.quantity)!"" />
                         <br />
                         <@field type="textarea" name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</@field>
                     </@td>

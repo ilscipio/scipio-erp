@@ -53,7 +53,7 @@
             <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonAmount}</@td>
                 <@td colspan="3">
-                    <@ofbizCurrency isoCode=payment.currencyUomId amount=finAccountTrans.amount!/>    
+                    <@ofbizCurrency isoCode=payment.currencyUomId amount=finAccountTrans.amount!""/>    
                 </@td>
             </@tr>
         </#if>

@@ -1010,7 +1010,7 @@
         <field name="promoName"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="sequenceNum"><text/></field>
+        <field name="sequenceNum"><hidden/></field>
         <field name="manualOnly">
             <drop-down allow-empty="true">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>

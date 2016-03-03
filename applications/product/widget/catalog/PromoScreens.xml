@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductPromos"/>
                 <set field="activeMainMenuItem" value="promos" global="true"/>
-                <set field="activeSubMenuItem" value="EditProductPromo" global="true"/>
+                <set field="activeSubMenuItem" value="FindProductPromo" global="true"/>
 
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <entity-condition entity-name="ProductPromo" list="productPromos">
@@ -65,9 +65,11 @@ under the License.
                 <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromo"/>
                 <set field="labelTitleProperty" value="ProductPromotion"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
+                <set field="title" value="${uiLabelMap.ProductPromotion}: ${productPromoId}  ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
@@ -213,33 +215,22 @@ under the License.
                                 <parameter param-name="productPromoId"/>
                             </link>
                         </container>
+                        
                         <section>
                             <condition>
-                                <if-compare field="manualOnly" operator="equals" value="Y"/>
+                                <not>
+                                    <if-empty field="productPromoCodes"/>
+                                </not>
                             </condition>
                             <widgets>
-                                <container>
-                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManualImported}" style="${styles.link_run_sys} ${styles.action_find}">
-                                        <parameter param-name="manualOnly" value="N"/>
-                                        <parameter param-name="productPromoId"/>
-                                    </link>
-                                </container>
+                                <screenlet title="${uiLabelMap.PageTitleFindProductPromotionCode}">
+                                    <include-form name="ListProductPromoCodes" location="component://product/widget/catalog/PromoForms.xml"/>
+                                </screenlet>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
+                                </platform-specific>
                             </widgets>
-                            <fail-widgets>
-                                <container>
-                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManual}" style="${styles.link_run_sys} ${styles.action_find}">
-                                        <parameter param-name="manualOnly" value="Y"/>
-                                        <parameter param-name="productPromoId"/>
-                                    </link>
-                                </container>
-                            </fail-widgets>
                         </section>
-                        <screenlet title="${uiLabelMap.PageTitleFindProductPromotionCode}">
-                            <include-form name="ListProductPromoCodes" location="component://product/widget/catalog/PromoForms.xml"/>
-                        </screenlet>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
-                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

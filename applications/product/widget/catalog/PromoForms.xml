@@ -102,7 +102,7 @@ under the License.
         </field>
     </form>
 
-    <form name="ListProductPromoCodes" type="list" title="" list-name="productPromoCodes"
+    <form name="ListProductPromoCodes" type="list" list-name="productPromoCodes"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductPromoCode" default-field-type="display"/>
         <field name="productPromoId"><hidden/></field>

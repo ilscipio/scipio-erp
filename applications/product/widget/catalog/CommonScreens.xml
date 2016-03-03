@@ -299,13 +299,10 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="productPromoId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="PromoTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <!--
                                         <container style="button-bar">
                                             <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>-->
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
-                                    </widgets>
+                                        </container>-->                                    </widgets>
                                 </section>
 
                                 <decorator-section-include name="body"/>

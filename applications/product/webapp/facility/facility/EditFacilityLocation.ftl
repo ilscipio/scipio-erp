@@ -45,10 +45,10 @@ under the License.
 <#if facilityId?? || facilityLocation??>
 
 <#if facilityLocation??>
-    <@field type="generic" label="${uiLabelMap.ProductFacilityId}">
+    <@field type="display" label="${uiLabelMap.ProductFacilityId}">
         ${facilityId!}
     </@field>
-    <@field type="generic" label="${uiLabelMap.ProductLocationSeqId}">
+    <@field type="display" label="${uiLabelMap.ProductLocationSeqId}">
         ${locationSeqId}
     </@field>
 </#if>

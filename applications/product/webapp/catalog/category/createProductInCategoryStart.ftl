@@ -34,29 +34,29 @@ under the License.
                 <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
                 <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
                 <@field type="generic" label="${productFeatureType.description}">
-                    <select name="pft_${productFeatureTypeId}">
+                    <@field type="select" name="pft_${productFeatureTypeId}">
                         <option value="">- ${uiLabelMap.CommonNone} -</option>
                         <#list productFeatures as productFeature>
                             <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
                         </#list>
-                    </select>
-                    <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
+                    </@field>
+                    <@field type="checkbox" name="pftsel_${productFeatureTypeId}" label=uiLabelMap.ProductSelectable!/>
                 </@field>
             </#list>
                 <@field type="input" label="${uiLabelMap.ProductInternalName}" name="internalName" size="30" maxlength="60"/>
                 <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" size="30" maxlength="60"/>
                 <@field type="input" label="${uiLabelMap.ProductShortDescription}" name="description" size="60" maxlength="250"/>
                 <@field type="generic" label="${uiLabelMap.ProductDefaultPrice}">
-                    <input type="text" name="defaultPrice" size="8"/>
+                    <@field type="input" name="defaultPrice" size="8"/>
                     <#assign findCurrenciesMap = {"uomTypeId":"CURRENCY_MEASURE"}>
                     <#assign currencies = delegator.findByAnd('Uom', findCurrenciesMap, null, true) />
                     <#if currencies?has_content && (currencies?size > 0)>
-                        <select name="currencyUomId">
+                        <@field type="select" name="currencyUomId">
                             <option value=""></option>
                             <#list currencies as currency>
                                 <option value="${currency.uomId}">${currency.get("description",locale)} [${currency.uomId}]</option>
                             </#list>
-                        </select>
+                        </@field>
                     </#if>
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductAverageCost}" name="averageCost" size="8"/>

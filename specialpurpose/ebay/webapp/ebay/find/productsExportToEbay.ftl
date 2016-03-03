@@ -44,12 +44,12 @@ under the License.
     <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>PostProductsToEbay</@ofbizUrl>" name="ProductsExportToEbay">
         <input type="hidden" name="productStoreId" value="${productStoreId!}" />
         <input type="hidden" name="selectResult" value="${selectResult!}"/>
-             <@field type="generic" label="${uiLabelMap.FormFieldTitle_ebayCategory}" name="ebayCategory" onChange="changeEbayCategory(this.value)">
+             <@field type="select" label="${uiLabelMap.FormFieldTitle_ebayCategory}" name="ebayCategory" onChange="javascript:changeEbayCategory(this.value)">
                 <option value=""> </option>
                 <#if categories??>
-                    <#list categories as category>
-                        <option value="${category.CategoryCode}" <#if categoryCode?? && categoryCode == category.CategoryCode>selected="selected"</#if>>${category.CategoryName}</option>
-                    </#list>
+                  <#list categories as category>
+                    <option value="${category.CategoryCode}" <#if categoryCode?? && categoryCode == category.CategoryCode>selected="selected"</#if>>${category.CategoryName}</option>
+                  </#list>
                 </#if>
              </@field>
             <#if hideExportOptions?has_content && hideExportOptions == "N">

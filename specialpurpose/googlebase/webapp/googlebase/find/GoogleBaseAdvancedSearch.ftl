@@ -121,10 +121,10 @@ under the License.
               <@field type="checkbox" inlineItems=false name="ACTIVE_PRODUCT" value="Y" label="Active Product"/>
               <@field type="checkbox" inlineItems=false name="GOOGLE_SYNCED" value="Y" label="Product not currently synced with Google Base"/>
           </@field>
-           <@field type="generic" label="Discontinued">
-               <@field type="checkbox" name="DISCONTINUED_PRODUCT" value="Y" label="Exclude sending discontinued product and stock is zero." />
-           </@field>
-           <@field type="input" label="${uiLabelMap.ProductProductName}" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
+          <@field type="generic" label="Discontinued">
+              <@field type="checkbox" name="DISCONTINUED_PRODUCT" value="Y" label="Exclude sending discontinued product and stock is zero." />
+          </@field>
+          <@field type="input" label="${uiLabelMap.ProductProductName}" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
           <@field type="input" label="${uiLabelMap.ProductInternalName}" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
           <@field type="generic" label="${uiLabelMap.ProductKeywords}">
               <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />

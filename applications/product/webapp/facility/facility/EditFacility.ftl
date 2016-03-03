@@ -28,7 +28,7 @@ under the License.
 </#if>
 
 <#if facility?? && facilityId?has_content>
-  <@field type="generic" label="${uiLabelMap.ProductFacilityId}" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}">
+  <@field type="display" label="${uiLabelMap.ProductFacilityId}" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}">
       ${facilityId!}
   </@field>
 </#if>

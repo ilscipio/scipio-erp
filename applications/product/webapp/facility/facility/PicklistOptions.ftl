@@ -22,19 +22,13 @@ under the License.
     <input type="hidden" name="facilityId" value="${facilityId}"/>
   <@row>
     <@cell columns=4>
-      <@field type="generic" label="${uiLabelMap.FacilityGroupByShippingMethod}">
-          <input type="checkbox" name="groupByShippingMethod" value="Y" <#if "${requestParameters.groupByShippingMethod!}" == "Y">checked="checked"</#if>/>
-      </@field>
+      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByShippingMethod}" name="groupByShippingMethod" value="Y" checked=("${requestParameters.groupByShippingMethod!}" == "Y") />
     </@cell>
     <@cell columns=4>
-      <@field type="generic" label="${uiLabelMap.FacilityGroupByWarehouseArea}">
-          <input type="checkbox" name="groupByWarehouseArea" value="Y" <#if "${requestParameters.groupByWarehouseArea!}" == "Y">checked="checked"</#if>/>
-      </@field>
+      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByWarehouseArea}" name="groupByWarehouseArea" value="Y" checked=("${requestParameters.groupByWarehouseArea!}" == "Y") />
     </@cell>
     <@cell columns=4>
-      <@field type="generic" label="${uiLabelMap.FacilityGroupByNoOfOrderItems}">
-          <input type="checkbox" name="groupByNoOfOrderItems" value="Y" <#if "${requestParameters.groupByNoOfOrderItems!}" == "Y">checked="checked"</#if>/>
-      </@field>
+      <@field type="checkbox" label="${uiLabelMap.FacilityGroupByNoOfOrderItems}" name="groupByNoOfOrderItems" value="Y" checked=("${requestParameters.groupByNoOfOrderItems!}" == "Y") />
     </@cell>
   </@row>
  

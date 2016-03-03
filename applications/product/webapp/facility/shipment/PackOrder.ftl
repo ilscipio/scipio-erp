@@ -69,9 +69,9 @@ under the License.
             <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
               <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="generic" label="${uiLabelMap.ProductOrderId}">
-                    <@field type="input" name="orderId" size="20" maxlength="20" value="${orderId!}"/>
+                    <@field type="input" inline=true name="orderId" size="20" maxlength="20" value="${orderId!}"/>
                     <span>/</span>
-                    <@field type="input" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId!'00001'}"/>
+                    <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId!'00001'}"/>
                     <@field type="checkbox" name="hideGrid" value="Y" checked=(hideGrid == "Y") label="${uiLabelMap.ProductHideGrid}" />
                 </@field>
                 <@field type="submitarea">

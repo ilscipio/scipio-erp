@@ -53,9 +53,9 @@ under the License.
             <option>${uiLabelMap.CommonChecking}</option>
             <option>${uiLabelMap.CommonSavings}</option>
         </@field>
-        <@field type="input" required=true label="${uiLabelMap.AccountingAccountNumber}" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
-        <@field type="input" required=true label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-        <@field type="generic" label="${uiLabelMap.PartyBillingAddress}">
+        <@field type="input" required=true label=uiLabelMap.AccountingAccountNumber! size="20" maxlength="40" name="accountNumber" value=eftAccountData.accountNumber! />
+        <@field type="input" required=true label=uiLabelMap.CommonDescription! size="30" maxlength="60" name="description" value=paymentMethodData.description! />
+        <@field type="generic" label=uiLabelMap.PartyBillingAddress!>
           <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
@@ -66,7 +66,7 @@ under the License.
             <#if curPostalAddress??>
               <@tr>
                 <@td class="button-col">
-                  <@field type="radio" inline=true name="contactMechId" value="${curContactMechId}" checked=true />
+                  <@field type="radio" inline=true name="contactMechId" value=curContactMechId! checked=true />
                 </@td>
                 <@td>
                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>

@@ -96,7 +96,7 @@ function insertImageName(size,nameValue) {
                     </#if>
                 </#assign>
                 <@field type="generic" label="${uiLabelMap.ProductSmallImage}" labelDetail=labelDetail>
-                    <input type="text" name="imageUrl" value="${(configItem.imageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255" />
+                    <@field type="input" name="imageUrl" value="${(configItem.imageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255" />
                     <#if configItemId?has_content>
                         <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>

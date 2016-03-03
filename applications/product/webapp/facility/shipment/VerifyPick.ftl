@@ -51,12 +51,12 @@ under the License.
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
           <@field type="generic" label="${uiLabelMap.ProductOrderId}">
               <#if shipmentId?has_content>
-                <input type="text" name="orderId" size="20" maxlength="20" value=""/>
+                <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=""/>
               <#else>
-                <input type="text" name="orderId" size="20" maxlength="20" value="${orderId!}"/>
+                <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=orderId!/>
               </#if>
               /
-              <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
+              <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
           </@field>
           <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>

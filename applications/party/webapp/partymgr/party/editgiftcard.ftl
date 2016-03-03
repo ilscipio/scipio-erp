@@ -26,8 +26,8 @@ under the License.
 <@section title=sectionTitle>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-        <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
         
@@ -41,8 +41,8 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
         
-        <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber!}" />
-        <@field type="input" label="${uiLabelMap.AccountingPinNumber}" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
+        <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=giftCardData.cardNumber! />
+        <@field type="input" label="${uiLabelMap.AccountingPinNumber}" size="10" maxlength="60" name="pinNumber" value=giftCardData.pinNumber! />
         <@field type="generic" label="${uiLabelMap.CommonExpireDate}">
             <#assign expMonth = "">
             <#assign expYear = "">
@@ -53,7 +53,7 @@ under the License.
                 <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
               </#if>
             </#if>
-            <select name="expMonth" onchange="javascript:makeExpDate();">
+            <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();">
               <#if giftCardData?has_content && expMonth?has_content>
                 <#assign ccExprMonth = expMonth>
               <#else>
@@ -63,8 +63,8 @@ under the License.
                 <option value="${ccExprMonth!}">${ccExprMonth!}</option>
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
-            </select>
-            <select name="expYear" onchange="javascript:makeExpDate();">
+            </@field>
+            <@field type="select" inline=true name="expYear" onchange="javascript:makeExpDate();">
               <#if giftCard?has_content && expYear?has_content>
                 <#assign ccExprYear = expYear>
               <#else>
@@ -74,9 +74,9 @@ under the License.
                 <option value="${ccExprYear!}">${ccExprYear!}</option>
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-            </select>
+            </@field>
         </@field>
-        <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
+        <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=paymentMethodData.description! />
 
       </form>
       

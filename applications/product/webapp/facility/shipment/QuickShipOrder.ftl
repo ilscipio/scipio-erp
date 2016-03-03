@@ -124,8 +124,8 @@ function setWeight(weight) {
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
               <@field type="generic" label="${uiLabelMap.ProductPackage} ${shipmentPackage.shipmentPackageSeqId} ${uiLabelMap.ProductWeight}">
-                  <input type="text" name="weight" />&nbsp;
-                  <select name="weightUomId">
+                  <@field type="input" name="weight" />
+                  <@field type="select" name="weightUomId">
                     <#if weightUom?has_content>
                       <option value="${weightUom.uomId}">${weightUom.get("description",locale)}</option>
                       <option value="${weightUom.uomId}">---</option>
@@ -133,7 +133,7 @@ function setWeight(weight) {
                     <#list weightUomList as weightUomOption>
                       <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                     </#list>
-                  </select>
+                  </@field>
               </@field>
               <@field type="submitarea">
                   <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.weightForm.submit();"/>

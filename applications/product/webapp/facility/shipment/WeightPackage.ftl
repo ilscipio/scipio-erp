@@ -60,9 +60,9 @@ under the License.
           <form name="selectOrderForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
               <@field type="generic" label="${uiLabelMap.ProductOrderId}">
-                  <input type="text" name="orderId" size="20" maxlength="20" value="${primaryOrderId!}"/>
+                  <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=primaryOrderId!""/>
                   /
-                  <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
+                  <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
               </@field>
               <@field type="submitarea">
                   <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('PackOrder')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />

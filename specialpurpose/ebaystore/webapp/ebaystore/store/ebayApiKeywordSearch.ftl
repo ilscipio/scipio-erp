@@ -43,51 +43,48 @@ under the License.
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
     <form id="productSearchform" method="post" action="<@ofbizUrl>productsearch</@ofbizUrl>" name="productSearchform">
     <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
-      <fieldset>
+      <@fieldset>
         <#-- Cato: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>
         <input type="hidden" name="PAGING" value="Y"/>-->
         <input type="hidden" name="noConditionFind" value="Y"/>
-          <@field type="generic" label="${uiLabelMap.ProductCatalog}">
-                  <select name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
-                    <#list prodCatalogList as prodCatalog>
-                      <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
-                      <#if (18 < displayDesc?length)>
-                        <#assign displayDesc = displayDesc[0..15] + "...">
-                      </#if>
-                      <option value="${prodCatalog.prodCatalogId}" <#if searchCatalogId! == prodCatalog.prodCatalogId> selected="selected"</#if>>${displayDesc} [${prodCatalog.prodCatalogId}]</option>
-                    </#list>
-                  </select>
-                  <span id="catalogErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
+          <@field type="select" label="${uiLabelMap.ProductCatalog}" required=true name="SEARCH_CATALOG_ID" id="searchCatalogId" onChange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));">
+            <#list prodCatalogList as prodCatalog>
+              <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
+              <#if (18 < displayDesc?length)>
+                <#assign displayDesc = displayDesc[0..15] + "...">
+              </#if>
+              <option value="${prodCatalog.prodCatalogId}" <#if searchCatalogId! == prodCatalog.prodCatalogId> selected="selected"</#if>>${displayDesc} [${prodCatalog.prodCatalogId}]</option>
+            </#list>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductCategory}">
-                  <#if categoryIds?has_content>
-                    <select name="SEARCH_CATEGORY_ID" id="searchCategoryId">
-                      <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
-                      <#list categoryIds as categoryId>
-                        <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : categoryId}, true) />
-                        <#assign displayDesc = productCategory.categoryName?default("${uiLabelMap.ProductNoDescription}") />
-                        <#if (18 < displayDesc?length)>
-                          <#assign displayDesc = displayDesc[0..15] + "...">
-                        </#if>
-                        <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
-                      </#list>
-                    </select>
-                  <#else>
-                    <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
-                  </#if>
+              <#if categoryIds?has_content>
+                <@field type="select" name="SEARCH_CATEGORY_ID" id="searchCategoryId">
+                  <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
+                  <#list categoryIds as categoryId>
+                    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : categoryId}, true) />
+                    <#assign displayDesc = productCategory.categoryName?default("${uiLabelMap.ProductNoDescription}") />
+                    <#if (18 < displayDesc?length)>
+                      <#assign displayDesc = displayDesc[0..15] + "...">
+                    </#if>
+                    <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
+                  </#list>
+                </@field>
+              <#else>
+                <@field type="lookup" value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
+              </#if>
           </@field>
           <@field type="input" label="${uiLabelMap.ProductProductName}" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
           <@field type="input" label="${uiLabelMap.ProductInternalName}" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
           <@field type="generic" label="${uiLabelMap.ProductKeywords}">
-              <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />&nbsp;
-                ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> />
-                ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if> />
+              <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />
+              <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}" />
+              <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
           </@field>
 
-          <hr />
+          <#--<hr />-->
           
           <@field type="submit" submitType="link" href="javascript:submit('productSearchform');" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
-      </fieldset>
+      </@fieldset>
     </form>
 </@section>

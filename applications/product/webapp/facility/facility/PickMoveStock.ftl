@@ -153,7 +153,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="lookup" label="${uiLabelMap.ProductProduct}" formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 <@field type="generic" label="${uiLabelMap.ProductFromLocation}">
-                    <input type="text" size="20" name="locationSeqId" maxlength="20" />
+                    <@field type="input" size="20" name="locationSeqId" maxlength="20" />
                     <a href="javascript:quicklookup('call_fieldlookup2', document.quickStockMove.locationSeqId, document.quickStockMove.facilityId, document.quickStockMove.productId)" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_find!}">
                       <img src="<@ofbizContentUrl>/images/fieldlookup.gif</@ofbizContentUrl>" width="15" height="14" border="0" alt="${uiLabelMap.CommonClickHereForFieldLookup}"/>
                     </a>

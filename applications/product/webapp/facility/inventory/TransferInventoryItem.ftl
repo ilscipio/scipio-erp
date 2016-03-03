@@ -18,12 +18,12 @@ under the License.
 -->
 
       <#if illegalInventoryItem??>
-            <div class="errorMessage">${illegalInventoryItem}</div>
+            <@commonMsg type="error">${illegalInventoryItem}</@commonMsg>
       </#if>
-        <div class="button-bar">
-          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductNewFacility}</a>
-          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.CommonPrint}</a>
-        </div>
+        <@menu type="button">
+          <@menuitem type="link" href=makeOfbizUrl("EditFacility") class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.ProductNewFacility}" />
+          <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") class="+${styles.action_run_sys!} ${styles.action_export!}" text="${uiLabelMap.CommonPrint}" />
+        </@menu>
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${facilityId}" />
@@ -52,25 +52,25 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
             
-            <@field type="generic" label="${uiLabelMap.ProductInventoryItemId}">
+            <@field type="display" label="${uiLabelMap.ProductInventoryItemId}">
                 ${inventoryItemId}
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductInventoryItemTypeId}">
+            <@field type="display" label="${uiLabelMap.ProductInventoryItemTypeId}">
                 <#if inventoryItemType??>
                     ${(inventoryItemType.get("description",locale))!}
                 </#if>
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductProductId}">
+            <@field type="display" label="${uiLabelMap.ProductProductId}">
                 <#if inventoryItem?? && (inventoryItem.productId)??>
-                        <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.productId)!}</a>
-                    </#if>
+                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.productId)!}</a>
+                </#if>
             </@field>
-            <@field type="generic" label="${uiLabelMap.CommonStatus}">
-                ${(inventoryStatus.get("description",locale))?default("--")}
+            <@field type="display" label="${uiLabelMap.CommonStatus}">
+                ${(inventoryStatus.get("description",locale))!("--")}
             </@field>
 
-            <@field type="generic" label="${uiLabelMap.ProductComments}">
-                ${(inventoryItem.comments)?default("--")}
+            <@field type="display" label="${uiLabelMap.ProductComments}">
+                ${(inventoryItem.comments)!("--")}
             </@field>
 
             <@field type="display" label="${uiLabelMap.ProductSerialAtpQoh}">
@@ -86,51 +86,48 @@ under the License.
 
             <hr />
   
-            <@field type="select" label="${uiLabelMap.ProductTransferStatus}" name="statusId">
-                    <#if (inventoryTransfer.statusId)??>
-                        <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
-                        <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
-                    </#if>
-                    <#list statusItems as statusItem>
-                    <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
-                    </#list>
-  
-            </@field>
+        <@field type="select" label="${uiLabelMap.ProductTransferStatus}" name="statusId">
+            <#if (inventoryTransfer.statusId)??>
+                <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
+                <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
+            </#if>
+            <#list statusItems as statusItem>
+            <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
+            </#list>
+        </@field>
         <@field type="generic" label="${uiLabelMap.ProductTransferSendDate}">
-            <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
-            <a href="#" onclick="setNow('sendDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
+            <@field type="input" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
+            <a href="#" onclick="javascript:setNow('sendDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
         </@field>
         <#if !(inventoryTransfer??)>
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
-                <select name="facilityIdTo">
+                <@field type="select" name="facilityIdTo" tooltip=uiLabelMap.ProductSelectFacility!>
                     <#list facilities as nextFacility>
                     <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
                     </#list>
-                </select>
-                <span class="tooltip">${uiLabelMap.ProductSelectFacility}</span>
-                <br />
-                <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />
-                <span class="tooltip">${uiLabelMap.ProductOrEnterContainerId}</span>
+                </@field>
+                <@field type="input" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" tooltip=uiLabelMap.ProductOrEnterContainerId!/>
             </@field>
             <@field type="lookup" label="${uiLabelMap.ProductToLocation}" value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" size="60" maxlength="250" />
             <@field type="generic" label="${uiLabelMap.ProductQuantityToTransfer}">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                    <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromiseTotal)!}" />
+                    <@field type="input" size="5" name="xferQty" value="${(inventoryItem.availableToPromiseTotal)!}" />
                 <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                     <input type="hidden" name="xferQty" value="1" />
                     1
                 <#elseif inventoryItem??>
-                    <span class="alert">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</span>
+                    <@commonMsg type="warning">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@commonMsg>
                 </#if>
             </@field>
         <#else>
             <@field type="generic" label="${uiLabelMap.ProductTransferReceiveDate}">
-                <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
-                <a href="#" onclick="setNow('receiveDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
+                <@field type="input" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
+                <a href="#" onclick="javascript:setNow('receiveDate')" class="${styles.link_run_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
-                <#assign fac = delegator.findOne("Facility", {"facilityId":inventoryTransfer.facilityIdTo}, false)> ${(fac.facilityName)?default("&nbsp;")}
+            <@field type="display" label="${uiLabelMap.ProductToFacilityContainer}">
+                <#assign fac = delegator.findOne("Facility", {"facilityId":inventoryTransfer.facilityIdTo}, false)> 
+                ${(fac.facilityName)!}
             </@field>
             <@field type="lookup" label="${uiLabelMap.ProductToLocation}" value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />

@@ -31,14 +31,12 @@ under the License.
         <#if !(facilityId??)>
             <@field type="input" label="${uiLabelMap.ProductFacility}" value="" size="19" maxlength="20" />
         </#if>
-        <@field type="generic" label="${uiLabelMap.ProductLocationSeqId}">
-            <#if parameters.facilityId??>
-                    <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
-                <#else>
-                    <#assign LookupFacilityLocationView="LookupFacilityLocation">
-                </#if>
-                <@htmlTemplate.lookupField formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
-        </@field>
+        <#if parameters.facilityId??>
+            <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
+        <#else>
+            <#assign LookupFacilityLocationView="LookupFacilityLocation">
+        </#if>
+        <@field type="lookup" label="${uiLabelMap.ProductLocationSeqId}" formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
         <@field type="input" label="${uiLabelMap.CommonArea}" name="areaId" value="" size="19" maxlength="20" />
         <@field type="input" label="${uiLabelMap.ProductAisle}" name="aisleId" value="" size="19" maxlength="20" />
         <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="" size="19" maxlength="20" />

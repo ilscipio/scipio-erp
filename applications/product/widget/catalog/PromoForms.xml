@@ -107,6 +107,10 @@ under the License.
     <form name="ListProductPromoCodes" type="list" list-name="productPromoCodes"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductPromoCode" default-field-type="display"/>
+        <field name="lastModifiedDate"><ignored/></field>
+        <field name="fromDate"><ignored/></field>
+        <field name="createdDate"><ignored/></field>
+        <field name="lastModifiedByUserLogin"><ignored/></field>
         <field name="productPromoId"><hidden/></field>
         <field name="productPromoCodeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductPromoCode" description="${productPromoCodeId}" also-hidden="false">
@@ -119,6 +123,7 @@ under the License.
                 <parameter param-name="productPromoId"/>
             </hyperlink>
         </field>
+        
     </form>
     
     <form name="EditProductPromoContentImage" type="upload" target="addImageContentForProductPromo" default-map-name="productPromoContent">

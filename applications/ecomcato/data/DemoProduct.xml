@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <WebSite webSiteId="WebStoreCato" siteName="Cato eCommerce Web Site" productStoreId="9000" visualThemeSetId="ECOMMERCE"/>
+    
+</entity-engine-xml>

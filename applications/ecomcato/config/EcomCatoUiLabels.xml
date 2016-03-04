@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="EcomCatoApplication">
+        <value xml:lang="en">EcomCato Application</value>
+        <value xml:lang="zh">EcomCato应用程序</value>
+    </property>
+    <property key="EcomCatoCompanyName">
+        <value xml:lang="en">OFBiz: EcomCato</value>
+    </property>
+    <property key="EcomCatoCompanySubtitle">
+        <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
+        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
+    </property>
+    <property key="EcomCatoViewPermissionError">
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+    </property>
+    
+    <property key="EcomCatoUser">
+        <value xml:lang="en">User</value>
+        <value xml:lang="en">User</value>
+    </property>
+    <property key="EcomCatoFree">
+        <value xml:lang="en">Free</value>
+        <value xml:lang="de">Free</value>
+    </property>
+    
+    <property key="EcomCatoUserDetails">
+        <value xml:lang="en">User Details</value>
+        <value xml:lang="en">User Details</value>
+    </property>
+    <property key="EcomCatoAnonymousCheckout">
+        <value xml:lang="en">Anonymous checkout</value>
+        <value xml:lang="de">Anonymous checkout</value>
+    </property>
+    <property key="EcomCatoUserNotFound">
+        <value xml:lang="en">No active user found</value>
+        <value xml:lang="de">Es wurde kein angemeldeter Benutzer gefunden</value>
+    </property>
+    <property key="EcomCatoMayWantToCreateUser">
+        <value xml:lang="en">You can continue on as a guest or create an user in order to keep informed about the latest books updates</value>
+        <value xml:lang="de">Sie können als Gast fortfahren oder einen neuen Benutzer anlegen und ihre Bücher jederzeit erneut runterladen</value>
+    </property>
+    <property key="EcomCatoClickHereCreateUser">
+        <value xml:lang="en">Click here to create an user</value>
+        <value xml:lang="de">Klicken Sie hier um einen Benutzer anzulegen</value>
+    </property>
+    <property key="EcomCatoAlsoMayLogin">
+        <value xml:lang="en">You may also want to login into an existing account</value>
+        <value xml:lang="de">You may also want to login into an existing account</value>
+    </property>
+    <property key="EcomCatoClickHereLogin">
+        <value xml:lang="en">clicking here</value>
+        <value xml:lang="de">clicking here</value>
+    </property>
+    
+    <property key="EcomCatoReadPolicy1">
+        <value xml:lang="en">I have read the</value>
+        <value xml:lang="de">Ich habe die</value>
+    </property>
+    <property key="EcomCatoReadPolicy2">
+        <value xml:lang="en">privacy</value>
+        <value xml:lang="de">Datenschutzerklärung</value>
+    </property>
+    <property key="EcomCatoReadPolicy3">
+        <value xml:lang="en">policy</value>
+        <value xml:lang="de">gelesen und bin mit dieser einverstanden</value>
+    </property>
+    
+    <property key="EcomCatoDownload">
+        <value xml:lang="en">Download</value>
+        <value xml:lang="de">Download</value>
+    </property>
+    
+    <property key="EcomCatoDownloadBook">
+        <value xml:lang="en">Download</value>
+        <value xml:lang="de">Download</value>
+    </property>
+    <property key="EcomCatoBookDownloadLinkNotAvailable">
+        <value xml:lang="en">This download is currently not available</value>
+        <value xml:lang="de">Dieser Download ist momentan nicht verfügbar</value>
+    </property>
+    <property key="EcomCatoStorePolicies">
+        <value xml:lang="en">Privacy Policy</value>
+        <value xml:lang="de">Impressum</value>
+    </property>    
+    <property key="EcomCatoProductSameAuthor">
+        <value xml:lang="en">Products from the same author</value>
+        <value xml:lang="de">Produkte vom gleichen Autor</value>
+    </property>
+
+</resource>

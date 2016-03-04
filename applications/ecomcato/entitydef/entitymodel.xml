@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of EcomCato Component</title>
+    <description>Entity of EcomCato Component</description>
+    <copyright>ilscipio GmbH</copyright>
+    <version>1.0</version>
+
+</entitymodel>

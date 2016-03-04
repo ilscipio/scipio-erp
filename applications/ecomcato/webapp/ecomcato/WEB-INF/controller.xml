@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+        
+    <!-- Based on ecommerce webapp -->
+    <include location="component://ecommerce/webapp/ecommerce/WEB-INF/controller.xml"/>
+    
+    <!-- Cato: Must be included last to override screen handler definitions; requires cato build --> 
+    <include location="component://catopublish/webcommon/WEB-INF/common-cato-client-controller.xml"/>
+       
+    <description>EcomCato Component Site Configuration File</description>
+    
+    <!-- Events to run on every request before security (chains exempt) -->
+    <preprocessor>
+        <!-- For Cato: make sure catalog ID is always set because may not be mutated from CMS page renders -->
+        <event name="ensureCurrentCatalogId" type="java" path="com.ilscipio.cato.ecomcato.order.shoppingcart.ShoppingCartEvents" invoke="ensureCurrentCatalogId"/>
+    </preprocessor>
+    
+    <!-- Special checkout functionality -->
+    <request-map uri="createUpdateCustomer">
+        <security https="true" auth="false"/>
+        <event type="simple" path="component://ecomcato/script/com/ilscipio/cato/ecomcato/customer/CustomerEvents.xml" invoke="createUpdateCustomer"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>        
+    </request-map>
+    
+    <!-- Custom event for additem operation -->
+    <request-map uri="additem">
+        <security https="false" auth="false"/>
+        <event type="java" path="com.ilscipio.cato.ecomcato.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
+        <response name="success" type="view-last" value="showcart" save-last-view="true"/>
+        <response name="survey" type="view" value="survey"/>
+        <response name="product" type="view" value="product"/>
+        <response name="viewcart" type="request-redirect" value="showcart"/>
+        <response name="error" type="view" value="showcart"/>
+    </request-map>
+    
+</site-conf>

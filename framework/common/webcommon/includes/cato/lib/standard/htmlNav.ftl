@@ -1141,6 +1141,7 @@ Render menu in a tree fashion way
         <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>         
         <#-- FIXME: I'm not sure why, but I must replace the # manually becase it gets encoded somewhere within objectAsScript -->
         <#local treeMenuDataJson>${treeMenuDataJson?replace("&#x23;", "#")}</#local>
+        <#-- ${Static["org.ofbiz.base.util.Debug"].log("treeMenuDataJson ====> " + treeMenuDataJson)} -->  
         <#local nestedEvents><#nested></#local>
 
         <div id="${id!''}"></div>
@@ -1153,8 +1154,7 @@ Render menu in a tree fashion way
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content>
                            , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
-                        </#if>,
-                        "check_callback" : true
+                        </#if>
                      }
                      
                      <#if treeMenuPlugins?has_content>
@@ -1163,17 +1163,13 @@ Render menu in a tree fashion way
                         </#list>
                         
                         , "plugins" : [
-                            "unique",
-                            "dnd",
                             <#list treeMenuPlugins as plugin>
                                 "${plugin.pluginName()}"                               
                                 <#if treeMenuPlugins?last.pluginName() != plugin.pluginName()>, </#if> 
                             </#list>
                         ]
                      </#if>
-                }).on('delete_node.jstree', function(e, data) {
-                    alert('delete');
-                });;
+                });
             });
         </script>
     </#if>

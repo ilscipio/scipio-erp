@@ -18706,18 +18706,18 @@
         <value xml:lang="zh_TW">包含在促銷中</value>
     </property>
     <property key="ProductIncludeSubCategories">
-        <value xml:lang="de">Enthält Unterkategorien?</value>
-        <value xml:lang="en">Include sub-categories?</value>
-        <value xml:lang="es">Incluír sub-categorías?</value>
-        <value xml:lang="fr">Inclure les sous-catégories ?</value>
+        <value xml:lang="de">Enthält Unterkategorien</value>
+        <value xml:lang="en">Include sub-categories</value>
+        <value xml:lang="es">Incluír sub-categorías</value>
+        <value xml:lang="fr">Inclure les sous-catégories</value>
         <value xml:lang="it">Includi sotto-categorie</value>
-        <value xml:lang="ja">サブカテゴリを含む?</value>
-        <value xml:lang="nl">Ook voor de subcategorieen?</value>
+        <value xml:lang="ja">サブカテゴリを含む</value>
+        <value xml:lang="nl">Ook voor de subcategorieen</value>
         <value xml:lang="ru">Включить подкатегории?</value>
-        <value xml:lang="th">รวมหมวดหมู่ย่อย?</value>
-        <value xml:lang="vi">Bao gồm cả các Phân loại Trình diễn cấp dưới?</value>
-        <value xml:lang="zh">包括子分类吗？</value>
-        <value xml:lang="zh_TW">包括子分類嗎？</value>
+        <value xml:lang="th">รวมหมวดหมู่ย่อย</value>
+        <value xml:lang="vi">Bao gồm cả các Phân loại Trình diễn cấp dưới</value>
+        <value xml:lang="zh">包括子分类吗</value>
+        <value xml:lang="zh_TW">包括子分類嗎</value>
     </property>
     <property key="ProductIncomingProductionRuns">
         <value xml:lang="de">Eingehende Produktionsaufträge</value>
@@ -29338,7 +29338,7 @@
     </property>
     <property key="ProductSubCats">
         <value xml:lang="de">Unterkategorien</value>
-        <value xml:lang="en">SubCats</value>
+        <value xml:lang="en">Subcategories</value>
         <value xml:lang="es">Subcategorías</value>
         <value xml:lang="fr">Sous-catég.</value>
         <value xml:lang="it">SottoCategorie</value>

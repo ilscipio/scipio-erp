@@ -20,7 +20,7 @@ under the License.
 
 <ofbiz-component name="workeffort"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd" enabled="false">
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
@@ -41,6 +41,7 @@ under the License.
 
     <test-suite loader="main" location="testdef/workefforttests.xml"/>
 
+     <!--
      <webapp name="workeffort"
         title="WorkEffort"
         server="default-server"
@@ -48,7 +49,7 @@ under the License.
         base-permission="OFBTOOLS,WORKEFFORTMGR"
         mount-point="/workeffort"
         app-bar-display="true"
-        menu-name="secondary"/>
+        menu-name="secondary"/>-->
 
      <webapp name="ical"
         title="iCalendar"

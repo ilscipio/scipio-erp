@@ -59,7 +59,8 @@ public final class OfbizUrlBuilder {
             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
             ControllerConfig config = ConfigXMLReader.getControllerConfig(url);
             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
-            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath);
+            String contextPath = request.getContextPath();
+            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
             request.setAttribute("_OFBIZ_URL_BUILDER_", builder);
         }
         return builder;
@@ -82,6 +83,7 @@ public final class OfbizUrlBuilder {
         WebSiteProperties webSiteProps = null;
         ControllerConfig config = null;
         String servletPath = null;
+        String contextPath = null;
         if (webAppInfo != null) {
             Assert.notNull("delegator", delegator);
             String webSiteId = WebAppUtil.getWebSiteId(webAppInfo);
@@ -93,11 +95,12 @@ public final class OfbizUrlBuilder {
             }
             config = ConfigXMLReader.getControllerConfig(webAppInfo);
             servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath);
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
     
     /**
@@ -119,25 +122,29 @@ public final class OfbizUrlBuilder {
     public static OfbizUrlBuilder from(WebappInfo webAppInfo, WebSiteProperties webSiteProps, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
         ControllerConfig config = null;
         String servletPath = null;
+        String contextPath = null;
         if (webAppInfo != null) {
             Assert.notNull("delegator", delegator);
             config = ConfigXMLReader.getControllerConfig(webAppInfo);
             servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath);
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
 
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
     private final String servletPath;
+    private final String contextPath;   // Cato: this class should record the context path (webapp mount-point)
 
-    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath) {
+    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath) {
         this.config = config;
         this.webSiteProps = webSiteProps;
         this.servletPath = servletPath;
+        this.contextPath = contextPath;
     }
 
     /**
@@ -159,16 +166,19 @@ public final class OfbizUrlBuilder {
     
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
+     * <p>
+     * Cato: Modified to support omitting controller lookup.
      * 
      * @param buffer
      * @param url
      * @param useSSL Default value to use - will be replaced by request-map setting
      * if one is found with security=true set.
+     * @param controller
      * @return <code>true</code> if the URL uses https
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildHostPart(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+    public boolean buildHostPart(Appendable buffer, String url, boolean useSSL, boolean controller) throws WebAppConfigurationException, IOException {
         boolean makeSecure = useSSL;
         String[] pathElements = url.split("/");
         String requestMapUri = pathElements[0];
@@ -177,8 +187,11 @@ public final class OfbizUrlBuilder {
             requestMapUri = requestMapUri.substring(0, queryIndex);
         }
         RequestMap requestMap = null;
-        if (config != null) {
-            requestMap = config.getRequestMapMap().get(requestMapUri);
+        // Cato: only lookup if controller lookup requested
+        if (controller) {
+            if (config != null) {
+                requestMap = config.getRequestMapMap().get(requestMapUri);
+            }
         }
         if (!makeSecure && requestMap != null) { // if the request has security="true" then use it
             makeSecure = requestMap.securityHttps;
@@ -207,6 +220,23 @@ public final class OfbizUrlBuilder {
         }
         return makeSecure;
     }
+    
+    /**
+     * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
+     * <p>
+     * Cato: Version that assumes controller is to be used.
+     * 
+     * @param buffer
+     * @param url
+     * @param useSSL Default value to use - will be replaced by request-map setting
+     * if one is found with security=true set.
+     * @return <code>true</code> if the URL uses https
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     */
+    public boolean buildHostPart(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+        return buildHostPart(buffer, url, useSSL, true);
+    }
 
     /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
@@ -228,4 +258,25 @@ public final class OfbizUrlBuilder {
         }
         buffer.append(url);
     }
+    
+    /**
+     * Cato: Builds a partial URL - including the context path, but not the scheme or host or servlet.
+     * 
+     * @param buffer
+     * @param url
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     */
+    public void buildPathPartWithContextRoot(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+        if (contextPath == null) {
+            throw new IllegalStateException("Context path is unknown");
+        }
+        buffer.append(contextPath);
+        // Cato: added check to make sure contextPath doesn't already end with "/"
+        // FIXME: we should really check buffer instead of contextPath, but we can't because Appendable...
+        if (!contextPath.endsWith("/") && !url.startsWith("/")) {
+            buffer.append("/");
+        }
+        buffer.append(url);
+    }    
 }

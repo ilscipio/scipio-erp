@@ -62,12 +62,17 @@ DEV NOTES:
                       (New in Cato) 
     uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
                       (New in Cato) 
-    absPath         = boolean (default: -inferred from uri-) (fallback default: false)       
+    absPath         = boolean (default: -type-dependent-) (fallback default: false)       
                       If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
                       If explicit false (stock Ofbiz default), the passed uri should be relative to a certain point depending on other flags.
                       If not specified, will attempt for figure out based on the uri passed and other flags.
-                      WARN: Auto-resolution depends on presence or absence of a starting slash ("/").
-                      (New in Cato) 
+                      Current behavior when unspecified:
+                      * For all intra-webapp links, absPath is assumed false.
+                      * For inter-webapp links:
+                        * If webSiteId is not specified, absPath is assumed true.
+                        * If webSiteId is specified, absPath is assumed false.
+                      NOTE: Behavior when unspecified is NOT currently influenced by present of starting slash ("/"),
+                          to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types. 
     interWebapp     = boolean (default: false) Alias for type="inter-webapp".
                       (New in Cato) 
     webSiteId       = string (default: -current website, found in request, if any-) Target web site ID 
@@ -115,6 +120,8 @@ which is very frequent due to use of macros.
                               the first param only, otherwise it creates too many checks needed; this is
                               consistent with macros anyway (you use either positional OR named params, you can't combine,
                               so you use only args map or only positionals).
+                              
+See @ofbizUrl.
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
@@ -132,6 +139,7 @@ which is very frequent due to use of macros.
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
 but usually used to access another servlet, such as /products/GZ-1000).
+
 See @ofbizUrl.
 -->
 <#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
@@ -145,6 +153,8 @@ See @ofbizUrl.
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
 but usually used to access another servlet, such as /products/GZ-1000).
+
+See @ofbizUrl.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
@@ -163,14 +173,6 @@ but usually used to access another servlet, such as /products/GZ-1000).
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
 
-DEV NOTES:
-* The problems with this have not really improved in recent Ofbiz (even though code has changed);
-  we actually should retrieve a webSiteId but there is no way to get it from mount-point only.
-  stock apps don't have their own webSiteId so can use current to look up settings, but already this requires
-  modification.
-  the main problem is apps that DO have their own webSiteId; it MUST be passed here and it can't
-  be fetched from the mount-point!!!
-
 See @ofbizUrl.
 -->
 <#macro ofbizInterWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
@@ -183,6 +185,8 @@ See @ofbizUrl.
 * makeOfbizInterWebappUrl
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+
+See @ofbizUrl.
 -->
 <#function makeOfbizInterWebappUrl args>
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->

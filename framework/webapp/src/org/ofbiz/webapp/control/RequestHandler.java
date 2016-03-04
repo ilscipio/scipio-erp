@@ -1167,9 +1167,18 @@ public class RequestHandler {
             boolean fullPath, boolean secure, boolean encode) {
         Delegator delegator = (Delegator) request.getAttribute("delegator"); // Cato: need delegator
         WebSiteProperties webSiteProps; // Cato: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
+        WebSiteProperties requestWebSiteProps; // Cato: will always need request web site props, for comparisons
         try {
-            // Cato: Multiple possible ways to get webSiteProps
-            if (interWebapp) {
+            requestWebSiteProps = WebSiteProperties.from(request);
+        } catch (Exception e) { // Cato: just catch everything: GenericEntityException
+            // If the entity engine is throwing exceptions, then there is no point in continuing.
+            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+            return null;
+        }
+        
+        // Cato: Multiple possible ways to get webSiteProps
+        if (interWebapp) {
+            try {
                 if (webappInfo != null) {
                     // Cato: get props for webapp if it has a webSiteId, otherwise defaults
                     String webSiteId = WebAppUtil.getWebSiteId(webappInfo);
@@ -1184,14 +1193,25 @@ public class RequestHandler {
                     // Cato: here must get defaults
                     webSiteProps = WebSiteProperties.defaults(delegator);
                 }
-            } else {
-                // Cato: stock case (get from request, or defaults)
-                webSiteProps = WebSiteProperties.from(request);
+            } catch (Exception e) { // Cato: just catch everything: GenericEntityException
+                // If the entity engine is throwing exceptions, then there is no point in continuing.
+                Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+                return null;
             }
-        } catch (Exception e) { // Cato: just catch everything: GenericEntityException
-            // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
-            return null;
+        } else {
+            // Cato: stock case (get from request, or defaults)
+            webSiteProps = requestWebSiteProps;
+        }
+        
+        // Cato: Special case: If we have inter-webapp, we need to check if the web site properties
+        // for this link different from the current webapp's. If so, we have to force full-path
+        // link. 
+        // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
+        // Maybe make a url.properties option and allow force fullPath and force secure.
+        if (interWebapp) {
+            if (!webSiteProps.equals(requestWebSiteProps)) {
+                fullPath = true;
+            }
         }
         
         String requestUri = null;

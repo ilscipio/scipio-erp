@@ -52,6 +52,7 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.cato.helper.JsTreeHelper;
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem;
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState;
+import com.ilscipio.solr.CategoryUtil;
 import com.ilscipio.cato.helper.TreeDataItem;
 
 import javolution.util.FastList;
@@ -547,8 +548,8 @@ public class CategoryWorker {
      * @throws GenericEntityException
      * @throws GenericServiceException
      */
-    public static List<? extends TreeDataItem> getTreeCategories(Delegator delegator, LocalDispatcher dispatcher, List<GenericValue> productCategories,
-            String library, String parentId) throws GenericEntityException, GenericServiceException {
+    public static List<? extends TreeDataItem> getTreeCategories(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
+            List<GenericValue> productCategories, String library, String parentId) throws GenericEntityException, GenericServiceException {
         List<TreeDataItem> treeDataItemList = FastList.newInstance();
         for (GenericValue productCategory : productCategories) {
             GenericValue category = null;
@@ -563,19 +564,32 @@ public class CategoryWorker {
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(true).queryList();
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups))
-                    treeDataItemList
-                            .addAll(getTreeCategories(delegator, dispatcher, childProductCategoryRollups, library, category.getString("productCategoryId")));
+                    treeDataItemList.addAll(
+                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId")));
 
                 Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
                         UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
                 if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
-                    treeDataItemList.addAll(getTreeProducts((List<GenericValue>) productCategoryMembers.get("categoryMembers"), library, productCategory.getString("productCategoryId")));
+                    treeDataItemList.addAll(getTreeProducts((List<GenericValue>) productCategoryMembers.get("categoryMembers"), library,
+                            productCategory.getString("productCategoryId")));
                 }
+
+                String categoryName = category.getString("categoryName");
+                if (UtilValidate.isEmpty(categoryName)) {
+                    categoryName = category.getString("productCategoryId");
+                    CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
+                    if (UtilValidate.isNotEmpty(wrapper.get("CATEGORY_NAME", "html")))
+                        categoryName = wrapper.get("CATEGORY_NAME", "html").toString();
+                }
+//                Debug.log("category name =========> " + categoryName);
+                
+//                String categoryTrail = CategoryUtil.getCategoryNameWithTrail(category.getString("productCategoryId"), dispatcher.getDispatchContext());
+//                Debug.log("category trail =================> " + categoryTrail);
 
                 if (library.equals("jsTree")) {
                     JsTreeDataItem dataItem = null;
-                    dataItem = new JsTreeDataItem(category.getString("productCategoryId"), category.getString("categoryName"), "jstree-folder",
-                            new JsTreeDataItemState(true, false), parentId);
+                    dataItem = new JsTreeDataItem(category.getString("productCategoryId"), categoryName, "jstree-folder", new JsTreeDataItemState(false, false),
+                            parentId);
                     dataItem.setType("category");
                     if (UtilValidate.isNotEmpty(dataItem))
                         treeDataItemList.add(dataItem);
@@ -596,14 +610,15 @@ public class CategoryWorker {
      * @throws GenericEntityException
      * @throws GenericServiceException
      */
-    public static List<? extends TreeDataItem> getTreeProducts(List<GenericValue> productCategoryMembers, String library, String parentId) throws GenericEntityException {
+    public static List<? extends TreeDataItem> getTreeProducts(List<GenericValue> productCategoryMembers, String library, String parentId)
+            throws GenericEntityException {
         List<TreeDataItem> products = FastList.newInstance();
         if (UtilValidate.isNotEmpty(productCategoryMembers)) {
             for (GenericValue productCategoryMember : productCategoryMembers) {
                 GenericValue product = productCategoryMember.getRelatedOne("Product", true);
                 if (library.equals("jsTree")) {
                     JsTreeDataItem dataItem = new JsTreeDataItem(product.getString("productId"), product.getString("productName"), "jstree-file",
-                            new JsTreeDataItemState(true, false), parentId);
+                            new JsTreeDataItemState(false, false), parentId);
                     dataItem.setType("product");
                     products.add(dataItem);
                 }

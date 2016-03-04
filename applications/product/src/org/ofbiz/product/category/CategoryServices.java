@@ -572,6 +572,7 @@ public class CategoryServices {
     public static Map<String, Object> buildCatalogTree(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
         String library = (String) context.get("library");
         String mode = (String) context.get("mode");
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -587,8 +588,8 @@ public class CategoryServices {
 
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, prodCatalogCategories, library, prodCatalogId));
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(true, false),
+                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, library, prodCatalogId));
+                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(false, false),
                                 null);
                         dataItem.setType("catalog");
                     }

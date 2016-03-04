@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.SSLUtil;
@@ -54,6 +55,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.OfbizUrlBuilder;
+import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -64,6 +66,7 @@ import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.python.modules.re;
+import org.xml.sax.SAXException;
 
 /**
  * RequestHandler - Request Processor Object
@@ -1135,7 +1138,252 @@ public class RequestHandler {
         return makeLink(request, response, url, false, false, true);
     }
 
+    /**
+     * Builds an Ofbiz link. Cato: TODO: WIP
+     * <p>
+     * Cato: This function is (TODO: WILL BE) heavily modified to support non-controller intra-webapp links
+     * as well as inter-webapp links. It should be able to generate all possible types of webapp
+     * navigation links.
+     * <p>
+     * <strong>NOTE:</strong> This method is relatively low-level and will not try to infer webSiteId, webappInfo or the controller
+     * boolean for the given URI (url). Rather, the method expects the passed arguments
+     * to be already valid for the given URI. See {@link #makeLinkAuto} for a method that interprets the URI.
+     * <p>
+     * If interWebapp is true, either webappInfo or absPath must be specified/true (or both, also valid).
+     *
+     * @param request the request (required)
+     * @param response the response (required)
+     * @param url the path or URI (required), including or omitting context and servlet path, depending on the other options
+     * @param absPath if true, the path already contains context and servlet path (from server root) (default: false) (optional, conditionally required) (Cato: new parameter)
+     * @param interWebapp if true, treat the link as inter-webapp (default: false) (Cato: new parameter)
+     * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Cato: new parameter)
+     * @param controller if true, assume is a controller link and refer to controller for building link (default: true) (Cato: new parameter)
+     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false)
+     * @param secure if true, always produce full secure URL (HTTPS) (default: false)
+     * @param encode if true, pass through response.encodeURL (default: true)
+     * @return the resulting URL
+     */
+    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean absPath, boolean interWebapp, WebappInfo webappInfo, boolean controller, 
+            boolean fullPath, boolean secure, boolean encode) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator"); // Cato: need delegator
+        WebSiteProperties webSiteProps; // Cato: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
+        try {
+            // Cato: Multiple possible ways to get webSiteProps
+            if (interWebapp) {
+                if (webappInfo != null) {
+                    // Cato: get props for webapp if it has a webSiteId, otherwise defaults
+                    String webSiteId = WebAppUtil.getWebSiteId(webappInfo);
+                    if (webSiteId != null && !webSiteId.isEmpty()) {
+                        webSiteProps = WebSiteProperties.from(delegator, webSiteId);
+                    }
+                    else {
+                        webSiteProps = WebSiteProperties.defaults(delegator);
+                    }
+                }
+                else {
+                    // Cato: here must get defaults
+                    webSiteProps = WebSiteProperties.defaults(delegator);
+                }
+            } else {
+                // Cato: stock case (get from request, or defaults)
+                webSiteProps = WebSiteProperties.from(request);
+            }
+        } catch (Exception e) { // Cato: just catch everything: GenericEntityException
+            // If the entity engine is throwing exceptions, then there is no point in continuing.
+            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+            return null;
+        }
+        
+        String requestUri = null;
+        ConfigXMLReader.RequestMap requestMap = null;
+        
+        // Cato: only lookup if we want to use controller
+        if (controller) {
+            requestUri = RequestHandler.getRequestUri(url);
+            
+            if (requestUri != null) {
+                try {
+                    requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
+                } catch (WebAppConfigurationException e) {
+                    // If we can't read the controller.xml file, then there is no point in continuing.
+                    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                    return null;
+                }
+            }
+        }
+        
+        boolean didFullSecure = false;
+        boolean didFullStandard = false;
+        if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
+            if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
+            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
+                didFullSecure = true;
+            } else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
+                didFullStandard = true;
+            }
+        }
+        StringBuilder newURL = new StringBuilder(250);
+        OfbizUrlBuilder builder = null; // Cato: reuse this outside
+        if (didFullSecure || didFullStandard) {
+            // Build the scheme and host part
+            try {
+                if (interWebapp) {
+                    // Cato: builder should be made using webappInfo if one was passed to us 
+                    // NOTE: webappInfo may be null here, in particular if absPath true
+                    builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
+                } else {
+                    // Cato: stock case
+                    builder = OfbizUrlBuilder.from(request);
+                }
+                builder.buildHostPart(newURL, url, didFullSecure, controller); // Cato: controller flag
+            } catch (GenericEntityException e) {
+                // If the entity engine is throwing exceptions, then there is no point in continuing.
+                Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+                return null;
+            } catch (WebAppConfigurationException e) {
+                // If we can't read the controller.xml file, then there is no point in continuing.
+                Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                return null;
+            } catch (IOException e) {
+                // If we can't write to StringBuilder, then there is no point in continuing.
+                Debug.logError(e, "Exception thrown while writing to StringBuilder: ", module);
+                return null;
+            } catch (SAXException e) {
+                // Cato: new case
+                Debug.logError(e, "Cato: Exception thrown while getting web site properties: ", module);
+                return null;
+            }
+        }
+        
+        // Cato: add control path only if requested and applicable
+        if (absPath) {
+            // Cato: We have absolute path, just append it
+            // now add the actual passed url, but if it doesn't start with a / add one first
+            if (!url.startsWith("/")) {
+                newURL.append("/");
+            }
+            newURL.append(url);
+        } else {
+            // Cato: we must build the path part (context root, servlet/controller path)
+            if (interWebapp) {
+                if (webappInfo == null) {
+                    // Cato: NOTE: must do this check first, in case builder already made (it's the buildPathPart method that will crash)
+                    throw new IllegalArgumentException("Cato: Cannot build inter-webapp URL path part without webapp info");
+                }
+                if (builder == null) {
+                    try {
+                        builder = OfbizUrlBuilder.from(webappInfo, webSiteProps, delegator);
+                    } catch (Exception e) {
+                        // Cato: new case
+                        Debug.logError(e, "Cato: Exception thrown while getting web site properties: ", module);
+                        return null;
+                    }
+                }
+
+                try {
+                    if (controller) {
+                        builder.buildPathPart(newURL, url);
+                    }
+                    else {
+                        builder.buildPathPartWithContextRoot(newURL, url);
+                    }
+                } catch (WebAppConfigurationException e) {
+                    // Cato: new case
+                    Debug.logError(e, "Cato: Exception thrown while building url path part: ", module);
+                    return null;
+                } catch (IOException e) {
+                    // Cato: new case
+                    Debug.logError(e, "Cato: Exception thrown while building url path part: ", module);
+                    return null;
+                }
+            } else {
+                if (controller) { 
+                    // Cato: This is the original stock case: intra-webapp, controller link
+                    // create the path to the control servlet
+                    String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
+                    newURL.append(controlPath);
+                } else {
+                    // Cato: Here we point to any servlet or file in the webapp, so only append context path
+                    String contextPath = request.getContextPath();
+                    newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
+                }
+                
+                // now add the actual passed url, but if it doesn't start with a / add one first
+                if (!url.startsWith("/")) {
+                    newURL.append("/");
+                }
+                newURL.append(url);
+            }
+        }
+
+        String encodedUrl;
+        if (encode) {
+            // Cato: do something different for inter-webapp links
+            if (interWebapp) {
+                if (response != null) {
+                    // Cato: We want to run inter-webapp links through URL encoding for outbound-rules and things,
+                    // but we should never add a jsessionId, so make sure we remove it.
+                    encodedUrl = RequestUtil.removeJsessionId(response.encodeURL(newURL.toString()));
+                } else {
+                    encodedUrl = newURL.toString();    
+                }
+            } else {
+                // Cato: stock case
+                boolean forceManualJsessionid = !cookies;
+                boolean isSpider = false;
+    
+                // if the current request comes from a spider, we will not add the jsessionid to the link
+                if (UtilHttp.checkURLforSpiders(request)) {
+                    isSpider = true;
+                }
+    
+                // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+                if (!request.isSecure() && didFullSecure) {
+                    forceManualJsessionid = true;
+                }
+    
+                // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+                if (request.isSecure() && didFullStandard) {
+                    forceManualJsessionid = true;
+                }
+    
+                if (response != null && !forceManualJsessionid && !isSpider) {
+                    encodedUrl = response.encodeURL(newURL.toString());
+                } else {
+                    if (!isSpider) {
+                        String sessionId = ";jsessionid=" + request.getSession().getId();
+                        // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
+                        int questionIndex = newURL.indexOf("?");
+                        if (questionIndex == -1) {
+                            newURL.append(sessionId);
+                        } else {
+                            newURL.insert(questionIndex, sessionId);
+                        }
+                    }
+                    if (response != null) {
+                        encodedUrl = response.encodeURL(newURL.toString());
+                    } else {
+                        encodedUrl = newURL.toString();
+                    }
+                }
+            }
+        } else {
+            encodedUrl = newURL.toString();
+        }
+        //if (encodedUrl.indexOf("null") > 0) {
+            //Debug.logError("in makeLink, controlPath:" + controlPath + " url:" + url, "");
+            //throw new RuntimeException("in makeLink, controlPath:" + controlPath + " url:" + url);
+        //}
+
+        //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
+
+        return encodedUrl;
+    }
+
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
+        return makeLink(request, response, url, false, false, null, true, fullPath, secure, encode);
+        
+        /* Cato: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
         WebSiteProperties webSiteProps = null;
         try {
             webSiteProps = WebSiteProperties.from(request);
@@ -1245,7 +1493,45 @@ public class RequestHandler {
         //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
 
         return encodedUrl;
+        */
     }
+    
+    /**
+     * Cato: Builds an Ofbiz link, inferring some of its properties by analyzing the passed URI (url)
+     * and webSiteId.
+     * <p>
+     * Each of the options can be passed null to let the method figure it out. If specified it 
+     * will be taken into consideration.
+     * <p>
+     * <em>WARN</em>: Due to technical limitations (notably Java servlet spec), this method may
+     * be forced to make inexact assumptions, which is why it is implemented as a separate method.
+     * <p>
+     * <em>WARN</em>: An Ofbiz webapp does not necessarily have a webSiteId!
+     * 
+     * TODO: not implemented
+     */
+    public String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, String webSiteId, Boolean controller, 
+            boolean fullPath, boolean secure, boolean encode) {
+        boolean sameWebSite = true;
+        if (webSiteId != null && !webSiteId.isEmpty()) {
+            String currWebSiteId = WebSiteWorker.getWebSiteId(request);
+            if (currWebSiteId != null && !currWebSiteId.isEmpty()) {
+                sameWebSite = webSiteId.equals(currWebSiteId);
+            }
+        }
+
+        // TODO: not implemented
+        if (interWebapp == null) {
+            interWebapp = Boolean.FALSE;// TODO
+        }
+        if (controller == null) {
+            controller = Boolean.TRUE;// TODO
+        }
+        WebappInfo webappInfo = null; // TODO
+        boolean absPath = false; // TODO
+        return makeLink(request, response, url, absPath, interWebapp, webappInfo, controller, fullPath, secure, encode);
+    }
+
 
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeUrl(request, response, url, false, false, false);

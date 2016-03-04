@@ -144,6 +144,22 @@ public final class WebSiteProperties {
         
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
     }
+    
+    /**
+     * Cato: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * in the WebSite entity value for the given webSiteId.
+     * 
+     * @param delegator
+     * @param webSiteId
+     */
+    public static WebSiteProperties from(Delegator delegator, String webSiteId) throws GenericEntityException {
+        Assert.notNull("webSiteId", webSiteId);
+        GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
+        if (webSiteValue != null) {
+            return from(webSiteValue);
+        }
+        return null;
+    }    
 
     private final String httpPort;
     private final String httpHost;

@@ -22,7 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.catalina.deploy.ServletDef;
 import org.apache.catalina.deploy.WebXml;
@@ -52,6 +54,12 @@ public final class WebAppUtil {
     private static final String webAppFileName = "/WEB-INF/web.xml";
     private static final UtilCache<String, WebXml> webXmlCache = UtilCache.createUtilCache("webapp.WebXml");
 
+    /**
+     * Cato: A fast homemache cache to optimize WebappInfo lookups by webSiteId.
+     */
+    private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
+
+    
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
@@ -96,9 +104,17 @@ public final class WebAppUtil {
      */
     public static WebappInfo getWebappInfoFromWebsiteId(String webSiteId) throws IOException, SAXException {
         Assert.notNull("webSiteId", webSiteId);
-        for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
-            if (webSiteId.equals(WebAppUtil.getWebSiteId(webAppInfo))) {
-                return webAppInfo;
+        // Cato: Go through cache first. No need to synchronize, doesn't matter.
+        WebappInfo res = webappInfoWebSiteIdCache.get(webSiteId);
+        if (res != null) {
+            return res;
+        }
+        else {
+            for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
+                if (webSiteId.equals(WebAppUtil.getWebSiteId(webAppInfo))) {
+                    webappInfoWebSiteIdCache.put(webSiteId, webAppInfo); // Cato: save in cache
+                    return webAppInfo;
+                }
             }
         }
         throw new IllegalArgumentException("Web site ID '" + webSiteId + "' not found.");

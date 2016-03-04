@@ -25,6 +25,10 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.deploy.ServletDef;
 import org.apache.catalina.deploy.WebXml;
@@ -59,6 +63,12 @@ public final class WebAppUtil {
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
 
+    /**
+     * Cato: A fast homemache cache to optimize WebappInfo lookups by exact context path.
+     */
+    private static final Map<String, WebappInfo> webappInfoContextPathCache = new ConcurrentHashMap<String, WebappInfo>();
+    
+    private static final Pattern contextPathDelimPat = Pattern.compile("[/?;#&]");
     
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
@@ -119,6 +129,88 @@ public final class WebAppUtil {
         }
         throw new IllegalArgumentException("Web site ID '" + webSiteId + "' not found.");
     }
+    
+    /**
+     * Cato: Returns the <code>WebappInfo</code> instance that has the same mount-point prefix as
+     * the given path.
+     * <p>
+     * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
+     * 
+     * @param webSiteId
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static WebappInfo getWebappInfoFromPath(String path) throws IOException, SAXException {
+        Assert.notNull("path", path);
+        // Must be absolute
+        if (!path.startsWith("/")) {
+            throw new IllegalArgumentException("Cato: Web app for path '" + path + "' not found (must be absolute path).");
+        }
+        
+        String contextPath = path;
+        // TODO: version without regexp... 
+        // TODO: version that supports multiple slashes, but too complicated for now
+        Matcher m = contextPathDelimPat.matcher(path.substring(1)); 
+        if (m.find()) {
+            contextPath = "/" + path.substring(1, m.start() + 1);
+        }
+        
+        WebappInfo webappInfo;
+        try {
+            webappInfo = getWebappInfoFromContextPath(contextPath);
+        }
+        catch(IllegalArgumentException e) {
+            try {
+                // If there was no exact match, assume we're covered by the root mount-point
+                webappInfo = getWebappInfoFromContextPath("/");
+            }
+            catch(IllegalArgumentException e2) {
+                throw new IllegalArgumentException("Cato: Web app for path '" + path + "' not found.");
+            }
+        }
+        return webappInfo;
+    }
+    
+    /**
+     * Cato: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
+     * <p>
+     * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
+     * 
+     * @param webSiteId
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static WebappInfo getWebappInfoFromContextPath(String contextPath) throws IOException, SAXException {
+        Assert.notNull("contextPath", contextPath);
+        
+        // Cato: Go through cache first. No need to synchronize, doesn't matter.
+        WebappInfo res = webappInfoContextPathCache.get(contextPath);
+        if (res != null) {
+            return res;
+        }
+        else {
+            for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
+                if (contextPath.equals(webAppInfo.getContextRoot())) {
+                    webappInfoContextPathCache.put(contextPath, webAppInfo); // Cato: save in cache
+                    return webAppInfo;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
+    }
+    
+    /**
+     * Cato: Returns the <code>WebappInfo</code> instance for the current request's webapp.
+     * 
+     * @param webSiteId
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static WebappInfo getWebappInfoFromRequest(HttpServletRequest request) throws IOException, SAXException {
+        Assert.notNull("request", request);
+        String contextPath = request.getContextPath();
+        return getWebappInfoFromContextPath(contextPath);
+    }    
 
     /**
      * Returns the web site ID - as configured in the web application's <code>web.xml</code> file,

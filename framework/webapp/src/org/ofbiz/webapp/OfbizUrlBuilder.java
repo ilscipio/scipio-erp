@@ -279,4 +279,19 @@ public final class OfbizUrlBuilder {
         }
         buffer.append(url);
     }    
+    
+    
+    /**
+     * Cato: Get serlvet path.
+     */
+    public String getServletPath() throws WebAppConfigurationException, IOException {
+        return servletPath;
+    }
+    
+    /**
+     * Cato: Get context path.
+     */
+    public String getContextPath() throws WebAppConfigurationException, IOException {
+        return contextPath;
+    }
 }

@@ -130,27 +130,29 @@ which is very frequent due to use of macros.
 *************
 * ofbizWebappUrl
 ************
-Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
+Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
+but usually used to access another servlet, such as /products/GZ-1000).
+See @ofbizUrl.
 -->
-<#macro ofbizWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
-  <#-- FIXME: this is ACTUALLY BROKEN, DO NOT USE -->
-  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
-  <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
+  <@ofbizUrl uri=uri absPath=false interWebapp=false controller=false 
+    fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
 *************
 * makeOfbizWebappUrl
 ************
-Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, but usually used to access another servlet, such as /products/GZ-1000).
+Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
+but usually used to access another servlet, such as /products/GZ-1000).
 -->
 <#function makeOfbizWebappUrl args>
-  <#-- FIXME: this is ACTUALLY BROKEN, DO NOT USE -->
-  <#-- TODO: implement by calling @ofbizUrl with more flags... -->
   <#if isObjectType("map", args)>
-    <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=false interWebapp=false controller=false 
+        fullPath=fullPath secure=secure encode=encode /></#local>
   <#else>
-    <#local res>${StringUtil.wrapString(args)}</#local>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath=false interWebapp=false controller=false 
+        fullPath=fullPath secure=secure encode=encode /></#local>
   </#if>
   <#return res>
 </#function>
@@ -169,6 +171,7 @@ DEV NOTES:
   the main problem is apps that DO have their own webSiteId; it MUST be passed here and it can't
   be fetched from the mount-point!!!
 
+See @ofbizUrl.
 -->
 <#macro ofbizInterWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
   <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->

@@ -426,6 +426,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                
                 <set field="viewSize" value="10" />
+                <set field="titleProperty" value="Accounting"/>
             </actions>
             <widgets>
                 <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  

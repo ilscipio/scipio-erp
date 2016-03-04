@@ -55,6 +55,7 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
+                <set field="titleProperty" value="CommonOverview"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

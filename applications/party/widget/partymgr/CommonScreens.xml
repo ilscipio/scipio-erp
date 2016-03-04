@@ -146,6 +146,7 @@ under the License.
                 <!-- <set field="titleProperty" value="PageTitleFindParty"/> -->
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="titleProperty" value="PartyManager"/>
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

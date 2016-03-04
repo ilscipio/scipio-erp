@@ -119,6 +119,7 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <set field="title" value="${uiLabelMap.MarketingManagerApplication}"/>
+                <set field="titleProperty" value="Marketing"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

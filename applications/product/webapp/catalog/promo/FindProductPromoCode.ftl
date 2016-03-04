@@ -16,20 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#if productPromoId??>
 
-
-                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}">
-                                <parameter param-name="productPromoId"/> 
-                           </link>
-                            
+                     
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <@menuitem type="generic" >
-            <@modal id="modal_new_importcodeset_${productPromoId}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
                  <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
-                    <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+                    <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
                     <span>${uiLabelMap.ProductPromoUserEntered}:</span>
                         <select name="userEntered">
                             <option value="Y">${uiLabelMap.CommonY}</option>
@@ -52,10 +47,10 @@ under the License.
         </@menuitem>
 
         <@menuitem type="generic" >
-            <@modal id="modal_new_promocodes_${productPromoId}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_promocodes_${productPromoId!}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</@heading>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
-                    <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+                    <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
                     <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
                     <span>${uiLabelMap.ProductPromoCodeLength}:</span><input type="text" size="12" name="codeLength" />
                     <span>${uiLabelMap.ProductPromoCodeLayout}:</span>
@@ -84,11 +79,13 @@ under the License.
                  
              </@modal>
         </@menuitem>
+
+        <@menuitem type="link" href=makeOfbizUrl("EditProductPromoCode") text="${uiLabelMap.ProductNewPromotionCode}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+
     </@menu>
-</#macro>                
-    <@section menuContent=menuContent>
-        <@alert type="info">
-                The Promotion codes can be imported in bulk, or added individually. 
-        </@alert>
-    </@section>
-</#if>
+</#macro> 
+<@section menuContent=menuContent>
+    <@alert type="info">
+            The Promotion codes can be imported in bulk, or added individually. 
+    </@alert>
+</@section>

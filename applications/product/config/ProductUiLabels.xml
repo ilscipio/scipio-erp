@@ -25366,6 +25366,13 @@
         <value xml:lang="zh">促销代码</value>
         <value xml:lang="zh_TW">促銷代碼</value>
     </property>
+    
+    <!-- CATO -->
+    <property key="ProductPromotionCode">
+        <value xml:lang="de">Aktionscodes</value>
+        <value xml:lang="en">Promotion Codes</value>
+    </property>
+    
     <property key="ProductPromotionImported">
         <value xml:lang="de">Nur importierte</value>
         <value xml:lang="en">Imported Only</value>

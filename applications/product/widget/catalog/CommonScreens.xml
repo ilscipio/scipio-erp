@@ -297,14 +297,17 @@ under the License.
                                 <if-has-permission permission="CATALOG" action="_VIEW"/>
                             </condition>
                             <widgets>
+                                <!--
                                 <section>
                                     <condition><not><if-empty field="productPromoId"/></not></condition>
                                     <widgets>
-                                        <!--
+                                        
                                         <container style="button-bar">
                                             <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>-->                                    </widgets>
+                                        </container>                                    
+                                        </widgets>
                                 </section>
+                                -->
 
                                 <decorator-section-include name="body"/>
                             </widgets>

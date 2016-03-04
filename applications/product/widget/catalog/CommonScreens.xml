@@ -282,6 +282,7 @@ under the License.
         <section>
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
@@ -321,6 +322,8 @@ under the License.
         <section>
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.ProductStore}: ${parameters.productStoreId}  ${extraFunctionName}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -356,7 +359,6 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="productStore"/></not></condition>
                                     <widgets>
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]  ${${extraFunctionName}}</label>
                                         <section>
                                             <widgets>
                                                 <include-menu name="ProductStoreSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>

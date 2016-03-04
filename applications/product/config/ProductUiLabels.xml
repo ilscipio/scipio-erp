@@ -12189,6 +12189,17 @@
         <value xml:lang="zh">添加新促销规则</value>
         <value xml:lang="zh_TW">增加新促銷規則</value>
     </property>
+    <!-- CATO -->
+    <property key="ProductAddPromoCategory">
+        <value xml:lang="de">Neue Aktionskategorie hinzufügen</value>
+        <value xml:lang="en">Add promotion category</value>
+    </property>
+    <property key="ProductAddPromoProduct">
+        <value xml:lang="de">Neues Aktionsprodukt hinzufügen</value>
+        <value xml:lang="en">Add promotion product</value>
+    </property>
+    
+    
     <property key="ProductAddResultsTo">
         <value xml:lang="de">Resultate hinzufügen zu</value>
         <value xml:lang="en">Add Results To</value>

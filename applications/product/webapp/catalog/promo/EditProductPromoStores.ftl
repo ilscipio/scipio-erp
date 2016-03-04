@@ -17,6 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId?? && productPromo??>
+                <@alert type="info">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</@alert>
+
                 <@section title=uiLabelMap.ProductAddStorePromo>
                     <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
                       <@fields type="default-compact">
@@ -57,7 +59,7 @@ under the License.
                             <#assign line = line + 1>
                             <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                             <@tr valign="middle">
-                                <@td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></@td>
+                                <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
                                 <#assign hasntStarted = false>
                                 <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                                 <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>

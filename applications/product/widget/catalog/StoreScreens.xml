@@ -95,13 +95,13 @@ under the License.
     <screen name="EditProductStorePromos">
        <section>
             <actions>
+                
                 <set field="titleProperty" value="PageTitleEditProductStorePromos"/>
                 <set field="activeMainMenuItem" value="store"/>
                 <set field="activeSubMenuItem" value="EditProductStorePromos"/>
                 <set field="labelTitleProperty" value="ProductPromotions"/>
                 <set field="userEntered" from-field="parameters.userEntered"/>
                 <set field="activeOnly" from-field="parameters.activeOnly" default-value="true"/>
-                
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="true"/>                
                 
@@ -117,40 +117,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container>
-                            <label>${uiLabelMap.CommonView}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                            </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                                <parameter param-name="userEntered" value="Y"/>
-                            </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                                <parameter param-name="userEntered" value="N"/>
-                            </link>
-                        </container>
-                        <container>
-                            <label>${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                                <parameter param-name="activeOnly" value="N"/>
-                            </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                                <parameter param-name="activeOnly" value="N"/>
-                                <parameter param-name="userEntered" value="Y"/>
-                            </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_run_sys} ${styles.action_view}">
-                                <parameter param-name="productStoreId"/>
-                                <parameter param-name="activeOnly" value="N"/>
-                                <parameter param-name="userEntered" value="N"/>
-                            </link>
-                        </container>
-                        <screenlet title="${uiLabelMap.PageTitleEditProductStorePromos}">
-                            <include-form name="ListProductStorePromos" location="component://product/widget/catalog/ProductStoreForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="productStorePromoAndAppls"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-form name="ListProductStorePromos" location="component://product/widget/catalog/ProductStoreForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+
                         <screenlet title="${uiLabelMap.ProductAddStorePromo}">
                             <include-form name="CreateProductStorePromo" location="component://product/widget/catalog/ProductStoreForms.xml"/>
                         </screenlet>

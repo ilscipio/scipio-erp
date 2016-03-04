@@ -65,11 +65,9 @@ under the License.
                 <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromo"/>
                 <set field="labelTitleProperty" value="ProductPromotion"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
-                <set field="title" value="${uiLabelMap.ProductPromotion}: ${productPromoId}  ${${extraFunctionName}}"/>
+
             </actions>
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml">
@@ -163,6 +161,7 @@ under the License.
                 <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromoStores"/>
                 <set field="labelTitleProperty" value="ProductStores"/>
+                
 
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>

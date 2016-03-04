@@ -99,6 +99,36 @@ public final class OfbizUrlBuilder {
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath);
     }
+    
+    /**
+     * Cato: Returns an <code>OfbizUrlBuilder</code> instance. Mixed method that allows
+     * using WebSiteProperties different than the WebappInfo instance.
+     * <p>
+     * This is needed because not every webapp has its own webSiteId, which means
+     * another source for WebSiteProperties must be used in its place.
+     * 
+     * @param webAppInfo Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder from(WebappInfo webAppInfo, WebSiteProperties webSiteProps, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        ControllerConfig config = null;
+        String servletPath = null;
+        if (webAppInfo != null) {
+            Assert.notNull("delegator", delegator);
+            config = ConfigXMLReader.getControllerConfig(webAppInfo);
+            servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath);
+    }
 
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;

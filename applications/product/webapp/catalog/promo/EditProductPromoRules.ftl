@@ -22,7 +22,7 @@ under the License.
     <@menu args=menuArgs>
         <@menuitem type="generic" >
             <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
-                <@heading>${uiLabelMap.ProductAddPromoRule!}</@heading>
+                <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                  <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
                     <@fields type="default-compact">
                       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
@@ -61,7 +61,7 @@ under the License.
 
         <@menuitem type="generic" >
             <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
-                <@heading>${uiLabelMap.ProductAddPromoProduct!}</@heading>
+                <@heading>${uiLabelMap.ProductAddPromoProduct}</@heading>
                  <form method="post" name="createpromoproductform" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
                       <@fields type="default-compact">
                         <input type="hidden" name="productPromoId" value="${productPromoId}" />

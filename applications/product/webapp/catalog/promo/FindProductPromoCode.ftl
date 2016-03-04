@@ -17,56 +17,78 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productPromoId??>
-    <@section title=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes>
-            <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
-                <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                <span>${uiLabelMap.ProductPromoUserEntered}:</span>
-                    <select name="userEntered">
-                        <option value="Y">${uiLabelMap.CommonY}</option>
-                        <option value="N">${uiLabelMap.CommonN}</option>
-                    </select>
-                <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
-                    <select name="requireEmailOrParty">
-                        <option value="N">${uiLabelMap.CommonN}</option>
-                        <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
-                <span>${uiLabelMap.ProductPromotionUseLimits}:
-                ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
-                <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
-                <div>
-                  <input type="file" size="40" name="uploadedFile" />
-                  <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
-                </div>
-            </form>
-    </@section>
 
-    <@section title=uiLabelMap.ProductPromotionAddSetOfPromotionCodes>
-            <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
-                <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-                <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
-                <span>${uiLabelMap.ProductPromoCodeLength}:</span><input type="text" size="12" name="codeLength" />
-                <span>${uiLabelMap.ProductPromoCodeLayout}:</span>
-                    <select name="promoCodeLayout">
-                        <option value="smart">${uiLabelMap.ProductPromoLayoutSmart}</option>
-                        <option value="normal">${uiLabelMap.ProductPromoLayoutNormal}</option>
-                        <option value="sequence">${uiLabelMap.ProductPromoLayoutSeqNum}</option>
-                    </select>
-                <span class="tooltip">${uiLabelMap.ProductPromoCodeLayoutTooltip}</span>
-                <br />
-                <span>${uiLabelMap.ProductPromoUserEntered}:</span>
-                    <select name="userEntered">
-                        <option value="Y">${uiLabelMap.CommonY}</option>
-                        <option value="N">${uiLabelMap.CommonN}</option>
-                    </select>
-                <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
-                    <select name="requireEmailOrParty">
-                        <option value="N">${uiLabelMap.CommonN}</option>
-                        <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
-                <span>${uiLabelMap.ProductPromotionUseLimits}:
-                ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
-                <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
-                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-            </form>
+
+                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}">
+                                <parameter param-name="productPromoId"/> 
+                           </link>
+                            
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="generic" >
+            <@modal id="modal_new_importcodeset_${productPromoId}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
+                 <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
+                    <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+                    <span>${uiLabelMap.ProductPromoUserEntered}:</span>
+                        <select name="userEntered">
+                            <option value="Y">${uiLabelMap.CommonY}</option>
+                            <option value="N">${uiLabelMap.CommonN}</option>
+                        </select>
+                    <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
+                        <select name="requireEmailOrParty">
+                            <option value="N">${uiLabelMap.CommonN}</option>
+                            <option value="Y">${uiLabelMap.CommonY}</option>
+                        </select>
+                    <span>${uiLabelMap.ProductPromotionUseLimits}:
+                    ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
+                    <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
+                    <div>
+                      <input type="file" size="40" name="uploadedFile" />
+                      <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
+                    </div>
+                </form>
+             </@modal>
+        </@menuitem>
+
+        <@menuitem type="generic" >
+            <@modal id="modal_new_promocodes_${productPromoId}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                <@heading>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</@heading>
+                <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
+                    <input type="hidden" name="productPromoId" value="${productPromoId}"/>
+                    <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
+                    <span>${uiLabelMap.ProductPromoCodeLength}:</span><input type="text" size="12" name="codeLength" />
+                    <span>${uiLabelMap.ProductPromoCodeLayout}:</span>
+                        <select name="promoCodeLayout">
+                            <option value="smart">${uiLabelMap.ProductPromoLayoutSmart}</option>
+                            <option value="normal">${uiLabelMap.ProductPromoLayoutNormal}</option>
+                            <option value="sequence">${uiLabelMap.ProductPromoLayoutSeqNum}</option>
+                        </select>
+                    <span class="tooltip">${uiLabelMap.ProductPromoCodeLayoutTooltip}</span>
+                    <br />
+                    <span>${uiLabelMap.ProductPromoUserEntered}:</span>
+                        <select name="userEntered">
+                            <option value="Y">${uiLabelMap.CommonY}</option>
+                            <option value="N">${uiLabelMap.CommonN}</option>
+                        </select>
+                    <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
+                        <select name="requireEmailOrParty">
+                            <option value="N">${uiLabelMap.CommonN}</option>
+                            <option value="Y">${uiLabelMap.CommonY}</option>
+                        </select>
+                    <span>${uiLabelMap.ProductPromotionUseLimits}:
+                    ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
+                    <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
+                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+                </form>
+                 
+             </@modal>
+        </@menuitem>
+    </@menu>
+</#macro>                
+    <@section menuContent=menuContent>
+        <@alert type="info">
+                The Promotion codes can be imported in bulk, or added individually. 
+        </@alert>
     </@section>
 </#if>

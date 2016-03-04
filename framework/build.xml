@@ -28,7 +28,8 @@ under the License.
                webapp/build.xml,widget/build.xml,
                common/build.xml,datafile/build.xml,
                testtools/build.xml,
-               webtools/build.xml"/>
+               webtools/build.xml,
+               solr/build.xml"/>
 
     <filelist id="test-builds" dir="framework" files="base/build.xml,entity/build.xml"/>
 </project>

@@ -228,4 +228,33 @@ public final class WebSiteProperties {
         sb.append("enableHttps=").append(enableHttps).append("}");
         return sb.toString();
     }
+    
+    /**
+     * Cato: Returns true if and only if all fields in this object match 
+     * the ones in the other WebSiteProperties.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof WebSiteProperties)) {
+            return false;
+        }
+        WebSiteProperties o = (WebSiteProperties) other;
+        return sameFields(this.httpHost, o.httpHost) &&
+               sameFields(this.httpPort, o.httpPort) &&
+               sameFields(this.httpsHost, o.httpsHost) &&
+               sameFields(this.httpsPort, o.httpsPort) &&
+               (this.enableHttps == o.enableHttps);
+    }
+    
+    private static boolean sameFields(String first, String second) {
+        // Cato: treat null and empty the same, just to be safe
+        if (first != null && !first.isEmpty()) {
+            return first.equals(second);
+        }
+        else {
+            return (second == null || second.isEmpty());
+        }
+    }
 }

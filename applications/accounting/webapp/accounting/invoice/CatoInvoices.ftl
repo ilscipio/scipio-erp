@@ -15,7 +15,7 @@
         <#assign outstandingAmount = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceNotApplied(delegator, item.invoiceId) />       
         <#assign itemType = item.getRelatedOne("InvoiceType", false)/>
         <@tr>
-            <@td><a href="<@ofbizUrl>/invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
+            <@td><a href="<@ofbizUrl>invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
             <@td>${itemType.get("description",locale)!}</@td>
             <#-- <@td>${item.partyIdFrom}</@td> -->
             <@td><@formattedDateTime date=item.dueDate /></@td>

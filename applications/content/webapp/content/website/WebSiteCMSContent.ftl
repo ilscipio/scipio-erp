@@ -27,7 +27,7 @@
     });
 
     function cmsSave() {
-        var simpleFormAction = '<@ofbizUrl>/updateContentCms</@ofbizUrl>';
+        var simpleFormAction = '<@ofbizUrl>updateContentCms</@ofbizUrl>';
         var editor = jQuery("#cmseditor");
         if (editor.length) {
             var cmsdata = jQuery("#cmsdata");

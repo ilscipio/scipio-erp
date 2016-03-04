@@ -58,9 +58,9 @@ var rawdata = [
      ];
 
  <#-------------------------------------------------------------------------------------define Requests-->
-  var editDocumentTreeUrl = '<@ofbizUrl>/views/EditDocumentTree</@ofbizUrl>';
-  var listDocument =  '<@ofbizUrl>/views/ListDocument</@ofbizUrl>';
-  var editDocumentUrl = '<@ofbizUrl>/views/EditDocument</@ofbizUrl>';
+  var editDocumentTreeUrl = '<@ofbizUrl>views/EditDocumentTree</@ofbizUrl>';
+  var listDocument =  '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
+  var editDocumentUrl = '<@ofbizUrl>views/EditDocument</@ofbizUrl>';
   var deleteDocumentUrl = '<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->

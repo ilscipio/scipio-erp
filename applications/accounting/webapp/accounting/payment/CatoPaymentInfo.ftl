@@ -76,7 +76,7 @@
     <#if payment.paymentGatewayResponseId?has_content>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGatewayResponse}</@td>
-            <@td colspan="3"><a href="<@ofbizUrl>/ViewGatewayResponse?paymentGatewayResponseId=${payment.paymentGatewayResponseId!}</@ofbizUrl>">${payment.paymentGatewayResponseId!}</a></@td>
+            <@td colspan="3"><a href="<@ofbizUrl>ViewGatewayResponse?paymentGatewayResponseId=${payment.paymentGatewayResponseId!}</@ofbizUrl>">${payment.paymentGatewayResponseId!}</a></@td>
         </@tr>
     </#if>
 

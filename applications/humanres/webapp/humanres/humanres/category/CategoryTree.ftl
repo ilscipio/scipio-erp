@@ -35,7 +35,7 @@ var rawdata = [
             <#if (rootCat?has_content)>
                 <#list rootCat as root>
                     {
-                    "data": {"title" : unescapeHtmlText("<#if root.groupName??>${root.groupName?js_string} [${root.partyId}]<#else>${root.partyId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>/viewprofile?partyId=${root.partyId}</@ofbizUrl>","onClick" : "callDocument('${root.partyId}');"}},
+                    "data": {"title" : unescapeHtmlText("<#if root.groupName??>${root.groupName?js_string} [${root.partyId}]<#else>${root.partyId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>viewprofile?partyId=${root.partyId}</@ofbizUrl>","onClick" : "callDocument('${root.partyId}');"}},
                     "attr": {"id" : "${root.partyId}", "rel" : "Y"}
                     <#if root.child??>
                     ,"state" : "closed"

@@ -33,7 +33,7 @@ under the License.
               <#list serviceResultList as srl>
                 <@tr>
                   <#if srl.hasChild=="Y">
-                    <@td><a href="<@ofbizUrl>/serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></@td>
+                    <@td><a href="<@ofbizUrl>serviceResult?servicePath=</@ofbizUrl><#if parameters.servicePath??>${parameters.servicePath}||</#if>${srl.key!}">${srl.key!}</a></@td>
                   <#else>
                     <@td>${srl.key!}</@td>
                   </#if>

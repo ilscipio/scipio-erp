@@ -35,7 +35,7 @@ var rawdata = [
     <#list parentGroupList as parentGroup>
                    {
                     "data": {"title" : unescapeHtmlText("<#if parentGroup.productStoreGroupName??>${parentGroup.productStoreGroupName?js_string} [${parentGroup.productStoreGroupId}]</#if>"),
-                                  "attr": {"href" : "<@ofbizUrl>/EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId}');"}},
+                                  "attr": {"href" : "<@ofbizUrl>EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId}');"}},
                     "attr": {"parentGroupId" : "${parentGroup.productStoreGroupId}"}, 
                     "state" : "closed"
                     }<#if parentGroup_has_next>,</#if>

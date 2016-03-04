@@ -61,7 +61,7 @@ var rawdata = [
 
  <#-------------------------------------------------------------------------------------define Requests-->
     var treeSelected = false;
-    var listDocument =  '<@ofbizUrl>/views/ShowDocument</@ofbizUrl>';
+    var listDocument =  '<@ofbizUrl>views/ShowDocument</@ofbizUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
@@ -80,11 +80,11 @@ var rawdata = [
     function callDocument(contentId) {
         var tabitem='${activeSubMenuItem!}';
         if (tabitem=="navigateContent")
-            listDocument = '<@ofbizUrl>/views/ListDocument</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
         if (tabitem=="LookupContentTree")
-            listDocument = '<@ofbizUrl>/views/ListContentTree</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ListContentTree</@ofbizUrl>';
         if (tabitem=="LookupDetailContentTree")
-            listDocument = '<@ofbizUrl>/views/ViewContentDetail</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ViewContentDetail</@ofbizUrl>';
 
         //jQuerry Ajax Request
         jQuery.ajax({

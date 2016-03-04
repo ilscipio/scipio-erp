@@ -57,9 +57,9 @@ var rawdata = [
 jQuery(document).ready(createTree());
 
  <#-------------------------------------------------------------------------------------define Requests-->
-  var editDocumentTreeUrl = '<@ofbizUrl>/views/EditDocumentTree</@ofbizUrl>';
-  var listDocument =  '<@ofbizUrl>/views/ListDocument</@ofbizUrl>';
-  var editDocumentUrl = '<@ofbizUrl>/views/EditDocument</@ofbizUrl>';
+  var editDocumentTreeUrl = '<@ofbizUrl>views/EditDocumentTree</@ofbizUrl>';
+  var listDocument =  '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
+  var editDocumentUrl = '<@ofbizUrl>views/EditDocument</@ofbizUrl>';
   var deleteDocumentUrl = '<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->
@@ -111,11 +111,11 @@ jQuery(document).ready(createTree());
     function callDocument(contentId) {
         var tabitem='${activeSubMenuItem!}';
         if (tabitem=="navigateContent")
-            listDocument = '<@ofbizUrl>/views/ListDocument</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
         if (tabitem=="LookupContentTree")
-            listDocument = '<@ofbizUrl>/views/ListContentTree</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ListContentTree</@ofbizUrl>';
         if (tabitem=="LookupDetailContentTree")
-            listDocument = '<@ofbizUrl>/views/ViewContentDetail</@ofbizUrl>';
+            listDocument = '<@ofbizUrl>views/ViewContentDetail</@ofbizUrl>';
 
         //jQuerry Ajax Request
         jQuery.ajax({

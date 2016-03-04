@@ -30,9 +30,9 @@
 
     var contentRoot = '${contentRoot!}';
     var webSiteId = '${webSiteId!}';
-    var editorUrl = '<@ofbizUrl>/views/WebSiteCMSContent</@ofbizUrl>';
-    var aliasUrl = '<@ofbizUrl>/views/WebSiteCMSPathAlias</@ofbizUrl>';
-    var metaUrl = '<@ofbizUrl>/views/WebSiteCMSMetaInfo</@ofbizUrl>';
+    var editorUrl = '<@ofbizUrl>views/WebSiteCMSContent</@ofbizUrl>';
+    var aliasUrl = '<@ofbizUrl>views/WebSiteCMSPathAlias</@ofbizUrl>';
+    var metaUrl = '<@ofbizUrl>views/WebSiteCMSMetaInfo</@ofbizUrl>';
 
     function loadTrees() {
         createSubsitesTree();
@@ -459,7 +459,7 @@ function callMetaInfo(contentId) {
 
 <#-------------------------------------------------------------------------------------pathRemove function-->
     function pathRemove(websiteId, pathAlias, contentId) {
-        var remAliasUrl = '<@ofbizUrl>/removeWebSitePathAliasJson</@ofbizUrl>';
+        var remAliasUrl = '<@ofbizUrl>removeWebSitePathAliasJson</@ofbizUrl>';
 
         jQuery.ajax({
                 url: remAliasUrl,

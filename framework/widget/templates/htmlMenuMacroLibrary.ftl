@@ -277,7 +277,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     </#if>
         <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
             <#- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
-            <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
+            <#local dashboardLink><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
             <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=(dashboardLink!) /><@renderMenuItemEnd/>->
   </#if>
    <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#- pushing info to stack, so that this can be used by subsequently -> 

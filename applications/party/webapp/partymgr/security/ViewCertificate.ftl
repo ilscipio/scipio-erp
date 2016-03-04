@@ -47,7 +47,7 @@ under the License.
           <#list keystores as store>
             <#if (store.isTrustStore())>
               <@tr>
-                <form method="post" action="<@ofbizUrl>/importIssuerProvision</@ofbizUrl>">
+                <form method="post" action="<@ofbizUrl>importIssuerProvision</@ofbizUrl>">
                   <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
                   <input type="hidden" name="keystoreName" value="${store.getName()}"/>
                   <input type="hidden" name="certString" value="${requestParameters.certString}"/>

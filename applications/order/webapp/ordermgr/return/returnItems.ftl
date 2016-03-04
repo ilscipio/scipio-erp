@@ -326,7 +326,7 @@ under the License.
         </#if>
         <#if (returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED") && (rowCount > 0)>
         <br />
-        <form name="acceptReturn" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
+        <form name="acceptReturn" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
           <#if returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
             <#assign statusId = "RETURN_ACCEPTED">
           <#else>

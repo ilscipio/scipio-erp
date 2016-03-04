@@ -35,7 +35,7 @@ var rawdata = [
             <#if (rootCat?has_content)>
                 <#list rootCat as root>
                     {
-                    "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string} [${root.productCategoryId}]<#else>${root.productCategoryId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>/EditProdCatalog?prodCatalogId=${root.productCategoryId}</@ofbizUrl>","onClick" : "callDocument('${root.productCategoryId}', 'catalog');"}},
+                    "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string} [${root.productCategoryId}]<#else>${root.productCategoryId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>EditProdCatalog?prodCatalogId=${root.productCategoryId}</@ofbizUrl>","onClick" : "callDocument('${root.productCategoryId}', 'catalog');"}},
                     "attr": {"id" : "${root.productCategoryId}", "rel" : "root", "isCatalog" : "${root.isCatalog?string}" ,"isCategoryType" : "${root.isCategoryType?string}"}
                     <#if root.child??>
                     ,"state" : "closed"

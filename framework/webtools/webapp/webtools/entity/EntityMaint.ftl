@@ -21,7 +21,7 @@ under the License.
 <@row>
 <@cell columns=6>
        <@heading relLevel=+1>${uiLabelMap.CommonGroup}</@heading>
-       <form action="<@ofbizUrl>/entitymaint</@ofbizUrl>">
+       <form action="<@ofbizUrl>entitymaint</@ofbizUrl>">
         <@field type="select" name="filterByGroupName" label=uiLabelMap.WebtoolsGroupName>
              <option value="">${uiLabelMap.CommonAll}</option>
              <#list entityGroups as group>

@@ -55,7 +55,7 @@ rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -Xdebug -Xnoag
 rem ### Simple easy to read line
 cd %OFBIZ_HOME%
 echo on
-"%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -jar ofbiz.jar
+"%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -Dsolr.solr.home=hot-deploy/solr/ -jar ofbiz.jar
 echo off
 rem ### If you would prefer the console output to be logged rather than displayed switch out the above line for this one
 rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -jar ofbiz.jar > runtime\logs\console.log

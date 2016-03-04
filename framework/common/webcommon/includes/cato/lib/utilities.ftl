@@ -51,26 +51,48 @@ DEV NOTES:
   * The inter-webapp is still complicated by need for webSiteId which stock apps don't have (and can't give)
 * webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
 
+!!! NOT YET FULLY IMPLEMENTED, DOCS ARE WIP !!!
 
   * Parameters *
+    type            = [intra-webapp|inter-webapp] (default: intra-app)
+                      intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
+                      inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
+                        The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
+                        It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.
+                      (New in Cato) 
     uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
                       (New in Cato) 
-    webSiteId       = string, target web site ID (default: current website, found in request, if any). 
-                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this
-                          is considered normal.
-                      WARN: The stock functionality provided by this parameter is currently limited,
-                          in particular to producing full URLs only.
-                      WARN: The behavior of this is currently poorly defined.
+    absPath         = boolean (default: -inferred from uri-) (fallback default: false)       
+                      If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
+                      If explicit false (stock Ofbiz default), the passed uri should be relative to a certain point depending on other flags.
+                      If not specified, will attempt for figure out based on the uri passed and other flags.
+                      WARN: Auto-resolution depends on presence or absence of a starting slash ("/").
+                      (New in Cato) 
+    interWebapp     = boolean (default: false) Alias for type="inter-webapp".
+                      (New in Cato) 
+    webSiteId       = string (default: -current website, found in request, if any-) Target web site ID 
+                      This usually should only be specified if interWebapp is true.
+                      Will determine the target webapp to use, specifically.
+                      NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
                       (Stock arg, some fixes in Cato)
-    fullPath        = boolean (default: false) or string boolean repr. If true, forces a full URL with protocol (HTTP or HTTPS).
+    controller      = boolean (default: -inferred from uri-) (fallback default: true)
+                      If true, the link is treated as pointing to an Ofbiz controller request URI, and will
+                      use information from the controller to generate the link.
+                      If false, the link is treated as pointing to any arbitrary servlet or resource.
+                      In some cases, this may be detected automatically, but this detection is not foolproof.
+                      (New in Cato) 
+    fullPath        = boolean (default: false) or string boolean repr. 
+                      If true, forces a full URL with protocol (HTTP or HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-    secure          = boolean (default: false) or string boolean repr. If true, forces a full URL with secure protocol (HTTPS).
+    secure          = boolean (default: false) or string boolean repr. 
+                      If true, forces a full URL with secure protocol (HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-    encode          = boolean (default: true) or string boolean repr. If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
+    encode          = boolean (default: true) or string boolean repr. 
+                      If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizUrl uri="" webSiteId="" fullPath=false secure=true encode=true>
+<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="">
 </#macro>
 -->
 

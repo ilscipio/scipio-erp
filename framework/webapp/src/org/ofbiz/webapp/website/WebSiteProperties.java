@@ -237,7 +237,10 @@ public final class WebSiteProperties {
      */
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof WebSiteProperties)) {
+        if (this == other) {
+            return true;
+        }
+        else if (!(other instanceof WebSiteProperties)) {
             return false;
         }
         WebSiteProperties o = (WebSiteProperties) other;

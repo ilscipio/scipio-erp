@@ -80,11 +80,13 @@ DEV NOTES:
                       Will determine the target webapp to use, specifically.
                       NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
                       (Stock arg, some fixes in Cato)
-    controller      = boolean (default: -inferred from uri-) (fallback default: true)
-                      If true, the link is treated as pointing to an Ofbiz controller request URI, and will
+    controller      = boolean (default: -dependent on type-) (fallback default: true)
+                      If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
                       use information from the controller to generate the link.
                       If false, the link is treated as pointing to any arbitrary servlet or resource.
-                      In some cases, this may be detected automatically, but this detection is not foolproof.
+                      Current behavior when unspecified:
+                      * If absPath is true, the uri will be checked to see whether it points to controller
+                      * Otherwise, generally defaults to true.
                       (New in Cato) 
     fullPath        = boolean (default: false) or string boolean repr. 
                       If true, forces a full URL with protocol (HTTP or HTTPS).
@@ -139,6 +141,7 @@ See @ofbizUrl.
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
 but usually used to access another servlet, such as /products/GZ-1000).
+This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
 
 See @ofbizUrl.
 -->
@@ -153,6 +156,7 @@ See @ofbizUrl.
 ************
 Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
 but usually used to access another servlet, such as /products/GZ-1000).
+This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
 
 See @ofbizUrl.
 -->

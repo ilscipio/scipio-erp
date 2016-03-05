@@ -21,25 +21,9 @@
 <project name="OFBiz Special Purpose Applications Build" default="build" basedir=".">
     <filelist id="specialpurpose-builds" dir="specialpurpose"
         files="
-        appserver/build.xml,
         assetmaint/build.xml,
-        birt/build.xml,
-        ebay/build.xml,
-        ebaystore/build.xml,
         ecommerce/build.xml,
         example/build.xml,
-        googlebase/build.xml,
-        googlecheckout/build.xml,
-        hhfacility/build.xml,
-        jetty/build.xml,
-        ldap/build.xml,
-        lucene/build.xml,
-        oagis/build.xml,
-        pos/build.xml,
-        projectmgr/build.xml,
-        scrum/build.xml,
-        bi/build.xml,
-        webpos/build.xml,
     	demosuite/build.xml
     "/>
 </project>

@@ -395,71 +395,147 @@ under the License.
     </menu>
 
     <menu name="ProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindProduct" title="${uiLabelMap.ProductFindProduct}">
+            <condition>
+                <if-empty field="parameters.productId"/>
+            </condition>
+            <link target="FindProduct" />
+        </menu-item>
         <menu-item name="EditProduct" title="${uiLabelMap.ProductProduct}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProduct">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductPrices" title="${uiLabelMap.ProductPrices}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductPrices">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductContent" title="${uiLabelMap.ProductContent}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductContent">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductGeos" title="${uiLabelMap.CommonGeos}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductGeos">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductGoodIdentifications" title="${uiLabelMap.CommonIds}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductGoodIdentifications">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductCategories" title="${uiLabelMap.ProductCategories}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductCategories">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="EditProductKeyword" title="${uiLabelMap.ProductKeywords}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductKeyword">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
         <menu-item name="EditProductAssoc" title="${uiLabelMap.ProductAssociations}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductAssoc">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="ViewProductManufacturing" title="${uiLabelMap.ProductManufacturing}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="ViewProductManufacturing">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
         <menu-item name="EditProductCosts" title="${uiLabelMap.ProductCosts}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductCosts">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductAttributes" title="${uiLabelMap.ProductAttributes}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductAttributes">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductFeatures">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductFacilities" title="${uiLabelMap.ProductFacilities}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductFacilities">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: TODO: Merge with  EditProductFacilities
         <menu-item name="EditProductFacilityLocations" title="${uiLabelMap.ProductLocations}">
             <link target="EditProductFacilityLocations">
                 <parameter param-name="productId"/>
@@ -471,54 +547,113 @@ under the License.
                 <parameter param-name="showAllFacilities" value="Y"/>
             </link>
         </menu-item>
+        -->
         <menu-item name="EditSupplierProduct" title="${uiLabelMap.ProductSuppliers}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductSuppliers">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="ViewProductAgreements" title="${uiLabelMap.ProductAgreements}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="ViewProductAgreements">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
+        <!-- CATO: TODO: Migrate to accounting
         <menu-item name="EditProductGlAccounts" title="${uiLabelMap.ProductAccounts}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductGlAccounts">
                 <parameter param-name="productId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="EditProductPaymentMethodTypes" title="${uiLabelMap.ProductPaymentTypes}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductPaymentMethodTypes">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="EditProductMaints" title="${uiLabelMap.ProductMaintenance}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductMaints">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
+        <!-- CATO: Review - this is a special type of product attribute
         <menu-item name="EditProductMeters" title="${uiLabelMap.ProductMeters}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductMeters">
                 <parameter param-name="productId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="EditProductSubscriptionResources" title="${uiLabelMap.ProductSubscriptionResources}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductSubscriptionResources">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="EditProductQuickAdmin" title="${uiLabelMap.ProductQuickAdmin}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductQuickAdmin">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+         -->
         <menu-item name="EditVendorProduct" title="${uiLabelMap.PartyVendor}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditVendorProduct">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
         <menu-item name="QuickAddVariants" title="${uiLabelMap.ProductVariants}">
             <condition>
-                <if-compare field="product.isVirtual" operator="equals" value="Y"/>
+                <and>
+                    <if-compare field="product.isVirtual" operator="equals" value="Y"/>
+                    <not>
+                        <if-empty field="parameters.productId"/>
+                    </not>
+                </and>
             </condition>
             <link target="QuickAddVariants">
                 <parameter param-name="productId"/>
@@ -526,10 +661,15 @@ under the License.
         </menu-item>
         <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}">
             <condition>
-                <or>
-                    <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED"/>
-                    <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED_SERVICE"/>
-                </or>
+                <and>
+                    <or>
+                        <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED"/>
+                        <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED_SERVICE"/>
+                    </or>
+                    <not>
+                        <if-empty field="parameters.productId"/>
+                    </not>
+                </and>
             </condition>
             <link target="EditProductConfigs">
                 <parameter param-name="productId"/>
@@ -537,43 +677,80 @@ under the License.
         </menu-item>
         <menu-item name="EditProductAssetUsage" title="${uiLabelMap.ProductAssetUsage}">
             <condition>
-                <or>
-                    <if-compare field="product.productTypeId" operator="equals" value="ASSET_USAGE"/>
-                    <if-compare field="product.productTypeId" operator="equals" value="ASSET_USAGE_OUT_IN"/>
-                </or>
+                <and>
+                    <or>
+                        <if-compare field="product.productTypeId" operator="equals" value="ASSET_USAGE"/>
+                        <if-compare field="product.productTypeId" operator="equals" value="ASSET_USAGE_OUT_IN"/>
+                    </or>
+                    <not>
+                        <if-empty field="parameters.productId"/>
+                    </not>
+                </and>
             </condition>
             <link target="EditProductAssetUsage">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        <!-- CATO: Remove 
         <menu-item name="EditProductWorkEfforts" title="${uiLabelMap.WorkEffortWorkEffort}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductWorkEfforts">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
+        <!-- CATO: Remove - the usefulness is really limited here and should probably be listed elsewhere
         <menu-item name="EditProductParties" title="${uiLabelMap.PartyParties}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductParties">
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
+        -->
+        <!-- CATO: Remove
         <menu-item name="viewProductOrder" title="${uiLabelMap.OrderOrders}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="viewProductOrder">
                 <parameter param-name="productId"/>
                 <parameter param-name="viewIndex" value="1"/>
                 <parameter param-name="viewSize" value="20"/>
                 <parameter param-name="showAll" value="Y"/>
             </link>
-        </menu-item>
+        </menu-item> -->
+        <!-- CATO: Remove
         <menu-item name="EditProductCommunicationEvents" title="${uiLabelMap.PartyCommunications}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="EditProductCommunicationEvents">
                 <parameter param-name="productId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
+        <!-- CATO: Remove
         <menu-item name="ViewProductGroupOrder" title="${uiLabelMap.ProductGroupOrder}">
+             <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
             <link target="ViewProductGroupOrder">
                 <parameter param-name="productId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
     </menu>
     <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ProductTabBar" recursive="includes-only" />

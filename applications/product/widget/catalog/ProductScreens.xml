@@ -122,6 +122,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProduct"/>
+                <set field="activeSubMenuItem" value="FindProduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">

@@ -3,6 +3,8 @@ package org.ofbiz.webapp.control;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Cato: Request utilities.
  */
@@ -56,4 +58,8 @@ public abstract class RequestUtil {
         }
     }
     
+    
+    public static String encodeURLNoJsessionId(String url, HttpServletResponse response) {
+        return RequestUtil.removeJsessionId(response.encodeURL(url));
+    }
 }

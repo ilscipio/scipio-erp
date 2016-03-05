@@ -27,7 +27,7 @@
         title="eCommerce Cato"
         server="default-server"
         location="webapp/ecomcato"
-        mount-point="/ecomcato"
+        mount-point="/shop"
         app-bar-display="false"/>
         
 </ofbiz-component>

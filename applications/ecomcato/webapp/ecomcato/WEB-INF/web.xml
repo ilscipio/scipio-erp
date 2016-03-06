@@ -143,11 +143,11 @@
     </filter>
     
     <!-- Cato: Process filter -->
-    <filter>
+<!--     <filter>
         <display-name>CatoProcessFilter</display-name>
         <filter-name>CatoProcessFilter</filter-name>
         <filter-class>com.ilscipio.cato.control.CatoProcessFilter</filter-class>         
-    </filter>  
+    </filter>  --> 
     
     <filter>
         <display-name>ContextFilter</display-name>
@@ -172,12 +172,12 @@
     </filter-mapping>
     
     <!-- Cato: Process filter mapping -->
-    <filter-mapping>
+<!--     <filter-mapping>
         <filter-name>CatoProcessFilter</filter-name>
         <url-pattern>/*</url-pattern>   
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
+    </filter-mapping> -->
     
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>

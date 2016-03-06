@@ -16,9 +16,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@section>
+   <@table type="fields">
+          <#if product.productRating?has_content>
+            <@tr>
+                <@td class="${styles.grid_large!}2">${uiLabelMap.ProductRating}
+                </@td>
+                <@td colspan="3">
+                    ${product.productRating!}
+                    <#if product.ratingTypeEnum?has_content>
+                        <#assign ratingEnum = product.getRelatedOne("RatingEnumeration", true)/>
+                        ${(ratingEnum.get("description",locale))!product.ratingTypeEnum}
+                    </#if>
+                </@td>
+            </@tr>
+        </#if>
 
-<#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
-  </@menu>
-</#if>
+
+    </@table>
+
+
+</@section>

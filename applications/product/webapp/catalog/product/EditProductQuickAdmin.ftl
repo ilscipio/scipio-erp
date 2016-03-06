@@ -115,9 +115,9 @@ function doPublish() {
             <@tr valign="middle">
                 <@td nowrap="nowrap">
                   <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
-                  <a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a>
+                  <a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a>
                 </@td>
-                <@td nowrap="nowrap"><a class="${styles.link_nav_info_name!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
+                <@td nowrap="nowrap"><a class="${styles.link_nav_info_name!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
                 <@td colspan="2">
                     <@field type="input" name="description${idx}" size="70" maxlength="100" value=(selFeatureDesc[assocProduct.productId]!)/>
                 </@td>
@@ -224,7 +224,7 @@ function doPublish() {
                     <@td><@field type="input" name="~ntwt${idx}" size="6" maxlength="20" value=(featureNtwt.get(assocProduct.productId)!)/></@td>
                     <@td><@field type="input" name="~grams${idx}" size="6" maxlength="20" value=(featureGrams.get(assocProduct.productId)!)/></@td>
                     <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureHazmat.get(assocProduct.productId)!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureSalesThru.get(assocProduct.productId)!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${StringUtil.wrapString(featureThruDate.get(assocProduct.productId)!)}</a></@td>
                 </@tr>
                 <#assign idx = idx + 1/>
@@ -246,7 +246,7 @@ function doPublish() {
                     <@td><@field type="input" name="~ntwt" size="6" maxlength="20" value=(ntwt!) /></@td>
                     <@td><@field type="input" name="~grams" size="6" maxlength="20" value=(grams!) /></@td>
                     <@td><a class="${styles.link_nav_info_value!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(hazmat!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></@td>
+                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(salesthru!)}</a></@td>
                     <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${StringUtil.wrapString(thrudate!)}</a></@td>
                 </@tr>
               <@tfoot>

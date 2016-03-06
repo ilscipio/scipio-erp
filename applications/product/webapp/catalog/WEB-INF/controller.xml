@@ -390,7 +390,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindProduct"/>
     </request-map>
-   <request-map uri="EditProduct">
+    <request-map uri="ViewProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewProduct"/>
+    </request-map>
+    <request-map uri="EditProduct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProduct"/>
     </request-map>
@@ -3059,6 +3063,7 @@ under the License.
     </request-map>
     
     <!-- ================ Product Tag Requests ================= -->
+     <!-- CATO: Remove
     <request-map uri="EditProductTag">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductTag"/>
@@ -3070,6 +3075,7 @@ under the License.
         <response name="success" type="request-redirect" value="EditProductTag"/>
         <response name="error" type="view" value="EditProductTag"/>
     </request-map>
+    -->
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -3107,6 +3113,7 @@ under the License.
     <view-map name="CreateProductInCategoryCheckExisting" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#CreateProductInCategoryCheckExisting"/>
 
     <view-map name="FindProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#FindProduct"/>
+    <view-map name="ViewProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#ViewProduct"/>
     <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/>
     <view-map name="EditProductPrices" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductPrices"/>
     <view-map name="EditProductAssetUsage" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssetUsage"/>
@@ -3235,7 +3242,8 @@ under the License.
     <view-map name="ListShipmentMethodTypes" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListShipmentMethodTypes"/>
     <view-map name="ListCarrierShipmentMethods" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListCarrierShipmentMethods"/>
 
-    <view-map name="EditProductTag" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductTag"/>
+    <!-- CATO: Remove    
+    <view-map name="EditProductTag" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductTag"/> -->
 
     <!-- Lookup request mappings -->
     <view-map name="LookupUserLoginAndPartyDetails" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupUserLoginAndPartyDetails"/>

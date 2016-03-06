@@ -42,7 +42,7 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <@tr valign="middle" alt=alt_row>
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
                 <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>

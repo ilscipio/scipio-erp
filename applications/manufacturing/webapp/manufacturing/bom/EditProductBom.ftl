@@ -216,7 +216,7 @@ function lookupBom() {
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
         <@tr>
             <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(assocToProduct.productId)!}</a></@td>
-<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
+<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>ViewProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
             <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if></@td>
             <@td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</@td>

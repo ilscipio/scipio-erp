@@ -110,7 +110,7 @@ under the License.
           <#list productsData as productData>
             <#assign node = productData.node>
             <@tr valign="middle">
-              <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_update!}">${node.product.productId}</a></@td>
+              <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_update!}">${node.product.productId}</a></@td>
               <@td>${node.product.internalName?default("&nbsp;")}</@td>
               <@td align="right">${node.quantity}</@td>
               <@td align="right">${productData.qoh!}</@td>

@@ -51,17 +51,17 @@ under the License.
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
                                         <#elseif orderItemType??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.itemDescription!}</a>
                                         </#if>
                                         
                                         <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>

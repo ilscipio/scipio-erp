@@ -54,7 +54,7 @@ under the License.
               <#if (quantityOrdered > 0) >
           <@tr>
               <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
-              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${orderItem.productId!}</@ofbizInterWebappUrl>" class="link">${orderItem.productId!}</a>]</@td>
+              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@ofbizInterWebappUrl>" class="link">${orderItem.productId!}</a>]</@td>
               <@td>${quantityOrdered}</@td>
               <@td>${quantityNotAvailable}</@td>
               <@td colspan="2">

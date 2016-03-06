@@ -11,7 +11,7 @@
                 URL = 'EditCategory';
                 dataSet = {"productCategoryId" : id};
             } else if(data.node.type == "product") {
-                URL = 'EditProduct';
+                URL = 'ViewProduct';
                 dataSet = {"productId" : id};
             }           
             if (URL && dataSet) {               

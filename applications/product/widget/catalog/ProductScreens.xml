@@ -28,6 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="products"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="productId" from-field="parameters.productId" global="true"/>
@@ -87,25 +88,22 @@ under the License.
                                         <platform-specific>
                                             <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
                                         </platform-specific>
-                                        
-                                        <label style="heading">${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
-                                        <image src="${product.smallImageUrl}" url-mode="content" alt="${product.internalName}" style="cssImgSmall"/>
-                                        
                                     </widgets>
                                     <fail-widgets>
                                         <section>
                                             <condition>
-                                                <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
+                                                <or>
+                                                    <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
+                                                </or>
                                             </condition>
                                             <widgets>
                                                 <platform-specific>
                                                     <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
                                                 </platform-specific>
-                                                <!-- <include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
                                             </widgets>
                                         </section>
                                     </fail-widgets>
-                                </section>
+                                </section>-->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -156,16 +154,25 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="EditProduct"/>
-                <set field="labelTitleProperty" value="ProductProduct"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="parameters.bypassIfNoProduct" value="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditProduct} ${parameters.productId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet> <!-- title="${uiLabelMap.PageTitleEditProduct}" -->
+                         <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoEditProduct"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                
+                            </container>
+                        </container>
+                        <!-- 
+                        <screenlet>
                             <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProduct"/>
                         </screenlet>
-                        <!-- 
                         <section>
                             <condition>
                                 <not><if-empty field="product"/></not>
@@ -194,6 +201,40 @@ under the License.
                             </widgets>
                         </section>
                          -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ViewProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="activeSubMenuItem" value="ViewProduct"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.bypassIfNoProduct" value="true"/>
+                <set field="title" value="${uiLabelMap.ProductProduct} ${parameters.productId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
+                    <decorator-section name="body">
+                         <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoProductInfo"/>
+                                <include-screen name="CatoProductCategory"/>
+                                <include-screen name="CatoProductDates"/>
+                                <include-screen name="CatoProductRates"/>
+                                <include-screen name="CatoProductShoppingCart"/>
+                                <include-screen name="CatoProductMisc"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoProductInventory"/>
+                                <include-screen name="CatoProductAmount"/>
+                                <include-screen name="CatoProductMeasures"/>
+                                <include-screen name="CatoProductShipping"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1510,6 +1551,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- CATO: Remove
     <screen name="EditProductTag">
         <section>
             <widgets>
@@ -1521,6 +1563,289 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen> -->
+    
+    
+    <!-- CATO: Widget implementation -->
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoEditProduct">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                     <widgets>
+                       <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoEditProduct.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductInfo">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.productName"/></not>
+                            <not><if-empty field="product.internalName"/></not>
+                            <not><if-empty field="product.brandName"/></not>
+                            <not><if-empty field="product.productTypeId"/></not>
+                            <not><if-empty field="product.manufacturerPartyId"/></not>
+                            <not><if-empty field="product.comments"/></not>
+                        </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonOverview}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductInfo.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductCategory">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.primaryProductCategoryId"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.ProductPrimaryCategory}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductCategory.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductDates">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.introductionDate"/></not>
+                            <not><if-empty field="product.releaseDate"/></not>
+                            <not><if-empty field="product.salesDiscontinuationDate"/></not>
+                            <not><if-empty field="product.supportDiscontinuationDate"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonDates}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductDates.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductInventory">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.salesDiscWhenNotAvail"/></not>
+                            <not><if-empty field="product.requirementMethodEnumId"/></not>
+                            <not><if-empty field="product.lotIdFilledIn"/></not>
+                            <not><if-empty field="product.inventoryMessage"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonInventory}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductInventory.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductRates">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.productRating"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonRate}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductRates.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductAmount">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.requireAmount"/></not>
+                            <not><if-empty field="product.amountUomTypeId"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonAmount}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductAmount.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductMeasures">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.productHeight"/></not>
+                            <not><if-empty field="product.productWidth"/></not>
+                            <not><if-empty field="product.productDepth"/></not>
+                            <not><if-empty field="product.productDiameter"/></not>
+                            <not><if-empty field="product.productWeight"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonMeasures}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductMeasures.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductShipping">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.quantityIncluded"/></not>
+                            <not><if-empty field="product.piecesIncluded"/></not>
+                            <not><if-empty field="product.inShippingBox"/></not>
+                            <not><if-empty field="product.defaultShipmentBoxTypeId"/></not>
+                            <not><if-empty field="product.chargeShipping"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonShipping}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductShipping.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductShoppingCart">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.orderDecimalQuantity"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonShoppingCart}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductShoppingCart.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->
+    <screen name="CatoProductMisc">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <not><if-empty field="product.returnable"/></not>
+                            <not><if-empty field="product.includeInPromotions"/></not>
+                            <not><if-empty field="product.taxable"/></not>
+                         </or>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonMiscellaneous}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/CatoProductMisc.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
         </section>
     </screen>
 </screens>

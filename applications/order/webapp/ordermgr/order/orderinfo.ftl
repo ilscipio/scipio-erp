@@ -80,7 +80,7 @@ under the License.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
-        <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalogmgr">${productStore.storeName!}</a> 
+        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalogmgr">${productStore.storeName!}</a> 
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
           <#if channel.get("description",locale)?has_content && channel.get("enumId")!= "UNKNWN_SALES_CHANNEL">

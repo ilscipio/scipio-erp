@@ -159,7 +159,7 @@ under the License.
                 </@td>
                 <@td>
                     <#if item.get("productId")??>
-                        <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${item.productId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a>
+                        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${item.productId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a>
                     <#else>
                         ${uiLabelMap.CommonNA}
                     </#if></@td>

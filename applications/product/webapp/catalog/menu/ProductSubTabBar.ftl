@@ -19,14 +19,18 @@ under the License.
 <@row>
     <@cell>
     <@menu type="subtab">
+        <#if productId?has_content>
+            <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId!}") text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
+        </#if>
         <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
         <#if product?has_content>
-          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?product_id=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ecommerce/control/product?product_id=${productId!}") text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
-          <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?productId=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId!}") text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
+          <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>
+        <#--
         <@menuitem type="link" href=makeOfbizUrl("EditProductTag") text=uiLabelMap.ProductTags class="+${styles.action_nav!} ${styles.action_update!}" />
-        <#--<#if activeSubMenuItem?has_content && activeSubMenuItem="EditProduct">
+        <#if activeSubMenuItem?has_content && activeSubMenuItem="EditProduct">
             <@menuitem type="link" href="javascript:expandAll(true);" text=uiLabelMap.CommonExpandAll class="+${styles.action_run_local!} ${styles.action_show!}" />
             <@menuitem type="link" href="javascript:expandAll(false);" text=uiLabelMap.CommonCollapseAll class="+${styles.action_run_local!} ${styles.action_hide!}" />
         </#if>-->

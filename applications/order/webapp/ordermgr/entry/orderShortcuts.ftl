@@ -37,7 +37,7 @@ under the License.
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("checkinits") text=uiLabelMap.PartyChangeParty class="+${styles.action_nav!} ${styles.action_update!}" />
         <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-           <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditProduct?${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductCreateNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+           <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductCreateNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("quickadd") text=uiLabelMap.OrderQuickAdd class="+${styles.action_nav!} ${styles.action_add!}" />
         <#if shoppingLists??>

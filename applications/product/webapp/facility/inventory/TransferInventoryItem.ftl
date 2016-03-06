@@ -62,7 +62,7 @@ under the License.
             </@field>
             <@field type="display" label=uiLabelMap.ProductProductId>
                 <#if inventoryItem?? && (inventoryItem.productId)??>
-                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.productId)!}</a>
+                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${(inventoryItem.productId)!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.productId)!}</a>
                 </#if>
             </@field>
             <@field type="display" label=uiLabelMap.CommonStatus>

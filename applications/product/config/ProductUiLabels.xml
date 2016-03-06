@@ -31095,6 +31095,7 @@
     </property>
     <property key="ProductVirtualFieldGroup">
         <value xml:lang="en">Virtual Product</value>
+        <value xml:lang="de">Virtuelles Produkt</value>
         <value xml:lang="fr">Article virtuel</value>
         <value xml:lang="it">Prodotto virtuale</value>
         <value xml:lang="ja">仮想製品</value>

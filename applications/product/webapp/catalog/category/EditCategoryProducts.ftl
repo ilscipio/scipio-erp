@@ -57,9 +57,9 @@ under the License.
                 <#if productCategoryMember.thruDate?? && nowTimestamp.after(productCategoryMember.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
                   <@tr valign="middle">
                     <@td>
-                      <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
+                      <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>
                       <#if (product.smallImageUrl)??>
-                         <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
+                         <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
                       </#if>
                     </@td>
                     <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>

@@ -37,7 +37,7 @@ under the License.
             <#assign product = shipmentItemData.product!>
             <@tr valign="middle">
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}" target="_blank">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}" target="_blank">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
             </@tr>

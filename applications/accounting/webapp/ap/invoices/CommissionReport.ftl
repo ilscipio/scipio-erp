@@ -37,7 +37,7 @@ under the License.
     </@thead>
     <#list commissionReportList as commissionReport>
       <@tr valign="middle">
-        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${commissionReport.productId!}</@ofbizInterWebappUrl>">${commissionReport.productName!}</a></@td>
+        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${commissionReport.productId!}</@ofbizInterWebappUrl>">${commissionReport.productName!}</a></@td>
         <@td>${commissionReport.quantity!}</@td>
         <@td>
           ${commissionReport.numberOfOrders!} /

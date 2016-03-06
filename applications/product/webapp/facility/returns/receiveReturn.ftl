@@ -115,14 +115,14 @@ under the License.
                         <#assign serializedInv = product.getRelated("InventoryItem", {"inventoryItemTypeId":"SERIALIZED_INV_ITEM"}, null, false)>
                         <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                         <@td width="45%">
-                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
+                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                             <#if serializedInv?has_content><font color="red">**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                         </@td>
                       <#elseif orderItem?has_content>
                         <@td width="45%">
                             ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                             <input type="text" size="12" name="productId_o_${rowCount}" />
-                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                         </@td>
                       <#else>
                         <@td width="45%">

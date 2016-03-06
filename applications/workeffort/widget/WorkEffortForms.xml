@@ -1044,7 +1044,7 @@ under the License.
         <field name="workEffortGoodStdTypeId"><display-entity entity-name="WorkEffortGoodStandardType" description="${description}"/></field>
         <field name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productName}" also-hidden="true">
-                <sub-hyperlink target="/catalog/control/EditProduct" description="${productId}" link-style="${styles.link_nav_info_id}" target-type="inter-app">
+                <sub-hyperlink target="/catalog/control/ViewProduct" description="${productId}" link-style="${styles.link_nav_info_id}" target-type="inter-app">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>

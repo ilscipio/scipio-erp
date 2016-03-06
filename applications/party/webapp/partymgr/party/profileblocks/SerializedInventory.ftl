@@ -42,7 +42,7 @@ under the License.
                                 </#if>
                                 <#if product?has_content>
                                     <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "html")!>
-                                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${productName!product.productId}</a>
+                                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${productName!product.productId}</a>
                                 </#if>
                             </#if>
                         </@td>

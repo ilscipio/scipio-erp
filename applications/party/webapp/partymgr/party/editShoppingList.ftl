@@ -166,7 +166,7 @@ under the License.
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
-            <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
+            <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
             </@td>
             <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">

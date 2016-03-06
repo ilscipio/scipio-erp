@@ -142,7 +142,7 @@ under the License.
         </field>
         <field name="productId">
             <display-entity entity-name="Product" description="${productName}">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="/catalog/control/ViewProduct" target-type="inter-app" description="${productId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>

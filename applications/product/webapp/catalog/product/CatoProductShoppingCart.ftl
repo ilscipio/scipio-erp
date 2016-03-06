@@ -16,9 +16,17 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@section>
 
-<#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
-  </@menu>
-</#if>
+    <@table type="fields">
+        <#if product.orderDecimalQuantity?has_content && product.chargeShipping=="Y">   
+            <@tr>
+              <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_orderDecimalQuantity}
+              </@td>
+              <@td colspan="3"><#if product.orderDecimalQuantity=="Y">${uiLabelMap.CommonYes}<#else>${uiLabelMap.CommonNo}</#if></@td>
+            </@tr>
+        </#if>
+    </@table>
+
+
+</@section>

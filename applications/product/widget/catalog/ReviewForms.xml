@@ -57,7 +57,7 @@ under the License.
         </row-actions>
         <field name="productReviewId"><hidden/></field>
         <field name="productId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
+            <hyperlink also-hidden="false" description="${productId}" target="ViewProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>

@@ -16,9 +16,17 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@section>
+    <@table type="fields">
+        <#if product.primaryProductCategoryId?has_content>
+            <#assign productCategory = product.getRelatedOne("PrimaryProductCategory", true) />
+            <@tr>
+              <@td class="${styles.grid_large!}2">${uiLabelMap.ProductPrimaryCategory}
+              </@td>
+              <@td colspan="3"><a href="<@ofbizUrl>EditCategory?productCategoryId=${product.primaryProductCategoryId}</@ofbizUrl>">${(productCategory.categoryName?default(product.primaryProductCategoryId))!}</a></@td>
+            </@tr>
+        </#if>
+    </@table>
 
-<#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
-  </@menu>
-</#if>
+
+</@section>

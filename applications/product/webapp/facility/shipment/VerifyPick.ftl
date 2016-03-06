@@ -197,7 +197,7 @@ under the License.
                   <@td>${orderItemSeqId!}</@td>
                   <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
                   <@td>
-                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
+                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
                   </@td>
                   <@td>
                     <select name="geo_${rowKey}">

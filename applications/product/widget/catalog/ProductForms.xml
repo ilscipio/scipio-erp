@@ -13,21 +13,23 @@
         <field name="noConditionFind">
             <hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
         </field>
-        <field name="productId" title="${uiLabelMap.CommonId}">
+        <!-- 
+        <field name="internalName" title="${uiLabelMap.CommonName}">
             <text-find />
         </field>
-        <field name="productTypeId" title="${uiLabelMap.CommonType}" position="2">
+         -->
+        <field name="productName" position="1">
+            <text-find />
+        </field>
+         <field name="productId" title="${uiLabelMap.CommonId}" position="2">
+            <text-find />
+        </field>
+        <field name="productTypeId" title="${uiLabelMap.CommonType}"  position="3">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="internalName" title="${uiLabelMap.CommonName}">
-            <text-find />
-        </field>
-        <field name="productName" position="2">
-            <text-find />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button" />
@@ -47,7 +49,7 @@
             </service>
         </actions>
         <field name="productId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id}">
-            <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
+            <hyperlink also-hidden="false" description="${productId}" target="ViewProduct">
                 <parameter param-name="productId" />
             </hyperlink>
         </field>
@@ -68,9 +70,9 @@
         </field>
     </form>
 
-
+    <!-- CATO: Remove
     <form name="EditProduct" type="single" target="updateProduct" title="" default-map-name="product" default-position-span="1"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row">
 
         <alt-target use-when="product==null" target="createProduct" />
 
@@ -92,7 +94,7 @@
 
         <field position="3" name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down no-current-selected-key="FINISHED_GOOD">
-                <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
+                <entity-options entity-name="ProductType" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
@@ -352,11 +354,7 @@
         <field name="contentInfoText" title="${uiLabelMap.ProductContentInfoText}" widget-style="tooltip">
             <display description="${uiLabelMap.ProductNoteForContentOptions}" also-hidden="false" />
         </field>
-        <!-- These go on the Content tab-button page <field name="productName"><text size="30" maxlength="60"/></field> <field name="description"><textarea 
-            cols="60" rows="2"/></field> <field name="longDescription"><textarea cols="60" rows="3"/></field> <field name="smallImageUrl"><text size="60" 
-            maxlength="255"/></field> <field name="mediumImageUrl"><text size="60" maxlength="255"/></field> <field name="largeImageUrl"><text size="60" 
-            maxlength="255"/></field> <field name="detailImageUrl"><text size="60" maxlength="255"/></field> <field name="detailScreen"><text size="60" 
-            maxlength="250"/></field> -->
+
         <field name="submitAction" title="${uiLabelMap.ProductUpdateProduct}" use-when="product!=null" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
@@ -456,7 +454,7 @@
                 <sort-field name="autoCreateKeywords" />
             </field-group>
         </sort-order>
-    </form>
+    </form> -->
 
     <form name="EditProductDup" type="single" target="DuplicateProduct" title="" default-map-name="product" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
@@ -1855,7 +1853,7 @@
             <hidden />
         </field>
         <field name="productIdTo" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_info_name}">
-            <hyperlink also-hidden="false" description="${productAssoc.internalName}" target="EditProduct">
+            <hyperlink also-hidden="false" description="${productAssoc.internalName}" target="ViewProduct">
                 <parameter param-name="productId" from-field="productIdTo" />
             </hyperlink>
         </field>
@@ -1896,7 +1894,7 @@
             <hidden />
         </field>
         <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
+            <hyperlink also-hidden="false" description="${productId}" target="ViewProduct">
                 <parameter param-name="productId" />
             </hyperlink>
         </field>
@@ -3448,8 +3446,9 @@
         </field>
     </form>
 
+    <!-- CATO: Remove
     <form name="ListProductTag" type="multi" target="updateProductTag" title="" list-name="" odd-row-style="alternate-row"
-        paginate-target="EditProductTag" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table" -->
+        paginate-target="EditProductTag" separate-columns="true">
         <actions>
             <entity-condition entity-name="ProductKeyword">
                 <condition-list combine="and">
@@ -3464,7 +3463,7 @@
             <hidden />
         </field>
         <field name="productId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditProduct" description="${productId}">
+            <hyperlink target="ViewProduct" description="${productId}">
                 <parameter param-name="productId" />
             </hyperlink>
         </field>
@@ -3486,4 +3485,5 @@
             <submit button-type="button" />
         </field>
     </form>
+    -->
 </forms>

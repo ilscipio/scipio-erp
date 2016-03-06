@@ -36,7 +36,7 @@ under the License.
             <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
             <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
             <@tr valign="middle">
-                <@td><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${(listToProduct.internalName)!} [${(assocFromProduct.productIdTo)!}]</a></@td>
+                <@td><a href="<@ofbizUrl>ViewProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${(listToProduct.internalName)!} [${(assocFromProduct.productIdTo)!}]</a></@td>
                 <@td><#if curProductAssocType??> ${(curProductAssocType.get("description",locale))!}<#else>${(assocFromProduct.productAssocTypeId)!}</#if></@td>
                 <#assign cellClass><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>+${styles.text_color_alert!}</#if></#assign>
                 <@td class=cellClass>

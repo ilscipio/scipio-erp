@@ -45,7 +45,7 @@ under the License.
           <form method="post" action="<@ofbizUrl>EditProduct</@ofbizUrl>" name="EditProductForm">
             <@pul title=uiLabelMap.ProductEditProductWithProductId>
                 <@pli><@field type="lookup" name="productId" id="productId" formName="EditProductForm" fieldFormName="LookupProduct" postfix=true/></@pli>
-                <@pli><a href="<@ofbizUrl>EditProduct</@ofbizUrl>" class="${styles.tiny!} ${styles.action_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
+                <@pli><a href="<@ofbizUrl>ViewProduct</@ofbizUrl>" class="${styles.tiny!} ${styles.action_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateNewProduct}</a></@pli>
                 <@pli><a href="<@ofbizUrl>CreateVirtualWithVariantsForm</@ofbizUrl>" class="${styles.tiny!}">${uiLabelMap.ProductQuickCreateVirtualFromVariants}</a></@pli>
             </@pul>
           </form>

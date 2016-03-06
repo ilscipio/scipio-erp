@@ -104,7 +104,7 @@ under the License.
                   <b>${requestParameters.productId!}</b>
               </@field>
               <@field type="display" label=uiLabelMap.ProductProductName>
-                  <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
+                  <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
               </@field>
               <@field type="display" label=uiLabelMap.ProductProductDescription>
                   ${product.description!}
@@ -283,13 +283,13 @@ under the License.
                             <#assign product = orderItem.getRelatedOne("Product", true)/>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}"/>
                             <@td width="45%">
-                                ${orderItem.orderItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
+                                ${orderItem.orderItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
                             </@td>
                           <#else>
                             <@td width="45%">
                                 <b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <@field type="input" size="12" name="productId_o_${rowCount}"/>
-                                <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                             </@td>
                           </#if>
                           <@td align="right">${uiLabelMap.ProductLocation}:</@td>

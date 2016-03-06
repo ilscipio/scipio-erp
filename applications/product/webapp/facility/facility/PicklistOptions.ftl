@@ -275,9 +275,9 @@ under the License.
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

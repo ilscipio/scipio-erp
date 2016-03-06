@@ -125,9 +125,7 @@
 	<classpathentry excluding="org/ofbiz/securityext/thirdparty/truition/TruitionCoReg.java" kind="src" path="applications/securityext/src"/>
 	<classpathentry kind="src" path="applications/humanres/src"/>
 	<classpathentry kind="src" path="applications/workeffort/src"/>
-	<classpathentry kind="src" path="specialpurpose/appserver/src"/>
 	<classpathentry excluding="org/ofbiz/base/config/CoberturaInstrumenter.java" kind="src" path="framework/base/src"/>
-	<classpathentry kind="src" path="specialpurpose/birt/src"/>
 	<classpathentry kind="src" path="framework/base/config"/>
 	<classpathentry kind="src" path="framework/catalina/src"/>
 	<classpathentry kind="src" path="framework/common/src"/>
@@ -135,7 +133,6 @@
 	<classpathentry kind="src" path="framework/entity/src"/>
 	<classpathentry kind="src" path="framework/entityext/src"/>
 	<classpathentry kind="src" path="framework/geronimo/src"/>
-	<classpathentry kind="src" path="specialpurpose/jetty/src"/>
 	<classpathentry kind="src" path="framework/minilang/src"/>
 	<classpathentry kind="src" path="framework/security/src"/>
 	<classpathentry kind="src" path="framework/service/src"/>
@@ -145,20 +142,8 @@
 	<classpathentry kind="src" path="framework/webtools/src"/>
 	<classpathentry kind="src" path="framework/widget/src"/>
 	<classpathentry kind="src" path="specialpurpose/assetmaint/src"/>
-	<classpathentry kind="src" path="specialpurpose/ebay/src"/>
-	<classpathentry kind="src" path="specialpurpose/ebaystore/src"/>
 	<classpathentry kind="src" path="specialpurpose/ecommerce/src"/>
 	<classpathentry kind="src" path="specialpurpose/example/src"/>
-	<classpathentry kind="src" path="specialpurpose/googlebase/src"/>
-	<classpathentry kind="src" path="specialpurpose/googlecheckout/src"/>
-	<classpathentry kind="src" path="specialpurpose/hhfacility/src"/>
-	<classpathentry kind="src" path="specialpurpose/ldap/src"/>
-	<classpathentry kind="src" path="specialpurpose/oagis/src"/>
-	<classpathentry kind="src" path="specialpurpose/pos/src"/>
-	<classpathentry kind="src" path="specialpurpose/projectmgr/src"/>
-	<classpathentry kind="src" path="specialpurpose/scrum/src"/>
-	<classpathentry kind="src" path="specialpurpose/webpos/src"/>
-	<classpathentry kind="src" path="specialpurpose/lucene/src"/>
 	<classpathentry kind="src" path="specialpurpose/demosuite/src"/>
 	<classpathentry kind="src" path="framework/solr/src"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>

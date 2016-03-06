@@ -35,7 +35,7 @@ under the License.
       <#assign options =  delegator.findByAnd("ProductType",{},["description ASC"], true)>
         <#list options as option>
             <#if product?has_content>
-                <#if product.productTypeId == option.productTypeId>
+                <#if product.productTypeId?has_content && product.productTypeId == option.productTypeId>
                     <#assign selected = true/>
                 <#elseif option.productTypeId=="FINISHED_GOOD">
                     <#assign selected = true/>
@@ -61,7 +61,7 @@ under the License.
           <#assign options =  delegator.findByAnd("ProductCategory",{},["categoryName ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.primaryProductCategoryId == option.productCategoryId>
+                <#if product.primaryProductCategoryId?has_content && product.primaryProductCategoryId == option.productCategoryId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -83,7 +83,7 @@ under the License.
         <#assign options =  delegator.findByAnd("UomType",{},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.amountUomTypeId == option.amountUomTypeId>
+                <#if product.amountUomTypeId?has_content && product.amountUomTypeId == option.amountUomTypeId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -100,7 +100,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.requirementMethodEnumId == option.enumId>
+                <#if product.requirementMethodEnumId?has_content && product.requirementMethodEnumId == option.enumId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -125,7 +125,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.heightUomId == option.uomId>
+                <#if product.heightUomId?has_content && product.heightUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -143,7 +143,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.widthUomId == option.uomId>
+                <#if product.widthUomId?has_content && product.widthUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -160,7 +160,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.depthUomId == option.uomId>
+                <#if product.depthUomId?has_content && product.depthUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -178,7 +178,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.diameterUomId == option.uomId>
+                <#if product.diameterUomId?has_content && product.diameterUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -196,7 +196,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"WEIGHT_MEASURE"},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.weightUomId == option.uomId>
+                <#if product.weightUomId?has_content && product.weightUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -216,7 +216,7 @@ under the License.
         <#assign options =  delegator.findByAnd("Uom",{},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.quantityUomId == option.uomId>
+                <#if product.quantityUomId?has_content && product.quantityUomId == option.uomId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>
@@ -235,7 +235,7 @@ under the License.
         <#assign options =  delegator.findByAnd("ShipmentBoxType",{},["description ASC"], true)/>
         <#list options as option>
             <#if product?has_content>
-                <#if product.defaultShipmentBoxTypeId == option.shipmentBoxTypeId>
+                <#if product.defaultShipmentBoxTypeId?has_content && product.defaultShipmentBoxTypeId == option.shipmentBoxTypeId>
                     <#assign selected = true/>
                  <#else>
                     <#assign selected = false/>

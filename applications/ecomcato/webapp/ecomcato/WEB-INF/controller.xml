@@ -3,10 +3,10 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
         
     <!-- Based on ecommerce webapp -->
-    <include location="component://ecommerce/webapp/ecommerce/WEB-INF/controller.xml"/>
+    <!-- <include location="component://ecommerce/webapp/ecommerce/WEB-INF/controller.xml"/> -->
     
     <!-- Cato: Must be included last to override screen handler definitions; requires cato build --> 
-    <include location="component://catopublish/webcommon/WEB-INF/common-cato-client-controller.xml"/>
+   <!--  <include location="component://catopublish/webcommon/WEB-INF/common-cato-client-controller.xml"/> -->
        
     <description>EcomCato Component Site Configuration File</description>
     

@@ -12,7 +12,7 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="jar" location="lib/*"/>
 
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/CatoDemoCatalogData.xml"/>
+    <!-- <entity-resource type="data" reader-name="demo" loader="main" location="data/CatoDemoCatalogData.xml"/> -->
 
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>

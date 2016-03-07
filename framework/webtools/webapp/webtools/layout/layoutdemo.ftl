@@ -826,6 +826,15 @@
       <@field type="input" name="input10" label="Input" value="val1" totalColumns=11 postfix=true widgetPostfixCombined=false />
       <@field type="input" name="input11" label="Input" value="val1" widgetPostfixColumns=8 postfix=true widgetPostfixCombined=false />
       <@field type="input" name="input12" label="Input" value="val1" widgetPostfixColumns=8 totalColumns=11 postfix=true widgetPostfixCombined=false />
+
+    <@fields fieldArgs={"totalColumns":11}>
+      <p>Group of fields with fewer than 12 total columns</p>
+      <@field type="input" name="input13" label="Input" value="val1" />
+      <@field type="input" name="input14" label="Input" value="val1" />
+      <@field type="input" name="input15" label="Input" value="val1" />
+      <@field type="input" name="input16" label="Input" value="val1" />
+    </@fields>
+
     </@fields>
     </@form>
   </@section>

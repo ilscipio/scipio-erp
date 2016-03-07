@@ -476,7 +476,7 @@ under the License.
             <xs:documentation>
                 You can have one response for each possible return code from the event.
                 An event can return any string, and that string can be used to route to different responses.
-                At least one reponse by request-map.
+                At least one response by request-map.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>

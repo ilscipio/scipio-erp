@@ -233,6 +233,8 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                 newURL.append(target);
                 writer.append(newURL.toString());
             } else if ("inter-app".equalsIgnoreCase(urlMode) && req != null) {
+                // Cato: why is this manual? delegate to buildHyperlinkUrl
+                /*
                 String externalLoginKey = (String) req.getAttribute("externalLoginKey");
                 if (UtilValidate.isNotEmpty(externalLoginKey)) {
                     writer.append(target);
@@ -243,6 +245,9 @@ public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRe
                     }
                     writer.append(externalLoginKey);
                 }
+                */
+                WidgetWorker.buildHyperlinkUrl(writer, target, "inter-app", link.getParameterMap(context), link.getPrefix(context),
+                        link.getFullPath(), link.getSecure(), link.getEncode(), req, res, context);
             } else {
                 writer.append(target);
             }

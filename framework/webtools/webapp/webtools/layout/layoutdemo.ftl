@@ -962,7 +962,8 @@
 <@section title="URL generation">
   <p>Our webSiteId (<em>NOTE:</em> in stock Ofbiz there is none assigned to webtools, so should be nothing here! Do not add one!): 
     <em>${Static["org.ofbiz.webapp.website.WebSiteWorker"].getWebSiteId(request)!"(none)"}</em></p>
-  <ul>
+
+  <ul>Standard URL variations:
     <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
@@ -974,9 +975,24 @@
     <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl uri="main" webSiteId="WebStore"/></li>
+    <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" /></li>
+    <li><@ofbizInterWebappUrl uri="main" webSiteId="WebStore" /></li>
     <li>${makeOfbizInterWebappUrl("/ecommerce/control/main")}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"/ecommerce/control/main", "webSiteId":"WebStore"})}</li>
+    <li>${makeOfbizInterWebappUrl("main", "WebStore")}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"WebStore"})}</li>
+  </ul>
+  
+  <ul>Non-standard URLs:
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" webSiteId="WebStore" absPath=true /></li>
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=true /></li>
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false /></li>
+    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="WebStore" controller=false /></li>
+    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="WebStore" controller=true /></li>
+    <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/webtools/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/webtools/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/webtools/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/webtools/control/main" /></li>
   </ul>
 </@section>
 

@@ -20,7 +20,7 @@ under the License.
 
 <component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/component-loader.xsd">
-    <!--<load-component component-location="ecommerce"/>-->
+    <load-component component-location="ecommerce"/>
     <load-component component-location="assetmaint"/>
     <load-component component-location="example"/>
     <load-component component-location="demosuite"/>

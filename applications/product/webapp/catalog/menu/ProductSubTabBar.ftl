@@ -19,12 +19,20 @@ under the License.
 <@row>
     <@cell>
     <@menu type="subtab">
-        <#if productId?has_content>
-            <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId!}") text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
-        </#if>
-        <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+        <#if parameters._CURRENT_VIEW_=="EditProduct">        
+            <#if product?has_content>
+                <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />                        
+                <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?productId=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+                <@menuitem type="link" href=makeOfbizUrl("ViewProduct") text=uiLabelMap.ProductProduct class="+${styles.action_nav!} ${styles.action_view!}" />                        
+            </#if>
+        <#else>
+            <@menuitem type="link" href=makeOfbizUrl("EditProduct") text=uiLabelMap.ProductNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+            <#if product?has_content>
+                <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?productId=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+                <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId!}") text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />                       
+            </#if>                        
+        </#if>        
         <#if product?has_content>
-          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?productId=${productId!}") text=uiLabelMap.ProductNewVirtualProduct class="+${styles.action_nav!} ${styles.action_add!}" />
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId!}") text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>

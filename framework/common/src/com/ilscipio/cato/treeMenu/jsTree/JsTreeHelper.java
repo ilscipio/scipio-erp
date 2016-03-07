@@ -99,27 +99,24 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     }
 
     private void updateTreeDataItemsIdAndParentReference(JsTreeDataItem i) {
-        Debug.log("total items repeated ============> " + sameIdDataItemsMap.keySet().size());
+//        Debug.log("total items repeated ============> " + sameIdDataItemsMap.keySet().size());
         // Update id
         String idKeyRepeated = null;
         for (String idKey : sameIdDataItemsMap.keySet()) {
-            Debug.log("id ==========> " + idKey + "  times repeated ============> " + sameIdDataItemsMap.get(idKey));
+            // Debug.log("id ==========> " + idKey + " times repeated
+            // ============> " + sameIdDataItemsMap.get(idKey));
             int count = sameIdDataItemsMap.get(idKey);
             if (i.getOriginalId().equals(idKey) && count >= 0) {
                 i.setId(i.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count);
-                if (UtilValidate.isNotEmpty(idKeyRepeated))
-                    idKeyRepeated = i.getOriginalId();
+                // int repeatedTimes = sameIdDataItemsMap.get(idKeyRepeated);
+//                for (JsTreeDataItem x : this) {
+//                    if (x.getParent().equals(idKeyRepeated)) {
+//                        x.setParent(x.getParent() + JSTREE_FIELD_ID_SEPARATOR + count);
+//                        count--;
+//                    }
+//                }
             } else if (count < 0) {
                 Debug.log("Houston, we got a problem");
-            }
-        }
-
-        // Update parent references
-        int repeatedTimes = sameIdDataItemsMap.get(idKeyRepeated);
-        for (JsTreeDataItem x : this) {
-            if (x.getParent().equals(idKeyRepeated)) {
-                x.setParent(x.getParent() + JSTREE_FIELD_ID_SEPARATOR + repeatedTimes);
-                repeatedTimes--;
             }
         }
     }
@@ -133,7 +130,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         return false;
     }
 
-    private void findRepeatedDataItems() {        
+    private void findRepeatedDataItems() {
         for (JsTreeDataItem dataItem : this) {
             Integer timesRepeated = 0;
             if (hasTreeDataItem(dataItem)) {

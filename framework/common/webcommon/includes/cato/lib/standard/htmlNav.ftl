@@ -1178,8 +1178,8 @@ Render menu in a tree fashion way
 
 <#macro treemenu_event event="">
     <#if event?has_content>
-        <#assign validEvents = Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].VALID_EVENTS />        
-        <#assign e = event?keep_before(Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].JSTREE_EVENT) />
+        <#assign validEvents = Static["com.ilscipio.cato.treeMenu.jsTree.JsTreeEvent"].VALID_EVENTS />        
+        <#assign e = event?keep_before(Static["com.ilscipio.cato.treeMenu.jsTree.JsTreeEvent"].JSTREE_EVENT) />
         <#-- ${Static["org.ofbiz.base.util.Debug"].log("e ====> " + e)} -->
 
         <#if validEvents?has_content && validEvents?seq_contains(e)>

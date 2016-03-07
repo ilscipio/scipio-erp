@@ -1028,6 +1028,10 @@
     <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/webtools/control/main" /></li>
     <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/webtools/control/main" /></li>
   </ul>
+  
+  <ul>Misc tests:
+    <li>${addExtLoginKey("main")}</li>
+  </ul>
 </@section>
 
 

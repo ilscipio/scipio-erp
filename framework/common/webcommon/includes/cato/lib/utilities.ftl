@@ -259,6 +259,8 @@ Function version of the @ofbizContentUrl macro.
 Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
 Can help to cut down on macro URL arguments, but may be used anywhere.
 
+FIXME: This is out of date with @ofbizUrl enhancements
+
 If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
  ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
@@ -280,6 +282,16 @@ The following URI forms are currently interpreted and transformed:
   <#else>
     <#return uri>
   </#if>
+</#function>
+
+<#-- 
+*************
+* addExtLoginKey
+************
+Adds the external login key to given url
+-->
+<#function addExtLoginKey url escape=true>
+  <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(url, request, escape))?string>
 </#function>
 
 <#-- 

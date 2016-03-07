@@ -251,6 +251,32 @@ public final class WebSiteProperties {
                (this.enableHttps == o.enableHttps);
     }
     
+    /**
+     * Cato: Returns true if and only if all fields in this object match 
+     * the ones in the other WebSiteProperties. Fields which are missing, 
+     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
+     * performing the comparison.
+     * <p>
+     * Currently, the hard defaults are "localhost" for host fields, "80" for httpPort
+     * and "443" for httpsPort. 
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equalsWithHardDefaults(Object other) {
+        if (this == other) {
+            return true;
+        }
+        else if (!(other instanceof WebSiteProperties)) {
+            return false;
+        }
+        WebSiteProperties o = (WebSiteProperties) other;
+        return sameFields(this.httpHost, o.httpHost, "localhost") &&
+               sameFields(this.httpPort, o.httpPort, "80") &&
+               sameFields(this.httpsHost, o.httpsHost, "localhost") &&
+               sameFields(this.httpsPort, o.httpsPort, "443") &&
+               (this.enableHttps == o.enableHttps);
+    }
+    
     private static boolean sameFields(String first, String second) {
         // Cato: treat null and empty the same, just to be safe
         if (first != null && !first.isEmpty()) {
@@ -260,4 +286,14 @@ public final class WebSiteProperties {
             return (second == null || second.isEmpty());
         }
     }
+    
+    private static boolean sameFields(String first, String second, String defaultVal) {
+        if (first == null || first.isEmpty()) {
+            first = defaultVal;
+        }
+        if (second == null || second.isEmpty()) {
+            second = defaultVal;
+        }
+        return first.equals(second);
+    }    
 }

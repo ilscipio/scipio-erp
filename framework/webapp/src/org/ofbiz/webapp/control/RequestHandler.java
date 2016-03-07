@@ -1153,10 +1153,11 @@ public class RequestHandler {
      * for an arbitrary servlet.
      * <p>
      * The caller sets <code>interWebapp</code> to the value he wants the link to be interpreted as; this method
-     * will not try to detect if the link falls within current request webapp or not.
+     * will not try to detect if the link falls within current request webapp or not; it may be valid
+     * to want to generate an intra-webapp link using inter-webapp building logic.
      * <p>
-     * <em>DEV NOTE</em>: The ability to specify arbitrary absolute path has been explicitly prevented and removed
-     * to simplify this method; the only case we can't generate
+     * <em>DEV NOTE</em>: The ability to specify arbitrary absolute path as url has been explicitly prevented and removed
+     * from this method, to simplify. The only case we can't generate
      * links is if for some reason a webapp is not recognized by the current server (no <code>WebappInfo</code>
      * available).
      * <p>
@@ -1226,7 +1227,7 @@ public class RequestHandler {
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
         // Maybe make a url.properties option and allow force fullPath and force secure.
         if (interWebapp) {
-            if (!webSiteProps.equals(requestWebSiteProps)) {
+            if (!webSiteProps.equalsWithHardDefaults(requestWebSiteProps)) {
                 fullPath = true;
             }
         }

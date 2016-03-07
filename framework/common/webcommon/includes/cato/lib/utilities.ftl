@@ -291,7 +291,7 @@ The following URI forms are currently interpreted and transformed:
 Adds the external login key to given url
 -->
 <#function addExtLoginKey url escape=true>
-  <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(url, request, escape))?string>
+  <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(StringUtil.wrapString(url)?string, request, escape))?string>
 </#function>
 
 <#-- 

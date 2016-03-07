@@ -59,12 +59,17 @@ public final class WebAppUtil {
     private static final UtilCache<String, WebXml> webXmlCache = UtilCache.createUtilCache("webapp.WebXml");
 
     /**
-     * Cato: A fast homemache cache to optimize WebappInfo lookups by webSiteId.
+     * Cato: Fast, light homemache cache to optimize control servlet path lookups.
+     */
+    private static final Map<String, String> controlServletPathWebappInfoCache = new ConcurrentHashMap<String, String>();
+    
+    /**
+     * Cato: Fast, light homemache cache to optimize WebappInfo lookups by webSiteId.
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
 
     /**
-     * Cato: A fast homemache cache to optimize WebappInfo lookups by exact context path.
+     * Cato: Fast, light homemache cache to optimize WebappInfo lookups by exact context path.
      */
     private static final Map<String, WebappInfo> webappInfoContextPathCache = new ConcurrentHashMap<String, WebappInfo>();
     
@@ -81,27 +86,70 @@ public final class WebAppUtil {
      */
     public static String getControlServletPath(WebappInfo webAppInfo) throws IOException, SAXException {
         Assert.notNull("webAppInfo", webAppInfo);
-        String servletMapping = null;
-        WebXml webXml = getWebXml(webAppInfo);
-        for (ServletDef servletDef : webXml.getServlets().values()) {
-            if ("org.ofbiz.webapp.control.ControlServlet".equals(servletDef.getServletClass())) {
-                String servletName = servletDef.getServletName();
-                // Catalina servlet mappings: key = url-pattern, value = servlet-name.
-                for (Entry<String, String> entry : webXml.getServletMappings().entrySet()) {
-                    if (servletName.equals(entry.getValue())) {
-                        servletMapping = entry.getKey();
-                        break;
-                    }
-                }
-                break;
+        // Cato: Go through cache first. No need to synchronize, doesn't matter.
+        String res = controlServletPathWebappInfoCache.get(webAppInfo.getContextRoot()); // key on context root (global unique)
+        if (res != null) {
+            // We take empty string to mean lookup found nothing
+            if (res.isEmpty()) {
+                throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
+            }
+            else {
+                return res;
             }
         }
-        if (servletMapping == null) {
-            throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
+        else {
+            String servletMapping = null;
+            WebXml webXml = getWebXml(webAppInfo);
+            for (ServletDef servletDef : webXml.getServlets().values()) {
+                if ("org.ofbiz.webapp.control.ControlServlet".equals(servletDef.getServletClass())) {
+                    String servletName = servletDef.getServletName();
+                    // Catalina servlet mappings: key = url-pattern, value = servlet-name.
+                    for (Entry<String, String> entry : webXml.getServletMappings().entrySet()) {
+                        if (servletName.equals(entry.getValue())) {
+                            servletMapping = entry.getKey();
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (servletMapping == null) {
+                // Cato: empty string means we did lookup and failed
+                controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), "");
+                throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
+            }
+            servletMapping = servletMapping.replace("*", "");
+            String servletPath = webAppInfo.contextRoot.concat(servletMapping);
+            // Cato: save result
+            controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), servletPath);
+            return servletPath;
         }
-        servletMapping = servletMapping.replace("*", "");
-        String servletPath = webAppInfo.contextRoot.concat(servletMapping);
-        return servletPath;
+    }
+    
+    /**
+     * Cato: Returns the control servlet path with no exceptions generated and with a terminating slash,
+     * or null. The path consists of the web application's mount-point
+     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * in the web application's <code>web.xml</code> file.
+     * 
+     * @param webAppInfo
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static String getControlServletPathSafeSlash(WebappInfo webAppInfo) {
+        String controlPath = null;
+        try {
+            controlPath = WebAppUtil.getControlServletPath(webAppInfo);
+        } catch (Exception e) {
+            ; // Control servlet may not exist; don't treat as error
+        }
+        
+        if (controlPath != null && controlPath.startsWith("/")) {
+            if (!controlPath.endsWith("/")) {
+                controlPath += "/"; // Important
+            }
+        }
+        return controlPath;
     }
 
     /**

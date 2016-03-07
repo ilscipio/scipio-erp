@@ -1548,21 +1548,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- CATO: Remove
-    <screen name="EditProductTag">
-        <section>
-            <widgets>
-                <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductTags}">
-                            <include-form name="ListProductTag" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen> -->
-    
+    <!-- CATO: EditProductTag removed -->
     
     <!-- CATO: Widget implementation -->
     <!-- CATO: Form widget replacement: component://product/widget/catalog/ProductForms.xml#EditProduct -->

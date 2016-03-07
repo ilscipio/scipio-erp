@@ -95,8 +95,8 @@ under the License.
             <@heading>${uiLabelMap.CommonDates}</@heading>
             <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonIntroductionDate name="introductionDate" value=(product.introductionDate!) size="25" maxlength="30" id="introductionDate" />
             <@field type="datetime" dateType="datetime" label=uiLabelMap.CommonReleaseDate name="releaseDate" value=(product.releaseDate!) size="25" maxlength="30" id="releaseDate" />
-            <@field type="datetime" dateType="datetime" label=uiLabelMap.ProductSalesThruDate name="salesDiscontinuationDate" value=(product.salesDiscontinuationDate!) size="25" maxlength="30" id="introductionDate" />
-            <@field type="datetime" dateType="datetime" label=uiLabelMap.ProductSupportThruDate name="supportDiscontinuationDate" value=(product.supportDiscontinuationDate!) size="25" maxlength="30" id="introductionDate" />
+            <@field type="datetime" dateType="datetime" label=uiLabelMap.ProductSalesThruDate name="salesDiscontinuationDate" value=(product.salesDiscontinuationDate!) size="25" maxlength="30" id="salesDiscontinuationDate" />
+            <@field type="datetime" dateType="datetime" label=uiLabelMap.ProductSupportThruDate name="supportDiscontinuationDate" value=(product.supportDiscontinuationDate!) size="25" maxlength="30" id="supportDiscontinuationDate" />
         </@cell>
     </@row>
     <@row>

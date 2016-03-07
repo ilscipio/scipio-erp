@@ -1810,14 +1810,22 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local widgetAreaClass><#if labelArea && labelInRow && !widgetPostfixCombined>${styles.grid_small!}${columnswidget - labelSmallColDiff}<#else>${styles.grid_small!}${columnswidget}</#if><#if isLargeParent> ${styles.grid_large!}${columnswidget}</#if></#local>
   <#local postfixAreaClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLargeParent> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
   
-  <#if widgetPostfixCombined>
-    <#local widgetPostfixAreaClass = widgetPostfixAreaClass + " " + styles.grid_end!>
-  <#else>
-    <#if postfix>
-      <#local postfixAreaClass = postfixAreaClass + " " + styles.grid_end!>
-    <#else>
-      <#local widgetAreaClass = widgetAreaClass + " " + styles.grid_end!>
-    </#if>
+  <#-- This is last if in separate row -->
+  <#if labelArea && !labelInRow>
+    <#local labelAreaClass = labelAreaClass + " " + styles.grid_end!>
+  </#if>
+
+  <#-- This is last in all cases where no postfix -->
+  <#if !postfix>
+    <#local widgetAreaClass = widgetAreaClass + " " + styles.grid_end!>
+  </#if>
+
+  <#-- This is always last (when used) -->
+  <#local widgetPostfixAreaClass = widgetPostfixAreaClass + " " + styles.grid_end!>
+
+  <#-- This is always last (when used) -->
+  <#if postfix>
+    <#local postfixAreaClass = postfixAreaClass + " " + styles.grid_end!>
   </#if>
   
   <#return {

@@ -49,10 +49,9 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.cato.helper.JsTreeHelper;
-import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem;
-import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState;
-import com.ilscipio.cato.helper.TreeDataItem;
+import com.ilscipio.cato.treeMenu.TreeDataItem;
+import com.ilscipio.cato.treeMenu.jsTree.JsTreeDataItem;
+import com.ilscipio.cato.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;

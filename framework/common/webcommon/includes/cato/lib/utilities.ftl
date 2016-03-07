@@ -98,6 +98,11 @@ DEV NOTES:
                         * This helps implementation of inter-webapp links.
                       * Otherwise, generally defaults to true.
                       (New in Cato)
+    extLoginKey     = boolean (default: false) or string boolean repr. 
+                      If true, this will add the external login key as parameter.
+                      NOTE: This is currently FALSE by default in all cases including inter-webapp links
+                          while details are sorted out.
+                      (New in Cato)
     fullPath        = boolean (default: false) or string boolean repr. 
                       If true, forces a full URL with protocol (HTTP or HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
@@ -138,7 +143,7 @@ See @ofbizUrl.
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" 
-        fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
+        extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
   </#if>
@@ -157,7 +162,7 @@ See @ofbizUrl.
 -->
 <#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
   <@ofbizUrl uri=uri absPath=false interWebapp=false controller=false 
-    fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=false fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -173,10 +178,10 @@ See @ofbizUrl, @ofbizWebappUrl.
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=false interWebapp=false controller=false 
-        fullPath=fullPath secure=secure encode=encode /></#local>
+        extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath=false interWebapp=false controller=false 
-        fullPath=fullPath secure=secure encode=encode /></#local>
+        extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
   </#if>
   <#return res>
 </#function>
@@ -191,9 +196,9 @@ or can be overridden; controller is left to interpretation or can be specified.
 
 See @ofbizUrl.
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" fullPath="" secure="" encode="">
+<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
-    fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -212,10 +217,10 @@ See @ofbizUrl, @ofbizInterWebappUrl.
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
-        controller=args.controller!"" fullPath=fullPath secure=secure encode=encode /></#local>
+        controller=args.controller!"" extLoginKey=args.extLoginKey!"" fullPath=fullPath secure=secure encode=encode /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" fullPath=fullPath secure=secure encode=encode /></#local>
+        controller="" extLoginKey="" fullPath=fullPath secure=secure encode=encode /></#local>
   </#if>
   <#return res>
 </#function>

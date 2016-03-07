@@ -1013,7 +1013,8 @@
     <li><@ofbizInterWebappUrl uri="main" webSiteId="WebStore" /></li>
     <li>${makeOfbizInterWebappUrl("/ecommerce/control/main")}</li>
     <li>${makeOfbizInterWebappUrl("main", "WebStore")}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"WebStore"})}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"WebStore", "extLoginKey": true})}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"WebStore", "extLoginKey": true})}</li>
   </ul>
   
   <ul>Non-standard URLs:

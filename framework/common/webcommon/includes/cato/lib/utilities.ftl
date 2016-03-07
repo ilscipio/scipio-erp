@@ -54,17 +54,26 @@ DEV NOTES:
 !!! NOT YET FULLY IMPLEMENTED, DOCS ARE WIP !!!
 
   * Parameters *
-    type            = [intra-webapp|inter-webapp] (default: intra-app)
+    type            = [intra-webapp|inter-webapp|] (default: intra-app)
                       intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
                       inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
                         The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
                         It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.
-                      (New in Cato) 
-    uri             = string, the request URI. This can be specified as parameter or as #nested macro content.
-                      (New in Cato) 
-    absPath         = boolean (default: -type-dependent-) (fallback default: false)       
+                      (New in Cato)
+    interWebapp     = boolean (default: false) Alias for type="inter-webapp".
+                      If true, same as type="inter-webapp".
+                      If false, same as type="" (intra-webapp implied).
+                      (New in Cato)
+    uri             = string (required) The request URI. May be specified as parameter or as #nested macro content.
+                      For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
+                      to webapp root, excluding webapp context root).
+                      For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
+                      server root, containing webapp context root and servlet path; if webSiteId specified, 
+                      this should specified relative like intra-webapp (unless absPath forced to true).
+                      (New in Cato)
+    absPath         = boolean (default: -depends on type-) (fallback default: false)       
                       If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
-                      If explicit false (stock Ofbiz default), the passed uri should be relative to a certain point depending on other flags.
+                      If explicit false (stock Ofbiz default), the passed uri should be relative to control servlet or webapp context.
                       If not specified, will attempt for figure out based on the uri passed and other flags.
                       Current behavior when unspecified:
                       * For all intra-webapp links, absPath is assumed false.
@@ -72,22 +81,23 @@ DEV NOTES:
                         * If webSiteId is not specified, absPath is assumed true.
                         * If webSiteId is specified, absPath is assumed false.
                       NOTE: Behavior when unspecified is NOT currently influenced by present of starting slash ("/"),
-                          to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types. 
-    interWebapp     = boolean (default: false) Alias for type="inter-webapp".
-                      (New in Cato) 
-    webSiteId       = string (default: -current website, found in request, if any-) Target web site ID 
-                      This usually should only be specified if interWebapp is true.
-                      Will determine the target webapp to use, specifically.
+                          to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types.
+                          It is also ambiguous in the case of intra-webapp non-controller links.
+                      (New in Cato)
+    webSiteId       = string (default: -current website or none-) Target web site ID 
+                      This usually should only be specified for inter-webapp links.
+                      Will determine the specific target webapp to use.
                       NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
                       (Stock arg, some fixes in Cato)
-    controller      = boolean (default: -dependent on type-) (fallback default: true)
+    controller      = boolean (default: -depends on type-) (fallback default: true)
                       If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
                       use information from the controller to generate the link.
                       If false, the link is treated as pointing to any arbitrary servlet or resource.
                       Current behavior when unspecified:
                       * If absPath is true, the uri will be checked to see whether it points to controller
+                        * This helps implementation of inter-webapp links.
                       * Otherwise, generally defaults to true.
-                      (New in Cato) 
+                      (New in Cato)
     fullPath        = boolean (default: false) or string boolean repr. 
                       If true, forces a full URL with protocol (HTTP or HTTPS).
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
@@ -158,7 +168,7 @@ Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi,
 but usually used to access another servlet, such as /products/GZ-1000).
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
 
-See @ofbizUrl.
+See @ofbizUrl, @ofbizWebappUrl.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
@@ -176,12 +186,14 @@ See @ofbizUrl.
 * ofbizInterWebappUrl
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+or can be overridden; controller is left to interpretation or can be specified.
 
 See @ofbizUrl.
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" fullPath="" secure="" encode="">
-  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
-  <#if uri?has_content>${StringUtil.wrapString(uri)}<#else><#nested></#if><#t>
+<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" fullPath="" secure="" encode="">
+  <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
+    fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -189,15 +201,21 @@ See @ofbizUrl.
 * makeOfbizInterWebappUrl
 ************
 Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
+This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+or can be overridden; controller is left to interpretation or can be specified.
 
-See @ofbizUrl.
+NOTE: if args is specified as map, "webSiteId" must be passed in args, not as argument.
+    (This is intentional, to be consistent with macro invocations, emulated for functions)
+
+See @ofbizUrl, @ofbizInterWebappUrl.
 -->
-<#function makeOfbizInterWebappUrl args>
-  <#-- TODO: implement (by delegating to @ofbizUrl with flag once implemented) -->
+<#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
-    <#local res>${StringUtil.wrapString(args.uri!"")}</#local>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
+        controller=args.controller!"" fullPath=fullPath secure=secure encode=encode /></#local>
   <#else>
-    <#local res>${StringUtil.wrapString(args)}</#local>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath="" interWebapp=true webSiteId=webSiteId
+        controller="" fullPath=fullPath secure=secure encode=encode /></#local>
   </#if>
   <#return res>
 </#function>

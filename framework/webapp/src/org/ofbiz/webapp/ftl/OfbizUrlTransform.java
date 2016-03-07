@@ -63,7 +63,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     public final static String module = OfbizUrlTransform.class.getName();
 
     @SuppressWarnings("rawtypes")
-    private static boolean checkBooleanArg(Map args, String key, boolean defaultValue) {
+    private static Boolean checkBooleanArg(Map args, String key, Boolean defaultValue) { // Cato: NOTE: can now return null
         Object o = args.get(key);
         // Cato (2016-02): we now support real booleans. 
         // In addition, SimpleScalar was a bad type to use.
@@ -130,12 +130,17 @@ public class OfbizUrlTransform implements TemplateTransformModel {
     @SuppressWarnings("rawtypes")
     public Writer getWriter(final Writer out, Map args) {
         final StringBuilder buf = new StringBuilder();
-        final boolean fullPath = checkBooleanArg(args, "fullPath", false);
-        final boolean secure = checkBooleanArg(args, "secure", false);
-        final boolean encode = checkBooleanArg(args, "encode", true);
+        final Boolean fullPath = checkBooleanArg(args, "fullPath", null); // Cato: modified to remove default; leave centralized
+        final Boolean secure = checkBooleanArg(args, "secure", null); // Cato: modified to remove default; leave centralized
+        final Boolean encode = checkBooleanArg(args, "encode", null); // Cato: modified to remove default; leave centralized
         final String webSiteId = convertToString(args.get("webSiteId"));
         // Cato: We now support a "uri" arg as alternative to #nested
         final String uriArg = getStringArg(args, "uri", null);
+        // Cato: more new parameters
+        final String type = getStringArg(args, "type", null);
+        final Boolean absPath = checkBooleanArg(args, "absPath", null); 
+        final Boolean interWebapp = checkBooleanArg(args, "interWebapp", null); // Alias for type="inter-webapp"
+        final Boolean controller = checkBooleanArg(args, "controller", null);
 
         return new Writer(out) {
 
@@ -163,6 +168,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         return;
                     }
                     HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
+                    /* Cato: This part is limited and incomplete. Instead, delegate to our improved makeLink* method(s).
                     // Handle web site ID.
                     if (!webSiteId.isEmpty()) {
                         Delegator delegator = FreeMarkerWorker.unwrap(env.getVariable("delegator"));
@@ -189,12 +195,33 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         out.write(newUrl);
                         return;
                     }
+                    */
                     if (request != null) {
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                         HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
                         String requestUrl = buf.toString();
                         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                        out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
+                        // Cato: Now use more advanced method
+                        //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
+                        Boolean interWebappEff = interWebapp;
+                        if (interWebappEff == null) {
+                            if (type == null || type.isEmpty()) {
+                                ; // leave it to method
+                            }
+                            else if ("intra-webapp".equals(type)) {
+                                interWebappEff = false;
+                            }
+                            else if ("inter-webapp".equals(type)) {
+                                interWebappEff = true;
+                            }
+                        }
+                        String link = rh.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
+                        if (link != null) {
+                            out.write(link);
+                        }
+                        else {
+                            out.write(requestUrl);
+                        }
                     } else {
                         out.write(buf.toString());
                     }

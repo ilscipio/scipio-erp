@@ -3,6 +3,7 @@ package org.ofbiz.webapp.control;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -61,5 +62,13 @@ public abstract class RequestUtil {
     
     public static String encodeURLNoJsessionId(String url, HttpServletResponse response) {
         return RequestUtil.removeJsessionId(response.encodeURL(url));
+    }
+    
+    public static String checkAddExternalLoginKey(String url, HttpServletRequest request, boolean escaped) {
+        String extLoginKey = (String) request.getAttribute("externalLoginKey");
+        if (extLoginKey != null && !extLoginKey.isEmpty()) { 
+            url = url + (url.contains("?") ? (escaped ? "&amp;" : "&") : "?") + "externalLoginKey=" + extLoginKey;
+        }
+        return url;
     }
 }

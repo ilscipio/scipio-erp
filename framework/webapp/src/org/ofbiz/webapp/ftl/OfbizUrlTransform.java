@@ -34,6 +34,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -141,7 +142,8 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         final Boolean absPath = checkBooleanArg(args, "absPath", null); 
         final Boolean interWebapp = checkBooleanArg(args, "interWebapp", null); // Alias for type="inter-webapp"
         final Boolean controller = checkBooleanArg(args, "controller", null);
-
+        final boolean extLoginKey = checkBooleanArg(args, "extLoginKey", false);
+        
         return new Writer(out) {
 
             @Override
@@ -200,6 +202,10 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                         HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
                         String requestUrl = buf.toString();
+                        // Cato: If requested, add external login key
+                        if (extLoginKey) {
+                            requestUrl = RequestUtil.checkAddExternalLoginKey(requestUrl, request, true);
+                        }
                         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                         // Cato: Now use more advanced method
                         //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));

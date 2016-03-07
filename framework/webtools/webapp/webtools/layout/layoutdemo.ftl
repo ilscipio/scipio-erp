@@ -806,6 +806,30 @@
     </@fields>
     </@form>
   </@section>
+
+  <@section title="Variable-size fields">
+    <@form name="form7">
+    <@fields type="default">
+      <@field type="input" name="input1" label="Input" value="val1" />
+      <@field type="input" name="input2" label="Input" value="val1" totalColumns=11 />
+      <@field type="input" name="input3" label="Input" value="val1" widgetPostfixColumns=8 />
+      <@field type="input" name="input4" label="Input" value="val1" widgetPostfixColumns=8 totalColumns=11 />
+ 
+      <@field type="input" name="input5" label="Input" value="val1" postfix=true />
+      <@field type="input" name="input6" label="Input" value="val1" totalColumns=11 postfix=true />
+      <@field type="input" name="input7" label="Input" value="val1" widgetPostfixColumns=8 postfix=true />
+      <@field type="input" name="input8" label="Input" value="val1" widgetPostfixColumns=8 totalColumns=11 postfix=true />
+
+      <#-- NOTE: widgetPostfixCombined is an override and usually should not be specified; here for testing -->
+      <p>NOTE: The next fields are for testing only, and may not look right (widget and postfix don't have their own container)</p>
+      <@field type="input" name="input9" label="Input" value="val1" postfix=true widgetPostfixCombined=false />
+      <@field type="input" name="input10" label="Input" value="val1" totalColumns=11 postfix=true widgetPostfixCombined=false />
+      <@field type="input" name="input11" label="Input" value="val1" widgetPostfixColumns=8 postfix=true widgetPostfixCombined=false />
+      <@field type="input" name="input12" label="Input" value="val1" widgetPostfixColumns=8 totalColumns=11 postfix=true widgetPostfixCombined=false />
+    </@fields>
+    </@form>
+  </@section>
+
 </@section>
 
 <@section title="Class arguments test">

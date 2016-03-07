@@ -33,7 +33,7 @@ under the License.
     
     <!-- CATO components -->
     <load-component component-location="admin"/> <!-- Admin works as a dashboard to all subsequent applications -->
-    <load-component component-location="ecomcato"/>
+    <!-- <load-component component-location="ecomcato"/> -->
     
     <!-- common component used by most other components last because it uses info from most components-->
     <load-component component-location="commonext"/>

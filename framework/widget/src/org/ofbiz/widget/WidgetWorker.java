@@ -41,6 +41,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.model.FieldInfo;
@@ -77,6 +78,8 @@ public final class WidgetWorker {
                 externalWriter.append(localRequestName);
             }
         } else if ("inter-app".equals(targetType)) {
+            // Cato: This is INCOMPLETE; we want to make sure this goes through response.encodeURL
+            /*
             String fullTarget = localRequestName;
             localWriter.append(fullTarget);
             String externalLoginKey = (String) request.getAttribute("externalLoginKey");
@@ -88,6 +91,28 @@ public final class WidgetWorker {
                 }
                 localWriter.append("externalLoginKey=");
                 localWriter.append(externalLoginKey);
+            }*/
+            String fullTarget = localRequestName;
+            String externalLoginKey = (String) request.getAttribute("externalLoginKey");
+            if (UtilValidate.isNotEmpty(externalLoginKey)) {
+                if (fullTarget.indexOf('?') == -1) {
+                    fullTarget += "?";
+                } else {
+                    fullTarget += "&amp;";
+                }
+                fullTarget += "externalLoginKey=" + externalLoginKey;
+                
+            }
+            if (request != null && response != null) {
+                // Cato: We want to make sure this goes through encodeURL, and we now also want to send this
+                // through makeLinkAuto so it can produce smarter inter-webapp links.
+                // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
+                ServletContext servletContext = request.getSession().getServletContext();
+                RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
+                externalWriter.append(rh.makeLinkAuto(request, response, fullTarget, true, true, null, null, fullPath, secure, encode));
+            }
+            else {
+                localWriter.append(fullTarget);
             }
         } else if ("content".equals(targetType)) {
             appendContentUrl(localWriter, localRequestName, request);

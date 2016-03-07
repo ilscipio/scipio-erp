@@ -791,8 +791,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               DEV NOTE: This value now includes the postfix area because it is usually easier
                                   to use this way given that the widget + postfix configuration is variable.
     widgetPostfixCombined   = boolean (default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix 
-                              having their own sub-container. It is best to leave this unset. In Cato standard markup,
-                              the default is usually true unless prevented by other settings like collapsing.
+                              having their own sub-container. It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
+                              the default is usually true unless prevented by other settings.
     class           = CSS classes for the field element (NOT the cell container!)
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -1753,19 +1753,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 
 <#-- calculates the default @field grid styles - used unless overridden by @field's caller 
      TODO: support more columns values -->
+<#assign getDefaultFieldGridStyles_defaultArgs = {
+  "totalColumns" : "", "widgetPostfixColumns" : "", "labelArea" : true, "labelInRow" : true,
+  "postfix" : false, "postfixSize" : 0, "isLargeParent" : "", "labelSmallColDiff" : 1,
+  "widgetPostfixCombined" : false
+}>
 <#function getDefaultFieldGridStyles args={} catchArgs...>
-  <#local args = mergeArgMapsBasic(args, {}, {
-    <#-- parameters: defaults -->
-    "totalColumns" : "",
-    "widgetPostfixColumns" : "",
-    "labelArea" : true,
-    "labelInRow" : true,
-    "postfix" : false,
-    "postfixSize" : 0,
-    "isLargeParent" : "",
-    "labelSmallColDiff" : 1,
-    "widgetPostfixCombined" : false
-  })>
+  <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.getDefaultFieldGridStyles_defaultArgs)>
   <#local dummy = localsPutAll(args)> 
   
   <#if !totalColumns?has_content>

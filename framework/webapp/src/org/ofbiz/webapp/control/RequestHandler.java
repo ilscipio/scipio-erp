@@ -1288,7 +1288,7 @@ public class RequestHandler {
             // We will NEVER build insecure URLs to requests marked secure.
             // This way, there is less control, but fullPath becomes easier and safer to use.
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
-            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && (!request.isSecure()))) {
+            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && (!request.isSecure() || fullPath))) {
                 didFullSecure = true;
             } else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
                 didFullStandard = true;

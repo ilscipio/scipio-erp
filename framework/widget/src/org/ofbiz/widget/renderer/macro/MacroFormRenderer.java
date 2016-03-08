@@ -1341,7 +1341,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringBuilder linkUrl = new StringBuilder();
         if (UtilValidate.isNotEmpty(targ)) {
             //this.appendOfbizUrl(writer, "/" + targ);
-            WidgetWorker.buildHyperlinkUrl(linkUrl, targ, targetType, null, null, false, false, true, request, response, context);
+            WidgetWorker.buildHyperlinkUrl(linkUrl, targ, targetType, null, null, null, null, null, request, response, context);
         }
         String formType = modelForm.getType();
         String targetWindow = modelForm.getTargetWindow(context);
@@ -3202,7 +3202,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             String targetWindow) throws IOException {
         if ( description != null || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             StringBuilder linkUrl = new StringBuilder();
-            WidgetWorker.buildHyperlinkUrl(linkUrl, target, targetType, parameterMap, null, false, false, true, request, response, context);
+            WidgetWorker.buildHyperlinkUrl(linkUrl, target, targetType, parameterMap, null, null, null, null, request, response, context);
             String event = "";
             String action = "";
             String imgSrc = "";
@@ -3298,7 +3298,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, List<CommonWidgetModels.Parameter> parameterList, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
         StringBuilder actionUrl = new StringBuilder();
-        WidgetWorker.buildHyperlinkUrl(actionUrl, target, targetType, null, null, false, false, true, request, response, context);
+        WidgetWorker.buildHyperlinkUrl(actionUrl, target, targetType, null, null, null, null, null, request, response, context);
         String name = WidgetWorker.makeLinkHiddenFormName(context, modelFormField);
         StringBuilder parameters = new StringBuilder();
         parameters.append("[");

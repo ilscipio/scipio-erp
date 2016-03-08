@@ -23,6 +23,7 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -1159,7 +1160,7 @@ public class RequestHandler {
      * <p>
      * Cato: Modified overload to allow boolean flags.
      */
-    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode, 
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
             ConfigXMLReader.RequestResponse requestResponse) {
         String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
         String queryString = this.makeQueryString(request, requestResponse);
@@ -1172,25 +1173,25 @@ public class RequestHandler {
      * Cato: Original signature method, now delegates.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
-        return makeLinkWithQueryString(request, response, url, false, false, true, requestResponse);
+        return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse);
     }
     
     /**
      * Cato: Builds a full-path link (HTTPS as necessary) with added query string.
      */
     public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
-        return makeLinkWithQueryString(request, response, url, true, false, true, requestResponse);
+        return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse);
     }    
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
-        return makeLink(request, response, url, false, false, true);
+        return makeLink(request, response, url, null, null, null);
     }
     
     /**
      * Cato: Builds a full-path link (HTTPS as necessary).
      */
     public String makeLinkFull(HttpServletRequest request, HttpServletResponse response, String url) {
-        return makeLink(request, response, url, true, false, true);
+        return makeLink(request, response, url, true, null, null);
     }    
 
     /**
@@ -1231,6 +1232,8 @@ public class RequestHandler {
      * <p>
      * <em>DEV NOTE</em>: <code>interWebapp</code> must remain a separate boolean because it may be possible
      * to pass <code>webappInfo</code> even when intra-webapp or for other optimizations.
+     * <p>
+     * TODO: fullPath, secure, encode should be Boolean not boolean to allow null and finer grained control, current interface too limited for some cases.
      *
      * @param request the request (required)
      * @param response the response (required)
@@ -1238,13 +1241,32 @@ public class RequestHandler {
      * @param interWebapp if true, treat the link as inter-webapp (default: false) (Cato: new parameter)
      * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Cato: new parameter)
      * @param controller if true, assume is a controller link and refer to controller for building link (default: true) (Cato: new parameter)
-     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false)
-     * @param secure if true, always produce full secure URL (HTTPS) (default: false)
-     * @param encode if true, pass through response.encodeURL (default: true)
+     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false) (Cato: changed to Boolean instead of boolean)
+     * @param secure if true, always produce full secure URL (HTTPS) (default: false) (Cato: changed to Boolean instead of boolean)
+     * @param encode if true, pass through response.encodeURL (default: true) (Cato: changed to Boolean instead of boolean)
      * @return the resulting URL
      */
-    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean interWebapp, WebappInfo webappInfo, boolean controller, 
-            boolean fullPath, boolean secure, boolean encode) {
+    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 
+            Boolean fullPath, Boolean secure, Boolean encode) {
+        // Cato: We now accept nulls for all booleans to prevent rehardcoding defaults and allow more options
+        if (interWebapp == null) {
+            interWebapp = Boolean.FALSE;
+        }
+        if (controller == null) {
+            controller = Boolean.TRUE;
+        }
+        // Cato: NOTE: change to Boolean not fully exploited yet
+        if (fullPath == null) {
+            fullPath = Boolean.FALSE;
+        }
+        if (secure == null) {
+            // Cato: NOTE: this does not mean the link is "insecure"!
+            secure = Boolean.FALSE;
+        }
+        if (encode == null) {
+            encode = Boolean.TRUE;
+        }
+        
         Delegator delegator = (Delegator) request.getAttribute("delegator"); // Cato: need delegator
         OfbizUrlBuilder builder = null; // Cato: reuse this outside
         WebSiteProperties webSiteProps; // Cato: NOTE: we *possibly* could want to accept this var as method parameter (as optimization/special), but to be safe, don't for now
@@ -1309,8 +1331,19 @@ public class RequestHandler {
             
             if (requestUri != null) {
                 try {
-                    // Cato: FIXME: looking up wrong controller for inter-webapp
-                    requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
+                    // Cato: Lookup correct controller for webapp
+                    if (interWebapp) {
+                        try {
+                            requestMap = ConfigXMLReader.getControllerConfig(webappInfo).getRequestMapMap().get(requestUri);
+                        } catch (MalformedURLException e) {
+                            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                            return null;
+                        }
+                    }
+                    else {
+                        // Cato: stock case
+                        requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
+                    }
                 } catch (WebAppConfigurationException e) {
                     // If we can't read the controller.xml file, then there is no point in continuing.
                     Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
@@ -1321,15 +1354,18 @@ public class RequestHandler {
         
         boolean didFullSecure = false;
         boolean didFullStandard = false;
-        if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
+        // Cato: We need to enter even if no controller
+        //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
+        if (webSiteProps.getEnableHttps() || fullPath || secure) {    
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
             // Cato: This condition has been CHANGED: if fullPath and target URI is secure, make secure URL instead of insecure.
             // We will NEVER build insecure URLs to requests marked secure.
             // This way, there is less control, but fullPath becomes easier and safer to use.
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
-            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && (!request.isSecure() || fullPath))) {
+            if (secure || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || fullPath))) {
                 didFullSecure = true;
-            } else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
+            //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
+            } else if (fullPath || (webSiteProps.getEnableHttps() && requestMap != null && !requestMap.securityHttps && request.isSecure())) {
                 didFullStandard = true;
             }
         }
@@ -1477,8 +1513,8 @@ public class RequestHandler {
         return encodedUrl;
     }
 
-    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
-        return makeLink(request, response, url, false, null, true, fullPath, secure, encode);
+    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
+        return makeLink(request, response, url, null, null, null, fullPath, secure, encode);
         
         /* Cato: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
         WebSiteProperties webSiteProps = null;
@@ -1768,17 +1804,7 @@ public class RequestHandler {
         } else {
             relUrl = url;
         }
-        
-        if (fullPath == null) {
-            fullPath = Boolean.FALSE;
-        }
-        if (secure == null) {
-            secure = Boolean.FALSE;
-        }
-        if (encode == null) {
-            encode = Boolean.TRUE;
-        }
-        
+
         return makeLink(request, response, relUrl, interWebapp, webappInfo, controller, fullPath, secure, encode);
     }
 
@@ -1805,7 +1831,7 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz URL.
      * <p>
-     * Cato: This is modified to pass encode <code>true</code> instead of <code>false</code>.
+     * Cato: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
      * This is <string>necessary</strong> to achieve filter hooks.
      * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
      * See {@link #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)} for details.
@@ -1813,10 +1839,10 @@ public class RequestHandler {
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
         // Cato: Pass encode = true
         //return makeUrl(request, response, url, false, false, false);
-        return makeUrl(request, response, url, false, false, true);
+        return makeUrl(request, response, url, null, null, null);
     }
 
-    public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
+    public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         return rh.makeLink(request, response, url, fullPath, secure, encode);
@@ -1826,7 +1852,7 @@ public class RequestHandler {
      * Cato: Builds a full-path link (HTTPS as necessary).
      */
     public static String makeUrlFull(HttpServletRequest request, HttpServletResponse response, String url) {
-        return makeUrl(request, response, url, true, false, true);
+        return makeUrl(request, response, url, true, null, null);
     }    
     
 

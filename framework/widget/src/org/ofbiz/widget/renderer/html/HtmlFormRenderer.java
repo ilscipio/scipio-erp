@@ -1169,7 +1169,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         writer.append(" action=\"");
         if (UtilValidate.isNotEmpty(targ)) {
             //this.appendOfbizUrl(writer, "/" + targ);
-            WidgetWorker.buildHyperlinkUrl(writer, targ, targetType, null, null, false, false, true, request, response, context);
+            WidgetWorker.buildHyperlinkUrl(writer, targ, targetType, null, null, null, null, null, request, response, context);
         }
         writer.append("\" ");
 

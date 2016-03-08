@@ -57,7 +57,7 @@ public final class WidgetWorker {
     private WidgetWorker () {}
 
     public static void buildHyperlinkUrl(Appendable externalWriter, String target, String targetType, Map<String, String> parameterMap,
-            String prefix, boolean fullPath, boolean secure, boolean encode, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+            String prefix, Boolean fullPath, Boolean secure, Boolean encode, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
         // We may get an encoded request like: &#47;projectmgr&#47;control&#47;EditTaskContents&#63;workEffortId&#61;10003
         // Try to reducing a possibly encoded string down to its simplest form: /projectmgr/control/EditTaskContents?workEffortId=10003
         // This step make sure the following appending externalLoginKey operation to work correctly
@@ -216,7 +216,7 @@ public final class WidgetWorker {
 
             writer.append(" href=\"");
 
-            buildHyperlinkUrl(writer, target, targetType, parameterMap, null, false, false, true, request, response, context);
+            buildHyperlinkUrl(writer, target, targetType, parameterMap, null, null, null, null, request, response, context);
 
             writer.append("\"");
 
@@ -296,7 +296,7 @@ public final class WidgetWorker {
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, false, false, true, request, response, context);
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {
@@ -396,7 +396,7 @@ public final class WidgetWorker {
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, false, false, true, request, response, context);                     
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);                     
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {

@@ -49,8 +49,8 @@ public Map createDemoProduct(DispatcherContext ) {
     ]
 
     List<String> productStoreIds = [
-        "CATO_FOUNDATION_1",
-        "CATO_FOUNDATION_2"
+        "9000",
+        "RentalStore"
     ]
 
     Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", "");

@@ -297,7 +297,9 @@ public class RequestHandler {
                     if (request.getQueryString() != null) {
                         urlBuf.append("?").append(request.getQueryString());
                     }
-                    String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
+                    // Cato: Always make full URL for redirect so uses host from entities
+                    //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
+                    String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                     if (newUrl.toUpperCase().startsWith("HTTPS")) {
                         // if we are supposed to be secure, redirect secure.
                         callRedirect(newUrl, response, request, statusCodeString);
@@ -313,7 +315,9 @@ public class RequestHandler {
                 if (request.getQueryString() != null) {
                     urlBuf.append("?").append(request.getQueryString());
                 }
-                String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
+                // Cato: Call proper method for this
+                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
+                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
                     callRedirect(newUrl, response, request, statusCodeString);
                     return;
@@ -585,7 +589,9 @@ public class RequestHandler {
                     redirectTarget += "?" + queryString;
                 }
                 
-                callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
+                // Cato: Always make full link early
+                //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
+                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
 
                 // the old/uglier way: doRequest(request, response, previousRequest, userLogin, delegator);
 
@@ -659,6 +665,7 @@ public class RequestHandler {
             
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                // Cato: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
                 callRedirect(nextRequestResponse.value, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
@@ -668,18 +675,18 @@ public class RequestHandler {
                 // NOTE: no support for webSiteId, so absPath assumed true
                 //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
-                String targetUrl = makeLinkAuto(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null, true, false, true);
+                String targetUrl = makeLinkAutoFull(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null);
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
-                callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, true, false, true, nextRequestResponse), response, request, statusCodeString);
+                callRedirect(makeLinkFullWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLink(request, response, nextRequestResponse.value), response, request, statusCodeString);
-                callRedirect(makeLink(request, response, nextRequestResponse.value, true, false, true), response, request, statusCodeString);
+                callRedirect(makeLinkFull(request, response, nextRequestResponse.value), response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -1157,10 +1164,24 @@ public class RequestHandler {
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
         return makeLinkWithQueryString(request, response, url, false, false, true, requestResponse);
     }
+    
+    /**
+     * Cato: Builds a full-path link (HTTPS as necessary) with added query string.
+     */
+    public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
+        return makeLinkWithQueryString(request, response, url, true, false, true, requestResponse);
+    }    
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, false, false, true);
     }
+    
+    /**
+     * Cato: Builds a full-path link (HTTPS as necessary).
+     */
+    public String makeLinkFull(HttpServletRequest request, HttpServletResponse response, String url) {
+        return makeLink(request, response, url, true, false, true);
+    }    
 
     /**
      * Builds an Ofbiz navigation link.
@@ -1192,6 +1213,8 @@ public class RequestHandler {
      * <p>
      * <em>DEV NOTE</em>: <code>interWebapp</code> must remain a separate boolean because it may be possible
      * to pass <code>webappInfo</code> even when intra-webapp or for other optimizations.
+     * <p>
+     * TODO: Needs an extra Boolean to force jsessionid on/off. Currently can be stripped using RequestUtil.
      *
      * @param request the request (required)
      * @param response the response (required)
@@ -1752,9 +1775,29 @@ public class RequestHandler {
     public String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller) {
         return makeLinkAuto(request, response, url, absPath, interWebapp, webSiteId, controller, null, null, null);
     }
+    
+    /**
+     * Cato: Builds an Ofbiz navigation full link (with HTTPS as necessary), where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * and <code>webSiteId</code>.
+     * 
+     * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
+     */
+    public String makeLinkAutoFull(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller) {
+        return makeLinkAuto(request, response, url, absPath, interWebapp, webSiteId, controller, true, null, null);
+    }    
 
+    /**
+     * Builds an Ofbiz URL.
+     * <p>
+     * Cato: This is modified to pass encode true instead of false.
+     * This is <string>necessary</strong> to achieve filter hooks.
+     * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
+     * There should be a separate option for jsessionid.
+     */
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
-        return makeUrl(request, response, url, false, false, false);
+        // Cato: Pass encode = true
+        //return makeUrl(request, response, url, false, false, false);
+        return makeUrl(request, response, url, false, false, true);
     }
 
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
@@ -1762,6 +1805,14 @@ public class RequestHandler {
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         return rh.makeLink(request, response, url, fullPath, secure, encode);
     }
+    
+    /**
+     * Cato: Builds a full-path link (HTTPS as necessary).
+     */
+    public static String makeUrlFull(HttpServletRequest request, HttpServletResponse response, String url) {
+        return makeUrl(request, response, url, true, false, true);
+    }    
+    
 
     public void runAfterLoginEvents(HttpServletRequest request, HttpServletResponse response) {
         try {

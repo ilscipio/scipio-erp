@@ -664,13 +664,22 @@ public class RequestHandler {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 String url = nextRequestResponse.value.startsWith("/") ? nextRequestResponse.value : "/" + nextRequestResponse.value;
-                callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
+                // Cato: Modified to pass through encodeURL and more intelligent link-building method
+                // NOTE: no support for webSiteId, so absPath assumed true
+                //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
+                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                String targetUrl = makeLinkAuto(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null, true, false, true);
+                callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
+                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
+                callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, true, false, true, nextRequestResponse), response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                callRedirect(makeLink(request, response, nextRequestResponse.value), response, request, statusCodeString);
+                // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
+                //callRedirect(makeLink(request, response, nextRequestResponse.value), response, request, statusCodeString);
+                callRedirect(makeLink(request, response, nextRequestResponse.value, true, false, true), response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -1128,10 +1137,25 @@ public class RequestHandler {
         }
     }
 
-    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
-        String initialLink = this.makeLink(request, response, url);
+    /**
+     * Builds links with added query string.
+     * <p>
+     * Cato: Modified overload to allow boolean flags.
+     */
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode, 
+            ConfigXMLReader.RequestResponse requestResponse) {
+        String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
         String queryString = this.makeQueryString(request, requestResponse);
         return initialLink + queryString;
+    }
+    
+    /**
+     * Builds links with added query string.
+     * <p>
+     * Cato: Original signature method, now delegates.
+     */
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
+        return makeLinkWithQueryString(request, response, url, false, false, true, requestResponse);
     }
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
@@ -1556,6 +1580,8 @@ public class RequestHandler {
      * @param secure
      * @param encode
      * @return
+     * 
+     * @see #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)
      */
     public String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
@@ -1707,6 +1733,15 @@ public class RequestHandler {
         return makeLink(request, response, relUrl, interWebapp, webappInfo, controller, fullPath, secure, encode);
     }
 
+    /**
+     * Cato: Builds an Ofbiz navigation link, where possible inferring <em>some</em> of its properties by analyzing the passed URI (<code>url</code>)
+     * and <code>webSiteId</code>.
+     * 
+     * @see #makeLinkAuto(HttpServletRequest, HttpServletResponse, String, Boolean, Boolean, String, Boolean, Boolean, Boolean, Boolean)
+     */
+    public String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller) {
+        return makeLinkAuto(request, response, url, absPath, interWebapp, webSiteId, controller, null, null, null);
+    }
 
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeUrl(request, response, url, false, false, false);

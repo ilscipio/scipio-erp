@@ -844,7 +844,17 @@ public class RequestHandler {
         return nextPage;
     }
 
+    /**
+     * Performs HTTP redirect to the given URL.
+     * <p>
+     * Cato: NOTE: All the code currently calling this may append jsessionIds (through processing
+     * of changing encode to true to correct filter hook behavior).
+     * Currently I don't see how this is bad.
+     * If need to remove jsessionId from redirects, could uncomment the lines below.
+     */
     private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString) throws RequestHandlerException {
+        // Cato: Uncomment this to force remove jsessionId from controller redirects...
+        //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "], sessionId=" + UtilHttp.getSessionId(req), module);
         // set the attributes in the session so we can access it.
         Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
@@ -1191,12 +1201,20 @@ public class RequestHandler {
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
      * <p>
-     * <strong>fullPath behavior change</strong>: In Cato, when fullPath is specified for a controller
+     * <strong>fullPath behavior change</strong>: In Cato, when <code>fullPath</code> is specified for a controller
      * request, if the request is defined as secure, a secure URL will be created. This method will now
      * <em>never</em> allow an insecure URL to built for a controller request marked secure.
      * In stock Ofbiz, this behavior was different: fullPath could generate insecure URLs to secure requests.
      * <p>
-     * The passed <code>url</code> should either be a controller URI (if <code>controller</code> true)
+     * <strong>encode behavior</strong>: The <code>encode</code> flag controls whether the link should
+     * be passed through <code>HttpServletResponse.encodeURL</code> method. For our purposes, this is <strong>NOT</strong>
+     * equivalent to appending <code>jsessionid</code>; it has other functionality such as calling servlet filter hooks.
+     * Almost all navigation links to Ofbiz webapps whether inter-webapp or intra-webapp should have encode <code>true</code>.
+     * If jsessionid must be prevented for a link, currently this can be done by calling
+     * {@link RequestUtil#removeJsessionId}.
+     * TODO: Could use an extra Boolean arg to force jsessionid on/off (null for default behavior).
+     * <p>
+     * <strong>URL format</strong>: The passed <code>url</code> should either be a controller URI (if <code>controller</code> true)
      * or a path relative to webapp context root. It should NEVER include the webapp context root (mount-point).
      * <p>
      * If both <code>interWebapp</code> and <code>controller</code> are false, it means we're building an intra-webapp URL
@@ -1213,8 +1231,6 @@ public class RequestHandler {
      * <p>
      * <em>DEV NOTE</em>: <code>interWebapp</code> must remain a separate boolean because it may be possible
      * to pass <code>webappInfo</code> even when intra-webapp or for other optimizations.
-     * <p>
-     * TODO: Needs an extra Boolean to force jsessionid on/off. Currently can be stripped using RequestUtil.
      *
      * @param request the request (required)
      * @param response the response (required)
@@ -1789,10 +1805,10 @@ public class RequestHandler {
     /**
      * Builds an Ofbiz URL.
      * <p>
-     * Cato: This is modified to pass encode true instead of false.
+     * Cato: This is modified to pass encode <code>true</code> instead of <code>false</code>.
      * This is <string>necessary</strong> to achieve filter hooks.
      * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
-     * There should be a separate option for jsessionid.
+     * See {@link #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)} for details.
      */
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
         // Cato: Pass encode = true

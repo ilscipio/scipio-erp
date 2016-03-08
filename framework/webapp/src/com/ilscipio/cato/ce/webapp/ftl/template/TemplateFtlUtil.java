@@ -454,6 +454,7 @@ public abstract class TemplateFtlUtil {
                 String localRequestName = StringEscapeUtils.unescapeHtml(target);
                 localRequestName = UtilHttp.encodeAmpersands(localRequestName);
                 if (request != null && response != null) {
+                    // FIXME: this does not support inter-webapp links or any new parameters
                     sb.append(RequestHandler.makeUrl(request, response, localRequestName, fullPath, secure, encode));
                 }
                 else {

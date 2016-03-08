@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Cato: Webapp request descriptor, before any transformation to its logical arguments or
  * its final web URL form.
+ * <p>
+ * FIXME: this does not support inter-webapp links or all the new ofbiz URL parameters
  */
 public abstract class RequestDescriptor {
     

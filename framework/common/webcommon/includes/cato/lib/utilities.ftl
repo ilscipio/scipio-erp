@@ -105,6 +105,9 @@ DEV NOTES:
                       (New in Cato)
     fullPath        = boolean (default: false) or string boolean repr. 
                       If true, forces a full URL with protocol (HTTP or HTTPS).
+                      WARNING: MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
+                          marked as secure will always generate a secure URL, not a plain URL. Some control
+                          is sacrificed to allow this flag to be used safely and more easily.
                       (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     secure          = boolean (default: false) or string boolean repr. 
                       If true, forces a full URL with secure protocol (HTTPS).

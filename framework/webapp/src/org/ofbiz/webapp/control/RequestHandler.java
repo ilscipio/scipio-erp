@@ -1170,6 +1170,11 @@ public class RequestHandler {
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
      * <p>
+     * <strong>fullPath behavior change</strong>: In Cato, when fullPath is specified for a controller
+     * request, if the request is defined as secure, a secure URL will be created. This method will now
+     * <em>never</em> allow an insecure URL to built for a controller request marked secure.
+     * In stock Ofbiz, this behavior was different: fullPath could generate insecure URLs to secure requests.
+     * <p>
      * The passed <code>url</code> should either be a controller URI (if <code>controller</code> true)
      * or a path relative to webapp context root. It should NEVER include the webapp context root (mount-point).
      * <p>
@@ -1265,6 +1270,7 @@ public class RequestHandler {
             
             if (requestUri != null) {
                 try {
+                    // Cato: FIXME: looking up wrong controller for inter-webapp
                     requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
                 } catch (WebAppConfigurationException e) {
                     // If we can't read the controller.xml file, then there is no point in continuing.
@@ -1278,7 +1284,11 @@ public class RequestHandler {
         boolean didFullStandard = false;
         if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
+            // Cato: This condition has been CHANGED: if fullPath and target URI is secure, make secure URL instead of insecure.
+            // We will NEVER build insecure URLs to requests marked secure.
+            // This way, there is less control, but fullPath becomes easier and safer to use.
+            //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
+            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && (!request.isSecure()))) {
                 didFullSecure = true;
             } else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
                 didFullStandard = true;

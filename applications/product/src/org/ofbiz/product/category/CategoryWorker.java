@@ -43,6 +43,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -568,10 +569,11 @@ public class CategoryWorker {
                 Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
                         UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
                 if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
-                    treeDataItemList.addAll(getTreeProducts((List<GenericValue>) productCategoryMembers.get("categoryMembers"), library,
+                    treeDataItemList.addAll(getTreeProducts(dispatcher, locale, (List<GenericValue>) productCategoryMembers.get("categoryMembers"), library,
                             productCategory.getString("productCategoryId")));
                 }
 
+                String categoryId = category.getString("productCategoryId");
                 String categoryName = category.getString("categoryName");
                 if (UtilValidate.isEmpty(categoryName)) {
                     categoryName = category.getString("productCategoryId");
@@ -579,14 +581,18 @@ public class CategoryWorker {
                     if (UtilValidate.isNotEmpty(wrapper.get("CATEGORY_NAME", "html")))
                         categoryName = wrapper.get("CATEGORY_NAME", "html").toString();
                 }
-//                Debug.log("category name =========> " + categoryName);
-                
-//                String categoryTrail = CategoryUtil.getCategoryNameWithTrail(category.getString("productCategoryId"), dispatcher.getDispatchContext());
-//                Debug.log("category trail =================> " + categoryTrail);
+
+                // Debug.log("category name =========> " + categoryName);
+
+                // String categoryTrail =
+                // CategoryUtil.getCategoryNameWithTrail(category.getString("productCategoryId"),
+                // dispatcher.getDispatchContext());
+                // Debug.log("category trail =================> " +
+                // categoryTrail);
 
                 if (library.equals("jsTree")) {
                     JsTreeDataItem dataItem = null;
-                    dataItem = new JsTreeDataItem(category.getString("productCategoryId"), categoryName, "jstree-folder", new JsTreeDataItemState(false, false),
+                    dataItem = new JsTreeDataItem(categoryId, categoryName + " [" + categoryId + "]", "jstree-folder", new JsTreeDataItemState(false, false),
                             parentId);
                     dataItem.setType("category");
                     if (UtilValidate.isNotEmpty(dataItem))
@@ -608,14 +614,24 @@ public class CategoryWorker {
      * @throws GenericEntityException
      * @throws GenericServiceException
      */
-    public static List<? extends TreeDataItem> getTreeProducts(List<GenericValue> productCategoryMembers, String library, String parentId)
-            throws GenericEntityException {
+    public static List<? extends TreeDataItem> getTreeProducts(LocalDispatcher dispatcher, Locale locale, List<GenericValue> productCategoryMembers,
+            String library, String parentId) throws GenericEntityException {
         List<TreeDataItem> products = FastList.newInstance();
         if (UtilValidate.isNotEmpty(productCategoryMembers)) {
             for (GenericValue productCategoryMember : productCategoryMembers) {
                 GenericValue product = productCategoryMember.getRelatedOne("Product", true);
+
+                String productId = product.getString("productId");
+                String productName = product.getString("productName");
+                if (UtilValidate.isEmpty(productName)) {
+                    productName = productId;
+                    ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
+                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "html")))
+                        productName = wrapper.get("CATEGORY_NAME", "html").toString();
+                }
+
                 if (library.equals("jsTree")) {
-                    JsTreeDataItem dataItem = new JsTreeDataItem(product.getString("productId"), product.getString("productName"), "jstree-file",
+                    JsTreeDataItem dataItem = new JsTreeDataItem(productId, productName + " [" + productId + "]", "jstree-file",
                             new JsTreeDataItemState(false, false), parentId);
                     dataItem.setType("product");
                     products.add(dataItem);

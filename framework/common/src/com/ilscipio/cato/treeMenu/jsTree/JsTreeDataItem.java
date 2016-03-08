@@ -121,9 +121,7 @@ public class JsTreeDataItem extends HashMap<String, Object>implements TreeDataIt
 
     @Override
     public boolean equals(Object o) {
-        // TODO Auto-generated method stub
         return this == o;
-        // return super.equals(o);
     }
 
 }

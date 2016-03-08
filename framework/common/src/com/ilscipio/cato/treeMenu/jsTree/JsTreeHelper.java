@@ -21,6 +21,8 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     private static final long serialVersionUID = -8201109323209706803L;
     private static String JSTREE_FIELD_ID_SEPARATOR = "_";
 
+    private static String module = "JsTreeHelper";
+
     private Map<String, Integer> sameIdDataItemsMap = FastMap.newInstance();
 
     @Override
@@ -28,8 +30,9 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.add(e);
         if (r) {
             findRepeatedDataItems();
+            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
             if (sameIdDataItemsMap.containsKey(e.getId()))
-                updateTreeDataItemsIdAndParentReference(e);
+                updateTreeDataItemsIdAndParentReference(e.getId());
         }
         return r;
     }
@@ -38,8 +41,9 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     public void add(int index, JsTreeDataItem element) {
         super.add(index, element);
         findRepeatedDataItems();
+        Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
         if (sameIdDataItemsMap.containsKey(element.getId()))
-            updateTreeDataItemsIdAndParentReference(element);
+            updateTreeDataItemsIdAndParentReference(element.getId());
     }
 
     @Override
@@ -47,9 +51,11 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.addAll(c);
         if (r) {
             findRepeatedDataItems();
-            for (JsTreeDataItem item : this) {
-                if (sameIdDataItemsMap.containsKey(item.getId()))
-                    updateTreeDataItemsIdAndParentReference(item);
+            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
+            for (String idKey : sameIdDataItemsMap.keySet()) {
+                // Debug.logInfo("updating id ============> " + idKey + " " +
+                // sameIdDataItemsMap.get(idKey) + " times", module);
+                updateTreeDataItemsIdAndParentReference(idKey);
             }
         }
         return r;
@@ -60,9 +66,11 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         boolean r = super.addAll(index, c);
         if (r) {
             findRepeatedDataItems();
-            for (JsTreeDataItem item : c) {
-                if (sameIdDataItemsMap.containsKey(item.getId()))
-                    updateTreeDataItemsIdAndParentReference(item);
+            Debug.logInfo("Total items repeated ============> " + sameIdDataItemsMap.keySet().size(), module);
+            for (String idKey : sameIdDataItemsMap.keySet()) {
+                // Debug.logInfo("updating id ============> " + idKey + " " +
+                // sameIdDataItemsMap.get(idKey) + " times", module);
+                updateTreeDataItemsIdAndParentReference(idKey);
             }
         }
         return r;
@@ -98,38 +106,42 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
 
     }
 
-    private void updateTreeDataItemsIdAndParentReference(JsTreeDataItem i) {
-//        Debug.log("total items repeated ============> " + sameIdDataItemsMap.keySet().size());
-        // Update id
-        String idKeyRepeated = null;
-        for (String idKey : sameIdDataItemsMap.keySet()) {
-            // Debug.log("id ==========> " + idKey + " times repeated
-            // ============> " + sameIdDataItemsMap.get(idKey));
-            int count = sameIdDataItemsMap.get(idKey);
-            if (i.getOriginalId().equals(idKey) && count >= 0) {
-                i.setId(i.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + count);
-                // int repeatedTimes = sameIdDataItemsMap.get(idKeyRepeated);
-//                for (JsTreeDataItem x : this) {
-//                    if (x.getParent().equals(idKeyRepeated)) {
-//                        x.setParent(x.getParent() + JSTREE_FIELD_ID_SEPARATOR + count);
-//                        count--;
-//                    }
-//                }
-            } else if (count < 0) {
-                Debug.log("Houston, we got a problem");
+    /**
+     * Updates the dataItemids that matches the id passed and as well as all the
+     * parent references
+     * 
+     * @param id
+     */
+    private void updateTreeDataItemsIdAndParentReference(String id) {
+        int idCount = sameIdDataItemsMap.get(id);
+        for (JsTreeDataItem item : this) {
+            // Update id
+            if (item.getOriginalId().equals(id) && idCount >= 0) {
+                item.setId(item.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + idCount);
+                idCount--;
+                // Debug.logInfo(
+                // "updating id ============> " + item.getOriginalId() + "
+                // remaining items with the same id to be updated =============>
+                // " + idCount, module);
+            } else if (item.getOriginalId().equals(id) && idCount < 0) {
+                Debug.log("Reached maximum number of replacements for id ====> " + id);
+            }
+
+            // Update parent
+            if (item.getParent().equals(id)) {
+                item.setParent(item.getParent() + JSTREE_FIELD_ID_SEPARATOR + idCount);
+                // Debug.logInfo("updating parent ============> " +
+                // item.getParent() + " remaining items with the same parent to
+                // be updated =============> "
+                // + idCount, module);
             }
         }
     }
 
-    private boolean hasTreeDataItem(JsTreeDataItem item) {
-        for (JsTreeDataItem i : this) {
-            if (i.getOriginalId().equals(item.getOriginalId()) && !i.equals(item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Finds all repeated elements, or basically the ones with the same id so
+     * they can be later on
+     */
     private void findRepeatedDataItems() {
         for (JsTreeDataItem dataItem : this) {
             Integer timesRepeated = 0;
@@ -140,6 +152,17 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
                 sameIdDataItemsMap.put(dataItem.getOriginalId(), timesRepeated);
             }
         }
+    }
+
+    private boolean hasTreeDataItem(JsTreeDataItem item) {
+        for (JsTreeDataItem i : this) {
+            if (i.getOriginalId().equals(item.getOriginalId()) && !i.equals(item)) {
+                if (UtilValidate.isEmpty(item.get("type")) || (UtilValidate.isNotEmpty(item.get("type")) && item.get("type").equals(i.get("type")))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

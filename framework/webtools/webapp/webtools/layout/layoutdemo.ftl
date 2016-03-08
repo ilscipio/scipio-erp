@@ -1021,6 +1021,9 @@
     <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" webSiteId="WebStore" absPath=true /></li>
     <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=true /></li>
     <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false /></li>
+    <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false fullPath=true/></li>
+    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false secure=true/></li>
     <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="WebStore" controller=false /></li>
     <li><@ofbizInterWebappUrl uri="main" webSiteId="WebStore" controller=true /></li>
     <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/webtools/control/main" /></li>

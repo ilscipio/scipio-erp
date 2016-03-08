@@ -145,7 +145,7 @@ See @ofbizUrl.
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" 
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" absPath=args.absPath!"" interWebapp=args.interWebapp!"" controller=args.controller!"" 
         extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
@@ -163,9 +163,9 @@ This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
 
 See @ofbizUrl.
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="">
-  <@ofbizUrl uri=uri absPath=false interWebapp=false controller=false 
-    extLoginKey=false fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
+<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false>
+  <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode><#nested></@ofbizUrl><#t>
 </#macro>
 
 <#-- 
@@ -180,8 +180,8 @@ See @ofbizUrl, @ofbizWebappUrl.
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=false interWebapp=false controller=false 
-        extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
+    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!false interWebapp=false controller=args.controller!false 
+        extLoginKey=args.extLoginKey!false fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath=false interWebapp=false controller=false 
         extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
@@ -220,10 +220,10 @@ See @ofbizUrl, @ofbizInterWebappUrl.
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
-        controller=args.controller!"" extLoginKey=args.extLoginKey!"" fullPath=fullPath secure=secure encode=encode /></#local>
+        controller=args.controller!"" extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
     <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" fullPath=fullPath secure=secure encode=encode /></#local>
+        controller="" extLoginKey="" fullPath="" secure="" encode="" /></#local>
   </#if>
   <#return res>
 </#function>

@@ -482,7 +482,6 @@ under the License.
         <antcall target="docs-applications"/>
         <antcall target="docs-specialpurpose"/>
         <hotdeployant target="docs"/>
-
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>
     </target>
 
@@ -533,8 +532,40 @@ under the License.
         <default-javadoc/>
 
         <echo message="[docs-all] ========== Done Building (JavaDocs) =========="/>
-   </target>
+    </target>
 
+    <!-- Cato: Main FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <target name="docs-ftl-cato" depends="build">
+        <antcall target="docs-ftl-cato-ftlonly"/>
+    </target>
+	
+	<!-- Cato: FIXME?: This is currently standard-Cato-specific and quite hardcoded. May even belong in a separate project.
+	       Or could also integrate this better with other "docs" builds in future (delegate to component build.xml) -->
+    <target name="docs-ftl-cato-ftlonly">
+        <echo message="[docs-ftl-cato] ========== Start Building (FTL docs) =========="/>
+    	<echo message="[docs-ftl-cato] Building Cato template-writer-friendly FTL lib docs..."/>
+        <java classname="com.ilscipio.cato.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
+            <arg value="cato-lib"/> <!-- lib format -->
+        	<arg value="framework/common/webcommon/includes/cato/lib"/> <!-- base source folder -->
+            <arg value="doc/cato/templating/ftl/lib"/> <!-- base output folder -->
+            <arg value="framework/common/webcommon/includes/cato/doc/ftlDocTemplate.ftl"/> <!-- doc template -->
+        	<!-- source files to process -->
+        	<arg value="utilities.ftl"/>
+        	<arg value="standard/htmlContent.ftl"/>
+        	<arg value="standard/htmlForm.ftl"/>
+            <arg value="standard/htmlInfo.ftl"/>
+        	<arg value="standard/htmlNav.ftl"/>
+        	<arg value="standard/htmlScript.ftl"/>
+            <arg value="standard/htmlStructure.ftl"/>
+        	<arg value="standard/htmlTemplate.ftl"/>
+            <classpath>
+                <path location="framework/webapp/build/lib/ofbiz-webapp.jar"/> <!-- the compiler class currently lives in here -->
+                <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
+            </classpath>
+        </java>
+        <echo message="[docs-ftl-cato] ========== Done Building (FTL docs) =========="/>
+    </target>
+	
     <!-- ================================================================== -->
     <!-- Contrib Targets                                                    -->
     <!-- ================================================================== -->

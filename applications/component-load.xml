@@ -32,7 +32,6 @@ under the License.
     <load-component component-location="marketing"/>
     
     <!-- CATO components -->
-    <load-component component-location="admin"/> <!-- Admin works as a dashboard to all subsequent applications -->
     <!-- <load-component component-location="ecomcato"/> -->
     
     <!-- common component used by most other components last because it uses info from most components-->

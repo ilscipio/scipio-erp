@@ -19,8 +19,8 @@ under the License.
 -->
 
 <web-app version="3.0">
-    <display-name>Open For Business - Metro Visual Theme</display-name>
-    <description>Metro Visual Theme</description>
+    <display-name>CATO - Shop Visual Theme</display-name>
+    <description>CATO Shop Visual Theme</description>
     
     <session-config>
         <session-timeout>1</session-timeout>

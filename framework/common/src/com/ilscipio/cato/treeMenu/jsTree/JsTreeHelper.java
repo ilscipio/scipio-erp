@@ -140,7 +140,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
 
     /**
      * Finds all repeated elements, or basically the ones with the same id so
-     * they can be later on
+     * they can be treated later on
      */
     private void findRepeatedDataItems() {
         for (JsTreeDataItem dataItem : this) {

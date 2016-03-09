@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <ProductStore productStoreId="catoShop" storeName="CATO Shop" companyName="ilscipio GmbH" title="CATO"
+        subtitle="Modern eCommerce" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="FOUNDATION_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+
+    <!-- <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="testRandomAuthorize"/> -->
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund" paymentCustomMethodId="CC_REFUND_TEST"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor" paymentCustomMethodId="EFT_AUTH_ALWAYSAPPRO"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor" paymentCustomMethodId="GIFT_AUTH_ALWAYSAPPR"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
+
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
+     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="WORLDPAY_CONFIG"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_OFFLINE" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_CONFIRM" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNotice" xslfoAttachScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNoticePdf" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_COMPLETE" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderCompleteNotice" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#BackorderNotice" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="OFBiz Demo - Order Payment Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://ecommerce/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="OFBiz Demo - Shipment Complete Notification #${orderId}" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnAccept" subject="OFBiz Demo - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnComplete" subject="OFBiz Demo - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_RTN_CANCEL" bodyScreenLocation="component://ecommerce/widget/EmailReturnScreens.xml#ReturnCancel" subject="OFBiz Demo - Return Cancelled #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_GC_PURCHASE" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase" fromAddress="ofbiztest@example.com" subject="A Gift From ${senderName}!"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_GC_RELOAD" bodyScreenLocation="component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload" fromAddress="ofbiztest@example.com" subject="Gift Card Reload Results"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_TELL_FRIEND" bodyScreenLocation="component://ecommerce/widget/EmailProductScreens.xml#TellFriend" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_PWD_RETRIEVE" bodyScreenLocation="component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail" subject="OFBiz Demo - Password Reminder (${userLogin.userLoginId})" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_QUO_CONFIRM" bodyScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple" xslfoAttachScreenLocation="component://order/widget/ordermgr/QuoteScreens.xml#QuoteReport" subject="OFBiz Demo - Quote Confirmation #${quoteId}" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PARTY_REGIS_CONFIRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_CUST_REGISTER" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#CreatePartyNotification" subject="New Account Created" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="UPD_PRSNL_INF_CNFRM" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#ChangePersonalInfoNotification" subject="Personal Information Updated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_EMAIL_VERIFY" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#VerifyEmailAddressNotification" subject="Email Address Verification" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="PRDS_CUST_ACTIVATED" bodyScreenLocation="component://party/widget/partymgr/EmailPartyScreens.xml#AccountActivatedNotification" subject="Account Activated" bccAddress="ofbiztest@example.com" fromAddress="ofbiztest@example.com"/>
+
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="CONT_NOTI_EMAIL" bodyScreenLocation="component://ecommerce/widget/EmailContactListScreens.xml#ContactUsEmailNotification" subject="Contact-us Information Notification" fromAddress="ofbiztest@example.com" />
+    
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="SUB_CONT_LIST_NOTI" bodyScreenLocation="component://ecommerce/widget/EmailContactListScreens.xml#ContactListSubscribeEmail" subject="Subscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="UNSUB_CONT_LIST_VERI" bodyScreenLocation="component://ecommerce/widget/EmailContactListScreens.xml#ContactListUnsubscribeVerifyEmail" subject="Verify Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="UNSUB_CONT_LIST_NOTI" bodyScreenLocation="component://ecommerce/widget/EmailContactListScreens.xml#ContactListUnsubscribeEmail" subject="Unsubscribe Contact List" fromAddress="ofbiztest@example.com"/>
+    <ProductStoreEmailSetting productStoreId="catoShop" emailType="CONT_EMAIL_TEMPLATE" bodyScreenLocation="component://ecommerce/widget/EmailContactListScreens.xml#ContactListEmailTemplate"/>
+
+    <WebAnalyticsConfig webSiteId="CatoWebStore" webAnalyticsTypeId="GOOGLE_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
+    <WebAnalyticsConfig webSiteId="CatoWebStore" webAnalyticsTypeId="BING_ANALYTICS" webAnalyticsCode="//--  enter here your analytic script code --"/>
+
+    <WebSite webSiteId="CatoWebStore" siteName="CATO Shop Web Site" productStoreId="catoShop" visualThemeSetId="ECOMMERCE" visualThemeSelectorScript="component://common/webcommon/WEB-INF/actions/includes/GetWebSiteStoreVisualThemeId.groovy" />
+
+    <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>    
+</entity-engine-xml>

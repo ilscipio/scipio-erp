@@ -43,11 +43,11 @@
 *   it's better for themes to use simple markup overrides instead, which do not use the advanced pattern.
 *
 * Template-facing macros (and advanced args pattern): 
-*   These macros such as @field, @row, @heading, etc. are meant to be
+* * These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden directly by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: 
 *   <#macro macroname args={} inlineArgs...>
-*   When called from templates, these macros accept regular inlined parameters as well as a map of parameters
+* * When called from templates, these macros accept regular inlined parameters as well as a map of parameters
 *   using the args map parameter. Intuitively, inline args have priority over args passed in the args map and in most cases simply override them.
 *   This pattern is especially needed for themes to override the templating-facing macros cleanly and to provide a way
 *   for template code to pass map content as arguments (not supported by Freemarker). It can be exploited 
@@ -61,15 +61,15 @@
 *   (e.g. <#macro myhtmlmacro (...) inlineAttribs...>). 
 *   IMPL NOTE: Extra attributions are handled by a system that records args names in a "allArgNames" member in 
 *       the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.
-*   INTERFACE:
+* * INTERFACE:
 *   <#assign name_defaultArgs = { (...), "passArgs":{} }>
 *   <#macro macroname args={} inlineArgs...>
-*     args: macro args map. map of parameters to pass to the macro. it can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
+*   * args: macro args map. map of parameters to pass to the macro. it can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
 *       IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
-*     inlineArgs: macro inline args. map of parameters passed inline to the macro via usual macro call syntax.
+*   * inlineArgs: macro inline args. map of parameters passed inline to the macro via usual macro call syntax.
 *       these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
 *       IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
-*     passArgs: pass-through args. map of args that should be passed along the major calls made by this macro or in other words
+*   * passArgs: pass-through args. map of args that should be passed along the major calls made by this macro or in other words
 *       passed through the whole call stack. it allows arguments to pass through from the templating-facing macro 
 *       to the internal implementations such as markup macros, similar to a context. this is needed especially to allow theme overrides 
 *       to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
@@ -78,28 +78,28 @@
 *           e.g. <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
 *
 * Markup macros (theme overrides): 
-*   These macros such as @row_markup, @heading_markup, etc. containing
+* * These macros such as @row_markup, @heading_markup, etc. containing
 *   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
 *   This is the simplest and preferred way to provide alternate markup.
 *   They do not have a versatile interface like the template-facing macros and are intentionally kept
 *   simple.
-*   Nevertheless, they have some requirements: these macros should always end their parameter list with
-*   a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
-*   with themes.
-*   INTERFACE:
+*   * Nevertheless, they have some requirements: these macros should always end their parameter list with
+*     a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
+*     with themes.
+* * INTERFACE:
 *   <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
-*     origArgs: original caller's args. map of complex parameters usually roughly as they were received by the calling macro. rarely-used and should be
+*   * origArgs: original caller's args. map of complex parameters usually roughly as they were received by the calling macro. rarely-used and should be
 *       avoided in favor of the other simpler macro arguments passed by the caller which are usually very similar. is 
 *       needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
 *       NOTE: in general orig args do not come from a template-facing macro but from an intermediate macro
 *           (such as @fieldset_core or @field_input_widget). this is the intention, as the former would break 
 *           abstraction too much. in many cases however, the calling macro may happen to be 
 *           a template-facing macro. do not rely on this while using origArgs.
-*     passArgs: pass-through args. map of args that are passed through from the template-facing macro to the parent/caller macro to 
+*   * passArgs: pass-through args. map of args that are passed through from the template-facing macro to the parent/caller macro to 
 *       this macro or in other words passed through the whole call stack, similar to a context. this is needed especially to allow theme overrides 
 *       to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
 *       be careful about using sufficiently unique names.
-*     catchArgs: catch-all args. simply catches all the parameters the macro doesn't need to handle
+*   * catchArgs: catch-all args. simply catches all the parameters the macro doesn't need to handle
 *       NOTE: the previous parameters may be omitted and caught with catchArgs if unused.
 *
 * DEV NOTE: TODO: although the main macro patterns are mostly in place, there are still open questions about (re-)implementation

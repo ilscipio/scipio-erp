@@ -983,7 +983,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if currentId?has_content> id="${currentId}"</#if><#t/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if><#t/>
-        name="${name?html}" value="${itemValue!""?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+        name="${name?html}" value="${(itemValue!"")?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">

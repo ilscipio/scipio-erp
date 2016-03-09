@@ -155,7 +155,7 @@ under the License.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label="${orderItem.quantity!0?string.number}">    
+                                        <@modal id="${productId}_q" label="${(orderItem.quantity!0)?string.number}">    
                                             <@table type="data-complex"> <#-- orig: class="" -->
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

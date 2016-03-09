@@ -75,7 +75,7 @@ under the License.
 <#macro renderHiddenField name value id event action></#macro>
 <#macro renderIgnoredField></#macro>
 
-<#macro renderFieldTitle style title id fieldHelpText="" for="">${title!""?replace("&nbsp;", " ")}</#macro>
+<#macro renderFieldTitle style title id fieldHelpText="" for="">${(title!"")?replace("&nbsp;", " ")}</#macro>
 <#macro renderSingleFormFieldTitle title>${title!""}</#macro>
     
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method=""></#macro>

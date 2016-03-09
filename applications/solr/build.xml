@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Ecommerce Component" default="jar" basedir=".">
+<project name="CATO - Solr Component" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -45,6 +45,7 @@ under the License.
         <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
         <!--<fileset dir="../../applications/party/build/lib" includes="*.jar"/> -->
         <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
         <!-- <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>

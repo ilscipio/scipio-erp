@@ -41,7 +41,7 @@ under the License.
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
                 
-                <script location="component://shop/widget/EcommerceSetup.groovy"/>
+                <script location="component://shop/script/org/ofbiz/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP"/>
@@ -61,7 +61,7 @@ under the License.
                   </condition>
                   <widgets>
                      <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                        <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                         <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                             <section>
                                 <condition>
                                     <not><if-empty-section section-name="left-column" /></not>
@@ -71,17 +71,31 @@ under the License.
                                 </widgets>
                                 <fail-widgets>
                                     <!-- provide default column for all others -->
-                                    <include-menu location="component://marketing/widget/MarketingMenus.xml" name="MarketingAppSideBar"/>
+                                    <include-screen name="leftbar"/>
                                 </fail-widgets>
                             </section>
                         </decorator-section>
                         <decorator-section name="body">
                             <decorator-section-include name="body"/>
                         </decorator-section>
+                        <decorator-section name="right-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                            <section>
+                                <condition>
+                                    <not><if-empty-section section-name="right-column" /></not>
+                                </condition>
+                                <widgets>
+                                    <decorator-section-include name="right-column"/>
+                                </widgets>
+                                <fail-widgets>
+                                    <!-- provide default column for all others -->
+                                    <include-screen name="rightbar"/>
+                                </fail-widgets>
+                            </section>
+                        </decorator-section>
                     </decorator-screen>
                   </widgets>
                   <fail-widgets>
-                     <label text="A Product Store has not been defined for this ecommerce site.  A Product Store can be created using the ofbizsetup wizard."/>
+                     <label text="A Product Store has not been defined for this ecommerce site."/>
                   </fail-widgets>
                </section>
             </widgets>
@@ -89,7 +103,7 @@ under the License.
     </screen>
 
     <!-- Side Columns -->
-    <screen name="left-column">
+    <screen name="leftbar">
         <section>
             <widgets>
                     <include-screen name="choosecatalog" location="component://shop/widget/CatalogScreens.xml"/>
@@ -102,7 +116,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="right-column">
+    <screen name="rightbar">
         <section>
             <widgets>
                     <include-screen name="language"/>
@@ -192,10 +206,6 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="center"/>
-
                 <set field="titleProperty" value="PageTitleMain"/>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>

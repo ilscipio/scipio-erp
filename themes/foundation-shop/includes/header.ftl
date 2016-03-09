@@ -36,7 +36,34 @@ under the License.
 <#else>
   <#assign orgName = "">
 </#if>
-
+<#macro generalMenu>
+    <#if userLogin??>
+        <#--
+        <#if layoutSettings.topLines?has_content>
+          <#list layoutSettings.topLines as topLine>
+            <#if topLine.text??>
+              <li>${topLine.text}<a href="${StringUtil.wrapString(topLine.url!)}${StringUtil.wrapString(externalKeyParam)}">${topLine.urlText!}</a></li>
+            <#elseif topLine.dropDownList??>
+              <li><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
+            <#else>
+              <li>${topLine!}</li>
+            </#if>
+          </#list>
+        <#else>
+          <li>${userLogin.userLoginId}</li>
+        </#if>
+        -->
+        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
+        <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
+    </#if>
+    <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
+        <#include "component://common/webcommon/includes/helplink.ftl" />
+    </#if>
+    <#if userLogin??>
+        <li class="divider"></li>
+        <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
+    </#if>
+</#macro>
 
 <#macro logoMenu hasLink=true isSmall=false>
     <#if layoutSettings.headerImageUrl??>
@@ -182,8 +209,11 @@ under the License.
         <ul class="right">
           <li class="has-dropdown not-click">
             <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
+            <ul class="dropdown">       
+                <@generalMenu />
+            </ul>
           </li>
           <li class="divider"></li>
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>       
+          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>   
         </ul>

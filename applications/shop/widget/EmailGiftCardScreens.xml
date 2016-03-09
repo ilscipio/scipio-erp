@@ -24,7 +24,7 @@ under the License.
     <screen name="GiftCardPurchase">
         <section>
             <actions>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
@@ -36,7 +36,7 @@ under the License.
     <screen name="GiftCardReload">
         <section>
             <actions>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>

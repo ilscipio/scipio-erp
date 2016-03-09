@@ -17,6 +17,8 @@
 * * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
 *
 * DEV NOTES: 
+* * WARNING: BE CAREFUL WITH FORMATTING, documentation will be interpreted by a parser.
+*   * The number of star characters (*) is significant!
 * * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 *   Even though it would be convenient, we can't allow a "attribString" arg because no way
 *   for macro to get attribs out of it if it needs them, cause problems.
@@ -24,7 +26,7 @@
 *       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
 *
 *
-* MACRO INTERFACES
+* * MACRO INTERFACES *
 * 
 * Cato standard macros have versatile interfaces. 
 *
@@ -100,7 +102,7 @@
 *     catchArgs: catch-all args. simply catches all the parameters the macro doesn't need to handle
 *       NOTE: the previous parameters may be omitted and caught with catchArgs if unused.
 *
-* TODO: DEV NOTE: although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
+* DEV NOTE: TODO: although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
 *     and optimization using transforms (see mergeArgMaps and related).
 *
 -->

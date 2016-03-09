@@ -13,6 +13,8 @@
 *************
 * Modal
 ************
+Creates a modal UI element.
+
   * Usage Example *  
     <@modal id="dsadsa" attr="" >
         Modal Content 
@@ -51,6 +53,7 @@
 * Alert box
 ************
 Alert box for messages that must grab user attention.
+
 NOTE: Should avoid using this for regular, common inlined message results such as "No records found." unless
     it's an unexpected result, error or one that requires user action.
     For most cases, it is preferrable to use @commonMsg macro because it is higher-level.
@@ -103,6 +106,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 *************
 * Panel box
 ************
+Creates a panel box.
+
   * Usage Example *  
     <@panel type="">
         This is a panel.
@@ -136,7 +141,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 ************
 Abstracts and factors out the display format of common messages of specific meanings, such as
 errors (e.g. permission errors) and query results (e.g. "No records found." messages).
-In other words, labels messages according to what they are and lets the theme decide on markup and styling based on content.
+
+This labels messages according to what they are and lets the theme decide on markup and styling based on content.
 
 This is higher-level than @alert macro; @alert has a specific markup/display and its types are usually levels of severity,
 whereas @commonMsg abstracts markup/display and its messages can be a combination of levels and specific meanings;
@@ -145,15 +151,16 @@ whereas @commonMsg abstracts markup/display and its messages can be a combinatio
 @commonMsg may use @alert to implement its markup.
 A template should not assume too much about the message markup, but the markup should be kept simple.
 
-WIDGETS: <label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
-    xxx is the message type. e.g.: 
-      <label style="common-msg-error-perm" text="Permission Error" />
-    translates to:
-      <@commonMsg type="error-perm">Permission Error</@commonMsg>
-    Extra classes are also possible using colon syntax (combined with the usual "+" macro additive class instruction):
-      <label style="common-msg-error-perm:+myclass" text="Permission Error" />
-    translates to:
-      <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
+* Screen Widgets Equivalent *
+  <label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
+  xxx is the message type. e.g.: 
+    <label style="common-msg-error-perm" text="Permission Error" />
+  translates to:
+    <@commonMsg type="error-perm">Permission Error</@commonMsg>
+  Extra classes are also possible using colon syntax (combined with the usual "+" macro additive class instruction):
+    <label style="common-msg-error-perm:+myclass" text="Permission Error" />
+  translates to:
+    <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
       
   * Usage Example *  
     <@commonMsg type="result-norecord"/>            

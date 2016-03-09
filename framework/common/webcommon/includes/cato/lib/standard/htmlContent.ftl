@@ -13,6 +13,8 @@
 *************
 * Heading
 ************
+An HTML heading (title).
+
   * Usage Example *  
     <@heading>My Title</@heading>         
                                  
@@ -127,7 +129,7 @@
 *************
 * Code Block
 ************
-Creates a very basic wrapper for code blocks
+Creates a basic wrapper for code blocks.
 
   * Usage Example *  
     <@code type="java">
@@ -175,27 +177,27 @@ Maps an Ofbiz form widget type to a @table macro type.
 Creates a responsive tables script (script only - no markup).
     
   * Parameters *
-    enabled             = true/false, default true (helper macro arg)
-    tableId             = id of table
+    enabled             = ((boolean)) (default: true) Helper arg to prevent the whole macro from executing, when false.
+    tableId             = table ID
     tableType           = table type
-    tableStyleName      = optimization: table style name (usually based on table type)
+    tableStyleName      = Optimization: table style name (usually based on table type)
                           can be omitted and will determine automatically from table type
-    responsive          = if true, will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
+    responsive          = ((boolean)) (default: -from global styles-) If true, will generate a responsive table
+                          Currently, this relies on the jQuery plugin datatables.js (www.datatables.net) to generate responsive table. 
                           Can be combined with fixed column type.
                           if explicitly set to false, will disable responsive regardless of defaults.
                           default is dependent on table type (global styles).
-    responsiveOptions   = a map of options passed directly to responsive tables
-    responsiveDefaults  = if true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults
-                          per-option; if false, no defaults are used and only 
+    responsiveOptions   = map of options passed directly to responsive tables implementation (javascript implementation)
+    responsiveDefaults  = ((boolean)) (default: true) Fine-grained control for whether responsive defaults are looked up or not.
+                          If true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults per-option; if false, no defaults are used and only 
                           responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used. 
-                          default is true.
-    scrollable          = if true, guarantees table will be scrollable horizontally.
+    scrollable          = ((boolean)) (default: -from global styles-) Scrolling control
+                          If true, guarantees table will be scrollable horizontally.
                           implementation of scrollable depends on macro and global styles (by default, uses responsive).
-                          if explicitly set to false, prevents scrolling.
-                          default is dependent on table type (global styles).
+                          If explicitly set to false, prevents scrolling.
                           (convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX)
-    fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
-    fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
+    fixedColumnsLeft    = ((integer)) Number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
+    fixedColumnsRight   = ((integer)) Number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
 <#assign tableResponsiveScript_defaultArgs = {
   "enabled" : true, "tableId" : "", "tableType" : "", "tableStyleName" : "", "responsive" : "", "scrollable" : "",
@@ -255,7 +257,9 @@ Creates a responsive tables script (script only - no markup).
 *************
 * Table
 ************
-Helps define an HTML table. Required wrapper for all @table sub-element macros.
+Defines a table with advanced generating functionality. Analogous to HTML <table> element.
+
+Required wrapper for all @table sub-element macros.
 
 TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
     overcomplicated at the moment.
@@ -312,11 +316,11 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                       where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
                       styles["table_default"]
     id              = table id
-    hasHeader       = boolean, this is a hint to indicate that table is expected to have a header, normally a <@thead>
-                      element. @table will try to figure this out on its own, but in some cases it may not be possible
+    hasHeader       = ((boolean)) Hint to indicate that table is expected to have a header, normally a <@thead> element.
+                      @table will try to figure this out on its own, but in some cases it may not be possible
                       or not possible to know in advance, in which case caller must specify this flag.
-                      currently this affects the following:
-                        responsive tables
+                      Currently this affects the following:
+                        * responsive tables
     autoAltRows     = defaults specified in styles hash, but otherwise false
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
@@ -330,7 +334,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     * Responsive Tables *
     responsive/responsiveOptions/
     responsiveDefaults/scrollable/
-    fixedColumnsLeft/fixedColumnsRight  = see @tableResponsiveScript macro for descriptions
+    fixedColumnsLeft/fixedColumnsRight  = See @tableResponsiveScript macro for descriptions
                                           NOTE: @table (default @table_markup) will automatically disable
                                               responsive on tables that have no @thead element and hasHeader=true is not specified.
                                               responsive tables break when no header.
@@ -524,6 +528,12 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
+<#-- 
+*************
+* Table header
+************
+Defines a table header with advanced generating functionality. Analogous to HTML <thead> element.
+-->
 <#assign thead_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
@@ -576,6 +586,12 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
+<#-- 
+*************
+* Table body
+************
+Defines a table body with advanced generating functionality. Analogous to HTML <tbody> element.
+-->
 <#assign tbody_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
@@ -626,7 +642,12 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-
+<#-- 
+*************
+* Table footer
+************
+Defines a table footer with advanced generating functionality. Analogous to HTML <tfoot> element.
+-->
 <#assign tfoot_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
@@ -818,9 +839,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 
 <#-- 
 *************
-* Table Cell
+* Table Header Cell
 ************
-Helps define table cells.
+Defines a table header cell. Analogous to <th> HTML element.
                     
   * Parameters *
     class           = CSS classes 
@@ -849,6 +870,15 @@ Helps define table cells.
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
+<#-- 
+*************
+* Table Body Cell
+************
+Defines a table body cell. Analogous to <td> HTML element.
+                    
+  * Parameters *
+    (other)         = See @th.
+-->
 <#assign td_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
@@ -871,7 +901,8 @@ Helps define table cells.
 * Table Row Class Attribute String
 ************
 Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
-Usage discouraged: use @table, @tr macros instead.
+
+DEPRECATED: use @table, @tr macros instead.
 
   * Usage Example *  
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
@@ -902,8 +933,10 @@ Usage discouraged: use @table, @tr macros instead.
 
 <#-- 
 *************
-* Pricing Table
+* Pricing table wrapper
 ************
+Creates a pricing table wrapper.
+
 Since this is very foundation specific, this function may be dropped in future installations.
 
   * Usage Example *  
@@ -912,8 +945,7 @@ Since this is very foundation specific, this function may be dropped in future i
     </@pul>            
                     
   * Parameters *
-    title           = fieldset-title
-    
+    title           = fieldset title
 -->
 <#assign pul_defaultArgs = {
   "title":"", "passArgs":{}
@@ -933,6 +965,14 @@ Since this is very foundation specific, this function may be dropped in future i
   </ul>
 </#macro>
 
+<#-- 
+*************
+* Pricing table element
+************
+Creates a pricing table element/entry.
+
+Since this is very foundation specific, this function may be dropped in future installations.
+-->
 <#assign pli_defaultArgs = {
   "type":"", "passArgs":{}
 }>
@@ -968,6 +1008,9 @@ Since this is very foundation specific, this function may be dropped in future i
 *************
 * Chart
 ************
+Creates a chart wrapper.
+
+Libraries used:
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
@@ -986,6 +1029,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     label2         = dataset 2 label
     labelUom1      = dataset 1 currency symbol (automatically added to the tooltips)
     labelUom2      = dataset 2 currency symbol (automatically added to the tooltips)
+    
+
+  * Related *
+    @chartdata
 -->
 <#assign chart_defaultArgs = {
   "type":"pie", "library":"foundation", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
@@ -1209,18 +1256,16 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </@script>
   </#if>
 </#macro>
+
 <#-- 
 *************
 * chart_get_number_of_datasets
 ************
-
-
-  * Usage Example *  
-               
+Gets chart number of datasets.
                     
   * Parameters *
-    content           = (pie|bar|line) (default:pie)
-    library        = (foundation|chart) (default:chart)   
+    content             = (pie|bar|line) (default:pie)
+    library             = (foundation|chart) (default:chart)   
 -->
 <#function chart_get_number_of_datasets content="" library="chart">
     <#if content?has_content>
@@ -1242,6 +1287,15 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
 </#function>
 
+<#-- 
+*************
+* Chart data
+************
+Chart data entry.
+
+  * Related *
+    @chart
+-->
 <#assign chartdata_defaultArgs = {
   "title":"", "value":"", "value2":"", "passArgs":{}
 }>

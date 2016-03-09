@@ -15,6 +15,7 @@
 ************
 Simple container (whether used as grid element or not); basically macro version of HTML div element.
 This serves to add various hooks that may be needed around regular containers.
+
 For grid usage, @row/@cell should be preferred.
 
 Currently, this will scan classes for @cell-related grid sizes. this macro should always be
@@ -69,7 +70,9 @@ to this one.
 *************
 * Row
 ************
-  * Usage Example *  
+Creates a grid row.
+
+  * Usage examples *  
     <@row attr="" >
         <@cell attr=""/>
     </@row>              
@@ -131,7 +134,9 @@ to this one.
 *************
 * Cell
 ************
-    Usage examples:  
+Creates a grid cell.
+
+  * Usage examples * 
     <@row attr="" >
         <@cell attr="">
             cell content goes in here!
@@ -169,7 +174,8 @@ to this one.
     smallOffset     = specific offset for small columns
     mediumOffset    = specific offset for medium columns
     largeOffset     = specific offset for large columns
-    last            = boolean, usually optional, if true indicate last cell in row 
+    last            = ((boolean)) If true indicates last cell in row 
+                      NOTE: This is often optional in CSS frameworks; affects float alignment.
 -->
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
@@ -239,8 +245,12 @@ to this one.
 
 <#-- 
 *************
-* Container size method overrides
+* parseContainerSizesFromStyleStr
 ************   
+OVERRIDE. Parses container sizes from a class/style string.
+
+* Container size method overrides* 
+
 These provide framework-/theme-specific overriding implementations of the placeholder functions of the
 saveCurrentContainerSizes and related utilities lib functions.
 
@@ -262,8 +272,15 @@ TODO?: these could also parse style for tile classes and calculate approximate c
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
-<#-- TODO: reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
-        and have this delegate to it -->
+<#-- 
+*************
+* evalAbsContainerSizeFactors
+************   
+OVERRIDE. Calculates nested container size factors. 
+
+TODO: Reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
+        and have this delegate to it 
+-->
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] catchArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>
@@ -325,6 +342,8 @@ TODO?: these could also parse style for tile classes and calculate approximate c
 *************
 * Grid List
 ************
+Creates a grid list.
+
 Since this is very foundation specific, this function may be dropped in future installations
 
   * Usage Example *  
@@ -337,12 +356,12 @@ Since this is very foundation specific, this function may be dropped in future i
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    columns         = Number of columns (default 5)
+    columns         = ((number)) (default: 5) Number of columns
     type            = (tiles|list|) (default: list)
-    tilesType       = default tiles type for tiles inside this element.
-                      this same value is used as default for the @tile macro "type" attrib.
-                      however, in addition, type when specified here may also influence tile arrangement.
-                      see @tile macro "type" attrib for possible values.
+    tilesType       = Default tiles type for tiles inside this element
+                      This same value is used as default for the @tile macro "type" attrib.
+                      However, in addition, type when specified here may also influence tile arrangement.
+                      See @tile macro "type" attrib for possible values.
 -->
 <#assign grid_defaultArgs = {
   "type":"", "tilesType":"", "class":"", "columns":4, "id":"", "passArgs":{}
@@ -429,6 +448,7 @@ Since this is very foundation specific, this function may be dropped in future i
 * Tile
 ************
 Creates a very basic wrapper for tiles (can be used in metro designs).
+
 Please be aware that this is neither based on standard bootstrap, nor foundation. 
 It is loosely based on http://metroui.org.ua/tiles.html 
 
@@ -467,7 +487,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
                         cover: this is currently the default. fills tile.
                         contain: show whole image in tile.
                       Type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
-    imageBgColor    = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles) (fallback default: none). 
+    imageBgColor    = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: none). 
                       none: prevents color class.
     overlayType     = (|default|...) (default: default) Overlay type. 
                       Cato standard supported types (extensible by theme):
@@ -634,11 +654,12 @@ It is loosely based on http://metroui.org.ua/tiles.html
 *************
 * Section
 ************
-Creates a logical section with optional title and menu. Automatically handles heading sizes
-and keeps track of section nesting for whole request, even across screens.render calls.
+Creates a logical section with optional title and menu.
 
-NOTE: use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
-levels manually, but most often should let @section menu handle them.
+Automatically handles heading sizes and keeps track of section nesting for the whole rendering request, even across screens.render calls.
+
+NOTE: Use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
+levels manually, but most often should let @section menu handle them level calculations.
 
 IMPL NOTE: This has dependencies on some non-structural macros.
 
@@ -646,7 +667,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <@section attr="">
         Inner Content
     </@section>            
-                    
+
   * Parameters *
     type                = (generic) (default: generic)
     class               = CSS classes, on outer columns element (affects title)
@@ -654,16 +675,17 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                             "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                             "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
                           note: boolean false has no effect here
-    id                  = set id
+    id                  = section ID
     title               = section title
-    titleClass          = section title class (supports complex expressions; rarely needed, usually headingLevel enough)
-    padded              = 
+    titleClass          = section title class 
+                          Supports complex expressions (rarely needed; usually headingLevel enough).
+    padded              = ((boolean)) (default: false)
     autoHeadingLevel    = auto increase heading level when title present (enabled by default)
     headingLevel        = force this heading level for title. if autoHeadingLevel true, also influences nested elems (even if no title here, but if no title won't consume a size).
     relHeadingLevel     = increase heading level by this number
     defaultHeadingLevel = default heading level (same as headingLevel if autoHeadingLevel false)
                           if empty string, use getDefaultHeadingLevel()
-    menuContent         = optional; a macro, hash/map of @menu args, or string html markup of li elements only defining a menu
+    menuContent         = (optional) A macro, hash/map of @menu args, or string html markup of li elements only defining a menu
                           as macro:
                             should accept one argument named "menuArgs" which is default @section menu args that can be passed
                             directly to @menu by caller, e.g.:
@@ -681,7 +703,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                             should be <li> elements only, generated manually or using <@menu type="section" ... inlineItems=true>.
                             WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                             assumed to be "section" or "section-inline".
-    optional menu data or markup, li elements only (ul auto added)
+                          optional menu data or markup, li elements only (ul auto added)
     menuLayout          = (post-title|pre-title|inline-title) (default: post-title) 
                           This is a low-level control; avoid where possible.
     menuRole            = (nav-menu|paginate-menu) (default: nav-menu)

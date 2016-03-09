@@ -17,13 +17,15 @@
 * HTML Head Open
 ************
 Opens an HTML document and header section.
+
 IMPL NOTE: Beware of whitespace.
 
   * Usage Example *  
     <@htmlHeadOpen />            
                     
   * Parameters *
-    includeDocType      = boolean, default false (included by screen renderer, @renderScreenBegin)
+    includeDocType      = ((boolean)) (default: false) Whether to include doctype or not.
+                          Default is false because is already included by screen renderer in @renderScreenBegin.
 -->
 <#assign htmlHeadOpen_defaultArgs = {
   "includeDocType":false, "passArgs":{}
@@ -60,7 +62,8 @@ IMPL NOTE: Beware of whitespace.
 * Scripts
 ************
 Optional scripts include modifier. Modifies the @script calls within it.
-Not associated with any HTML element.
+
+NOTE: This is NOT associated with any HTML element nor does it define any.
 
   * Usage Example *  
     <@scripts output=true> <#- guarantees the @script calls will output content to page at this location ->
@@ -95,9 +98,10 @@ Not associated with any HTML element.
 * Script
 ************
 Inline script wrapper. By default, makes a javascript block.
-DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
 NOTE: Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).
+
+DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
   * Usage Example *  
     <@script>
@@ -158,11 +162,14 @@ NOTE: Unlike others this macro explicitly currently cannot support open/close st
 *************
 * requireScriptOfbizUrl
 ************
-This informs the decorator that the given ofbiz URI must be made available to javascript
-code through the getOfbizUrl(url) JS function.
+Informs the rendering process (decorator) that the given ofbiz URI must be made available to javascript
+code.
 
-the screen/ftl has to communicate to the decorator which URIs it needs to use, so
-this is one such mechanism (other option: layoutSettings? TODO? any way is messy).
+Normally the getOfbizUrl(url) Javascript function will be used to do this.
+
+The screen/ftl has to communicate to the decorator which URIs it needs to use, so
+this is one such mechanism 
+DEV NOTE: Other options: layoutSettings? any way is messy...
                     
 Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can't predict URL patterns unless rewrite
@@ -237,7 +244,6 @@ Prints a string of element attributes for common macro HTML elements.
 This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.
 
   * Parameters *
-    (see @elemAttribStr; mostly same parameters but defaults different)
     attribs       = the attribs map here is more versatile and supports mergeArgMaps functions more easily.
                     it may contain two special members: localArgNames and allArgNames. both should be lists.
                     localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
@@ -245,6 +251,7 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                     if this map contains an "attribs" member, it will be added for exclude as well.
                     see function getAttribMapAllExcludes for implementation details.
     noExclude     = prevents excludes of attribs with specified names (list)
+    (other)       = See @elemAttribStr; mostly same parameters but defaults different.
 -->
 <#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>

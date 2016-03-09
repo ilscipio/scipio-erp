@@ -38,11 +38,12 @@
 *************
 * ofbizUrl
 ************
-Wraps a controller-based Ofbiz URL.
+Builds an Ofbiz navigation URL.
+
 THIS IS THE MAIN STOCK OFBIZ URL MACRO. It may be modified with enhanced
 capabilities for Cato.
 
-With Cato, Boolean arguments can be given as booleans, string representation of booleans
+With Cato, boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 
 DEV NOTES:
@@ -50,8 +51,6 @@ DEV NOTES:
   the code from Cato magnolia project
   * The inter-webapp is still complicated by need for webSiteId which stock apps don't have (and can't give)
 * webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
-
-!!! NOT YET FULLY IMPLEMENTED, DOCS ARE WIP !!!
 
   * Parameters *
     type            = [intra-webapp|inter-webapp|] (default: intra-app)
@@ -125,23 +124,24 @@ DEV NOTES:
 *************
 * makeOfbizUrl
 ************
-Function version of the @ofbizUrl macro.
+Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.
 
 This is useful to prevent bloating templates with <#assign...><@ofbizUrl.../></#assign> captures
 which is very frequent due to use of macros.
 
   * Parameters *
-   args (uri)           = map of @ofbizUrl arguments OR a string containing a uri (single parameter)
-                          DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
-                              for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
-                              However majority of cases use only a URI so we can shortcut in that case.
-                              Freemarker doesn't support overloading so we basically implement it ourselves.
-                              Note that if we needed extra positional parameters for common cases, should keep the args map check on
-                              the first param only, otherwise it creates too many checks needed; this is
-                              consistent with macros anyway (you use either positional OR named params, you can't combine,
-                              so you use only args map or only positionals).
-                              
-See @ofbizUrl.
+    args (uri)           = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+                           DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
+                               for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
+                               However majority of cases use only a URI so we can shortcut in that case.
+                               Freemarker doesn't support overloading so we basically implement it ourselves.
+                               Note that if we needed extra positional parameters for common cases, should keep the args map check on
+                               the first param only, otherwise it creates too many checks needed; this is
+                               consistent with macros anyway (you use either positional OR named params, you can't combine,
+                               so you use only args map or only positionals).
+   
+  * Related *                           
+    @ofbizUrl
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
@@ -157,11 +157,18 @@ See @ofbizUrl.
 *************
 * ofbizWebappUrl
 ************
-Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
-but usually used to access another servlet, such as /products/GZ-1000).
-This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
+Builds an Ofbiz navigation intra-webapp, non-controller URL.
 
-See @ofbizUrl.
+The URI takes the basic form /control/requesturi, 
+but this is normally used to access another servlet, such as /products/GZ-1000.
+
+This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+
+  * Parameters *
+    (other)              = See @ofbizUrl
+
+  * Related *                           
+    @ofbizUrl
 -->
 <#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false>
   <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
@@ -172,11 +179,20 @@ See @ofbizUrl.
 *************
 * makeOfbizWebappUrl
 ************
-Wraps an intra-webapp Ofbiz URL (in the basic form /control/requesturi, 
-but usually used to access another servlet, such as /products/GZ-1000).
-This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false.
+Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.
 
-See @ofbizUrl, @ofbizWebappUrl.
+The URI takes the basic form /control/requesturi, 
+but this is normally used to access another servlet, such as /products/GZ-1000.
+
+This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+h absPath=false, interWebapp=false, controller=false.
+
+  * Parameters *
+    (other)              = See #makeOfbizUrl, @ofbizWebappUrl
+
+  * Related * 
+    @ofbizWebappUrl                          
+    @ofbizUrl
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
@@ -193,11 +209,19 @@ See @ofbizUrl, @ofbizWebappUrl.
 *************
 * ofbizInterWebappUrl
 ************
-Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
-This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
-or can be overridden; controller is left to interpretation or can be specified.
+Builds an Ofbiz navigation inter-webapp URL.
 
-See @ofbizUrl.
+The URI takes the basic and usual form /webappmountpoint/control/requesturi 
+OR requesturi if webSiteId is specified and is a controller request.
+
+This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+by the implementation or can be overridden; controller is left to interpretation or can be specified.
+
+  * Parameters *
+    (other)              = See @ofbizUrl
+
+  * Related * 
+    @ofbizUrl
 -->
 <#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="">
   <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
@@ -208,14 +232,23 @@ See @ofbizUrl.
 *************
 * makeOfbizInterWebappUrl
 ************
-Wraps an inter-webapp Ofbiz URL (in the basic and usual form /webappmountpoint/control/requesturi).
-This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
-or can be overridden; controller is left to interpretation or can be specified.
+Builds an Ofbiz navigation inter-webapp URL. Function version of @ofbizInterWebappUrl.
 
-NOTE: if args is specified as map, "webSiteId" must be passed in args, not as argument.
+The URI takes the basic and usual form /webappmountpoint/control/requesturi 
+OR requesturi if webSiteId is specified and is a controller request.
+
+This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+by the implementation or can be overridden; controller is left to interpretation or can be specified.
+
+NOTE: If args is specified as map, "webSiteId" must be passed in args, not as argument.
     (This is intentional, to be consistent with macro invocations, emulated for functions)
 
-See @ofbizUrl, @ofbizInterWebappUrl.
+  * Parameters *
+    (other)              = See #makeOfbizUrl, @ofbizInterWebappUrl
+
+  * Related * 
+    @ofbizInterWebappUrl
+    @ofbizUrl
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
@@ -232,12 +265,16 @@ See @ofbizUrl, @ofbizInterWebappUrl.
 *************
 * ofbizContentUrl
 ************
-Wraps a Ofbiz content/resource URL.
+Builds an Ofbiz content/resource URL.
+
 THIS IS THE STOCK OFBIZ CONTENT URL MACRO. It may be modified with enhanced
 capabilities for Cato.
 
+TODO: Make this accept uri
+
   * Parameters *
-    ...
+    variant             = variant
+                          (Stock Ofbiz parameter)
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#macro ofbizContentUrl ...>
@@ -248,7 +285,13 @@ capabilities for Cato.
 *************
 * makeOfbizContentUrl
 ************
-Function version of the @ofbizContentUrl macro.
+Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl macro.
+
+  * Parameters *
+    (other)              = See @ofbizContentUrl
+
+  * Related * 
+    @ofbizContentUrl
 -->
 <#function makeOfbizContentUrl uri variant="">
   <#local res><@ofbizContentUrl variant=variant>${StringUtil.wrapString(uri)}</@ofbizContentUrl></#local>
@@ -269,6 +312,9 @@ The following URI forms are currently interpreted and transformed:
  ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
                Form (note: order of arguments is strict; args will be stripped): 
                  ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
+                 
+  * Parameters *
+    url             = uri to interpret for known formats and, if matching, to produce URL
 -->
 <#function interpretRequestUri uri>
   <#local uri = StringUtil.wrapString(uri)?string>
@@ -292,6 +338,10 @@ The following URI forms are currently interpreted and transformed:
 * addExtLoginKey
 ************
 Adds the external login key to given url
+
+  * Parameters *
+    url             = URL to augment
+    escape          = boolean (default: true) If true, use escaped param delimiter.
 -->
 <#function addExtLoginKey url escape=true>
   <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(StringUtil.wrapString(url)?string, request, escape))?string>
@@ -304,10 +354,10 @@ Adds the external login key to given url
 Returns empty string if no label is found
 
   * Parameters *
-    name            = name of label (required)
-    resource        = optional resource. if label not found in uiLabelMap (preferred), falls
-                      back to lookup in this resource.
-                      usually uiLabelMap preferred but sometimes not worth importing
+    name            = (required) Label name
+    resource        = (optional) Resource name
+                      If label not found in uiLabelMap (preferred), falls back to lookup in this 
+                      resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
                       a whole file for one label. 
 -->
 <#function getLabel name resource="">
@@ -330,7 +380,12 @@ Returns empty string if no label is found
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.
-NOTE: always use default value ("!") or other test operator!
+
+NOTE: Always use default value ("!") or other test operator!
+
+  * Parameters *
+    resource        = (required) Resource name
+    name            = (required) Property name
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getPropertyValue resource name>
@@ -346,11 +401,20 @@ NOTE: always use default value ("!") or other test operator!
 * getPropertyMsg
 ************
 Gets property or empty string if missing (same behavior as UtilProperties).
-uses locales. meant for resource bundles / ui labels.
-will use context locale if none specified.
-if msgArgs not specified, property has access to context (occasionally this is used in screens).
-if msgArgs is a sequence, they are passed instead of context to the property.
+
+Uses locales. Meant for resource bundles / UI labels.
+Will use context locale if none specified.
+If msgArgs not specified, property is given access to context for substitute values (occasionally 
+this is used in Ofbiz screens).
+If msgArgs is a sequence, they are passed instead of context to the property.
+
 TODO: implement as transform.
+
+  * Parameters *
+    resource        = (required) Resource name
+    name            = (required) Property name
+    msgArgs         = map or sequence (optional) (default: -use context variables-) Substitute values for message template
+    specLocale      = locale (optional) (default: -locale from context-) Explicit locale
 -->
 <#function getPropertyMsg resource name msgArgs=false specLocale=true>
   <#if specLocale?is_boolean>
@@ -370,6 +434,23 @@ TODO: implement as transform.
   </#if>
 </#function>
 
+<#-- 
+*************
+* getPropertyMsgFromLocExpr
+************
+Gets property or empty string if missing (same behavior as UtilProperties).
+
+TODO: implement as transform.
+
+  * Parameters *
+    resourceExpr    = (required) Resource name and property name separated with "#", or name alone
+                      If name alone, assumes CommonUiLabels for resource.
+    msgArgs         = map or sequence (optional) (default: -use context variables-) Substitute values for message template
+    specLocale      = locale (optional) (default: -locale from context-) Explicit locale
+    
+  * Related *
+    #getPropertyMsg
+-->
 <#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false specLocale=true>
   <#local parts = resourceExpr?split("#")>
   <#if (parts?size >= 2)>
@@ -386,10 +467,17 @@ TODO: implement as transform.
 *************
 * getTextLabelFromExpr
 ************
-Convenience function that accepts a string in multiple formats.
-If starts with "#LABEL:", the following name is taken from uiLabelMap.
-If starts with "#PROP:", the following location/name is passed through to getPropertyMsgFromLocExpr
-If no prefix, returns the text as-is.
+Convenience label identifier parsing function that accepts a string in multiple formats
+that may designate a label or property as label.
+
+If textExpr starts with "#LABEL:", the following name is taken from uiLabelMap.
+If textExpr starts with "#PROP:", the following location/name is passed through to getPropertyMsgFromLocExpr
+If no such prefix in textExpr, returns the text as-is.
+
+  * Parameters *
+    textExpr        = (required) Label text expression 
+    msgArgs         = map or sequence (optional) (default: -use context variables-) Substitute values for message template
+    specLocale      = locale (optional) (default: -locale from context-) Explicit locale
 -->
 <#function getTextLabelFromExpr textExpr msgArgs=false specLocale=true>
   <#if textExpr?starts_with("#LABEL:")>
@@ -407,12 +495,13 @@ If no prefix, returns the text as-is.
 ************
 Adds a param delimiter to end of url if needed.
 
-2016-01-21: New special case: if paramDelim is "/" or contains "/", treat differently (because trumps "?")
+NOTE: 2016-01-21: New special case: if paramDelim is "/" or contains "/", treat differently (because trumps "?")
                     
   * Parameters *
-    url             = Url to which to append delimiter
-    paramDelim      = Param delimiter to use (escaped, "&amp;" by default)
-    paramStarter    = usually/always "?". only significant if paramDelim does not contain "/".
+    url             = URL to which to append delimiter
+    paramDelim      = (default: "&amp;") Param delimiter
+    paramStarter    = (default: "?") Query string delimiter. Usually "?"
+                      Only significant if paramDelim does not contain "/"
 -->
 <#function addParamDelimToUrl url paramDelim="&amp;" paramStarter="?">
   <#if paramDelim?contains("/")>
@@ -443,10 +532,10 @@ Adds a param delimiter to end of url if needed.
 Adds parameters from a hash to a URL param string (no full URL logic).
                     
   * Parameters *
-    paramStr        = Escaped param string
-    paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
-    paramDelim      = Param delimiter (escaped, "&amp;" by default)
-    includeEmpty    = Include empty values, or if false omit empty values
+    paramStr        = Param string
+    paramMap        = Hash of keys to values to add
+    paramDelim      = (default: "&amp;") Param delimiter
+    includeEmpty    = boolean (default: true) If true, include empty values; if false, omit empty values
 -->
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
@@ -465,13 +554,13 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 *************
 * splitStrParams
 ************
-Extracts parameters from a string in the format and returns as a hash:
-    name1=val1DELIMname2=val2DELIMname3=val3
-where DELIM is specified delimiter (& &amp; , ; etc.)
+Extracts parameters from a string in the following format and returns as a hash:
+  name1=val1DELIMname2=val2DELIMname3=val3
+where DELIM is specified delimiter (& &amp; , ; etc.).
                     
   * Parameters *
-    paramStr        = Escaped param string
-    paramDelim      = Param delimiter ("&amp;" by default)
+    paramStr        = Param string
+    paramDelim      = (default: "&amp;") Param delimiter
 -->
 <#function splitStrParams paramStr paramDelim="&amp;">
   <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim)>
@@ -495,8 +584,8 @@ where DELIM is specified delimiter (& &amp; , ; etc.)
 Strips leading and trailing param delims from a URL param string.
                     
   * Parameters *
-    paramStr        = param string
-    paramDelim      = Param delimiter (escaped, "&amp;" by default)
+    paramStr        = Param string
+    paramDelim      = (default: "&amp;") Param delimiter
 -->
 <#function trimParamStrDelims paramStr paramDelim="&amp;">
   <#local res = paramStr>
@@ -517,13 +606,13 @@ Strips leading and trailing param delims from a URL param string.
 *************
 * splitStyleNames
 ************
-splits a style classes string into sequence, same order.
+Splits a style classes string into sequence, in same order as input.
                     
   * Parameters *
-    styleString     = style string containing classes
+    styleString     = Style string
     
   * Return Value *
-    a sequence of style names, same order.
+    a sequence of style names, in same order as input.
 -->
 <#function splitStyleNames styleString>
   <#return getPlainClassArgNames(styleString)?split(r'\s+', 'r')>
@@ -533,7 +622,7 @@ splits a style classes string into sequence, same order.
 *************
 * splitStyleNamesToSet
 ************
-splits a style classes string into a Set of unique elems, no order.
+Splits a style classes string into a Set of unique elements, not preserving order.
                     
   * Parameters *
     styleString     = style string containing classes
@@ -549,12 +638,13 @@ splits a style classes string into a Set of unique elems, no order.
 *************
 * joinStyleNames
 ************
-Joins style names in a nice string
+Joins style names in a proper style string of class names.
+
   * Usage Example *   
     <#assign myVar = joinStyleNames("class1", "", " class3")>
        
   * Parameters *
-    styleNames     = style names (strings), as positional params.
+    styleNames     = Style names, as arbitrary number of positional parameters
     
   * Return Value *
     a string of combined style names
@@ -563,6 +653,21 @@ Joins style names in a nice string
   <#return styleNames?join(" ")?trim>
 </#function> 
 
+<#-- 
+*************
+* joinStyleNamesList
+************
+Joins style names in a proper style string of class names.
+
+  * Usage Example *   
+    <#assign myVar = joinStyleNames(["class1", "", " class3"])>
+       
+  * Parameters *
+    styleNames     = Style names, as sequence
+    
+  * Return Value *
+    a string of combined style names
+-->
 <#function joinStyleNamesList styleNames>
   <#-- this is imperfect but fast and works fine in most cases, except cases where empty strings in middle, like
     ["asdf", "", "asdf"], adds extra spaces there, but rare -->
@@ -574,14 +679,15 @@ Joins style names in a nice string
 * getStyleNamesByPrefix
 ************
 Returns all style names with given prefix, as sequence.
+
 NOTE: now recognizes special syntax cato class args.
          
   * Parameters *
-    styleString     = style string containing classes
-    classNamePrefix = prefix
+    styleString         = Style string.
+    classNamePrefix     = Prefix to search for.
     
   * Return Value *
-    true if class/style string contains given style, false otherwise.
+    true if class/style string contains given style, false otherwise
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getStyleNamesByPrefix styleString className>
@@ -593,20 +699,34 @@ NOTE: now recognizes special syntax cato class args.
 * containsStyleName
 ************
 Returns true if class/style string contains given style.
+
 NOTE: now recognizes special syntax cato class args.
                     
   * Parameters *
-    styleString     = style string containing classes
-    className       = name of class to find
+    styleString     = Style string
+    className       = Name of class to find
     
   * Return Value *
-    true if class/style string contains given style, false otherwise.
+    true if class/style string contains given style, false otherwise
 -->
 <#function containsStyleName styleString className>
   <#-- don't need regexp -->
   <#return getPlainClassArgNames(styleString)?split(" ")?seq_contains(className)> 
 </#function> 
 
+<#-- 
+*************
+* containsStyleNamePrefix
+************
+Returns true if class/style string contains a style with given prefix.
+   
+  * Parameters *
+    styleString         = Style string
+    classNamePrefix     = Prefix to search for
+    
+  * Return Value *
+    true if class/style string contains given style prefix, false otherwise
+-->
 <#function containsStyleNamePrefix styleString classNamePrefix>
   <#-- don't need regexp -->
   <#local plainStyle = getPlainClassArgNames(styleString)>
@@ -619,19 +739,20 @@ NOTE: now recognizes special syntax cato class args.
 ************   
 Removes style classes from a style string. 
 strips lead/trailing space.
+
 NOTE: now recognizes special syntax cato class args.
            
   * Parameters *
-    styleString     = style string containing classes
-    namesToRemove   = array of names or space-separated string of names to remove 
-                      (can be single name)
+    styleString     = Style string
+    namesToRemove   = string or sequence. Sequence of names or space-separated string of names to remove,
+                      or single name (as string) to remove.
   * Return Value *
-    the style string with names removed, same order but reformatted.
+    the style string with names removed, reformatted, in same order as input
 -->
 <#function removeStyleNames styleString namesToRemove>
   <#local prefix = getClassArgPrefix(styleString)>
   <#local styleString = getPlainClassArgNames(styleString)>
-  <#if namesToRemove?is_string>
+  <#if namesToRemove?is_string> <#-- NOTE: this is only ok as long as we don't accept hashes here, else use isObjectType -->
     <#local namesToRemove = splitStyleNamesToSet(namesToRemove)>
   <#else>
     <#local namesToRemove = Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(namesToRemove)>
@@ -654,7 +775,7 @@ NOTE: now recognizes special syntax cato class args.
 Strips param string (starting with "?" or ";") from url.
                     
   * Parameters *
-    url             = Url
+    url             = URL to strip
 -->
 <#function stripParamStrFromUrl url>
   <#local index = url?index_of("?")>
@@ -668,7 +789,6 @@ Strips param string (starting with "?" or ";") from url.
   <#return url>
 </#function> 
 
-
 <#-- 
 *************
 * addParamsToUrl
@@ -676,9 +796,9 @@ Strips param string (starting with "?" or ";") from url.
 Adds parameters from a hash to a URL. appends delimiters as needed.
                     
   * Parameters *
-    url             = Url
-    paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
-    paramDelim      = Param delimiter (escaped, "&amp;" by default)
+    url             = URL to augment
+    paramMap        = Hash of keys to values to add
+    paramDelim      = (default: "&amp;") Param delimiter
     includeEmpty    = Include empty values, or if false omit empty values
 -->
 <#function addParamsToUrl url paramMap paramDelim="&amp;" includeEmpty=true>
@@ -690,6 +810,10 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 * escapeUrlParamDelims
 ************
 Escapes the URL's parameter delimiters if they are not already escaped.
+
+  * Parameters *
+    url             = URL to escape
+    paramDelim      = (default: "&amp;") Param delimiter for substitution
 -->
 <#function escapeUrlParamDelims url paramDelim="&amp;">
   <#if url?contains(paramDelim)>
@@ -715,8 +839,11 @@ Converts camelCase to camel-case.
 * isObjectType
 ************
 Checks the given FTL object against a set of logical types.
-Perform special logical type checks because ?is_string and ?is_hash are insufficient for BeanModel-based
-widget context vars.
+
+This is used to ensure type checks are valid across both native FTL types and java/groovy types received in context.
+
+WARN: The FTL built-in ?is_string and ?is_hash are insufficient for BeanModel-based widget context vars.
+    In many cases you must use this function.
 
   * Parameters *
     type        = (string|map|simplemap|complexmap) (required)
@@ -725,7 +852,7 @@ widget context vars.
                        (simplemap or complexmap)
                   simplemap: Simple hash only (?keys to get elems).
                   complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).
-    object      = the object to test
+    object      = The object to test
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function isObjectType type object>
@@ -736,8 +863,14 @@ widget context vars.
 *************
 * copyObject
 ************
-Performs a shallow copy of an object (map or list). Usually not needed in FTL; for advanced usage.
-The resulting underlying type may differ from the original, but by default will be similar.
+Performs a shallow copy of an object (map or list).
+
+Usually not needed in FTL; provided for advanced usage.
+The resulting underlying type may differ from the original, but tries to keep the type similar when 
+possible.
+
+  * Parameters *
+    object      = The object to copy
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function copyObject object>
@@ -748,20 +881,21 @@ The resulting underlying type may differ from the original, but by default will 
 *************
 * copyMap
 ************
-Performs a shallow copy of a map. Usually not needed in FTL; for advanced usage.
-The resulting underlying type may differ from the original; in principle tries to preserve, but in most
-cases will create a simple hash.
+Performs a shallow copy of a map. 
 
-NOTE: copyObject will also work fine on maps, but this has more map-specific options.
+Usually not needed in FTL; for advanced usage. The resulting underlying type may differ from the 
+original; in principle tries to preserve, but in most cases will create a simple FTL hash.
 
-NOTE: This can only copy maps without ?keys support if mode is include ("i") and keys specified.
+NOTES: 
+* copyObject will also work fine on maps, but this provides more map-specific options.
+* This will only copy maps that don't have ?keys support if mode is include ("i") and inExKeys specified.
 
   * Parameters *
-    map         = the source map
-    mode        = optional mode flags
+    map         = The source map
+    mode        = ("e"|"i"|) (default: -none-) Optional mode flags
                   "e": exclude listed keys
                   "i": include only listed keys
-    inExKeys    = optional list or wrapped set of keys to include or exclude    
+    inExKeys    = (optional) List or wrapped set of keys to include or exclude    
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function copyMap map mode inExKeys>
@@ -772,8 +906,13 @@ NOTE: This can only copy maps without ?keys support if mode is include ("i") and
 *************
 * toSimpleMap
 ************
-Takes a bean-wrapped map and gives it a simple map adapter instead. Does not perform a copy.
-If it is not a complex map but already another type of map, returns it as-is. Other types throw errors.
+Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
+any copies.
+
+If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
+
+  * Parameters *
+    object       = The source map
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>
@@ -784,8 +923,13 @@ If it is not a complex map but already another type of map, returns it as-is. Ot
 *************
 * mapKeys
 ************
-Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).
+Gets the logical map keys from any map-like object, whether an FTL hash (?keys) or 
+a bean-wrapped context var (.ketSet()).
+
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
+
+  * Parameters *
+    object       = The source map
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function mapKeys object>
@@ -796,13 +940,14 @@ Unlike ?keys, behaves as expected on both maps from screen context and FTL.
 *************
 * concatMaps
 ************
-Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
-By default, result is now always a simple map, so type is more predictable, and usually this is what we want.
+Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz context maps as well.
+
+By default, result is now always a simple map, so type is predictable.
 
 Using "+" on screen context bean maps causes problems such as "hiding" of the bean map type underneath
 an FTL wrapper, which wrecks all subsequent type checks. And others.
 
-TODO? This is currently inefficient; but must guarantee immutability.
+TODO?: This is currently inefficient; but must guarantee immutability.
     Note currently forced to implement in FTL (not java transform) if want to exploit "+" operator.
     
 IMPL NOTE: it's part of this function's interface that any of the arguments for which ?has_content is false,
@@ -813,7 +958,13 @@ IMPL NOTE: it's part of this function's interface that any of the arguments for 
     they count on this method to handle empty sequence case.
     they also depend on this for the toSimple=true conversion.
 
-Also see mergeArgMaps.
+  * Parameters *
+    first       = The first map
+    second      = The second map
+    toSimple    = boolean (default: true) If true, ensure result is a simple hash.
+    
+  * Related *
+    #mergeArgMaps
 -->
 <#function concatMaps first second toSimple=true>
   <#if first?has_content>
@@ -850,10 +1001,15 @@ Also see mergeArgMaps.
 *************
 * evalToSimpleMap
 ************
-This is similar to toSimpleMap but if the object is a string, tries to ?eval it to a map.
+Similar to toSimpleMap but if the object is a string, tries to ?eval it to a map;
+otherwise converts the map to a simple hash.
+
 Enclosing braces are optional.
-TODO: this should be transform... maybe integrate into toSimpleMap, but then lose type safety,
-and ?eval harder there.
+
+TODO: implement as transform
+
+  * Parameters *
+    object       = string or map. The object to convert to a simple map.
 -->
 <#function evalToSimpleMap object>
   <#if isObjectType("string", object)>
@@ -872,9 +1028,13 @@ and ?eval harder there.
 * toSet
 ************
 Returns a bean-wrapped java Set for a sequence or collection. 
+
 If already a bean-wrapped Set, returns as-is; does not create a copy (this is analogous to toSimpleMap
 and also org.ofbiz.base.util.UtilMisc.toSet).
-If no parameters, creates new empty set.
+If called without parameters, creates new empty set.
+
+  * Parameters *
+    object       = collection (optional) If omitted, creates an empty Set. 
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSet object=[]>
@@ -885,7 +1045,10 @@ If no parameters, creates new empty set.
 *************
 * compileProgressSuccessAction
 ************
-widget-related progress success action compile (see widget-form.xsd form element extra "attribs" attrib).
+Widget-related progress success action compile (see widget-form.xsd form element extra "attribs" attrib).
+
+  * Parameters *
+   progressSuccessAction        = Progress success action
 -->
 <#function compileProgressSuccessAction progressSuccessAction>
   <#return StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))?string>
@@ -895,12 +1058,14 @@ widget-related progress success action compile (see widget-form.xsd form element
 *************
 * getCurrentSectionLevel
 ************
-Gets current @section level. 
-
-Currently must be a function because global var is not always set and request attrib is messy. 
+Gets current global section level. 
 
   * Parameters *
-    useDefault      = default true; if true, if no heading defined, return default; else return void
+    useDefault      = boolean (default: true) If true, if no heading defined, returns default; else return void
+    
+  * Related *
+    @section
+    #setCurrentSectionLevel
 -->
 <#function getCurrentSectionLevel useDefault=true>
   <#local sLevel = getRequestVar("catoCurrentSectionLevel")!"">
@@ -911,6 +1076,20 @@ Currently must be a function because global var is not always set and request at
   </#if>
 </#function> 
 
+<#-- 
+*************
+* getDefaultSectionLevel
+************
+Gets default section level.
+
+This should almost never be used except in odd macro implementations. 
+
+  * Parameters *
+    (none)
+   
+  * Related *
+    @section
+-->
 <#function getDefaultSectionLevel>
   <#return 1>
 </#function> 
@@ -919,7 +1098,16 @@ Currently must be a function because global var is not always set and request at
 *************
 * setCurrentSectionLevel
 ************
-Set current @section level manually. For advanced markup, bypassing @section.
+Sets current global section level manually. 
+
+For advanced markup; bypasses @section.
+    
+  * Parameters *
+    sLevel          = ((number)) The section level
+   
+  * Related *
+    @section
+    #getCurrentSectionLevel
 -->
 <#function setCurrentSectionLevel sLevel>
   <#-- set as request attrib so survives template environments and screens.render -->
@@ -932,12 +1120,14 @@ Set current @section level manually. For advanced markup, bypassing @section.
 *************
 * getCurrentHeadingLevel
 ************
-Gets current heading level. 
-
-Currently must be a function because global var is not always set and request attrib is messy. 
+Gets current global heading (title) level. 
 
   * Parameters *
-    useDefault      = default true; if true, if no heading defined, return default; else return void
+    useDefault      = ((boolean)) (default: true) If true, if no heading defined, return default; else return void
+
+  * Related *
+    @heading
+    #getDefaultHeadingLevel
 -->
 <#function getCurrentHeadingLevel useDefault=true>
   <#local hLevel = getRequestVar("catoCurrentHeadingLevel")!"">
@@ -948,6 +1138,18 @@ Currently must be a function because global var is not always set and request at
   </#if>
 </#function> 
 
+<#-- 
+*************
+* getDefaultHeadingLevel
+************
+Gets default heading (title) level. 
+
+  * Parameters *
+    (none)
+    
+  * Related *
+    @heading
+-->
 <#function getDefaultHeadingLevel>
   <#return 2>
 </#function> 
@@ -956,8 +1158,16 @@ Currently must be a function because global var is not always set and request at
 *************
 * setCurrentHeadingLevel
 ************
-Set current heading level manually. For advanced markup, bypassing @section (but a parent
-@section will restore heading upon closing).
+Set current global heading level manually. 
+
+For advanced markup; bypasses @section (but a parent @section will restore heading upon closing).
+
+  * Parameters *
+    hLevel          = ((number)) Heading level
+    
+  * Related *
+    @heading
+    #getCurrentHeadingLevel
 -->
 <#function setCurrentHeadingLevel hLevel>
   <#-- set as request attrib so survives template environments and screens.render -->
@@ -970,7 +1180,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 *************
 * objectAsScript
 ************
-Output a Freemarker variable as Javascript or JSON
+Output a Freemarker variable as a value in Javascript, JSON or similar script language.
 
 DEV NOTE: This is complicated in Ofbiz because Maps and objects from
     widget/java/groovy context don't behave same as FTL types.
@@ -983,10 +1193,10 @@ TODO: doesn't handle dates (ambiguous?)
   * Parameters *
     object          = (required) the FTL or context object
     lang            = (js|json) (required)
-    wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
-    hasMore         = boolean, default false, if true, always include trailing separator in hashes and arrays
-    escape          = escape characters in strings
-    maxDepth        = maximum depth or -1 for no limit
+    wrap            = ((boolean)) (default: true) If true, wrap in {}, [], or "" as needed; otherwise omit enclosing characters.
+    hasMore         = ((boolean)) (default: false) If true, always include trailing separator in hashes and arrays
+    escape          = ((boolean)) (default: true) Escape characters in strings
+    maxDepth        = ((number)) (default: -1) Maximum depth, or -1 for no limit
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
   <#if isObjectType("string", object)>
@@ -1076,7 +1286,10 @@ TODO: doesn't handle dates (ambiguous?)
 *************
 * mergeArgMaps
 ************
-Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros implementing the 
+Merges cato macro inlineArgs/args/defaultArgs/overrideArgs argument maps for macros implementing
+the advanced argument interface.
+
+The advanced interface follows the
   <#macro name args={} inlineArgs...>
 pattern, whereby inlineArgs map is merged over the args map, over defaults.
 
@@ -1124,15 +1337,19 @@ TODO: rewrite this macro using FTL transform; also see @mergeArgMapsToLocals bel
 TODO?: may want helper booleans to control in/out allArgNames?
 
   * Parameters *
-    args          = the args map (normal priority). may be any type of map.
-    inlineArgs    = the macro's inline args (high priority). expects either FTL hash or empty sequence (but not non-empty sequence).
-    defaultArgs   = arg defaults (lowest priority).expects an FTL hash only. the key names in this map are also used to
+    args          = The args map (normal priority). 
+                    May be any type of map.
+    inlineArgs    = The macro's inline args (high priority). 
+                    Expects either FTL hash or empty sequence (but not non-empty sequence).
+    defaultArgs   = Arg defaults (lowest priority). 
+                    Expects an FTL hash only. The key names in this map are also used to
                     create a list of the known arguments this macro accepts.
-                    as such, even if the macro does not need this map, it should pass it along
+                    As such, even if the macro does not need this map, it should pass it along
                     with the names of all supported arguments.
-                    the names end up in the resulting map as localArgNames.
-    overrideArgs  = extra macro args that override all others (highest priority). expects a FTL hash only.
-                    the names used here also count toward the localArgNames.
+                    The names end up in the resulting map as localArgNames.
+    overrideArgs  = Extra macro args that override all others (highest priority). 
+                    Expects an FTL hash ONLY (not context map).
+                    The names used here also count toward the localArgNames.
                     NOTE: if a key is present in both defaultArgs and overrideArgs, it will result in
                         two names added to localArgNames/allArgNames. The code that finally uses
                         those lists should make a Set if it needs to.
@@ -1149,7 +1366,16 @@ TODO?: may want helper booleans to control in/out allArgNames?
     { "localArgNames":localArgNames, "allArgNames":allArgNames }>
 </#function>
 
-<#-- a version of mergeArgMaps that only merges maps, nothing else -->
+<#-- 
+*************
+* mergeArgMapsBasic
+************
+a version of mergeArgMaps that only merges maps, but doesn't perform any special implied
+operations on them.
+
+  * Parameters *
+    (other)         = See #mergeArgMaps
+-->
 <#function mergeArgMapsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
   <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
     <#local inlineArgs = {}>
@@ -1161,8 +1387,11 @@ TODO?: may want helper booleans to control in/out allArgNames?
 *************
 * mergeArgMapsToLocals
 ************
-WIP. DO NOT USE AT CURRENT TIME. Use mergeArgMaps and localsPutAll instead.
-TODO: implement as transform.
+Combines mergeArgMaps and localsPutAll into one call.
+
+DO NOT USE AT CURRENT TIME. Use mergeArgMaps and localsPutAll instead.
+
+TODO: implement as transform (not currently possible)
 
 This is a helper function which should be functionally identical to doing:
   <#macro name args={} inlineArgs...>
@@ -1177,7 +1406,12 @@ This is a helper function which should be functionally identical to doing:
 </#function>
 -->
 
-<#-- Same as mergeArgMapsToLocals but calls mergeArgMapsBasic instead of mergeArgMaps -->
+<#-- 
+*************
+* mergeArgMapsToLocalsBasic
+************
+Same as mergeArgMapsToLocals but uses mergeArgMapsBasic logic instead of mergeArgMaps logic.
+-->
 <#-- NOT IMPLEMENTED
 <#function mergeArgMapsToLocalsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
 </#function>
@@ -1189,7 +1423,8 @@ This is a helper function which should be functionally identical to doing:
 ************
 Returns all the known args and default args for a cato macro that uses the advanced
 args pattern, where the macro resides in the given namespace (or namespace-like map).
-Basically the macros should always have default values (in the event one was missing, this method
+
+Basically, the macros should always have default values (in the event one was missing, this method
 should automatically give one such as empty string).
 If namespace is omitted, currently (2015-12-14), this will use ".vars" as the namespace.
 
@@ -1208,16 +1443,18 @@ DEV NOTE: there could be some use for the ?namespace built-in somewhere around t
 *************
 * mergeAttribMaps
 ************
-Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros still implementing the 
+Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros implementing
+a special attribs/inlineAttribs pattern for HTML element attributes.
+
+This is found in the
   <#macro name arg1="" arg2="" ... argN="" attribs={} inlineAttribs...>
 pattern, whereby inlineAttribs map is merged over the attribs map, and these maps only contain extra
 element attributes.
 
 This pattern is simpler but much less flexible than the 'args={} inlineArgs...' pattern.
-They are not interchangeable.
+They are different and NOT interchangeable.
 
-  * Parameters *
-    (see mergeArgMaps; parameters are analogous, even though macro implementation may differ)
+Parameters are analogous to #mergeArgMaps but implied logic differs.
 -->
 <#function mergeAttribMaps attribs={} inlineAttribs={} defaultAttribs={} overrideAttribs={}>
   <#if !inlineAttribs?has_content> <#-- necessary to prevent empty sequence -->
@@ -1232,16 +1469,17 @@ They are not interchangeable.
 ************
 Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an "attribs"
 sub-map and blends them together logically to make an attribs map.
+
 The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
 NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
 
 NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
 members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
 
-See getAttribMapAllExcludes function.
+Parameters are analogous to #mergeArgMaps but implied logic differs.
 
-  * Parameters *
-    (see mergeArgMaps; parameters are analogous, even though macro implementation may differ)
+  * Related *
+    #getAttribMapAllExcludes
 -->
 <#function makeAttribMapFromArgMap args={}>
   <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
@@ -1258,9 +1496,10 @@ Returns the attrib map excludes based on allArgNames list, plus known needed exc
 plus "noExclude" alternatives of all the aforementioned that prevent excludes.
 The result is returned as a bean-wrapped Set.
 
-See makeAttribMapFromArgs.
+TODO: implement as transform.
 
-TODO: rewrite as transform.
+  * Related *
+    #makeAttribMapFromArgs
 -->
 <#function getAttribMapAllExcludes attribs={} exclude=[] noExclude=[]>
   <#local exclude = toSet(exclude)>
@@ -1288,9 +1527,17 @@ TODO: rewrite as transform.
 
 <#-- 
 *************
-* Class argument functions
+* compileClassArg
 ************
-Internal functions to help parse class argument passed to macros.
+Compiles a class argument as common to most standard macros,
+producing a simple list of class names from a class arg, adding optional default.
+
+NOTE: Default value may also be set prior to using addClassArgDefault on the class arg instead
+    of passing as parameter.
+
+CLASS ARGUMENT FUNCTIONS
+
+This function and the others below help parse class argument passed to macros.
 Not for use in templates.
 
 Macro class arguments can have essential (required) and non-essential (default)
@@ -1334,9 +1581,6 @@ For these, in some places an "xxxExplicit" version of functions are used instead
 replace if explicitly prefixed with "=", but not if no prefix. Otherwise, existing widget styles break
 the grid everywhere.
 -->
-
-<#-- Produces a simple list of class names from a class arg, adding optional default 
-    NOTE: default may also be set prior using addClassArgDefault -->
 <#function compileClassArg class defaultVal="">
   <#if defaultVal?has_content>
     <#local class = addClassArgDefault(class, defaultVal)>
@@ -1349,8 +1593,13 @@ the grid everywhere.
   </#if>
 </#function>
 
-<#-- version of compileClassArg that will only use defaultVal if it explicitly starts with "="; needed
-    for compatibility in some cases -->
+<#-- 
+*************
+* compileClassArgExplicit
+************
+Version of compileClassArg that will only use defaultVal if it explicitly starts with "="; needed
+for compatibility in some cases 
+-->
 <#function compileClassArgExplicit class defaultVal="">
   <#if defaultVal?has_content>
     <#local class = addClassArgDefaultExplicit(class, defaultVal)>
@@ -1363,21 +1612,35 @@ the grid everywhere.
   </#if>
 </#function>
 
-<#-- produces a class string attribute at same time as compiling class arg, with optional default,
-     with leading space
-    NOTE: default may also be set prior using addClassArgDefault -->
+<#-- 
+*************
+* compiledClassAttribStr
+************
+Produces a class string attribute at same time as compiling class arg, with optional default,
+with leading space.
+-->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>
   <#if classes?has_content> class="${classes}"</#if><#t>
 </#macro>
 
-<#-- explicit version of above -->
+<#-- 
+*************
+* compiledClassAttribStrExplicit
+************
+Explicit version of #compiledClassAttribStr.
+-->
 <#macro compiledClassAttribStrExplicit class defaultVal="">
   <#local classes = compileClassArgExplicit(class, defaultVal)>
   <#if classes?has_content> class="${classes}"</#if><#t>
 </#macro>
 
-<#-- Converts simple class name to an appending class -->
+<#-- 
+*************
+* toClassArgAppending
+************
+Converts simple class name to an appending class
+-->
 <#function toClassArgAppending newClass>
   <#if newClass?has_content>
     <#return "+" + newClass>
@@ -1386,7 +1649,12 @@ the grid everywhere.
   </#if>
 </#function>
 
-<#-- Converts simple class name to a replacing class -->
+<#-- 
+*************
+* toClassArgReplacing
+************
+Converts simple class name to a replacing class
+-->
 <#function toClassArgReplacing newClass>
   <#if newClass?has_content>
     <#return newClass>
@@ -1399,6 +1667,13 @@ the grid everywhere.
 *************
 * addClassArg
 ************
+Adds a required class, that must appear in class string.
+
+NOTE: Does not influence the default value logic perceived by addClassArgDefault (user intention preserved). 
+    It does this by prefixing result with "+" string where necessary.
+
+ADD CLASS ARG FUNCTIONS
+
 These functions take a template-level/logical cato macro "class" arg and add to it the given class.
 Should be called by the implementing macros only. 
 
@@ -1410,10 +1685,6 @@ The newClass parameter is a simple string literal and is not interpreted.
 These are non-destructive except for addClassArgReplacing which always causes the string to become
 a replacing string ("=").
 -->
-
-<#-- Adds a required class, that must appear in class string.
-    Note: Does not influence the default value logic perceived by addClassArgDefault (user intention preserved). 
-        It does this by prefixing result with "+" string where necessary. -->
 <#function addClassArg class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -1425,10 +1696,16 @@ a replacing string ("=").
   </#if>
 </#function>
 
-<#-- Special case of addClassArg where the required class will become a replacing string ("=" prefix),
-     though will not squash previous values. 
-     Note: this destroys information about what macro user requested and affects the default value logic
-        perceived by addClassArgDefault. -->
+<#-- 
+*************
+* addClassArgReplacing
+************
+Special case of addClassArg where the required class will become a replacing string ("=" prefix),
+though will not squash previous values. 
+
+NOTE: This destroys information about what macro user requested and affects the default value logic
+    perceived by addClassArgDefault. 
+-->
 <#function addClassArgReplacing class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -1442,8 +1719,13 @@ a replacing string ("=").
   </#if>
 </#function>
 
-<#-- Adds a class only if the class arg does not contain default-replacing classes. 
-    It adds default if class is true, empty or starts with "+". -->
+<#-- 
+*************
+* addClassArgDefault
+************
+Adds a class only if the class arg does not contain default-replacing classes. 
+It adds default if class is true, empty or starts with "+".
+-->
 <#function addClassArgDefault class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -1457,8 +1739,13 @@ a replacing string ("=").
   </#if>
 </#function>
 
-<#-- version of addClassArgDefault that will only replace default if it explicitly starts with "="; needed
-    for compatibility in some cases -->
+<#-- 
+*************
+* addClassArgDefaultExplicit
+************
+Version of addClassArgDefault that will only replace default if it explicitly starts with "="; needed
+for compatibility in some cases
+-->
 <#function addClassArgDefaultExplicit class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -1476,20 +1763,20 @@ a replacing string ("=").
 *************
 * combineClassArgs
 ************
-This function logically combines two template-level cato macro "class" arguments. 
+Logically combines two template-level cato macro "class" arguments. 
 The second almost always overrides the first, except when second is appending a class
 with "+", in which case depends on the first.
 
 Essentially it extends the intended use of the class arg to mean "+" also allows appending
 of previous values (in addition of being an appending value itself).
 
-NOTE: even if the second arg is merely "+" (which usually means "use defaults" for cato macros),
+NOTE: Even if the second arg is merely "+" (which usually means "use defaults" for cato macros),
     this method will return "+" and dismiss the first argument. "+" is not treated as
-    pass-through here. this does not seem consistent,
+    pass-through here. This does not seem consistent,
     but is chosen explicitly so that caller/macro decides what the "pass-through" value
-    is supposed to be. here, we assume "+" was passed explicitly to override the first.
-    we only treat "+" with an arg.
-    in other words, can see this as another kludge for lack of null values in freemarker.
+    is supposed to be. Here, we assume "+" was passed explicitly to override the first.
+    We only treat "+" with an arg.
+    In other words, can see this as another kludge for lack of null values in freemarker.
     TODO: review this
 -->
 <#function combineClassArgs first second>
@@ -1505,6 +1792,12 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
   </#if>
 </#function>
 
+<#-- 
+*************
+* getPlainClassArgNames
+************
+Returns class names without their Cato-supported prefix.
+-->
 <#function getPlainClassArgNames class>
   <#if class?starts_with("+") || class?starts_with("=")>
     <#return class?substring(1)>
@@ -1513,6 +1806,12 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
   </#if>    
 </#function>
 
+<#-- 
+*************
+* getClassArgPrefix
+************
+Returns the Cato-supported class prefix from a class arg.
+-->
 <#function getClassArgPrefix class>
   <#if class?starts_with("+") || class?starts_with("=")>
     <#return class[0]>
@@ -1521,7 +1820,6 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
   </#if>    
 </#function>
 
-
 <#-- 
 *************
 * translateStyleStrClassesArg
@@ -1529,12 +1827,13 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
 Translates a class arg from a string-only representation to a FTL value which can be passed as
 macro args processed by compileClassArg.
 
-usually those macro args take true or false by default.
+Usually those macro args take true or false by default.
 
 Needed for string repr of booleans and because empty string "" may have different meanings
 depending on context. also translates booleans.
 
-see compileClassArg, results of getElemSpecFromStyleStr.
+  * Related *
+    #compileClassArg
 -->
 <#function translateStyleStrClassesArg val>
   <#if val?has_content>
@@ -1549,9 +1848,10 @@ see compileClassArg, results of getElemSpecFromStyleStr.
 Translates a bool arg from a string-only representation to a FTL value which can be passed as
 macro args expected to be booleans.
 
-usually those macro args take "" by default, to mean default.
+Usually those macro args take "" by default, to mean default.
 
-see compileClassArg, results of getElemSpecFromStyleStr.
+  * Related *
+    #compileClassArg
 -->
 <#function translateStyleStrBoolArg val>
   <#if val?has_content>
@@ -1563,6 +1863,18 @@ see compileClassArg, results of getElemSpecFromStyleStr.
   </#if>    
 </#function>
 
+<#-- 
+*************
+* translateStyleStrNumberArg
+************
+Translates a number arg from a string-only representation to a FTL value which can be passed as
+macro args expected to be numbers.
+
+Usually those macro args take "" by default, to mean default.
+
+  * Related *
+    #compileClassArg
+-->
 <#function translateStyleStrNumberArg val>
   <#if val?has_content>
     <#return val?number>
@@ -1743,25 +2055,27 @@ Puts all key-value pairs from given map into FTL globals (#local).
 * elemAttribStr
 ************
 Prints a string of element attributes. (HTML, FO, XML)
+
+NOTE: This is a very generic function; for common implementation, see @commonElemAttribStr.
+
 TODO: implement as transform.
-NOTE: this is a very generic function; for common implementation, see commonElemAttribStr.
 
   * Parameters *
-    attribs         = hash of attribute-value pairs. 
-                      it currently accepts string format as a fallback/legacy support, but this is highly discouraged
-                      and other args won't work with it.
-    alt             = boolean, if true alternate row (odd), if false regular (even)
-    selected        = boolean, if true row is marked selected
-    exclude         = list of attrib names to skip
-    attribNamePrefix      = add this prefix to attribute names
-    alwaysAddPrefix       = if false, only add prefix if not already has prefix (default true)
-    attribNamePrefixStrip = remove this prefix from all attrib names
-    attribNameSubstitutes = map of attrib names to substitute attrib names. note if this is set, the exclude names
-                            should be the names of the subtitutes, not the input attrib names.
-                            note this is applied after prefix ops are applied.
-    camelCaseToDashLowerNames = boolean, if true converts attrib names from camelCase to camel-case at the very end.
-    emptyValToken             = when this (string) value encountered, will include an empty attrib
-    noValToken                = when this (string) value encountered, will include an attrib with no value
+    attribs                     = hash of attribute-value pairs. 
+                                  it currently accepts string format as a fallback/legacy support, but this is highly discouraged
+                                  and other args won't work with it.
+    alt                         = boolean, if true alternate row (odd), if false regular (even)
+    selected                    = boolean, if true row is marked selected
+    exclude                     = list of attrib names to skip
+    attribNamePrefix            = add this prefix to attribute names
+    alwaysAddPrefix             = if false, only add prefix if not already has prefix (default true)
+    attribNamePrefixStrip       = remove this prefix from all attrib names
+    attribNameSubstitutes       = map of attrib names to substitute attrib names. note if this is set, the exclude names
+                                  should be the names of the subtitutes, not the input attrib names.
+                                  note this is applied after prefix ops are applied.
+    camelCaseToDashLowerNames   = boolean, if true converts attrib names from camelCase to camel-case at the very end.
+    emptyValToken               = when this (string) value encountered, will include an empty attrib
+    noValToken                  = when this (string) value encountered, will include an attrib with no value
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
@@ -1772,7 +2086,6 @@ NOTE: this is a very generic function; for common implementation, see commonElem
     <#t> ${attribs?string}
   </#if>
 </#macro>
-
 
 <#-- 
 *************
@@ -1795,16 +2108,43 @@ See also function versions below (helpful when inlining).
   ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, dateType)!defaultVal}<#t>
 </#macro>
 
-<#-- Convenience wrappers -->
+<#-- 
+*************
+* formattedDateTime
+************
+Renders a formatted date-time value (convenience wrapper).
+
+  * Related *
+    @formattedDate
+-->
 <#macro formattedDateTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
   ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!defaultVal}<#t>
 </#macro>
 
+<#-- 
+*************
+* formattedTime
+************
+Renders a formatted time value (convenience wrapper).
+
+  * Related *
+    @formattedDate
+-->
 <#macro formattedTime date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="">
   ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!defaultVal}<#t>
 </#macro>
 
-<#-- These functions return VOID (no value) if no or empty output, so default value operator can be used -->
+<#-- 
+*************
+* formatDate
+************
+Formats a date.
+
+These functions return VOID (no value) if no or empty output, so default value operator can be used.
+
+  * Related *
+    @formattedDate
+-->
 <#function formatDate date dateTimeFormat="" specLocale=true specTimeZone=true dateType="date">
   <#if specLocale?is_boolean>
     <#if specLocale>
@@ -1833,6 +2173,17 @@ See also function versions below (helpful when inlining).
   </#if>
 </#function>
 
+<#-- 
+*************
+* formatDateTime
+************
+Formats a date-time value.
+
+These functions return VOID (no value) if no or empty output, so default value operator can be used.
+
+  * Related *
+    @formattedDate
+-->
 <#function formatDateTime date dateTimeFormat="" specLocale=true specTimeZone=true>
   <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "timestamp")!"">
   <#if res?has_content>
@@ -1841,6 +2192,17 @@ See also function versions below (helpful when inlining).
   </#if>
 </#function>
 
+<#-- 
+*************
+* formatTime
+************
+Formats a time value.
+
+These functions return VOID (no value) if no or empty output, so default value operator can be used.
+
+  * Related *
+    @formattedDate
+-->
 <#function formatTime date dateTimeFormat="" specLocale=true specTimeZone=true>
   <#local res = formatDate(date, dateTimeFormat, specLocale, specTimeZone, "time")!"">
   <#if res?has_content>
@@ -1853,18 +2215,22 @@ See also function versions below (helpful when inlining).
 *************
 * getHeadingElemSpecFromStyleStr
 ************
-Parses a complex style string meant to describe an element notably heading 
-in the following formats to a hash of values:
+Parses a complex style string meant to describe a markup element and styles, notably heading,
+and converts to a hash of values.
+
+The style strying is in the following format:
     containerElemType:containerClass;elemType:class;param1=val1,param2=val2
 "h" and "heading" elem types support + notation for relative, and for these types
 a level and relLevel are extracted.
-  e.g.:  
+
+Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
+
+  * Usage examples *
     h3
     h3:headingclass
     h+3:headingclass
     div:divclass;h+3:headingclass
     div:divclass;h+3:headingclass;consumeLevel=true
-Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
   <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
@@ -2108,11 +2474,13 @@ and the current container size (if was added).
 *************
 * getAbsContainerSizeFactors
 ************
-This returns a map of container size factors along the format:
-{"large":n1, "medium":n2, "small":n3}
+Returns a map of container size factors.
+
+The return map format is:
+  {"large":n1, "medium":n2, "small":n3}
 where n1, n2, n3 are floating-point (NOT integer) values calculated from the combination of all
 grid sizes of all the current parent containers.
-NOTE: this is only an example; this method is framework-agnostic.
+NOTE: This is only an example; this method is framework-agnostic.
 
 These numbers can be used to approximate the current absolute column width in grid sizes,
 in the absence of interfering CSS. It will only be useful if the parent containers save their
@@ -2131,7 +2499,7 @@ IMPL NOTE: The calculated factors are saved in their own stack and recalculated 
     would have to override getAbsContainerSizeFactors (not recommended).
     
   * Parameters *
-    maxSizes     = hash/map of per-key max container sizes OR a single number giving max size
+    maxSizes     = ((number)|(map)) (default: 0) Hash/map of per-key max container sizes OR a single number giving max size
                    for all keys (usually same in most frameworks) OR zero to mean use defaults
 -->
 <#function getAbsContainerSizeFactors maxSizes=0>
@@ -2213,14 +2581,16 @@ html, xml, etc.; best-effort.
 *************
 * getDefaultCatoLibLocation
 ************
-supported names: "variables", "template"
-note: this is currently render context-unaware
-returns void if nothing.
+Returns a cato library location.
+
+Supported names: "variables", "template"
+NOTE: this is currently render context-unaware
+Returns void if nothing.
 
   * Parameters *
     libName             = (variables|template) (required)
-    renderPlatformType  = just call getRenderPlatformType()
-    renderContextType   = just call getRenderContextType()
+    renderPlatformType  = Caller should use getRenderPlatformType()
+    renderContextType   = Caller should use getRenderContextType()
 -->
 <#function getDefaultCatoLibLocation libName renderPlatformType="default" renderContextType="general">
   <#local res = getPropertyValue("catoWebapp", "cato.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location")!"">
@@ -2250,9 +2620,12 @@ returns void if nothing.
 * getMacroLibraryLocationStaticFromResources
 ************
 Gets a lib location from a theme resources variable which contains an expression, which can be either a straight component:// location
-meant as "general" context and for "html" and "default" platforms, or a EL-defined map in format such as:
-${['[platform]':'component://...', ...]}
-e.g. ${[''html':'component://...', 'xml':'component://...', 'default':'component://...']}
+meant as "general" context and for "html" and "default" platforms, or a EL-defined map
+
+The foramt is:
+  ${['[platform]':'component://...', ...]}
+  e.g. ${[''html':'component://...', 'xml':'component://...', 'default':'component://...']}
+  
 Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.
 Checks the resourceNames in the given order.
 "default" is a special map key; usually best avoided.
@@ -2275,7 +2648,10 @@ Checks the resourceNames in the given order.
 *************
 * printVars
 ************
-Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
+Iterates over all variable attributes & functions and prints in table.
+
+Useful for determining current vars in context.
+
 NOTE: since is in utilities.ftl, keep generic and check platform.
 
   * Usage Example *  

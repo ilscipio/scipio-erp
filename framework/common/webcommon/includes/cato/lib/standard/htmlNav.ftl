@@ -13,6 +13,8 @@
 *************
 * Nav List
 ************
+Creates a navigation list, for example based on magellan-destination or breadcrumbs.
+
 Since this is very foundation specific, this function may be dropped in future installations
 
   * Usage Example *  
@@ -70,6 +72,12 @@ Since this is very foundation specific, this function may be dropped in future i
   </#switch>
 </#macro>
 
+<#-- 
+*************
+* mli
+************
+Creates a magellan-destination link.
+-->
 <#assign mli_defaultArgs = {
   "arrival":"", "passArgs":{}
 }>
@@ -85,11 +93,23 @@ Since this is very foundation specific, this function may be dropped in future i
   <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>
 
+<#-- 
+*************
+* mtarget
+************
+Creates an magellan-destination attribute string.
+-->
 <#function mtarget id>
   <#local returnValue="data-magellan-destination=\"${id}\""/>
   <#return returnValue>
 </#function>
 
+<#-- 
+*************
+* makeMagTargetAttribMap
+************
+Makes an attrib map container a magellan-destination attribute.
+-->
 <#function makeMagTargetAttribMap id>
   <#return {"data-magellan-destination":id}>
 </#function>
@@ -98,10 +118,10 @@ Since this is very foundation specific, this function may be dropped in future i
 *************
 * Menu
 ************
-Menu macro, mainly intended for small inline menu definitions in templates, but can substitute for widget menu
+Menu macro, mainly intended for small inline menu definitions in templates, but able to substitute for widget menu
 definitions if needed.
 
-It can be used in two forms:
+It may be used in two forms:
   <#assign items = [{"type":"link", ...}, {"type":"link", ...}, ...]>
   <@menu ... items=items />
   OR
@@ -301,6 +321,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 * Menu Item
 ************
 Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if need to generate items only).
+
+WARN: Currently the enclosing @menu and sub-menus should never cross widget boundaries, and at most will
+    survive direct FTL file includes.
              
   * Parameters *
     type            = (generic|link|text|submit) (default: generic) Menu item (content) type.
@@ -334,10 +357,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     nestedContent   = alternative to #nested content, so can be passed in @menu items hash list
     nestedMenu      = alternative to nestedContent and #nested content, is a hash of @menu attribs
                       for menu to use as sub-menu.
-    wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
-    nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
+    wrapNested      = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following).
+    nestedFirst     = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text).
     htmlwrap        = wrapping HTML element (li|span|div, default: li)
-    inlineItem      = boolean, if true, generate only items, not menu container
+    inlineItem      = ((boolean)) If true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
   "type":"generic", "class":"", "contentClass", "", "id":"", "style":"", "attribs":{},
@@ -475,8 +498,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 * Menu Markup Inline Check
 ************
 Function that examines a string containing menu HTML markup and returns true if and only if
-the menu items are inlined, i.e. without container. Occasionally macros need to check this,
-notably for compatibility with Ofbiz screens.
+the menu items are inlined, i.e. without container. 
+
+Occasionally macros need to check this, notably for compatibility with Ofbiz screens.
 By default, this checks if the first item is a <li> element. Themes that use a different
 menu item element must override this and provide a proper check.
              
@@ -491,6 +515,9 @@ menu item element must override this and provide a proper check.
 *************
 * Pagination
 ************
+Creates a pagination menu, for example around a data table, using Ofbiz view pagination
+functionality.
+
   * Usage Example *  
     <@paginate mode="single" ... />
     <@paginate mode="content">
@@ -1094,7 +1121,7 @@ menu item element must override this and provide a proper check.
 *************
 * Tree Menu
 ************
-Render menu in a tree fashion way 
+Renders a menu in a tree fashion.
 
   * Usage Example *  
     <@treemenu type="">
@@ -1107,8 +1134,8 @@ Render menu in a tree fashion way
     </@treemenu>
                     
   * Parameters *
-    treeMenuLibrary = (jsTree) (default:jsTree)
-    inlineItems     = boolean, if true, generate only items, not menu container    
+    treeMenuLibrary = (jsTree) (default: jsTree)
+    inlineItems     = ((boolean)) If true, generate only items, not menu container    
     id              = menu id    
     attribs         = hash of other tree menu attribs
     data            = if jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item

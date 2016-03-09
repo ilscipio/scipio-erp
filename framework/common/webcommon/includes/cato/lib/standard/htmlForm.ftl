@@ -15,7 +15,7 @@
 *************
 * Form
 ************
-An HTML form element.
+Defines a form. Analogous to <form> HTML element.
 
   * Usage Example *  
     <@form name="myform">

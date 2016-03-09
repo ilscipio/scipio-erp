@@ -178,8 +178,9 @@ under the License.
         location="com.ilscipio.solr.SolrProductSearch"
         invoke="getSideDeepCategories" debug="true" validate="true">
         <description>Run a query on Solr and return the results</description>
-        <attribute mode="IN" optional="true" name="productCategoryId" type="String"/>
+        <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
+        <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>

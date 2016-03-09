@@ -190,17 +190,24 @@ public abstract class SolrUtil {
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {
-    	return categoriesAvailable(catalogId,categoryId,productId,null,displayproducts,viewIndex,viewSize);
+    	return categoriesAvailable(catalogId,categoryId,productId,null,displayproducts,viewIndex,viewSize, null);
+    }
+    
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize) {
+        return categoriesAvailable(catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize, null);
     }
 
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize) {
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, String core) {
         // create the data model
         Map<String, Object> result = FastMap.newInstance();
         HttpSolrClient client = null;
         QueryResponse returnMap = new QueryResponse();
         try {
             // do the basic query
-            client = new HttpSolrClient(solrUrl);
+            if (UtilValidate.isNotEmpty(core))
+                client = new HttpSolrClient(SolrUtil.solrUrl + "/" + core);
+            else
+                client = new HttpSolrClient(SolrUtil.solrFullUrl);
             // create Query Object
             String query = "inStock[1 TO *]";
             if (categoryId != null)

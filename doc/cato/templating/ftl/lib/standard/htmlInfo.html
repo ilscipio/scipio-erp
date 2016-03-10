@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
       <title>Informational/notification element HTML template include, standard Cato markup.</title>
 
-<style>
+<style type="text/css">
 table.entry-parameters {
   width: 100%;
   border: 1px outset black;
 }
 
 table.entry-parameters td {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   border: 1px solid black;
 }
 
@@ -21,6 +25,10 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-detail {
   font-style: italic;
   font-size: 0.6em;
+}
+
+.lib-entry-formalname {
+  font-weight: bold;
 }
 </style>
 
@@ -43,7 +51,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
     
 
     <div class="lib-entry-links">
-      <strong>Definitions:</strong>
+      <h4>Definitions:</h4>
       <p>
         <a href="#entry-alert">alert</a>, 
         <a href="#entry-commonMsg">commonMsg</a>, 
@@ -53,7 +61,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
     </div>
 
     <div class="lib-links">
-      <strong>All libraries:</strong>
+      <h4>All libraries:</h4>
       <p>
         <a href="../standard/htmlContent.html">standard/htmlContent</a>, 
         <a href="../standard/htmlForm.html">standard/htmlForm</a>, 
@@ -80,7 +88,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Modal</h3>
             
             <div class="lib-entry-formal">
-               <em><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><strong>modal</strong></span></em>
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>modal</code></span></h4>
                     
             </div>
             
@@ -100,43 +108,54 @@ May have implicit dependencies on other parts of Cato API.      </li>
               
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
-                    NOTE: doc parameter parsing is broken<br/>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>id</code>, 
+                          <code>label</code>, 
+                          <code>href</code>, 
+                          <code>icon</code>, 
+                          <code>class</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
                       <table class="entry-parameters">
                           <tr>
-                            <td class="entry-paramname">label</td>
+                            <td class="entry-paramname"><code>label</code></td>
                             <td class="entry-paramdesc">set anchor text (required)</td>
                           </tr>
                           <tr>
-                            <td class="entry-paramname">icon</td>
+                            <td class="entry-paramname"><code>icon</code></td>
                             <td class="entry-paramdesc">generates icon inside the link (Note: has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;)</td>
                           </tr>
                           <tr>
-                            <td class="entry-paramname">class</td>
-                            <td class="entry-paramdesc">CSS classes or additional classes for anchor</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname">Supports prefixes:
-                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-                        &quot;</td>
-                            <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                            <td class="entry-paramname"><code>class</code></td>
+                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for anchor
+Supports prefixes:
+  &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+  &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
                           </tr>
                       </table>
-    
-                      <p><em>All programmed parameters:</em>
-                          id, 
-                          label, 
-                          href, 
-                          icon, 
-                          class, 
-                          passArgs
-                    </p>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                          <em>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                          </em>
+                        </p>
+                      </div>
                   </div>
             
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
             
-            <div class="lib-entry-details">
-              
-              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
-            </div>
           </div>
           
           
@@ -147,7 +166,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Alert box</h3>
             
             <div class="lib-entry-formal">
-               <em><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><strong>alert</strong></span></em>
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>alert</code></span></h4>
                     
             </div>
             
@@ -169,33 +188,48 @@ May have implicit dependencies on other parts of Cato API.      </li>
               
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
-                    NOTE: doc parameter parsing is broken<br/>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>type</code>, 
+                          <code>class</code>, 
+                          <code>id</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
                       <table class="entry-parameters">
                           <tr>
-                            <td class="entry-paramname">class</td>
-                            <td class="entry-paramdesc">CSS classes or additional classes for nested container</td>
+                            <td class="entry-paramname"><code>type</code></td>
+                            <td class="entry-paramdesc">(info|success|warning|secondary|alert|error), default info</td>
                           </tr>
                           <tr>
-                            <td class="entry-paramname">Supports prefixes:
-                       &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-                       &quot;</td>
-                            <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                            <td class="entry-paramname"><code>class</code></td>
+                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for nested container
+Supports prefixes:
+  &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+  &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
                           </tr>
                       </table>
-    
-                      <p><em>All programmed parameters:</em>
-                          type, 
-                          class, 
-                          id, 
-                          passArgs
-                    </p>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                          <em>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                          </em>
+                        </p>
+                      </div>
                   </div>
             
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
             
-            <div class="lib-entry-details">
-              
-              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
-            </div>
           </div>
           
           
@@ -206,7 +240,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Panel box</h3>
             
             <div class="lib-entry-formal">
-               <em><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><strong>panel</strong></span></em>
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>panel</code></span></h4>
                     
             </div>
             
@@ -226,26 +260,44 @@ May have implicit dependencies on other parts of Cato API.      </li>
               
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
-                    NOTE: doc parameter parsing is broken<br/>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>type</code>, 
+                          <code>title</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
                       <table class="entry-parameters">
                           <tr>
-                            <td class="entry-paramname">title</td>
+                            <td class="entry-paramname"><code>type</code></td>
+                            <td class="entry-paramdesc">(callout|) default:empty</td>
+                          </tr>
+                          <tr>
+                            <td class="entry-paramname"><code>title</code></td>
                             <td class="entry-paramdesc">Title</td>
                           </tr>
                       </table>
-    
-                      <p><em>All programmed parameters:</em>
-                          type, 
-                          title, 
-                          passArgs
-                    </p>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                          <em>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                          </em>
+                        </p>
+                      </div>
                   </div>
             
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
             
-            <div class="lib-entry-details">
-              
-              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
-            </div>
           </div>
           
           
@@ -256,7 +308,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Common messages (abstraction)</h3>
             
             <div class="lib-entry-formal">
-               <em><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><strong>commonMsg</strong></span></em>
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>commonMsg</code></span></h4>
                     
             </div>
             
@@ -270,6 +322,62 @@ whereas @commonMsg abstracts markup/display and its messages can be a combinatio
 A template should not assume too much about the message markup, but the markup should be kept simple.</p>                  </div>
             
               
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>type</code>, 
+                          <code>class</code>, 
+                          <code>id</code>, 
+                          <code>text</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+                      <table class="entry-parameters">
+                          <tr>
+                            <td class="entry-paramname"><code>type</code></td>
+                            <td class="entry-paramdesc">(default|generic|...) (default: default) The type of message contained.
+ Basic types:
+   default: default. in standard Cato markup, same as generic.
+   generic: no type specified (avoid using - prefer more specific)
+ Types recognizes by Cato standard markup (theme-defined types are possible):
+   result: an informational result from any kind of query. e.g., &quot;No records found.&quot;.
+       is a normal event that shouldn&#39;t distract user attention.
+   result-norecord: specific &quot;No records found.&quot; message.
+   info: general information (<strong>NOTE:</strong> this is not really useful, but supported for completeness)
+   info-important: general important information
+   warning: general warning
+   fail: general non-fatal error
+   error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
+   error-perm: permission error
+   error-security: security error
+    id          = ID</td>
+                          </tr>
+                          <tr>
+                            <td class="entry-paramname"><code>class</code></td>
+                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for message container (innermost containing element)
+Supports prefixes:
+  &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+  &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                          </tr>
+                          <tr>
+                            <td class="entry-paramname"><code>text</code></td>
+                            <td class="entry-paramdesc">text. If string not specified, uses #nested instead.</td>
+                          </tr>
+                      </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                          <em>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                          </em>
+                        </p>
+                      </div>
+                  </div>
                   <div class="lib-entry-section-other">
                     <h4>Usage from screen widgets</h4>
 &lt;label.../&gt; elements in screen widgets can be mapped to this macro using the special &quot;common-msg-xxx&quot; style name, where
@@ -280,7 +388,7 @@ A template should not assume too much about the message markup, but the markup s
   Extra classes are also possible using colon syntax (combined with the usual &quot;+&quot; macro additive class instruction):
     &lt;label style=&quot;common-msg-error-perm:+myclass&quot; text=&quot;Permission Error&quot; /&gt;
   translates to:
-    &lt;@commonMsg type=&quot;error-perm&quot; class=&quot;+myclass&quot;&gt;Permission Error&lt;/@commonMsg&gt;                  </div> 
+    &lt;@commonMsg type=&quot;error-perm&quot; class=&quot;+myclass&quot;&gt;Permission Error&lt;/@commonMsg&gt;                  </div>
             
               
                   <div class="lib-entry-section-examples">
@@ -289,58 +397,14 @@ A template should not assume too much about the message markup, but the markup s
 </pre>                  </div>
             
               
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    NOTE: doc parameter parsing is broken<br/>
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname">Basic types:
-                    default: default. in standard Cato markup, same as generic.
-                    generic: no type specified (avoid using - prefer more specific)
-                  Types recognizes by Cato standard markup (theme-defined types are possible):
-                    result: an informational result from any kind of query. e.g., &quot;No records found.&quot;.
-                        is a normal event that shouldn&#39;t distract user attention.
-                    result-norecord: specific &quot;No records found.&quot; message.
-                    info: general information (NOTE: this is not really useful, but supported for completeness)
-                    info-important: general important information
-                    warning: general warning
-                    fail: general non-fatal error
-                    error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
-                    error-perm: permission error
-                    error-security: security error
-    id</td>
-                            <td class="entry-paramdesc">ID</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname">class</td>
-                            <td class="entry-paramdesc">CSS classes or additional classes for message container (innermost containing element)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname">Supports prefixes:
-                    &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-                    &quot;</td>
-                            <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname">text</td>
-                            <td class="entry-paramdesc">text. If string not specified, uses #nested instead.</td>
-                          </tr>
-                      </table>
-    
-                      <p><em>All programmed parameters:</em>
-                          type, 
-                          class, 
-                          id, 
-                          text, 
-                          passArgs
-                    </p>
-                  </div>
             
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
             
-            <div class="lib-entry-details">
-              
-              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
-            </div>
           </div>
           
       </div>

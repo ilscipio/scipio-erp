@@ -31,7 +31,7 @@ Since this is very foundation specific, this function may be dropped in future i
                     
   * Parameters *
     type            = (inline|magellan|breadcrumbs) (default: inline)
-    class           = CSS classes
+    class           = ((css-class)) CSS classes
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)   
@@ -145,7 +145,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     type            = (generic|section|section-inline|main|tab|subtab|button|...) (default: generic) The menu type.
                       generic: any content, but specific type should be preferred.
     inlineItems     = boolean (default: false) If true, generate only items, not menu container
-    class           = class (default: -based on menu type-) Menu class.
+    class           = ((css-class)) (default: -based on menu type-) CSS classes for menu
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
@@ -328,7 +328,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   * Parameters *
     type            = (generic|link|text|submit) (default: generic) Menu item (content) type.
                       generic: any generic content, but specific types should be preferred.
-    class           = class (default: -based on menu type-) Menu item class (for <li> element).
+    class           = ((css-class)) (default: -based on menu type-) CSS classes for menu item
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
@@ -548,7 +548,7 @@ functionality.
    enabled         = boolean (default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.
                      For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url             = Base Url to be used for pagination
-   class           = CSS classes 
+   class           = ((css-class)) CSS classes 
                      Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)

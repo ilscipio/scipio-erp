@@ -8,23 +8,31 @@
 * See FtlDocCompiler class for data model details.
 *
 * WARN: NO Ofbiz libraries are available here; treat this as separate project.
+*
+* WARN: The parsing of the input files (and data model received here) is sensitive
+*     to whitespace, indentation and line endings.
+*
 -->
 <!DOCTYPE html>
 <html lang="en-US">
 <#if (libFormat!"") == "cato-lib">
   <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <#if pageTitle?has_content>
       <title>${pageTitle?html}</title>
     </#if>
 
-<style>
+<style type="text/css">
 table.entry-parameters {
   width: 100%;
   border: 1px outset black;
 }
 
 table.entry-parameters td {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   border: 1px solid black;
 }
 
@@ -35,6 +43,10 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-detail {
   font-style: italic;
   font-size: 0.6em;
+}
+
+.lib-entry-formalname {
+  font-weight: bold;
 }
 </style>
 
@@ -104,6 +116,9 @@ table.entry-parameters td.entry-paramname {
 </#macro>
 
 <#function makeInterLibUrl targetLibDocPath targetName="">
+  <#if !targetLibDocPath?ends_with(".html")>
+    <#local targetLibDocPath = targetLibDocPath + ".html">
+  </#if>
   <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libDocPath)!""><#t>
   <#if targetName?has_content>
     <#return relLibDocPath + "#" + targetName>
@@ -130,7 +145,7 @@ table.entry-parameters td.entry-paramname {
     
   <#if (sectionMap?size >= 2) && entryMap?has_content>
     <div class="lib-section-links">
-      <strong>Sections:</strong>
+      <h4>Sections:</h4>
       <ul>
         <#list sectionMap?keys as sectionName> 
           <#assign section = sectionMap[sectionName]>
@@ -155,7 +170,7 @@ table.entry-parameters td.entry-paramname {
 
   <#if entryMap?has_content>
     <div class="lib-entry-links">
-      <strong><#if (sectionMap?size >= 2)>All </#if>Definitions:</strong>
+      <h4><#if (sectionMap?size >= 2)>All </#if>Definitions:</h4>
       <p>
       <#list entryMap?keys?sort as entryName>
         <a href="#entry-${entryName?html}">${entryName?html}</a><#if entryName_has_next>, </#if>
@@ -166,7 +181,7 @@ table.entry-parameters td.entry-paramname {
 
   <#if libMap?has_content>
     <div class="lib-links">
-      <strong>All libraries:</strong>
+      <h4>All libraries:</h4>
       <p>
       <#list libMap?keys?sort as libName>
         <#assign lib = libMap[libName]>
@@ -209,10 +224,64 @@ table.entry-parameters td.entry-paramname {
             
             <div class="lib-entry-formal">
                <#-- type is "macro", "function" or "variable" -->
-               <em><span class="lib-entry-type-text">${entry.type}</span> <span class="lib-entry-formalname"><strong>${entryName?html}</strong></span></em>
+               <h4><span class="lib-entry-type-text">${entry.type}</span> <span class="lib-entry-formalname"><code>${entryName?html}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if></h4>
                   <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if>  
             </div>
             
+            <#global parametersSectionRendered = false>
+            
+            <#-- Needs special handling -->
+            <#macro parametersSection entrySection entry>
+                <#if !parametersSectionRendered>
+                  <div class="lib-entry-section-params">
+                    <h4><@labelText text=entrySection.title!"Parameters" /></h4>
+                    
+                    <div class="lib-entry-params-formal"><#--<em>All parameters:</em>-->
+                      <p>
+                      <#-- NOTE: do not sort -->
+                      <#if entry.argList?has_content>
+                        <#list entry.argList as argName>
+                          <code>${argName?html}</code><#if argName_has_next>, </#if>
+                        </#list>
+                      <#else>
+                        (none)
+                      </#if>
+                      </p>
+                    </div>
+                    <#if entry.paramDescMap?has_content>
+                      <div class="lib-entry-params-doc">
+                      <table class="entry-parameters">
+                        <#list entry.paramDescMap?keys as paramName>
+                          <#assign paramDesc = entry.paramDescMap[paramName]!"">
+                          <tr>
+                            <td class="entry-paramname"><code>${paramName?html}</code></td>
+                            <td class="entry-paramdesc"><@descText text=paramDesc.text!"" /></td>
+                          </tr>
+                        </#list>
+                      </table>
+                      </div>
+                    </#if>
+
+                    <#if entry.isAdvancedArgs>
+                      <div class="lib-entry-params-details">
+                        <p>
+                          <em>
+                      <#if entry.type == "function">
+                        <strong>NOTE:</strong> This function implements an advanced arguments interface emulating named
+                            parameters using maps, and the parameters above may not be positional. See <a href="${makeInterLibUrl("standard/htmlTemplate")}">standard/htmlTemplate</a> for details.
+                      <#elseif entry.type == "macro">
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="${makeInterLibUrl("standard/htmlTemplate")}">standard/htmlTemplate</a> for details.
+                      </#if>
+                          </em>
+                        </p>
+                      </div>
+                    </#if>
+                  </div>
+                </#if>
+                <#global parametersSectionRendered = true>
+            </#macro>
+
             <#assign entrySections = entry.sections>
             <#list entrySections?keys as entrySectionName>
               <#assign entrySection = entrySections[entrySectionName]>
@@ -234,41 +303,17 @@ table.entry-parameters td.entry-paramname {
                     <@preformedText text=entrySection.rawText!"" />
                   </div>
                 <#elseif entrySectionName == "parameters">
-                  <div class="lib-entry-section-params">
-                    <h4><@labelText text=entrySection.title!"" /></h4>
-                    NOTE: doc parameter parsing is broken<br/>
-                    <#if entry.parameters?has_content>
-                      <table class="entry-parameters">
-                        <#list entry.parameters?keys as paramName>
-                          <#assign paramText = entry.parameters[paramName]!"">
-                          <tr>
-                            <td class="entry-paramname">${paramName?html}</td>
-                            <td class="entry-paramdesc"><@descText text=paramText /></td>
-                          </tr>
-                        </#list>
-                      </table>
-                    <#else>
-                      <span>(no parameters)</span>
-                    </#if>
-    
-                    <#if entry.argList??>
-                      <p><em>All programmed parameters:</em>
-                      <#if entry.argList?has_content>
-                        <#list entry.argList as argName>
-                          ${argName?html}<#if argName_has_next>, </#if>
-                        </#list>
-                      <#else>
-                        (none)
-                      </#if>
-                    </#if>
-                    </p>
-                  </div>
+                  <@parametersSection entrySection=entrySection entry=entry />
                 <#elseif entrySectionName == "returnValues">
+                  <@parametersSection entrySection={} entry=entry />
                   <div class="lib-entry-section-return">
                     <h4><@labelText text=entrySection.title!"" /></h4>
-                    <@descText text=entrySection.text!"" />
+                    <p>
+                      <@descText text=entrySection.text!"" />
+                    </p>
                   </div>
                 <#elseif entrySectionName == "related">
+                  <@parametersSection entrySection={} entry=entry />
                   <div class="lib-entry-section-related">
                      <h4><@labelText text=entrySection.title!"" /></h4>
                      <p>
@@ -278,18 +323,24 @@ table.entry-parameters td.entry-paramname {
                      </p>
                   </div>  
                 <#else>
+                  <@parametersSection entrySection={} entry=entry />
                   <div class="lib-entry-section-other">
                     <h4><@labelText text=entrySection.title!"" /></h4>
                     <@descText text=entrySection.text!"" />
-                  </div> 
+                  </div>
                 </#if>     
             
             </#list>
+            <@parametersSection entrySection={} entry=entry />
+
+            <#if entry.isTransform || (entry.isAdvancedArgs!false)>
+              <div class="lib-entry-details">
+                <p>
+                  <#if entry.isTransform><span class="lib-entry-detail">Implemented as transform.</span></#if>
+                </p>
+              </div>
+            </#if>
             
-            <div class="lib-entry-details">
-              <#if entry.isTransform><span class="lib-entry-detail">Implemented as transform.</span></#if>
-              <#if entry.isAdvancedArgs!false><span class="lib-entry-detail">Supports advanced arguments interface.</span></#if>
-            </div>
           </div>
           
           </#if>

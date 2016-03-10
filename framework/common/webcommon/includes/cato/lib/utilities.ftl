@@ -130,7 +130,7 @@ This is useful to prevent bloating templates with <#assign...><@ofbizUrl.../></#
 which is very frequent due to use of macros.
 
   * Parameters *
-    args (uri)           = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+    args                 = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
                            DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
                                for functions, which would be unreadable here (makeOfbizUrl("main", false, false, true, true...))
                                However majority of cases use only a URI so we can shortcut in that case.
@@ -1350,10 +1350,10 @@ TODO?: may want helper booleans to control in/out allArgNames?
     overrideArgs  = Extra macro args that override all others (highest priority). 
                     Expects an FTL hash ONLY (not context map).
                     The names used here also count toward the localArgNames.
-                    NOTE: if a key is present in both defaultArgs and overrideArgs, it will result in
+                    NOTE: If a key is present in both defaultArgs and overrideArgs, it will result in
                         two names added to localArgNames/allArgNames. The code that finally uses
                         those lists should make a Set if it needs to.
-                    NOTE: this map is present for cases where the others are insufficient.
+                    NOTE: This map is present for cases where the others are insufficient.
                         but otherwise should avoid using this map when possible.
 -->
 <#function mergeArgMaps args={} inlineArgs={} defaultArgs={} overrideArgs={}>
@@ -2096,13 +2096,18 @@ Renders a formatted date.
 NOTE: formattedDate by default renders the "date" type but it also doubles as handler for the other types
     (which also have convenience wrappers below).
     
-See also function versions below (helpful when inlining).
-
   * Parameters *
-   date         = the date
-   dateType     = (date-time|timestamp|date|time) (default: date)
+    date         = the date
+    dateType     = (date-time|timestamp|date|time) (default: date)
                   "timestamp" and "date-time" are synonymous.  
-   defaultVal   = if no output is produced (empty), this value (string) will be shown instead.
+    defaultVal   = if no output is produced (empty), this value (string) will be shown instead.
+   
+  * Related *
+    @formattedDateTime
+    @formattedTime
+    #formatDate
+    #formatDateTime
+    #formatTime
 -->
 <#macro formattedDate date dateTimeFormat="" specLocale=true specTimeZone=true defaultVal="" dateType="date">
   ${formatDate(date, dateTimeFormat, specLocale, specTimeZone, dateType)!defaultVal}<#t>
@@ -2434,9 +2439,9 @@ Required call at container close following a saveCurrentContainerSizesXxx call a
 
 <#-- 
 *************
-* parseContainerSizesFromStyleStr [PLACEHOLDER]
+* parseContainerSizesFromStyleStr
 ************   
-This function should be overridden by a framework-specific implementation that parses the 
+ABSTRACT. This function should be overridden by a framework-specific implementation that parses the 
 container sizes from a class names string.
            
   * Parameters *
@@ -2519,10 +2524,10 @@ IMPL NOTE: The calculated factors are saved in their own stack and recalculated 
 
 <#-- 
 *************
-* evalAbsContainerSizeFactors [PLACEHOLDER]
+* evalAbsContainerSizeFactors
 ************   
-This function should be overridden by a framework-specific implementation that evals container
-size factors 
+ABSTRACT. This function should be overridden by a framework-specific implementation that evals container
+size factors.
            
   * Parameters *
     sizesList           = list of hashes describing all (known) parent and current container sizes

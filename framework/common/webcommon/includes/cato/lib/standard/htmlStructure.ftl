@@ -23,12 +23,14 @@ used instead of div if the div contains grid size classes (but conversely, @cell
 to this one.
                     
   * Parameters *
-    class                 = CSS classes (supports prefixed/extended syntax, but normally no classes will be added)
+    class                 = ((css-class)) CSS classes
                             Supports prefixes:
                               "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
-    id                    = id
-    attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
+                              "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
+                            NOTE: This type of element is expected to have no default classes. 
+    id                    = Container ID
+    attribs               = ((map)) Extra attributes for div (as map, needed for attribs with dashes in names)
+    inlineAttribs...      = ((inline-args)) Extra attributes for div (as inline args)
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign container_defaultArgs = {
@@ -78,12 +80,12 @@ Creates a grid row.
     </@row>              
                     
   * Parameters *
-    class           = CSS classes 
+    class           = ((css-class)) CSS classes 
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    alt             = boolean, if true alternate row (odd), if false regular (even)
-    selected        = boolean, if true row is marked selected
+    alt             = ((boolean)) (default: false) If true alternate row (odd), if false regular (even)
+    selected        = ((boolean)) (default: false) If true row is marked selected
 -->
 <#assign row_defaultArgs = {
   "class":"", "id":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, "passArgs":{}
@@ -162,18 +164,19 @@ Creates a grid cell.
     </@row>            
                     
   * Parameters *
-    class           = CSS classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
+    class           = ((css-class)) CSS classes
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    columns         = expected number of columns to be rendered (specify as number, default 12, default only used if class empty and no column sizes specified)
-    small           = specific number of small columns (specify as number), overrides small part general columns value above
-    large           = specific number of large columns (specify as number), overrides large part of general columns value above
-    medium          = specific number of medium columns (specify as number), overrides medium part of general columns value above
-    offset          = offset in number of columns
-    smallOffset     = specific offset for small columns
-    mediumOffset    = specific offset for medium columns
-    largeOffset     = specific offset for large columns
+    columns         = ((number)) (default: 12) Expected number of columns to be rendered 
+                      Default only used if class empty and no column sizes specified.
+    small           = ((number)) Specific number of small columns, overrides small part general columns value above
+    large           = ((number)) Specific number of large columns, overrides large part of general columns value above
+    medium          = ((number)) Specific number of medium columns, overrides medium part of general columns value above
+    offset          = ((number)) Offset in number of columns
+    smallOffset     = ((number)) Specific offset for small columns
+    mediumOffset    = ((number)) Specific offset for medium columns
+    largeOffset     = ((number)) Specific offset for large columns
     last            = ((boolean)) If true indicates last cell in row 
                       NOTE: This is often optional in CSS frameworks; affects float alignment.
 -->
@@ -262,6 +265,9 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
     should be confirmed...
     
 TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
+
+  * Related *
+    utilities#parseContainerSizesFromStyleStr
 -->
 <#function parseContainerSizesFromStyleStr style catchArgs...>
   <#if !catoContainerSizesPrefixMap??>
@@ -279,7 +285,10 @@ TODO?: these could also parse style for tile classes and calculate approximate c
 OVERRIDE. Calculates nested container size factors. 
 
 TODO: Reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
-        and have this delegate to it 
+        and have this delegate to it
+        
+  * Related *
+    utilities#evalAbsContainerSizeFactors
 -->
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] catchArgs...>
   <#local maxSize = 12>
@@ -352,7 +361,7 @@ Since this is very foundation specific, this function may be dropped in future i
     </@grid>            
                     
   * Parameters *
-    class           = Adds or sets classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
+    class           = ((css-class)) CSS classes
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
@@ -469,7 +478,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
                       Type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
     titleBgColor    = (none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: 0). 
                       none: prevents color class.
-    class           = CSS classes 
+    class           = ((css-class)) CSS classes 
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
@@ -670,7 +679,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 
   * Parameters *
     type                = (generic) (default: generic)
-    class               = CSS classes, on outer columns element (affects title)
+    class               = ((css-class)) CSS classes, on outer columns element (affects title)
                           Supports prefixes:
                             "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                             "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
@@ -707,7 +716,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     menuLayout          = (post-title|pre-title|inline-title) (default: post-title) 
                           This is a low-level control; avoid where possible.
     menuRole            = (nav-menu|paginate-menu) (default: nav-menu)
-    menuClass           = Optional extra menu CSS classes. 
+    menuClass           = ((css-class)) (optional) CSS classes, extra menu classes
                           Supports prefixes:
                             "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                             "=": causes the class to replace non-essential defaults (same as specifying a class name directly)

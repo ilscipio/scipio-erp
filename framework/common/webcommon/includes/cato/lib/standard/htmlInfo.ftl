@@ -24,7 +24,7 @@ Creates a modal UI element.
     id              = set id (required)
     label           = set anchor text (required)
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
-    class           = CSS classes or additional classes for anchor
+    class           = ((css-class)) CSS classes or additional classes for anchor
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
@@ -65,7 +65,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
                     
   * Parameters *
     type           = (info|success|warning|secondary|alert|error), default info
-    class          = CSS classes or additional classes for nested container
+    class          = ((css-class)) CSS classes or additional classes for nested container
                      Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
@@ -183,7 +183,7 @@ A template should not assume too much about the message markup, but the markup s
                     error-perm: permission error
                     error-security: security error
     id          = ID
-    class       = CSS classes or additional classes for message container (innermost containing element)
+    class       = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
                   Supports prefixes:
                     "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                     "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  

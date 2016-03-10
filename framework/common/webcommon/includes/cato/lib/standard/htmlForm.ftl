@@ -30,12 +30,12 @@ Defines a form. Analogous to <form> HTML element.
     type                = (input|display) (default: input)
                           DEV NOTE: "display" is special for time being, probably rare or unused;
                                     maybe it should cause to omit <form> element
-    class               = CSS classes on form element itself
+    class               = ((css-class)) CSS classes on form element itself
                           Supports prefixes:
                             "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                             "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
-    attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
-    inlineAttribs       = other attributes for HTML <form> element
+    attribs             = ((map)) Extra attributes for HTML <form> element (as map - needed for names with dashes)
+    inlineAttribs...    = ((inline-args)) Extra attributes for HTML <form> element (as inline macro args)
                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign form_defaultArgs = {
@@ -86,17 +86,18 @@ Defines a form. Analogous to <form> HTML element.
 Generates script data and markup needed to make an instance to initialize upload progress 
 javascript anim for a form, with progress bar and/or text.
 
-Server-side upload event for the form must register a FileUploadProgressListener in session
-for getFileUploadProgressStatus AJAX calls.
+The server-side upload event for the form must register a Java FileUploadProgressListener in session
+for getFileUploadProgressStatus controller AJAX calls.
                     
   * Parameters *
-    enabled         = boolean, default true (helper macro arg)
-    progressOptions = elem IDs and options passed to CatoUploadProgress javascript class
-                      in addition, supports: 
+    enabled         = ((boolean) (default: true) If true, disables whole macro.
+                      Occasionally needed in templates as FTL workaround.
+    progressOptions = ((map)) Elem IDs and options passed to CatoUploadProgress Javascript class
+                      In addition, supports: 
                         submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
                         validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
-                      see CatoUploadProgress javascript class for available options.
-    htmlwrap        = if true, wrap in @script (default true)
+                      See CatoUploadProgress javascript class for available options.
+    htmlwrap        = ((boolean)) (default: true) If true, wrap in @script
 -->
 <#assign progressScript_defaultArgs = {
   "enabled":true, "htmlwrap":true, "progressOptions":{}, "passArgs":{}
@@ -162,22 +163,25 @@ to a form submit.
     $('#${id}_meter').css("width", "78%");
                      
   * Parameters *
-    value          = Percentage done
-    id             = custom ID; can also be specified as progressOptions.progBarId instead.
+    value          = ((number)) Percentage done
+    id             = Custom ID; can also be specified as progressOptions.progBarId instead.
                      The meter will get an id of "${id}_meter".
                      If omitted, no progress bar per se will be created, but script will still be generated for progressOptions.progTextBoxId.
-    type           = (alert|info|success) (default: info)
-    class          = Adds or sets classes - please use "(small|medium|large)-block-grid-#"
+    type           = (alert|success|info) (default: info)
+    class          = ((css-class)) CSS classes
                      Supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    containerClass = classes added only on container
+    containerClass = ((css-class)) Classes added only on container
+                     Supports prefixes:
+                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     showValue      = Display value inside bar
-    wrapClass      = classes on outer wrapper only
-    progressArgs      = if present, attaches progress bar to an upload form with javascript-based progress and 
+    wrapClass      = Classes on outer wrapper only
+    progressArgs      = ((map)) If present, attaches progress bar to an upload form with javascript-based progress and 
                         attaches results to page using elem IDs and options specified via these arguments,
                         which are passed to @progress macro (see @progress macro for supported options)
-    progressOptions   = convenience parameter; same as passing:
+    progressOptions   = ((map)) Convenience parameter; same as passing:
                         progressArgs={"enabled":true, "progressOptions":progressOptions}
 -->
 <#assign progress_defaultArgs = {
@@ -188,7 +192,9 @@ to a form submit.
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progress_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-
+  
+  <#local value = value?number>
+  
   <#local progressOptions = progressArgs.progressOptions!progressOptions>
   <#local explicitId = id?has_content>
   <#if !id?has_content>
@@ -229,27 +235,29 @@ to a form submit.
 ************
 Generates script data and markup needed to turn a multiple-select form field into
 dynamic jquery asmselect.
-IMPL NOTE: this must support legacy ofbiz parameters.
+
+IMPL NOTE: This must support legacy Ofbiz parameters.
                     
   * Parameters *
-    * general *
-    enabled             = boolean true/false, default true (helper for macro args)
-    id                  = select elem id
-    title               = select title
-    sortable            = boolean
-    formId              = form ID
-    formName            = form name
-    asmSelectOptions    = optional, a map of overriding options to pass to asmselect
-    asmSelectDefaults   = boolean, default true, if false will not include any defaults and use asmSelectOptions only
+    * General *
+    enabled             = ((boolean)) (default: true) If enabled, disables the whole macro.
+                          Sometimes needed in templates as FTL workaround.
+    id                  = Select elem id
+    title               = Select title
+    sortable            = ((boolean)) (default: false)
+    formId              = Form ID
+    formName            = Form name
+    asmSelectOptions    = (optional) A map of overriding options to pass to asmselect
+    asmSelectDefaults   = ((boolean)) (default: true) If false, will not include any defaults and use asmSelectOptions only
     relatedFieldId      = related field ID (optional)
-    htmlwrap            = if true, wrap in @script (default true)
+    htmlwrap            = ((boolean) (default: true) If true, wrap in @script.
     
-    * needed only if relatedFieldId specified *
-    relatedTypeName       = related type, name
-    relatedTypeFieldId    = related type field ID
-    paramKey              = param key 
-    requestName           = request name
-    responseName          = response name
+    * Needed only if relatedFieldId specified *
+    relatedTypeName       = Related type, name
+    relatedTypeFieldId    = Related type field ID
+    paramKey              = Param key 
+    requestName           = Request name
+    responseName          = Response name
 -->
 <#assign asmSelectScript_defaultArgs = {
   "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "asmSelectOptions":{}, 
@@ -319,12 +327,15 @@ A visible fieldset, including the HTML element.
     </@fieldset>            
                     
   * Parameters *
-    class           = CSS classes 
+    class           = ((css-class)) CSS classes 
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    containerClass  = class for wrapper 
-                      (includes width in columns, or append only with "+")
+    containerClass  = ((css-class)) CSS classes for wrapper 
+                      Includes width in columns, or append only with "+".
+                      Supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = set id
     title           = fieldset-title
     collapsed       = show/hide the fieldset
@@ -441,7 +452,7 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type            = (default|default-nolabels|default-compact|default-manual|generic), (default: default). The type of fields arrangement. Affects layout and styling of contained fields.
+    type            = (default|default-nolabels|default-compact|default-manual|generic) (default: default) The type of fields arrangement. Affects layout and styling of contained fields.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
                       default-nolabels: default cato field arrangement for common sets of fields with no labels.
@@ -458,7 +469,7 @@ or even multiple per fieldset.
                           This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
                           generally, @field specifies label as pure data and theme decides where and how to display it.
                           In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
-    labelType       = (horizontal|vertical|none), (default: -type-specific-). Override for type of the field labels themselves.
+    labelType       = (horizontal|vertical|none) (default: -type-specific-) Override for type of the field labels themselves.
                       horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
                           the implementation decides how to do this.
                           DEV NOTE: previously this was called "gridarea". But in the bootstrap code, this no longer makes sense.
@@ -793,7 +804,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     widgetPostfixCombined   = boolean (default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix 
                               having their own sub-container. It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
                               the default is usually true unless prevented by other settings.
-    class           = CSS classes for the field element (NOT the cell container!)
+    class           = ((css-class)) CSS classes for the field element (NOT the cell container!)
                       Supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)

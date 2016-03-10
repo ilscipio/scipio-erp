@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
       <title>Master HTML template include, standard Cato markup.</title>
 
-<style>
+<style type="text/css">
 table.entry-parameters {
   width: 100%;
   border: 1px outset black;
 }
 
 table.entry-parameters td {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   border: 1px solid black;
 }
 
@@ -21,6 +25,10 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-detail {
   font-style: italic;
   font-size: 0.6em;
+}
+
+.lib-entry-formalname {
+  font-weight: bold;
 }
 </style>
 
@@ -170,7 +178,7 @@ catchArgs: catch-all args. simply catches all the parameters the macro doesn&#39
 
 
     <div class="lib-links">
-      <strong>All libraries:</strong>
+      <h4>All libraries:</h4>
       <p>
         <a href="../standard/htmlContent.html">standard/htmlContent</a>, 
         <a href="../standard/htmlForm.html">standard/htmlForm</a>, 

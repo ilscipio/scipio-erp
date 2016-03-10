@@ -300,9 +300,15 @@ under the License.
                 <container style="${styles.grid_row} fullWidth" id="content-main-section">
                     <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
                     <section>
-                        <!-- Not Authenticated Screens -->
+                        <!-- Not Authenticated Screens; can be overriden by setting loginOverride-->
                         <condition>
-                            <if-empty field="userLogin" />
+                            <and>
+                                <if-empty field="userLogin" />
+                                <or>
+                                    <if-empty field="loginOverride" />
+                                    <if-compare operator="equals" value="false" field="loginOverride" />
+                                </or>
+                            </and>
                         </condition>
                         <actions>
                             <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>

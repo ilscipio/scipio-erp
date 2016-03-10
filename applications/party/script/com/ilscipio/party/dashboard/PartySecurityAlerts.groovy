@@ -10,8 +10,7 @@ import org.ofbiz.entity.model.DynamicViewEntity
 import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.webapp.stats.ServerHitBin;
 
-
-String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
+String iScope = context.intervalScope != null ? context.intervalScope : "month"; //day|week|month|year
 
 Calendar calendar = Calendar.getInstance();
 if (iScope.equals("day")) {
@@ -65,16 +64,14 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         fDate = UtilDateTime.toCalendar(userLoginAndHistory.fromDate);
         fromDate = Calendar.getInstance();
         fromDate.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));        
-        if (hitStartDate.equals(fromDate)) {
+        if (hitStartDate.getTimeInMillis() == fromDate.getTimeInMillis()) {
             securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
                 "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "fromDate", fromDate.getTime());
             securityAlerts.add(securityAlert);
-            
-            Debug.log("userLoginId ==========> " + userLoginAndHistory.userLoginId +  " enabled ========>  " + userLoginAndHistory.enabled + " successfulLogin ========> " + userLoginAndHistory.successfulLogin
-                    + "   visitId =========> " + userLoginAndHistory.visitId
-                    + "   fromDate ========> " + userLoginAndHistory.fromDate);
-                
+//            Debug.log("userLoginId ==========> " + userLoginAndHistory.userLoginId +  " enabled ========>  " + userLoginAndHistory.enabled + " successfulLogin ========> " + userLoginAndHistory.successfulLogin
+//                    + "   visitId =========> " + userLoginAndHistory.visitId
+//                    + "   fromDate ========> " + userLoginAndHistory.fromDate);
             break;
         }
     }

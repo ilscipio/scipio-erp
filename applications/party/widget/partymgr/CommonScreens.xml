@@ -160,9 +160,10 @@ under the License.
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
-                            <!-- <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
-                            </container> -->
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <!-- <include-screen name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/> -->
+                                <include-screen name="CatoLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>                                
+                            </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
@@ -209,8 +210,7 @@ under the License.
     <screen name="CatoSecurityAlerts">
         <section>
             <actions>
-                <set field="chartIntervalScope" value="month"/>               
-                <!-- <set field="label1" value="${uiLabelMap.PartySecurityAlerts}"/> 1st dataset label                -->                   
+                <set field="intervalScope" value="month"/>
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartySecurityAlerts.groovy"/>
            </actions>
            <widgets>
@@ -224,6 +224,31 @@ under the License.
                        <screenlet title="${uiLabelMap.CommonSecurity}">
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartySecurityAlerts.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoLastCommunication">
+        <section>
+            <actions>
+                <set field="intervalScope" value="month"/>
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartyLastCommunications.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="lastCommunications"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.PartyCommunications}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyLastCommunications.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>

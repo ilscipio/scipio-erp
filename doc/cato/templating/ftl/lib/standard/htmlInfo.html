@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,6 +33,7 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>Informational/notification element HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlInfo.ftl</em></p>
 <p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
       <li>
 May have implicit dependencies on other parts of Cato API.      </li>
@@ -50,9 +56,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Modal</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>modal</strong>
-              
+              <em>macro</em> <strong>modal</strong> 
             </div>
             
             
@@ -62,10 +66,14 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@modal id=&quot;dsadsa&quot; attr=&quot;&quot; &gt;<br/>        Modal Content<br/>    &lt;/@modal&gt;              </div>
+<pre>    &lt;@modal id=&quot;dsadsa&quot; attr=&quot;&quot; &gt;
+        Modal Content
+    &lt;/@modal&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">label</td>
@@ -87,18 +95,22 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       id,
                       label,
                       href,
                       icon,
                       class,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -109,9 +121,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Alert box</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>alert</strong>
-              
+              <em>macro</em> <strong>alert</strong> 
             </div>
             
             
@@ -123,10 +133,14 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@alert type=&quot;info&quot;&gt;<br/>        This is an alert!<br/>    &lt;/@alert&gt;              </div>
+<pre>    &lt;@alert type=&quot;info&quot;&gt;
+        This is an alert!
+    &lt;/@alert&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">class</td>
@@ -140,16 +154,20 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       class,
                       id,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -160,9 +178,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Panel box</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>panel</strong>
-              
+              <em>macro</em> <strong>panel</strong> 
             </div>
             
             
@@ -172,10 +188,14 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@panel type=&quot;&quot;&gt;<br/>        This is a panel.<br/>    &lt;/@panel&gt;              </div>
+<pre>    &lt;@panel type=&quot;&quot;&gt;
+        This is a panel.
+    &lt;/@panel&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">title</td>
@@ -183,15 +203,19 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       title,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -202,9 +226,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Common messages (abstraction)</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>commonMsg</strong>
-              
+              <em>macro</em> <strong>commonMsg</strong> 
             </div>
             
             
@@ -214,14 +236,30 @@ errors (e.g. permission errors) and query results (e.g. &quot;No records found.&
 <p>This labels messages according to what they are and lets the theme decide on markup and styling based on content.</p><p>This is higher-level than @alert macro; @alert has a specific markup/display and its types are usually levels of severity,
 whereas @commonMsg abstracts markup/display and its messages can be a combination of levels and specific meanings;
 @alert&#39;s goal is to grab user attention, whereas @commonMsg&#39;s behavior depends on the type of message.</p><p>@commonMsg may use @alert to implement its markup.
-A template should not assume too much about the message markup, but the markup should be kept simple.</p>              </div>
+A template should not assume too much about the message markup, but the markup should be kept simple.</p>    <div>  <ul>
+      <li>
+Screen Widgets Equivalent *
+&lt;label.../&gt; elements in screen widgets can be mapped to this macro using the special &quot;common-msg-xxx&quot; style name, where
+xxx is the message type. e.g.:
+  &lt;label style=&quot;common-msg-error-perm&quot; text=&quot;Permission Error&quot; /&gt;
+translates to:
+  &lt;@commonMsg type=&quot;error-perm&quot;&gt;Permission Error&lt;/@commonMsg&gt;
+Extra classes are also possible using colon syntax (combined with the usual &quot;+&quot; macro additive class instruction):
+  &lt;label style=&quot;common-msg-error-perm:+myclass&quot; text=&quot;Permission Error&quot; /&gt;
+translates to:
+  &lt;@commonMsg type=&quot;error-perm&quot; class=&quot;+myclass&quot;&gt;Permission Error&lt;/@commonMsg&gt;      </li>
+  </ul>
+</div>
+              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@commonMsg type=&quot;result-norecord&quot;/&gt;              </div>
+<pre>    &lt;@commonMsg type=&quot;result-norecord&quot;/&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Basic types:
@@ -257,22 +295,34 @@ A template should not assume too much about the message markup, but the markup s
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       class,
                       id,
                       text,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
       </div>
       
-      <hr />
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

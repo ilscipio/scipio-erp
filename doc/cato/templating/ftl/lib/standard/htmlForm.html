@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,6 +33,7 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>Form and field HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlForm.ftl</em></p>
 <p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
       <li>
 May have implicit dependencies on other parts of Cato API.      </li>
@@ -50,9 +56,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Form</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>form</strong>
-              
+              <em>macro</em> <strong>form</strong> 
             </div>
             
             
@@ -62,10 +66,18 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@form name=&quot;myform&quot;&gt;<br/>      &lt;@fields&gt;<br/>        &lt;input type=&quot;hidden&quot; ... /&gt;<br/>        &lt;@field ... /&gt;<br/>        &lt;@field ... /&gt;<br/>      &lt;/@fields&gt;<br/>    &lt;/@form&gt;              </div>
+<pre>    &lt;@form name=&quot;myform&quot;&gt;
+      &lt;@fields&gt;
+        &lt;input type=&quot;hidden&quot; ... /&gt;
+        &lt;@field ... /&gt;
+        &lt;@field ... /&gt;
+      &lt;/@fields&gt;
+    &lt;/@form&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">DEV NOTE: &quot;display&quot; is special for time being, probably rare or unused;
@@ -85,11 +97,12 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                       <tr>
                         <td class="entry-paramname">inlineAttribs</td>
-                        <td class="entry-paramdesc">other attributes for HTML &lt;form&gt; element<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                        <td class="entry-paramdesc">other attributes for HTML &lt;form&gt; element
+<strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       name,
                       id,
@@ -98,11 +111,15 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       close,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -113,9 +130,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Progress Script</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>progressScript</strong>
-              
+              <em>macro</em> <strong>progressScript</strong> 
             </div>
             
             
@@ -128,6 +143,7 @@ for getFileUploadProgressStatus AJAX calls.</p>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">progressOptions</td>
@@ -143,16 +159,20 @@ for getFileUploadProgressStatus AJAX calls.</p>              </div>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       enabled,
                       htmlwrap,
                       progressOptions,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -163,9 +183,7 @@ for getFileUploadProgressStatus AJAX calls.</p>              </div>
             <h3 class="lib-entry-title">Progress Bar</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>progress</strong>
-              
+              <em>macro</em> <strong>progress</strong> 
             </div>
             
             
@@ -177,10 +195,15 @@ to a form submit.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@progress value=40/&gt;<br/><br/>    Javascript animation (manual):<br/>    $(&#39;#${id}_meter&#39;).css(&quot;width&quot;, &quot;78%&quot;);              </div>
+<pre>    &lt;@progress value=40/&gt;
+
+    Javascript animation (manual):
+    $(&#39;#${id}_meter&#39;).css(&quot;width&quot;, &quot;78%&quot;);
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">id</td>
@@ -226,7 +249,7 @@ to a form submit.</p>              </div>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       value,
                       id,
                       type,
@@ -236,11 +259,15 @@ to a form submit.</p>              </div>
                       progressArgs,
                       progressOptions,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -251,9 +278,7 @@ to a form submit.</p>              </div>
             <h3 class="lib-entry-title">asmSelectScript</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>asmSelectScript</strong>
-              
+              <em>macro</em> <strong>asmSelectScript</strong> 
             </div>
             
             
@@ -266,6 +291,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">enabled</td>
@@ -309,7 +335,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       enabled,
                       id,
                       title,
@@ -326,11 +352,15 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
                       responseName,
                       htmlwrap,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -341,9 +371,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
             <h3 class="lib-entry-title">Fieldset</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>fieldset</strong>
-              
+              <em>macro</em> <strong>fieldset</strong> 
             </div>
             
             
@@ -353,10 +381,14 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@fieldset title=&quot;&quot;&gt;<br/>        Inner Content<br/>    &lt;/@fieldset&gt;              </div>
+<pre>    &lt;@fieldset title=&quot;&quot;&gt;
+        Inner Content
+    &lt;/@fieldset&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -383,7 +415,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       id,
                       title,
                       class,
@@ -392,11 +424,15 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
                       open,
                       close,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -407,9 +443,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.</p>
             <h3 class="lib-entry-title">Fields</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>fields</strong>
-              
+              <em>macro</em> <strong>fields</strong> 
             </div>
             
             
@@ -423,10 +457,25 @@ or even multiple per fieldset.</p>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@fields&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;<br/><br/>    &lt;@fields type=&quot;default-nolabels&quot;&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;<br/><br/>    &lt;@fields type=&quot;generic&quot; labelArea=false&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;              </div>
+<pre>    &lt;@fields&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@field&gt;
+
+    &lt;@fields type=&quot;default-nolabels&quot;&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@field&gt;
+
+    &lt;@fields type=&quot;generic&quot; labelArea=false&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@field&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">default: default cato field arrangement. this is the type assumed when no @fields element is present.
@@ -544,7 +593,7 @@ or even multiple per fieldset.</p>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       open,
                       close,
@@ -565,11 +614,15 @@ or even multiple per fieldset.</p>
                       ignoreParentField,
                       fieldArgs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -580,9 +633,7 @@ or even multiple per fieldset.</p>
             <h3 class="lib-entry-title">mapCatoFieldTypeToStyleName</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>mapCatoFieldTypeToStyleName</strong>
-              
+              <em>function</em> <strong>mapCatoFieldTypeToStyleName</strong> 
             </div>
             
             
@@ -593,6 +644,11 @@ or even multiple per fieldset.</p>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -603,9 +659,7 @@ or even multiple per fieldset.</p>
             <h3 class="lib-entry-title">mapOfbizFieldTypeToStyleName</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>mapOfbizFieldTypeToStyleName</strong>
-              
+              <em>function</em> <strong>mapOfbizFieldTypeToStyleName</strong> 
             </div>
             
             
@@ -616,6 +670,11 @@ or even multiple per fieldset.</p>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -626,9 +685,7 @@ or even multiple per fieldset.</p>
             <h3 class="lib-entry-title">mapOfbizFieldTypeToCatoFieldType</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>mapOfbizFieldTypeToCatoFieldType</strong>
-              
+              <em>function</em> <strong>mapOfbizFieldTypeToCatoFieldType</strong> 
             </div>
             
             
@@ -639,6 +696,11 @@ or even multiple per fieldset.</p>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -649,9 +711,7 @@ or even multiple per fieldset.</p>
             <h3 class="lib-entry-title">Field</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>field</strong>
-              
+              <em>macro</em> <strong>field</strong> 
             </div>
             
             
@@ -673,10 +733,24 @@ standard markup.</p><p><strong>NOTE:</strong> All @field arg defaults can be ove
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@field attr=&quot;&quot; /&gt; &lt;#- single field using default look -&gt;<br/><br/>    &lt;@fields type=&quot;default&quot;&gt; &lt;#- single field using default look, same as previous -&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@fields&gt;<br/><br/>    &lt;@fields type=&quot;default-nolabels&quot;&gt; &lt;#- specific arrangement needed -&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@fields&gt;<br/><br/>    &lt;@fields type=&quot;default-manual&quot;&gt; &lt;#- use @field as low-level control -&gt;<br/>      &lt;@field attr=&quot;&quot; labelArea=true label=&quot;My Label&quot; /&gt;<br/>    &lt;/@fields&gt;              </div>
+<pre>    &lt;@field attr=&quot;&quot; /&gt; &lt;#- single field using default look -&gt;
+
+    &lt;@fields type=&quot;default&quot;&gt; &lt;#- single field using default look, same as previous -&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@fields&gt;
+
+    &lt;@fields type=&quot;default-nolabels&quot;&gt; &lt;#- specific arrangement needed -&gt;
+      &lt;@field attr=&quot;&quot; /&gt;
+    &lt;/@fields&gt;
+
+    &lt;@fields type=&quot;default-manual&quot;&gt; &lt;#- use @field as low-level control -&gt;
+      &lt;@field attr=&quot;&quot; labelArea=true label=&quot;My Label&quot; /&gt;
+    &lt;/@fields&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">type</td>
@@ -915,7 +989,7 @@ standard markup.</p><p><strong>NOTE:</strong> All @field arg defaults can be ove
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       label,
                       labelDetail,
@@ -1006,16 +1080,28 @@ standard markup.</p><p><strong>NOTE:</strong> All @field arg defaults can be ove
                       events,
                       wrap,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
       </div>
       
-      <hr />
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

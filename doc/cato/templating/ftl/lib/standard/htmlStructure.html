@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,6 +33,7 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>Structural code (grid, tile, etc.) HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlStructure.ftl</em></p>
 <p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
       <li>
 May have implicit dependencies on other parts of Cato API.      </li>
@@ -50,9 +56,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Container</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>container</strong>
-              
+              <em>macro</em> <strong>container</strong> 
             </div>
             
             
@@ -66,6 +70,7 @@ to this one.</p>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -79,11 +84,12 @@ to this one.</p>              </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">attribs/inlineAttribs</td>
-                        <td class="entry-paramdesc">other attributes for div; attribs map needed for attribs with dashes in names.<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                        <td class="entry-paramdesc">other attributes for div; attribs map needed for attribs with dashes in names.
+<strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       class,
                       id,
                       open,
@@ -91,11 +97,15 @@ to this one.</p>              </div>
                       elem,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -106,9 +116,7 @@ to this one.</p>              </div>
             <h3 class="lib-entry-title">Row</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>row</strong>
-              
+              <em>macro</em> <strong>row</strong> 
             </div>
             
             
@@ -118,10 +126,14 @@ to this one.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage examples</h4>
-&lt;@row attr=&quot;&quot; &gt;<br/>        &lt;@cell attr=&quot;&quot;/&gt;<br/>    &lt;/@row&gt;              </div>
+<pre>    &lt;@row attr=&quot;&quot; &gt;
+        &lt;@cell attr=&quot;&quot;/&gt;
+    &lt;/@row&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -139,7 +151,7 @@ to this one.</p>              </div>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       class,
                       id,
                       collapse,
@@ -149,11 +161,15 @@ to this one.</p>              </div>
                       open,
                       close,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -164,9 +180,7 @@ to this one.</p>              </div>
             <h3 class="lib-entry-title">Cell</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>cell</strong>
-              
+              <em>macro</em> <strong>cell</strong> 
             </div>
             
             
@@ -176,10 +190,34 @@ to this one.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage examples</h4>
-&lt;@row attr=&quot;&quot; &gt;<br/>        &lt;@cell attr=&quot;&quot;&gt;<br/>            cell content goes in here!<br/>        &lt;/@cell&gt;<br/>    &lt;/@row&gt;<br/><br/>    &lt;@row&gt;<br/>        &lt;@cell&gt;<br/>            cell content goes in here!<br/>        &lt;/@cell&gt;<br/>    &lt;/@row&gt;<br/><br/>    &lt;@row&gt;<br/>        &lt;@cell columns=3&gt;<br/>            cell content goes in here!<br/>        &lt;/@cell&gt;<br/>    &lt;/@row&gt;<br/><br/>    &lt;@row&gt;<br/>        &lt;@cell columns=3 small=2 class=&quot;+my-cell&quot;&gt;<br/>            cell content goes in here!<br/>        &lt;/@cell&gt;<br/>    &lt;/@row&gt;              </div>
+<pre>    &lt;@row attr=&quot;&quot; &gt;
+        &lt;@cell attr=&quot;&quot;&gt;
+            cell content goes in here!
+        &lt;/@cell&gt;
+    &lt;/@row&gt;
+
+    &lt;@row&gt;
+        &lt;@cell&gt;
+            cell content goes in here!
+        &lt;/@cell&gt;
+    &lt;/@row&gt;
+
+    &lt;@row&gt;
+        &lt;@cell columns=3&gt;
+            cell content goes in here!
+        &lt;/@cell&gt;
+    &lt;/@row&gt;
+
+    &lt;@row&gt;
+        &lt;@cell columns=3 small=2 class=&quot;+my-cell&quot;&gt;
+            cell content goes in here!
+        &lt;/@cell&gt;
+    &lt;/@row&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -221,11 +259,12 @@ to this one.</p>              </div>
                       </tr>
                       <tr>
                         <td class="entry-paramname">last</td>
-                        <td class="entry-paramdesc">((boolean)) If true indicates last cell in row<br/><strong>NOTE:</strong> This is often optional in CSS frameworks; affects float alignment.</td>
+                        <td class="entry-paramdesc">((boolean)) If true indicates last cell in row
+<strong>NOTE:</strong> This is often optional in CSS frameworks; affects float alignment.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       columns,
                       small,
                       medium,
@@ -242,11 +281,15 @@ to this one.</p>              </div>
                       open,
                       close,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -257,9 +300,7 @@ to this one.</p>              </div>
             <h3 class="lib-entry-title">parseContainerSizesFromStyleStr</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>parseContainerSizesFromStyleStr</strong>
-              
+              <em>function</em> <strong>parseContainerSizesFromStyleStr</strong> 
             </div>
             
             
@@ -268,12 +309,17 @@ to this one.</p>              </div>
 <h4>Container size method overrides</h4><p>These provide framework-/theme-specific overriding implementations of the placeholder functions of the
 saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOTE:</strong> implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
     same.
-<strong>NOTE:</strong> catchArgs... is in case of interface changes. Not used.</p><p><strong>DEV <strong>NOTE:</strong></strong> <strong>TODO:</strong> these should be general enough to work for both foundation and bootstrap, but
-    should be confirmed...</p><p>TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.</p>              </div>
+<strong>NOTE:</strong> catchArgs... is in case of interface changes. Not used.</p><p><strong>DEV NOTE:</strong> <strong>TODO:</strong> these should be general enough to work for both foundation and bootstrap, but
+    should be confirmed...</p><p><strong>TODO?:</strong> these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.</p>              </div>
             
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -284,9 +330,7 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
             <h3 class="lib-entry-title">evalAbsContainerSizeFactors</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>evalAbsContainerSizeFactors</strong>
-              
+              <em>function</em> <strong>evalAbsContainerSizeFactors</strong> 
             </div>
             
             
@@ -298,6 +342,11 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -308,9 +357,7 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
             <h3 class="lib-entry-title">Grid List</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>grid</strong>
-              
+              <em>macro</em> <strong>grid</strong> 
             </div>
             
             
@@ -320,10 +367,14 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@grid&gt;<br/>        &lt;li&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/li&gt;<br/>    &lt;/@grid&gt;              </div>
+<pre>    &lt;@grid&gt;
+        &lt;li&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/li&gt;
+    &lt;/@grid&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -341,22 +392,29 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
                       </tr>
                       <tr>
                         <td class="entry-paramname">tilesType</td>
-                        <td class="entry-paramdesc">Default tiles type for tiles inside this element<br/>This same value is used as default for the @tile macro &quot;type&quot; attrib.<br/>However, in addition, type when specified here may also influence tile arrangement.<br/>See @tile macro &quot;type&quot; attrib for possible values.</td>
+                        <td class="entry-paramdesc">Default tiles type for tiles inside this element
+This same value is used as default for the @tile macro &quot;type&quot; attrib.
+However, in addition, type when specified here may also influence tile arrangement.
+See @tile macro &quot;type&quot; attrib for possible values.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       tilesType,
                       class,
                       columns,
                       id,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -367,9 +425,7 @@ saveCurrentContainerSizes and related utilities lib functions.</p><p><strong>NOT
             <h3 class="lib-entry-title">Tile</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tile</strong>
-              
+              <em>macro</em> <strong>tile</strong> 
             </div>
             
             
@@ -380,10 +436,14 @@ It is loosely based on http://metroui.org.ua/tiles.html</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@tile size=&quot;small&quot;&gt;<br/>       // content<br/>    &lt;/@tile&gt;              </div>
+<pre>    &lt;@tile size=&quot;small&quot;&gt;
+       // content
+    &lt;/@tile&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as &quot;tile_xxx&quot; where xxx is type).
@@ -466,11 +526,12 @@ It is loosely based on http://metroui.org.ua/tiles.html</p>              </div>
                         slide-up: this is currently the default.
                       Type style is looked up as: styles[&quot;type_overlay_&quot; + overlayType?replace(&quot;-&quot;,&quot;_&quot;)].
     overlayBgColor</td>
-                        <td class="entry-paramdesc">(none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: 0).<br/>                      none: prevents color class.</td>
+                        <td class="entry-paramdesc">(none|0|1|2|3|4|5|6|7|...) (default: -from global styles-) (fallback default: 0).
+                      none: prevents color class.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       size,
                       title,
@@ -488,11 +549,15 @@ It is loosely based on http://metroui.org.ua/tiles.html</p>              </div>
                       overlayType,
                       overlayBgColor,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -503,23 +568,25 @@ It is loosely based on http://metroui.org.ua/tiles.html</p>              </div>
             <h3 class="lib-entry-title">Section</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>section</strong>
-              
+              <em>macro</em> <strong>section</strong> 
             </div>
             
             
               <div class="lib-entry-desc">
                   <p class="lib-entry-shortdesc">Creates a logical section with optional title and menu.</p>
 <p>Automatically handles heading sizes and keeps track of section nesting for the whole rendering request, even across screens.render calls.</p><p><strong>NOTE:</strong> Use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
-levels manually, but most often should let @section menu handle them level calculations.</p><p><strong>IMPL <strong>NOTE:</strong></strong> This has dependencies on some non-structural macros.</p>              </div>
+levels manually, but most often should let @section menu handle them level calculations.</p><p><strong>IMPL NOTE:</strong> This has dependencies on some non-structural macros.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@section attr=&quot;&quot;&gt;<br/>        Inner Content<br/>    &lt;/@section&gt;              </div>
+<pre>    &lt;@section attr=&quot;&quot;&gt;
+        Inner Content
+    &lt;/@section&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">class</td>
@@ -621,11 +688,13 @@ levels manually, but most often should let @section menu handle them level calcu
                       </tr>
                       <tr>
                         <td class="entry-paramname">hasContent</td>
-                        <td class="entry-paramdesc">boolean (default: true) Optional content hint;<br/>when false, will add classes to indicate content is empty or treat as logically empty<br/>(workaround for lack of CSS :blank and possibly other browser limitations)</td>
+                        <td class="entry-paramdesc">boolean (default: true) Optional content hint;
+when false, will add classes to indicate content is empty or treat as logically empty
+(workaround for lack of CSS :blank and possibly other browser limitations)</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       id,
                       title,
@@ -646,16 +715,28 @@ levels manually, but most often should let @section menu handle them level calcu
                       open,
                       close,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
       </div>
       
-      <hr />
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

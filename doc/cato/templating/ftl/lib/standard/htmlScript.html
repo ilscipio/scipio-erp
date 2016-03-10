@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,12 +33,13 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>HTML document markup and script HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlScript.ftl</em></p>
 <p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
       <li>
 May have implicit dependencies on other parts of Cato API.      </li>
   </ul>
 </div>
-    <div><strong>DEV <strong>NOTES:</strong></strong>  <ul>
+    <div><strong>DEV NOTES:</strong>  <ul>
       <li>
 This currently contains some theme- and platform-specific utilites... could have own file, but
 this is somewhat generic.      </li>
@@ -56,32 +62,36 @@ this is somewhat generic.      </li>
             <h3 class="lib-entry-title">HTML Head Open</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>htmlHeadOpen</strong>
-              
+              <em>macro</em> <strong>htmlHeadOpen</strong> 
             </div>
             
             
               <div class="lib-entry-desc">
                   <p class="lib-entry-shortdesc">Opens an HTML document and header section.</p>
-<p><strong>IMPL <strong>NOTE:</strong></strong> Beware of whitespace.</p>              </div>
+<p><strong>IMPL NOTE:</strong> Beware of whitespace.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@htmlHeadOpen /&gt;              </div>
+<pre>    &lt;@htmlHeadOpen /&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       includeDocType,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -92,9 +102,7 @@ this is somewhat generic.      </li>
             <h3 class="lib-entry-title">Scripts</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>scripts</strong>
-              
+              <em>macro</em> <strong>scripts</strong> 
             </div>
             
             
@@ -104,23 +112,40 @@ this is somewhat generic.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@scripts output=true&gt; &lt;#- guarantees the @script calls will output content to page at this location -&gt;<br/>      &lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Page loaded.&quot;);<br/>        });<br/>      &lt;/@script&gt;<br/>      &lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Test.&quot;);<br/>        });<br/>      &lt;/@script&gt;<br/>    &lt;/@scripts&gt;              </div>
+<pre>    &lt;@scripts output=true&gt; &lt;#- guarantees the @script calls will output content to page at this location -&gt;
+      &lt;@script&gt;
+        jQuery(document).ready(function() {
+            alert(&quot;Page loaded.&quot;);
+        });
+      &lt;/@script&gt;
+      &lt;@script&gt;
+        jQuery(document).ready(function() {
+            alert(&quot;Test.&quot;);
+        });
+      &lt;/@script&gt;
+    &lt;/@scripts&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       scriptType,
                       output,
                       htmlwrap,
                       cdata,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -131,22 +156,26 @@ this is somewhat generic.      </li>
             <h3 class="lib-entry-title">Script</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>script</strong>
-              
+              <em>macro</em> <strong>script</strong> 
             </div>
             
             
               <div class="lib-entry-desc">
                   <p class="lib-entry-shortdesc">Inline script wrapper. By default, makes a javascript block.</p>
-<p><strong>NOTE:</strong> Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).</p><p><strong>DEV <strong>NOTE:</strong></strong> In future, could be used to collect scripts for inclusion at end of page.</p>              </div>
+<p><strong>NOTE:</strong> Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).</p><p><strong>DEV NOTE:</strong> In future, could be used to collect scripts for inclusion at end of page.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Page loaded.&quot;);<br/>        });<br/>    &lt;/@script&gt;              </div>
+<pre>    &lt;@script&gt;
+        jQuery(document).ready(function() {
+            alert(&quot;Page loaded.&quot;);
+        });
+    &lt;/@script&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">src</td>
@@ -174,18 +203,22 @@ this is somewhat generic.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       src,
                       output,
                       htmlwrap,
                       cdata,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -196,9 +229,7 @@ this is somewhat generic.      </li>
             <h3 class="lib-entry-title">requireScriptOfbizUrl</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>requireScriptOfbizUrl</strong>
-              
+              <em>macro</em> <strong>requireScriptOfbizUrl</strong> 
             </div>
             
             
@@ -207,13 +238,14 @@ this is somewhat generic.      </li>
 code.</p>
 <p>Normally the getOfbizUrl(url) Javascript function will be used to do this.</p><p>The screen/ftl has to communicate to the decorator which URIs it needs to use, so
 this is one such mechanism
-<strong>DEV <strong>NOTE:</strong></strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
+<strong>DEV NOTE:</strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can&#39;t predict URL patterns unless rewrite
 @ofbizUrl in JS.</p>              </div>
             
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">output</td>
@@ -228,15 +260,19 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       uri,
                       htmlwrap,
                       output
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -247,9 +283,7 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
             <h3 class="lib-entry-title">commonElemEventAttribStr</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>commonElemEventAttribStr</strong>
-              
+              <em>macro</em> <strong>commonElemEventAttribStr</strong> 
             </div>
             
             
@@ -261,15 +295,20 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       events
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -280,9 +319,7 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
             <h3 class="lib-entry-title">commonElemAttribStr</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>commonElemAttribStr</strong>
-              
+              <em>macro</em> <strong>commonElemAttribStr</strong> 
             </div>
             
             
@@ -294,6 +331,7 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">it may contain two special members: localArgNames and allArgNames. both should be lists.
@@ -310,7 +348,7 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       attribs,
                       includeEmpty,
                       emptyValToken,
@@ -322,16 +360,28 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                       attribNamePrefixStrip,
                       attribNameSubstitutes,
                       camelCaseToDashLowerNames
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
       </div>
       
-      <hr />
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

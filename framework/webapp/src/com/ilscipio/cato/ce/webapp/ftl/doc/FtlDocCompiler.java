@@ -283,10 +283,14 @@ public class FtlDocCompiler {
             // get file name only 
             String libTopName = srcFile.getName();
             dataModel.put("libTopName", replaceExtension(libTopName, ""));
-            
+            dataModel.put("libFilename", getLibFilename());
             dataModel.put("libFormat", getLibFormat());
             dataModel.put("libName", getLibName());
             dataModel.put("libDocPath", getLibDocPath());
+        }
+        
+        public String getLibFilename() {
+            return libFilename;
         }
         
         public String getLibName() {
@@ -431,7 +435,7 @@ public class FtlDocCompiler {
         // These must all test for space and newline at beginning
         private final Pattern commentedEntryPostPat = Pattern.compile(
                 "^\\s*" +
-                "<#--\\s*(.*?)\\s*" + // NOTE: crazy look-ahead needed
+                "<#--\\s*([^\\n]*?)\\s*" + // NOTE: crazy look-ahead needed
                 "(<#[^-].*?)" +
                 "\\s*-->"
                 , Pattern.DOTALL);
@@ -491,36 +495,36 @@ public class FtlDocCompiler {
             info.put("isDeprecated", Boolean.FALSE);
             
             if (commentedImplComment != null) {
-                if (commentedImplComment.matches(".*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)TRANSFORM.*")) {
+                if (commentedImplComment.matches("(?s).*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)?TRANSFORM.*")) {
                     info.put("isTransform", Boolean.TRUE);
                 }
-                if (commentedImplComment.matches(".*NOT\\s+IMPLEMENTED.*")) {
+                if (commentedImplComment.matches("(?s).*NOT\\s+IMPLEMENTED.*")) {
                     info.put("isImplemented", Boolean.FALSE);
                 }
-                if (commentedImplComment.matches(".*DEPRECATED.*")) {
+                if (commentedImplComment.matches("(?s).*DEPRECATED.*")) {
                     info.put("isDeprecated", Boolean.TRUE);
                 }
             }
             
             String shortDesc = (String) info.get("shortDesc");
             if (shortDesc != null) {
-                if (shortDesc.matches(".*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)TRANSFORM.*")) {
+                if (shortDesc.matches("(?s).*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)?TRANSFORM.*")) {
                     info.put("isTransform", Boolean.TRUE);
                 }
-                if (shortDesc.matches(".*NOT\\s+IMPLEMENTED.*")) {
+                if (shortDesc.matches("(?s).*NOT\\s+IMPLEMENTED.*")) {
                     info.put("isImplemented", Boolean.FALSE);
                 }
-                if (shortDesc.matches(".*DEPRECATED.*")) {
+                if (shortDesc.matches("(?s).*DEPRECATED.*")) {
                     info.put("isDeprecated", Boolean.TRUE);
                 }
             }
         }
         
         private final Pattern entryBodySectionsPat = Pattern.compile(
-                "(?:^|\\n)\\s{1,4}[*]\\s+([^\\n]*?)\\s+[*]\\n"
+                "(?:^|\\n)[^\\S\\n]{1,4}[*][^\\S\\n]+([^\\n]*?)[^\\S\\n]+[*]\\n"
                 , Pattern.DOTALL);
         private final Pattern parameterPat = Pattern.compile(
-                "(?:^|\\n)\\s{1,8}([^=]+?)\\s*=\\s*?"
+                "(?:^|\\n)[^\\S\\n]{1,8}([^=]+?)[^\\S\\n]*=[^\\S\\n]*?"
                 , Pattern.DOTALL);
     
         protected Map<String, Object> parseEntryBody(CharSequence text) throws ParseException {
@@ -535,13 +539,13 @@ public class FtlDocCompiler {
             
             while(secm.find()) {
                 CharSequence lastSecText = text.subSequence(lastEndIndex, secm.start());
-                secTitleMap.put(lastSecTitle, tmplHelper.cleanTextValue(lastSecText.toString()));
+                secTitleMap.put(lastSecTitle, lastSecText.toString());
                 
                 lastSecTitle = tmplHelper.cleanTextValue(secm.group(1));
                 lastEndIndex = secm.end();
             }
             
-            secTitleMap.put(lastSecTitle, tmplHelper.cleanTextValue(text.subSequence(lastEndIndex, text.length()).toString()));
+            secTitleMap.put(lastSecTitle, text.subSequence(lastEndIndex, text.length()).toString());
            
             Map<String, Map<String, Object>> entrySections = new LinkedHashMap<>();
             
@@ -550,10 +554,13 @@ public class FtlDocCompiler {
             for(Map.Entry<String, String> entry : secTitleMap.entrySet()) {
                 String secTitle = entry.getKey();
                 String secText = entry.getValue();
+                String rawSecText = tmplHelper.cleanTextValueNoTrim(secText);
+                secText = tmplHelper.cleanTextValue(secText);
                 
                 Map<String, Object> secInfo = new LinkedHashMap<>();
                 secInfo.put("title", secTitle);
                 secInfo.put("text", secText);
+                secInfo.put("rawText", rawSecText);
                 
                 String secName;
                 if (secTitle.matches("(?i)Main Description")) {
@@ -561,8 +568,12 @@ public class FtlDocCompiler {
                     // First sentence is the short desc
                     Matcher shortdescm = tmplHelper.getFirstLineMatcher(secText);
                     if (shortdescm.matches()) {
-                        secInfo.put("shortDesc", tmplHelper.cleanTextValue(shortdescm.group(1)));
-                        secInfo.put("extraDesc", tmplHelper.cleanTextValue(shortdescm.group(2)));
+                        String shortDesc = tmplHelper.cleanTextValue(shortdescm.group(1));
+                        String extraDesc = tmplHelper.cleanTextValue(shortdescm.group(2));
+                        secInfo.put("shortDesc", shortDesc);
+                        secInfo.put("extraDesc", extraDesc);
+                        info.put("shortDesc", shortDesc);
+                        info.put("extraDesc", extraDesc);
                     }
                     else {
                         throw new ParseException("There is no short description for the entry. "
@@ -571,9 +582,12 @@ public class FtlDocCompiler {
                 }
                 else if (secTitle.matches("(?i)Usage\\s+examples?")) {
                     secName = "examples";
+                    info.put("exampleText", rawSecText);
                 }
                 else if (secTitle.matches("(?i)Parameters")) {
                     secName = "parameters";
+                    
+                    // FIXME: !!! FORGOT THAT PARAMETERS HAVE EXTRA SUB-HEADERS TO COMPLICATE THINGS !!!
                     
                     Map<String, String> parameters = new LinkedHashMap<>();
                     
@@ -601,14 +615,17 @@ public class FtlDocCompiler {
                     }
                     
                     secInfo.put("parameters", parameters);
+                    info.put("parameters", parameters);
                 }
                 else if (secTitle.matches("(?i)Return\\s+values?")) {
                     secName = "returnValues";
+                    info.put("returnValueText", secText);
                 }
                 else if (secTitle.matches("(?i)Related?")) {
                     secName = "related";
                     String[] relatedNames = secText.split("\\s+");
                     secInfo.put("relatedNames", relatedNames);
+                    info.put("relatedNames", relatedNames);
                 }
                 else {
                     // Unknown, can include anyway
@@ -655,6 +672,8 @@ public class FtlDocCompiler {
                     // override arguments with special ones from #assign
                     info.put("argStr", tmplHelper.cleanTextValue(m.group(2)));
                     info.put("argList", parseMapArgString(tmplHelper.cleanTextValue(m.group(2))));
+                    
+                    info.put("isAdvancedArgs", Boolean.TRUE);
                 }
                 else {
                     msgHandler.printDebug(" is regular var");
@@ -665,9 +684,10 @@ public class FtlDocCompiler {
                 return info;
             }
             else {
-                Map<String, Object> functionMacroInfo = parseFunctionMacroInfo(text);
-                if (functionMacroInfo != null) {
-                    return functionMacroInfo;
+                Map<String, Object> info = parseFunctionMacroInfo(text);
+                if (info != null) {
+                    info.put("isAdvancedArgs", Boolean.FALSE);
+                    return info;
                 }
                 else {
                     return null;
@@ -900,7 +920,7 @@ public class FtlDocCompiler {
         }
         
         private final Pattern firstLinePat = Pattern.compile(
-                "^\\s*(.*?)(?:\\n\\s*\\n(.*)$|[\\s\\n]*?$)"
+                "^\\s*(.*?)(?:\\n\\n(.*)|[\\s\\n]*?)$"
                 , Pattern.DOTALL);
         
         public Matcher getFirstLineMatcher(String text) {
@@ -933,6 +953,16 @@ public class FtlDocCompiler {
             if (text != null) {
                 // trim and remove all trailing whitespace
                 return text.trim().replaceAll("[^\\S\\n]+(\\n)", "$1");
+            }
+            else {
+                return text;
+            }
+        }
+        
+        public String cleanTextValueNoTrim(String text) {
+            if (text != null) {
+                // remove all trailing whitespace
+                return text.replaceAll("[^\\S\\n]+(\\n)", "$1");
             }
             else {
                 return text;

@@ -321,14 +321,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                       or not possible to know in advance, in which case caller must specify this flag.
                       Currently this affects the following:
                         * responsive tables
-    autoAltRows     = defaults specified in styles hash, but otherwise false
-    firstRowAlt     = default false
+    autoAltRows     = (default: -from global styles-) (fallback default: false)
+    firstRowAlt     = (default: false)
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
     open/close      = advanced structure control, for esoteric cases
-    attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
-    [inlineAttribs...]    = other legacy <table attributes and values, inlined
+    attribs         = hash of other legacy <table> attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <table> attributes and values, inlined
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
     
     * Responsive Tables *
@@ -902,8 +902,7 @@ Defines a table body cell. Analogous to <td> HTML element.
 * Table Row Class Attribute String
 ************
 Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
-
-DEPRECATED: use @table, @tr macros instead.
+DEPRECATED: use @table, @tr macros instead. 
 
   * Usage Example *  
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
@@ -941,7 +940,7 @@ Creates a pricing table wrapper.
 Since this is very foundation specific, this function may be dropped in future installations.
 
   * Usage Example *  
-    <@pul >
+    <@pul>
         <@pli>Text or <a href="">Anchor</a></@pli>
     </@pul>            
                     

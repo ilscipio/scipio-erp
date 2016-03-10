@@ -31,6 +31,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -65,34 +70,26 @@ table.entry-parameters td.entry-paramname {
   </#if>
 </#macro>
 
-<#function highlightKeyWords text>
-  <#-- TODO: less horrible version. most of these need better formatting too. -->
-  <#return text
-    ?replace("WARN:", "<strong>WARN:</strong>")
-    ?replace("TODO:", "<strong>TODO:</strong>")
-    ?replace("WARNING:", "<strong>WARNING:</strong>")
-    ?replace("DEV NOTE:", "<strong>DEV NOTE:</strong>")
-    ?replace("DEV NOTES:", "<strong>DEV NOTES:</strong>")
-    ?replace("IMPL NOTE:", "<strong>IMPL NOTE:</strong>")
-    ?replace("IMPL NOTES:", "<strong>IMPL NOTES:</strong>")
-    ?replace("IMPLEMENTATION NOTES:", "<strong>IMPLEMENTATION NOTES:</strong>")
-    ?replace("NOTE:", "<strong>NOTE:</strong>")
-    ?replace("NOTES:", "<strong>NOTES:</strong>")
-    >
+<#-- NOTE: some of these should be stripped completely, can't do it from here -->
+<#assign keyIntroWords = ["WARN", "WARNING", "TODO", "TODO\\?", "FIXME", "FIXME\\?", "DEV NOTE", "DEV NOTES", 
+ "IMPL NOTE", "IMPL NOTES", "IMPLEMENTATION NOTES", "NOTE", "NOTES"]>
+<#assign keyIntroWordsStr = keyIntroWords?join("|")>
+<#function decorateText text>
+  <#return text?replace("("+keyIntroWordsStr+"):", "<strong>$1:</strong>", 'r')>
 </#function>
 
 <#macro preformedText text>
-  ${highlightKeyWords(text?html)?replace("\n", "<br/>")}<#t>
+  <pre>${decorateText(text?html)}</pre><#t><#-- ?replace("\n", "<br/>") -->
 </#macro>
 
 <#-- For titles and short labels -->
 <#macro labelText text>
-  ${highlightKeyWords(text?html)}<#t>
+  ${decorateText(text?html)}<#t>
 </#macro>
 
 <#-- For longer descriptions -->
 <#macro descText text>
-  ${highlightKeyWords(text?html)}<#t>
+  ${decorateText(text?html)}<#t>
 </#macro>
 
 
@@ -114,6 +111,9 @@ table.entry-parameters td.entry-paramname {
       <#if pageTitle?has_content>
         <h1><@labelText text=pageTitle /></h1>
       </#if>
+      <#if libFilename?has_content>
+        <p><em>${libFilename}</em></p>
+      </#if>
       <#if pageDesc?has_content>
         <#list tmplHelper.splitToParagraphs(pageDesc) as paragraph>
           <@descEntryContent text=paragraph />
@@ -126,10 +126,10 @@ table.entry-parameters td.entry-paramname {
       <strong>Sections</strong>
       <ul>
         <#list sectionMap?keys as sectionName> 
-          <#assign sectionInfo = sectionMap[sectionName]>
-          <#if sectionInfo.entryMap?has_content>
+          <#assign section = sectionMap[sectionName]>
+          <#if section.entryMap?has_content>
             <li><a href="#section-${sectionName}"><#rt>
-                <#if sectionInfo.title?has_content><@labelText text=sectionInfo.title /><#t>
+                <#if section.title?has_content><@labelText text=section.title /><#t>
                 <#elseif sectionName == "default"><@labelText text="MAIN" /><#t>
                 <#else><@labelText text=sectionName /></#if><#t>
                 </a></li><#lt>
@@ -142,27 +142,27 @@ table.entry-parameters td.entry-paramname {
     <#-- NOTE: there is a global entryMap, and each section also has its own entryMap -->
 
   <#list sectionMap?keys as sectionName> 
-    <#assign sectionInfo = sectionMap[sectionName]>
-    <#if sectionInfo.entryMap?has_content>
+    <#assign section = sectionMap[sectionName]>
+    <#if section.entryMap?has_content>
 
-    <#if sectionInfo.title?has_content>
+    <#if section.title?has_content>
       <hr />  
     </#if>
 
       <a name="section-${sectionName?html}"></a>
       <div class="lib-section">
-        <#if sectionInfo.title?has_content> <#-- NOTE: default section has no title -->
-          <h2 class="lib-section-title"><@labelText text=sectionInfo.title /></h2>
+        <#if section.title?has_content> <#-- NOTE: default section has no title -->
+          <h2 class="lib-section-title"><@labelText text=section.title /></h2>
         </#if>
     
-        <#list sectionInfo.entryMap?keys as entryName>
-          <#assign entryInfo = sectionInfo.entryMap[entryName]>
-          <#if entryInfo.isImplemented>
+        <#list section.entryMap?keys as entryName>
+          <#assign entry = section.entryMap[entryName]>
+          <#if entry.isImplemented>
           
           <hr />
           <a name="entry-${entryName?html}"></a>
           <div class="lib-entry">
-            <#assign entryTitle = entryInfo.title!"">
+            <#assign entryTitle = entry.title!"">
             <#if !entryTitle?has_content>
               <#assign entryTitle = entryName>
             </#if>
@@ -170,12 +170,10 @@ table.entry-parameters td.entry-paramname {
             <h3 class="lib-entry-title"><@labelText text=entryTitle /></h3>
             
             <div class="lib-entry-formal">
-              <#if entryInfo.isDeprecated><strong>DEPRECATED.</strong><br/></#if>
-              <em>${(entryInfo.type!"")?html}</em> <strong>${entryName?html}</strong>
-              <#if entryInfo.isTransform><br/><em>Implemented as transform.</strong></#if>
+              <em>${(entry.type!"")?html}</em> <strong>${entryName?html}</strong><#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if> 
             </div>
             
-            <#assign entrySections = entryInfo.sections>
+            <#assign entrySections = entry.sections>
             
             <#if entrySections.mainDesc??>
               <div class="lib-entry-desc">
@@ -193,21 +191,21 @@ table.entry-parameters td.entry-paramname {
             <#if entrySections.examples??>
               <div class="lib-entry-examples">
                 <h4><@labelText text=entrySections.examples.title!"" /></h4>
-                <@preformedText text=entrySections.examples.text!"" />
+                <@preformedText text=entry.exampleText!"" />
               </div>
             </#if>
             
             <#if entrySections.parameters??>
               <div class="lib-entry-params">
                 <h4><@labelText text=entrySections.parameters.title!"" /></h4>
-                <#if entrySections.parameters.parameters?has_content>
+                NOTE: doc parameter parsing is broken<br/>
+                <#if entry.parameters?has_content>
                   <table class="entry-parameters">
-                    <#list entrySections.parameters.parameters?keys as paramName>
-                      <#assign paramText = entrySections.parameters.parameters[paramName]!"">
+                    <#list entry.parameters?keys as paramName>
+                      <#assign paramText = entry.parameters[paramName]!"">
                       <tr>
                         <td class="entry-paramname">${paramName?html}</td>
-                        <#-- FIXME: @preformedText is not appropriate -->
-                        <td class="entry-paramdesc"><@preformedText text=paramText /></td>
+                        <td class="entry-paramdesc"><@descText text=paramText /></td>
                       </tr>
                     </#list>
                   </table>
@@ -215,16 +213,15 @@ table.entry-parameters td.entry-paramname {
                   <span>(no parameters)</span>
                 </#if>
 
-                <#if entryInfo.argList??>
-                  <p><em>All programmed parameters:
-                  <#if entryInfo.argList?has_content>
-                    <#list entryInfo.argList as argName>
+                <#if entry.argList??>
+                  <p><em>All programmed parameters:</em>
+                  <#if entry.argList?has_content>
+                    <#list entry.argList as argName>
                       ${argName?html}<#if argName_has_next>,</#if>
                     </#list>
                   <#else>
                     (none)
                   </#if>
-                  </em>
                 </#if>
                 </p>
               </div>
@@ -233,29 +230,43 @@ table.entry-parameters td.entry-paramname {
             <#if entrySections.returnValues??>
               <div class="lib-entry-return">
                 <h4><@labelText text=entrySections.returnValues.title!"" /></h4>
-                <@preformedText text=entrySections.returnValues.text!"" />
+                <@descText text=entrySections.returnValues.text!"" />
               </div>
             </#if>
             
             <#if entrySections.related??>
               <div class="lib-entry-related">
                  <h4><@labelText text=entrySections.related.title!"" /></h4>
+                 NOTE: doc related is broken<br/>
                  <p>
-                 <#list entrySections.related.relatedNames![] as name>
+                 <#list entry.relatedNames![] as name>
                    <@entryRef name=name /><#if name_has_next>,</#if>
                  </#list>
                  </p>
               </div>       
             </#if>     
+            
+            <div class="lib-entry-details">
+              <#if entry.isTransform><span class="lib-entry-detail">Implemented as transform.</span></#if>
+              <#if entry.isAdvancedArgs!false><span class="lib-entry-detail">Supports advanced arguments interface.</span></#if>
+            </div>
           </div>
           
           </#if>
         </#list>
       </div>
       
-      <hr />
     </#if>
   </#list>
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-${.now?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 <#else>

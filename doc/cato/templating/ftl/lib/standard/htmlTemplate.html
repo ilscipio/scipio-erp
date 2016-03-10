@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,6 +33,7 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>Master HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlTemplate.ftl</em></p>
 <p>A set of HTML templating macros, part of standard Cato Freemarker API.
 Automatically included at all times, unless overridden by properties or themes.
 Intended to be swappable.
@@ -41,12 +47,12 @@ Functions in Freemarker only support positional arguments, but some Cato functio
 an &quot;args&quot; argument as a map, which emulates named arguments.      </li>
   </ul>
 </div>
-    <div><strong>IMPLEMENTATION <strong>NOTES:</strong></strong>  <ul>
+    <div><strong>IMPLEMENTATION NOTES:</strong>  <ul>
       <li>
 Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.      </li>
   </ul>
 </div>
-    <div><strong>DEV <strong>NOTES:</strong></strong>  <ul>
+    <div><strong>DEV NOTES:</strong>  <ul>
       <li>
 <strong>WARNING:</strong> BE CAREFUL WITH FORMATTING, documentation will be interpreted by a parser.  <ul>
       <li>
@@ -57,7 +63,7 @@ The number of star characters (*) is significant!      </li>
 Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 Even though it would be convenient, we can&#39;t allow a &quot;attribString&quot; arg because no way
 for macro to get attribs out of it if it needs them, cause problems.
-FIXME: Not all macros currently properly check attribMap for duplicate attribs
+<strong>FIXME:</strong> Not all macros currently properly check attribMap for duplicate attribs
     of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).      </li>
   </ul>
 </div>
@@ -97,7 +103,7 @@ both in args map or inlineArgs, but usually it&#39;s used to emulate HTML with m
 these are not declared in the default argument lists; see individual macro documentation;
 they are equivalent in usage to regular FTL interface macros that take extra attrbs as varargs
 (e.g. &lt;#macro myhtmlmacro (...) inlineAttribs...&gt;).
-<strong>IMPL <strong>NOTE:</strong></strong> Extra attributions are handled by a system that records args names in a &quot;allArgNames&quot; member in
+<strong>IMPL NOTE:</strong> Extra attributions are handled by a system that records args names in a &quot;allArgNames&quot; member in
     the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.      </li>
       <li>
 INTERFACE:
@@ -105,18 +111,18 @@ INTERFACE:
 &lt;#macro macroname args={} inlineArgs...&gt;  <ul>
       <li>
 args: macro args map. map of parameters to pass to the macro. it can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
-  <strong>IMPL <strong>NOTE:</strong></strong> the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </li>
+  <strong>IMPL NOTE:</strong> the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </li>
       <li>
 inlineArgs: macro inline args. map of parameters passed inline to the macro via usual macro call syntax.
   these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
-  <strong>IMPL <strong>NOTE:</strong></strong> the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </li>
+  <strong>IMPL NOTE:</strong> the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </li>
       <li>
 passArgs: pass-through args. map of args that should be passed along the major calls made by this macro or in other words
   passed through the whole call stack. it allows arguments to pass through from the templating-facing macro
   to the internal implementations such as markup macros, similar to a context. this is needed especially to allow theme overrides
   to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
   be careful about using sufficiently unique names.
-  <strong>IMPL <strong>NOTE:</strong></strong> overriding macros should avoid overriding this map; always add new members to it instead.
+  <strong>IMPL NOTE:</strong> overriding macros should avoid overriding this map; always add new members to it instead.
       e.g. &lt;@somemacro passArgs=(passArgs + {&quot;myParam&quot;:&quot;myValue&quot;)&gt;      </li>
   </ul>
       </li>
@@ -158,7 +164,7 @@ catchArgs: catch-all args. simply catches all the parameters the macro doesn&#39
       </li>
   </ul>
 </div>
-<p><strong>DEV <strong>NOTE:</strong></strong> <strong>TODO:</strong> although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
+<p><strong>DEV NOTE:</strong> <strong>TODO:</strong> although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
     and optimization using transforms (see mergeArgMaps and related).</p>    </div>
     
     <div>
@@ -168,6 +174,15 @@ catchArgs: catch-all args. simply catches all the parameters the macro doesn&#39
     </div>
     
 
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

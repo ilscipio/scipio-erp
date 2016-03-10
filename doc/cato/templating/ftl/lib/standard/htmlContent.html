@@ -17,6 +17,11 @@ table.entry-parameters td {
 table.entry-parameters td.entry-paramname {
   width:20%;
 }
+
+.lib-entry-detail {
+  font-style:italic;
+  font-size:0.6em;
+}
     
     
     </style>
@@ -28,6 +33,7 @@ table.entry-parameters td.entry-paramname {
   
     <div>
         <h1>Content element HTML template include, standard Cato markup.</h1>
+        <p><em>standard/htmlContent.ftl</em></p>
 <p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
       <li>
 May have implicit dependencies on other parts of Cato API.      </li>
@@ -50,9 +56,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Heading</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>heading</strong>
-              
+              <em>macro</em> <strong>heading</strong> 
             </div>
             
             
@@ -62,10 +66,12 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@heading&gt;My Title&lt;/@heading&gt;              </div>
+<pre>    &lt;@heading&gt;My Title&lt;/@heading&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">boolean true means use default; false means none (same as &quot;raw&quot;).
@@ -100,7 +106,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                       <tr>
                         <td class="entry-paramname">consumeLevel</td>
-                        <td class="entry-paramdesc">boolean, default currently always false (<strong>DEV <strong>NOTE:</strong></strong> could be made to depend on calculated level).</td>
+                        <td class="entry-paramdesc">boolean, default currently always false (<strong>DEV NOTE:</strong> could be made to depend on calculated level).</td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">if true, the global heading level is set to (calculated level for this heading) + 1.
@@ -122,11 +128,12 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                       <tr>
                         <td class="entry-paramname">[inlineAttribs...]</td>
-                        <td class="entry-paramdesc">other legacy h1-h6 attributes, inlined<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                        <td class="entry-paramdesc">other legacy h1-h6 attributes, inlined
+<strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       elemType,
                       level,
                       relLevel,
@@ -139,11 +146,15 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       containerId,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -154,9 +165,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Code Block</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>code</strong>
-              
+              <em>macro</em> <strong>code</strong> 
             </div>
             
             
@@ -166,20 +175,28 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@code type=&quot;java&quot;&gt;<br/>       // Some java code<br/>    &lt;/@code&gt;              </div>
+<pre>    &lt;@code type=&quot;java&quot;&gt;
+       // Some java code
+    &lt;/@code&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -190,9 +207,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">mapOfbizFormTypeToTableType</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>mapOfbizFormTypeToTableType</strong>
-              
+              <em>function</em> <strong>mapOfbizFormTypeToTableType</strong> 
             </div>
             
             
@@ -203,6 +218,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -213,9 +233,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Responsive Table Script</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tableResponsiveScript</strong>
-              
+              <em>macro</em> <strong>tableResponsiveScript</strong> 
             </div>
             
             
@@ -226,6 +244,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">tableId</td>
@@ -276,7 +295,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       enabled,
                       tableId,
                       tableType,
@@ -289,11 +308,15 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       fixedColumnsRight,
                       htmlwrap,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -304,23 +327,36 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>table</strong>
-              
+              <em>macro</em> <strong>table</strong> 
             </div>
             
             
               <div class="lib-entry-desc">
                   <p class="lib-entry-shortdesc">Defines a table with advanced generating functionality. Analogous to HTML &lt;table&gt; element.</p>
-<p>Required wrapper for all @table sub-element macros.</p><p>TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
+<p>Required wrapper for all @table sub-element macros.</p><p><strong>TODO?:</strong> @table macros were made before push/popRequestStack was fully realized, so may be
     overcomplicated at the moment.</p>              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@table type=&quot;data-list&quot; id=&quot;my-table&quot;&gt;<br/>      &lt;@thead&gt;<br/>        &lt;@tr&gt;<br/>          &lt;@th width=&quot;15%&quot;&gt;col 1&lt;/@th&gt;<br/>          &lt;@th width=&quot;85%&quot;&gt;col 2&lt;/@th&gt;<br/>        &lt;/@tr&gt;<br/>      &lt;/@thead&gt;<br/>      &lt;@tbody&gt;<br/>        &lt;@tr class=&quot;my-row-class&quot; valign=&quot;middle&quot;&gt;<br/>          &lt;@td&gt;data value 1&lt;/@td&gt;<br/>          &lt;@td&gt;data value 2&lt;/@td&gt;<br/>        &lt;/@tr&gt;<br/>      &lt;/@tbody&gt;<br/>    &lt;/@table&gt;              </div>
+<pre>    &lt;@table type=&quot;data-list&quot; id=&quot;my-table&quot;&gt;
+      &lt;@thead&gt;
+        &lt;@tr&gt;
+          &lt;@th width=&quot;15%&quot;&gt;col 1&lt;/@th&gt;
+          &lt;@th width=&quot;85%&quot;&gt;col 2&lt;/@th&gt;
+        &lt;/@tr&gt;
+      &lt;/@thead&gt;
+      &lt;@tbody&gt;
+        &lt;@tr class=&quot;my-row-class&quot; valign=&quot;middle&quot;&gt;
+          &lt;@td&gt;data value 1&lt;/@td&gt;
+          &lt;@td&gt;data value 2&lt;/@td&gt;
+        &lt;/@tr&gt;
+      &lt;/@tbody&gt;
+    &lt;/@table&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">type</td>
@@ -381,11 +417,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       Currently this affects the following:
                         * responsive tables
     autoAltRows</td>
-                        <td class="entry-paramdesc">defaults specified in styles hash, but otherwise false</td>
+                        <td class="entry-paramdesc">(default: -from global styles-) (fallback default: false)</td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">firstRowAlt</td>
-                        <td class="entry-paramdesc">default false</td>
+                        <td class="entry-paramdesc">(default: false)</td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">inheritAltRows</td>
@@ -405,15 +441,16 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                       <tr>
                         <td class="entry-paramname">attribs</td>
-                        <td class="entry-paramdesc">hash of other legacy &lt;table attributes (mainly for those with dash in name)</td>
+                        <td class="entry-paramdesc">hash of other legacy &lt;table&gt; attributes (mainly for those with dash in name)</td>
                       </tr>
                       <tr>
                         <td class="entry-paramname">[inlineAttribs...]</td>
-                        <td class="entry-paramdesc">other legacy &lt;table attributes and values, inlined<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                        <td class="entry-paramdesc">other legacy &lt;table&gt; attributes and values, inlined
+<strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       class,
                       id,
@@ -433,11 +470,15 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       close,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -448,9 +489,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table header</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>thead</strong>
-              
+              <em>macro</em> <strong>thead</strong> 
             </div>
             
             
@@ -461,6 +500,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -471,9 +515,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table body</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tbody</strong>
-              
+              <em>macro</em> <strong>tbody</strong> 
             </div>
             
             
@@ -484,6 +526,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -494,9 +541,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table footer</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tfoot</strong>
-              
+              <em>macro</em> <strong>tfoot</strong> 
             </div>
             
             
@@ -507,6 +552,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -517,9 +567,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table Row</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tr</strong>
-              
+              <em>macro</em> <strong>tr</strong> 
             </div>
             
             
@@ -530,6 +578,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">in complete absence of styles hash, default is &quot;generic&quot;;
@@ -597,7 +646,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       class,
                       id,
@@ -610,11 +659,15 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       close,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -625,9 +678,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table Header Cell</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>th</strong>
-              
+              <em>macro</em> <strong>th</strong> 
             </div>
             
             
@@ -638,6 +689,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -663,18 +715,22 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       class,
                       id,
                       open,
                       close,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -685,9 +741,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table Body Cell</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>td</strong>
-              
+              <em>macro</em> <strong>td</strong> 
             </div>
             
             
@@ -698,20 +752,25 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       class,
                       id,
                       open,
                       close,
                       attribs,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -722,22 +781,23 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Table Row Class Attribute String</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>tableRowClassAttribStr</strong>
-              
+              <em>macro</em> <strong>tableRowClassAttribStr</strong> <strong>(DEPRECATED)</strong> 
             </div>
             
             
               <div class="lib-entry-desc">
-                  <p class="lib-entry-shortdesc">Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).</p>
-<p>DEPRECATED: use @table, @tr macros instead.</p>              </div>
+                  <p class="lib-entry-shortdesc">Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
+DEPRECATED: use @table, @tr macros instead.</p>
+              </div>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;tr&lt;@tableRowClassAttribStr class=&quot;myClass&quot; alt=false/&gt;&gt;              </div>
+<pre>    &lt;tr&lt;@tableRowClassAttribStr class=&quot;myClass&quot; alt=false/&gt;&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">Supports prefixes:
@@ -755,16 +815,20 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       class,
                       alt,
                       selected,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -775,9 +839,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Pricing table wrapper</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>pul</strong>
-              
+              <em>macro</em> <strong>pul</strong> 
             </div>
             
             
@@ -787,20 +849,28 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@pul &gt;<br/>        &lt;@pli&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/@pli&gt;<br/>    &lt;/@pul&gt;              </div>
+<pre>    &lt;@pul&gt;
+        &lt;@pli&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/@pli&gt;
+    &lt;/@pul&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <span>(no parameters)</span>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       title,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -811,9 +881,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Pricing table element</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>pli</strong>
-              
+              <em>macro</em> <strong>pli</strong> 
             </div>
             
             
@@ -824,6 +892,11 @@ May have implicit dependencies on other parts of Cato API.      </li>
             
               
             
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -834,9 +907,7 @@ May have implicit dependencies on other parts of Cato API.      </li>
             <h3 class="lib-entry-title">Chart</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>chart</strong>
-              
+              <em>macro</em> <strong>chart</strong> 
             </div>
             
             
@@ -848,10 +919,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
             
               <div class="lib-entry-examples">
                 <h4>Usage Example</h4>
-&lt;@chart type=&quot;bar&quot; &gt;<br/>        &lt;@chartdata value=&quot;36&quot; title=&quot;Peperoni&quot;/&gt;<br/>    &lt;/@chart&gt;              </div>
+<pre>    &lt;@chart type=&quot;bar&quot; &gt;
+        &lt;@chartdata value=&quot;36&quot; title=&quot;Peperoni&quot;/&gt;
+    &lt;/@chart&gt;
+</pre>              </div>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">library</td>
@@ -887,7 +962,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       type,
                       library,
                       title,
@@ -898,17 +973,22 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
                       labelUom1,
                       labelUom2,
                       passArgs
-                  </em>
                 </p>
               </div>
               
             
               <div class="lib-entry-related">
                  <h4>Related</h4>
+                 NOTE: doc related is broken<br/>
                  <p>
                    
                  </p>
               </div>       
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
           
@@ -919,9 +999,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
             <h3 class="lib-entry-title">chart_get_number_of_datasets</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>function</em> <strong>chart_get_number_of_datasets</strong>
-              
+              <em>function</em> <strong>chart_get_number_of_datasets</strong> 
             </div>
             
             
@@ -932,6 +1010,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
             
               <div class="lib-entry-params">
                 <h4>Parameters</h4>
+                NOTE: doc parameter parsing is broken<br/>
                   <table class="entry-parameters">
                       <tr>
                         <td class="entry-paramname">library</td>
@@ -939,13 +1018,17 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
                       </tr>
                   </table>
 
-                  <p><em>All programmed parameters:
+                  <p><em>All programmed parameters:</em>
                       content
-                  </em>
                 </p>
               </div>
               
             
+            
+            <div class="lib-entry-details">
+              
+              
+            </div>
           </div>
           
           
@@ -956,9 +1039,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
             <h3 class="lib-entry-title">Chart data</h3>
             
             <div class="lib-entry-formal">
-              
-              <em>macro</em> <strong>chartdata</strong>
-              
+              <em>macro</em> <strong>chartdata</strong> 
             </div>
             
             
@@ -971,15 +1052,29 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>
             
               <div class="lib-entry-related">
                  <h4>Related</h4>
+                 NOTE: doc related is broken<br/>
                  <p>
                    
                  </p>
               </div>       
+            
+            <div class="lib-entry-details">
+              
+              <span class="lib-entry-detail">Supports advanced arguments interface.</span>
+            </div>
           </div>
           
       </div>
       
-      <hr />
+
+    <footer id="footer">
+      <div>
+        <hr />
+        <small>
+          Copyright (c) 2014-2016 <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. Powered by <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+        </small>
+      </div>
+    </footer>
 
   </body>
 </html>

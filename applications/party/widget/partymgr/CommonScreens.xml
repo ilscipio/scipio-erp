@@ -150,28 +150,6 @@ under the License.
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- TODO: Cato: This is going to be removed -->
-                    <!-- <decorator-section name="topLeft">
-                        <section>
-                            do check for PARTYMGR, _VIEW permission
-                            <condition>
-                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <actions>
-                                <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
-                                <service service-name="findParty" auto-field-map="parameters"/>
-                            </actions>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://party/webapp/partymgr/party/findparty.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section> -->
-                    
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -181,13 +159,21 @@ under the License.
                                 <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
                             </container>
                         </container>
+                        <container style="${styles.grid_row}">
+                            <!-- <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
+                            </container> -->
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     
-    <!-- CATO: Widget implementation -->
+    <!-- CATO: Dashboard widget implementation -->
     <screen name="CatoNewRegistrations">
         <section>
             <actions>
@@ -212,6 +198,32 @@ under the License.
                        <screenlet title="${uiLabelMap.PartyRegistrations}">
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+
+    <screen name="CatoSecurityAlerts">
+        <section>
+            <actions>
+                <set field="chartIntervalScope" value="month"/>               
+                <!-- <set field="label1" value="${uiLabelMap.PartySecurityAlerts}"/> 1st dataset label                -->                   
+                <script location="component://party/script/com/ilscipio/party/dashboard/PartySecurityAlerts.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="securityAlerts"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.CommonSecurity}">
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartySecurityAlerts.ftl"/></html>
                             </platform-specific>
                        </screenlet>     
                    </widgets>

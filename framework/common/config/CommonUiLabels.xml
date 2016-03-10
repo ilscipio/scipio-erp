@@ -9739,6 +9739,9 @@
         <value xml:lang="zh">报表</value>
         <value xml:lang="zh_TW">報表</value>
     </property>
+    <property key="CommonRequest">
+        <value xml:lang="en">Request</value>        
+    </property> 
     <property key="CommonReports">
         <value xml:lang="ar">تقارير</value>
         <value xml:lang="cs">Přehledy</value>

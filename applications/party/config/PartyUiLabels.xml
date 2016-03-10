@@ -11268,6 +11268,9 @@
         <value xml:lang="zh">角色</value>
         <value xml:lang="zh_TW">角色</value>
     </property>
+    <property key="PartySecurityAlert">
+        <value xml:lang="en">Alerts</value>
+    </property>
     <property key="PartySecurityGroup">
         <value xml:lang="de">Sicherheitsgruppe</value>
         <value xml:lang="en">Security Group</value>

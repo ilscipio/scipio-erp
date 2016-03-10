@@ -17,28 +17,27 @@
       <title>${pageTitle?html}</title>
     </#if>
 
-    <style>
+<style>
 table.entry-parameters {
-  width:100%;
-  border:1px outset black;
+  width: 100%;
+  border: 1px outset black;
 }
 
 table.entry-parameters td {
-  padding:1em;
-  border:1px solid black;
+  padding: 1em;
+  border: 1px solid black;
 }
 
 table.entry-parameters td.entry-paramname {
-  width:20%;
+  width: 20%;
 }
 
 .lib-entry-detail {
-  font-style:italic;
-  font-size:0.6em;
+  font-style: italic;
+  font-size: 0.6em;
 }
-    
-    
-    </style>
+</style>
+
   </head>
   <body>
   
@@ -92,19 +91,26 @@ table.entry-parameters td.entry-paramname {
   ${decorateText(text?html)}<#t>
 </#macro>
 
-
 <#-- reference to another entry -->
 <#macro entryRef name>
   <#local searchRes = tmplHelper.findEntryGlobal(name, entryMap, libMap)!false>
   <#if !searchRes?is_boolean>
     <#if searchRes.libDocPath?has_content>
-      <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(searchRes.libDocPath, libDocPath)!"">
-      <a href="${relLibDocPath}#entry-${searchRes.rawName?html}">${name?html}</a>
+      <a href="${makeInterLibUrl(searchRes.libDocPath, "entry-" + searchRes.rawName)}">${name?html}</a>
     <#else>
-      <a href="#entry-${searchRes.rawName?html}">${name?html}</a>
+      <a href="#entry-${searchRes.rawName}">${name?html}</a>
     </#if>
   </#if>
 </#macro>
+
+<#function makeInterLibUrl targetLibDocPath targetName="">
+  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libDocPath)!""><#t>
+  <#if targetName?has_content>
+    <#return relLibDocPath + "#" + targetName>
+  <#else>
+    <#return relLibDocPath>
+  </#if>
+</#function>
 
   
     <div>
@@ -112,8 +118,9 @@ table.entry-parameters td.entry-paramname {
         <h1><@labelText text=pageTitle /></h1>
       </#if>
       <#if libFilename?has_content>
-        <p><em>${libFilename}</em></p>
+        <p><em>${libFilename?html}</em></p>
       </#if>
+
       <#if pageDesc?has_content>
         <#list tmplHelper.splitToParagraphs(pageDesc) as paragraph>
           <@descEntryContent text=paragraph />
@@ -121,9 +128,9 @@ table.entry-parameters td.entry-paramname {
       </#if>
     </div>
     
-  <#if (sectionMap?size >= 2)>
-    <div>
-      <strong>Sections</strong>
+  <#if (sectionMap?size >= 2) && entryMap?has_content>
+    <div class="lib-section-links">
+      <strong>Sections:</strong>
       <ul>
         <#list sectionMap?keys as sectionName> 
           <#assign section = sectionMap[sectionName]>
@@ -132,10 +139,40 @@ table.entry-parameters td.entry-paramname {
                 <#if section.title?has_content><@labelText text=section.title /><#t>
                 <#elseif sectionName == "default"><@labelText text="MAIN" /><#t>
                 <#else><@labelText text=sectionName /></#if><#t>
-                </a></li><#lt>
+                </a><br/>
+                <#--<strong>Definitions:</strong><br/>-->
+                <p>
+                <#list section.entryMap?keys?sort as entryName>
+                  <a href="#entry-${entryName?html}">${entryName?html}</a><#if entryName_has_next>, </#if>
+                </#list>
+                </p>
+            </li><#lt>
           </#if>
         </#list>
       </ul>
+    </div>
+  </#if>
+
+  <#if entryMap?has_content>
+    <div class="lib-entry-links">
+      <strong><#if (sectionMap?size >= 2)>All </#if>Definitions:</strong>
+      <p>
+      <#list entryMap?keys?sort as entryName>
+        <a href="#entry-${entryName?html}">${entryName?html}</a><#if entryName_has_next>, </#if>
+      </#list>
+      </p>
+    </div>
+  </#if>
+
+  <#if libMap?has_content>
+    <div class="lib-links">
+      <strong>All libraries:</strong>
+      <p>
+      <#list libMap?keys?sort as libName>
+        <#assign lib = libMap[libName]>
+        <a href="${makeInterLibUrl(lib.libDocPath)}">${libName?html}</a><#if libName_has_next>, </#if>
+      </#list>
+      </p>
     </div>
   </#if>
     
@@ -161,90 +198,93 @@ table.entry-parameters td.entry-paramname {
           
           <hr />
           <a name="entry-${entryName?html}"></a>
-          <div class="lib-entry">
+          <div class="lib-entry lib-entry-type-${entry.type}">
             <#assign entryTitle = entry.title!"">
             <#if !entryTitle?has_content>
               <#assign entryTitle = entryName>
             </#if>
 
+            <#-- NOTE: title is sometimes same as formal name (below), but not always -->
             <h3 class="lib-entry-title"><@labelText text=entryTitle /></h3>
             
             <div class="lib-entry-formal">
-              <em>${(entry.type!"")?html}</em> <strong>${entryName?html}</strong><#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if> 
+               <#-- type is "macro", "function" or "variable" -->
+               <em><span class="lib-entry-type-text">${entry.type}</span> <span class="lib-entry-formalname"><strong>${entryName?html}</strong></span></em>
+                  <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if>  
             </div>
             
             <#assign entrySections = entry.sections>
-            
-            <#if entrySections.mainDesc??>
-              <div class="lib-entry-desc">
-                <#if (entrySections.mainDesc.shortDesc)?has_content>
-                  <p class="lib-entry-shortdesc">${entrySections.mainDesc.shortDesc?html}</p>
-                </#if>
-                <#if (entrySections.mainDesc.extraDesc)?has_content>
-                  <#list tmplHelper.splitToParagraphs(entrySections.mainDesc.extraDesc) as paragraph>
-                    <@descEntryContent text=paragraph />
-                  </#list>
-                </#if>
-              </div>
-            </#if>
-            
-            <#if entrySections.examples??>
-              <div class="lib-entry-examples">
-                <h4><@labelText text=entrySections.examples.title!"" /></h4>
-                <@preformedText text=entry.exampleText!"" />
-              </div>
-            </#if>
-            
-            <#if entrySections.parameters??>
-              <div class="lib-entry-params">
-                <h4><@labelText text=entrySections.parameters.title!"" /></h4>
-                NOTE: doc parameter parsing is broken<br/>
-                <#if entry.parameters?has_content>
-                  <table class="entry-parameters">
-                    <#list entry.parameters?keys as paramName>
-                      <#assign paramText = entry.parameters[paramName]!"">
-                      <tr>
-                        <td class="entry-paramname">${paramName?html}</td>
-                        <td class="entry-paramdesc"><@descText text=paramText /></td>
-                      </tr>
-                    </#list>
-                  </table>
-                <#else>
-                  <span>(no parameters)</span>
-                </#if>
-
-                <#if entry.argList??>
-                  <p><em>All programmed parameters:</em>
-                  <#if entry.argList?has_content>
-                    <#list entry.argList as argName>
-                      ${argName?html}<#if argName_has_next>,</#if>
-                    </#list>
-                  <#else>
-                    (none)
-                  </#if>
-                </#if>
-                </p>
-              </div>
-            </#if>
+            <#list entrySections?keys as entrySectionName>
+              <#assign entrySection = entrySections[entrySectionName]>
               
-            <#if entrySections.returnValues??>
-              <div class="lib-entry-return">
-                <h4><@labelText text=entrySections.returnValues.title!"" /></h4>
-                <@descText text=entrySections.returnValues.text!"" />
-              </div>
-            </#if>
+                <#if entrySectionName == "mainDesc">
+                  <div class="lib-entry-section-maindesc">
+                    <#if (entrySection.shortDesc)?has_content>
+                      <p class="lib-entry-shortdesc">${entrySections.mainDesc.shortDesc?html}</p>
+                    </#if>
+                    <#if (entrySection.extraDesc)?has_content>
+                      <#list tmplHelper.splitToParagraphs(entrySection.extraDesc) as paragraph>
+                        <@descEntryContent text=paragraph />
+                      </#list>
+                    </#if>
+                  </div>
+                <#elseif entrySectionName == "examples">
+                  <div class="lib-entry-section-examples">
+                    <h4><@labelText text=entrySection.title!"" /></h4>
+                    <@preformedText text=entrySection.rawText!"" />
+                  </div>
+                <#elseif entrySectionName == "parameters">
+                  <div class="lib-entry-section-params">
+                    <h4><@labelText text=entrySection.title!"" /></h4>
+                    NOTE: doc parameter parsing is broken<br/>
+                    <#if entry.parameters?has_content>
+                      <table class="entry-parameters">
+                        <#list entry.parameters?keys as paramName>
+                          <#assign paramText = entry.parameters[paramName]!"">
+                          <tr>
+                            <td class="entry-paramname">${paramName?html}</td>
+                            <td class="entry-paramdesc"><@descText text=paramText /></td>
+                          </tr>
+                        </#list>
+                      </table>
+                    <#else>
+                      <span>(no parameters)</span>
+                    </#if>
+    
+                    <#if entry.argList??>
+                      <p><em>All programmed parameters:</em>
+                      <#if entry.argList?has_content>
+                        <#list entry.argList as argName>
+                          ${argName?html}<#if argName_has_next>, </#if>
+                        </#list>
+                      <#else>
+                        (none)
+                      </#if>
+                    </#if>
+                    </p>
+                  </div>
+                <#elseif entrySectionName == "returnValues">
+                  <div class="lib-entry-section-return">
+                    <h4><@labelText text=entrySection.title!"" /></h4>
+                    <@descText text=entrySection.text!"" />
+                  </div>
+                <#elseif entrySectionName == "related">
+                  <div class="lib-entry-section-related">
+                     <h4><@labelText text=entrySection.title!"" /></h4>
+                     <p>
+                     <#list entry.relatedNames![] as name>
+                       <@entryRef name=name /><#if name_has_next>, </#if>
+                     </#list>
+                     </p>
+                  </div>  
+                <#else>
+                  <div class="lib-entry-section-other">
+                    <h4><@labelText text=entrySection.title!"" /></h4>
+                    <@descText text=entrySection.text!"" />
+                  </div> 
+                </#if>     
             
-            <#if entrySections.related??>
-              <div class="lib-entry-related">
-                 <h4><@labelText text=entrySections.related.title!"" /></h4>
-                 NOTE: doc related is broken<br/>
-                 <p>
-                 <#list entry.relatedNames![] as name>
-                   <@entryRef name=name /><#if name_has_next>,</#if>
-                 </#list>
-                 </p>
-              </div>       
-            </#if>     
+            </#list>
             
             <div class="lib-entry-details">
               <#if entry.isTransform><span class="lib-entry-detail">Implemented as transform.</span></#if>

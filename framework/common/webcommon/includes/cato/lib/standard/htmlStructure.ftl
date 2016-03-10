@@ -659,7 +659,7 @@ Creates a logical section with optional title and menu.
 Automatically handles heading sizes and keeps track of section nesting for the whole rendering request, even across screens.render calls.
 
 NOTE: Use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
-levels manually, but most often should let @section menu handle them level calculations.
+levels manually, but most often should let @section menu handle the level calculations.
 
 IMPL NOTE: This has dependencies on some non-structural macros.
 

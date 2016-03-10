@@ -151,7 +151,8 @@ whereas @commonMsg abstracts markup/display and its messages can be a combinatio
 @commonMsg may use @alert to implement its markup.
 A template should not assume too much about the message markup, but the markup should be kept simple.
 
-* Screen Widgets Equivalent *
+  * Usage from screen widgets *
+
   <label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
   xxx is the message type. e.g.: 
     <label style="common-msg-error-perm" text="Permission Error" />

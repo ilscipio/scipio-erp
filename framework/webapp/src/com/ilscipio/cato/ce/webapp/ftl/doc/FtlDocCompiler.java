@@ -225,7 +225,9 @@ public class FtlDocCompiler {
             
             msgHandler.printMsg("Parsing " + srcFile.toString());
             Map<String, Object> dataModel = parseSourceToDataModel(libFilename, srcFile, defaultLibFormat);
-            srcFileDataModels.put(libFilename, dataModel);
+            String libName = (String) dataModel.get("libName");
+            
+            srcFileDataModels.put(libName, dataModel);
         }
         return srcFileDataModels;
     }
@@ -493,6 +495,7 @@ public class FtlDocCompiler {
             info.put("isTransform", Boolean.FALSE);
             info.put("isImplemented", Boolean.TRUE);
             info.put("isDeprecated", Boolean.FALSE);
+            info.put("isOverride", Boolean.FALSE); 
             
             if (commentedImplComment != null) {
                 if (commentedImplComment.matches("(?s).*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)?TRANSFORM.*")) {
@@ -503,6 +506,9 @@ public class FtlDocCompiler {
                 }
                 if (commentedImplComment.matches("(?s).*DEPRECATED.*")) {
                     info.put("isDeprecated", Boolean.TRUE);
+                }
+                if (commentedImplComment.matches("(?s).*OVERRIDE.*")) {
+                    info.put("isOverride", Boolean.TRUE);
                 }
             }
             
@@ -517,11 +523,14 @@ public class FtlDocCompiler {
                 if (shortDesc.matches("(?s).*DEPRECATED.*")) {
                     info.put("isDeprecated", Boolean.TRUE);
                 }
+                if (shortDesc.matches("(?s).*OVERRIDE.*")) {
+                    info.put("isOverride", Boolean.TRUE);
+                }
             }
         }
         
         private final Pattern entryBodySectionsPat = Pattern.compile(
-                "(?:^|\\n)[^\\S\\n]{1,4}[*][^\\S\\n]+([^\\n]*?)[^\\S\\n]+[*]\\n"
+                "(?:^|\\n)[^\\S\\n]{1,2}[*][^\\S\\n]+([^\\n]*?)[^\\S\\n]+[*]\\n"
                 , Pattern.DOTALL);
         private final Pattern parameterPat = Pattern.compile(
                 "(?:^|\\n)[^\\S\\n]{1,8}([^=]+?)[^\\S\\n]*=[^\\S\\n]*?"
@@ -659,6 +668,8 @@ public class FtlDocCompiler {
                 if (varName.endsWith(advancedArgDefaultArgsSuffix)) {
                     msgHandler.printDebug(" is advanced arg pattern");
                     
+                    String argStr = tmplHelper.cleanTextValue(m.group(2));
+                    
                     //msgHandler.printMsg("Has suffix");
                     // FIXME: super inefficient!!!
                     CharSequence postVarText = text.toString().substring(m.end());
@@ -670,8 +681,9 @@ public class FtlDocCompiler {
                     info.putAll(functionMacroInfo);
                     
                     // override arguments with special ones from #assign
-                    info.put("argStr", tmplHelper.cleanTextValue(m.group(2)));
-                    info.put("argList", parseMapArgString(tmplHelper.cleanTextValue(m.group(2))));
+                    
+                    info.put("argStr", argStr);
+                    info.put("argList", parseMapArgString(argStr));
                     
                     info.put("isAdvancedArgs", Boolean.TRUE);
                 }
@@ -792,7 +804,7 @@ public class FtlDocCompiler {
             if (argStr == null) {
                 return argList;
             }
-            String[] args = argStr.toString().split(",");
+            String[] args = argStr.toString().split("\\s+");
             for (String arg : args) {
                 String[] parts = arg.split("=");
                 String name = parts[0].trim();
@@ -1134,50 +1146,48 @@ public class FtlDocCompiler {
         }
         
         public boolean isEntryNameFullPath(String nameRef) {
-            return (nameRef.lastIndexOf('@') >= 1) && (nameRef.lastIndexOf('#') >= 1);
+            return (nameRef.lastIndexOf('@') >= 1) || (nameRef.lastIndexOf('#') >= 1);
         }
         
         public String getEntryNameOnly(String nameRef) {
             int index = nameRef.lastIndexOf('@');
-            if (index > 0) {
+            if (index >= 0) {
                 return nameRef.substring(index + 1);
             }
             index =  nameRef.lastIndexOf('#');
-            if (index > 0) {
+            if (index >= 0) {
                 return nameRef.substring(index + 1);
             }
             return nameRef;
         }
         
         public String getEntryLibLoc(String nameRef) {
-            int index = nameRef.lastIndexOf('@');
+            String res = null;
+            int index = nameRef.indexOf('@');
             if (index > 0) {
-                return nameRef.substring(0, index);
+                res = nameRef.substring(0, index);
             }
-            index =  nameRef.lastIndexOf('#');
-            if (index > 0) {
-                return nameRef.substring(0, index);
+            else {
+                index = nameRef.indexOf('#');
+                if (index > 0) {
+                    res = nameRef.substring(0, index);
+                }
             }
-            return null;
+            if (res != null) {
+                if (res.endsWith(inFileExtension)) {
+                    res = res.substring(0, res.length() - inFileExtension.length());
+                }
+            }
+            return res;
         }
         
-        
         public String getTargetRelLibDocPath(String targetLibDocPath, String currLibDocPath) {
-            String[] targetParts = targetLibDocPath.split("/");
             String[] currParts = currLibDocPath.split("/");
-            if (targetParts.length == currParts.length) {
-                return targetLibDocPath;
+            String res = "";
+            for(int i = 0; i < (currParts.length - 1); i++) {
+                res += "../";
             }
-            else if (targetParts.length > currParts.length) {
-                return join(targetParts, "/", targetParts.length - currParts.length, targetParts.length);
-            }
-            else { // if (targetParts.length < currParts.length) {
-                String res = "";
-                for(int i=0; i<(currParts.length - targetParts.length); i++) {
-                    res += "../";
-                }
-                return res + targetParts[targetParts.length - 1];
-            }
+            return res + targetLibDocPath;
         }
     }
     

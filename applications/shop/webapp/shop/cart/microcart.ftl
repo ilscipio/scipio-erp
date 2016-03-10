@@ -22,7 +22,8 @@ under the License.
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
-<div id="microcart">
+
+<@section id="microcart">
         <#if (shoppingCartSize > 0)>
             <p id="microCartNotEmpty">
                 ${uiLabelMap.EcommerceCartHas} <strong id="microCartQuantity">${shoppingCart.getTotalQuantity()}</strong>
@@ -57,4 +58,4 @@ under the License.
           <li class="disabled">[${uiLabelMap.EcommerceOnePageCheckout}]</li>
       </#if>
     </ul>
-</div>
+</@section>

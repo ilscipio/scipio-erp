@@ -363,7 +363,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     inlineItem      = ((boolean)) If true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
-  "type":"generic", "class":"", "contentClass", "", "id":"", "style":"", "attribs":{},
+  "type":"generic", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":false, "nestedFirst":false,

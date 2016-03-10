@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <title>Content element HTML template include, standard Cato markup.</title>
+
+    <style>
+table.entry-parameters {
+  width:100%;
+  border:1px outset black;
+}
+
+table.entry-parameters td {
+  padding:1em;
+  border:1px solid black;
+}
+
+table.entry-parameters td.entry-paramname {
+  width:20%;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+  
+  
+
+  
+    <div>
+        <h1>Content element HTML template include, standard Cato markup.</h1>
+<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+      <li>
+May have implicit dependencies on other parts of Cato API.      </li>
+  </ul>
+</div>
+    </div>
+    
+    
+
+
+
+      <a name="section-default"></a>
+      <div class="lib-section">
+            
+          
+          <hr />
+          <a name="entry-heading"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Heading</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>heading</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">An HTML heading (title).</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@heading&gt;My Title&lt;/@heading&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">boolean true means use default; false means none (same as &quot;raw&quot;).
+                     NOTE: do not specify h1-h6 here; use level argument instead.
+    level</td>
+                        <td class="entry-paramdesc">specific level (1-6). If not specified, current heading level returned by</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">getCurrentHeadingLevel() function is used.
+                     note: does not consume a level.
+    relLevel</td>
+                        <td class="entry-paramdesc">for level, uses level of current heading returned by getCurrentHeadingLevel()</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">plus this number of levels. default: 0 (current level)
+    class</td>
+                        <td class="entry-paramdesc">heading elem classes (simple)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                       &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                       &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">levelClassPrefix</td>
+                        <td class="entry-paramdesc">default &quot;heading-level-&quot;, prefix for class that will be appended level number</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">heading id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">consumeLevel</td>
+                        <td class="entry-paramdesc">boolean, default currently always false (<strong>DEV <strong>NOTE:</strong></strong> could be made to depend on calculated level).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">if true, the global heading level is set to (calculated level for this heading) + 1.
+                     note this is better handled through use of the @section macro. mostly useful for h1.
+    containerElemType</td>
+                        <td class="entry-paramdesc">(div|) (default: -empty-). if present, adds container around title or this elem type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerClass</td>
+                        <td class="entry-paramdesc">container elem classes (simple)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerId</td>
+                        <td class="entry-paramdesc">container id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other legacy h1-h6 attributes (mainly for those with dash in name)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">[inlineAttribs...]</td>
+                        <td class="entry-paramdesc">other legacy h1-h6 attributes, inlined<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      elemType,
+                      level,
+                      relLevel,
+                      class,
+                      id,
+                      levelClassPrefix,
+                      consumeLevel,
+                      containerElemType,
+                      containerClass,
+                      containerId,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-code"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Code Block</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>code</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a basic wrapper for code blocks.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@code type=&quot;java&quot;&gt;<br/>       // Some java code<br/>    &lt;/@code&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mapOfbizFormTypeToTableType"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mapOfbizFormTypeToTableType</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>mapOfbizFormTypeToTableType</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Maps an Ofbiz form widget type to a @table macro type.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-tableResponsiveScript"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Responsive Table Script</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>tableResponsiveScript</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a responsive tables script (script only - no markup).</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">tableId</td>
+                        <td class="entry-paramdesc">table ID</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">tableType</td>
+                        <td class="entry-paramdesc">table type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">tableStyleName</td>
+                        <td class="entry-paramdesc">Optimization: table style name (usually based on table type)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">can be omitted and will determine automatically from table type
+    responsive</td>
+                        <td class="entry-paramdesc">((boolean)) (default: -from global styles-) If true, will generate a responsive table</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Currently, this relies on the jQuery plugin datatables.js (www.datatables.net) to generate responsive table.
+                          Can be combined with fixed column type.
+                          if explicitly set to false, will disable responsive regardless of defaults.
+                          default is dependent on table type (global styles).
+    responsiveOptions</td>
+                        <td class="entry-paramdesc">map of options passed directly to responsive tables implementation (javascript implementation)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">responsiveDefaults</td>
+                        <td class="entry-paramdesc">((boolean)) (default: true) Fine-grained control for whether responsive defaults are looked up or not.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">If true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults per-option; if false, no defaults are used and only
+                          responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used.
+    scrollable</td>
+                        <td class="entry-paramdesc">((boolean)) (default: -from global styles-) Scrolling control</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">If true, guarantees table will be scrollable horizontally.
+                          implementation of scrollable depends on macro and global styles (by default, uses responsive).
+                          If explicitly set to false, prevents scrolling.
+                          (convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX)
+    fixedColumnsLeft</td>
+                        <td class="entry-paramdesc">((integer)) Number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">fixedColumnsRight</td>
+                        <td class="entry-paramdesc">((integer)) Number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      enabled,
+                      tableId,
+                      tableType,
+                      tableStyleName,
+                      responsive,
+                      scrollable,
+                      responsiveOptions,
+                      responsiveDefaults,
+                      fixedColumnsLeft,
+                      fixedColumnsRight,
+                      htmlwrap,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-table"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>table</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table with advanced generating functionality. Analogous to HTML &lt;table&gt; element.</p>
+<p>Required wrapper for all @table sub-element macros.</p><p>TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
+    overcomplicated at the moment.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@table type=&quot;data-list&quot; id=&quot;my-table&quot;&gt;<br/>      &lt;@thead&gt;<br/>        &lt;@tr&gt;<br/>          &lt;@th width=&quot;15%&quot;&gt;col 1&lt;/@th&gt;<br/>          &lt;@th width=&quot;85%&quot;&gt;col 2&lt;/@th&gt;<br/>        &lt;/@tr&gt;<br/>      &lt;/@thead&gt;<br/>      &lt;@tbody&gt;<br/>        &lt;@tr class=&quot;my-row-class&quot; valign=&quot;middle&quot;&gt;<br/>          &lt;@td&gt;data value 1&lt;/@td&gt;<br/>          &lt;@td&gt;data value 2&lt;/@td&gt;<br/>        &lt;/@tr&gt;<br/>      &lt;/@tbody&gt;<br/>    &lt;/@table&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">type</td>
+                        <td class="entry-paramdesc">(generic|(theme-specific)) (default: generic)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">* STANDARD TYPES *
+                      These types must always be recognized by all styles themes:
+                      generic: generic html table (free-form, complex); no features enabled by default.
+                          similar to defining an html &lt;table&gt; manually, but more powerful.
+                      * DEFAULT STYLES TYPES *
+                      WARN: these are WIP types, may not be enough (important part is to label things for easy search)
+                      The following are currently recognized by the default cato styles (NOTE: targeted for backend):
+                      data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
+                          similar to a form widget &quot;list&quot; or &quot;multi&quot; table; intended to resemble these, to unify them.
+                      data-list-multiform: virtually same as data-list, but expected to contain a multi-submit form, which
+                          could change styling requirements.
+                          this makes no real semantic difference from data-list to @table macro, but this type exists as analog
+                          to form widget &quot;multi&quot; form type, so possible to style differently.
+                      data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
+                          there is no form widget equivalent of these and usually need some custom alt-row work.
+                      summary: usually table with one or a few set rows of summary totals
+                          e.g. order grand totals.
+                          TODO? review need for this type (should be converted?)
+                      fields: label-value pairs for display, side-by-side, usually no header, roughly
+                          this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
+                          legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
+                          ultimately belong as @field and @row/@cell.
+                          TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
+    class</td>
+                        <td class="entry-paramdesc">manual classes to add, as string, default depends on table type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">if specified as string, replaces defaults (class</td>
+                        <td class="entry-paramdesc">false prevents class), unless prefixed with &quot;+&quot;</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">defaults are looked up in the styles hash using:
+                      styles[&quot;table_&quot; + type?replace(&quot;-&quot;,&quot;_&quot;)]
+                      where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
+                      styles[&quot;table_default&quot;]
+    id</td>
+                        <td class="entry-paramdesc">table id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">hasHeader</td>
+                        <td class="entry-paramdesc">((boolean)) Hint to indicate that table is expected to have a header, normally a &lt;@thead&gt; element.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">@table will try to figure this out on its own, but in some cases it may not be possible
+                      or not possible to know in advance, in which case caller must specify this flag.
+                      Currently this affects the following:
+                        * responsive tables
+    autoAltRows</td>
+                        <td class="entry-paramdesc">defaults specified in styles hash, but otherwise false</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">firstRowAlt</td>
+                        <td class="entry-paramdesc">default false</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inheritAltRows</td>
+                        <td class="entry-paramdesc">only for nested tables: if true, all rows in nested tables will inherit alt from parent table row</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">useFootAltRoots</td>
+                        <td class="entry-paramdesc">whether use alt row logic in foot or not</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">cellspacing</td>
+                        <td class="entry-paramdesc">cellspacing, defaults specified in styles hash, set to &quot;&quot; to prevent setting.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">open/close</td>
+                        <td class="entry-paramdesc">advanced structure control, for esoteric cases</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other legacy &lt;table attributes (mainly for those with dash in name)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">[inlineAttribs...]</td>
+                        <td class="entry-paramdesc">other legacy &lt;table attributes and values, inlined<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      id,
+                      hasHeader,
+                      cellspacing,
+                      responsive,
+                      scrollable,
+                      responsiveOptions,
+                      responsiveDefaults,
+                      fixedColumnsLeft,
+                      fixedColumnsRight,
+                      autoAltRows,
+                      firstRowAlt,
+                      inheritAltRows,
+                      useFootAltRows,
+                      open,
+                      close,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-thead"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table header</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>thead</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table header with advanced generating functionality. Analogous to HTML &lt;thead&gt; element.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-tbody"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table body</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>tbody</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table body with advanced generating functionality. Analogous to HTML &lt;tbody&gt; element.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-tfoot"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table footer</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>tfoot</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table footer with advanced generating functionality. Analogous to HTML &lt;tfoot&gt; element.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-tr"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table Row</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>tr</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Helps define table rows. takes care of alt row styles. must have a parent @table wrapper.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">in complete absence of styles hash, default is &quot;generic&quot;;
+                          in default cato styles, default is &quot;generic&quot; for &quot;generic&quot; tables, and &quot;content&quot; for all other table types.
+                      generic: free-form row with no assumptions on content.
+                      content: normal data or content row. exact meaning depends on table type.
+                               note that for &quot;data-complex&quot; this definition is currently relaxed.
+                      meta: indicates this is a special info/status row (e.g. &quot;No Records Found&quot; message), not an actual content row.
+                            meta rows are treated differently by default as are thead and tfoot rows.
+                            exact meaning depends on table type.
+                      util: indicates this is a special utility-only row meant to hold no real data,
+                            such as: spacer rows (&lt;@tr type</td>
+                        <td class="entry-paramdesc">&quot;util&quot;&gt;&lt;@td colspan=3&gt;&lt;hr /&gt;&lt;/@td&gt;&lt;/@tr&gt;)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">TODO: this isn&#39;t handled yet but SHOULD be used in templates anyhow.
+    class</td>
+                        <td class="entry-paramdesc">CSS classes</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">row id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">useAlt</td>
+                        <td class="entry-paramdesc">boolean, if specified, can manually enable/disable whether alternate row code runs per-row</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">alt</td>
+                        <td class="entry-paramdesc">boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">note: at current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
+                            next row&#39;s alt (unless groupLast used explicit on next) logic
+    groupLast</td>
+                        <td class="entry-paramdesc">boolean, if specified, considers row logically grouped with last row;</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">sets alt to exact same as last row
+    groupParent</td>
+                        <td class="entry-paramdesc">boolean, nested tables only, if specified, considers row logically grouped with parent row;</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">sets alt to exact same as parent row
+    selected</td>
+                        <td class="entry-paramdesc">boolean, if specified and true marked as selected</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">open/close</td>
+                        <td class="entry-paramdesc">advanced structure control, for esoteric cases</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other legacy &lt;tr attributes (mainly for those with dash in name)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">[inlineAttribs...]</td>
+                        <td class="entry-paramdesc">other legacy &lt;tr attributes and values, inlined</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      id,
+                      useAlt,
+                      alt,
+                      groupLast,
+                      groupParent,
+                      selected,
+                      open,
+                      close,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-th"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table Header Cell</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>th</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table header cell. Analogous to &lt;th&gt; HTML element.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">cell id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">open/close</td>
+                        <td class="entry-paramdesc">advanced structure control, for esoteric cases</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other legacy &lt;th and &lt;td attributes (mainly for those with dash in name)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">[inlineAttribs...]</td>
+                        <td class="entry-paramdesc">other legacy &lt;th and &lt;td attributes and values</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      class,
+                      id,
+                      open,
+                      close,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-td"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table Body Cell</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>td</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a table body cell. Analogous to &lt;td&gt; HTML element.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      class,
+                      id,
+                      open,
+                      close,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-tableRowClassAttribStr"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Table Row Class Attribute String</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>tableRowClassAttribStr</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).</p>
+<p>DEPRECATED: use @table, @tr macros instead.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;tr&lt;@tableRowClassAttribStr class=&quot;myClass&quot; alt=false/&gt;&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">alt</td>
+                        <td class="entry-paramdesc">boolean, if true is alternate row (odd), if false regular (even)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">selected</td>
+                        <td class="entry-paramdesc">boolean, if true marked as selected</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      class,
+                      alt,
+                      selected,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-pul"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Pricing table wrapper</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>pul</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a pricing table wrapper.</p>
+<p>Since this is very foundation specific, this function may be dropped in future installations.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@pul &gt;<br/>        &lt;@pli&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/@pli&gt;<br/>    &lt;/@pul&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      title,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-pli"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Pricing table element</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>pli</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a pricing table element/entry.</p>
+<p>Since this is very foundation specific, this function may be dropped in future installations.</p>              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-chart"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Chart</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>chart</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a chart wrapper.</p>
+<p>Libraries used:
+Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
+Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@chart type=&quot;bar&quot; &gt;<br/>        &lt;@chartdata value=&quot;36&quot; title=&quot;Peperoni&quot;/&gt;<br/>    &lt;/@chart&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">library</td>
+                        <td class="entry-paramdesc">(foundation|chart) (default:foundation)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">title</td>
+                        <td class="entry-paramdesc">Data Title  (default:empty)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">xlabel</td>
+                        <td class="entry-paramdesc">x-axis label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">ylabel</td>
+                        <td class="entry-paramdesc">y-axis label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">label1</td>
+                        <td class="entry-paramdesc">dataset 1 label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">label2</td>
+                        <td class="entry-paramdesc">dataset 2 label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">labelUom1</td>
+                        <td class="entry-paramdesc">dataset 1 currency symbol (automatically added to the tooltips)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">labelUom2</td>
+                        <td class="entry-paramdesc">dataset 2 currency symbol (automatically added to the tooltips)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      library,
+                      title,
+                      xlabel,
+                      ylabel,
+                      label1,
+                      label2,
+                      labelUom1,
+                      labelUom2,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+              <div class="lib-entry-related">
+                 <h4>Related</h4>
+                 <p>
+                   
+                 </p>
+              </div>       
+          </div>
+          
+          
+          <hr />
+          <a name="entry-chart_get_number_of_datasets"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">chart_get_number_of_datasets</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>chart_get_number_of_datasets</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Gets chart number of datasets.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">library</td>
+                        <td class="entry-paramdesc">(foundation|chart) (default:chart)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      content
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-chartdata"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Chart data</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>chartdata</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Chart data entry.</p>
+              </div>
+            
+            
+              
+            
+              <div class="lib-entry-related">
+                 <h4>Related</h4>
+                 <p>
+                   
+                 </p>
+              </div>       
+          </div>
+          
+      </div>
+      
+      <hr />
+
+  </body>
+</html>

@@ -45,12 +45,15 @@ import freemarker.template.TemplateExceptionHandler;
  * <p>
  * TODO: Could consider use of markdown (or other) in descriptions.
  * <p>
+ * TODO: log4j
+ * <p>
  * TODO: License
  */
 public class FtlDocCompiler {
 
     public static final String CATO_LIB_FORMAT = "cato-lib";
     public static final Charset DEFAULT_FILE_ENCODING = StandardCharsets.UTF_8;
+    private static final boolean DEBUG = true;
     
     protected MsgHandler msgHandler = new VoidMsgHandler();
     
@@ -63,8 +66,8 @@ public class FtlDocCompiler {
     protected String outFolderPath = null;
     protected File outFolderPathFile = null;
     
-    protected final String inFileExtension = ".ftl";
-    protected final String outFileExtension = ".html";
+    protected static final String inFileExtension = ".ftl";
+    protected static final String outFileExtension = ".html";
     
     protected Configuration cfg = null;
     
@@ -235,6 +238,7 @@ public class FtlDocCompiler {
         
         try {
             FtlDocFileParser parser = FtlDocFileParser.getInstance(libFilename, srcFile, defaultLibFormat);
+            parser.setMsgHandler(msgHandler);
             parser.addSourcePropertiesToDataModel(dataModel);
             parser.parseSourceTextToDataModel(dataModel, text);
         }
@@ -249,12 +253,18 @@ public class FtlDocCompiler {
     
     public static abstract class FtlDocFileParser {
         
+        protected MsgHandler msgHandler = new VoidMsgHandler();
+        
         protected final String libFilename;
         protected final File srcFile;
         
         protected FtlDocFileParser(String libFilename, File srcFile) {
             this.libFilename = libFilename;
             this.srcFile = srcFile;
+        }
+
+        public void setMsgHandler(MsgHandler msgHandler) {
+            this.msgHandler = msgHandler;
         }
 
         protected static FtlDocFileParser getInstance(String libFilename, File srcFile, String defaultLibFormat) {
@@ -273,9 +283,29 @@ public class FtlDocCompiler {
             // get file name only 
             String libTopName = srcFile.getName();
             dataModel.put("libTopName", replaceExtension(libTopName, ""));
+            
+            dataModel.put("libFormat", getLibFormat());
+            dataModel.put("libName", getLibName());
+            dataModel.put("libDocPath", getLibDocPath());
         }
+        
+        public String getLibName() {
+            return replaceExtension(libFilename, "");
+        }
+        
+        public String getLibDocPath() {
+            return replaceExtension(libFilename, outFileExtension);
+        }
+        
+        public abstract String getLibFormat();
     }
     
+    /**
+     * cato-lib FTL doc format parser.
+     * <p>
+     * NOTE: many of the regexp assume no trailing spaces in lines.
+     * tmplHelper.cleanTextValue removes them.
+     */
     public static class CatoLibFtlDocFileParser extends FtlDocFileParser {
     
         protected final CatoLibTemplateHelper tmplHelper = new CatoLibTemplateHelper();
@@ -289,31 +319,34 @@ public class FtlDocCompiler {
             this.advancedArgDefaultArgsSuffix = advancedArgDefaultArgsSuffix;
         }
         
+        @Override
+        public String getLibFormat() {
+            return CATO_LIB_FORMAT;
+        }
+        
         private final Pattern commentPat = Pattern.compile("<#--(.*?)-->", Pattern.DOTALL);
+        
+        // [^\\S\\n] means "whitespace but not newline"
+        
         // Delimited by *********, at least 30 stars
         private final Pattern sectionPat = Pattern.compile(
-                "\\s*" +
-                "[*]{30,}\\s*\\n\\s*" +
-                "[*]\\s*(.*?)\\s*[*]\\s*\\n" +
-                "[*]{30,}\\s+\\n\\s*" +
-                "(?:[*]\\s*)?(.*?)" + 
-                "\\s*"
+                "[*]{30,}\\n" +
+                "[*][^\\S\\n]*([^\\n]+?)(?:[^\\S\\n]*[*])?\\n" +
+                "[*]{30,}\\n" +
+                "(?:[*]\\s*)?(.*?)"
                 , Pattern.DOTALL);
         // Delimited by *******, between 10 and 20 stars
         private final Pattern entryPat = Pattern.compile(
-                "\\s*" +
-                "[*]{10,20}\\s*\\n\\s*" +
-                "[*]\\s*(.*?)\\s*[*]\\s*\\n" +
-                "[*]{10,20}\\s+\\n\\s*" +
-                "(.*?)" +
-                "\\s*"
+                "[*]{10,20}\\n" +
+                "[*][^\\S\\n]*([^\\n]+?)(?:[^\\S\\n]*[*])?\\n" +
+                "[*]{10,20}\\n" +
+                "(.*?)"
                 , Pattern.DOTALL);
     
         /**
          * NOTE: this is very inefficient, but doesn't matter.
          */
         public void parseSourceTextToDataModel(Map<String, Object> dataModel, String fullText) throws ParseException {
-
             Matcher m;
     
             // First comment is file description
@@ -322,12 +355,10 @@ public class FtlDocCompiler {
                 throw new ParseException("Missing file top comment");
             }
             
-            dataModel.put("libFormat", CATO_LIB_FORMAT);
-            
             String introText = tmplHelper.stripCommentLeadingAsterix(tmplHelper.cleanTextValue(m.group(1)));
-            Matcher introm = tmplHelper.getFirstLineMatcher(introText);
             dataModel.put("introText", introText);
-            if (introm.matches()) {
+            Matcher introm = tmplHelper.getFirstLineMatcher(introText);
+            if (introm.matches()) { // NOTE: not .find()
                 dataModel.put("pageTitle", tmplHelper.cleanTextValue(introm.group(1)));
                 dataModel.put("pageDesc", tmplHelper.cleanTextValue(introm.group(2)));
             }
@@ -350,7 +381,7 @@ public class FtlDocCompiler {
                 String comment = tmplHelper.cleanTextValue(m.group(1));
                 Matcher subm;
                 subm = sectionPat.matcher(comment);
-                if (subm.matches()) {
+                if (subm.matches()) { // NOTE: not .find()
                     currentSectionName = tmplHelper.cleanTextValue(subm.group(1));
                     sectionInfo = new LinkedHashMap<>();
                     sectionInfo.put("name", currentSectionName);
@@ -363,10 +394,11 @@ public class FtlDocCompiler {
                 }
                 else {
                     subm = entryPat.matcher(comment);
-                    if (subm.matches()) {
+                    if (subm.matches()) { // NOTE: not .find()
                         String entryTitle = tmplHelper.cleanTextValue(subm.group(1));
                         String entryBody = tmplHelper.cleanTextValue(subm.group(2));
                         String postEntryText = fullText.substring(m.end()); // FIXME: This is ridiculous inefficient
+
                         try {
                             Map<String, Object> entryInfo = parseCatoFtlLibEntry(entryTitle, entryBody, postEntryText);
                             entryInfo.put("sectionName", currentSectionName);
@@ -382,7 +414,7 @@ public class FtlDocCompiler {
                         }
                         catch (ParseException e) {
                             throw new ParseException("Error parsing entry '" + entryTitle + "': " + e.getMessage(), e);
-                        }
+                        } 
                     }
                     else {
                         ; // Ignore.
@@ -390,75 +422,105 @@ public class FtlDocCompiler {
                 }
             }
             
+            msgHandler.printMsg(" - entries: " + entryMap.size() + ", sections: " + sectionMap.size());
+            
             dataModel.put("sectionMap", sectionMap);
             dataModel.put("entryMap", entryMap);
         }
         
         // These must all test for space and newline at beginning
         private final Pattern commentedEntryPostPat = Pattern.compile(
-                "(?:\\s|\\n)*" +
-                "<#--\\s*(.*?)\\n" + // WARN: THERE MUST BE A NEWLINE HERE
-                "(.*?)" +
+                "^\\s*" +
+                "<#--\\s*(.*?)\\s*" + // NOTE: crazy look-ahead needed
+                "(<#[^-].*?)" +
                 "\\s*-->"
                 , Pattern.DOTALL);
-        private final Pattern assignPat = Pattern.compile(
-                "(?:\\s|\\n)*" +
-                "<#assign\\s(\\w+)\\s*=\\s*(\\s[^>]*?)\\s*/?>"
-                , Pattern.DOTALL);
-        private final Pattern macroPat = Pattern.compile(
-                "(?:\\s|\\n)*" +
-                "<#macro\\s(\\w+)(\\s[^>]*?)?>(.*?)</#macro>"
-                , Pattern.DOTALL);
-        private final Pattern functionPat = Pattern.compile(
-                "(?:\\s|\\n)*" +
-                "<#function\\s(\\w+)(\\s[^>]*?)?>(.*?)</#function>"
-                , Pattern.DOTALL);
         
+        // WARN: postEntryText is NOT cleaned
         protected Map<String, Object> parseCatoFtlLibEntry(String entryTitle, String entryBody, CharSequence postEntryText) throws ParseException {
             Map<String, Object> info = new LinkedHashMap<>();
             info.put("title", entryTitle);
-            info.put("body", entryBody); // just in case
+            info.put("body", entryBody); // just in case template needs, usually not
             
             Matcher m;
             
+            msgHandler.printDebug("entry " + entryTitle);
+            
+            //msgHandler.printDebug("postEntryText: " + postEntryText.toString().substring(0, postEntryText.length()));
+            
             m = commentedEntryPostPat.matcher(postEntryText);
-            if (m.matches()) {
+            if (m.find()) {
                 // NOTE: Even if commented, there must be a valid function, var or assign here
                 // FIXME: super inefficient !!
-                String commentedEntry = tmplHelper.cleanTextValue(m.group(2));
+                String commentedEntry = tmplHelper.cleanTextValue(m.group(2)); 
+                msgHandler.printDebug(" is commented");
                 Map<String, Object> funcMacroVarInfo = parseFunctionMacroVarInfo(commentedEntry);
                 if (funcMacroVarInfo == null) {
                     throw new ParseException("Expected a commented #assign, #function, or #macro declaration, but got nothing; please make sure " +
                             "even commented code still contains valid Freemarker and a placeholder commented entry remains; please make sure there "
-                            + "is not an extra comment between the main entry documentation and the declaration (or commented declaration)");
+                            + "is not an extra comment between the main entry documentation and the declaration (or commented declaration); "
+                            + "please make sure the commented placeholder entry is in a separate comment from the entry documentation comment");
                 }
                 info.putAll(funcMacroVarInfo);
-                info.put("isCommented", true);
-                info.put("commentedImplComment", tmplHelper.cleanTextValue(m.group(1)));
+                info.put("isCommented", Boolean.TRUE);
+                String commentedImplComment = tmplHelper.cleanTextValue(m.group(1));
+                info.put("commentedImplComment", commentedImplComment);
             }
             else {
+                msgHandler.printDebug(" is NOT commented");
                 Map<String, Object> funcMacroVarInfo = parseFunctionMacroVarInfo(postEntryText);
                 if (funcMacroVarInfo == null) {
                     throw new ParseException("Expected #assign, #function, or #macro declaration, or a commented placeholder, but got nothing");
                 }
                 info.putAll(funcMacroVarInfo);
-                info.put("isCommented", false);
-    
+                info.put("isCommented", Boolean.FALSE);
             }
-            
+
             Map<String, Object> entryBodyInfo = parseEntryBody(entryBody);
             info.putAll(entryBodyInfo);
+            
+            checkEntrySpecialStatus(info);
     
             return info;
         }
         
+        protected void checkEntrySpecialStatus(Map<String, Object> info) throws ParseException {
+            String commentedImplComment = (String) info.get("commentedImplComment");
+            info.put("isTransform", Boolean.FALSE);
+            info.put("isImplemented", Boolean.TRUE);
+            info.put("isDeprecated", Boolean.FALSE);
+            
+            if (commentedImplComment != null) {
+                if (commentedImplComment.matches(".*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)TRANSFORM.*")) {
+                    info.put("isTransform", Boolean.TRUE);
+                }
+                if (commentedImplComment.matches(".*NOT\\s+IMPLEMENTED.*")) {
+                    info.put("isImplemented", Boolean.FALSE);
+                }
+                if (commentedImplComment.matches(".*DEPRECATED.*")) {
+                    info.put("isDeprecated", Boolean.TRUE);
+                }
+            }
+            
+            String shortDesc = (String) info.get("shortDesc");
+            if (shortDesc != null) {
+                if (shortDesc.matches(".*IMPLEMENTED\\s+AS\\s+(JAVA\\S+)TRANSFORM.*")) {
+                    info.put("isTransform", Boolean.TRUE);
+                }
+                if (shortDesc.matches(".*NOT\\s+IMPLEMENTED.*")) {
+                    info.put("isImplemented", Boolean.FALSE);
+                }
+                if (shortDesc.matches(".*DEPRECATED.*")) {
+                    info.put("isDeprecated", Boolean.TRUE);
+                }
+            }
+        }
         
-        // TODO? this regexp probably won't work
         private final Pattern entryBodySectionsPat = Pattern.compile(
-                "\\n\\s{2,4}[*]\\s+(.*?)\\s+[*]\\s*\\n"
+                "(?:^|\\n)\\s{1,4}[*]\\s+([^\\n]*?)\\s+[*]\\n"
                 , Pattern.DOTALL);
         private final Pattern parameterPat = Pattern.compile(
-                "(?:^|\\n)\\s{2,8}([^=]+?)\\s*=\\s*?"
+                "(?:^|\\n)\\s{1,8}([^=]+?)\\s*=\\s*?"
                 , Pattern.DOTALL);
     
         protected Map<String, Object> parseEntryBody(CharSequence text) throws ParseException {
@@ -490,8 +552,8 @@ public class FtlDocCompiler {
                 String secText = entry.getValue();
                 
                 Map<String, Object> secInfo = new LinkedHashMap<>();
-                secInfo.put("sectionTitle", secTitle);
-                secInfo.put("sectionText", secText);
+                secInfo.put("title", secTitle);
+                secInfo.put("text", secText);
                 
                 String secName;
                 if (secTitle.matches("(?i)Main Description")) {
@@ -535,7 +597,7 @@ public class FtlDocCompiler {
                     if (!lastParamName.isEmpty()) {
                         String lastParamVal = tmplHelper.cleanTextValue(secText.substring(lastParamEndIndex, secText.length()));
                         lastParamVal = tmplHelper.stripIndent(lastParamVal, lastParamNameMatch.length());
-                        secTitleMap.put(lastParamName, lastParamVal);
+                        parameters.put(lastParamName, lastParamVal);
                     }
                     
                     secInfo.put("parameters", parameters);
@@ -545,6 +607,8 @@ public class FtlDocCompiler {
                 }
                 else if (secTitle.matches("(?i)Related?")) {
                     secName = "related";
+                    String[] relatedNames = secText.split("\\s+");
+                    secInfo.put("relatedNames", relatedNames);
                 }
                 else {
                     // Unknown, can include anyway
@@ -555,29 +619,36 @@ public class FtlDocCompiler {
                 secCount++;
             }
             
-            
             info.put("sections", entrySections);
             
             return info;
         }
         
+        private final Pattern assignPat = Pattern.compile(
+                "^\\s*" +
+                "<#assign\\s(\\w+)\\s*=\\s*(\\s[^>]*?)\\s*/?>" 
+                , Pattern.DOTALL);
         
+        // WARN: text is not cleaned
         protected Map<String, Object> parseFunctionMacroVarInfo(CharSequence text) throws ParseException {
-    
             Matcher m;
+            
             m = assignPat.matcher(text);
-            if (m.matches()) {
+            if (m.find()) {
                 Map<String, Object> info = new LinkedHashMap<>();
                 
                 // Either a variable or an advanced args pattern
                 String varName = tmplHelper.cleanTextValue(m.group(1));
                 if (varName.endsWith(advancedArgDefaultArgsSuffix)) {
+                    msgHandler.printDebug(" is advanced arg pattern");
+                    
+                    //msgHandler.printMsg("Has suffix");
                     // FIXME: super inefficient!!!
                     CharSequence postVarText = text.toString().substring(m.end());
                     
                     Map<String, Object> functionMacroInfo = parseFunctionMacroInfo(postVarText);
                     if (functionMacroInfo == null) {
-                        throw new ParseException("Expected to find function or macro at this point");
+                        throw new ParseException("Expected to find function or macro at this point, but got something else (or nothing)");
                     }
                     info.putAll(functionMacroInfo);
                     
@@ -586,40 +657,59 @@ public class FtlDocCompiler {
                     info.put("argList", parseMapArgString(tmplHelper.cleanTextValue(m.group(2))));
                 }
                 else {
+                    msgHandler.printDebug(" is regular var");
                     info.put("type", "variable");
                     info.put("name", varName);
                     info.put("defaultVal", tmplHelper.cleanTextValue(m.group(2))); // NOTE: only var gets default for now
                 }
+                return info;
             }
             else {
                 Map<String, Object> functionMacroInfo = parseFunctionMacroInfo(text);
                 if (functionMacroInfo != null) {
                     return functionMacroInfo;
                 }
+                else {
+                    return null;
+                }
             }
-    
-            return null;
         }
         
+        private final Pattern macroPat = Pattern.compile(
+                "^\\s*" +
+                "<#macro\\s(\\w+)(\\s[^>]*?)?>(.*?)</#macro>" +
+                ".*" // extra needed for .matches()
+                , Pattern.DOTALL);
+        private final Pattern functionPat = Pattern.compile(
+                "^\\s*" +
+                "<#function\\s(\\w+)(\\s[^>]*?)?>(.*?)</#function>" +
+                ".*" // extra needed for .matches()
+                , Pattern.DOTALL);
+        
+        // WARN: text is not cleaned
         protected Map<String, Object> parseFunctionMacroInfo(CharSequence text) throws ParseException {
             Map<String, Object> info = new LinkedHashMap<>();
-            String type ;
+            String type;
     
             Matcher m;
             m = macroPat.matcher(text);
-            if (m.matches()) {
+            if (m.find()) {
+                msgHandler.printDebug(" is macro");
                 type = "macro";
                 info.put("name", tmplHelper.cleanTextValue(m.group(1)));
-                info.put("argStr", tmplHelper.cleanTextValue(m.group(2)));
-                info.put("argList", parseMacroArgString(tmplHelper.cleanTextValue(m.group(2))));
+                String argStr = tmplHelper.cleanTextValue(m.group(2));
+                info.put("argStr", argStr);
+                info.put("argList", parseMacroArgString(argStr));
             }
             else {
+                msgHandler.printDebug(" is function");
                 m = functionPat.matcher(text);
-                if (m.matches()) {
+                if (m.find()) {
                     type = "function";
                     info.put("name", tmplHelper.cleanTextValue(m.group(1)));
-                    info.put("argStr", tmplHelper.cleanTextValue(m.group(2)));
-                    info.put("argList", parseFunctionArgString(tmplHelper.cleanTextValue(m.group(2))));
+                    String argStr = tmplHelper.cleanTextValue(m.group(2));
+                    info.put("argStr", argStr);
+                    info.put("argList", parseFunctionArgString(argStr));
                 }
                 else {
                     return null;
@@ -632,7 +722,7 @@ public class FtlDocCompiler {
         
         
         private final Pattern mapArgSinglePat = Pattern.compile(
-                "(['\"])(.*?)\1\\s*:.*"
+                "(['\"])(.*?)\\1\\s*:.*"
                 , Pattern.DOTALL);
         
         /**
@@ -641,15 +731,20 @@ public class FtlDocCompiler {
          * NOTE: INTENTIONALLY omitting default values because generally misleading.
          */
         protected List<String> parseMapArgString(String argStr) throws ParseException {
+            List<String> argList = new ArrayList<>();
+            if (argStr == null) {
+                return argList;
+            }
             argStr = argStr.trim();
             if (argStr.startsWith("{")) {
                 argStr = argStr.substring(1).trim();
+                if (argStr.endsWith("}")) {
+                    argStr = argStr.substring(0, argStr.length() - 1).trim();
+                }
+                else {
+                    throw new ParseException("Error parsing map variable (in #assign) - unterminated bracket");
+                }
             }
-            if (argStr.startsWith("}")) {
-                argStr = argStr.substring(0, argStr.length() - 1).trim();
-            }
-            
-            List<String> argList = new ArrayList<>();
             String[] args = argStr.toString().split(",");
             for (String argEntry : args) {
                 String arg = argEntry.trim();
@@ -659,7 +754,9 @@ public class FtlDocCompiler {
                     argList.add(name);
                 }
                 else {
-                    throw new ParseException("Error parsing map variable (in #assign)");
+                    msgHandler.printDebug(" text '" + arg + "' could not be matched");
+                    throw new ParseException("Error parsing map variable (in #assign)."
+                            + " WARN: Any non-simple syntax breaks easily here.");
                 }
             }
             return argList;
@@ -672,6 +769,9 @@ public class FtlDocCompiler {
          */
         protected List<String> parseFunctionArgString(CharSequence argStr) throws ParseException {
             List<String> argList = new ArrayList<>();
+            if (argStr == null) {
+                return argList;
+            }
             String[] args = argStr.toString().split(",");
             for (String arg : args) {
                 String[] parts = arg.split("=");
@@ -714,11 +814,12 @@ public class FtlDocCompiler {
         outFolderFile.mkdirs();
         
         for(Map.Entry<String, Map<String, Object>> entry : srcFileDataModels.entrySet()) {
-            String libFilename = entry.getKey();
             Map<String, Object> srcFileDataModel = entry.getValue();
             
+            String libDocPath = (String) srcFileDataModel.get("libDocPath");
+            
             // Get out file path
-            File outFile = new File(outFolderFile, replaceExtension(libFilename, outFileExtension));
+            File outFile = new File(outFolderFile, libDocPath);
             
             msgHandler.printMsg("Rendering to output file " + outFile.toString());
             
@@ -757,16 +858,6 @@ public class FtlDocCompiler {
         template.process(dataModel, out);
     }
     
-
-    public static String replaceExtension(String filePath, String newExt) {
-        Matcher m = Pattern.compile("^.*([.][a-zA-Z0-9]+)$").matcher(filePath);
-        if (!m.matches()) {
-            throw new IllegalArgumentException("Can't replace file extension, has none");
-        }
-        String ext = m.group(1);
-        return filePath.substring(0, filePath.length() - ext.length()) + newExt;
-    }
-    
     
     /*
      **********************************************************
@@ -776,6 +867,8 @@ public class FtlDocCompiler {
     
     /**
      * Template helper class that can be used by both the compiler and FTL doc templates.
+     * <p>
+     * TODO: Some of this code probably belongs in extending class.
      */
     public static abstract class TemplateHelper {
         
@@ -807,7 +900,7 @@ public class FtlDocCompiler {
         }
         
         private final Pattern firstLinePat = Pattern.compile(
-                "^\\s*(.*?)(?:\\n\\s*\\n(.*)|[\\s\\n]*?$)"
+                "^\\s*(.*?)(?:\\n\\s*\\n(.*)$|[\\s\\n]*?$)"
                 , Pattern.DOTALL);
         
         public Matcher getFirstLineMatcher(String text) {
@@ -861,7 +954,7 @@ public class FtlDocCompiler {
         public Map<String, Object> parseAsBulletList(String text) {
             // get the first bullet
             Matcher m = bulletPat.matcher(text);
-            if (m.matches()) {
+            if (m.find()) {
                 Map<String, Object> listInfo = new LinkedHashMap<>();
                 
                 int indentSize = m.group(1).length();
@@ -892,9 +985,9 @@ public class FtlDocCompiler {
                     listItemTexts.add(itemText);
                 }
                 
-                // The first item is actually the title
-                String title = listItemTexts.remove(0);
-                listInfo.put("title", title);
+                // The first item is actually the title or first text part
+                String leadingText = listItemTexts.remove(0);
+                listInfo.put("leadingText", leadingText);
                 
                 List<Object> items = new ArrayList<>();
                 
@@ -956,7 +1049,106 @@ public class FtlDocCompiler {
 
             return dataInfo;
         }
-
+        
+        
+        @SuppressWarnings("unchecked")
+        public Map<String, Object> findEntryGlobal(String nameRef, Map<String, Map<String, Object>> entryMap, 
+                Map<String, Map<String, Object>> libMap) {
+            String rawName = getEntryNameOnly(nameRef);
+            // check in our entry map first
+            if (isEntryNameOnly(nameRef) && entryMap.containsKey(rawName)) {
+                Map<String, Object> info = new HashMap<>();
+                info.put("entry", entryMap.get(rawName));
+                info.put("rawName", rawName);
+                return info;
+            }
+            else {
+                String libName = getEntryLibLoc(nameRef);
+                if (libName != null) {
+                    Map<String, Object> dataModel = libMap.get(libName);
+                    if (dataModel != null) {
+                        entryMap = (Map<String, Map<String, Object>>) dataModel.get("entryMap");
+                        if (entryMap.containsKey(rawName)) {
+                            Map<String, Object> info = new HashMap<>();
+                            info.put("entry", entryMap.get(rawName));
+                            info.put("libName", libName);
+                            info.put("libDocPath", dataModel.get("libDocPath"));
+                            info.put("rawName", rawName);
+                            return info;
+                        }
+                    }
+                    return null;
+                }
+                else {
+                    // No full path, must search for best guess, return the first (usually unique but not guaranteed)
+                    for(Map.Entry<String, Map<String, Object>> mapEntry : libMap.entrySet()) {
+                        libName = mapEntry.getKey();
+                        Map<String, Object> dataModel = mapEntry.getValue();
+                        entryMap = (Map<String, Map<String, Object>>) dataModel.get("entryMap");
+                        if (entryMap.containsKey(rawName)) {
+                            Map<String, Object> info = new HashMap<>();
+                            info.put("entry", entryMap.get(rawName));
+                            info.put("libName", libName);
+                            info.put("libDocPath", dataModel.get("libDocPath"));
+                            info.put("rawName", rawName);
+                            return info;
+                        }
+                    }
+                    return null;
+                }
+            }
+        }
+        
+        public boolean isEntryNameOnly(String nameRef) {
+            return (nameRef.lastIndexOf('@') <= 0) && (nameRef.lastIndexOf('#') <= 0);
+        }
+        
+        public boolean isEntryNameFullPath(String nameRef) {
+            return (nameRef.lastIndexOf('@') >= 1) && (nameRef.lastIndexOf('#') >= 1);
+        }
+        
+        public String getEntryNameOnly(String nameRef) {
+            int index = nameRef.lastIndexOf('@');
+            if (index > 0) {
+                return nameRef.substring(index + 1);
+            }
+            index =  nameRef.lastIndexOf('#');
+            if (index > 0) {
+                return nameRef.substring(index + 1);
+            }
+            return nameRef;
+        }
+        
+        public String getEntryLibLoc(String nameRef) {
+            int index = nameRef.lastIndexOf('@');
+            if (index > 0) {
+                return nameRef.substring(0, index);
+            }
+            index =  nameRef.lastIndexOf('#');
+            if (index > 0) {
+                return nameRef.substring(0, index);
+            }
+            return null;
+        }
+        
+        
+        public String getTargetRelLibDocPath(String targetLibDocPath, String currLibDocPath) {
+            String[] targetParts = targetLibDocPath.split("/");
+            String[] currParts = currLibDocPath.split("/");
+            if (targetParts.length == currParts.length) {
+                return targetLibDocPath;
+            }
+            else if (targetParts.length > currParts.length) {
+                return join(targetParts, "/", targetParts.length - currParts.length, targetParts.length);
+            }
+            else { // if (targetParts.length < currParts.length) {
+                String res = "";
+                for(int i=0; i<(currParts.length - targetParts.length); i++) {
+                    res += "../";
+                }
+                return res + targetParts[targetParts.length - 1];
+            }
+        }
     }
     
     public static class CatoLibTemplateHelper extends TemplateHelper {
@@ -986,6 +1178,24 @@ public class FtlDocCompiler {
         return fn;
     }
     
+    public static String replaceExtension(String filePath, String newExt) {
+        Matcher m = Pattern.compile("^.*([.][a-zA-Z0-9]+)$").matcher(filePath);
+        if (!m.matches()) {
+            throw new IllegalArgumentException("Can't replace file extension, has none");
+        }
+        String ext = m.group(1);
+        return filePath.substring(0, filePath.length() - ext.length()) + newExt;
+    }
+    
+    
+    private static String join(String[] parts, String sep, int start, int end) {
+        String res = parts[start];
+        for(int i=start+1; i<end; i++) {
+            res += sep + parts[i];
+        }
+        return res;
+    }
+
     @SuppressWarnings("serial")
     public static class ParseException extends IOException {
 
@@ -1010,6 +1220,7 @@ public class FtlDocCompiler {
     public static interface MsgHandler {
         public void printMsg(String msg);
         public void printError(String msg);
+        public void printDebug(String msg);
     }
     
     public static class SysOutMsgHandler implements MsgHandler {
@@ -1022,6 +1233,11 @@ public class FtlDocCompiler {
         public void printError(String msg) {
             System.out.println("ERROR: " + msg);
         }
+
+        @Override
+        public void printDebug(String msg) {
+            System.out.println(" - " + msg);
+        }
     }
     
     public static class VoidMsgHandler implements MsgHandler {
@@ -1032,6 +1248,10 @@ public class FtlDocCompiler {
         @Override
         public void printError(String msg) {
         }
+
+        @Override
+        public void printDebug(String msg) {            
+        }
     }    
-    
+
 }

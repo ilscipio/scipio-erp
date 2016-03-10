@@ -1005,7 +1005,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     tooltip         = tooltip, may result in extra wrapping container for tooltip
 -->
 <#assign field_defaultArgs = {
-  <#-- TODO: group these arguments so easier to read... -->
   "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
@@ -1024,6 +1023,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
+  <#-- TODO: Group arguments above so easier to read... -->
 
   <#-- parent @fields group elem info (if any; may be omitted) -->
   <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>

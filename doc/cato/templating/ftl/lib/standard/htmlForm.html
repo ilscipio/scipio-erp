@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <title>Form and field HTML template include, standard Cato markup.</title>
+
+    <style>
+table.entry-parameters {
+  width:100%;
+  border:1px outset black;
+}
+
+table.entry-parameters td {
+  padding:1em;
+  border:1px solid black;
+}
+
+table.entry-parameters td.entry-paramname {
+  width:20%;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+  
+  
+
+  
+    <div>
+        <h1>Form and field HTML template include, standard Cato markup.</h1>
+<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+      <li>
+May have implicit dependencies on other parts of Cato API.      </li>
+  </ul>
+</div>
+    </div>
+    
+    
+
+
+
+      <a name="section-default"></a>
+      <div class="lib-section">
+            
+          
+          <hr />
+          <a name="entry-form"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Form</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>form</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Defines a form. Analogous to &lt;form&gt; HTML element.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@form name=&quot;myform&quot;&gt;<br/>      &lt;@fields&gt;<br/>        &lt;input type=&quot;hidden&quot; ... /&gt;<br/>        &lt;@field ... /&gt;<br/>        &lt;@field ... /&gt;<br/>      &lt;/@fields&gt;<br/>    &lt;/@form&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">DEV NOTE: &quot;display&quot; is special for time being, probably rare or unused;
+                                    maybe it should cause to omit &lt;form&gt; element
+    class</td>
+                        <td class="entry-paramdesc">CSS classes on form element itself</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                            &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                            &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of attributes for HTML &lt;form&gt; element (needed for names with dashes)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inlineAttribs</td>
+                        <td class="entry-paramdesc">other attributes for HTML &lt;form&gt; element<br/><strong>NOTE:</strong> camelCase names are automatically converted to dash-separated-lowercase-names.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      name,
+                      id,
+                      class,
+                      open,
+                      close,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-progressScript"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Progress Script</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>progressScript</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Generates script data and markup needed to make an instance to initialize upload progress
+javascript anim for a form, with progress bar and/or text.</p>
+<p>Server-side upload event for the form must register a FileUploadProgressListener in session
+for getFileUploadProgressStatus AJAX calls.</p>              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">progressOptions</td>
+                        <td class="entry-paramdesc">elem IDs and options passed to CatoUploadProgress javascript class</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">in addition, supports:
+                        submitHook - one of: &quot;formSubmit&quot; (default), &quot;validate&quot; (jquery validate), &quot;none&quot; (caller does manually)
+                        validateObjScript - if submitHook is &quot;validate&quot;, add this script text to jquery validate({...}) object body.
+                      see CatoUploadProgress javascript class for available options.
+    htmlwrap</td>
+                        <td class="entry-paramdesc">if true, wrap in @script (default true)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      enabled,
+                      htmlwrap,
+                      progressOptions,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-progress"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Progress Bar</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>progress</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">A progress bar.</p>
+<p>Can be animated using Javascript manually or by using progressOptions argument.
+Presence of progressOptions activates use of CatoUploadProgress script for this progress bar by linking it
+to a form submit.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@progress value=40/&gt;<br/><br/>    Javascript animation (manual):<br/>    $(&#39;#${id}_meter&#39;).css(&quot;width&quot;, &quot;78%&quot;);              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">custom ID; can also be specified as progressOptions.progBarId instead.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">The meter will get an id of &quot;${id}_meter&quot;.
+                     If omitted, no progress bar per se will be created, but script will still be generated for progressOptions.progTextBoxId.
+    type</td>
+                        <td class="entry-paramdesc">(alert|info|success) (default: info)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">Adds or sets classes - please use &quot;(small|medium|large)-block-grid-#&quot;</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                       &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                       &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerClass</td>
+                        <td class="entry-paramdesc">classes added only on container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">showValue</td>
+                        <td class="entry-paramdesc">Display value inside bar</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">wrapClass</td>
+                        <td class="entry-paramdesc">classes on outer wrapper only</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">progressArgs</td>
+                        <td class="entry-paramdesc">{&quot;enabled&quot;:true, &quot;progressOptions&quot;:progressOptions}</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attaches results to page using elem IDs and options specified via these arguments,
+                        which are passed to @progress macro (see @progress macro for supported options)
+    progressOptions</td>
+                        <td class="entry-paramdesc">convenience parameter; same as passing:</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      value,
+                      id,
+                      type,
+                      class,
+                      showValue,
+                      containerClass,
+                      progressArgs,
+                      progressOptions,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-asmSelectScript"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">asmSelectScript</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>asmSelectScript</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Generates script data and markup needed to turn a multiple-select form field into
+dynamic jquery asmselect.
+IMPL NOTE: this must support legacy ofbiz parameters.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">enabled</td>
+                        <td class="entry-paramdesc">boolean true/false, default true (helper for macro args)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">select elem id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">title</td>
+                        <td class="entry-paramdesc">select title</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">sortable</td>
+                        <td class="entry-paramdesc">boolean</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">formId</td>
+                        <td class="entry-paramdesc">form ID</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">formName</td>
+                        <td class="entry-paramdesc">form name</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">asmSelectOptions</td>
+                        <td class="entry-paramdesc">optional, a map of overriding options to pass to asmselect</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">asmSelectDefaults</td>
+                        <td class="entry-paramdesc">boolean, default true, if false will not include any defaults and use asmSelectOptions only</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">relatedFieldId</td>
+                        <td class="entry-paramdesc">related field ID (optional)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">htmlwrap</td>
+                        <td class="entry-paramdesc">if true, wrap in @script (default true)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      enabled,
+                      id,
+                      title,
+                      sortable,
+                      formId,
+                      formName,
+                      asmSelectOptions,
+                      asmSelectDefaults,
+                      relatedFieldId,
+                      relatedTypeName,
+                      relatedTypeFieldId,
+                      paramKey,
+                      requestName,
+                      responseName,
+                      htmlwrap,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-fieldset"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Fieldset</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>fieldset</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">A visible fieldset, including the HTML element.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@fieldset title=&quot;&quot;&gt;<br/>        Inner Content<br/>    &lt;/@fieldset&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerClass</td>
+                        <td class="entry-paramdesc">class for wrapper</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">(includes width in columns, or append only with &quot;+&quot;)
+    id</td>
+                        <td class="entry-paramdesc">set id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">title</td>
+                        <td class="entry-paramdesc">fieldset-title</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">collapsed</td>
+                        <td class="entry-paramdesc">show/hide the fieldset</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      id,
+                      title,
+                      class,
+                      containerClass,
+                      collapsed,
+                      open,
+                      close,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-fields"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Fields</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>fields</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Fields helper that helps modify a set of @field definitions, or group of fields.
+Not associated with a visible element, as is @fieldset.
+Can be omitted.
+May sometimes need multiple of these per form (so @form insufficient for this purpose),
+or even multiple per fieldset.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@fields&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;<br/><br/>    &lt;@fields type=&quot;default-nolabels&quot;&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;<br/><br/>    &lt;@fields type=&quot;generic&quot; labelArea=false&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@field&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">default: default cato field arrangement. this is the type assumed when no @fields element is present.
+                          currently, it mostly influences the label area (present for all @field types except submit).
+                      default-nolabels: default cato field arrangement for common sets of fields with no labels.
+                          it expects that @field entries won&#39;t be passed any labels.
+                      default-compact: default cato field arrangement for fields that are in limited space.
+                          by default, this means the labels will be arranged vertically with the fields.
+                      default-manual: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
+                          any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
+                      generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
+                          make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
+                      NOTE: For default-manual, generic and similar where styles hash does not specify a label area by default,
+                          to show a label area for a field, it is NOT sufficient to specify label</td>
+                        <td class="entry-paramdesc">&quot;xxx&quot;.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">You must specify both labelArea</td>
+                        <td class="entry-paramdesc">true and label=&quot;xxx&quot;. label arg does not influence presence of label area.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
+                          generally, @field specifies label as pure data and theme decides where and how to display it.
+                          In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
+    labelType</td>
+                        <td class="entry-paramdesc">(horizontal|vertical|none), (default: -type-specific-). Override for type of the field labels themselves.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">horizontal: a label area added to the left (or potentially to the right) a field, horizontally.
+                          the implementation decides how to do this.
+                          DEV NOTE: previously this was called &quot;gridarea&quot;. But in the bootstrap code, this no longer makes sense.
+                              It would be perfectly valid for us to add an extra type here called &quot;gridarea&quot; that specifically requires
+                              a grid (TODO?). &quot;horizontal&quot; simply delegates the choice to the implementation.
+                      vertical: a label area added before (or potentially after) a field, vertically.
+                          the implementation decides how to do this.
+                      none: no labels or label areas. expects the @field macro won&#39;t be passed any.
+                      TODO: we should have types here that specifically request that either &quot;gridarea&quot; or &quot;inline&quot; are used for markup:
+                          gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
+                          The current implementation is unspecific.
+    labelPosition</td>
+                        <td class="entry-paramdesc">(left|right|top|bottom|none) (default: -type-specific-). override for layout/positioning of the labels.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">some values only make sense for some arrangements.
+    labelArea</td>
+                        <td class="entry-paramdesc">boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">logic is influenced by other arguments.
+                      NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
+                          They are decoupled. This only controls presence of it.
+                      NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
+    labelAreaExceptions</td>
+                        <td class="entry-paramdesc">string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
+    labelAreaRequireContent</td>
+                        <td class="entry-paramdesc">boolean, if true, the label area will only be included if label or labelDetail have content.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">this is generally independent of labelArea boolean and other settings.
+                              NOTE: This will not affect
+                              the fallback logic of labels to inline labels (a.k.a. whether the label area &quot;consumes&quot; the label for itself),
+                              otherwise that would mean labels would always be forced into the label area and never inline.
+    labelAreaConsumeExceptions</td>
+                        <td class="entry-paramdesc">string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">list of field types that should never have their label appear in the main label area.
+                                 for these, the label will trickle down into the field&#39;s inline area, if it has any (otherwise no label).
+                                 NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
+    formName</td>
+                        <td class="entry-paramdesc">the form name the child fields should assume</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">formId</td>
+                        <td class="entry-paramdesc">the form ID the child fields should assume</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inlineItems</td>
+                        <td class="entry-paramdesc">change default for @field inlineItems parameter (true/false)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">checkboxType</td>
+                        <td class="entry-paramdesc">default checkbox type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">radioType</td>
+                        <td class="entry-paramdesc">default radio type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">open/close</td>
+                        <td class="entry-paramdesc">advanced structure logic</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">ignoreParentField</td>
+                        <td class="entry-paramdesc">default false. If true, causes all fields within to ignore their parent and behave as if no parent.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">fieldArgs</td>
+                        <td class="entry-paramdesc">A map of @field parameters that will be used as new defaults for each field call.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">This is an automated mechanism. The map will be blended over the standard @field defaults before the invocation.
+                          In addition, contrary to the parameters, a map passed directly to @fields will be blended over both the @field defaults
+                          AND over any defaults set in the styles for the given @fields type:
+                            {@field regular defaults} + {fieldargs from styles hash} + {@fields fieldArgs direct arg}
+                          NOTES:
+                            * This may overlap with some of the existing parameters above. Covers other cases not made explicit above.
+                            * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
+                          EXAMPLE:
+                            &lt;@fields type</td>
+                        <td class="entry-paramdesc">&quot;default&quot; fieldArgs={&quot;labelArea&quot;:false}&gt;</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      open,
+                      close,
+                      labelType,
+                      labelPosition,
+                      labelArea,
+                      labelAreaExceptions,
+                      labelAreaRequireContent,
+                      labelAreaConsumeExceptions,
+                      formName,
+                      formId,
+                      inlineItems,
+                      collapse,
+                      collapsePostfix,
+                      collapsedInlineLabel,
+                      checkboxType,
+                      radioType,
+                      ignoreParentField,
+                      fieldArgs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mapCatoFieldTypeToStyleName"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mapCatoFieldTypeToStyleName</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>mapCatoFieldTypeToStyleName</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Maps a cato field type to a style name representing the type.</p>
+<p>Should be coordinated with mapOfbizFieldTypeToStyleName to produce common field type style names.</p>              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mapOfbizFieldTypeToStyleName"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mapOfbizFieldTypeToStyleName</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>mapOfbizFieldTypeToStyleName</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Maps an Ofbiz field type to a style name representing the type.</p>
+<p>Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.</p>              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mapOfbizFieldTypeToCatoFieldType"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mapOfbizFieldTypeToCatoFieldType</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>mapOfbizFieldTypeToCatoFieldType</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Maps an Ofbiz field type to a Cato field type.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-field"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Field</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>field</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">A form field input widget with optional label and post-input (postfix) content.</p>
+<p>@field can be used as a low-level field control (similar to original Ofbiz
+form widget macros, but with friendlier parameters) and for high-level declarations
+of fields (similar to the actual &lt;field&gt; elements in Ofbiz form widget definitions, but friendlier
+and more configurable). This versatility is the main reason for its implementation complexity.</p><p>In the high-level role, the macro takes care of label area logic and alignment
+such that you will not get fields looking out of place even if they have no label,
+giving all the fields in a given form a default uniform look, which can be customized globally.</p><p>@field&#39;s behavior can be customized for a set of fields using a parent @fields macro invocation
+as well as using the global styles hash (preferred where possible). A set of fields may be grouped under a @fields
+call with a @fields &quot;type&quot; selected, which will give all fields within it a predefined look
+and behavior. This behavior can be set in the global styles hash (preferred) or overridden directly
+in the @fields element.</p><p>If no @fields element is used, by default @field will behave the same as if it
+were surrounded by a @fields element with &quot;default&quot; type, which gives all fields a default
+look out of the box.</p><p>To use @field as a low-level control, it should be given a parent @fields with &quot;generic&quot; type.</p><p>This system can accodomate custom @fields types, but a default set are provided in the cato
+standard markup.</p><p><strong>NOTE:</strong> All @field arg defaults can be overridden by the @fields fieldArgs argument.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@field attr=&quot;&quot; /&gt; &lt;#- single field using default look -&gt;<br/><br/>    &lt;@fields type=&quot;default&quot;&gt; &lt;#- single field using default look, same as previous -&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@fields&gt;<br/><br/>    &lt;@fields type=&quot;default-nolabels&quot;&gt; &lt;#- specific arrangement needed -&gt;<br/>      &lt;@field attr=&quot;&quot; /&gt;<br/>    &lt;/@fields&gt;<br/><br/>    &lt;@fields type=&quot;default-manual&quot;&gt; &lt;#- use @field as low-level control -&gt;<br/>      &lt;@field attr=&quot;&quot; labelArea=true label=&quot;My Label&quot; /&gt;<br/>    &lt;/@fields&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">type</td>
+                        <td class="entry-paramdesc">form element type - supported values and their parameters listed below, between asterix.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">default &quot;generic&quot;, which means input defined manually with #nested.
+                      generic is mostly for grouping multiple sub-fields, but can be used anywhere.
+                      (specific field types should be preferred to manually defining content, where possible)
+    label</td>
+                        <td class="entry-paramdesc">field label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">for top-level @field elements and and parent fields, normally the label will get consumed
+                      by the label area and shown there. for child fields and some other circumstances, or whenever there is
+                      no label area, the label will instead be passed down as an &quot;inline label&quot; to the input
+                      widget implementation. in some cases, this &quot;inline label&quot; is
+                      re-implemented using the label area - see collapsedInlineLabel parameter.
+                      NOTE: Presence of label arg does not guarantee a label area will be shown; this is controlled
+                          by labelArea (and labelType) and its defaults, optionally coming from @fields container.
+                          label arg is mainly to provide data; theme and other flags decide what to do with it.
+                          For generic parent fields, label type must be specified explicitly, e.g.
+                            &lt;@fields type</td>
+                        <td class="entry-paramdesc">&quot;generic&quot;&gt;&lt;@field labelType=&quot;horizontal&quot; label=&quot;mylabel&quot;&gt;...&lt;/@fields&gt;</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: label area behavior may also be influenced by containing macros such as @fields
+    labelDetail</td>
+                        <td class="entry-paramdesc">extra content (HTML) inserted with (after) label</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">labelType</td>
+                        <td class="entry-paramdesc">explicit label type (see @fields)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">labelPosition</td>
+                        <td class="entry-paramdesc">explicit label layout (see @fields)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">labelArea</td>
+                        <td class="entry-paramdesc">boolean, default empty string (use @fields type default).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">if true, forces a label area.
+                      if false, prevents a label area.
+                      NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
+                          They are decoupled. This only controls presence of it.
+    labelAreaRequireContent</td>
+                        <td class="entry-paramdesc">boolean, if true, the label area will only be included if label or labelDetail have content.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">by default, this is empty string (use @fields type default), and if no styles defaults,
+                              default is false.
+    labelAreaConsume</td>
+                        <td class="entry-paramdesc">boolean, default true. if set to false, will prevent the label area from consuming (displaying) the label and the</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">label will trickle down into an inline area if one exists for the field type.
+    inlineLabelArea</td>
+                        <td class="entry-paramdesc">manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: false (or &quot;&quot;).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inlineLabel</td>
+                        <td class="entry-paramdesc">manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: &quot;&quot; (false on interface).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: often if you specify this it means you might want to set inlineLabelArea</td>
+                        <td class="entry-paramdesc">true as well.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">tooltip</td>
+                        <td class="entry-paramdesc">Small field description - to be displayed to the customer</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">May be set to boolean false to manually prevent tooltip defaults.
+    description</td>
+                        <td class="entry-paramdesc">Field description.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: currently this is treated as an alternative arg for tooltip
+                      TODO?: DEV NOTE: this should probably be separate from tooltip in the end...
+    name</td>
+                        <td class="entry-paramdesc">field name</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">value</td>
+                        <td class="entry-paramdesc">field value</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">totalColumns</td>
+                        <td class="entry-paramdesc">Total number of columns spanned by the outer container, including label area, widget and postfix.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">widgetPostfixColumns</td>
+                        <td class="entry-paramdesc">Number of grid columns to use as size for widget + postfix area (combined).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">If totalColumns is kept the same, any space removed from this value is given to the label area,
+                              and any space added is removed from the label area, also depending on the configuration of the label area.
+                              DEV NOTE: This value now includes the postfix area because it is usually easier
+                                  to use this way given that the widget + postfix configuration is variable.
+    widgetPostfixCombined</td>
+                        <td class="entry-paramdesc">boolean (default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">having their own sub-container. It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
+                              the default is usually true unless prevented by other settings.
+    class</td>
+                        <td class="entry-paramdesc">CSS classes for the field element (NOT the cell container!)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerClass</td>
+                        <td class="entry-paramdesc">optional class for outer container (prefix with +)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">maxlength</td>
+                        <td class="entry-paramdesc">max allowed length (e.g. max number of characters for text inputs)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">field id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">containerId</td>
+                        <td class="entry-paramdesc">id for the outer container (optional)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">events</td>
+                        <td class="entry-paramdesc">map of JS event names to script actions.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">event names can be specified with or without the &quot;on&quot; prefix (&quot;click&quot; or &quot;onclick&quot;).
+    onClick</td>
+                        <td class="entry-paramdesc">shortcut for: events={&quot;click&quot;: onClick}</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">WARN: Beware of character case. It&#39;s onClick, not onclick!
+    onChange</td>
+                        <td class="entry-paramdesc">shortcut for: events={&quot;change&quot;: onChange}</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">onFocus</td>
+                        <td class="entry-paramdesc">shortcut for: events={&quot;focus&quot;: onChange}</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">disabled</td>
+                        <td class="entry-paramdesc">field disabled</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">placeholder</td>
+                        <td class="entry-paramdesc">field placeholder</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">alert</td>
+                        <td class="entry-paramdesc">adds additional CSS alert class</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">mask</td>
+                        <td class="entry-paramdesc">toggles jQuery mask plugin</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">size</td>
+                        <td class="entry-paramdesc">size attribute (default: 20)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">collapse</td>
+                        <td class="entry-paramdesc">should the whole field (including label and postfix) be collapsing? (default: false)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">collapsePostfix</td>
+                        <td class="entry-paramdesc">should the postfix collapse with the field input? (default: true)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">this will not affect label unless collapse is also true (in which case this setting is ignored
+                      and the whole field is collapse)
+    collapsedInlineLabel</td>
+                        <td class="entry-paramdesc">this is a special function that will only apply in some cases.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">if this is set to true and the label does not get consumed
+                            by the label area and becomes an inline label, this will cause an auto-implementation
+                            of an inlined label using collapsing (instead of passing the inline label
+                            down to the individual field type widget).
+                            this may be needed for some field types.
+    norows</td>
+                        <td class="entry-paramdesc">render without the rows-container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">nocells</td>
+                        <td class="entry-paramdesc">render without the cells-container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">container</td>
+                        <td class="entry-paramdesc">defaul true. If false, sets norows=true and nocells=true.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inline</td>
+                        <td class="entry-paramdesc">default false. If true, forces container=false and marks the field with styles.field_inline, or</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">in other words, turns it into a logically inline element (traditionally, CSS &quot;display: inline;&quot;).
+                      Theme should act on this style to prevent taking up all the width.
+    ignoreParentField</td>
+                        <td class="entry-paramdesc">default false. If true causes a child field to act as if it had no parent field. Rarely needed.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">required</td>
+                        <td class="entry-paramdesc">boolean, default false. Marks a required input.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">requiredClass</td>
+                        <td class="entry-paramdesc">default required class name. Does not support extended class +/= syntax.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">requiredTooltip</td>
+                        <td class="entry-paramdesc">tooltip to use when field is required. this is overridden by regular tooltip.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the named label from uiLabelMap.
+    postfix</td>
+                        <td class="entry-paramdesc">boolean true/false, controls whether an extra area is appended after widget area</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">postfixSize</td>
+                        <td class="entry-paramdesc">manual postfix size, in (large) grid columns</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">postfixContent</td>
+                        <td class="entry-paramdesc">manual postfix markup/content - set to boolean false to prevent any content (but not area container)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      label,
+                      labelDetail,
+                      name,
+                      value,
+                      valueType,
+                      currentValue,
+                      defaultValue,
+                      class,
+                      size,
+                      maxlength,
+                      id,
+                      onClick,
+                      onChange,
+                      onFocus,
+                      disabled,
+                      placeholder,
+                      autoCompleteUrl,
+                      mask,
+                      alert,
+                      readonly,
+                      rows,
+                      cols,
+                      dateType,
+                      dateDisplayType,
+                      multiple,
+                      checked,
+                      collapse,
+                      collapsePostfix,
+                      collapsedInlineLabel,
+                      tooltip,
+                      totalColumns,
+                      widgetPostfixColumns,
+                      widgetPostfixCombined,
+                      norows,
+                      nocells,
+                      container,
+                      containerId,
+                      containerClass,
+                      fieldFormName,
+                      formName,
+                      formId,
+                      postfix,
+                      postfixSize,
+                      postfixContent,
+                      required,
+                      requiredClass,
+                      requiredTooltip,
+                      items,
+                      autocomplete,
+                      progressArgs,
+                      progressOptions,
+                      labelType,
+                      labelPosition,
+                      labelArea,
+                      labelAreaRequireContent,
+                      labelAreaConsume,
+                      inlineLabelArea,
+                      inlineLabel,
+                      description,
+                      submitType,
+                      text,
+                      href,
+                      src,
+                      confirmMsg,
+                      inlineItems,
+                      selected,
+                      allowEmpty,
+                      currentFirst,
+                      currentDescription,
+                      manualItems,
+                      manualItemsOnly,
+                      asmSelectArgs,
+                      title,
+                      allChecked,
+                      checkboxType,
+                      radioType,
+                      inline,
+                      ignoreParentField,
+                      opValue,
+                      opFromValue,
+                      opThruValue,
+                      ignoreCaseValue,
+                      hideOptions,
+                      hideIgnoreCase,
+                      titleClass,
+                      formatText,
+                      events,
+                      wrap,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+      </div>
+      
+      <hr />
+
+  </body>
+</html>

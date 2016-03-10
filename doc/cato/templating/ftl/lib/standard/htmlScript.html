@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <title>HTML document markup and script HTML template include, standard Cato markup.</title>
+
+    <style>
+table.entry-parameters {
+  width:100%;
+  border:1px outset black;
+}
+
+table.entry-parameters td {
+  padding:1em;
+  border:1px solid black;
+}
+
+table.entry-parameters td.entry-paramname {
+  width:20%;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+  
+  
+
+  
+    <div>
+        <h1>HTML document markup and script HTML template include, standard Cato markup.</h1>
+<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+      <li>
+May have implicit dependencies on other parts of Cato API.      </li>
+  </ul>
+</div>
+    <div><strong>DEV <strong>NOTES:</strong></strong>  <ul>
+      <li>
+This currently contains some theme- and platform-specific utilites... could have own file, but
+this is somewhat generic.      </li>
+  </ul>
+</div>
+    </div>
+    
+    
+
+
+
+      <a name="section-default"></a>
+      <div class="lib-section">
+            
+          
+          <hr />
+          <a name="entry-htmlHeadOpen"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">HTML Head Open</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>htmlHeadOpen</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Opens an HTML document and header section.</p>
+<p><strong>IMPL <strong>NOTE:</strong></strong> Beware of whitespace.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@htmlHeadOpen /&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      includeDocType,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-scripts"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Scripts</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>scripts</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Optional scripts include modifier. Modifies the @script calls within it.</p>
+<p><strong>NOTE:</strong> This is NOT associated with any HTML element nor does it define any.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@scripts output=true&gt; &lt;#- guarantees the @script calls will output content to page at this location -&gt;<br/>      &lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Page loaded.&quot;);<br/>        });<br/>      &lt;/@script&gt;<br/>      &lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Test.&quot;);<br/>        });<br/>      &lt;/@script&gt;<br/>    &lt;/@scripts&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      scriptType,
+                      output,
+                      htmlwrap,
+                      cdata,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-script"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Script</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>script</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Inline script wrapper. By default, makes a javascript block.</p>
+<p><strong>NOTE:</strong> Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).</p><p><strong>DEV <strong>NOTE:</strong></strong> In future, could be used to collect scripts for inclusion at end of page.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@script&gt;<br/>        jQuery(document).ready(function() {<br/>            alert(&quot;Page loaded.&quot;);<br/>        });<br/>    &lt;/@script&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">src</td>
+                        <td class="entry-paramdesc">source (if no nested content)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">language</td>
+                        <td class="entry-paramdesc">deprecated by HTML - ignored by macro</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">output</td>
+                        <td class="entry-paramdesc">if true, the script must be output in the markup where the macro is used</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">and should never be delegated. in cases of scripts within common templates,
+                      this should be omitted, except when used in html &lt;head&gt; or in a footer.
+                      if not specified or &quot;&quot;, cato decides what to do with them (output or accumulate at bottom of page).
+                      TODO: code to accumulate at footer.
+    htmlwrap</td>
+                        <td class="entry-paramdesc">boolean, default true, if false don&#39;t include HTML wrapper (or cdata)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">cdata</td>
+                        <td class="entry-paramdesc">boolean, default true, if false don&#39;t include CDATA guard (only used if htmlwrap true)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      src,
+                      output,
+                      htmlwrap,
+                      cdata,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-requireScriptOfbizUrl"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">requireScriptOfbizUrl</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>requireScriptOfbizUrl</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Informs the rendering process (decorator) that the given ofbiz URI must be made available to javascript
+code.</p>
+<p>Normally the getOfbizUrl(url) Javascript function will be used to do this.</p><p>The screen/ftl has to communicate to the decorator which URIs it needs to use, so
+this is one such mechanism
+<strong>DEV <strong>NOTE:</strong></strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
+dynamic using controller request defs and can&#39;t predict URL patterns unless rewrite
+@ofbizUrl in JS.</p>              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">output</td>
+                        <td class="entry-paramdesc">if true, the include must be output in the markup where the macro is used</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">and should never be delegated. in most cases this should be omitted.
+                      DEV NOTE: if not specified, &quot;&quot; or false for now simply accumulates the names
+                          and will be included by decorator in footer.
+    htmlwrap</td>
+                        <td class="entry-paramdesc">whether to wrap in @script - default FALSE for this one</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      uri,
+                      htmlwrap,
+                      output
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-commonElemEventAttribStr"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">commonElemEventAttribStr</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>commonElemEventAttribStr</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Prints a string of JS events as HTML element attributes for common macro HTML elements.
+Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      events
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-commonElemAttribStr"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">commonElemAttribStr</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>commonElemAttribStr</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Prints a string of element attributes for common macro HTML elements.
+This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.</p>
+              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">it may contain two special members: localArgNames and allArgNames. both should be lists.
+                    localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
+                    the two will be excluded themselves.
+                    if this map contains an &quot;attribs&quot; member, it will be added for exclude as well.
+                    see function getAttribMapAllExcludes for implementation details.
+    noExclude</td>
+                        <td class="entry-paramdesc">prevents excludes of attribs with specified names (list)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">(other)</td>
+                        <td class="entry-paramdesc">See @elemAttribStr; mostly same parameters but defaults different.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      attribs,
+                      includeEmpty,
+                      emptyValToken,
+                      noValToken,
+                      exclude,
+                      noExclude,
+                      attribNamePrefix,
+                      alwaysAddPrefix,
+                      attribNamePrefixStrip,
+                      attribNameSubstitutes,
+                      camelCaseToDashLowerNames
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+      </div>
+      
+      <hr />
+
+  </body>
+</html>

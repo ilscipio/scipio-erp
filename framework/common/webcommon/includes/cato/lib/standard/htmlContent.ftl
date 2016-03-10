@@ -344,9 +344,10 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
   "fixedColumnsLeft":0, "fixedColumnsRight":0, "autoAltRows":"", "firstRowAlt":"", "inheritAltRows":false, "useFootAltRows":false, 
   "open":true, "close":true, "attribs":{}, "passArgs":{}
-  <#-- DEV NOTE: for all table macros, when adding parameters, make sure also pushed on catoTableStack stack below -->
 }>
 <#macro table args={} inlineArgs...>
+  <#-- DEV NOTE: For all @table macros, when adding parameters above, make sure also pushed on catoTableStack stack below! -->
+
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.table_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>

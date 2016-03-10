@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <title>Informational/notification element HTML template include, standard Cato markup.</title>
+
+    <style>
+table.entry-parameters {
+  width:100%;
+  border:1px outset black;
+}
+
+table.entry-parameters td {
+  padding:1em;
+  border:1px solid black;
+}
+
+table.entry-parameters td.entry-paramname {
+  width:20%;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+  
+  
+
+  
+    <div>
+        <h1>Informational/notification element HTML template include, standard Cato markup.</h1>
+<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+      <li>
+May have implicit dependencies on other parts of Cato API.      </li>
+  </ul>
+</div>
+    </div>
+    
+    
+
+
+
+      <a name="section-default"></a>
+      <div class="lib-section">
+            
+          
+          <hr />
+          <a name="entry-modal"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Modal</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>modal</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a modal UI element.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@modal id=&quot;dsadsa&quot; attr=&quot;&quot; &gt;<br/>        Modal Content<br/>    &lt;/@modal&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">label</td>
+                        <td class="entry-paramdesc">set anchor text (required)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">icon</td>
+                        <td class="entry-paramdesc">generates icon inside the link (Note: has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">CSS classes or additional classes for anchor</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      id,
+                      label,
+                      href,
+                      icon,
+                      class,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-alert"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Alert box</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>alert</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Alert box for messages that must grab user attention.</p>
+<p><strong>NOTE:</strong> Should avoid using this for regular, common inlined message results such as &quot;No records found.&quot; unless
+    it&#39;s an unexpected result, error or one that requires user action.
+    For most cases, it is preferrable to use @commonMsg macro because it is higher-level.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@alert type=&quot;info&quot;&gt;<br/>        This is an alert!<br/>    &lt;/@alert&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">CSS classes or additional classes for nested container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                       &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                       &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      id,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-panel"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Panel box</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>panel</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a panel box.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@panel type=&quot;&quot;&gt;<br/>        This is a panel.<br/>    &lt;/@panel&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">title</td>
+                        <td class="entry-paramdesc">Title</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      title,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-commonMsg"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Common messages (abstraction)</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>commonMsg</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Abstracts and factors out the display format of common messages of specific meanings, such as
+errors (e.g. permission errors) and query results (e.g. &quot;No records found.&quot; messages).</p>
+<p>This labels messages according to what they are and lets the theme decide on markup and styling based on content.</p><p>This is higher-level than @alert macro; @alert has a specific markup/display and its types are usually levels of severity,
+whereas @commonMsg abstracts markup/display and its messages can be a combination of levels and specific meanings;
+@alert&#39;s goal is to grab user attention, whereas @commonMsg&#39;s behavior depends on the type of message.</p><p>@commonMsg may use @alert to implement its markup.
+A template should not assume too much about the message markup, but the markup should be kept simple.</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@commonMsg type=&quot;result-norecord&quot;/&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">Basic types:
+                    default: default. in standard Cato markup, same as generic.
+                    generic: no type specified (avoid using - prefer more specific)
+                  Types recognizes by Cato standard markup (theme-defined types are possible):
+                    result: an informational result from any kind of query. e.g., &quot;No records found.&quot;.
+                        is a normal event that shouldn&#39;t distract user attention.
+                    result-norecord: specific &quot;No records found.&quot; message.
+                    info: general information (NOTE: this is not really useful, but supported for completeness)
+                    info-important: general important information
+                    warning: general warning
+                    fail: general non-fatal error
+                    error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
+                    error-perm: permission error
+                    error-security: security error
+    id</td>
+                        <td class="entry-paramdesc">ID</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">CSS classes or additional classes for message container (innermost containing element)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                    &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                    &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">text</td>
+                        <td class="entry-paramdesc">text. If string not specified, uses #nested instead.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      id,
+                      text,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+      </div>
+      
+      <hr />
+
+  </body>
+</html>

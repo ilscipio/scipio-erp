@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+      <title>Navigation HTML template include, standard Cato markup.</title>
+
+    <style>
+table.entry-parameters {
+  width:100%;
+  border:1px outset black;
+}
+
+table.entry-parameters td {
+  padding:1em;
+  border:1px solid black;
+}
+
+table.entry-parameters td.entry-paramname {
+  width:20%;
+}
+    
+    
+    </style>
+  </head>
+  <body>
+  
+  
+
+  
+    <div>
+        <h1>Navigation HTML template include, standard Cato markup.</h1>
+<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+      <li>
+May have implicit dependencies on other parts of Cato API.      </li>
+  </ul>
+</div>
+    </div>
+    
+    
+
+
+
+      <a name="section-default"></a>
+      <div class="lib-section">
+            
+          
+          <hr />
+          <a name="entry-nav"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Nav List</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>nav</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a navigation list, for example based on magellan-destination or breadcrumbs.</p>
+<p>Since this is very foundation specific, this function may be dropped in future installations</p>              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@nav type=&quot;&quot;&gt;<br/>        &lt;li&gt;Text or &lt;a href=&quot;#&quot;&gt;Anchor&lt;/a&gt;&lt;/li&gt;<br/>    &lt;/@nav&gt;<br/><br/>    Or:<br/>    &lt;@nav type=&quot;magellan&quot;&gt;<br/>        &lt;@mli arrival=&quot;MyTargetAnchor&quot;&gt;Text or &lt;a href=&quot;#&quot;&gt;Anchor&lt;/a&gt;&lt;/@mli&gt;<br/>    &lt;/@nav&gt;<br/><br/>    &lt;@heading attribs=makeMagTargetAttribMap(&quot;MyTargetAnchor&quot;) id=&quot;MyTargetAnchor&quot;&gt;Grid&lt;/@heading&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">CSS classes</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mli"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mli</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>mli</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a magellan-destination link.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-mtarget"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">mtarget</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>mtarget</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates an magellan-destination attribute string.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-makeMagTargetAttribMap"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">makeMagTargetAttribMap</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>makeMagTargetAttribMap</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Makes an attrib map container a magellan-destination attribute.</p>
+              </div>
+            
+            
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-menu"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Menu</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>menu</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Menu macro, mainly intended for small inline menu definitions in templates, but able to substitute for widget menu
+definitions if needed.</p>
+<p>It may be used in two forms:
+  &lt;#assign items = [{&quot;type&quot;:&quot;link&quot;, ...}, {&quot;type&quot;:&quot;link&quot;, ...}, ...]&gt;
+  &lt;@menu ... items=items /&gt;
+  OR
+  &lt;@menu ...&gt;
+    &lt;@menuitem type=&quot;link&quot; ... /&gt;
+    &lt;@menuitem type=&quot;link&quot; ... /&gt;
+    ...
+  &lt;/@menu&gt;</p><p>In the first, each hash of the items list represents a menu item with the exact same arguments as the @menuitem macro.
+The first method gives the @menu macro more control over the items, and to delegate the definitions, while
+second is cleaner to express.</p><p>Note that both macros support arguments passed in a hash (or map) using the &quot;args&quot; argument, so the entire menu definition
+can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.</p><p>FIXME? doesn&#39;t survive screens.render (uses #globals only), but probably doesn&#39;t need to.
+    should use set/getRequestVar and/or stack.</p>              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">generic: any content, but specific type should be preferred.
+    inlineItems</td>
+                        <td class="entry-paramdesc">boolean (default: false) If true, generate only items, not menu container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">class (default: -based on menu type-) Menu class.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">defaults are based on:
+                      styles[&quot;menu_&quot; + type?replace(&quot;-&quot;,&quot;_&quot;)], or if missing from hash, falls back to
+                      styles[&quot;menu_default&quot;]
+                      NOTE: for this macro, the inline &quot;class&quot; args is now logically combined with the &quot;class&quot;
+                          arg from the &quot;args&quot; map using the logic in combineClassArgs function, with
+                          inline having priority.
+    id</td>
+                        <td class="entry-paramdesc">menu id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">style</td>
+                        <td class="entry-paramdesc">legacy menu style (for &lt;ul element)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other menu attribs (for &lt;ul element, especially those with dashes)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">items</td>
+                        <td class="entry-paramdesc">list of hashes, where each hash contains arguments representing a menu item,</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">same as @menuitem macro parameters.
+                      alternatively, the items can be specified as nested content.
+    preItems</td>
+                        <td class="entry-paramdesc">special-case list of hashes of items, added before items and #nested.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">excluded from sorting.
+                      templates should generally avoid use unless specific need, but may be used by other macros.
+    postItems</td>
+                        <td class="entry-paramdesc">special-case list of hashes of items, added after items and #nested</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">excluded from sorting.
+                      avoid use unless specific need; may be needed by cato menu handling.
+                      templates should generally avoid use unless specific need, but may be used by other macros.
+    sort,
+    sortBy,
+    sortDesc</td>
+                        <td class="entry-paramdesc">items sorting behavior; will only work if items are specified</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">through items list of hashes, currently does not apply to
+                      nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
+                      normally case-insensitive.
+    nestedFirst</td>
+                        <td class="entry-paramdesc">default false, if true, use nested items before items list, otherwise items list always first.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">usually use only one of alternatives but versatile.
+    htmlwrap</td>
+                        <td class="entry-paramdesc">wrapping HTML element (ul|div|span, default: ul)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">specialType</td>
+                        <td class="entry-paramdesc">(button-dropdown|) (default: -none-)<br/><strong>DEV <strong>NOTE:</strong></strong> each specialType could have its own styles hash menu_special_xxx entries</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      inlineItems,
+                      id,
+                      style,
+                      attribs,
+                      items,
+                      preItems,
+                      postItems,
+                      sort,
+                      sortBy,
+                      sortDesc,
+                      nestedFirst,
+                      title,
+                      specialType,
+                      mainButtonClass,
+                      htmlwrap,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-menuitem"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Menu Item</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>menuitem</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if need to generate items only).</p>
+<p><strong>WARN:</strong> Currently the enclosing @menu and sub-menus should never cross widget boundaries, and at most will
+    survive direct FTL file includes.</p>              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">generic: any generic content, but specific types should be preferred.
+    class</td>
+                        <td class="entry-paramdesc">class (default: -based on menu type-) Menu item class (for &lt;li&gt; element).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                        &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                        &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: for this macro, the inline &quot;class&quot; args is now logically combined with the &quot;class&quot;
+                          arg from the &quot;args&quot; map using the logic in combineClassArgs function, with inline given priority.
+    id</td>
+                        <td class="entry-paramdesc">menu item id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">style</td>
+                        <td class="entry-paramdesc">legacy menu item style (for &lt;li&gt; element)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">other menu item attributes (for &lt;li&gt; element, especially those with dashes in names)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">contentClass</td>
+                        <td class="entry-paramdesc">menu item content class (for &lt;a&gt;, &lt;span&gt; or &lt;input&gt; element)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: for this macro, the inline &quot;contentClass&quot; args is now logically combined with the &quot;contentClass&quot;
+                          arg from the &quot;args&quot; map using the logic in combineClassArgs function, with inline given priority.
+    contentId</td>
+                        <td class="entry-paramdesc">menu item content id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">contentStyle</td>
+                        <td class="entry-paramdesc">legacy menu item content style</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">contentName</td>
+                        <td class="entry-paramdesc">content name attrib (name=&quot;&quot; on &lt;a&gt; link)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">contentAttribs</td>
+                        <td class="entry-paramdesc">other menu item content attributes (for &lt;a&gt;, &lt;span&gt; or &lt;input&gt; element, especially those with dashes in names)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">text</td>
+                        <td class="entry-paramdesc">text to use as content. for now ALWAYS use this argument to specify</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">text, not nested content.
+                      TODO: clarify nested content usage (because may have nested menus?)
+    href</td>
+                        <td class="entry-paramdesc">content link, for &quot;link&quot; type</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)
+    onClick</td>
+                        <td class="entry-paramdesc">onClick (for content elem)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">title</td>
+                        <td class="entry-paramdesc">logical title attribute of content (link)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">disabled</td>
+                        <td class="entry-paramdesc">whether disabled, default false</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">selected</td>
+                        <td class="entry-paramdesc">whether selected or not, default false</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">active</td>
+                        <td class="entry-paramdesc">whether active or not, default false</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">nestedContent</td>
+                        <td class="entry-paramdesc">alternative to #nested content, so can be passed in @menu items hash list</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">nestedMenu</td>
+                        <td class="entry-paramdesc">alternative to nestedContent and #nested content, is a hash of @menu attribs</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">for menu to use as sub-menu.
+    wrapNested</td>
+                        <td class="entry-paramdesc">((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">nestedFirst</td>
+                        <td class="entry-paramdesc">((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text).</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">htmlwrap</td>
+                        <td class="entry-paramdesc">wrapping HTML element (li|span|div, default: li)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">inlineItem</td>
+                        <td class="entry-paramdesc">((boolean)) If true, generate only items, not menu container</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      type,
+                      class,
+                      contentClass,
+                      id,
+                      style,
+                      attribs,
+                      contentId,
+                      contentStyle,
+                      contentName,
+                      contentAttribs,
+                      text,
+                      href,
+                      onClick,
+                      disabled,
+                      selected,
+                      active,
+                      target,
+                      nestedContent,
+                      nestedMenu,
+                      wrapNested,
+                      nestedFirst,
+                      htmlwrap,
+                      inlineItem,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-isMenuMarkupItemsInline"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Menu Markup Inline Check</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>function</em> <strong>isMenuMarkupItemsInline</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Function that examines a string containing menu HTML markup and returns true if and only if
+the menu items are inlined, i.e. without container.</p>
+<p>Occasionally macros need to check this, notably for compatibility with Ofbiz screens.
+By default, this checks if the first item is a &lt;li&gt; element. Themes that use a different
+menu item element must override this and provide a proper check.</p>              </div>
+            
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <span>(no parameters)</span>
+
+                  <p><em>All programmed parameters:
+                      menuContent
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-paginate"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Pagination</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>paginate</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Creates a pagination menu, for example around a data table, using Ofbiz view pagination
+functionality.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@paginate mode=&quot;single&quot; ... /&gt;<br/>    &lt;@paginate mode=&quot;content&quot;&gt;<br/>      &lt;@table type=&quot;data-list&quot;&gt;<br/>        ...<br/>      &lt;/@table&gt;<br/>    &lt;/@paginate&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">content: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
+                       NOTE: in overwhelmingly most cases, this mode should be preferred, as it offers more control to the theme.
+                     single: produces a single pagination menu (layout argument has no effect)
+   type</td>
+                        <td class="entry-paramdesc">(default) (default: default) Type of the pagination menu itself</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">default: default cato pagination menu
+   layout</td>
+                        <td class="entry-paramdesc">(default|top|bottom|both) (default: default) Type of layout, only meaningful for &quot;content&quot; mode</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">default: &quot;pagination_layout&quot; from styles hash, otherwise both
+                     top: no more than one menu, always at top
+                     bottom: no more than one menu, always at bottom
+                     both: always two menus, top and bottom
+   position</td>
+                        <td class="entry-paramdesc">(top|bottom|) (default: -empty-) Optional position indicator, only makes sense in single mode.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">if specified, it may lead to the pagination not rendering depending on resolved value of layout.
+                     in content mode (preferred), this is handled automatically.
+   noResultsMode</td>
+                        <td class="entry-paramdesc">(default|hide|disable) (default: default)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">default: &quot;pagination_noresultsmode&quot; from styles hash, otherwise hide. may depend on mode argument.
+                     hide: hide menu when no results
+                     disable: disable but show controls when no results (TODO?: not implemented)
+   enabled</td>
+                        <td class="entry-paramdesc">boolean (default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">For &quot;content&quot; mode, with false, will still render nested content (that is the purpose), but will never decorate.
+   url</td>
+                        <td class="entry-paramdesc">Base Url to be used for pagination</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">class</td>
+                        <td class="entry-paramdesc">CSS classes</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Supports prefixes:
+                       &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
+                       &quot;</td>
+                        <td class="entry-paramdesc">&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">listSize</td>
+                        <td class="entry-paramdesc">size of the list in total</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewIndex</td>
+                        <td class="entry-paramdesc">page currently displayed</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewSize</td>
+                        <td class="entry-paramdesc">maximum number of items displayed. <strong>NOTE:</strong> this should be decided earlier in rendering (data prep)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">and a valid value MUST be passed.
+   forcePost</td>
+                        <td class="entry-paramdesc">Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">paramStr</td>
+                        <td class="entry-paramdesc">Extra URL parameters in string format, escaped (param1=val1&amp;amp;param2=val2)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewIndexFirst</td>
+                        <td class="entry-paramdesc">First viewIndex value number (0 or 1, only affects param values, not display)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">showCount</td>
+                        <td class="entry-paramdesc">If true show &quot;Displaying...&quot; count or string provided in countMsg; if false don&#39;t; empty string is let markup/theme decide</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">alwaysShowCount</td>
+                        <td class="entry-paramdesc">If true, show count even if other pagination controls are supposed to be omitted</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">countMsg</td>
+                        <td class="entry-paramdesc">Custom message for count, optional; markup provides its own default or in styles hash</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">lowCountMsg</td>
+                        <td class="entry-paramdesc">Alternate custom message for low counts, optional; markup provides its own or in styles hash</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">paginateToggle</td>
+                        <td class="entry-paramdesc">if true, include a control to toggle pagination on/off</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">(specify current state with paginateOn and tweak using paginateToggle* arguments)
+   paginateOn</td>
+                        <td class="entry-paramdesc">indicates whether pagination is currently on or off</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">Can be used with paginateToggle to indicate current state, or set to false to prevent
+                     pagination controls while still allowing some decorations (depending on styling).
+                     NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering.
+   previousViewSize</td>
+                        <td class="entry-paramdesc">used if paginate state is off. if not specified, it will use a default from general.properties.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">paginateOffViewSize</td>
+                        <td class="entry-paramdesc">a viewSize value send when turning off pagination via toggle. default is specified in general.properties.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewSizeSelection</td>
+                        <td class="entry-paramdesc">default false, currently officially unsupported.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">DEV NOTE: only here for testing purposes
+   altParam</td>
+                        <td class="entry-paramdesc">Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewIndexString/</td>
+                        <td class="entry-paramdesc">specific param names to use (default VIEW_INDEX / VIEW_SIZE / PAGING)</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">viewSizeString/
+   paginateToggleString
+   paramPrefix</td>
+                        <td class="entry-paramdesc">prefix added to param names. some screens need &quot;~&quot;.</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">NOTE: Does not affect paramStr - caller must handle.
+   paramDelim</td>
+                        <td class="entry-paramdesc">default &quot;&amp;amp;&quot;. Some screens need &quot;/&quot;.<br/>                        <strong>NOTE:</strong> Does not affect paramStr - caller must handle.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      mode,
+                      type,
+                      layout,
+                      noResultsMode,
+                      enabled,
+                      url,
+                      class,
+                      viewIndex,
+                      listSize,
+                      viewSize,
+                      prioViewSize,
+                      altParam,
+                      forcePost,
+                      paramStr,
+                      viewIndexFirst,
+                      showCount,
+                      alwaysShowCount,
+                      countMsg,
+                      lowCountMsg,
+                      paginateToggle,
+                      paginateOn,
+                      paginateToggleOnValue,
+                      paginateToggleOffValue,
+                      viewSizeSelection,
+                      position,
+                      viewIndexString,
+                      viewSizeString,
+                      paginateToggleString,
+                      paramDelim,
+                      paramPrefix,
+                      previousViewSize,
+                      paginateOffViewSize,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-treemenu"></a>
+          <div class="lib-entry">
+
+            <h3 class="lib-entry-title">Tree Menu</h3>
+            
+            <div class="lib-entry-formal">
+              
+              <em>macro</em> <strong>treemenu</strong>
+              
+            </div>
+            
+            
+              <div class="lib-entry-desc">
+                  <p class="lib-entry-shortdesc">Renders a menu in a tree fashion.</p>
+              </div>
+            
+              <div class="lib-entry-examples">
+                <h4>Usage Example</h4>
+&lt;@treemenu type=&quot;&quot;&gt;<br/>        &lt;li&gt;Text or &lt;a href=&quot;#&quot;&gt;Anchor&lt;/a&gt;&lt;/li&gt;<br/>    &lt;/@treemenu&gt;<br/><br/>    Or:<br/>    &lt;@treemenu type=&quot;magellan&quot;&gt;<br/>        &lt;@treemenuitem arrival=&quot;MyTargetAnchor&quot;&gt;Text or &lt;a href=&quot;#&quot;&gt;Anchor&lt;/a&gt;&lt;/@mli&gt;<br/>    &lt;/@treemenu&gt;              </div>
+            
+              <div class="lib-entry-params">
+                <h4>Parameters</h4>
+                  <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">inlineItems</td>
+                        <td class="entry-paramdesc">((boolean)) If true, generate only items, not menu container</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">id</td>
+                        <td class="entry-paramdesc">menu id</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">attribs</td>
+                        <td class="entry-paramdesc">hash of other tree menu attribs</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">data</td>
+                        <td class="entry-paramdesc">if jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item</td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">same as @treemenuitem macro parameters.
+    settings</td>
+                        <td class="entry-paramdesc">if jsTree:<br/>                      alternatively, the items can be specified as nested content.</td>
+                      </tr>
+                  </table>
+
+                  <p><em>All programmed parameters:
+                      library,
+                      data,
+                      settings,
+                      plugins,
+                      inlineItems,
+                      id,
+                      attribs,
+                      passArgs
+                  </em>
+                </p>
+              </div>
+              
+            
+          </div>
+          
+      </div>
+      
+      <hr />
+
+  </body>
+</html>

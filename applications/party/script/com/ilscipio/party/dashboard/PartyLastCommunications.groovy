@@ -1,7 +1,7 @@
-import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilValidate
+import org.ofbiz.entity.util.EntityUtilProperties
 import org.ofbiz.party.party.PartyHelper
 
 String iScope = context.intervalScope != null ? context.intervalScope : "month"; //day|week|month|year

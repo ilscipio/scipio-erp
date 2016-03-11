@@ -39,6 +39,16 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-params-details {
   font-size: 0.8em;
 }
+
+ul {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+pre {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
 </style>
 
   </head>
@@ -47,14 +57,24 @@ table.entry-parameters td.entry-paramname {
   
   
     <div>
-        <h1>Informational/notification element HTML template include, standard Cato markup.</h1>
-        <p><em>standard/htmlInfo.ftl</em></p>
+        <h1 class="lib-pagetitle">Informational/notification element HTML template include, standard Cato markup.</h1>
+        <h2>Template Building Documentation</h2>
+        <p><em><span class="lib-filename">standard/htmlInfo.ftl</span></em></p>
 
-<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+        <div class="lib-pagedesc">
+      <p>
+Included by htmlTemplate.ftl.      </p>
+      <p>
+NOTES:
+      </p>
+        <div>  <ul>
       <li>
-May have implicit dependencies on other parts of Cato API.      </li>
+      <span>
+May have implicit dependencies on other parts of Cato API.      </span>
+      </li>
   </ul>
 </div>
+        </div>
     </div>
     
 
@@ -146,7 +166,9 @@ May have implicit dependencies on other parts of Cato API.      </li>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Generates icon inside the link</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><strong>NOTE:</strong> Has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+NOTE: Has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;      </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -156,9 +178,21 @@ May have implicit dependencies on other parts of Cato API.      </li>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes or additional classes for anchor</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">Supports prefixes:
-* &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-* &quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+Supports prefixes:
+      </span>
+        <div>  <ul>
+      <li>
+      <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+      </li>
+      <li>
+      <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+      </li>
+  </ul>
+</div>
+</span>
                     </td>
                   </tr>
               </table>
@@ -196,9 +230,13 @@ May have implicit dependencies on other parts of Cato API.      </li>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Alert box for messages that must grab user attention.</p>
-<p><strong>NOTE:</strong> Should avoid using this for regular, common inlined message results such as &quot;No records found.&quot; unless
-    it&#39;s an unexpected result, error or one that requires user action.
-    For most cases, it is preferrable to use <a href="#entry-commonMsg">@commonMsg</a> macro because it is higher-level.</p>                  </div>
+                      <div class="lib-entry-extradesc">
+      <span>
+NOTE: Should avoid using this for regular, common inlined message results such as &quot;No records found.&quot; unless
+      </span>
+<pre>it&#39;s an unexpected result, error or one that requires user action.
+For most cases, it is preferrable to use @commonMsg macro because it is higher-level.</pre>                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-examples">
@@ -239,9 +277,21 @@ May have implicit dependencies on other parts of Cato API.      </li>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes or additional classes for nested container</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">Supports prefixes:
-* &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-* &quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+Supports prefixes:
+      </span>
+        <div>  <ul>
+      <li>
+      <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+      </li>
+      <li>
+      <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+      </li>
+  </ul>
+</div>
+</span>
                     </td>
                   </tr>
               </table>
@@ -358,10 +408,18 @@ May have implicit dependencies on other parts of Cato API.      </li>
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Abstracts and factors out the display format of common messages of specific meanings, such as
 errors (e.g. permission errors) and query results (e.g. &quot;No records found.&quot; messages).</p>
-<p>This labels messages according to what they are and lets the theme decide on markup and styling based on content.</p><p>This is higher-level than <a href="#entry-alert">@alert</a> macro; <a href="#entry-alert">@alert</a> has a specific markup/display and its types are usually levels of severity,
+                      <div class="lib-entry-extradesc">
+      <span>
+This labels messages according to what they are and lets the theme decide on markup and styling based on content.      </span>
+      <span>
+This is higher-level than <a href="#entry-alert">@alert</a> macro; <a href="#entry-alert">@alert</a> has a specific markup/display and its types are usually levels of severity,
 whereas <a href="#entry-commonMsg">@commonMsg</a> abstracts markup/display and its messages can be a combination of levels and specific meanings;
-<a href="#entry-alert">@alert</a>&#39;s goal is to grab user attention, whereas <a href="#entry-commonMsg">@commonMsg</a>&#39;s behavior depends on the type of message.</p><p><a href="#entry-commonMsg">@commonMsg</a> may use <a href="#entry-alert">@alert</a> to implement its markup.
-A template should not assume too much about the message markup, but the markup should be kept simple.</p>                  </div>
+<a href="#entry-alert">@alert</a>&#39;s goal is to grab user attention, whereas <a href="#entry-commonMsg">@commonMsg</a>&#39;s behavior depends on the type of message.      </span>
+      <span>
+<a href="#entry-commonMsg">@commonMsg</a> may use <a href="#entry-alert">@alert</a> to implement its markup.
+A template should not assume too much about the message markup, but the markup should be kept simple.      </span>
+                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-params">

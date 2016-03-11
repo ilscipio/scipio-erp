@@ -67,6 +67,11 @@ ul {
   margin-top: 0.3em;
   margin-bottom: 0.4em;
 }
+
+pre {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
 </style>
 
   </head>
@@ -166,8 +171,8 @@ ul {
 *************************************
 -->
 
-<#-- NOTE: don't decorateText this because usually contains examples and markup -->
 <#macro preformedText text>
+  <#-- NOTE: don't decorateText this because usually contains examples and code -->
   <pre>${highlightWords(text?html)}</pre><#t><#-- ?replace("\n", "<br/>") -->
 </#macro>
 

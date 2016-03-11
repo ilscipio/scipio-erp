@@ -39,6 +39,16 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-params-details {
   font-size: 0.8em;
 }
+
+ul {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
+
+pre {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
 </style>
 
   </head>
@@ -47,20 +57,35 @@ table.entry-parameters td.entry-paramname {
   
   
     <div>
-        <h1>HTML document markup and script HTML template include, standard Cato markup.</h1>
-        <p><em>standard/htmlScript.ftl</em></p>
+        <h1 class="lib-pagetitle">HTML document markup and script HTML template include, standard Cato markup.</h1>
+        <h2>Template Building Documentation</h2>
+        <p><em><span class="lib-filename">standard/htmlScript.ftl</span></em></p>
 
-<p>Included by htmlTemplate.ftl.</p>    <div><strong>NOTES:</strong>  <ul>
+        <div class="lib-pagedesc">
+      <p>
+Included by htmlTemplate.ftl.      </p>
+      <p>
+NOTES:
+      </p>
+        <div>  <ul>
       <li>
-May have implicit dependencies on other parts of Cato API.      </li>
+      <span>
+May have implicit dependencies on other parts of Cato API.      </span>
+      </li>
   </ul>
 </div>
-    <div><strong>DEV NOTES:</strong>  <ul>
+      <p>
+DEV NOTES:
+      </p>
+        <div>  <ul>
       <li>
+      <span>
 This currently contains some theme- and platform-specific utilites... could have own file, but
-this is somewhat generic.      </li>
+this is somewhat generic.      </span>
+      </li>
   </ul>
 </div>
+        </div>
     </div>
     
 
@@ -111,7 +136,11 @@ this is somewhat generic.      </li>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Opens an HTML document and header section.</p>
-<p><strong>IMPL NOTE:</strong> Beware of whitespace.</p>                  </div>
+                      <div class="lib-entry-extradesc">
+      <span>
+IMPL NOTE: Beware of whitespace.      </span>
+                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-examples">
@@ -138,7 +167,9 @@ this is somewhat generic.      </li>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Whether to include doctype or not</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"> Default is false because is already included by screen renderer in @renderScreenBegin.</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+ Default is false because is already included by screen renderer in @renderScreenBegin.      </span>
+</span>
                     </td>
                   </tr>
               </table>
@@ -176,7 +207,11 @@ this is somewhat generic.      </li>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Optional scripts include modifier. Modifies the @script calls within it.</p>
-<p><strong>NOTE:</strong> This is NOT associated with any HTML element nor does it define any.</p>                  </div>
+                      <div class="lib-entry-extradesc">
+      <span>
+NOTE: This is NOT associated with any HTML element nor does it define any.      </span>
+                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-examples">
@@ -255,7 +290,13 @@ this is somewhat generic.      </li>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Inline script wrapper. By default, makes a javascript block.</p>
-<p><strong>NOTE:</strong> Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).</p><p><strong>DEV NOTE:</strong> In future, could be used to collect scripts for inclusion at end of page.</p>                  </div>
+                      <div class="lib-entry-extradesc">
+      <span>
+NOTE: Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).      </span>
+      <span>
+DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.      </span>
+                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-examples">
@@ -299,7 +340,7 @@ this is somewhat generic.      </li>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Source (if no nested content)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Source document address (when no nested content)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -319,11 +360,13 @@ this is somewhat generic.      </li>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, the script must be output in the markup where the macro is used</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">and should never be delegated. In cases of scripts within common templates,
+                      <span class="lib-entry-param-desc-shortdesc">If true, the script must be output in the markup where the macro is used and should never be delegated</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+In cases of scripts within common templates,
 this should be omitted, except when used in html &lt;head&gt; or in a footer.
 If not specified or &quot;&quot;, cato decides what to do with them (output or accumulate at bottom of page).
-<br/><strong>TODO:</strong> code to accumulate at footer.</span>
+TODO: code to accumulate at footer.      </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -382,11 +425,19 @@ If not specified or &quot;&quot;, cato decides what to do with them (output or a
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Informs the rendering process (decorator) that the given ofbiz URI must be made available to javascript
 code.</p>
-<p>Normally the getOfbizUrl(url) Javascript function will be used to do this.</p><p>The screen/ftl has to communicate to the decorator which URIs it needs to use, so
+                      <div class="lib-entry-extradesc">
+      <span>
+Normally the getOfbizUrl(url) Javascript function will be used to do this.      </span>
+      <span>
+The screen/ftl has to communicate to the decorator which URIs it needs to use, so
 this is one such mechanism
-<br/><strong>DEV NOTE:</strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
+DEV NOTE: Other options: layoutSettings? any way is messy...      </span>
+      <span>
+Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can&#39;t predict URL patterns unless rewrite
-<a href="../utilities.html#entry-ofbizUrl">@ofbizUrl</a> in JS.</p>                  </div>
+<a href="../utilities.html#entry-ofbizUrl">@ofbizUrl</a> in JS.      </span>
+                      </div>
+                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -418,9 +469,11 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">If true, the include must be output in the markup where the macro is used</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">and should never be delegated. In most cases this should be omitted.
-<br/><strong>DEV NOTE:</strong> If not specified, &quot;&quot; or false for now simply accumulates the names
-  and will be included by decorator in footer.</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+and should never be delegated. In most cases this should be omitted.
+DEV NOTE: If not specified, &quot;&quot; or false for now simply accumulates the names
+      </span>
+<pre>and will be included by decorator in footer.</pre></span>
                     </td>
                   </tr>
                   <tr>
@@ -430,7 +483,9 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Whether to wrap in <a href="#entry-script">@script</a> -</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><strong>NOTE:</strong> Default is FALSE for this one</span>
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+NOTE: Default is FALSE for this one      </span>
+</span>
                     </td>
                   </tr>
               </table>
@@ -536,12 +591,14 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Attribs map</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"> The attribs map here is more versatile and supports mergeArgMaps functions more easily.
+                      <span class="lib-entry-param-desc-extradesc">      <span>
+ The attribs map here is more versatile and supports mergeArgMaps functions more easily.
  It may contain two special members: localArgNames and allArgNames. Both should be lists.
  localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
  The two will be excluded themselves.
  If this map contains an &quot;attribs&quot; member, it will be added for exclude as well.
- See function getAttribMapAllExcludes for implementation details.</span>
+ See function getAttribMapAllExcludes for implementation details.      </span>
+</span>
                     </td>
                   </tr>
                   <tr>

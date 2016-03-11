@@ -19,6 +19,9 @@
 * DEV NOTES: 
 * * WARN: Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
 *       and line endings. Must be spaces-only and LF-only line endings.
+*   * In parser, bullets will create HTML lists, text encloding in two bullets (* *) will create
+*     a heading, notes with uppercase label and "?" or ":" prefix will be highlighted (support multi-
+*     line by indenting the next line), and indents alone will create preformatted text (usually code).
 * * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 *   Even though it would be convenient, we can't allow a "attribString" arg because no way
 *   for macro to get attribs out of it if it needs them, cause problems.
@@ -34,7 +37,10 @@
 * * All macros expect to be invoked using named parameters only (always <@row class="my-class">, never <@row "my-class">)
 * * Many macros have advanced, low-level open/close controls for esoteric structure control where the macro 
 *   markup open and close tags and logic needs to be split or skipped. Generally their defaults are true; must specify
-*   <@macroname open=true close=false /> for open-only and <@macroname close=true open=false /> for close-only.
+*     <@macroname open=true close=false /> 
+*   for open-only and 
+*     <@macroname close=true open=false /> 
+*   for close-only.
 *   Use of these in templates is discouraged but occasionally forcefully needed.
 * * These patterns are often workarounds for limitations in the FTL language.
 * * The advanced args pattern described below is primarily designed to be simple to use from templates, almost
@@ -46,7 +52,7 @@
 * * These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden directly by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: 
-*   <#macro macroname args={} inlineArgs...>
+*     <#macro macroname args={} inlineArgs...>
 * * When called from templates, these macros accept regular inlined parameters as well as a map of parameters
 *   using the args map parameter. Intuitively, inline args have priority over args passed in the args map and in most cases simply override them.
 *   This pattern is especially needed for themes to override the templating-facing macros cleanly and to provide a way
@@ -58,24 +64,26 @@
 *   both in args map or inlineArgs, but usually it's used to emulate HTML with macros, thus inlineArgs); 
 *   these are not declared in the default argument lists; see individual macro documentation;
 *   they are equivalent in usage to regular FTL interface macros that take extra attrbs as varargs
-*   (e.g. <#macro myhtmlmacro (...) inlineAttribs...>). 
+*   e.g. 
+*     <#macro myhtmlmacro (...) inlineAttribs...> 
 *   IMPL NOTE: Extra attributions are handled by a system that records args names in a "allArgNames" member in 
 *       the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.
 * * INTERFACE:
-*   <#assign name_defaultArgs = { (...), "passArgs":{} }>
-*   <#macro macroname args={} inlineArgs...>
+*     <#assign name_defaultArgs = { (...), "passArgs":{} }>
+*     <#macro macroname args={} inlineArgs...>
 *   * args: macro args map. map of parameters to pass to the macro. it can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
-*       IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
+*     IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
 *   * inlineArgs: macro inline args. map of parameters passed inline to the macro via usual macro call syntax.
-*       these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
-*       IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
+*     these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
+*     IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).
 *   * passArgs: pass-through args. map of args that should be passed along the major calls made by this macro or in other words
-*       passed through the whole call stack. it allows arguments to pass through from the templating-facing macro 
-*       to the internal implementations such as markup macros, similar to a context. this is needed especially to allow theme overrides 
-*       to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
-*       be careful about using sufficiently unique names.
-*       IMPL NOTE: overriding macros should avoid overriding this map; always add new members to it instead.
-*           e.g. <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
+*     passed through the whole call stack. it allows arguments to pass through from the templating-facing macro 
+*     to the internal implementations such as markup macros, similar to a context. this is needed especially to allow theme overrides 
+*     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
+*     be careful about using sufficiently unique names.
+*     IMPL NOTE: overriding macros should avoid overriding this map; always add new members to it instead.
+*     e.g. 
+*       <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
 *
 * Markup macros (theme overrides): 
 * * These macros such as @row_markup, @heading_markup, etc. containing
@@ -87,20 +95,20 @@
 *     a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
 *     with themes.
 * * INTERFACE:
-*   <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
+*     <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
 *   * origArgs: original caller's args. map of complex parameters usually roughly as they were received by the calling macro. rarely-used and should be
-*       avoided in favor of the other simpler macro arguments passed by the caller which are usually very similar. is 
-*       needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
-*       NOTE: in general orig args do not come from a template-facing macro but from an intermediate macro
-*           (such as @fieldset_core or @field_input_widget). this is the intention, as the former would break 
-*           abstraction too much. in many cases however, the calling macro may happen to be 
-*           a template-facing macro. do not rely on this while using origArgs.
+*     avoided in favor of the other simpler macro arguments passed by the caller which are usually very similar. is 
+*     needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
+*     NOTE: in general orig args do not come from a template-facing macro but from an intermediate macro
+*         (such as @fieldset_core or @field_input_widget). this is the intention, as the former would break 
+*         abstraction too much. in many cases however, the calling macro may happen to be 
+*         a template-facing macro. do not rely on this while using origArgs.
 *   * passArgs: pass-through args. map of args that are passed through from the template-facing macro to the parent/caller macro to 
-*       this macro or in other words passed through the whole call stack, similar to a context. this is needed especially to allow theme overrides 
-*       to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
-*       be careful about using sufficiently unique names.
+*     this macro or in other words passed through the whole call stack, similar to a context. this is needed especially to allow theme overrides 
+*     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
+*     be careful about using sufficiently unique names.
 *   * catchArgs: catch-all args. simply catches all the parameters the macro doesn't need to handle
-*       NOTE: the previous parameters may be omitted and caught with catchArgs if unused.
+*     NOTE: the previous parameters may be omitted and caught with catchArgs if unused.
 *
 * DEV NOTE: TODO: although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
 *     and optimization using transforms (see mergeArgMaps and related).

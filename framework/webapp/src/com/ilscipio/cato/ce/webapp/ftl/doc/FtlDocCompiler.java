@@ -45,7 +45,7 @@ import freemarker.template.TemplateExceptionHandler;
  * <p>
  * TODO: Could consider use of markdown (or other) in descriptions.
  * <p>
- * TODO: log4j
+ * TODO: Replace MsgHandler by log4j
  * <p>
  * TODO: License
  * <p>
@@ -106,30 +106,30 @@ public class FtlDocCompiler {
                 compiler.setMsgHandler(msgHandler);
                 compiler.execBasic(defaultLibFormat, srcFolderPath, libFilenames, templatePath, outFolderPath);
             } catch (Throwable t) {
-                msgHandler.printError(t.getMessage());
+                msgHandler.logError(t.getMessage());
                 t.printStackTrace();
                 System.exit(1);
             }
         }
         else {
-            msgHandler.printError("Insufficient arguments");
+            msgHandler.logError("Insufficient arguments");
             System.exit(1);
         }
     }
     
     public void execBasic(String defaultLibFormat, String srcFolderPath, List<String> libFilenames, 
             String templatePath, String outFolderPath) throws IllegalArgumentException, IOException, TemplateException {
-        msgHandler.printMsg("Setting sources and output...");
+        msgHandler.logInfo("Setting sources and output...");
         setDefaultLibFormat(defaultLibFormat);
         setSources(srcFolderPath, libFilenames, templatePath);
         setOutputFolder(outFolderPath);
         
-        msgHandler.printMsg("Initializing...");
+        msgHandler.logInfo("Initializing...");
         init();
         
-        msgHandler.printMsg("Begin compiling...");
+        msgHandler.logInfo("Begin compiling...");
         compile();
-        msgHandler.printMsg("Compilation complete.");
+        msgHandler.logInfo("Compilation complete.");
     }
     
     public void setMsgHandler(MsgHandler msgHandler) {
@@ -197,14 +197,14 @@ public class FtlDocCompiler {
     }
     
     public void compile() throws IOException, ParseException, TemplateException {
-        msgHandler.printMsg("Parsing to data models...");
+        msgHandler.logInfo("Parsing to data models...");
         Map<String, Map<String, Object>> srcFileDataModels = parseLibs(this.defaultLibFormat);
-        msgHandler.printMsg("Got " + srcFileDataModels.size() + " data models");
+        msgHandler.logInfo("Got " + srcFileDataModels.size() + " data models");
         
-        msgHandler.printMsg("Loading FTL doc template...");
+        msgHandler.logInfo("Loading FTL doc template...");
         Template template = cfg.getTemplate(this.templatePath);
         
-        msgHandler.printMsg("Rendering...");
+        msgHandler.logInfo("Rendering...");
         render(template, srcFileDataModels);
     }
     
@@ -226,7 +226,7 @@ public class FtlDocCompiler {
         for(String libFilename : libFilenames) {
             File srcFile = new File(srcFolderPathFile, libFilename);
             
-            msgHandler.printMsg("Parsing " + srcFile.toString());
+            msgHandler.logInfo("Parsing " + srcFile.toString());
             Map<String, Object> dataModel = parseLib(libFilename, srcFile, defaultLibFormat);
             String libName = (String) dataModel.get("libName");
             
@@ -322,6 +322,7 @@ public class FtlDocCompiler {
         
         public CatoLibFtlDocFileParser(String libFilename, File srcFile) {
             super(libFilename, srcFile);
+            tmplHelper.setMsgHandler(this.msgHandler);
         }
         
         public void setAdvancedArgDefaultArgsSuffix(String advancedArgDefaultArgsSuffix) {
@@ -434,7 +435,7 @@ public class FtlDocCompiler {
                 }
             }
             
-            msgHandler.printMsg(" - entries: " + entryMap.size() + ", sections: " + sectionMap.size());
+            msgHandler.logInfo(" - entries: " + entryMap.size() + ", sections: " + sectionMap.size());
             
             dataModel.put("sectionMap", sectionMap);
             dataModel.put("entryMap", entryMap);
@@ -456,7 +457,7 @@ public class FtlDocCompiler {
             
             Matcher m;
             
-            msgHandler.printDebug("entry " + title);
+            msgHandler.logDebug("entry " + title);
             
             //msgHandler.printDebug("postEntryText: " + postEntryText.toString().substring(0, postEntryText.length()));
             
@@ -465,7 +466,7 @@ public class FtlDocCompiler {
                 // NOTE: Even if commented, there must be a valid function, var or assign here
                 // FIXME: super inefficient !!
                 String commentedEntry = tmplHelper.cleanTextValue(m.group(2)); 
-                msgHandler.printDebug(" is commented");
+                msgHandler.logDebug(" is commented");
                 Map<String, Object> funcMacroVarInfo = parseFunctionMacroVar(commentedEntry);
                 if (funcMacroVarInfo == null) {
                     throw new ParseException("Expected a commented #assign, #function, or #macro declaration, but got nothing; please make sure " +
@@ -479,7 +480,7 @@ public class FtlDocCompiler {
                 info.put("commentedImplComment", commentedImplComment);
             }
             else {
-                msgHandler.printDebug(" is NOT commented");
+                msgHandler.logDebug(" is NOT commented");
                 Map<String, Object> funcMacroVarInfo = parseFunctionMacroVar(postEntryText);
                 if (funcMacroVarInfo == null) {
                     throw new ParseException("Expected #assign, #function, or #macro declaration, or a commented placeholder, but got nothing");
@@ -562,7 +563,7 @@ public class FtlDocCompiler {
                 String secTitle = entry.getKey();
                 String secText = entry.getValue().toString();
                 // some of the sections need text without first indent trimmed, so save a version without trim
-                String rawSecText = tmplHelper.cleanTextValueNoTrim(secText);
+                String rawSecText = tmplHelper.cleanTextValueSafe(secText);
                 secText = tmplHelper.cleanTextValue(secText);
                 
                 Map<String, Object> secInfo = makeObjectMap();
@@ -667,7 +668,7 @@ public class FtlDocCompiler {
 
             for(Map.Entry<String, CharSequence> entry : secTitleMap.entrySet()) {
                 String secTitle = entry.getKey();
-                String rawSecText = tmplHelper.cleanTextValueNoTrim(entry.getValue().toString());
+                String rawSecText = tmplHelper.cleanTextValueSafe(entry.getValue().toString());
 
                 Map<String, Map<String, Object>> sectionParamDescMap = parseParamEntries(rawSecText);
 
@@ -738,7 +739,7 @@ public class FtlDocCompiler {
                     // TODO: go into more detail (type, default, required, etc.)
                     info.put("typeStr", typeStr);
                     // NO TRIM here
-                    remain = tmplHelper.cleanTextValueNoTrim(remain.substring(i+1));
+                    remain = tmplHelper.cleanTextValueSafe(remain.substring(i+1));
                 }
             }
             
@@ -748,7 +749,8 @@ public class FtlDocCompiler {
             i = remain.indexOf("\n");
             if (i >= 0) {
                 shortDesc = tmplHelper.cleanTextValue(remain.substring(0, i));
-                extraDesc = tmplHelper.cleanTextValueNoTrim(remain.substring(i+1));
+                extraDesc = tmplHelper.cleanTextValueSafe(remain.substring(i+1));
+                //extraDesc = tmplHelper.cleanTextValue(remain.substring(i+1));
             }
             else {
                 shortDesc = remain;
@@ -776,7 +778,7 @@ public class FtlDocCompiler {
                 // Either a variable or an advanced args pattern
                 String varName = tmplHelper.cleanTextValue(m.group(1));
                 if (varName.endsWith(advancedArgDefaultArgsSuffix)) {
-                    msgHandler.printDebug(" is advanced arg pattern");
+                    msgHandler.logDebug(" is advanced arg pattern");
                     
                     String argStr = tmplHelper.cleanTextValue(m.group(2));
                     
@@ -798,7 +800,7 @@ public class FtlDocCompiler {
                     info.put("isAdvancedArgs", Boolean.TRUE);
                 }
                 else {
-                    msgHandler.printDebug(" is regular var");
+                    msgHandler.logDebug(" is regular var");
                     info.put("type", "variable");
                     info.put("name", varName);
                     info.put("defaultVal", tmplHelper.cleanTextValue(m.group(2))); // NOTE: only var gets default for now
@@ -836,7 +838,7 @@ public class FtlDocCompiler {
             Matcher m;
             m = macroPat.matcher(text);
             if (m.find()) {
-                msgHandler.printDebug(" is macro");
+                msgHandler.logDebug(" is macro");
                 type = "macro";
                 info.put("name", tmplHelper.cleanTextValue(m.group(1)));
                 String argStr = tmplHelper.cleanTextValue(m.group(2));
@@ -844,7 +846,7 @@ public class FtlDocCompiler {
                 info.put("argList", parseArgStringMacro(argStr));
             }
             else {
-                msgHandler.printDebug(" is function");
+                msgHandler.logDebug(" is function");
                 m = functionPat.matcher(text);
                 if (m.find()) {
                     type = "function";
@@ -896,7 +898,7 @@ public class FtlDocCompiler {
                     argList.add(name);
                 }
                 else {
-                    msgHandler.printDebug(" text '" + arg + "' could not be matched");
+                    msgHandler.logDebug(" text '" + arg + "' could not be matched");
                     throw new ParseException("Error parsing map variable (in #assign)."
                             + " WARN: Any non-simple syntax breaks easily here.");
                 }
@@ -963,7 +965,7 @@ public class FtlDocCompiler {
             // Get out file path
             File outFile = new File(outFolderFile, libDocPath);
             
-            msgHandler.printMsg("Rendering to output file " + outFile.toString());
+            msgHandler.logInfo("Rendering to output file " + outFile.toString());
             
             // Create any missing sub-folders
             outFile.getParentFile().mkdirs();
@@ -995,7 +997,9 @@ public class FtlDocCompiler {
         dataModel.put("libMap", srcFileDataModels);
         dataModel.putAll(srcFileDataModel);
         
-        dataModel.put("tmplHelper", TemplateHelper.getInstance((String) dataModel.get("libFormat")));
+        TemplateHelper tmplHelper = TemplateHelper.getInstance((String) dataModel.get("libFormat"));
+        tmplHelper.setMsgHandler(msgHandler);
+        dataModel.put("tmplHelper", tmplHelper);
         
         template.process(dataModel, out);
     }
@@ -1014,6 +1018,13 @@ public class FtlDocCompiler {
      */
     public static abstract class TemplateHelper {
         
+        protected MsgHandler msgHandler = new VoidMsgHandler();
+        
+        public void setMsgHandler(MsgHandler msgHandler) {
+            this.msgHandler = msgHandler;
+        }
+
+
         public static TemplateHelper getInstance(String libFormat) {
             if (CATO_LIB_FORMAT.equals(libFormat)) {
                 return new CatoLibTemplateHelper();
@@ -1083,7 +1094,10 @@ public class FtlDocCompiler {
             }
         }
         
-        public String cleanTextValueNoTrim(String text) {
+        /**
+         * Will never remove leading whitespace...
+         */
+        public String cleanTextValueSafe(String text) {
             if (text != null) {
                 // remove all trailing whitespace
                 // Assume this was done at beginning of doc
@@ -1252,6 +1266,79 @@ public class FtlDocCompiler {
             }
             return -1;
         } 
+        
+        
+        public String makeRegexRangeExpr(int minSize, int maxSize) {
+            if (minSize > 0) {
+                if (maxSize < 0) {
+                    if (minSize == 1) {
+                        return "+";
+                    }
+                    else {
+                        return "{" + minSize + ",}";
+                    }
+                }
+                else if (maxSize > minSize) {
+                    return "{" + minSize + "," + maxSize + "}";
+                }
+                else if (maxSize == minSize) {
+                    return "{" + minSize + "}";
+                }
+                else {
+                    throw new IllegalArgumentException("Invalid regexp end range: maxSize: " + maxSize + "; minSize: " + minSize);
+                }
+            }
+            else {
+                if (maxSize < 0) {
+                    return "*";
+                }
+                else if (maxSize == 0) {
+                    // is this valid? whatever
+                    return "{0}";
+                }
+                else {
+                    return "{0," + maxSize + "}";
+                }
+            }
+        }
+        
+        /**
+         * Entries are string for text, map with groups for match 
+         */
+        public List<Object> splitByPat(String text, Pattern pat, Map<String, Object> modelMap, String... groupKeyNames) {
+            List<Object> res = new ArrayList<>();
+            
+            Matcher m = pat.matcher(text);
+            
+            int lastEndIndex = 0;
+            
+            while(m.find()) {
+                // add intermediate text
+                if (lastEndIndex < m.start()) {
+                    res.add(cleanTextValueSafe(text.substring(lastEndIndex, m.start())));
+                }
+                
+                Map<String, Object> info = makeObjectMap(modelMap);
+                // Save group values (by index)
+                for(int i = 0; i < groupKeyNames.length ; i++) {
+                    if (groupKeyNames[i] != null && !groupKeyNames[i].isEmpty()) {
+                        info.put(groupKeyNames[i], m.group(i + 1));
+                    }
+                }
+                
+                // add the entry
+                res.add(info);
+                
+                lastEndIndex = m.end();
+            }
+            
+            // add last text part
+            if (lastEndIndex < text.length()) {
+                res.add(cleanTextValueSafe(text.substring(lastEndIndex)));
+            }
+            
+            return res;
+        }
     }
     
     public static class CatoLibTemplateHelper extends TemplateHelper {
@@ -1270,6 +1357,523 @@ public class FtlDocCompiler {
         }
         
         
+        private static final Pattern textLibEntryRefPat = Pattern.compile(
+                "([a-zA-Z0-9][a-zA-Z0-9/._-]*[a-zA-Z0-9])?([@#])([a-zA-Z0-9_]{3,})"
+                , Pattern.DOTALL);
+        
+        /**
+         * Parses the text for lib-entry like references, basically those containing
+         * "@" or "#" characters, and returns a list where each entry is either
+         * a piece of text or a map describing a link to an entry.
+         */
+        public List<Object> splitByLibEntryRefs(String text, Map<String, Map<String, Object>> entryMap, 
+                Map<String, Map<String, Object>> libMap) {
+            List<Object> textList = new ArrayList<>();
+            
+            Matcher m = textLibEntryRefPat.matcher(text);
+            
+            int lastEndIndex = 0;
+            while(m.find()) {
+                // Add text in between
+                if (lastEndIndex < m.start()) {
+                    textList.add(text.substring(lastEndIndex, m.start()));
+                }
+                
+                String ref = m.group();
+                
+                Map<String, Object> entryInfo = findEntryGlobal(ref, entryMap, libMap);
+                if (entryInfo != null) {
+                    textList.add(entryInfo);
+                }
+                else {
+                    // Got nothing. Just add as regular text.
+                    textList.add(ref);
+                }
+
+                lastEndIndex = m.end();
+            }
+            
+            // Add last part
+            if (lastEndIndex < text.length()) {
+                textList.add(text.substring(lastEndIndex));
+            }
+            return textList;
+        }
+
+        
+        private static final Pattern strictTitlePat = Pattern.compile(
+                "^[^\\S\\n]*[*][^\\S\\n]*([^*\\n]*?)[^\\S\\n]*[*][^\\S\\n]*$"
+                , Pattern.DOTALL + Pattern.MULTILINE);
+        //private static final Pattern strictTitlePat = Pattern.compile(
+        //        "^.*[*](.*?)[*].*$"
+        //        , Pattern.MULTILINE);
+        
+        /**
+         * Splits text into a list of maps (titles) and strings (regular text).
+         * Only parses strict top-level titles.
+         */
+        public List<Object> splitByTitles(String text) {
+            Map<String, Object> modelMap = makeObjectMap();
+            modelMap.put("type", "title");
+            return splitByPat(text, strictTitlePat, modelMap, "value");
+        }
+
+        
+        
+        /**
+         * Splits text into a list of maps (indented blocks) and strings (regular text).
+         * Only parses strict top-level titles.
+         */
+        @SuppressWarnings("unchecked")
+        public List<Object> splitByIndentBlocks(String text, int minSize, int maxSize) {
+            final Pattern indentLinePat = Pattern.compile(
+                    "^([^\\S\\n]" + makeRegexRangeExpr(minSize, maxSize) + ")(\\S.*)$"
+                    , Pattern.MULTILINE);
+            
+            // Get all the indented lines
+            Map<String, Object> modelMap = makeObjectMap();
+            modelMap.put("type", "indent");
+            List<Object> lineList = splitByPat(text, indentLinePat, modelMap, "indentSpaces", "value");
+            
+            // Combine the lines into blocks
+            int lastBlockIndentSize = 0;
+            
+            msgHandler.logDebug("====================================");
+            msgHandler.logDebug("splitByIndentBlocks: line count: " + lineList.size());
+            msgHandler.logDebug("====================================");
+
+            List<Object> res = new ArrayList<>();
+            for(Object entry : lineList) {
+                if (entry instanceof String) {
+                    String entryText = (String) entry;
+                    
+                    msgHandler.logDebug("splitByIndentBlocks: TEXT: " + entryText);
+
+                    if (lastBlockIndentSize > 0 && (entryText.isEmpty() || entryText.equals("\n"))) {
+                        ; // discard text if it was only the newline between lines in a code block
+                        
+                        msgHandler.logDebug("splitByIndentBlocks: discarded empty");
+                    }
+                    else {
+                        res.add(entryText);
+                        // a piece of text breaking up a code block
+                        lastBlockIndentSize = 0;
+                        
+                        if (entryText.trim().isEmpty()) {
+                            msgHandler.logWarn("splitByIndentBlocks: got empty but not discarded");
+                        }
+                        
+                        msgHandler.logDebug("splitByIndentBlocks: did reset");
+                    }
+                }
+                else {
+                    Map<String, Object> lineInfo = (Map<String, Object>) entry;
+                    
+                    String indentSpaces = (String) lineInfo.get("indentSpaces");
+                    int indentSize = indentSpaces.length();
+                    lineInfo.put("indentSize", indentSize);
+                    
+                    
+                    msgHandler.logDebug("splitByIndentBlocks: INDENT LINE: " + lineInfo.get("value").toString());
+                    
+                    msgHandler.logDebug("splitByIndentBlocks: indentSize " + indentSize + " lastBlockIndentSize " + lastBlockIndentSize );
+                    
+                    if (lastBlockIndentSize > 0 && indentSize >= lastBlockIndentSize) {
+                        msgHandler.logDebug("splitByIndentBlocks: append: indentSize " + indentSize + " lastBlockIndentSize " + lastBlockIndentSize);
+                        
+                        // combine with last line
+                        Map<String, Object> blockInfo = (Map<String, Object>) res.get(res.size() - 1);
+                        // Add the text, but make sure to keep right number of spaces
+                        
+                        String blockText = (String) blockInfo.get("value");
+                        String lineText = (String) lineInfo.get("value");
+                        
+                        blockText += "\n"; // not included in regexp
+                        for(int i = 0; i < (indentSize - lastBlockIndentSize); i++) {
+                            blockText += " ";
+                        }
+                        blockText += lineText;
+                        
+                        blockInfo.put("value", blockText);
+                    }
+                    else {
+                        msgHandler.logDebug("splitByIndentBlocks: was new block");
+                        
+                        // new block
+                        res.add(lineInfo); // already in valid format for block
+                        lastBlockIndentSize = indentSize;
+                    }
+                }
+            }
+            
+            return res;
+        }
+        
+        public List<Object> splitByIndentBlocks(String text) {
+            return splitByIndentBlocks(text, 2, -1);
+        }
+        
+        
+        /**
+         * Finds and parses the first list. The list will never have a "title" or
+         * leading text; only sub-lists will. This parses using INDENTATION.
+         * Currently non-recursive only and does not recognize sub-lists, caller must do that.
+         * <p>
+         * Version that can isolate a list without consuming excess text.
+         */
+        public Map<String, Object> findParseBulletList(String text, boolean recurse) {
+            if (recurse == true) {
+                throw new UnsupportedOperationException("findParseBulletList doesn't recurse at the moment, ambiguous");
+            }
+            
+            // get the first bullet
+            Matcher m = bulletPat.matcher(text);
+            if (m.find()) {
+                Map<String, Object> listInfo = makeObjectMap();
+                
+                int startIndex = m.start();
+                int endIndex = text.length();
+                int indentSize = m.group(1).length();
+
+                // slow, but whatever
+                String listText = text.substring(startIndex);
+                
+                // NOTE: these pats use NOT DOTALL. Go line-by-line. MULTILINE is for ^ and $.
+                Pattern listLinePat;
+                if (indentSize > 0) {
+                    listLinePat = Pattern.compile("^[^\\S\\n]{" + indentSize + "}([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
+                }
+                else {
+                    listLinePat = Pattern.compile("^([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
+                }
+                
+                List<Object> listItemTexts = new LinkedList<>();
+                String listItemText = null;
+                
+                Matcher linem = listLinePat.matcher(listText);
+                
+                while(linem.find()) {
+                    String firstChar = linem.group(1);
+                    String lineText = linem.group(2);
+                    
+                    if ("*".equals(firstChar)) {
+                        if (listItemText != null) {
+                            // save previous
+                            listItemTexts.add(cleanTextValueSafe(listItemText));
+                        }
+                        
+                        // start new item
+                        listItemText = lineText;
+                    }
+                    else {
+                        if (listItemText == null) {
+                            throw new IllegalStateException("Error parsing bullet lists... regexp not working");
+                        }
+                        // append
+                        listItemText += ((linem.start() > 0) ? "\n" : "" ) + lineText;
+                    }
+                    
+                    // must add original startIndex to get the real endIndex (on the orig text); relative
+                    endIndex = startIndex + linem.end();
+                }
+                
+                // finish off previous
+                if (listItemText != null) {
+                    listItemTexts.add(cleanTextValueSafe(listItemText));
+                }
+
+                List<Object> items = listItemTexts;
+                
+                /* this used to treat sub-lists as special items, but get more versatile markup if we don't.
+                   also now let caller do this.
+                List<Map<String, Object>> items = new ArrayList<>();
+                
+                // Go through items, and create sub-lists where necessary.
+                for(String itemText : listItemTexts) {
+                    Map<String, Object> itemInfo = makeObjectMap();
+                    
+                    Map<String, Object> subList = findParseBulletList(itemText);
+                    if (subList != null) {
+                        // leading text
+                        int subStartIndex = (int) subList.get("startIndex");
+                        if (subStartIndex > 0) {
+                            itemInfo.put("leadingText", itemText.substring(0, subStartIndex));
+                        }
+                        // trailing text
+                        // NOTE: there shouldn't be any trailing text normally...
+                        int subEndIndex = (int) subList.get("endIndex");
+                        if (subEndIndex < itemText.length()) {
+                            itemInfo.put("trailingText", itemText.substring(subEndIndex));
+                        }
+                        
+                        itemInfo.put("items", subList.get("items"));
+                    }
+                    else {
+                        itemInfo.put("leadingText", itemText);
+                    }
+                    items.add(itemInfo);
+                }*/
+                
+                listInfo.put("items", items);
+                listInfo.put("startIndex", startIndex);
+                listInfo.put("endIndex", endIndex);
+                listInfo.put("type", "list");
+                return listInfo;
+            }
+            else {
+                return null;
+            }
+        }
+        
+        /**
+         * Returns list of maps and strings. 
+         * String is piece of text, while each map describes a list.
+         * <p>
+         * If recurse, the list elems are passed through splitByMarkupElems
+         */
+        @SuppressWarnings("unchecked")
+        public List<Object> splitByLists(String text, boolean recurse) {
+            List<Object> textList = new ArrayList<>();
+            
+            String remainText = text;
+            
+            while (true) {
+                Map<String, Object> listInfo = findParseBulletList(remainText, false);
+                if (listInfo == null) {
+                    break;
+                }
+
+                int startIndex = (int) listInfo.get("startIndex");
+                int endIndex = (int) listInfo.get("endIndex");
+                
+                
+                // Add text before list
+                if (startIndex > 0) {
+                    textList.add(remainText.substring(0, startIndex));
+                }
+                
+                
+                // If recursive, 
+                if (recurse) {
+                    List<Object> parsedItems = new ArrayList<>();
+                    List<Object> itemTexts = (List<Object>) listInfo.get("items");
+                    if (itemTexts != null && !itemTexts.isEmpty()) {
+                        for(Object itemEntry : itemTexts) {
+                            String itemText = (String) itemEntry;
+                            List<Object> parsedItemList = splitByMarkupElems(itemText);
+                            parsedItems.add(parsedItemList);
+                        }
+                    }
+                    // just replace directly, we know we can
+                    listInfo.put("items", parsedItems);
+                }
+                
+                // Add the list
+                textList.add(listInfo);
+                
+                // Update matcher to start at updated position
+                // FIXME: This method is really dumb, there must be a better way...
+                // ... however also very simple
+                remainText = remainText.substring(endIndex);
+            }
+            
+            // last piece of text remaining
+            if (!remainText.isEmpty()) {
+                textList.add(remainText);
+            }
+            
+            return textList;
+        }
+        
+        
+        // just try to match everything possible here. note will consume (and discard) leading space.
+        private static final Pattern notesPat = Pattern.compile(
+                "[^\\S\\n]*([A-Z]{3}[A-Z ]*[A-Z])([?]:|:|[?])[^\\S\\n]*(.*?)$"
+                , Pattern.DOTALL + Pattern.MULTILINE);
+        
+        /**
+         * Splits text into a list of maps (titles) and strings (regular text).
+         * <p>
+         * Notes are hard to handle, they occur almost anywhere and need to treat specially.
+         * NOTE: This does not combine notes and lists, see {@link #combineMarkupElems}
+         * <p>
+         * Also, notes will always consume the whitespace that comes before them, and whitespace
+         * around value on same line.
+         * It may have no value after this call.
+         */
+        @SuppressWarnings("unchecked")
+        public List<Object> splitByNotes(String text) {
+            Map<String, Object> modelMap = makeObjectMap();
+            modelMap.put("type", "note");
+            List<Object> bareList = splitByPat(text, notesPat, modelMap, "label", "sep", "value");
+            // This is too unwieldly to do in regex:
+            // check if note started a new line or not, and also clean value found so far (same line)
+            
+            List<Object> res = new ArrayList<>();
+            boolean lastWasNewline = true;
+            
+            for(Object bare : bareList) {
+                if (bare instanceof String) {
+                    String bareText = (String) bare;
+                    if (bareText.isEmpty()) {
+                        
+                    }
+                    else if (bareText.endsWith("\n")) {
+                        lastWasNewline = true;
+                    }
+                    else {
+                        lastWasNewline = false;
+                    }
+                    res.add(bare);
+                }
+                else {
+                    Map<String, Object> noteInfo = (Map<String, Object>) bare;
+
+                    String value = (String) noteInfo.get("value");
+                    if (value != null) {
+                        value = cleanTextValue(value);
+                    }
+                    if (value.isEmpty()) {
+                        value = null;
+                    }
+                    noteInfo.put("value", value);
+                    
+                    noteInfo.put("labelAndSep", ((String) noteInfo.get("label")) + ((String) noteInfo.get("sep")));
+                    
+                    noteInfo.put("ownLine", lastWasNewline);
+                    lastWasNewline = true;
+                }
+            }
+            
+            return res;
+        }
+        
+        
+        /**
+         * This performs high-level combination of elements already split.
+         * <p>
+         * Notes may consume lists and indent blocks.
+         */
+        @SuppressWarnings("unchecked")
+        public List<Object> combineMarkupElems(List<Object> elemList) {
+            List<Object> res = new ArrayList<>();
+            
+            int i = 0;
+            
+            while(i < elemList.size()) {
+                // NOTE: slow if not ArrayList
+                Object elemObj = elemList.get(i);
+                
+                if (elemObj instanceof Map) {
+                    Map<String, Object> elemInfo = (Map<String, Object>) elemObj;
+                    String type = (String) elemInfo.get("type");
+                    
+                    // notes should only consume if they were on their own line and they had no value.
+                    if (("note".equals(type) && 
+                        Boolean.TRUE.equals(elemInfo.get("ownLine")) && (elemInfo.get("value") == null))) {
+                        
+                        Object nextElemObj = null;
+                        if ((i+1) < elemList.size()) {
+                            nextElemObj = elemList.get(i+1);
+                        }
+                        
+                        if (nextElemObj != null && nextElemObj instanceof Map) {
+                            Map<String, Object> nextElemInfo = (Map<String, Object>) nextElemObj;
+                            String nextElemType = (String) nextElemInfo.get("type");
+                            
+                            if ("list".equals(nextElemType)) {
+                                // consume it and put it as the value for the note
+                                i++;
+                                elemInfo.put("value", nextElemInfo);
+                            }
+                            else if ("indent".equals(nextElemType)) {
+                                // consume it and put it as the TEXT value for the note
+                                i++;
+                                String indentText = (String) nextElemInfo.get("value");
+                                elemInfo.put("value", indentText);
+                            }
+                        }
+                    }
+
+                    res.add(elemInfo);
+                }
+                else {
+                    res.add(elemObj);
+                }
+                i++;
+            }
+            
+            return res;
+        }
+        
+        
+        
+        /**
+         * High-level, splits text into a list of maps (markup elements) and strings (regular text).
+         * For lists, applies recursively.
+         * NOTE: does not split by entry refs, main markup elems only.
+         */
+        public List<Object> splitByMarkupElems(String text) {
+            List<Object> res;
+            List<Object> prevSplit;
+
+            // split by simple/strict titles first
+            res = splitByTitles(text);
+            
+            // split remaining text parts by lists, and also do lists recursively
+            prevSplit = res;
+            res = new ArrayList<>();
+            for(Object part : prevSplit) {
+                if (part instanceof String) {
+                    List<Object> listSplit = splitByLists((String) part, true);
+                    res.addAll(listSplit);
+                }
+                else {
+                    res.add(part);
+                }
+            }
+            
+            // split remaining text parts by notes (NOTE:)
+            /*
+            prevSplit = res;
+            res = new ArrayList<>();            
+            for(Object part : prevSplit) {
+                if (part instanceof String) {
+                    List<Object> listSplit = splitByNotes((String) part);
+                    res.addAll(listSplit);
+                }
+                else {
+                    res.add(part);
+                }
+            }*/
+            
+            // split remaining text parts by indent blocks
+            prevSplit = res;
+            res = new ArrayList<>();   
+            for(Object part : prevSplit) {
+                if (part instanceof String) {
+                    List<Object> listSplit = splitByIndentBlocks((String) part);
+                    res.addAll(listSplit);
+                }
+                else {
+                    res.add(part);
+                }
+            }
+            
+            
+            // HIGH-LEVEL COMBINES
+            res = combineMarkupElems(res);
+            
+            return res;
+        }
+        
+        
+        
+        
+        
+        
+        
+        @Deprecated
         public Map<String, Object> parseAsBulletListGreedy(String text) {
             // get the first bullet
             Matcher m = bulletPat.matcher(text);
@@ -1349,6 +1953,7 @@ public class FtlDocCompiler {
          * 
          * @see #splitToParagraphs
          */
+        @Deprecated
         public Map<String, Object> parseDesc(String text) {
             Map<String, Object> dataInfo = makeObjectMap();
             
@@ -1371,196 +1976,6 @@ public class FtlDocCompiler {
             }
 
             return dataInfo;
-        }
-        
-        /**
-         * Finds and parses the first list. The list will never have a "title" or
-         * leading text; only sub-lists will. This parses using INDENTATION.
-         * <p>
-         * Version that can isolate a list without consuming excess text.
-         */
-        public Map<String, Object> findParseBulletList(String text) {
-            // get the first bullet
-            Matcher m = bulletPat.matcher(text);
-            if (m.find()) {
-                Map<String, Object> listInfo = makeObjectMap();
-                
-                int startIndex = m.start();
-                int indentSize = m.group(1).length();
-
-                // slow, but whatever
-                String listText = text.substring(startIndex);
-                
-                // NOTE: these pats use NOT DOTALL. Go line-by-line. MULTILINE is for ^ and $.
-                Pattern listLinePat;
-                if (indentSize > 0) {
-                    listLinePat = Pattern.compile("^([^\\S\\n]{" + indentSize + "})([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
-                }
-                else {
-                    listLinePat = Pattern.compile("^([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
-                }
-                
-                List<String> listItemTexts = new LinkedList<>();
-                String listItemText = null;
-                
-                Matcher linem = listLinePat.matcher(listText);
-                
-                while(linem.find()) {
-                    String firstChar = linem.group(1);
-                    String lineText = linem.group(2);
-                    
-                    if ("*".equals(firstChar)) {
-                        if (listItemText != null) {
-                            // save previous
-                            listItemTexts.add(cleanTextValue(listItemText));
-                        }
-                        
-                        // start new item
-                        listItemText = lineText;
-                    }
-                    else {
-                        if (listItemText == null) {
-                            throw new IllegalStateException("Error parsing bullet lists... regexp not working");
-                        }
-                        // append
-                        listItemText += "\n" + lineText;
-                    }
-                }
-                
-                // finish off previous
-                if (listItemText != null) {
-                    listItemTexts.add(cleanTextValue(listItemText));
-                }
-                
-                List<Map<String, Object>> items = new ArrayList<>();
-                
-                // Go through items, and create sub-lists where necessary.
-                for(String itemText : listItemTexts) {
-                    Map<String, Object> itemInfo = makeObjectMap();
-                    
-                    Map<String, Object> subList = findParseBulletList(itemText);
-                    if (subList != null) {
-                        // leading text
-                        int subStartIndex = (int) subList.get("startIndex");
-                        if (subStartIndex > 0) {
-                            itemInfo.put("leadingText", itemText.substring(0, subStartIndex));
-                        }
-                        // trailing text
-                        // NOTE: there shouldn't be any trailing text normally...
-                        int subEndIndex = (int) subList.get("endIndex");
-                        if (subEndIndex < itemText.length()) {
-                            itemInfo.put("trailingText", itemText.substring(subEndIndex));
-                        }
-                        
-                        itemInfo.put("items", subList.get("items"));
-                    }
-                    else {
-                        itemInfo.put("leadingText", itemText);
-                    }
-                    items.add(itemInfo);
-                }
-                
-                // must add original startIndex to get the real endIndex; relative
-                int endIndex = startIndex + linem.end();
-                
-                listInfo.put("items", items);
-                listInfo.put("startIndex", startIndex);
-                listInfo.put("endIndex", endIndex);
-                listInfo.put("type", "list");
-                return listInfo;
-            }
-            else {
-                return null;
-            }
-        }
-        
-        /**
-         * Returns list of maps and strings. 
-         * String is piece of text, while each map describes a list.
-         * For the top-level list there is never a "title" because no way to know, but usually fine.
-         */
-        public List<Object> splitByLists(String text) {
-            List<Object> textList = new ArrayList<>();
-            
-            String remainText = text;
-            
-            while (true) {
-                Map<String, Object> listInfo = findParseBulletList(remainText);
-                if (listInfo == null) {
-                    break;
-                }
-
-                int startIndex = (int) listInfo.get("startIndex");
-                int endIndex = (int) listInfo.get("endIndex");
-                
-                
-                // Add text before list
-                if (startIndex > 0) {
-                    textList.add(remainText.substring(0, startIndex));
-                }
-                
-                // Add the list
-                textList.add(listInfo);
-                
-                // Update matcher to start at updated position
-                // FIXME: This method is really dumb, there must be a better way...
-                // ... however also very simple
-                remainText = remainText.substring(endIndex);
-            }
-            
-            // last piece of text remaining
-            if (!remainText.isEmpty()) {
-                textList.add(remainText);
-            }
-            
-            return textList;
-        }
-        
-        
-        
-        
-        private static final Pattern textLibEntryRefPat = Pattern.compile(
-                "([a-zA-Z0-9][a-zA-Z0-9/._-]*[a-zA-Z0-9])?([@#])([a-zA-Z0-9_]{3,})"
-                , Pattern.DOTALL);
-        
-        
-        /**
-         * Parses the text for lib-entry like references, basically those containing
-         * "@" or "#" characters, and returns a list where each entry is either
-         * a piece of text or a map describing a link to an entry.
-         */
-        public List<Object> splitByLibEntryRefs(String text, Map<String, Map<String, Object>> entryMap, 
-                Map<String, Map<String, Object>> libMap) {
-            List<Object> textList = new ArrayList<>();
-            
-            Matcher m = textLibEntryRefPat.matcher(text);
-            
-            int lastEndIndex = 0;
-            while(m.find()) {
-                // Add text in between
-                if (lastEndIndex < m.start()) {
-                    textList.add(text.substring(lastEndIndex, m.start()));
-                }
-                
-                String ref = m.group();
-                
-                Map<String, Object> entryInfo = findEntryGlobal(ref, entryMap, libMap);
-                if (entryInfo != null) {
-                    textList.add(entryInfo);
-                }
-                else {
-                    // Got nothing. Just add as regular text.
-                    textList.add(ref);
-                }
-
-                lastEndIndex = m.end();
-            }
-            
-            // Add last part
-            if (lastEndIndex < text.length()) {
-                textList.add(text.substring(lastEndIndex));
-            }
-            return textList;
         }
         
     }
@@ -1600,7 +2015,7 @@ public class FtlDocCompiler {
     
     private static String join(String[] parts, String sep, int start, int end) {
         String res = parts[start];
-        for(int i=start+1; i<end; i++) {
+        for(int i = start + 1; i < end; i++) {
             res += sep + parts[i];
         }
         return res;
@@ -1610,8 +2025,16 @@ public class FtlDocCompiler {
         return new LinkedHashMap<>();
     }
     
+    protected static <T> Map<String, T> makeDataMap(Map<String, ? extends T> from) {
+        return new LinkedHashMap<>(from);
+    }
+    
     protected static <T> Map<String, T> makeObjectMap() {
         return new HashMap<>();
+    }
+    
+    protected static <T> Map<String, T> makeObjectMap(Map<String, ? extends T> from) {
+        return new HashMap<>(from);
     }
 
     @SuppressWarnings("serial")
@@ -1635,40 +2058,51 @@ public class FtlDocCompiler {
         
     }
     
+
     public static interface MsgHandler {
-        public void printMsg(String msg);
-        public void printError(String msg);
-        public void printDebug(String msg);
+        public void logInfo(String msg);
+        public void logError(String msg);
+        public void logDebug(String msg);
+        public void logWarn(String msg);
     }
     
     public static class SysOutMsgHandler implements MsgHandler {
         @Override
-        public void printMsg(String msg) {
+        public void logInfo(String msg) {
             System.out.println(msg);
         }
 
         @Override
-        public void printError(String msg) {
+        public void logError(String msg) {
             System.out.println("ERROR: " + msg);
         }
 
         @Override
-        public void printDebug(String msg) {
+        public void logDebug(String msg) {
             System.out.println(" - " + msg);
+        }
+
+        @Override
+        public void logWarn(String msg) {
+            System.out.println("WARN: " + msg);
         }
     }
     
     public static class VoidMsgHandler implements MsgHandler {
         @Override
-        public void printMsg(String msg) {
+        public void logInfo(String msg) {
         }
 
         @Override
-        public void printError(String msg) {
+        public void logError(String msg) {
         }
 
         @Override
-        public void printDebug(String msg) {            
+        public void logDebug(String msg) {            
+        }
+
+        @Override
+        public void logWarn(String msg) {
         }
     }    
 

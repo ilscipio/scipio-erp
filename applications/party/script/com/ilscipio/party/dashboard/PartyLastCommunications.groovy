@@ -39,4 +39,22 @@ for (communication in communicationEventList) {
         "toPersonFullName", toPersonFullName, "subject", subject, "commEventType", commEventType.description, "date", communication.entryDate
     ));
 }
+
+// pagination for last communications list
+viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 0);
+viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "10", delegator));
+listSize = lastCommunications ? lastCommunications.size() : 0;
+
+lowIndex = (viewIndex * viewSize) + 1;
+highIndex = (viewIndex + 1) * viewSize;
+highIndex = highIndex > listSize ? listSize : highIndex;
+lowIndex = lowIndex > highIndex ? highIndex : lowIndex;
+
+context.viewIndex = viewIndex;
+context.viewSize = viewSize;
+context.listSize = listSize;
+context.lowIndex = lowIndex;
+context.highIndex = highIndex;
+
+
 context.lastCommunications = lastCommunications;

@@ -78,5 +78,21 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         }
     }
 }
-context.listSize = securityAlerts.size();
+
+// pagination for the security alerts list
+viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 0);
+viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "10", delegator));
+listSize = securityAlerts ? securityAlerts.size() : 0;
+
+lowIndex = (viewIndex * viewSize) + 1;
+highIndex = (viewIndex + 1) * viewSize;
+highIndex = highIndex > listSize ? listSize : highIndex;
+lowIndex = lowIndex > highIndex ? highIndex : lowIndex;
+
+context.viewIndex = viewIndex;
+context.viewSize = viewSize;
+context.listSize = listSize;
+context.lowIndex = lowIndex;
+context.highIndex = highIndex;
+
 context.securityAlerts = securityAlerts;

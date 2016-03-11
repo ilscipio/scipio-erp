@@ -120,23 +120,23 @@ May have implicit dependencies on other parts of Cato API.      </li>
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>label</code></td>
-                            <td class="entry-paramdesc">set anchor text (required)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>icon</code></td>
-                            <td class="entry-paramdesc">generates icon inside the link (Note: has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>class</code></td>
-                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for anchor
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>label</code></td>
+                    <td class="entry-paramdesc">set anchor text (required)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>icon</code></td>
+                    <td class="entry-paramdesc">generates icon inside the link (Note: has to be the full set of classes, e.g. &quot;fa fa-fw fa-info&quot;)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>class</code></td>
+                    <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for anchor
 Supports prefixes:
   &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
   &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
-                          </tr>
-                      </table>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -198,19 +198,19 @@ Supports prefixes:
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>type</code></td>
-                            <td class="entry-paramdesc">(info|success|warning|secondary|alert|error), default info</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>class</code></td>
-                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for nested container
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>type</code></td>
+                    <td class="entry-paramdesc">(info|success|warning|secondary|alert|error), default info</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>class</code></td>
+                    <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for nested container
 Supports prefixes:
   &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
   &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
-                          </tr>
-                      </table>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -269,16 +269,16 @@ Supports prefixes:
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>type</code></td>
-                            <td class="entry-paramdesc">(callout|) default:empty</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>title</code></td>
-                            <td class="entry-paramdesc">Title</td>
-                          </tr>
-                      </table>
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>type</code></td>
+                    <td class="entry-paramdesc">(callout|) default:empty</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>title</code></td>
+                    <td class="entry-paramdesc">Title</td>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -334,40 +334,6 @@ A template should not assume too much about the message markup, but the markup s
                           <code>passArgs</code>
                       </p>
                     </div>
-                      <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>type</code></td>
-                            <td class="entry-paramdesc">(default|generic|...) (default: default) The type of message contained.
- Basic types:
-   default: default. in standard Cato markup, same as generic.
-   generic: no type specified (avoid using - prefer more specific)
- Types recognizes by Cato standard markup (theme-defined types are possible):
-   result: an informational result from any kind of query. e.g., &quot;No records found.&quot;.
-       is a normal event that shouldn&#39;t distract user attention.
-   result-norecord: specific &quot;No records found.&quot; message.
-   info: general information (<strong>NOTE:</strong> this is not really useful, but supported for completeness)
-   info-important: general important information
-   warning: general warning
-   fail: general non-fatal error
-   error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
-   error-perm: permission error
-   error-security: security error
-    id          = ID</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>class</code></td>
-                            <td class="entry-paramdesc">((css-class)) CSS classes or additional classes for message container (innermost containing element)
-Supports prefixes:
-  &quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)
-  &quot;=&quot;: causes the class to replace non-essential defaults (same as specifying a class name directly)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>text</code></td>
-                            <td class="entry-paramdesc">text. If string not specified, uses #nested instead.</td>
-                          </tr>
-                      </table>
-                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -378,7 +344,7 @@ Supports prefixes:
                         </p>
                       </div>
                   </div>
-                  <div class="lib-entry-section-other">
+                  <div class="lib-entry-section-usageFromScreenWidgets lib-entry-section-other">
                     <h4>Usage from screen widgets</h4>
 &lt;label.../&gt; elements in screen widgets can be mapped to this macro using the special &quot;common-msg-xxx&quot; style name, where
   xxx is the message type. e.g.:

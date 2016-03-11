@@ -17,8 +17,8 @@
 * * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
 *
 * DEV NOTES: 
-* * WARNING: BE CAREFUL WITH FORMATTING, documentation will be interpreted by a parser.
-*   * The number of star characters (*) is significant!
+* * WARN: Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
+*       and line endings. Must be spaces-only and LF-only line endings.
 * * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 *   Even though it would be convenient, we can't allow a "attribString" arg because no way
 *   for macro to get attribs out of it if it needs them, cause problems.

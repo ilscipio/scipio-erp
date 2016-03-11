@@ -62,11 +62,8 @@ Macros should almost never use &quot;request&quot; object directly - use setRequ
 </div>
     <div><strong>DEV NOTES:</strong>  <ul>
       <li>
-<strong>WARNING:</strong> BE CAREFUL WITH FORMATTING, documentation will be interpreted by a parser.  <ul>
-      <li>
-The number of star characters (*) is significant!      </li>
-  </ul>
-      </li>
+<strong>WARN:</strong> Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
+    and line endings. Must be spaces-only and LF-only line endings.      </li>
       <li>
 Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 Even though it would be convenient, we can&#39;t allow a &quot;attribString&quot; arg because no way

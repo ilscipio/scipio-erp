@@ -9,8 +9,8 @@
 *
 * WARN: NO Ofbiz libraries are available here; treat this as separate project.
 *
-* WARN: The parsing of the input files (and data model received here) is sensitive
-*     to whitespace, indentation and line endings.
+* WARN: Input documentation formatting (parsing) is sensitive to whitespace, presence and number of asterisks (*),
+*    and line endings. Must be spaces-only and LF-only line endings.
 *
 -->
 <!DOCTYPE html>
@@ -230,6 +230,18 @@ table.entry-parameters td.entry-paramname {
             
             <#global parametersSectionRendered = false>
             
+            <#macro parametersTable paramDescMap>
+              <table class="entry-parameters">
+                <#list paramDescMap?keys as paramName>
+                  <#assign paramDesc = paramDescMap[paramName]!"">
+                  <tr>
+                    <td class="entry-paramname"><code>${paramName?html}</code></td>
+                    <td class="entry-paramdesc"><@descText text=paramDesc.text!"" /></td>
+                  </tr>
+                </#list>
+              </table>
+            </#macro>
+            
             <#-- Needs special handling -->
             <#macro parametersSection entrySection entry>
                 <#if !parametersSectionRendered>
@@ -248,17 +260,20 @@ table.entry-parameters td.entry-paramname {
                       </#if>
                       </p>
                     </div>
-                    <#if entry.paramDescMap?has_content>
+                    <#-- NOTE: there is an entry-wide paramDescMap, and each param section has one too -->
+                    <#if entrySection.paramDescMap?has_content>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                        <#list entry.paramDescMap?keys as paramName>
-                          <#assign paramDesc = entry.paramDescMap[paramName]!"">
-                          <tr>
-                            <td class="entry-paramname"><code>${paramName?html}</code></td>
-                            <td class="entry-paramdesc"><@descText text=paramDesc.text!"" /></td>
-                          </tr>
-                        </#list>
-                      </table>
+                        <#if (entrySection.paramSectionMap?size >= 2)>
+                          <#list entrySection.paramSectionMap?keys as paramSectionName>
+                            <#assign paramSection = entrySection.paramSectionMap[paramSectionName]>
+                            <div class="lib-entry-paramsection lib-entry-paramsection-${paramSectionName?html}">
+                              <h5><@labelText text=paramSection.title /></h5>
+                              <@parametersTable paramDescMap=paramSection.paramDescMap />
+                            </div>
+                          </#list>
+                        <#else>
+                          <@parametersTable paramDescMap=entry.paramDescMap />
+                        </#if>
                       </div>
                     </#if>
 
@@ -324,7 +339,7 @@ table.entry-parameters td.entry-paramname {
                   </div>  
                 <#else>
                   <@parametersSection entrySection={} entry=entry />
-                  <div class="lib-entry-section-other">
+                  <div class="lib-entry-section-${entrySection.name?html} lib-entry-section-other">
                     <h4><@labelText text=entrySection.title!"" /></h4>
                     <@descText text=entrySection.text!"" />
                   </div>

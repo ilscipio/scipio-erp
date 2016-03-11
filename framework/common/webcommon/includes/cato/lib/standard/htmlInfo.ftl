@@ -21,13 +21,13 @@ Creates a modal UI element.
     </@modal>        
             
   * Parameters *
-    id              = set id (required)
-    label           = set anchor text (required)
-    icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
-    class           = ((css-class)) CSS classes or additional classes for anchor
-                      Supports prefixes:
-                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
+    id                      = set id (required)
+    label                   = set anchor text (required)
+    icon                    = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
+    class                   = ((css-class)) CSS classes or additional classes for anchor
+                              Supports prefixes:
+                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
 -->
 <#assign modal_defaultArgs = {
   "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
@@ -64,11 +64,11 @@ NOTE: Should avoid using this for regular, common inlined message results such a
     </@alert>            
                     
   * Parameters *
-    type           = (info|success|warning|secondary|alert|error), default info
-    class          = ((css-class)) CSS classes or additional classes for nested container
-                     Supports prefixes:
-                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
+    type                    = (info|success|warning|secondary|alert|error), default info
+    class                   = ((css-class)) CSS classes or additional classes for nested container
+                              Supports prefixes:
+                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign alert_defaultArgs = {
   "type":"info", "class":"", "id":"", "passArgs":{}
@@ -114,8 +114,8 @@ Creates a panel box.
     </@panel>            
                     
   * Parameters *
-    type           = (callout|) default:empty
-    title          = Title
+    type                    = (callout|) default:empty
+    title                   = Title
 -->
 <#assign panel_defaultArgs = {
   "type":"", "title":"", "passArgs":{}
@@ -167,27 +167,27 @@ A template should not assume too much about the message markup, but the markup s
     <@commonMsg type="result-norecord"/>            
              
   * Parameters *
-    type        = (default|generic|...) (default: default) The type of message contained.
-                  Basic types:
-                    default: default. in standard Cato markup, same as generic.
-                    generic: no type specified (avoid using - prefer more specific)
-                  Types recognizes by Cato standard markup (theme-defined types are possible):
-                    result: an informational result from any kind of query. e.g., "No records found.".
-                        is a normal event that shouldn't distract user attention.
-                    result-norecord: specific "No records found." message.
-                    info: general information (NOTE: this is not really useful, but supported for completeness)
-                    info-important: general important information
-                    warning: general warning
-                    fail: general non-fatal error
-                    error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
-                    error-perm: permission error
-                    error-security: security error
-    id          = ID
-    class       = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
-                  Supports prefixes:
-                    "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                    "=": causes the class to replace non-essential defaults (same as specifying a class name directly)  
-    text        = text. If string not specified, uses #nested instead.
+    type                    = (default|generic|...) (default: default) The type of message contained.
+                              Basic types:
+                              * default: default. in standard Cato markup, same as generic.
+                              * generic: no type specified (avoid using - prefer more specific)
+                              Types recognizes by Cato standard markup (theme-defined types are possible):
+                              * result: an informational result from any kind of query. e.g., "No records found.".
+                                    is a normal event that shouldn't distract user attention.
+                              * result-norecord: specific "No records found." message.
+                              * info: general information (NOTE: this is not really useful, but supported for completeness)
+                              * info-important: general important information
+                              * warning: general warning
+                              * fail: general non-fatal error
+                              * error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
+                              * error-perm: permission error
+                              * error-security: security error
+    id                      = ID
+    class                   = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
+                              Supports prefixes:
+                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+    text                    = ((string)) Text. If a string is not specified, uses #nested instead.
 -->
 <#assign commonMsg_defaultArgs = {
   "type":"", "class":"", "id":"", "text":true, "passArgs":{}

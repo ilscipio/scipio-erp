@@ -48,6 +48,9 @@ import freemarker.template.TemplateExceptionHandler;
  * TODO: log4j
  * <p>
  * TODO: License
+ * <p>
+ * WARN: Input documentation formatting (parsing) is sensitive to whitespace, presence and number of asterisks (*),
+ *    and line endings. Must be spaces-only and LF-only line endings.
  */
 public class FtlDocCompiler {
 
@@ -218,7 +221,7 @@ public class FtlDocCompiler {
      * @return a map of file names to data models
      */
     protected Map<String, Map<String, Object>> parseLibs(String defaultLibFormat) throws IOException {
-        Map<String, Map<String, Object>> srcFileDataModels = new LinkedHashMap<>();
+        Map<String, Map<String, Object>> srcFileDataModels = makeDataMap();
         
         for(String libFilename : libFilenames) {
             File srcFile = new File(srcFolderPathFile, libFilename);
@@ -233,7 +236,7 @@ public class FtlDocCompiler {
     }
     
     protected Map<String, Object> parseLib(String libFilename, File srcFile, String defaultLibFormat) throws ParseException, IOException {
-        Map<String, Object> dataModel = new HashMap<>();
+        Map<String, Object> dataModel = makeObjectMap();
         
         // Super lazy, load entire file as a string.
         String text = readFileAsString(srcFile.getPath(), this.defaultEncoding);
@@ -330,19 +333,19 @@ public class FtlDocCompiler {
             return CATO_LIB_FORMAT;
         }
         
-        private final Pattern commentPat = Pattern.compile("<#--(.*?)-->", Pattern.DOTALL);
+        private static final Pattern commentPat = Pattern.compile("<#--(.*?)-->", Pattern.DOTALL);
         
         // [^\\S\\n] means "whitespace but not newline"
         
         // Delimited by *********, at least 30 stars
-        private final Pattern sectionPat = Pattern.compile(
+        private static final Pattern sectionPat = Pattern.compile(
                 "[*]{30,}\\n" +
                 "[*][^\\S\\n]*([^\\n]+?)(?:[^\\S\\n]*[*])?\\n" +
                 "[*]{30,}\\n" +
                 "(?:[*]\\s*)?(.*?)"
                 , Pattern.DOTALL);
         // Delimited by *******, between 10 and 20 stars
-        private final Pattern entryPat = Pattern.compile(
+        private static final Pattern entryPat = Pattern.compile(
                 "[*]{10,20}\\n" +
                 "[*][^\\S\\n]*([^\\n]+?)(?:[^\\S\\n]*[*])?\\n" +
                 "[*]{10,20}\\n" +
@@ -374,16 +377,16 @@ public class FtlDocCompiler {
             
             
             String currentSectionName = "default";
-            Map<String, Object> sectionInfo = new LinkedHashMap<>();
+            Map<String, Object> sectionInfo = makeObjectMap();
             sectionInfo.put("name", currentSectionName);
             sectionInfo.put("title", null);
             sectionInfo.put("type", "default");
             sectionInfo.put("comment", "");
-            Map<String, Map<String, Object>> sectionEntryMap = new LinkedHashMap<>();
+            Map<String, Map<String, Object>> sectionEntryMap = makeDataMap();
             sectionInfo.put("entryMap", sectionEntryMap);
             
-            Map<String, Map<String, Object>> entryMap = new LinkedHashMap<>();
-            Map<String, Map<String, Object>> sectionMap = new LinkedHashMap<>();
+            Map<String, Map<String, Object>> entryMap = makeDataMap();
+            Map<String, Map<String, Object>> sectionMap = makeDataMap();
             sectionMap.put("default", sectionInfo);
             
             while (m.find()) {
@@ -392,12 +395,12 @@ public class FtlDocCompiler {
                 subm = sectionPat.matcher(comment);
                 if (subm.matches()) { // NOTE: not .find()
                     currentSectionName = tmplHelper.cleanTextValue(subm.group(1));
-                    sectionInfo = new LinkedHashMap<>();
+                    sectionInfo = makeObjectMap();
                     sectionInfo.put("name", currentSectionName);
                     sectionInfo.put("title", currentSectionName);
                     sectionInfo.put("type", "sub");
                     sectionInfo.put("comment", tmplHelper.cleanTextValue(subm.group(2)));
-                    sectionEntryMap = new LinkedHashMap<>();
+                    sectionEntryMap = makeDataMap();
                     sectionInfo.put("entryMap", sectionEntryMap);
                     sectionMap.put(currentSectionName, sectionInfo);
                 }
@@ -438,7 +441,7 @@ public class FtlDocCompiler {
         }
         
         // These must all test for space and newline at beginning
-        private final Pattern commentedEntryPostPat = Pattern.compile(
+        private static final Pattern commentedEntryPostPat = Pattern.compile(
                 "^\\s*" +
                 "<#--\\s*([^\\n]*?)\\s*" + // NOTE: crazy look-ahead needed
                 "(<#[^-].*?)" +
@@ -447,7 +450,7 @@ public class FtlDocCompiler {
         
         // WARN: postEntryText is NOT cleaned
         protected Map<String, Object> parseEntry(String title, String body, CharSequence postEntryText) throws ParseException {
-            Map<String, Object> info = new LinkedHashMap<>();
+            Map<String, Object> info = makeObjectMap();
             info.put("title", title);
             info.put("body", body); // just in case template needs, usually not
             
@@ -542,16 +545,16 @@ public class FtlDocCompiler {
             }
         }
         
-        private final Pattern entryBodySectionsPat = Pattern.compile(
+        private static final Pattern entryBodySectionsPat = Pattern.compile(
                 "(?:^|\\n)[^\\S\\n]{1,2}[*][^\\S\\n]+([^\\n]*?)[^\\S\\n]+[*]\\n"
                 , Pattern.DOTALL);
     
         protected Map<String, Object> parseEntryBody(CharSequence text) throws ParseException {
-            Map<String, Object> info = new LinkedHashMap<>();
+            Map<String, Object> info = makeObjectMap();
             
-            Map<String, CharSequence> secTitleMap = parseHeaderSections(text, entryBodySectionsPat, "Main Description");
+            Map<String, CharSequence> secTitleMap = parseSubSections(text, entryBodySectionsPat, "Main Description");
 
-            Map<String, Map<String, Object>> entrySections = new LinkedHashMap<>();
+            Map<String, Map<String, Object>> entrySections = makeDataMap();
             
             int secCount = 0;
             
@@ -562,7 +565,7 @@ public class FtlDocCompiler {
                 String rawSecText = tmplHelper.cleanTextValueNoTrim(secText);
                 secText = tmplHelper.cleanTextValue(secText);
                 
-                Map<String, Object> secInfo = new LinkedHashMap<>();
+                Map<String, Object> secInfo = makeObjectMap();
                 secInfo.put("title", secTitle);
                 secInfo.put("text", secText);
                 secInfo.put("rawText", rawSecText);
@@ -591,9 +594,9 @@ public class FtlDocCompiler {
                 }
                 else if (secTitle.matches("(?i)Parameters")) {
                     secName = "parameters";
-                    Map<String, Map<String, Object>> paramDescMap = parseParamsSecBody(rawSecText);
-                    secInfo.put("paramDescMap", paramDescMap);
-                    info.put("paramDescMap", paramDescMap);
+                    Map<String, Object> paramsInfo = parseParamsBody(rawSecText);
+                    secInfo.putAll(paramsInfo);
+                    info.put("paramDescMap", paramsInfo.get("paramDescMap")); // convenience
                 }
                 else if (secTitle.matches("(?i)Return\\s+values?")) {
                     secName = "returnValues";
@@ -607,9 +610,9 @@ public class FtlDocCompiler {
                 }
                 else {
                     // Unknown, just include anyway and template will render how/where it wants
-                    secName = "other-" + secCount;
+                    secName = tmplHelper.makeCamelCaseNameFromTitle(secTitle);
                 }
-                secInfo.put("sectionName", secName);
+                secInfo.put("name", secName);
                 entrySections.put(secName, secInfo);
                 secCount++;
             }
@@ -619,21 +622,88 @@ public class FtlDocCompiler {
             return info;
         }
         
-        private final Pattern parameterPat = Pattern.compile(
+        /**
+         * Parse sections. headerTitlePat group 1 must be the title.
+         * Titles are cleaned but bodies are NOT.
+         */
+        protected Map<String, CharSequence> parseSubSections(CharSequence text, Pattern headerTitlePat, String defaultSectionTitle) {
+            Matcher m = headerTitlePat.matcher(text);
+            
+            Map<String, CharSequence> secTitleMap = makeDataMap();
+            
+            int lastEndIndex = 0;
+            String lastSecTitle = tmplHelper.cleanTextValue(defaultSectionTitle);
+            
+            while(m.find()) {
+                if (m.start() > 0) { // if (m.start() == 0) we assume first section supplants the default
+                    CharSequence lastSecText = text.subSequence(lastEndIndex, m.start());
+                    // extra check (augments (m.start() > 0) check): if this is the first, make sure don't have only whitespace
+                    if ((lastEndIndex > 0) || lastSecText.toString().trim().length() > 0) {
+                        secTitleMap.put(lastSecTitle, lastSecText);
+                    }
+                }
+                
+                lastSecTitle = tmplHelper.cleanTextValue(m.group(1));
+                lastEndIndex = m.end();
+            }
+            
+            secTitleMap.put(lastSecTitle, text.subSequence(lastEndIndex, text.length()));
+            
+            return secTitleMap;
+        }
+        
+        private static final Pattern paramSectionsPat = Pattern.compile(
+                "(?:^|\\n)[^\\S\\n]{3,5}[*][^\\S\\n]+([^\\n]*?)[^\\S\\n]+[*]\\n"
+                , Pattern.DOTALL);
+        
+        protected Map<String, Object> parseParamsBody(String rawText) {
+            Map<String, Object> paramsInfo = makeObjectMap();
+            
+            // There's a global paramDescMap for the entry, and each paramSectionMap has a paramDescMap too
+            Map<String, Map<String, Object>> paramDescMap = makeDataMap();
+            Map<String, Map<String, Object>> paramSectionMap = makeDataMap();
+            
+            Map<String, CharSequence> secTitleMap = parseSubSections(rawText, paramSectionsPat, "General");
+
+            for(Map.Entry<String, CharSequence> entry : secTitleMap.entrySet()) {
+                String secTitle = entry.getKey();
+                String rawSecText = tmplHelper.cleanTextValueNoTrim(entry.getValue().toString());
+
+                Map<String, Map<String, Object>> sectionParamDescMap = parseParamEntries(rawSecText);
+
+                // Add all params to global list for entry
+                paramDescMap.putAll(sectionParamDescMap);
+                
+                // Make map for this section
+                Map<String, Object> paramSectionInfo = makeObjectMap();
+                paramSectionInfo.put("paramDescMap", sectionParamDescMap);
+                paramSectionInfo.put("title", secTitle);
+                String secName = tmplHelper.makeCamelCaseNameFromTitle(secTitle);
+                paramSectionInfo.put("name", secName);
+                paramSectionMap.put(secName, paramSectionInfo);
+            }
+            
+            paramsInfo.put("paramDescMap", paramDescMap);
+            paramsInfo.put("paramSectionMap", paramSectionMap);
+            
+            return paramsInfo;
+        }
+        
+        private static final Pattern parameterPat = Pattern.compile(
                 "(?:^|\\n)[^\\S\\n]{1,8}([^\\s=][^=]+?[^\\s=])[^\\S\\n]*=[^\\S\\n]*?"
                 , Pattern.DOTALL);
         
-        protected Map<String, Map<String, Object>> parseParamsSecBody(String rawSecText) {
-            Map<String, Map<String, Object>> paramDescMap = new LinkedHashMap<>();
-            
-            Matcher paramm = parameterPat.matcher(rawSecText);
+        protected Map<String, Map<String, Object>> parseParamEntries(String rawText) {
+            Map<String, Map<String, Object>> paramDescMap = makeDataMap();
+
+            Matcher paramm = parameterPat.matcher(rawText);
             int lastParamEndIndex = 0;
             String lastParamName = "";
             String lastParamNameMatch = "";
             
             while(paramm.find()) {
                 if (!lastParamName.isEmpty()) {
-                    String lastParamVal = tmplHelper.cleanTextValue(rawSecText.substring(lastParamEndIndex, paramm.start()));
+                    String lastParamVal = tmplHelper.cleanTextValue(rawText.substring(lastParamEndIndex, paramm.start()));
                     lastParamVal = tmplHelper.stripIndent(lastParamVal, lastParamNameMatch.length());
                     paramDescMap.put(lastParamName, parseParamDesc(lastParamVal));
                 }
@@ -645,50 +715,26 @@ public class FtlDocCompiler {
             }   
             
             if (!lastParamName.isEmpty()) {
-                String lastParamVal = tmplHelper.cleanTextValue(rawSecText.substring(lastParamEndIndex, rawSecText.length()));
+                String lastParamVal = tmplHelper.cleanTextValue(rawText.substring(lastParamEndIndex, rawText.length()));
                 lastParamVal = tmplHelper.stripIndent(lastParamVal, lastParamNameMatch.length());
                 paramDescMap.put(lastParamName, parseParamDesc(lastParamVal));
             }
             
             return paramDescMap;
         }
+
         
         protected Map<String, Object> parseParamDesc(String text) {
-            Map<String, Object> info = new HashMap<>();
+            Map<String, Object> info = makeObjectMap();
             // TODO: This should try to extract type, defaults, etc. from the definition.
             // Currently docs not standard enough.
             info.put("text", text);
             return info;
         }
-        
 
-        /**
-         * Parse sections. headerTitlePat group 1 must be the title.
-         * Titles are cleaned but bodies are NOT.
-         */
-        protected Map<String, CharSequence> parseHeaderSections(CharSequence text, Pattern headerTitlePat, String defaultSectionTitle) {
-            Matcher m = headerTitlePat.matcher(text);
-            
-            Map<String, CharSequence> secTitleMap = new LinkedHashMap<>();
-            
-            int lastEndIndex = 0;
-            String lastSecTitle = tmplHelper.cleanTextValue(defaultSectionTitle);
-            
-            while(m.find()) {
-                CharSequence lastSecText = text.subSequence(lastEndIndex, m.start());
-                secTitleMap.put(lastSecTitle, lastSecText);
-                
-                lastSecTitle = tmplHelper.cleanTextValue(m.group(1));
-                lastEndIndex = m.end();
-            }
-            
-            secTitleMap.put(lastSecTitle, text.subSequence(lastEndIndex, text.length()));
-            
-            return secTitleMap;
-        }
         
         
-        private final Pattern assignPat = Pattern.compile(
+        private static final Pattern assignPat = Pattern.compile(
                 "^\\s*" +
                 "<#assign\\s(\\w+)\\s*=\\s*(\\s[^>]*?)\\s*/?>" 
                 , Pattern.DOTALL);
@@ -699,7 +745,7 @@ public class FtlDocCompiler {
             
             m = assignPat.matcher(text);
             if (m.find()) {
-                Map<String, Object> info = new LinkedHashMap<>();
+                Map<String, Object> info = makeObjectMap();
                 
                 // Either a variable or an advanced args pattern
                 String varName = tmplHelper.cleanTextValue(m.group(1));
@@ -745,12 +791,12 @@ public class FtlDocCompiler {
             }
         }
         
-        private final Pattern macroPat = Pattern.compile(
+        private static final Pattern macroPat = Pattern.compile(
                 "^\\s*" +
                 "<#macro\\s(\\w+)(\\s[^>]*?)?>(.*?)</#macro>" +
                 ".*" // extra needed for .matches()
                 , Pattern.DOTALL);
-        private final Pattern functionPat = Pattern.compile(
+        private static final Pattern functionPat = Pattern.compile(
                 "^\\s*" +
                 "<#function\\s(\\w+)(\\s[^>]*?)?>(.*?)</#function>" +
                 ".*" // extra needed for .matches()
@@ -758,7 +804,7 @@ public class FtlDocCompiler {
         
         // WARN: text is not cleaned
         protected Map<String, Object> parseFunctionMacro(CharSequence text) throws ParseException {
-            Map<String, Object> info = new LinkedHashMap<>();
+            Map<String, Object> info = makeObjectMap();
             String type;
     
             Matcher m;
@@ -791,7 +837,7 @@ public class FtlDocCompiler {
         }
         
         
-        private final Pattern mapArgSinglePat = Pattern.compile(
+        private static final Pattern mapArgSinglePat = Pattern.compile(
                 "(['\"])(.*?)\\1\\s*:.*"
                 , Pattern.DOTALL);
         
@@ -919,7 +965,7 @@ public class FtlDocCompiler {
     protected void render(Template template, Map<String, Object> srcFileDataModel, Map<String, Map<String, Object>> srcFileDataModels, 
             Writer out) throws TemplateException, IOException {
         
-        Map<String, Object> dataModel = new HashMap<>();
+        Map<String, Object> dataModel = makeObjectMap();
         dataModel.put("libMap", srcFileDataModels);
         dataModel.putAll(srcFileDataModel);
         
@@ -969,7 +1015,7 @@ public class FtlDocCompiler {
             }
         }
         
-        private final Pattern firstLinePat = Pattern.compile(
+        private static final Pattern firstLinePat = Pattern.compile(
                 "^\\s*(.*?)(?:\\n\\n(.*)|[\\s\\n]*?)$"
                 , Pattern.DOTALL);
         
@@ -1002,7 +1048,9 @@ public class FtlDocCompiler {
         public String cleanTextValue(String text) {
             if (text != null) {
                 // trim and remove all trailing whitespace
-                return text.trim().replaceAll("[^\\S\\n]+(\\n)", "$1");
+                // Assume this was done at beginning of doc
+                //return text.trim().replaceAll("[^\\S\\n]+(\\n)", "$1");
+                return text.trim();
             }
             else {
                 return text;
@@ -1012,7 +1060,9 @@ public class FtlDocCompiler {
         public String cleanTextValueNoTrim(String text) {
             if (text != null) {
                 // remove all trailing whitespace
-                return text.replaceAll("[^\\S\\n]+(\\n)", "$1");
+                // Assume this was done at beginning of doc
+                //return text.replaceAll("[^\\S\\n]+(\\n)", "$1");
+                return text;
             }
             else {
                 return text;
@@ -1027,10 +1077,10 @@ public class FtlDocCompiler {
          * about it again.
          */
         public String normalizeText(String text) {
-            return text.replaceAll("[^\\S\\n]+(\\n)", "$1").replaceAll("\\t", "    ");
+            return text.replaceAll("\\t", "    ").replaceAll("[^\\S\\n]+(\\n)", "$1");
         }
         
-        private final Pattern bulletPat = Pattern.compile(
+        private static final Pattern bulletPat = Pattern.compile(
                 "^([^\\S\\n]*)[*]"
                 , Pattern.DOTALL + Pattern.MULTILINE);
 
@@ -1046,7 +1096,7 @@ public class FtlDocCompiler {
             // get the first bullet
             Matcher m = bulletPat.matcher(text);
             if (m.find()) {
-                Map<String, Object> listInfo = new LinkedHashMap<>();
+                Map<String, Object> listInfo = makeObjectMap();
                 
                 int indentSize = m.group(1).length();
 
@@ -1101,7 +1151,7 @@ public class FtlDocCompiler {
         }
         
         
-        private final Pattern titlePat = Pattern.compile(
+        private static final Pattern titlePat = Pattern.compile(
                 "^(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)([^\\n]*?)(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)$"
                 , Pattern.DOTALL);
         
@@ -1118,7 +1168,7 @@ public class FtlDocCompiler {
          * @see #splitToParagraphs
          */
         public Map<String, Object> parseDescEntry(String text) {
-            Map<String, Object> dataInfo = new LinkedHashMap<>();
+            Map<String, Object> dataInfo = makeObjectMap();
             
             Matcher m = titlePat.matcher(text);
             if (m.matches()) {
@@ -1148,7 +1198,7 @@ public class FtlDocCompiler {
             String rawName = getEntryNameOnly(nameRef);
             // check in our entry map first
             if (isEntryNameOnly(nameRef) && entryMap.containsKey(rawName)) {
-                Map<String, Object> info = new HashMap<>();
+                Map<String, Object> info = makeObjectMap();
                 info.put("entry", entryMap.get(rawName));
                 info.put("rawName", rawName);
                 return info;
@@ -1160,7 +1210,7 @@ public class FtlDocCompiler {
                     if (dataModel != null) {
                         entryMap = (Map<String, Map<String, Object>>) dataModel.get("entryMap");
                         if (entryMap.containsKey(rawName)) {
-                            Map<String, Object> info = new HashMap<>();
+                            Map<String, Object> info = makeObjectMap();
                             info.put("entry", entryMap.get(rawName));
                             info.put("libName", libName);
                             info.put("libDocPath", dataModel.get("libDocPath"));
@@ -1177,7 +1227,7 @@ public class FtlDocCompiler {
                         Map<String, Object> dataModel = mapEntry.getValue();
                         entryMap = (Map<String, Map<String, Object>>) dataModel.get("entryMap");
                         if (entryMap.containsKey(rawName)) {
-                            Map<String, Object> info = new HashMap<>();
+                            Map<String, Object> info = makeObjectMap();
                             info.put("entry", entryMap.get(rawName));
                             info.put("libName", libName);
                             info.put("libDocPath", dataModel.get("libDocPath"));
@@ -1238,6 +1288,29 @@ public class FtlDocCompiler {
             }
             return res + targetLibDocPath;
         }
+        
+        
+        private static final Pattern simpleWordPat = Pattern.compile("[a-zA-Z0-9]+");
+        
+        /**
+         * This makes a cleaned camel-case name from an English title, 
+         * using simple-character words extracted from it (only).
+         */
+        public String makeCamelCaseNameFromTitle(String title) {
+            StringBuilder sb = new StringBuilder();
+            Matcher m = simpleWordPat.matcher(title);
+            while (m.find()) {
+                String val = m.group();
+                if (sb.length() == 0) {
+                    sb.append(val.toLowerCase());
+                }
+                else {
+                    sb.append(val.substring(0, 1).toUpperCase());
+                    sb.append(val.substring(1).toLowerCase());
+                }
+            }
+            return sb.toString();
+        }
     }
     
     public static class CatoLibTemplateHelper extends TemplateHelper {
@@ -1283,6 +1356,14 @@ public class FtlDocCompiler {
             res += sep + parts[i];
         }
         return res;
+    }
+    
+    protected static <T> Map<String, T> makeDataMap() {
+        return new LinkedHashMap<>();
+    }
+    
+    protected static <T> Map<String, T> makeObjectMap() {
+        return new HashMap<>();
     }
 
     @SuppressWarnings("serial")

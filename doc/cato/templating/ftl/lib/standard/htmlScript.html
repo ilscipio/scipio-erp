@@ -122,13 +122,13 @@ this is somewhat generic.      </li>
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>includeDocType</code></td>
-                            <td class="entry-paramdesc">((boolean)) (default: false) Whether to include doctype or not.
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>includeDocType</code></td>
+                    <td class="entry-paramdesc">((boolean)) (default: false) Whether to include doctype or not.
  Default is false because is already included by screen renderer in @renderScreenBegin.</td>
-                          </tr>
-                      </table>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -198,12 +198,12 @@ this is somewhat generic.      </li>
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>scriptType/output/cdata/htmlwrap</code></td>
-                            <td class="entry-paramdesc">defaults for child @script calls (see @script)</td>
-                          </tr>
-                      </table>
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>scriptType/output/cdata/htmlwrap</code></td>
+                    <td class="entry-paramdesc">defaults for child @script calls (see @script)</td>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -267,36 +267,36 @@ this is somewhat generic.      </li>
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>type</code></td>
-                            <td class="entry-paramdesc">script type identifier (default &quot;text/javascript&quot;)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>src</code></td>
-                            <td class="entry-paramdesc">source (if no nested content)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>language</code></td>
-                            <td class="entry-paramdesc">deprecated by HTML - ignored by macro</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>output</code></td>
-                            <td class="entry-paramdesc">if true, the script must be output in the markup where the macro is used
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>type</code></td>
+                    <td class="entry-paramdesc">script type identifier (default &quot;text/javascript&quot;)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>src</code></td>
+                    <td class="entry-paramdesc">source (if no nested content)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>language</code></td>
+                    <td class="entry-paramdesc">deprecated by HTML - ignored by macro</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>output</code></td>
+                    <td class="entry-paramdesc">if true, the script must be output in the markup where the macro is used
 and should never be delegated. in cases of scripts within common templates,
 this should be omitted, except when used in html &lt;head&gt; or in a footer.
 if not specified or &quot;&quot;, cato decides what to do with them (output or accumulate at bottom of page).
 <strong>TODO:</strong> code to accumulate at footer.</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>htmlwrap</code></td>
-                            <td class="entry-paramdesc">boolean, default true, if false don&#39;t include HTML wrapper (or cdata)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>cdata</code></td>
-                            <td class="entry-paramdesc">boolean, default true, if false don&#39;t include CDATA guard (only used if htmlwrap true)</td>
-                          </tr>
-                      </table>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>htmlwrap</code></td>
+                    <td class="entry-paramdesc">boolean, default true, if false don&#39;t include HTML wrapper (or cdata)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>cdata</code></td>
+                    <td class="entry-paramdesc">boolean, default true, if false don&#39;t include CDATA guard (only used if htmlwrap true)</td>
+                  </tr>
+              </table>
                       </div>
 
                       <div class="lib-entry-params-details">
@@ -352,23 +352,23 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>url</code></td>
-                            <td class="entry-paramdesc">controller request uri</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>output</code></td>
-                            <td class="entry-paramdesc">if true, the include must be output in the markup where the macro is used
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>url</code></td>
+                    <td class="entry-paramdesc">controller request uri</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>output</code></td>
+                    <td class="entry-paramdesc">if true, the include must be output in the markup where the macro is used
 and should never be delegated. in most cases this should be omitted.
 <strong>DEV NOTE:</strong> if not specified, &quot;&quot; or false for now simply accumulates the names
     and will be included by decorator in footer.</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>htmlwrap</code></td>
-                            <td class="entry-paramdesc">whether to wrap in @script - default FALSE for this one</td>
-                          </tr>
-                      </table>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>htmlwrap</code></td>
+                    <td class="entry-paramdesc">whether to wrap in @script - default FALSE for this one</td>
+                  </tr>
+              </table>
                       </div>
 
                   </div>
@@ -405,12 +405,12 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>events</code></td>
-                            <td class="entry-paramdesc">map of event names to actions</td>
-                          </tr>
-                      </table>
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>events</code></td>
+                    <td class="entry-paramdesc">map of event names to actions</td>
+                  </tr>
+              </table>
                       </div>
 
                   </div>
@@ -457,25 +457,25 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                       </p>
                     </div>
                       <div class="lib-entry-params-doc">
-                      <table class="entry-parameters">
-                          <tr>
-                            <td class="entry-paramname"><code>attribs</code></td>
-                            <td class="entry-paramdesc">the attribs map here is more versatile and supports mergeArgMaps functions more easily.
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname"><code>attribs</code></td>
+                    <td class="entry-paramdesc">the attribs map here is more versatile and supports mergeArgMaps functions more easily.
  it may contain two special members: localArgNames and allArgNames. both should be lists.
  localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
  the two will be excluded themselves.
  if this map contains an &quot;attribs&quot; member, it will be added for exclude as well.
  see function getAttribMapAllExcludes for implementation details.</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>noExclude</code></td>
-                            <td class="entry-paramdesc">prevents excludes of attribs with specified names (list)</td>
-                          </tr>
-                          <tr>
-                            <td class="entry-paramname"><code>(other)</code></td>
-                            <td class="entry-paramdesc">See @elemAttribStr; mostly same parameters but defaults different.</td>
-                          </tr>
-                      </table>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>noExclude</code></td>
+                    <td class="entry-paramdesc">prevents excludes of attribs with specified names (list)</td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname"><code>(other)</code></td>
+                    <td class="entry-paramdesc">See @elemAttribStr; mostly same parameters but defaults different.</td>
+                  </tr>
+              </table>
                       </div>
 
                   </div>

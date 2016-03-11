@@ -111,16 +111,16 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     </@script>         
                     
   * Parameters *
-    type            = script type identifier (default "text/javascript")
-    src             = source (if no nested content)
-    language        = deprecated by HTML - ignored by macro
-    output          = if true, the script must be output in the markup where the macro is used
-                      and should never be delegated. in cases of scripts within common templates,
-                      this should be omitted, except when used in html <head> or in a footer.
-                      if not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
-                      TODO: code to accumulate at footer.
-    htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
-    cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
+    type                    = (default: text/javascript) Script type identifier
+    src                     = Source (if no nested content)
+    language                = DEPRECATED by HTML - ignored by macro
+    output                  = ((boolean)) If true, the script must be output in the markup where the macro is used
+                              and should never be delegated. In cases of scripts within common templates,
+                              this should be omitted, except when used in html <head> or in a footer.
+                              If not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
+                              TODO: code to accumulate at footer.
+    htmlwrap                = ((boolean)) (default: true) If false don't include HTML wrapper (or cdata)
+    cdata                   = ((boolean)) (default: true) If false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#assign script_defaultArgs = {
   "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
@@ -176,12 +176,13 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 @ofbizUrl in JS.  
          
   * Parameters *
-    url             = controller request uri
-    output          = if true, the include must be output in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted.  
-                      DEV NOTE: if not specified, "" or false for now simply accumulates the names  
-                          and will be included by decorator in footer.
-    htmlwrap        = whether to wrap in @script - default FALSE for this one
+    url                     = Controller request uri
+    output                  = ((boolean)) If true, the include must be output in the markup where the macro is used
+                              and should never be delegated. In most cases this should be omitted.  
+                              DEV NOTE: If not specified, "" or false for now simply accumulates the names  
+                                and will be included by decorator in footer.
+    htmlwrap                = ((boolean)) (default: false) Whether to wrap in @script - 
+                              NOTE: Default is FALSE for this one
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false output="">
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
@@ -230,7 +231,7 @@ Prints a string of JS events as HTML element attributes for common macro HTML el
 Accepts attrib names as both "onxxx" and "xxx".
 
   * Parameters *
-    events    = map of event names to actions
+    events                  = ((map)) Map of event names to actions
 -->
 <#macro commonElemEventAttribStr events>
   <@elemAttribStr attribs=events attribNamePrefix="on" alwaysAddPrefix=false /><#t>
@@ -244,14 +245,15 @@ Prints a string of element attributes for common macro HTML elements.
 This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.
 
   * Parameters *
-    attribs       = the attribs map here is more versatile and supports mergeArgMaps functions more easily.
-                    it may contain two special members: localArgNames and allArgNames. both should be lists.
-                    localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
-                    the two will be excluded themselves.
-                    if this map contains an "attribs" member, it will be added for exclude as well.
-                    see function getAttribMapAllExcludes for implementation details.
-    noExclude     = prevents excludes of attribs with specified names (list)
-    (other)       = See @elemAttribStr; mostly same parameters but defaults different.
+    attribs                 = ((map)) Attribs map
+                              The attribs map here is more versatile and supports mergeArgMaps functions more easily.
+                              It may contain two special members: localArgNames and allArgNames. Both should be lists.
+                              localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
+                              The two will be excluded themselves.
+                              If this map contains an "attribs" member, it will be added for exclude as well.
+                              See function getAttribMapAllExcludes for implementation details.
+    noExclude               = ((list)) Prevents excludes of attribs with specified names
+    (other)                 = See @elemAttribStr; mostly same parameters but with different defaults.
 -->
 <#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="_EMPTY_VALUE_" noValToken="_NO_VALUE_" exclude=[] noExclude=[]
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>

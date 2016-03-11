@@ -726,14 +726,40 @@ public class FtlDocCompiler {
         
         protected Map<String, Object> parseParamDesc(String text) {
             Map<String, Object> info = makeObjectMap();
-            // TODO: This should try to extract type, defaults, etc. from the definition.
-            // Currently docs not standard enough.
             info.put("text", text);
+            
+            String remain = text;
+            int i;
+            
+            if (remain.startsWith("(")) {
+                i = tmplHelper.getClosingCharIndex(remain, 1, '(', ')');
+                if (i >= 0) {
+                    String typeStr = remain.substring(0, i+1);
+                    // TODO: go into more detail (type, default, required, etc.)
+                    info.put("typeStr", typeStr);
+                    // NO TRIM here
+                    remain = tmplHelper.cleanTextValueNoTrim(remain.substring(i+1));
+                }
+            }
+            
+            String shortDesc; 
+            String extraDesc;
+                    
+            i = remain.indexOf("\n");
+            if (i >= 0) {
+                shortDesc = tmplHelper.cleanTextValue(remain.substring(0, i));
+                extraDesc = tmplHelper.cleanTextValueNoTrim(remain.substring(i+1));
+            }
+            else {
+                shortDesc = remain;
+                extraDesc = null;
+            }
+            
+            info.put("shortDesc", shortDesc);
+            info.put("extraDesc", extraDesc);
             return info;
         }
 
-        
-        
         private static final Pattern assignPat = Pattern.compile(
                 "^\\s*" +
                 "<#assign\\s(\\w+)\\s*=\\s*(\\s[^>]*?)\\s*/?>" 
@@ -1080,118 +1106,7 @@ public class FtlDocCompiler {
             return text.replaceAll("\\t", "    ").replaceAll("[^\\S\\n]+(\\n)", "$1");
         }
         
-        private static final Pattern bulletPat = Pattern.compile(
-                "^([^\\S\\n]*)[*]"
-                , Pattern.DOTALL + Pattern.MULTILINE);
 
-        /**
-         * WARN: assumes no trailing whitespace
-         */
-        public boolean hasBulletList(String text) {
-            return bulletPat.matcher(text).find();
-        }
-        
-        
-        public Map<String, Object> parseAsBulletList(String text) {
-            // get the first bullet
-            Matcher m = bulletPat.matcher(text);
-            if (m.find()) {
-                Map<String, Object> listInfo = makeObjectMap();
-                
-                int indentSize = m.group(1).length();
-
-                List<String> listItemTexts = new LinkedList<>();
-                
-                Pattern listItemPat;
-                if (indentSize > 0) {
-                    listItemPat = Pattern.compile("^([^\\S\\n]{" + indentSize + "})[*]", Pattern.DOTALL + Pattern.MULTILINE);
-                }
-                else {
-                    listItemPat = Pattern.compile("^[*]", Pattern.DOTALL + Pattern.MULTILINE);
-                }
-                
-                // This is basically String.split. 
-                // For each item, clean and strip any indent.
-                int lastItemEndIndex = 0;
-                m = listItemPat.matcher(text);
-                while(m.find()) {
-                    String itemText = cleanTextValue(text.substring(lastItemEndIndex, m.start()));
-                    itemText = stripIndent(itemText, indentSize + 2);
-                    listItemTexts.add(itemText);
-                    lastItemEndIndex = m.end();
-                }
-                {
-                    String itemText = cleanTextValue(text.substring(lastItemEndIndex));
-                    itemText = stripIndent(itemText, indentSize + 2);
-                    listItemTexts.add(itemText);
-                }
-                
-                // The first item is actually the title or first text part
-                String leadingText = listItemTexts.remove(0);
-                listInfo.put("leadingText", leadingText);
-                
-                List<Object> items = new ArrayList<>();
-                
-                for(String itemText : listItemTexts) {
-                    Map<String, Object> subEntry = parseAsBulletList(itemText);
-                    if (subEntry != null) {
-                        items.add(subEntry);
-                    }
-                    else {
-                        items.add(itemText);
-                    }
-                }
-                
-                listInfo.put("items", items);
-                return listInfo;
-            }
-            else {
-                return null;
-            }
-        }
-        
-        
-        private static final Pattern titlePat = Pattern.compile(
-                "^(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)([^\\n]*?)(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)$"
-                , Pattern.DOTALL);
-        
-        /**
-         * Gets info about an entry/paragraph. Only works for single paragraphs.
-         * <p>
-         * Returns a map describing the data.
-         * <p>
-         * Possible types are: 
-         * text: simple text value
-         * title: a title
-         * list: the object will be a list, which may go recursively
-         * 
-         * @see #splitToParagraphs
-         */
-        public Map<String, Object> parseDescEntry(String text) {
-            Map<String, Object> dataInfo = makeObjectMap();
-            
-            Matcher m = titlePat.matcher(text);
-            if (m.matches()) {
-                dataInfo.put("type", "title");
-                dataInfo.put("value", cleanTextValue(m.group(1)));
-            }
-            else {
-                Object listInfo = parseAsBulletList(text);
-                if (listInfo != null) {
-                    dataInfo.put("type", "list");
-                    dataInfo.put("value", listInfo);
-                }
-                else {
-                    dataInfo.put("type", "text");
-                    dataInfo.put("value", cleanTextValue(text));
-                }
-
-            }
-
-            return dataInfo;
-        }
-        
-        
         @SuppressWarnings("unchecked")
         public Map<String, Object> findEntryGlobal(String nameRef, Map<String, Map<String, Object>> entryMap, 
                 Map<String, Map<String, Object>> libMap) {
@@ -1201,6 +1116,7 @@ public class FtlDocCompiler {
                 Map<String, Object> info = makeObjectMap();
                 info.put("entry", entryMap.get(rawName));
                 info.put("rawName", rawName);
+                info.put("name", nameRef); // save the orig name for convenience
                 return info;
             }
             else {
@@ -1215,6 +1131,7 @@ public class FtlDocCompiler {
                             info.put("libName", libName);
                             info.put("libDocPath", dataModel.get("libDocPath"));
                             info.put("rawName", rawName);
+                            info.put("name", nameRef); // save the orig name for convenience
                             return info;
                         }
                     }
@@ -1232,6 +1149,7 @@ public class FtlDocCompiler {
                             info.put("libName", libName);
                             info.put("libDocPath", dataModel.get("libDocPath"));
                             info.put("rawName", rawName);
+                            info.put("name", nameRef); // save the orig name for convenience
                             return info;
                         }
                     }
@@ -1311,10 +1229,340 @@ public class FtlDocCompiler {
             }
             return sb.toString();
         }
+        
+        /**
+         * Gets the index of the given closing char in the string.
+         * Supports nesting. start should be the open char index + 1.
+         */
+        public int getClosingCharIndex(String text, int start, char openChar, char closingChar) {
+            int i = start;
+            while(i < text.length()) {
+                char curr = text.charAt(i);
+                if (curr == closingChar) {
+                    return i;
+                }
+                else if (curr == openChar) {
+                    // Recursive for nesting
+                    i = getClosingCharIndex(text, i+1, openChar, closingChar);
+                    if (i < 0) {
+                        return -1;
+                    }
+                }
+                i++;
+            }
+            return -1;
+        } 
     }
     
     public static class CatoLibTemplateHelper extends TemplateHelper {
-        ;
+        // NOTE: some of the Parser methods could actually be moved here, but don't need for now
+        
+        
+        private static final Pattern bulletPat = Pattern.compile(
+                "^([^\\S\\n]*)[*]"
+                , Pattern.DOTALL + Pattern.MULTILINE);
+
+        /**
+         * WARN: assumes no trailing whitespace
+         */
+        public boolean hasBulletList(String text) {
+            return bulletPat.matcher(text).find();
+        }
+        
+        
+        public Map<String, Object> parseAsBulletListGreedy(String text) {
+            // get the first bullet
+            Matcher m = bulletPat.matcher(text);
+            if (m.find()) {
+                Map<String, Object> listInfo = makeObjectMap();
+                
+                int indentSize = m.group(1).length();
+
+                List<String> listItemTexts = new LinkedList<>();
+                
+                Pattern listItemPat;
+                if (indentSize > 0) {
+                    listItemPat = Pattern.compile("^([^\\S\\n]{" + indentSize + "})[*]", Pattern.DOTALL + Pattern.MULTILINE);
+                }
+                else {
+                    listItemPat = Pattern.compile("^[*]", Pattern.DOTALL + Pattern.MULTILINE);
+                }
+                
+                // This is basically String.split. 
+                // For each item, clean and strip any indent.
+                int lastItemEndIndex = 0;
+                m = listItemPat.matcher(text);
+                while(m.find()) {
+                    String itemText = cleanTextValue(text.substring(lastItemEndIndex, m.start()));
+                    itemText = stripIndent(itemText, indentSize + 2);
+                    listItemTexts.add(itemText);
+                    lastItemEndIndex = m.end();
+                }
+                {
+                    String itemText = cleanTextValue(text.substring(lastItemEndIndex));
+                    itemText = stripIndent(itemText, indentSize + 2);
+                    listItemTexts.add(itemText);
+                }
+                
+                // The first item is actually the title or first text part
+                String leadingText = listItemTexts.remove(0);
+                if (!leadingText.isEmpty()) {
+                    listInfo.put("leadingText", leadingText);
+                }
+                
+                List<Map<String, Object>> items = new ArrayList<>();
+                
+                for(String itemText : listItemTexts) {
+                    Map<String, Object> itemInfo = makeObjectMap();
+                    Map<String, Object> subEntry = parseAsBulletListGreedy(itemText);
+                    if (subEntry != null) {
+                        itemInfo.putAll(subEntry);
+                    }
+                    else {
+                        itemInfo.put("leadingText", itemText);
+                    }
+                    items.add(itemInfo);
+                }
+                
+                listInfo.put("items", items);
+                return listInfo;
+            }
+            else {
+                return null;
+            }
+        }
+        
+        
+        private static final Pattern titlePat = Pattern.compile(
+                "^(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)([^\\n]*?)(?:[^\\S\\n]*)[*](?:[^\\S\\n]*)$"
+                , Pattern.DOTALL);
+        
+        /**
+         * Gets info about an entry/paragraph. Only works for single paragraphs.
+         * <p>
+         * Returns a map describing the data.
+         * <p>
+         * Possible types are: 
+         * text: simple text value
+         * title: a title
+         * list: the object will be a list, which may go recursively
+         * 
+         * @see #splitToParagraphs
+         */
+        public Map<String, Object> parseDesc(String text) {
+            Map<String, Object> dataInfo = makeObjectMap();
+            
+            Matcher m = titlePat.matcher(text);
+            if (m.matches()) {
+                dataInfo.put("type", "title");
+                dataInfo.put("value", cleanTextValue(m.group(1)));
+            }
+            else {
+                Object listInfo = parseAsBulletListGreedy(text);
+                if (listInfo != null) {
+                    dataInfo.put("type", "list");
+                    dataInfo.put("value", listInfo);
+                }
+                else {
+                    dataInfo.put("type", "text");
+                    dataInfo.put("value", cleanTextValue(text));
+                }
+
+            }
+
+            return dataInfo;
+        }
+        
+        /**
+         * Finds and parses the first list. The list will never have a "title" or
+         * leading text; only sub-lists will. This parses using INDENTATION.
+         * <p>
+         * Version that can isolate a list without consuming excess text.
+         */
+        public Map<String, Object> findParseBulletList(String text) {
+            // get the first bullet
+            Matcher m = bulletPat.matcher(text);
+            if (m.find()) {
+                Map<String, Object> listInfo = makeObjectMap();
+                
+                int startIndex = m.start();
+                int indentSize = m.group(1).length();
+
+                // slow, but whatever
+                String listText = text.substring(startIndex);
+                
+                // NOTE: these pats use NOT DOTALL. Go line-by-line. MULTILINE is for ^ and $.
+                Pattern listLinePat;
+                if (indentSize > 0) {
+                    listLinePat = Pattern.compile("^([^\\S\\n]{" + indentSize + "})([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
+                }
+                else {
+                    listLinePat = Pattern.compile("^([*\\s])[^\\S\\n](.*)$", Pattern.MULTILINE);
+                }
+                
+                List<String> listItemTexts = new LinkedList<>();
+                String listItemText = null;
+                
+                Matcher linem = listLinePat.matcher(listText);
+                
+                while(linem.find()) {
+                    String firstChar = linem.group(1);
+                    String lineText = linem.group(2);
+                    
+                    if ("*".equals(firstChar)) {
+                        if (listItemText != null) {
+                            // save previous
+                            listItemTexts.add(cleanTextValue(listItemText));
+                        }
+                        
+                        // start new item
+                        listItemText = lineText;
+                    }
+                    else {
+                        if (listItemText == null) {
+                            throw new IllegalStateException("Error parsing bullet lists... regexp not working");
+                        }
+                        // append
+                        listItemText += "\n" + lineText;
+                    }
+                }
+                
+                // finish off previous
+                if (listItemText != null) {
+                    listItemTexts.add(cleanTextValue(listItemText));
+                }
+                
+                List<Map<String, Object>> items = new ArrayList<>();
+                
+                // Go through items, and create sub-lists where necessary.
+                for(String itemText : listItemTexts) {
+                    Map<String, Object> itemInfo = makeObjectMap();
+                    
+                    Map<String, Object> subList = findParseBulletList(itemText);
+                    if (subList != null) {
+                        // leading text
+                        int subStartIndex = (int) subList.get("startIndex");
+                        if (subStartIndex > 0) {
+                            itemInfo.put("leadingText", itemText.substring(0, subStartIndex));
+                        }
+                        // trailing text
+                        // NOTE: there shouldn't be any trailing text normally...
+                        int subEndIndex = (int) subList.get("endIndex");
+                        if (subEndIndex < itemText.length()) {
+                            itemInfo.put("trailingText", itemText.substring(subEndIndex));
+                        }
+                        
+                        itemInfo.put("items", subList.get("items"));
+                    }
+                    else {
+                        itemInfo.put("leadingText", itemText);
+                    }
+                    items.add(itemInfo);
+                }
+                
+                // must add original startIndex to get the real endIndex; relative
+                int endIndex = startIndex + linem.end();
+                
+                listInfo.put("items", items);
+                listInfo.put("startIndex", startIndex);
+                listInfo.put("endIndex", endIndex);
+                listInfo.put("type", "list");
+                return listInfo;
+            }
+            else {
+                return null;
+            }
+        }
+        
+        /**
+         * Returns list of maps and strings. 
+         * String is piece of text, while each map describes a list.
+         * For the top-level list there is never a "title" because no way to know, but usually fine.
+         */
+        public List<Object> splitByLists(String text) {
+            List<Object> textList = new ArrayList<>();
+            
+            String remainText = text;
+            
+            while (true) {
+                Map<String, Object> listInfo = findParseBulletList(remainText);
+                if (listInfo == null) {
+                    break;
+                }
+
+                int startIndex = (int) listInfo.get("startIndex");
+                int endIndex = (int) listInfo.get("endIndex");
+                
+                
+                // Add text before list
+                if (startIndex > 0) {
+                    textList.add(remainText.substring(0, startIndex));
+                }
+                
+                // Add the list
+                textList.add(listInfo);
+                
+                // Update matcher to start at updated position
+                // FIXME: This method is really dumb, there must be a better way...
+                // ... however also very simple
+                remainText = remainText.substring(endIndex);
+            }
+            
+            // last piece of text remaining
+            if (!remainText.isEmpty()) {
+                textList.add(remainText);
+            }
+            
+            return textList;
+        }
+        
+        
+        
+        
+        private static final Pattern textLibEntryRefPat = Pattern.compile(
+                "([a-zA-Z0-9][a-zA-Z0-9/._-]*[a-zA-Z0-9])?([@#])([a-zA-Z0-9_]{3,})"
+                , Pattern.DOTALL);
+        
+        
+        /**
+         * Parses the text for lib-entry like references, basically those containing
+         * "@" or "#" characters, and returns a list where each entry is either
+         * a piece of text or a map describing a link to an entry.
+         */
+        public List<Object> splitByLibEntryRefs(String text, Map<String, Map<String, Object>> entryMap, 
+                Map<String, Map<String, Object>> libMap) {
+            List<Object> textList = new ArrayList<>();
+            
+            Matcher m = textLibEntryRefPat.matcher(text);
+            
+            int lastEndIndex = 0;
+            while(m.find()) {
+                // Add text in between
+                if (lastEndIndex < m.start()) {
+                    textList.add(text.substring(lastEndIndex, m.start()));
+                }
+                
+                String ref = m.group();
+                
+                Map<String, Object> entryInfo = findEntryGlobal(ref, entryMap, libMap);
+                if (entryInfo != null) {
+                    textList.add(entryInfo);
+                }
+                else {
+                    // Got nothing. Just add as regular text.
+                    textList.add(ref);
+                }
+
+                lastEndIndex = m.end();
+            }
+            
+            // Add last part
+            if (lastEndIndex < text.length()) {
+                textList.add(text.substring(lastEndIndex));
+            }
+            return textList;
+        }
+        
     }
     
     

@@ -27,7 +27,7 @@ Defines a form. Analogous to <form> HTML element.
     </@form>            
                     
   * Parameters *
-    type                    = (input|display) (default: input)
+    type                    = (input|display, default: input) Form type
                               DEV NOTE: "display" is special for time being, probably rare or unused;
                                   maybe it should cause to omit <form> element
     class                   = ((css-class)) CSS classes on form element itself
@@ -90,14 +90,17 @@ The server-side upload event for the form must register a Java FileUploadProgres
 for getFileUploadProgressStatus controller AJAX calls.
                     
   * Parameters *
-    enabled                 = ((boolean)) (default: true) If true, disables whole macro.
+    enabled                 = ((boolean), default: true) If true, disables whole macro
                               Occasionally needed in templates as FTL workaround.
     progressOptions         = ((map)) Elem IDs and options passed to CatoUploadProgress Javascript class
                               In addition, supports: 
-                              * submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
-                              * validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
+                              * submitHook: one of: 
+                                * formSubmit: The default
+                                * validate: Use jquery validate
+                                * none: Caller does manually 
+                              * validateObjScript: If submitHook is "validate", add this script text to jquery validate({...}) object body
                               See CatoUploadProgress javascript class for available options.
-    htmlwrap                = ((boolean)) (default: true) If true, wrap in @script
+    htmlwrap                = ((boolean), default: true) If true, wrap in @script
 -->
 <#assign progressScript_defaultArgs = {
   "enabled":true, "htmlwrap":true, "progressOptions":{}, "passArgs":{}
@@ -164,10 +167,10 @@ to a form submit.
                      
   * Parameters *
     value                   = ((int)) Percentage done
-    id                      = Custom ID; can also be specified as progressOptions.progBarId instead.
+    id                      = Custom ID; can also be specified as progressOptions.progBarId instead
                               The meter will get an id of "${id}_meter".
                               If omitted, no progress bar per se will be created, but script will still be generated for progressOptions.progTextBoxId.
-    type                    = (alert|success|info) (default: info)
+    type                    = (alert|success|info, default: info)
     class                   = ((css-class)) CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -243,18 +246,17 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
                     
   * Parameters *
     * General *
-    enabled                 = ((boolean)) (default: true) If enabled, disables the whole macro.
+    enabled                 = ((boolean), default: true) If enabled, disables the whole macro
                               Sometimes needed in templates as FTL workaround.
     id                      = Select elem id
     title                   = Select title
-    sortable                = ((boolean)) (default: false)
+    sortable                = ((boolean), default: false)
     formId                  = Form ID
     formName                = Form name
     asmSelectOptions        = (optional) A map of overriding options to pass to asmselect
-    asmSelectDefaults       = ((boolean)) (default: true) If false, will not include any defaults and use asmSelectOptions only
+    asmSelectDefaults       = ((boolean), default: true) If false, will not include any defaults and use asmSelectOptions only
     relatedFieldId          = Related field ID (optional)
-    htmlwrap                = ((boolean)) (default: true) If true, wrap in @script.
-    
+    htmlwrap                = ((boolean), default: true) If true, wrap in @script
     * Needed only if relatedFieldId specified *
     relatedTypeName         = Related type, name
     relatedTypeFieldId      = Related type field ID
@@ -455,7 +457,7 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type                        = (default|default-nolabels|default-compact|default-manual|generic) (default: default) The type of fields arrangement. Affects layout and styling of contained fields.
+    type                        = (default|default-nolabels|default-compact|default-manual|generic, default: default) The type of fields arrangement. Affects layout and styling of contained fields
                                   Cato standard markup types:
                                   * default: default cato field arrangement. this is the type assumed when no @fields element is present.
                                       currently, it mostly influences the label area (present for all @field types except submit).
@@ -473,7 +475,7 @@ or even multiple per fieldset.
                                       This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
                                       Generally, @field specifies label as pure data and theme decides where and how to display it.
                                       In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
-    labelType                   = (horizontal|vertical|none) (default: -type-specific-) Override for type of the field labels themselves.
+    labelType                   = (horizontal|vertical|none, default: -type-specific-) Override for type of the field labels themselves
                                   Values:
                                   * horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
                                       the implementation decides how to do this.
@@ -486,21 +488,21 @@ or even multiple per fieldset.
                                   TODO: we should have types here that specifically request that either "gridarea" or "inline" are used for markup:
                                       gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
                                       The current implementation is unspecific.
-    labelPosition               = (left|right|top|bottom|none) (default: -type-specific-) Override for layout/positioning of the labels
+    labelPosition               = (left|right|top|bottom|none, default: -type-specific-) Override for layout/positioning of the labels
                                   Some values only make sense for some arrangements.
-    labelArea                   = ((boolean)) (default: -from global styles-) Overrides whether fields are expected to have a label area or not, mainly when label omitted
+    labelArea                   = ((boolean), default: -from global styles-) Overrides whether fields are expected to have a label area or not, mainly when label omitted
                                   Logic is influenced by other arguments.
                                   NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
                                       They are decoupled. This only controls presence of it.
                                   NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
-    labelAreaExceptions         = ((string)|(list)) (default: -from global styles-) String of space-delimited @field type names or list of names
+    labelAreaExceptions         = ((string)|(list), default: -from global styles-) String of space-delimited @field type names or list of names
                                   NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
-    labelAreaRequireContent     = ((boolean)) If true, the label area will only be included if label or labelDetail have content.
+    labelAreaRequireContent     = ((boolean)) If true, the label area will only be included if label or labelDetail have content
                                   This is generally independent of labelArea boolean and other settings. 
                                   NOTE: This will not affect the fallback logic of labels to inline labels (a.k.a. whether the label area "consumes" the label for itself);
                                       otherwise that would mean labels would always be forced into the label area and never inline.
-    labelAreaConsumeExceptions  = ((string)|(list)) (default: -from global styles-) String of space-delimited @field type names or list of names 
-                                  list of field types that should never have their label appear in the main label area.
+    labelAreaConsumeExceptions  = ((string)|(list), default: -from global styles-) String of space-delimited @field type names or list of names 
+                                  List of field types that should never have their label appear in the main label area.
                                   for these, the label will trickle down into the field's inline area, if it has any (otherwise no label).
                                   NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
     formName                    = The form name the child fields should assume  
@@ -508,9 +510,9 @@ or even multiple per fieldset.
     inlineItems                 = ((boolean)) Change default for @field inlineItems parameter
     checkboxType                = Default checkbox type
     radioType                   = Default radio type  
-    open/close                  = ((boolean)) Advanced structure control, for esoteric cases
-    ignoreParentField           = ((boolean)) (default: false) If true, causes all fields within to ignore their parent and behave as if no parent.
-    fieldArgs                   = A map of @field parameters that will be used as new defaults for each field call.
+    open, close                 = ((boolean)) Advanced structure control, for esoteric cases
+    ignoreParentField           = ((boolean), default: false) If true, causes all fields within to ignore their parent and behave as if no parent
+    fieldArgs                   = A map of @field parameters that will be used as new defaults for each field call
                                   This is an automated mechanism. The map will be blended over the standard @field defaults before the invocation.
                                   In addition, contrary to the parameters, a map passed directly to @fields will be blended over both the @field defaults
                                   AND over any defaults set in the styles for the given @fields type: 
@@ -760,7 +762,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
   * Parameters *
     * General *
-    type                    = (|generic|...) (default: generic) Form element type 
+    type                    = (|generic|..., default: generic) Form element type 
                               Supported values and their parameters are listed in this documentation as
                               parameter sections (groups of parameters), as there are type-specific field parameters.
                               * generic: Means input defined manually with #nested. Mostly for grouping multiple sub-fields, but can be used anywhere.
@@ -780,32 +782,32 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     labelDetail             = Extra content (HTML) inserted with (after) label
     labelType               = Explicit label type (see @fields)
     labelPosition           = Explicit label layout (see @fields)
-    labelArea               = ((boolean)) (default: -from global styles-) If true, forces a label area; if false, prevents a label area.
+    labelArea               = ((boolean), default: -from global styles-) If true, forces a label area; if false, prevents a label area
                               NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
                                   They are decoupled. This only controls presence of it.
-    labelAreaRequireContent = ((boolean)) (default: false) If true, the label area will only be included if label or labelDetail have content
+    labelAreaRequireContent = ((boolean), default: false) If true, the label area will only be included if label or labelDetail have content
                               By default, this is empty string (use @fields type default), and if no styles defaults,
-    labelAreaConsume        = ((boolean)) (default: true) If set to false, will prevent the label area from consuming (displaying) the label
+    labelAreaConsume        = ((boolean), default: true) If set to false, will prevent the label area from consuming (displaying) the label
                               The label will trickle down into an inline area if one exists for the field type.
-    inlineLabelArea         = ((boolean)) (default: -from global styles-) (fallback default: false) Manual override for inline label logic
+    inlineLabelArea         = ((boolean), default: -from global styles-) (fallback default: false) Manual override for inline label logic
                               In general can be left to macro.
-    inlineLabel             = ((boolean)) (default: -from global styles-) (fallback default: false) Manual override for inline label logic
+    inlineLabel             = ((boolean), default: -from global styles-) (fallback default: false) Manual override for inline label logic
                               In general can be left to macro.
                               NOTE: Often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip                 = Small field description - to be displayed to the customer
                               May be set to boolean false to manually prevent tooltip defaults.
-    description             = Field description.
+    description             = Field description
                               NOTE: currently this is treated as an alternative arg for tooltip
                               TODO?: DEV NOTE: this should probably be separate from tooltip in the end...
     name                    = Field name
     value                   = Field value
-    totalColumns            = ((int)) Total number of columns spanned by the outer container, including label area, widget and postfix.
-    widgetPostfixColumns    = ((int)) Number of grid columns to use as size for widget + postfix area (combined).
+    totalColumns            = ((int)) Total number of columns spanned by the outer container, including label area, widget and postfix
+    widgetPostfixColumns    = ((int)) Number of grid columns to use as size for widget + postfix area (combined)
                               If totalColumns is kept the same, any space removed from this value is given to the label area,
                               and any space added is removed from the label area, also depending on the configuration of the label area.
                               DEV NOTE: This value now includes the postfix area because it is usually easier
                                   to use this way given that the widget + postfix configuration is variable.
-    widgetPostfixCombined   = ((boolean)) (default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix having their own sub-container
+    widgetPostfixCombined   = ((boolean), default: -markup decision, usually true-) Overridable setting to force or prevent widget and postfix having their own sub-container
                               It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
                               the default is usually true unless prevented by other settings.
     class                   = ((css-class)) CSS classes for the field element (NOT the cell container!)
@@ -823,16 +825,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     events                  = ((map)) Map of JS event names to script actions
                               event names can be specified with or without the "on" prefix ("click" or "onclick").
     onClick                 = Shortcut for: events={"click": onClick}
-                              WARN: Beware of character case. It's onClick, not onclick!
+                              WARN: Beware of character case (due to Freemarker). It's onClick, not onclick!
     onChange                = Shortcut for: events={"change": onChange}
     onFocus                 = Shortcut for: events={"focus": onChange}
-    disabled                = ((boolean)) (default: false) Whether field is disabled
+    disabled                = ((boolean), default: false) Whether field is disabled
     placeholder             = Field placeholder
     alert                   = ((css-class)) CSS classes, additional alert class
     mask                    = ((boolean)) Toggles jQuery mask plugin
-    size                    = ((int)) (default: 20) Size attribute
-    collapse                = Should the whole field (including label and postfix) be collapsing? (default: false)
-    collapsePostfix         = Should the postfix collapse with the field input? (default: true)
+    size                    = ((int), default: 20) Size attribute
+    collapse                = ((boolean), default: false) Should the whole field (including label and postfix) be collapsing?
+    collapsePostfix         = ((boolean), default: true) Should the postfix collapse with the field input?
                               this will not affect label unless collapse is also true (in which case this setting is ignored
                               and the whole field is collapse)
     collapsedInlineLabel    = ((boolean)) Special collapsed inline label control
@@ -842,41 +844,41 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               of an inlined label using collapsing (instead of passing the inline label
                               down to the individual field type widget).
                               this may be needed for some field types.
-    norows                  = ((boolean)) (default: false) If true, render without the rows-container
-    nocells                 = ((boolean)) (default: false) If true, render without the cells-container
-    container               = ((boolean)) (default: true) If false, sets norows=true and nocells=true.
-    inline                  = ((boolean)) (default: false) If true, forces container=false and marks the field with styles.field_inline
+    norows                  = ((boolean), default: false) If true, render without the rows-container
+    nocells                 = ((boolean), default: false) If true, render without the cells-container
+    container               = ((boolean), default: true) If false, sets norows=true and nocells=true
+    inline                  = ((boolean), default: false) If true, forces container=false and marks the field with styles.field_inline
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
-    ignoreParentField       = ((boolean)) (default: false) If true causes a child field to act as if it had no parent field. Rarely needed.
-    required                = ((boolean)) (default: false) Marks a required input.
+    ignoreParentField       = ((boolean), default: false) If true causes a child field to act as if it had no parent field. Rarely needed
+    required                = ((boolean), default: false) Marks a required input
     requiredClass           = ((css-class)) CSS classes, default required class name
                               Does not support extended class +/= syntax.
-    requiredTooltip         = tooltip to use when field is required. this is overridden by regular tooltip.
+    requiredTooltip         = tooltip to use when field is required. this is overridden by regular tooltip
                               for this, can prefix with "#LABEL:" string which indicates to take the named label from uiLabelMap.
-    postfix                 = ((boolean)) (default: false) Controls whether an extra area is appended after widget area
-    postfixSize             = ((int)) (default: 1) Manual postfix size, in (large) grid columns
+    postfix                 = ((boolean), default: false) Controls whether an extra area is appended after widget area
+    postfixSize             = ((int), default: 1) Manual postfix size, in (large) grid columns
     postfixContent          = Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
-    postfix                 = ((boolean)) (default: false) If set to true, attach submit button
+    postfix                 = ((boolean), default: false) If set to true, attach submit button
     
     * textarea *
     readonly                = readonly
     rows                    = ((int)) number of rows
     cols                    = ((int)) number of columns
     wrap                    = HTML5 wrap attribute
-    text/value              = text/value, alternate to #nested
+    text, value             = text/value, alternative to #nested content
     
     * datetime *
-    dateType                = (date-time|timestamp|date|time) (default: date-time) type of datetime
+    dateType                = (date-time|timestamp|date|time, default: date-time) type of datetime
                               "date-time" and "timestamp" are synonymous.
-    dateDisplayType         = (default|date|...) (default: -same as dateType-). The visual display format of the date. Optional.
+    dateDisplayType         = (default|date|..., default: -same as dateType-). The visual display format of the date. Optional
                               If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
                               This means the user will be presented with a short date only, but the data sent to the server
                               will be a full timestamp.
-    title                   = shows requested title.
+    title                   = shows requested title
                               If empty, markup/theme decides what to show.
                               Can also be a special value in format "#PROP:resource#propname". If no resource, taken from CommonUiLabels.
                               NOTE: Tooltip has priority over title.
@@ -888,10 +890,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * textfind *
     opValue                 = The selected operator (value)
-    ignoreCaseValue         = ((boolean)) (default: true), the ignore case checkbox (current value)
+    ignoreCaseValue         = ((boolean), default: true), the ignore case checkbox (current value)
                               The default should be same as form widget default (text-find's "ignore-case" in widget-form.xsd).
-    hideOptions             = ((boolean)) (default: false). If true, don't show select options.
-    hideIgnoreCase          = ((boolean)) (default: false). If true, hide case sensitivity boolean.
+    hideOptions             = ((boolean), default: false). If true, don't show select options
+    hideIgnoreCase          = ((boolean), default: false). If true, hide case sensitivity boolean
     titleClass              = ((css-class)) CSS classes, extra classes for title
     
     * rangefind *
@@ -930,14 +932,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     selected                = ((boolean))
     
     * lookup *
-    formName                = The name of the form that contains the lookup field.
-    fieldFormName           = Contains the lookup window form name.
-    
+    formName                = The name of the form that contains the lookup field
+    fieldFormName           = Contains the lookup window form name
     * checkbox (single mode) *
     value                   = Y/N
     currentValue            = current value, used to check if should be checked
     checked                 = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
-    checkboxType            = (default|...) (default: default)
+    checkboxType            = (default|..., default: default)
                               Generic:
                               * default: default theme checkbox
                               Cato standard theme:
@@ -948,18 +949,18 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               list of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
-    inlineItems             = ((boolean)) (default: true) If true, radio items are many per line; if false, one per line
+    inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line
                               note this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
     defaultValue            = Default value, determines checked (convenience option; used when currentValue empty; can also be sequence)
-    allChecked              = ((boolean|)) (default: -empty-) Convenience option (explicit false sets all to unchecked; leave empty "" for no setting)
+    allChecked              = ((boolean|), default: -empty-) Convenience option (explicit false sets all to unchecked; leave empty "" for no setting)
     
     * radio (single mode) *
     value                   = Y/N, only used if single radio item mode (items not specified)
     currentValue            = current value, used to check if should be checked
     checked                 = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
-    radioType               = (default|...) (default: default)
+    radioType               = (default|..., default: default)
                               Generic:
                               * default: default theme radio
                               Cato standard theme:
@@ -970,34 +971,34 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               list of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
-    inlineItems             = if true (default), radio items are many per line; if false, one per line
-                              note this takes effect whether single-item or multiple-item radio.
-                              the default can be overridden on a parent @field or @fields element.
+    inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line
+                              NOTE: This takes effect whether single-item or multiple-item radio.
+                              The default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked
     defaultValue            = Default value, determines checked (convenience option; used when currentValue empty)
     
     * file *
-    autocomplete            = ((boolean)) (default: true) If false, prevents autocomplete
+    autocomplete            = ((boolean), default: true) If false, prevents autocomplete
     
     * password *
-    autocomplete            = ((boolean)) (default: true) If false, prevents autocomplete
+    autocomplete            = ((boolean), default: true) If false, prevents autocomplete
     
     * submitarea *
     <#nested>               = ((markup)) Button(s) (<@field type="submit"> or manual <input>, <a>, <button>) to include
     progressArgs            = ((map)) If this is an upload form, arguments to pass to @progress macro
-                              See @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
+                              See @progress and @progressScript macros. should specify formSel, (progBarId and/or progTextBoxId), and others.
     progressOptions         = ((map)) Convenience parameter; same as passing:
                                 progressArgs={"enabled":true, "progressOptions":progressOptions}      
                       
     * submit *
-    submitType              = (submit|link|button|image|input-button) (default: submit) Submit element type
+    submitType              = (submit|link|button|image|input-button, default: submit) Submit element type
                               Values:
                               * submit: <input type="submit" ... />
                               * input-button: <input type="button" ... />
                               * link: <a href="..." ...>...</a>
                                 NOTE: href should usually be specified for this, or explicitly set to boolean false if using onClick. 
                                     If not specified, generated href will cause form submit with form name (if found and not disabled).
-                              * button: WARN/FIXME?: currently this is same as input-button: <input type="button" ... />
+                              * button: WARN: FIXME?: currently this is same as input-button: <input type="button" ... />
                                 This could change to <button...>...</button> without notice...
                               * image: <input type="image" src="..." .../>
     text                    = Display text (also value for submitType "submit")                
@@ -1011,7 +1012,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     text                    = Label to show on reset button
                       
     * display *
-    valueType               = (image|text|currency|date|date-time|timestamp|accounting-number|generic) (default: generic)
+    valueType               = (image|text|currency|date|date-time|timestamp|accounting-number|generic, default: generic)
                               "date-time" and "timestamp" are synonymous.
                               Values:
                               * generic: treated as arbitrary content, but text may still be interpreted
@@ -1020,7 +1021,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     description             = For image type: image alt
     tooltip                 = Tooltip text,
                               May result in extra wrapping container.
-    formatText              = ((boolean)) (default: false). If true, translates newlines to <br/> (and potentially other transformations); else untouched.
+    formatText              = ((boolean), default: false). If true, translates newlines to <br/> (and potentially other transformations); else untouched
                               WARN: The default for @field macro is now FALSE, which differs from the Ofbiz form widget default, which is true.
                               WARN: TODO? It is possible the default may be changed to true for specific valueType.
                                   However, the default for "generic" will always be false.   

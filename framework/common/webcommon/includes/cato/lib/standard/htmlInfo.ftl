@@ -21,9 +21,10 @@ Creates a modal UI element.
     </@modal>        
             
   * Parameters *
-    id                      = set id (required)
-    label                   = set anchor text (required)
-    icon                    = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
+    id                      = (required) Model ID 
+    label                   = (required) Anchor text
+    icon                    = Generates icon inside the link 
+                              NOTE: Has to be the full set of classes, e.g. "fa fa-fw fa-info"
     class                   = ((css-class)) CSS classes or additional classes for anchor
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -114,7 +115,7 @@ Creates a panel box.
     </@panel>            
                     
   * Parameters *
-    type                    = (callout|) default:empty
+    type                    = (callout|, default: -empty-)
     title                   = Title
 -->
 <#assign panel_defaultArgs = {
@@ -167,7 +168,7 @@ A template should not assume too much about the message markup, but the markup s
     <@commonMsg type="result-norecord"/>            
              
   * Parameters *
-    type                    = (default|generic|...) (default: default) The type of message contained.
+    type                    = (default|generic|..., default: default) The type of message contained
                               Basic types:
                               * default: default. in standard Cato markup, same as generic.
                               * generic: no type specified (avoid using - prefer more specific)
@@ -187,7 +188,7 @@ A template should not assume too much about the message markup, but the markup s
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
-    text                    = ((string)) Text. If a string is not specified, uses #nested instead.
+    text                    = ((string)) Text. If a string is not specified, uses #nested instead
 -->
 <#assign commonMsg_defaultArgs = {
   "type":"", "class":"", "id":"", "text":true, "passArgs":{}

@@ -19,24 +19,24 @@ An HTML heading (title).
     <@heading>My Title</@heading>         
                                  
   * Parameters *
-    elemType                = (heading|h|p|span|div|raw|(boolean)) (default: heading) Element type
+    elemType                = (heading|h|p|span|div|raw|(boolean), default: heading) Element type
                               boolean true means use default; false means none (same as "raw").
                               NOTE: Do not specify h1-h6 here; use level argument instead.
-    level                   = ((int)) (default: -current global heading level-) Specific heading level. 
+    level                   = ((int), default: -current global heading level-) Specific heading level
                               If not specified, current heading level returned by #getCurrentHeadingLevel function is used. 
                               NOTE: Does not consume a level.
-    relLevel                = ((int)) (default: 0) Determines heading level by adding this number to current global heading level
+    relLevel                = ((int), default: 0) Determines heading level by adding this number to current global heading level
     class                   = ((css-class)) Heading element CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
     levelClassPrefix        = (default: "heading-level-") Prefix for level number class
     id                      = Heading ID
-    consumeLevel            = ((boolean)) (default: false) Whether should consume a level in addition to printing a heading.
+    consumeLevel            = ((boolean), default: false) Whether should consume a level in addition to printing a heading
                               If true, the global heading level is set to (calculated level for this heading) + 1.
                               NOTE: this is better handled through use of the @section macro. Mostly useful for h1.
                               DEV NOTE: default could be made to depend on calculated level.
-    containerElemType       = (div|) (default: -empty-). if present, adds container around title or this elem type
+    containerElemType       = (div|, default: -empty-). if present, adds container around title or this elem type
     containerClass          = ((css-class)) Container element CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -140,7 +140,7 @@ Creates a basic wrapper for code blocks.
     </@code>
                     
   * Parameters *
-    type                    = (html|java|css|javascript|log) (default:html) 
+    type                    = (html|java|css|javascript|log, default:html) 
 -->
 <#assign code_defaultArgs = {
   "type":"html", "passArgs":{}
@@ -180,21 +180,21 @@ Maps an Ofbiz form widget type to a @table macro type.
 Creates a responsive tables script (script only - no markup).
     
   * Parameters *
-    enabled                 = ((boolean)) (default: true) Helper arg to prevent the whole macro from executing, when false.
+    enabled                 = ((boolean), default: true) Helper arg to prevent the whole macro from executing, when false
     tableId                 = Table ID
     tableType               = Table type
     tableStyleName          = Optimization: table style name (usually based on table type)
                               can be omitted and will determine automatically from table type
-    responsive              = ((boolean)) (default: -from global styles-) If true, will generate a responsive table
+    responsive              = ((boolean), default: -from global styles-) If true, will generate a responsive table
                               Currently, this relies on the jQuery plugin datatables.js (www.datatables.net) to generate responsive table. 
                               Can be combined with fixed column type.
                               if explicitly set to false, will disable responsive regardless of defaults.
                               default is dependent on table type (global styles).
     responsiveOptions       = ((map)) Map of options passed directly to responsive tables implementation (javascript implementation)
-    responsiveDefaults      = ((boolean)) (default: true) Fine-grained control for whether responsive defaults are looked up or not.
+    responsiveDefaults      = ((boolean), default: true) Fine-grained control for whether responsive defaults are looked up or not
                               If true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults per-option; if false, no defaults are used and only 
                               responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used. 
-    scrollable              = ((boolean)) (default: -from global styles-) Scrolling control
+    scrollable              = ((boolean), default: -from global styles-) Scrolling control
                               If true, guarantees table will be scrollable horizontally.
                               implementation of scrollable depends on macro and global styles (by default, uses responsive).
                               If explicitly set to false, prevents scrolling.
@@ -285,7 +285,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                     
   * Parameters *
     * General *
-    type                    = (generic|(theme-specific)) (default: generic)
+    type                    = (generic|(theme-specific), default: generic)
                               * STANDARD TYPES *
                               These types must always be recognized by all styles themes:
                               * generic: generic html table (free-form, complex); no features enabled by default.
@@ -309,7 +309,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                                   legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
                                   ultimately belong as @field and @row/@cell.
                                   TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
-    class                   = ((css-class)) (default: -from global styles-) CSS classes
+    class                   = ((css-class), default: -from global styles-) CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
@@ -318,30 +318,32 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                               where type is the table type above. If the given style entry does not exist, the default is instead determined by:
                                 styles["table_default"]
     id                      = Table ID
-    hasHeader               = ((boolean)) Hint to indicate that table is expected to have a header, normally a <@thead> element.
+    hasHeader               = ((boolean)) Hint to indicate that table is expected to have a header, normally a <@thead> element
                               @table will try to figure this out on its own, but in some cases it may not be possible
                               or not possible to know in advance, in which case caller must specify this flag.
                               Currently, this setting affects the following:
                                 * Responsive tables
-    autoAltRows             = ((boolean)) (default: -from global styles-) (fallback default: false)
-    firstRowAlt             = ((boolean)) (default: false)
+    autoAltRows             = ((boolean), default: -from global styles-) (fallback default: false)
+    firstRowAlt             = ((boolean), default: false)
     inheritAltRows          = ((boolean)) Only for nested tables: If true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots         = ((boolean)) Whether use alt row logic in foot or not
-    cellspacing             = ((int)) (default: -from global styles-) (fallback default: -empty-) Traditional cellspacing.
+    cellspacing             = ((int), default: -from global styles-) (fallback default: -empty-) Traditional cellspacing
                               Should be avoided in modern templates.
-    open/close              = ((boolean)) Advanced structure control, for esoteric cases
+    open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Map of other legacy <table> attributes (mainly for those with dash in name)
     inlineAttribs...        = ((inline-args)) Other legacy <table> attributes and values, inlined
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
     
     * Responsive Tables *
-    responsive/responsiveOptions/
-    responsiveDefaults/scrollable/
-    fixedColumnsLeft/fixedColumnsRight  = See @tableResponsiveScript macro for descriptions
-                                          NOTE: @table (default @table_markup) will automatically disable
-                                              responsive on tables that have no @thead element and hasHeader=true is not specified.
-                                              responsive tables break when no header.
-                                              in other words, responsive tables required a <@thead> element.
+    responsive, 
+    responsiveOptions,
+    responsiveDefaults,
+    scrollable,
+    fixedColumnsLeft,
+    fixedColumnsRight       = See @tableResponsiveScript macro for descriptions
+                              NOTE: @table with default markup will automatically disable responsive on tables 
+                                  that have no @thead element and hasHeader=true is not specified.
+                                  Responsive tables may break when no header is present; they may require a <@thead> element.
 -->
 <#assign table_defaultArgs = {
   "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
@@ -709,7 +711,7 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                      
   * Parameters *
-    type                    = (generic|content|meta|util), (default: -dependent on table type-) (fallback default: "generic")
+    type                    = (generic|content|meta|util, default: -dependent on table type-) (fallback default: "generic")
                               In complete absence of global styles, default is "generic".
                               In default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
                               Standard types:
@@ -735,8 +737,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                               sets alt to exact same as last row
     groupParent             = ((boolean)) Nested tables only, if specified, considers row logically grouped with parent row;
                               sets alt to exact same as parent row
-    selected                = ((boolean)) (default: false) If specified and true marked as selected
-    open/close              = ((boolean)) Advanced structure control, for esoteric cases
+    selected                = ((boolean), default: false) If specified and true marked as selected
+    open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Map of other legacy <tr> attributes (mainly for those with dash in name)
     inlineAttribs...        = ((inline-args)) Other legacy <tr> attributes and values, inlined
 -->
@@ -854,7 +856,7 @@ Defines a table header cell. Analogous to <th> HTML element.
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
     id                      = Cell ID
-    open/close              = ((boolean)) Advanced structure control, for esoteric cases
+    open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Map of other legacy <th> and <td> attributes (mainly for those with dash in name)
     inlineAttribs...        = ((inline-args)) Other legacy <th> and <td> attributes and values
 -->
@@ -916,8 +918,8 @@ DEPRECATED: use @table, @tr macros instead.
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    alt                     = ((boolean)) (default: false) If true is alternate row (odd), if false regular (even)
-    selected                = ((boolean)) (default: false) If true marked as selected
+    alt                     = ((boolean), default: false) If true is alternate row (odd), if false regular (even)
+    selected                = ((boolean), default: false) If true marked as selected
 -->
 <#assign tableRowClassAttribStr_defaultArgs = {
   "class":"", "alt":"", "selected":"", "passArgs":{}
@@ -1024,17 +1026,16 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </@chart>              
                     
   * Parameters *
-    type                    = (pie|bar|line) (default:pie)
-    library                 = (foundation|chart) (default:foundation)
-    title                   = Data Title  (default:empty)    
-    xlabel                  = x-axis label
-    ylabel                  = y-axis label
-    label1                  = dataset 1 label
-    label2                  = dataset 2 label
-    labelUom1               = dataset 1 currency symbol (automatically added to the tooltips)
-    labelUom2               = dataset 2 currency symbol (automatically added to the tooltips)
+    type                    = (pie|bar|line, default: pie)
+    library                 = (foundation|chart, default: foundation)
+    title                   = ((string), default: -empty-) Data Title
+    xlabel                  = X-axis label
+    ylabel                  = Y-axis label
+    label1                  = Dataset 1 label
+    label2                  = Dataset 2 label
+    labelUom1               = Dataset 1 currency symbol (automatically added to the tooltips)
+    labelUom2               = Dataset 2 currency symbol (automatically added to the tooltips)
     
-
   * Related *
     @chartdata
 -->
@@ -1268,8 +1269,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 Gets chart number of datasets.
                     
   * Parameters *
-    content                 = (pie|bar|line) (default: pie)
-    library                 = (foundation|chart) (default: chart)   
+    content                 = (pie|bar|line, default: pie)
+    library                 = (foundation|chart, default: chart)   
 -->
 <#function chart_get_number_of_datasets content="" library="chart">
     <#if content?has_content>

@@ -53,23 +53,23 @@ DEV NOTES:
 * webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
 
   * Parameters *
-    type                    = [intra-webapp|inter-webapp|] (default: intra-app)
+    type                    = (intra-webapp|inter-webapp|, default: intra-webapp)
                               * intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
                               * inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
                                 The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
                                 It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.
                               (New in Cato)
-    interWebapp             = ((boolean)) (default: false) Alias for type="inter-webapp"
+    interWebapp             = ((boolean), default: false) Alias for type="inter-webapp"
                               If true, same as type="inter-webapp"; if false, same as type="" (intra-webapp implied).
                               (New in Cato)
-    uri                     = ((string)) (required) The request URI. May be specified as parameter or as #nested macro content.
+    uri                     = ((string), required) The request URI. May be specified as parameter or as #nested macro content
                               For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
                               to webapp root, excluding webapp context root).
                               For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
                               server root, containing webapp context root and servlet path; if webSiteId specified, 
                               this should specified relative like intra-webapp (unless absPath forced to true).
                               (New in Cato)
-    absPath                 = ((boolean)) (default: -depends on type-) (fallback default: false)       
+    absPath                 = ((boolean), default: -depends on type-) (fallback default: false)       
                               If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
                               If explicit false (stock Ofbiz default), the passed uri should be relative to control servlet or webapp context.
                               If not specified, will attempt for figure out based on the uri passed and other flags.
@@ -82,12 +82,12 @@ DEV NOTES:
                                   to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types.
                                   It is also ambiguous in the case of intra-webapp non-controller links.
                               (New in Cato)
-    webSiteId               = ((string)) (default: -current website or none-) Target web site ID 
+    webSiteId               = ((string), default: -current website or none-) Target web site ID 
                               This usually should only be specified for inter-webapp links.
                               Will determine the specific target webapp to use.
                               NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
                               (Stock arg, some fixes in Cato)
-    controller              = ((boolean)) (default: -depends on type-) (fallback default: true)
+    controller              = ((boolean), default: -depends on type-) (fallback default: true)
                               If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
                               use information from the controller to generate the link.
                               If false, the link is treated as pointing to any arbitrary servlet or resource.
@@ -96,21 +96,21 @@ DEV NOTES:
                                 * This helps implementation of inter-webapp links.
                               * Otherwise, generally defaults to true.
                               (New in Cato)
-    extLoginKey             = ((boolean)) (default: false) or string boolean repr. 
+    extLoginKey             = ((boolean), default: false) or string boolean repr
                               If true, this will add the external login key as parameter.
                               NOTE: This is currently FALSE by default in all cases including inter-webapp links
                                   while details are sorted out.
                               (New in Cato)
-    fullPath                = ((boolean)) (default: false) or string boolean repr. 
+    fullPath                = ((boolean), default: false) or string boolean repr
                               If true, forces a full URL with protocol (HTTP or HTTPS).
                               WARN: MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
                                   marked as secure will always generate a secure URL, not a plain URL. Some control
                                   is sacrificed to allow this flag to be used safely and more easily.
                               (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-    secure                  = ((boolean)) (default: false) or string boolean repr. 
+    secure                  = ((boolean), default: false) or string boolean repr
                               If true, forces a full URL with secure protocol (HTTPS).
                               (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
-    encode                  = ((boolean)) (default: true) or string boolean repr. 
+    encode                  = ((boolean), default: true) or string boolean repr
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.
                               (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
 -->
@@ -340,7 +340,7 @@ Adds the external login key to given url
 
   * Parameters *
     url                     = URL to augment
-    escape                  = ((boolean)) (default: true) If true, use escaped param delimiter.
+    escape                  = ((boolean), default: true) If true, use escaped param delimiter
 -->
 <#function addExtLoginKey url escape=true>
   <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(StringUtil.wrapString(url)?string, request, escape))?string>
@@ -412,8 +412,8 @@ TODO: implement as transform.
   * Parameters *
     resource                = (required) Resource name
     name                    = (required) Property name
-    msgArgs                 = ((map)|(list)) (default: -use context-) Substitute values for message template
-    specLocale              = ((locale)) (default: -locale from context-) Explicit locale
+    msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
+    specLocale              = ((locale), default: -locale from context-) Explicit locale
 -->
 <#function getPropertyMsg resource name msgArgs=false specLocale=true>
   <#if specLocale?is_boolean>
@@ -444,8 +444,8 @@ TODO: implement as transform.
   * Parameters *
     resourceExpr            = (required) Resource name and property name separated with "#", or name alone
                               If name alone, assumes CommonUiLabels for resource.
-    msgArgs                 = ((map)|(list)) (default: -use context-) Substitute values for message template
-    specLocale              = ((locale)) (default: -locale from context-) Explicit locale
+    msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
+    specLocale              = ((locale), default: -locale from context-) Explicit locale
     
   * Related *
     #getPropertyMsg
@@ -475,8 +475,8 @@ If no such prefix in textExpr, returns the text as-is.
 
   * Parameters *
     textExpr                = (required) Label text expression 
-    msgArgs                 = ((map)|(list)) (default: -use context-) Substitute values for message template
-    specLocale              = ((locale)) (default: -locale from context-) Explicit locale
+    msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
+    specLocale              = ((locale), default: -locale from context-) Explicit locale
 -->
 <#function getTextLabelFromExpr textExpr msgArgs=false specLocale=true>
   <#if textExpr?starts_with("#LABEL:")>
@@ -532,9 +532,9 @@ Adds parameters from a hash to a URL param string (no full URL logic).
                     
   * Parameters *
     paramStr                = (required) Param string
-    paramMap                = ((map)) (required) Map of keys to values to add
+    paramMap                = ((map), required) Map of keys to values to add
     paramDelim              = (default: "&amp;") Param delimiter
-    includeEmpty            = ((boolean)) (default: true) If true, include empty values; if false, omit empty values
+    includeEmpty            = ((boolean), default: true) If true, include empty values; if false, omit empty values
 -->
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
@@ -682,9 +682,8 @@ Returns all style names with given prefix, as sequence.
 NOTE: now recognizes special syntax cato class args.
          
   * Parameters *
-    styleString             = (required) Style string.
-    classNamePrefix         = (required) Prefix to search for.
-    
+    styleString             = (required) Style string
+    classNamePrefix         = (required) Prefix to search for
   * Return Value *
     true if class/style string contains given style, false otherwise
 -->
@@ -743,7 +742,7 @@ NOTE: now recognizes special syntax cato class args.
            
   * Parameters *
     styleString             = (required) Style string
-    namesToRemove           = ((list)|(string)) (required) Name or mames to remove
+    namesToRemove           = ((list)|(string), required) Name or mames to remove
                               Sequence of names OR space-separated string of names OR single name
 
   * Return Value *
@@ -797,9 +796,9 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
                     
   * Parameters *
     url                     = (required) URL to augment
-    paramMap                = ((map)) (required) Map of keys to values to add
+    paramMap                = ((map), required) Map of keys to values to add
     paramDelim              = (default: "&amp;") Param delimiter
-    includeEmpty            = ((boolean)) (default: true) Include empty values, or if false omit empty values
+    includeEmpty            = ((boolean), default: true) Include empty values, or if false omit empty values
 -->
 <#function addParamsToUrl url paramMap paramDelim="&amp;" includeEmpty=true>
   <#return addParamsToStr(addParamDelimToUrl(url, paramDelim), paramMap, paramDelim, includeEmpty)>
@@ -846,13 +845,13 @@ WARN: The FTL built-in ?is_string and ?is_hash are insufficient for BeanModel-ba
     In many cases you must use this function.
 
   * Parameters *
-    type                    = (string|map|simplemap|complexmap) (required)
+    type                    = (string|map|simplemap|complexmap, required)
                               * string: Anything meant to be a string WITHOUT being a more complex type.
                               * map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map) 
                                 (simplemap or complexmap)
                               * simplemap: Simple hash only (?keys to get elems).
                               * complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).
-    object                  = ((object)) (required) The object to test
+    object                  = ((object), required) The object to test
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function isObjectType type object>
@@ -891,8 +890,8 @@ NOTES:
 * This will only copy maps that don't have ?keys support if mode is include ("i") and inExKeys specified.
 
   * Parameters *
-    map                     = ((map)) (required)  The source map
-    mode                    = ("e"|"i"|) (default: -none-) Optional mode flags
+    map                     = ((map), required)  The source map
+    mode                    = ("e"|"i"|, default: -none-) Optional mode flags
                               * "e": exclude listed keys
                               * "i": include only listed keys
     inExKeys                = (optional) List or wrapped set of keys to include or exclude    
@@ -912,7 +911,7 @@ any copies.
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
 
   * Parameters *
-    object                  = ((map)) (required) The source map
+    object                  = ((map), required) The source map
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>
@@ -929,7 +928,7 @@ a bean-wrapped context var (.ketSet()).
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
 
   * Parameters *
-    object                  = ((map)) (required) The source map
+    object                  = ((map), required) The source map
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function mapKeys object>
@@ -959,10 +958,9 @@ IMPL NOTE: it's part of this function's interface that any of the arguments for 
     they also depend on this for the toSimple=true conversion.
 
   * Parameters *
-    first                   = ((map)) (required) The first map
-    second                  = ((map))(required) The second map
-    toSimple                = ((boolean)) (default: true) If true, ensure result is a simple hash.
-    
+    first                   = ((map), required) The first map
+    second                  = ((map), required) The second map
+    toSimple                = ((boolean), default: true) If true, ensure result is a simple hash
   * Related *
     #mergeArgMaps
 -->
@@ -1009,7 +1007,7 @@ Enclosing braces are optional.
 TODO: implement as transform
 
   * Parameters *
-    object                  = ((string)|(map)) (required) The object to convert to a simple map
+    object                  = ((string)|(map), required) The object to convert to a simple map
 -->
 <#function evalToSimpleMap object>
   <#if isObjectType("string", object)>
@@ -1062,7 +1060,7 @@ Widget-related progress success action compile (see widget-form.xsd form element
 Gets current global section level. 
 
   * Parameters *
-    useDefault              = ((boolean)) (default: true) If true, if no heading defined, returns default; else return void
+    useDefault              = ((boolean), default: true) If true, if no heading defined, returns default; else return void
     
   * Related *
     @section
@@ -1104,7 +1102,7 @@ Sets current global section level manually.
 For advanced markup; bypasses @section.
     
   * Parameters *
-    sLevel                  = ((int)) (required) The section level
+    sLevel                  = ((int), required) The section level
    
   * Related *
     @section
@@ -1124,7 +1122,7 @@ For advanced markup; bypasses @section.
 Gets current global heading (title) level. 
 
   * Parameters *
-    useDefault              = ((boolean)) (default: true) If true, if no heading defined, return default; else return void
+    useDefault              = ((boolean), default: true) If true, if no heading defined, return default; else return void
 
   * Related *
     @heading
@@ -1164,7 +1162,7 @@ Set current global heading level manually.
 For advanced markup; bypasses @section (but a parent @section will restore heading upon closing).
 
   * Parameters *
-    hLevel                  = ((int)) (required) Heading level
+    hLevel                  = ((int), required) Heading level
     
   * Related *
     @heading
@@ -1192,12 +1190,12 @@ DEV NOTE: This is complicated in Ofbiz because Maps and objects from
 TODO: doesn't handle dates (ambiguous?)
                     
   * Parameters *
-    object                  = ((object)) (required) The FTL or context object
-    lang                    = (js|json) (required)
-    wrap                    = ((boolean)) (default: true) If true, wrap in {}, [], or "" as needed; otherwise omit enclosing characters.
-    hasMore                 = ((boolean)) (default: false) If true, always include trailing separator in hashes and arrays
-    escape                  = ((boolean)) (default: true) Escape characters in strings
-    maxDepth                = ((int)) (default: -1) Maximum depth, or -1 for no limit
+    object                  = ((object), required) The FTL or context object
+    lang                    = (js|json, required)
+    wrap                    = ((boolean), default: true) If true, wrap in {}, [], or "" as needed; otherwise omit enclosing characters
+    hasMore                 = ((boolean), default: false) If true, always include trailing separator in hashes and arrays
+    escape                  = ((boolean), default: true) Escape characters in strings
+    maxDepth                = ((int), default: -1) Maximum depth, or -1 for no limit
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
   <#if isObjectType("string", object)>
@@ -1955,7 +1953,7 @@ Gets a copy of the named request stack as a list (read-only).
   * Parameters *
     name                    = (required) Global request stack var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
-    listType                = (copy|orig) (default: copy)
+    listType                = (copy|orig, default: copy)
                               * orig: Avoids a list copy.
                                 WARN: "orig" means the caller must ditch the list as soon as possible, before any
                                     more modifications to the stack; otherwise results will be unpredictable.
@@ -1977,8 +1975,8 @@ Values set by this method must be read using getRequestVar.
   * Parameters *
     name                    = (required) Global request var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
-    val                     = ((object)) (required) Value
-    mode                    = (u|w|) (default: -empty-) Modes
+    val                     = ((object), required) Value
+    mode                    = (u|w|, default: -empty-) Modes
                               * u: always unwrap the TemplateModel before storing (where possible)
                               * w: always keep TemplateModel as-is (wrapped) when storing
                               NOTE: "u" and "w" modes are usually unnecessary and should be avoided in most template and macro code.
@@ -2014,10 +2012,10 @@ Puts all key-value pairs from given map into FTL current namespace variables (#a
 
   * Parameters *
     map                     = the source map
-    mode                    = (e|i|) (default: -empty-) Optional mode flags
+    mode                    = (e|i|, default: -empty-) Optional mode flags
                               * e: Exclude listed keys
                               * i: Include only listed keys
-    inExKeys                = ((list)|(set)) (default: -empty-) Optional list or wrapped set of keys to include or exclude      
+    inExKeys                = ((list)|(set), default: -empty-) Optional list or wrapped set of keys to include or exclude      
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function varsPutAll map mode="" inExKeys=[]>
@@ -2064,7 +2062,7 @@ NOTE: This is a very generic function; for common implementation, see @commonEle
 TODO: implement as transform.
 
   * Parameters *
-    attribs                     = ((map)) Map of attribute-value pairs. 
+    attribs                     = ((map)) Map of attribute-value pairs
                                   It currently accepts string format as a fallback/legacy support, but this is highly discouraged
                                   and other args won't work with it.
     alt                         = ((boolean)) If true alternate row (odd), if false regular (even)
@@ -2073,11 +2071,11 @@ TODO: implement as transform.
     attribNamePrefix            = ((string)) Add this prefix to attribute names
     alwaysAddPrefix             = ((boolean)) If false, only add prefix if not already has prefix (default true)
     attribNamePrefixStrip       = ((string)) Remove this prefix from all attrib names
-    attribNameSubstitutes       = ((map)) Map of attrib names to substitute attrib names. 
+    attribNameSubstitutes       = ((map)) Map of attrib names to substitute attrib names
                                   NOTES: 
                                   * If this is set, the exclude names should be the names of the subtitutes, not the input attrib names.
                                   * This is applied after prefix ops are applied.
-    camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end.
+    camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end
     emptyValToken               = ((string)) When this value encountered, will include an empty attrib
     noValToken                  = ((String)) When this value encountered, will include an attrib with no value
 -->
@@ -2101,12 +2099,12 @@ NOTE: formattedDate by default renders the "date" type but it also doubles as ha
     (which also have convenience wrappers below).
     
   * Parameters *
-    date                    = ((date)) (required) The date
-    dateType                = (date-time|timestamp|date|time) (default: date)
+    date                    = ((date), required) The date
+    dateType                = (date-time|timestamp|date|time, default: date)
                               "timestamp" and "date-time" are synonymous.  
-    defaultVal              = If no output is produced (empty), this value (string) will be shown instead.
-    specLocale              = ((locale)) (default: -locale from context-) Override locale
-    specTimeZone            = ((timezone)) (default: -timeZone from context-) Override time zones
+    defaultVal              = If no output is produced (empty), this value (string) will be shown instead
+    specLocale              = ((locale), default: -locale from context-) Override locale
+    specTimeZone            = ((timezone), default: -timeZone from context-) Override time zones
     
   * Related *
     @formattedDateTime, @formattedTime, #formatDate, #formatDateTime, #formatTime
@@ -2381,10 +2379,10 @@ Helper method that can extract style names by prefix with int value suffix from 
 
   * Parameters *
     style                   = (required) CSS Style/classes string
-    prefixMap               = ((map)) (required) Map of CSS class prefixes to result names
+    prefixMap               = ((map), required) Map of CSS class prefixes to result names
     
   * Return Value *
-    a hash/map of result names to integer values.
+    a map of result names to integer values.
 -->
 <#function extractPrefixedStyleNamesWithInt style prefixMap>
   <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].extractPrefixedStyleNamesWithInt(style, prefixMap)>
@@ -2403,7 +2401,7 @@ Every push should be followed by a pop.
 NOTE: This function is generally framework-agnostic and size-key agnostic.
 
   * Parameters *
-    sizes                   = ((map)) (required) Map of size names to integer values
+    sizes                   = ((map), required) Map of size names to integer values
                               Typically, this will be (e.g.):
                                 {"large":12, "medium":12, "small":12}
                               but can be anything (the methods in this file do not care).
@@ -2417,7 +2415,7 @@ NOTE: This function is generally framework-agnostic and size-key agnostic.
 *************
 * saveCurrentContainerSizesFromStyleStr
 ************
-Same as saveCurrentContainerSizes but tries to extract the container sizes from a style/classes string.
+Same as saveCurrentContainerSizes but tries to extract the container sizes from a style string.
 
 This is needed to know grid sizes because most of the facilities only support setting
 class name strings (except for @cell which supports columns/small/medium/large args).
@@ -2426,7 +2424,7 @@ IMPL NOTE: For this method to work, the framework-/theme-specific code must over
     function parseContainerSizesFromStyleStr.
 
   * Parameters *
-    style                   = (required) Style/classes string containing grid size classes
+    style                   = (required) Style string containing grid size classes
 -->
 <#function saveCurrentContainerSizesFromStyleStr style>
   <#return saveCurrentContainerSizes(parseContainerSizesFromStyleStr(style))>
@@ -2451,10 +2449,10 @@ ABSTRACT. This function should be overridden by a framework-specific implementat
 container sizes from a class names string.
            
   * Parameters *
-    style                   = (required) Style/classes string containing grid size classes
+    style                   = (required) Style string containing grid size classes
     
   * Return Value *
-    a map/hash of size names to integer values.
+    a map of size names to integer values.
 -->
 <#function parseContainerSizesFromStyleStr style>
   <#return {}>
@@ -2511,7 +2509,7 @@ IMPL NOTE: The calculated factors are saved in their own stack and recalculated 
     would have to override getAbsContainerSizeFactors (not recommended).
     
   * Parameters *
-    maxSizes                = ((int)|(map)) (default: 0) Max container sizes (grid size)
+    maxSizes                = ((int)|(map), default: 0) Max container sizes (grid size)
                               This is can a map of per-key max container sizes OR a single number giving max size
                               for all keys (usually same in most frameworks) OR zero to mean use defaults.
                    
@@ -2541,15 +2539,15 @@ ABSTRACT. This function should be overridden by a framework-specific implementat
 size factors.
            
   * Parameters *
-    sizesList               = ((list)) (required) List of hashes describing all (known) parent and current container sizes
+    sizesList               = ((list), required) List of hashes describing all (known) parent and current container sizes
                               NOTE: Entries may be empty and should be skipped.
     maxSizes                = (default: 0) See #getAbsContainerSizeFactors maxSizes parameter
-    cachedFactorsList       = ((list)) (default: -empty-) List of cached factor results, of same size and order as sizesList
+    cachedFactorsList       = ((list), default: -empty-) List of cached factor results, of same size and order as sizesList
                               Each entry corresponds to the container at same index as the sizes in sizesList.
                               If an entry is boolean, then a factor was not (yet) calculated for that container.
     
   * Return Value *
-    a map/hash of size names to float values.
+    a map of size names to float values.
 -->
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[]>
   <#return {}>
@@ -2604,10 +2602,10 @@ NOTE: this is currently render context-unaware
 Returns void if nothing.
 
   * Parameters *
-    libName                 = (variables|template) (required)
-    renderPlatformType      = ((string)) Platform type
+    libName                 = (variables|template, required)
+    renderPlatformType      = ((string), default: default) Platform type
                               Caller should use #getRenderPlatformType().
-    renderContextType       = ((string)) Render context type
+    renderContextType       = ((string), default: general) Render context type
                               Caller should use #getRenderContextType().
 -->
 <#function getDefaultCatoLibLocation libName renderPlatformType="default" renderContextType="general">
@@ -2678,10 +2676,10 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     <@printVars />           
                     
   * Parameters *
-    var                     = ((object)) (default: context) Var to be printed 
-    platform                = ((boolean)|html|...) (default: true) The target platform (HTML, etc.)
+    var                     = ((object), default: context) Var to be printed 
+    platform                = ((boolean)|html|..., default: true) The target platform (HTML, etc.)
                               If true, looks up current render.
-    maxDepth                = ((int)) (default: 5) Max depth, to prevent endless recursions.
+    maxDepth                = ((int), default: 5) Max depth, to prevent endless recursions
 -->
 <#macro printVars var=context platform=true maxDepth=5>
   <#if platform?is_boolean><#if platform><#local platform = getRenderPlatformType()!""><#else><#local platform = ""></#if></#if>

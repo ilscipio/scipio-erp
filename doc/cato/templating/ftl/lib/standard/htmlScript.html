@@ -4,6 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
       <title>HTML document markup and script HTML template include, standard Cato markup.</title>
 
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -30,13 +31,20 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-formalname {
   font-weight: bold;
 }
+
+.lib-entry-param-desc-extradesc {
+  font-size: 0.8em;
+}
+
+.lib-entry-params-details {
+  font-size: 0.8em;
+}
 </style>
 
   </head>
   <body>
   
   
-
   
     <div>
         <h1>HTML document markup and script HTML template include, standard Cato markup.</h1>
@@ -124,19 +132,22 @@ this is somewhat generic.      </li>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>includeDocType</code></td>
-                    <td class="entry-paramdesc">((boolean)) (default: false) Whether to include doctype or not.
- Default is false because is already included by screen renderer in @renderScreenBegin.</td>
+                    <td class="entry-paramname">
+                        <code>includeDocType</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Whether to include doctype or not</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Default is false because is already included by screen renderer in @renderScreenBegin.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
 
                       <div class="lib-entry-params-details">
                         <p>
-                          <em>
                         <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
                             regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
-                          </em>
                         </p>
                       </div>
                   </div>
@@ -200,18 +211,22 @@ this is somewhat generic.      </li>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>scriptType/output/cdata/htmlwrap</code></td>
-                    <td class="entry-paramdesc">defaults for child @script calls (see @script)</td>
+                    <td class="entry-paramname">
+                        <code>scriptType,    output,    data,    htmlwrap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Default arguments for child script calls; see <a href="#entry-script">@script</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
 
                       <div class="lib-entry-params-details">
                         <p>
-                          <em>
                         <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
                             regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
-                          </em>
                         </p>
                       </div>
                   </div>
@@ -269,42 +284,75 @@ this is somewhat generic.      </li>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>type</code></td>
-                    <td class="entry-paramdesc">script type identifier (default &quot;text/javascript&quot;)</td>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;text/javascript&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Script type identifier</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>src</code></td>
-                    <td class="entry-paramdesc">source (if no nested content)</td>
+                    <td class="entry-paramname">
+                        <code>src</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Source (if no nested content)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>language</code></td>
-                    <td class="entry-paramdesc">deprecated by HTML - ignored by macro</td>
+                    <td class="entry-paramname">
+                        <code>language</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">DEPRECATED by HTML - ignored by macro</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>output</code></td>
-                    <td class="entry-paramdesc">if true, the script must be output in the markup where the macro is used
-and should never be delegated. in cases of scripts within common templates,
+                    <td class="entry-paramname">
+                        <code>output</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">If true, the script must be output in the markup where the macro is used</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">and should never be delegated. In cases of scripts within common templates,
 this should be omitted, except when used in html &lt;head&gt; or in a footer.
-if not specified or &quot;&quot;, cato decides what to do with them (output or accumulate at bottom of page).
-<strong>TODO:</strong> code to accumulate at footer.</td>
+If not specified or &quot;&quot;, cato decides what to do with them (output or accumulate at bottom of page).
+<br/><strong>TODO:</strong> code to accumulate at footer.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>htmlwrap</code></td>
-                    <td class="entry-paramdesc">boolean, default true, if false don&#39;t include HTML wrapper (or cdata)</td>
+                    <td class="entry-paramname">
+                        <code>htmlwrap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If false don&#39;t include HTML wrapper (or cdata)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>cdata</code></td>
-                    <td class="entry-paramdesc">boolean, default true, if false don&#39;t include CDATA guard (only used if htmlwrap true)</td>
+                    <td class="entry-paramname">
+                        <code>cdata</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If false don&#39;t include CDATA guard (only used if htmlwrap true)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
 
                       <div class="lib-entry-params-details">
                         <p>
-                          <em>
                         <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
                             regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
-                          </em>
                         </p>
                       </div>
                   </div>
@@ -336,9 +384,9 @@ if not specified or &quot;&quot;, cato decides what to do with them (output or a
 code.</p>
 <p>Normally the getOfbizUrl(url) Javascript function will be used to do this.</p><p>The screen/ftl has to communicate to the decorator which URIs it needs to use, so
 this is one such mechanism
-<strong>DEV NOTE:</strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
+<br/><strong>DEV NOTE:</strong> Other options: layoutSettings? any way is messy...</p><p>Ideally this shouldn&#39;t needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can&#39;t predict URL patterns unless rewrite
-@ofbizUrl in JS.</p>                  </div>
+<a href="../utilities.html#entry-ofbizUrl">@ofbizUrl</a> in JS.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -354,19 +402,36 @@ dynamic using controller request defs and can&#39;t predict URL patterns unless 
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">controller request uri</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Controller request uri</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>output</code></td>
-                    <td class="entry-paramdesc">if true, the include must be output in the markup where the macro is used
-and should never be delegated. in most cases this should be omitted.
-<strong>DEV NOTE:</strong> if not specified, &quot;&quot; or false for now simply accumulates the names
-    and will be included by decorator in footer.</td>
+                    <td class="entry-paramname">
+                        <code>output</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">If true, the include must be output in the markup where the macro is used</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">and should never be delegated. In most cases this should be omitted.
+<br/><strong>DEV NOTE:</strong> If not specified, &quot;&quot; or false for now simply accumulates the names
+  and will be included by decorator in footer.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>htmlwrap</code></td>
-                    <td class="entry-paramdesc">whether to wrap in @script - default FALSE for this one</td>
+                    <td class="entry-paramname">
+                        <code>htmlwrap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Whether to wrap in <a href="#entry-script">@script</a> -</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"><strong>NOTE:</strong> Default is FALSE for this one</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -407,8 +472,14 @@ Accepts attrib names as both &quot;onxxx&quot; and &quot;xxx&quot;.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>events</code></td>
-                    <td class="entry-paramdesc">map of event names to actions</td>
+                    <td class="entry-paramname">
+                        <code>events</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Map of event names to actions</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -459,21 +530,39 @@ This is nearly the same as elemAttribStr but with different defaults and with mo
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>attribs</code></td>
-                    <td class="entry-paramdesc">the attribs map here is more versatile and supports mergeArgMaps functions more easily.
- it may contain two special members: localArgNames and allArgNames. both should be lists.
+                    <td class="entry-paramname">
+                        <code>attribs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Attribs map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> The attribs map here is more versatile and supports mergeArgMaps functions more easily.
+ It may contain two special members: localArgNames and allArgNames. Both should be lists.
  localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
- the two will be excluded themselves.
- if this map contains an &quot;attribs&quot; member, it will be added for exclude as well.
- see function getAttribMapAllExcludes for implementation details.</td>
+ The two will be excluded themselves.
+ If this map contains an &quot;attribs&quot; member, it will be added for exclude as well.
+ See function getAttribMapAllExcludes for implementation details.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>noExclude</code></td>
-                    <td class="entry-paramdesc">prevents excludes of attribs with specified names (list)</td>
+                    <td class="entry-paramname">
+                        <code>noExclude</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Prevents excludes of attribs with specified names</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See @elemAttribStr; mostly same parameters but defaults different.</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="../utilities.html#entry-elemAttribStr">@elemAttribStr</a>; mostly same parameters but with different defaults.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>

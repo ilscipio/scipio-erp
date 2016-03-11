@@ -24,7 +24,7 @@ IMPL NOTE: Beware of whitespace.
     <@htmlHeadOpen />            
                     
   * Parameters *
-    includeDocType      = ((boolean)) (default: false) Whether to include doctype or not.
+    includeDocType      = ((boolean), default: false) Whether to include doctype or not
                           Default is false because is already included by screen renderer in @renderScreenBegin.
 -->
 <#assign htmlHeadOpen_defaultArgs = {
@@ -80,7 +80,10 @@ NOTE: This is NOT associated with any HTML element nor does it define any.
     </@scripts>         
                     
   * Parameters *
-    scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
+    scriptType,
+    output,
+    data,
+    htmlwrap                = Default arguments for child script calls; see @script
 -->
 <#assign scripts_defaultArgs = {
   "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
@@ -111,16 +114,16 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     </@script>         
                     
   * Parameters *
-    type                    = (default: text/javascript) Script type identifier
-    src                     = Source (if no nested content)
+    type                    = (default: "text/javascript") Script type identifier
+    src                     = Source document address (when no nested content)
     language                = DEPRECATED by HTML - ignored by macro
-    output                  = ((boolean)) If true, the script must be output in the markup where the macro is used
-                              and should never be delegated. In cases of scripts within common templates,
+    output                  = ((boolean)) If true, the script must be output in the markup where the macro is used and should never be delegated
+                              In cases of scripts within common templates,
                               this should be omitted, except when used in html <head> or in a footer.
                               If not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
                               TODO: code to accumulate at footer.
-    htmlwrap                = ((boolean)) (default: true) If false don't include HTML wrapper (or cdata)
-    cdata                   = ((boolean)) (default: true) If false don't include CDATA guard (only used if htmlwrap true)
+    htmlwrap                = ((boolean), default: true) If false don't include HTML wrapper (or cdata)
+    cdata                   = ((boolean), default: true) If false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#assign script_defaultArgs = {
   "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
@@ -181,7 +184,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                               and should never be delegated. In most cases this should be omitted.  
                               DEV NOTE: If not specified, "" or false for now simply accumulates the names  
                                 and will be included by decorator in footer.
-    htmlwrap                = ((boolean)) (default: false) Whether to wrap in @script - 
+    htmlwrap                = ((boolean), default: false) Whether to wrap in @script - 
                               NOTE: Default is FALSE for this one
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false output="">

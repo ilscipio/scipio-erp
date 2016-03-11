@@ -4,6 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
       <title>Generic Cato FTL Utilities.</title>
 
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -30,13 +31,20 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-formalname {
   font-weight: bold;
 }
+
+.lib-entry-param-desc-extradesc {
+  font-size: 0.8em;
+}
+
+.lib-entry-params-details {
+  font-size: 0.8em;
+}
 </style>
 
   </head>
   <body>
   
   
-
   
     <div>
         <h1>Generic Cato FTL Utilities.</h1>
@@ -379,35 +387,53 @@ webSiteId arg below is from stock but does not fully work and will not work with
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>type</code></td>
-                    <td class="entry-paramdesc">[intra-webapp|inter-webapp|] (default: intra-app)
- intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
- inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(intra-webapp|inter-webapp|, default: intra-webapp)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> * intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
+ * inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
    The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
    It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.
- (New in Cato)</td>
+ (New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>interWebapp</code></td>
-                    <td class="entry-paramdesc">boolean (default: false) Alias for type=&quot;inter-webapp&quot;.
-If true, same as type=&quot;inter-webapp&quot;.
-If false, same as type=&quot;&quot; (intra-webapp implied).
-(New in Cato)</td>
+                    <td class="entry-paramname">
+                        <code>interWebapp</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Alias for type=&quot;inter-webapp&quot;</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, same as type=&quot;inter-webapp&quot;; if false, same as type=&quot;&quot; (intra-webapp implied).
+(New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>uri</code></td>
-                    <td class="entry-paramdesc">string (required) The request URI. May be specified as parameter or as #nested macro content.
-For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
+                    <td class="entry-paramname">
+                        <code>uri</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The request URI. May be specified as parameter or as #nested macro content</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
 to webapp root, excluding webapp context root).
 For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
 server root, containing webapp context root and servlet path; if webSiteId specified,
 this should specified relative like intra-webapp (unless absPath forced to true).
-(New in Cato)</td>
+(New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>absPath</code></td>
-                    <td class="entry-paramdesc">boolean (default: -depends on type-) (fallback default: false)
-If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
+                    <td class="entry-paramname">
+                        <code>absPath</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -depends on type-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">(fallback default: false)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
 If explicit false (stock Ofbiz default), the passed uri should be relative to control servlet or webapp context.
 If not specified, will attempt for figure out based on the uri passed and other flags.
 Current behavior when unspecified:
@@ -415,59 +441,90 @@ Current behavior when unspecified:
 * For inter-webapp links:
   * If webSiteId is not specified, absPath is assumed true.
   * If webSiteId is specified, absPath is assumed false.
-<strong>NOTE:</strong> Behavior when unspecified is NOT currently influenced by present of starting slash (&quot;/&quot;),
+<br/><strong>NOTE:</strong> Behavior when unspecified is NOT currently influenced by present of starting slash (&quot;/&quot;),
     to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types.
     It is also ambiguous in the case of intra-webapp non-controller links.
-(New in Cato)</td>
+(New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>webSiteId</code></td>
-                    <td class="entry-paramdesc">string (default: -current website or none-) Target web site ID
-This usually should only be specified for inter-webapp links.
+                    <td class="entry-paramname">
+                        <code>webSiteId</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -current website or none-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Target web site ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">This usually should only be specified for inter-webapp links.
 Will determine the specific target webapp to use.
-<strong>NOTE:</strong> Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
-(Stock arg, some fixes in Cato)</td>
+<br/><strong>NOTE:</strong> Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
+(Stock arg, some fixes in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>controller</code></td>
-                    <td class="entry-paramdesc">boolean (default: -depends on type-) (fallback default: true)
-If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
+                    <td class="entry-paramname">
+                        <code>controller</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -depends on type-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">(fallback default: true)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
 use information from the controller to generate the link.
 If false, the link is treated as pointing to any arbitrary servlet or resource.
 Current behavior when unspecified:
 * If absPath is true, the uri will be checked to see whether it points to controller
   * This helps implementation of inter-webapp links.
 * Otherwise, generally defaults to true.
-(New in Cato)</td>
+(New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>extLoginKey</code></td>
-                    <td class="entry-paramdesc">boolean (default: false) or string boolean repr.
-If true, this will add the external login key as parameter.
-<strong>NOTE:</strong> This is currently FALSE by default in all cases including inter-webapp links
+                    <td class="entry-paramname">
+                        <code>extLoginKey</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, this will add the external login key as parameter.
+<br/><strong>NOTE:</strong> This is currently FALSE by default in all cases including inter-webapp links
     while details are sorted out.
-(New in Cato)</td>
+(New in Cato)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>fullPath</code></td>
-                    <td class="entry-paramdesc">boolean (default: false) or string boolean repr.
-If true, forces a full URL with protocol (HTTP or HTTPS).
-<strong>WARNING:</strong> MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
+                    <td class="entry-paramname">
+                        <code>fullPath</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, forces a full URL with protocol (HTTP or HTTPS).
+<br/><strong>WARN:</strong> MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
     marked as secure will always generate a secure URL, not a plain URL. Some control
     is sacrificed to allow this flag to be used safely and more easily.
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</td>
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>secure</code></td>
-                    <td class="entry-paramdesc">boolean (default: false) or string boolean repr.
-If true, forces a full URL with secure protocol (HTTPS).
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</td>
+                    <td class="entry-paramname">
+                        <code>secure</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, forces a full URL with secure protocol (HTTPS).
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>encode</code></td>
-                    <td class="entry-paramdesc">boolean (default: true) or string boolean repr.
-If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</td>
+                    <td class="entry-paramname">
+                        <code>encode</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -498,7 +555,7 @@ If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.</p>
-<p>This is useful to prevent bloating templates with &lt;#assign...&gt;&lt;@ofbizUrl.../&gt;&lt;/#assign&gt; captures
+<p>This is useful to prevent bloating templates with &lt;#assign...&gt;&lt;<a href="#entry-ofbizUrl">@ofbizUrl</a>.../&gt;&lt;/#assign&gt; captures
 which is very frequent due to use of macros.</p>                  </div>
             
               
@@ -513,16 +570,21 @@ which is very frequent due to use of macros.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>args</code></td>
-                    <td class="entry-paramdesc">Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
- <strong>DEV NOTE:</strong> This is the only sane way to implement this because FTL supports only positional args
+                    <td class="entry-paramname">
+                        <code>args</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Map of <a href="#entry-ofbizUrl">@ofbizUrl</a> arguments OR a string containing a uri (single parameter)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> <br/><strong>DEV NOTE:</strong> This is the only sane way to implement this because FTL supports only positional args
      for functions, which would be unreadable here (makeOfbizUrl(&quot;main&quot;, false, false, true, true...))
      However majority of cases use only a URI so we can shortcut in that case.
      Freemarker doesn&#39;t support overloading so we basically implement it ourselves.
      Note that if we needed extra positional parameters for common cases, should keep the args map check on
      the first param only, otherwise it creates too many checks needed; this is
      consistent with macros anyway (you use either positional OR named params, you can&#39;t combine,
-     so you use only args map or only positionals).</td>
+     so you use only args map or only positionals).</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -558,7 +620,7 @@ which is very frequent due to use of macros.</p>                  </div>
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL.</p>
 <p>The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.</p><p>This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.</p>                  </div>
+but this is normally used to access another servlet, such as /products/GZ-1000.</p><p>This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -578,8 +640,14 @@ but this is normally used to access another servlet, such as /products/GZ-1000.<
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See @ofbizUrl</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -615,7 +683,7 @@ but this is normally used to access another servlet, such as /products/GZ-1000.<
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.</p>
 <p>The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.</p><p>This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+but this is normally used to access another servlet, such as /products/GZ-1000.</p><p>This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.
 h absPath=false, interWebapp=false, controller=false.</p>                  </div>
             
               
@@ -630,8 +698,14 @@ h absPath=false, interWebapp=false, controller=false.</p>                  </div
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See #makeOfbizUrl, @ofbizWebappUrl</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>, <a href="#entry-ofbizWebappUrl">@ofbizWebappUrl</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -669,7 +743,7 @@ h absPath=false, interWebapp=false, controller=false.</p>                  </div
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL.</p>
 <p>The URI takes the basic and usual form /webappmountpoint/control/requesturi
-OR requesturi if webSiteId is specified and is a controller request.</p><p>This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+OR requesturi if webSiteId is specified and is a controller request.</p><p>This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.</p>                  </div>
             
               
@@ -691,8 +765,14 @@ by the implementation or can be overridden; controller is left to interpretation
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See @ofbizUrl</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizUrl">@ofbizUrl</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -728,7 +808,7 @@ by the implementation or can be overridden; controller is left to interpretation
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL. Function version of @ofbizInterWebappUrl.</p>
 <p>The URI takes the basic and usual form /webappmountpoint/control/requesturi
-OR requesturi if webSiteId is specified and is a controller request.</p><p>This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+OR requesturi if webSiteId is specified and is a controller request.</p><p>This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.</p><p><strong>NOTE:</strong> If args is specified as map, &quot;webSiteId&quot; must be passed in args, not as argument.
     (This is intentional, to be consistent with macro invocations, emulated for functions)</p>                  </div>
             
@@ -745,8 +825,14 @@ by the implementation or can be overridden; controller is left to interpretation
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See #makeOfbizUrl, @ofbizInterWebappUrl</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-makeOfbizUrl">#makeOfbizUrl</a>, <a href="#entry-ofbizInterWebappUrl">@ofbizInterWebappUrl</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -798,9 +884,14 @@ capabilities for Cato.</p><p><strong>TODO:</strong> Make this accept uri</p>    
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>variant</code></td>
-                    <td class="entry-paramdesc">variant
- (Stock Ofbiz parameter)</td>
+                    <td class="entry-paramname">
+                        <code>variant</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">variant</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> (Stock Ofbiz parameter)</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -846,8 +937,14 @@ capabilities for Cato.</p><p><strong>TODO:</strong> Make this accept uri</p>    
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See @ofbizContentUrl</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -883,9 +980,9 @@ capabilities for Cato.</p><p><strong>TODO:</strong> Make this accept uri</p>    
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
 Can help to cut down on macro URL arguments, but may be used anywhere.</p>
-<p><strong>FIXME:</strong> This is out of date with @ofbizUrl enhancements</p><p>If the uri is already a web URL, it is returned as-is.
+<p><strong>FIXME:</strong> This is out of date with <a href="#entry-ofbizUrl">@ofbizUrl</a> enhancements</p><p>If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
- ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
+ ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through <a href="#entry-ofbizUrl">@ofbizUrl</a>/makeOfbizUrl.
                Form (note: order of arguments is strict; args will be stripped):
                  ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1</p>                  </div>
             
@@ -901,8 +998,14 @@ The following URI forms are currently interpreted and transformed:
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">uri to interpret for known formats and, if matching, to produce URL</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">uri to interpret for known formats and, if matching, to produce URL</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -943,12 +1046,24 @@ The following URI forms are currently interpreted and transformed:
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">URL to augment</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">URL to augment</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>escape</code></td>
-                    <td class="entry-paramdesc">boolean (default: true) If true, use escaped param delimiter.</td>
+                    <td class="entry-paramname">
+                        <code>escape</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, use escaped param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -989,15 +1104,26 @@ The following URI forms are currently interpreted and transformed:
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">(required) Label name</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Label name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>resource</code></td>
-                    <td class="entry-paramdesc">(optional) Resource name
-If label not found in uiLabelMap (preferred), falls back to lookup in this
+                    <td class="entry-paramname">
+                        <code>resource</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Resource name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If label not found in uiLabelMap (preferred), falls back to lookup in this
 resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-a whole file for one label.</td>
+a whole file for one label.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1038,12 +1164,24 @@ a whole file for one label.</td>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>resource</code></td>
-                    <td class="entry-paramdesc">(required) Resource name</td>
+                    <td class="entry-paramname">
+                        <code>resource</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Resource name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">(required) Property name</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Property name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1095,20 +1233,44 @@ If msgArgs is a sequence, they are passed instead of context to the property.</p
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>resource</code></td>
-                    <td class="entry-paramdesc">(required) Resource name</td>
+                    <td class="entry-paramname">
+                        <code>resource</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Resource name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">(required) Property name</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Property name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>msgArgs</code></td>
-                    <td class="entry-paramdesc">map or sequence (optional) (default: -use context variables-) Substitute values for message template</td>
+                    <td class="entry-paramname">
+                        <code>msgArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list), default: -use context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Substitute values for message template</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>specLocale</code></td>
-                    <td class="entry-paramdesc">locale (optional) (default: -locale from context-) Explicit locale</td>
+                    <td class="entry-paramname">
+                        <code>specLocale</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1150,17 +1312,34 @@ If msgArgs is a sequence, they are passed instead of context to the property.</p
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>resourceExpr</code></td>
-                    <td class="entry-paramdesc">(required) Resource name and property name separated with &quot;#&quot;, or name alone
- If name alone, assumes CommonUiLabels for resource.</td>
+                    <td class="entry-paramname">
+                        <code>resourceExpr</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Resource name and property name separated with &quot;#&quot;, or name alone</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> If name alone, assumes CommonUiLabels for resource.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>msgArgs</code></td>
-                    <td class="entry-paramdesc">map or sequence (optional) (default: -use context variables-) Substitute values for message template</td>
+                    <td class="entry-paramname">
+                        <code>msgArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list), default: -use context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Substitute values for message template</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>specLocale</code></td>
-                    <td class="entry-paramdesc">locale (optional) (default: -locale from context-) Explicit locale</td>
+                    <td class="entry-paramname">
+                        <code>specLocale</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1214,16 +1393,34 @@ If no such prefix in textExpr, returns the text as-is.</p>                  </di
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>textExpr</code></td>
-                    <td class="entry-paramdesc">(required) Label text expression</td>
+                    <td class="entry-paramname">
+                        <code>textExpr</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Label text expression</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>msgArgs</code></td>
-                    <td class="entry-paramdesc">map or sequence (optional) (default: -use context variables-) Substitute values for message template</td>
+                    <td class="entry-paramname">
+                        <code>msgArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map)|(list), default: -use context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Substitute values for message template</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>specLocale</code></td>
-                    <td class="entry-paramdesc">locale (optional) (default: -locale from context-) Explicit locale</td>
+                    <td class="entry-paramname">
+                        <code>specLocale</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Explicit locale</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1265,17 +1462,34 @@ If no such prefix in textExpr, returns the text as-is.</p>                  </di
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">URL to which to append delimiter</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> URL to which to append delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramStarter</code></td>
-                    <td class="entry-paramdesc">(default: &quot;?&quot;) Query string delimiter. Usually &quot;?&quot;
-Only significant if paramDelim does not contain &quot;/&quot;</td>
+                    <td class="entry-paramname">
+                        <code>paramStarter</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;?&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Query string delimiter, usually &quot;?&quot;</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Only significant if paramDelim does not contain &quot;/&quot;</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1318,20 +1532,44 @@ Only significant if paramDelim does not contain &quot;/&quot;</td>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>paramStr</code></td>
-                    <td class="entry-paramdesc">Param string</td>
+                    <td class="entry-paramname">
+                        <code>paramStr</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramMap</code></td>
-                    <td class="entry-paramdesc">Hash of keys to values to add</td>
+                    <td class="entry-paramname">
+                        <code>paramMap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Map of keys to values to add</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>includeEmpty</code></td>
-                    <td class="entry-paramdesc">boolean (default: true) If true, include empty values; if false, omit empty values</td>
+                    <td class="entry-paramname">
+                        <code>includeEmpty</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, include empty values; if false, omit empty values</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1374,12 +1612,24 @@ where DELIM is specified delimiter (&amp; &amp;amp; , ; etc.).</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>paramStr</code></td>
-                    <td class="entry-paramdesc">Param string</td>
+                    <td class="entry-paramname">
+                        <code>paramStr</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1420,12 +1670,24 @@ where DELIM is specified delimiter (&amp; &amp;amp; , ; etc.).</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>paramStr</code></td>
-                    <td class="entry-paramdesc">Param string</td>
+                    <td class="entry-paramname">
+                        <code>paramStr</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1465,8 +1727,14 @@ where DELIM is specified delimiter (&amp; &amp;amp; , ; etc.).</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">Style string</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1513,8 +1781,14 @@ a sequence of style names, in same order as input.                    </p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">style string containing classes</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string containing classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1567,8 +1841,14 @@ a java Set of style names (can be seen as sequence)                    </p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleNames</code></td>
-                    <td class="entry-paramdesc">Style names, as arbitrary number of positional parameters</td>
+                    <td class="entry-paramname">
+                        <code>styleNames</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style names, as arbitrary number of positional parameters</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1621,8 +1901,14 @@ a string of combined style names                    </p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleNames</code></td>
-                    <td class="entry-paramdesc">Style names, as sequence</td>
+                    <td class="entry-paramname">
+                        <code>styleNames</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style names, as sequence</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1670,12 +1956,24 @@ a string of combined style names                    </p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">Style string.</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>classNamePrefix</code></td>
-                    <td class="entry-paramdesc">Prefix to search for.</td>
+                    <td class="entry-paramname">
+                        <code>classNamePrefix</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Prefix to search for</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1728,12 +2026,24 @@ true if class/style string contains given style, false otherwise                
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">Style string</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>className</code></td>
-                    <td class="entry-paramdesc">Name of class to find</td>
+                    <td class="entry-paramname">
+                        <code>className</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Name of class to find</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1781,12 +2091,24 @@ true if class/style string contains given style, false otherwise                
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">Style string</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>classNamePrefix</code></td>
-                    <td class="entry-paramdesc">Prefix to search for</td>
+                    <td class="entry-paramname">
+                        <code>classNamePrefix</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Prefix to search for</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1835,13 +2157,24 @@ strips lead/trailing space.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>styleString</code></td>
-                    <td class="entry-paramdesc">Style string</td>
+                    <td class="entry-paramname">
+                        <code>styleString</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>namesToRemove</code></td>
-                    <td class="entry-paramdesc">string or sequence. Sequence of names or space-separated string of names to remove,
-or single name (as string) to remove.</td>
+                    <td class="entry-paramname">
+                        <code>namesToRemove</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list)|(string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Name or mames to remove</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Sequence of names OR space-separated string of names OR single name</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1888,8 +2221,14 @@ the style string with names removed, reformatted, in same order as input        
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">URL to strip</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> URL to strip</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1932,20 +2271,44 @@ the style string with names removed, reformatted, in same order as input        
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">URL to augment</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> URL to augment</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramMap</code></td>
-                    <td class="entry-paramdesc">Hash of keys to values to add</td>
+                    <td class="entry-paramname">
+                        <code>paramMap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Map of keys to values to add</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>includeEmpty</code></td>
-                    <td class="entry-paramdesc">Include empty values, or if false omit empty values</td>
+                    <td class="entry-paramname">
+                        <code>includeEmpty</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Include empty values, or if false omit empty values</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -1986,12 +2349,24 @@ the style string with names removed, reformatted, in same order as input        
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>url</code></td>
-                    <td class="entry-paramdesc">URL to escape</td>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> URL to escape</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>paramDelim</code></td>
-                    <td class="entry-paramdesc">(default: &quot;&amp;amp;&quot;) Param delimiter for substitution</td>
+                    <td class="entry-paramname">
+                        <code>paramDelim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Param delimiter for substitution</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2064,17 +2439,28 @@ the style string with names removed, reformatted, in same order as input        
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>type</code></td>
-                    <td class="entry-paramdesc">(string|map|simplemap|complexmap) (required)
- string: Anything meant to be a string WITHOUT being a more complex type.
- map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map)
-      (simplemap or complexmap)
- simplemap: Simple hash only (?keys to get elems).
- complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).</td>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(string|map|simplemap|complexmap, required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> * string: Anything meant to be a string WITHOUT being a more complex type.
+ * map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map)
+   (simplemap or complexmap)
+ * simplemap: Simple hash only (?keys to get elems).
+ * complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">The object to test</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The object to test</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2121,8 +2507,14 @@ possible.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">The object to copy</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The object to copy</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2177,18 +2569,35 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>map</code></td>
-                    <td class="entry-paramdesc">The source map</td>
+                    <td class="entry-paramname">
+                        <code>map</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">  The source map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>mode</code></td>
-                    <td class="entry-paramdesc">(&quot;e&quot;|&quot;i&quot;|) (default: -none-) Optional mode flags
-&quot;e&quot;: exclude listed keys
-&quot;i&quot;: include only listed keys</td>
+                    <td class="entry-paramname">
+                        <code>mode</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(&quot;e&quot;|&quot;i&quot;|, default: -none-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Optional mode flags</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">* &quot;e&quot;: exclude listed keys
+* &quot;i&quot;: include only listed keys</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>inExKeys</code></td>
-                    <td class="entry-paramdesc">(optional) List or wrapped set of keys to include or exclude</td>
+                    <td class="entry-paramname">
+                        <code>inExKeys</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> List or wrapped set of keys to include or exclude</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2234,8 +2643,14 @@ any copies.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">The source map</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The source map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2281,8 +2696,14 @@ a bean-wrapped context var (.ketSet()).</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">The source map</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The source map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2337,16 +2758,34 @@ an FTL wrapper, which wrecks all subsequent type checks. And others.</p><p><stro
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>first</code></td>
-                    <td class="entry-paramdesc">The first map</td>
+                    <td class="entry-paramname">
+                        <code>first</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The first map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>second</code></td>
-                    <td class="entry-paramdesc">The second map</td>
+                    <td class="entry-paramname">
+                        <code>second</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The second map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>toSimple</code></td>
-                    <td class="entry-paramdesc">boolean (default: true) If true, ensure result is a simple hash.</td>
+                    <td class="entry-paramname">
+                        <code>toSimple</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, ensure result is a simple hash</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2396,8 +2835,14 @@ otherwise converts the map to a simple hash.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">string or map. The object to convert to a simple map.</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string)|(map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The object to convert to a simple map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2439,8 +2884,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">collection (optional) If omitted, creates an empty Set.</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((collection))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">(optional) The collection</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> If omitted, creates an empty Set.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2485,8 +2936,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>progressSuccessAction</code></td>
-                    <td class="entry-paramdesc">Progress success action</td>
+                    <td class="entry-paramname">
+                        <code>progressSuccessAction</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Progress success action</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2526,8 +2983,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>useDefault</code></td>
-                    <td class="entry-paramdesc">boolean (default: true) If true, if no heading defined, returns default; else return void</td>
+                    <td class="entry-paramname">
+                        <code>useDefault</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, if no heading defined, returns default; else return void</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2606,7 +3069,7 @@ If called without parameters, creates new empty set.</p>                  </div>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Sets current global section level manually.</p>
-<p>For advanced markup; bypasses @section.</p>                  </div>
+<p>For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a>.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -2620,8 +3083,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>sLevel</code></td>
-                    <td class="entry-paramdesc">((int)) The section level</td>
+                    <td class="entry-paramname">
+                        <code>sLevel</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((int), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The section level</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2672,8 +3141,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>useDefault</code></td>
-                    <td class="entry-paramdesc">((boolean)) (default: true) If true, if no heading defined, return default; else return void</td>
+                    <td class="entry-paramname">
+                        <code>useDefault</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, if no heading defined, return default; else return void</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2752,7 +3227,7 @@ If called without parameters, creates new empty set.</p>                  </div>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Set current global heading level manually.</p>
-<p>For advanced markup; bypasses @section (but a parent @section will restore heading upon closing).</p>                  </div>
+<p>For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a> (but a parent <a href="standard/htmlStructure.html#entry-section">@section</a> will restore heading upon closing).</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -2766,8 +3241,14 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>hLevel</code></td>
-                    <td class="entry-paramdesc">((int)) Heading level</td>
+                    <td class="entry-paramname">
+                        <code>hLevel</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((int), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Heading level</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2828,28 +3309,64 @@ If called without parameters, creates new empty set.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>object</code></td>
-                    <td class="entry-paramdesc">((object)) (required) The FTL or context object</td>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The FTL or context object</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>lang</code></td>
-                    <td class="entry-paramdesc">(js|json) (required)</td>
+                    <td class="entry-paramname">
+                        <code>lang</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(js|json, required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>wrap</code></td>
-                    <td class="entry-paramdesc">((boolean)) (default: true) If true, wrap in {}, [], or &quot;&quot; as needed; otherwise omit enclosing characters.</td>
+                    <td class="entry-paramname">
+                        <code>wrap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, wrap in {}, [], or &quot;&quot; as needed; otherwise omit enclosing characters</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>hasMore</code></td>
-                    <td class="entry-paramdesc">((boolean)) (default: false) If true, always include trailing separator in hashes and arrays</td>
+                    <td class="entry-paramname">
+                        <code>hasMore</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, always include trailing separator in hashes and arrays</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>escape</code></td>
-                    <td class="entry-paramdesc">((boolean)) (default: true) Escape characters in strings</td>
+                    <td class="entry-paramname">
+                        <code>escape</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Escape characters in strings</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>maxDepth</code></td>
-                    <td class="entry-paramdesc">((int)) (default: -1) Maximum depth, or -1 for no limit</td>
+                    <td class="entry-paramname">
+                        <code>maxDepth</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -1)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Maximum depth, or -1 for no limit</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -2898,11 +3415,11 @@ between delegating/overriding macro calls that make use of mergeArgMaps without
 having to recreate new intermediate maps. allArgNames keep track of all the explicit
 args used by all the macros in a call chain, which can then be used to identify
 the remaining &quot;extra&quot; arguments (analogous to varArgs in FTL&#39;s &lt;#macro varArgs...&gt;).
-<strong>WARN:</strong> in some cases allArgNames accumulation and reuse of maps could be undesirable.
+<br/><strong>WARN:</strong> in some cases allArgNames accumulation and reuse of maps could be undesirable.
     (currently workaround this by using localArgNames only and/or creating new intermediate maps).
-<strong>NOTE:</strong> currently the result may often contain duplicate names (is not a set).
+<br/><strong>NOTE:</strong> currently the result may often contain duplicate names (is not a set).
     This is normal and should not be changed; code that uses these lists may make a Set if needed.
-<strong>TODO:</strong> current macros must be translated to exploit this mechanism.</p><p>The result is the caller can access any arg names in the resulting map which had a default
+<br/><strong>TODO:</strong> current macros must be translated to exploit this mechanism.</p><p>The result is the caller can access any arg names in the resulting map which had a default
 value using simple syntax guaranteed not to cause missing values. e.g
   &lt;#macro name args={} inlineArgs...&gt;
     &lt;#local args = mergeArgMaps(inlineArgs, args, {&quot;myParam1&quot;:true})&gt;
@@ -2918,8 +3435,8 @@ OR
       ...
     &lt;/#if&gt;
   &lt;/#macro&gt;</p><p>This can also be used for functions, but for functions, the inlineArgs param should always
-be passed an empty hash (functions don&#39;t support named parameters).</p><p><strong>TODO:</strong> rewrite this macro using FTL transform; also see @mergeArgMapsToLocals below
-<strong>TODO?:</strong> may want helper booleans to control in/out allArgNames?</p>                  </div>
+be passed an empty hash (functions don&#39;t support named parameters).</p><p><strong>TODO:</strong> rewrite this macro using FTL transform; also see <a href="#entry-mergeArgMapsToLocals">@mergeArgMapsToLocals</a> below
+<br/><strong>TODO?:</strong> may want helper booleans to control in/out allArgNames?</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -2936,34 +3453,54 @@ be passed an empty hash (functions don&#39;t support named parameters).</p><p><s
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>args</code></td>
-                    <td class="entry-paramdesc">The args map (normal priority).
- May be any type of map.</td>
+                    <td class="entry-paramname">
+                        <code>args</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The args map (normal priority)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> May be any type of map.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>inlineArgs</code></td>
-                    <td class="entry-paramdesc">The macro&#39;s inline args (high priority).
-Expects either FTL hash or empty sequence (but not non-empty sequence).</td>
+                    <td class="entry-paramname">
+                        <code>inlineArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The macro&#39;s inline args (high priority)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Expects either FTL hash or empty sequence (but not non-empty sequence).</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>defaultArgs</code></td>
-                    <td class="entry-paramdesc">Arg defaults (lowest priority).
-Expects an FTL hash only. The key names in this map are also used to
+                    <td class="entry-paramname">
+                        <code>defaultArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Arg defaults (lowest priority)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Expects an FTL hash only. The key names in this map are also used to
 create a list of the known arguments this macro accepts.
 As such, even if the macro does not need this map, it should pass it along
 with the names of all supported arguments.
-The names end up in the resulting map as localArgNames.</td>
+The names end up in the resulting map as localArgNames.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>overrideArgs</code></td>
-                    <td class="entry-paramdesc">Extra macro args that override all others (highest priority).
-Expects an FTL hash ONLY (not context map).
+                    <td class="entry-paramname">
+                        <code>overrideArgs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Extra macro args that override all others (highest priority)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Expects an FTL hash ONLY (not context map).
 The names used here also count toward the localArgNames.
-<strong>NOTE:</strong> If a key is present in both defaultArgs and overrideArgs, it will result in
+<br/><strong>NOTE:</strong> If a key is present in both defaultArgs and overrideArgs, it will result in
     two names added to localArgNames/allArgNames. The code that finally uses
     those lists should make a Set if it needs to.
-<strong>NOTE:</strong> This map is present for cases where the others are insufficient.
-    but otherwise should avoid using this map when possible.</td>
+<br/><strong>NOTE:</strong> This map is present for cases where the others are insufficient.
+    but otherwise should avoid using this map when possible.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3007,8 +3544,14 @@ operations on them.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>(other)</code></td>
-                    <td class="entry-paramdesc">See #mergeArgMaps</td>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-mergeArgMaps">#mergeArgMaps</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3076,7 +3619,7 @@ a special attribs/inlineAttribs pattern for HTML element attributes.</p>
   &lt;#macro name arg1=&quot;&quot; arg2=&quot;&quot; ... argN=&quot;&quot; attribs={} inlineAttribs...&gt;
 pattern, whereby inlineAttribs map is merged over the attribs map, and these maps only contain extra
 element attributes.</p><p>This pattern is simpler but much less flexible than the &#39;args={} inlineArgs...&#39; pattern.
-They are different and NOT interchangeable.</p><p>Parameters are analogous to #mergeArgMaps but implied logic differs.</p>                  </div>
+They are different and NOT interchangeable.</p><p>Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.</p>                  </div>
             
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
@@ -3112,8 +3655,8 @@ They are different and NOT interchangeable.</p><p>Parameters are analogous to #m
                       <p class="lib-entry-shortdesc">Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an &quot;attribs&quot;
 sub-map and blends them together logically to make an attribs map.</p>
 <p>The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-<strong>NOTE:</strong> this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.</p><p><strong>NOTE:</strong> The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus &quot;attribs&quot;, &quot;allArgNames&quot;, &quot;localArgNames&quot;, &quot;excludeNames&quot; and &quot;noExcludeNames&quot; members.</p><p>Parameters are analogous to #mergeArgMaps but implied logic differs.</p>                  </div>
+<br/><strong>NOTE:</strong> this currently does not change the exclude lists (see <a href="#entry-mergeArgMaps">@mergeArgMaps</a>), but could in the future.</p><p><strong>NOTE:</strong> The resulting map does not contain only attribs. It may contain a large number of unrelated
+members plus &quot;attribs&quot;, &quot;allArgNames&quot;, &quot;localArgNames&quot;, &quot;excludeNames&quot; and &quot;noExcludeNames&quot; members.</p><p>Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -3218,12 +3761,12 @@ to accept following values:</p><p>- string with &quot;+&quot; prefix or empty st
     this is the same as boolean false but with replacement classes provided.
     in other words, replaces default (non-essential) classes.</p><p>In one or two cases the non-essential defaults are &quot;conditionally essential&quot;
 so class=&quot;=&quot; makes little sense, but we dont really need to handle that.
-<strong>NOTE:</strong> Not all macros support all the cases but the syntax is supported everywhere
+<br/><strong>NOTE:</strong> Not all macros support all the cases but the syntax is supported everywhere
 now anyway so doesn&#39;t matter to templates.</p><p>compileClassArg should usually be used as late as possible in macro:
   &lt;#local classes = compileClassArg(class)&gt;
 A defaultVal can be set which is the same as doing:
   &lt;#local class = addClassArgDefault(class, &quot;default-class&quot;)&gt;
-  &lt;#local classes = compileClassArg(class)&gt;</p><p>IMPORTANT:
+  &lt;#local classes = compileClassArg(class)&gt;</p><p><strong>IMPORTANT:</strong>
 Currently in some cases the logic above breaks too much compatibility. So it is not universally used
 for screen/form/menu widgets although often supported.
 For these, in some places an &quot;xxxExplicit&quot; version of functions are used instead which will only
@@ -3566,7 +4109,7 @@ of previous values (in addition of being an appending value itself).</p><p><stro
     is supposed to be. Here, we assume &quot;+&quot; was passed explicitly to override the first.
     We only treat &quot;+&quot; with an arg.
     In other words, can see this as another kludge for lack of null values in freemarker.
-    <strong>TODO:</strong> review this</p>                  </div>
+    <br/><strong>TODO:</strong> review this</p>                  </div>
             
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
@@ -3799,13 +4342,24 @@ macro args expected to be numbers.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request stack var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>val</code></td>
-                    <td class="entry-paramdesc">value</td>
+                    <td class="entry-paramname">
+                        <code>val</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Value</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3850,9 +4404,14 @@ macro args expected to be numbers.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request stack var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3899,13 +4458,24 @@ do a pushRequestStack, and much more efficient.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request stack var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>val</code></td>
-                    <td class="entry-paramdesc">value</td>
+                    <td class="entry-paramname">
+                        <code>val</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Value</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3951,9 +4521,14 @@ do a pushRequestStack, and much more efficient.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request stack var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -3999,17 +4574,27 @@ do a pushRequestStack, and much more efficient.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request stack var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>listType</code></td>
-                    <td class="entry-paramdesc">(copy|orig) (default: copy)
-Caller may specify &quot;orig&quot; to avoid a list copy.
-<strong>WARN:</strong> &quot;orig&quot; means the caller must ditch the list as soon as possible, before any
-    more modifications to the stack; otherwise results will be unpredictable.
-    It should only be used for optimization.</td>
+                    <td class="entry-paramname">
+                        <code>listType</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(copy|orig, default: copy)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc">* orig: Avoids a list copy.
+  <br/><strong>WARN:</strong> &quot;orig&quot; means the caller must ditch the list as soon as possible, before any
+      more modifications to the stack; otherwise results will be unpredictable.
+      It should only be used for optimization.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4039,9 +4624,8 @@ Caller may specify &quot;orig&quot; to avoid a list copy.
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Sets a global var in request scope (request attributes, or if no request, globals).
-Values set by this method must be read using getRequestVar.</p>
-                  </div>
+                      <p class="lib-entry-shortdesc">Sets a global var in request scope (request attributes, or if no request, globals).</p>
+<p>Values set by this method must be read using getRequestVar.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -4057,20 +4641,36 @@ Values set by this method must be read using getRequestVar.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>val</code></td>
-                    <td class="entry-paramdesc">value</td>
+                    <td class="entry-paramname">
+                        <code>val</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Value</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>mode</code></td>
-                    <td class="entry-paramdesc">optional, string; mode characters
-&quot;u&quot;: always unwrap the TemplateModel before storing (where possible)
-&quot;w&quot;: always keep TemplateModel as-is (wrapped) when storing
-&quot;u&quot; and &quot;w&quot; are usually unnecessary and should be avoided in most template and macro code.</td>
+                    <td class="entry-paramname">
+                        <code>mode</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(u|w|, default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Modes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">* u: always unwrap the TemplateModel before storing (where possible)
+* w: always keep TemplateModel as-is (wrapped) when storing
+<br/><strong>NOTE:</strong> &quot;u&quot; and &quot;w&quot; modes are usually unnecessary and should be avoided in most template and macro code.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4100,10 +4700,9 @@ Values set by this method must be read using getRequestVar.</p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Gets a global var from request scope (request attributes, or if no request, globals).
-Should only be used to read values set by setRequestVar.
-Not meant to be used on regular request attributes.</p>
-                  </div>
+                      <p class="lib-entry-shortdesc">Gets a global var from request scope (request attributes, or if no request, globals).</p>
+<p>Should only be used to read values set by setRequestVar.
+Not meant to be used on regular request attributes.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -4117,9 +4716,14 @@ Not meant to be used on regular request attributes.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>name</code></td>
-                    <td class="entry-paramdesc">global request var name; must be unique
- across all known types of contexts (request attribs, screen context, FTL globals)</td>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Global request var name</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Must be unique across all known types of contexts (request attribs, screen context, FTL globals)</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4166,18 +4770,35 @@ Not meant to be used on regular request attributes.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>map</code></td>
-                    <td class="entry-paramdesc">the source map</td>
+                    <td class="entry-paramname">
+                        <code>map</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">the source map</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>mode</code></td>
-                    <td class="entry-paramdesc">optional mode flags
-&quot;e&quot;: exclude listed keys
-&quot;i&quot;: include only listed keys</td>
+                    <td class="entry-paramname">
+                        <code>mode</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(e|i|, default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Optional mode flags</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">* e: Exclude listed keys
+* i: Include only listed keys</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>inExKeys</code></td>
-                    <td class="entry-paramdesc">optional list or wrapped set of keys to include or exclude</td>
+                    <td class="entry-paramname">
+                        <code>inExKeys</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list)|(set), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Optional list or wrapped set of keys to include or exclude</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4221,6 +4842,20 @@ Not meant to be used on regular request attributes.</p>
                           <code>inExKeys</code>
                       </p>
                     </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-varsPutAll">#varsPutAll</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
 
                   </div>
             
@@ -4261,6 +4896,20 @@ Not meant to be used on regular request attributes.</p>
                           <code>inExKeys</code>
                       </p>
                     </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>(other)</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-varsPutAll">#varsPutAll</a></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
 
                   </div>
             
@@ -4288,7 +4937,7 @@ Not meant to be used on regular request attributes.</p>
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Prints a string of element attributes. (HTML, FO, XML)</p>
-<p><strong>NOTE:</strong> This is a very generic function; for common implementation, see @commonElemAttribStr.</p><p><strong>TODO:</strong> implement as transform.</p>                  </div>
+<p><strong>NOTE:</strong> This is a very generic function; for common implementation, see <a href="standard/htmlScript.html#entry-commonElemAttribStr">@commonElemAttribStr</a>.</p><p><strong>TODO:</strong> implement as transform.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -4311,52 +4960,117 @@ Not meant to be used on regular request attributes.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>attribs</code></td>
-                    <td class="entry-paramdesc">hash of attribute-value pairs.
- it currently accepts string format as a fallback/legacy support, but this is highly discouraged
- and other args won&#39;t work with it.</td>
+                    <td class="entry-paramname">
+                        <code>attribs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Map of attribute-value pairs</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> It currently accepts string format as a fallback/legacy support, but this is highly discouraged
+ and other args won&#39;t work with it.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>alt</code></td>
-                    <td class="entry-paramdesc">boolean, if true alternate row (odd), if false regular (even)</td>
+                    <td class="entry-paramname">
+                        <code>alt</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true alternate row (odd), if false regular (even)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>selected</code></td>
-                    <td class="entry-paramdesc">boolean, if true row is marked selected</td>
+                    <td class="entry-paramname">
+                        <code>selected</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true row is marked selected</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>exclude</code></td>
-                    <td class="entry-paramdesc">list of attrib names to skip</td>
+                    <td class="entry-paramname">
+                        <code>exclude</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> List of attrib names to skip</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>attribNamePrefix</code></td>
-                    <td class="entry-paramdesc">add this prefix to attribute names</td>
+                    <td class="entry-paramname">
+                        <code>attribNamePrefix</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Add this prefix to attribute names</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>alwaysAddPrefix</code></td>
-                    <td class="entry-paramdesc">if false, only add prefix if not already has prefix (default true)</td>
+                    <td class="entry-paramname">
+                        <code>alwaysAddPrefix</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If false, only add prefix if not already has prefix (default true)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>attribNamePrefixStrip</code></td>
-                    <td class="entry-paramdesc">remove this prefix from all attrib names</td>
+                    <td class="entry-paramname">
+                        <code>attribNamePrefixStrip</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Remove this prefix from all attrib names</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>attribNameSubstitutes</code></td>
-                    <td class="entry-paramdesc">map of attrib names to substitute attrib names. note if this is set, the exclude names
-should be the names of the subtitutes, not the input attrib names.
-note this is applied after prefix ops are applied.</td>
+                    <td class="entry-paramname">
+                        <code>attribNameSubstitutes</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Map of attrib names to substitute attrib names</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"><strong>NOTES:</strong>
+* If this is set, the exclude names should be the names of the subtitutes, not the input attrib names.
+* This is applied after prefix ops are applied.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>camelCaseToDashLowerNames</code></td>
-                    <td class="entry-paramdesc">boolean, if true converts attrib names from camelCase to camel-case at the very end.</td>
+                    <td class="entry-paramname">
+                        <code>camelCaseToDashLowerNames</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true converts attrib names from camelCase to camel-case at the very end</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>emptyValToken</code></td>
-                    <td class="entry-paramdesc">when this (string) value encountered, will include an empty attrib</td>
+                    <td class="entry-paramname">
+                        <code>emptyValToken</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> When this value encountered, will include an empty attrib</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>noValToken</code></td>
-                    <td class="entry-paramdesc">when this (string) value encountered, will include an attrib with no value</td>
+                    <td class="entry-paramname">
+                        <code>noValToken</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((String))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> When this value encountered, will include an attrib with no value</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4402,17 +5116,54 @@ note this is applied after prefix ops are applied.</td>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>date</code></td>
-                    <td class="entry-paramdesc">the date</td>
+                    <td class="entry-paramname">
+                        <code>date</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((date), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The date</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>dateType</code></td>
-                    <td class="entry-paramdesc">(date-time|timestamp|date|time) (default: date)
-                  &quot;timestamp&quot; and &quot;date-time&quot; are synonymous.</td>
+                    <td class="entry-paramname">
+                        <code>dateType</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(date-time|timestamp|date|time, default: date)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc">&quot;timestamp&quot; and &quot;date-time&quot; are synonymous.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>defaultVal</code></td>
-                    <td class="entry-paramdesc">if no output is produced (empty), this value (string) will be shown instead.</td>
+                    <td class="entry-paramname">
+                        <code>defaultVal</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">If no output is produced (empty), this value (string) will be shown instead</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>specLocale</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((locale), default: -locale from context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Override locale</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>specTimeZone</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((timezone), default: -timeZone from context-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Override time zones</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4737,12 +5488,24 @@ a level and relLevel are extracted.</p><p>Note that the class portions may be pr
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>style</code></td>
-                    <td class="entry-paramdesc">style/classes string</td>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> CSS Style/classes string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>prefixMap</code></td>
-                    <td class="entry-paramdesc">map of CSS class prefixes to result names</td>
+                    <td class="entry-paramname">
+                        <code>prefixMap</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Map of CSS class prefixes to result names</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4753,7 +5516,7 @@ a level and relLevel are extracted.</p><p>Note that the class portions may be pr
                   <div class="lib-entry-section-return">
                     <h4>Return Value</h4>
                     <p>
-a hash/map of result names to integer values.                    </p>
+a map of result names to integer values.                    </p>
                   </div>
             
 
@@ -4774,11 +5537,8 @@ a hash/map of result names to integer values.                    </p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">This records current container (grid) sizes into a global stack, so that it&#39;s generally possible for inner
-containers to be aware of all the sizes applied to it and the general width.
-Every push should be followed by a pop.
-NOTE: this is generally framework-agnostic and size-key agnostic.</p>
-                  </div>
+                      <p class="lib-entry-shortdesc">This records current container (grid) sizes into a global stack</p>
+<p>This makes it possible for inner containers to be aware of all the sizes applied to it and the general width.</p><p>Every push should be followed by a pop.</p><p><strong>NOTE:</strong> This function is generally framework-agnostic and size-key agnostic.</p>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -4792,10 +5552,16 @@ NOTE: this is generally framework-agnostic and size-key agnostic.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>sizes</code></td>
-                    <td class="entry-paramdesc">a map of size names to integer values. typically, this will be (e.g.):
- {&quot;large&quot;:12, &quot;medium&quot;:12, &quot;small&quot;:12}
- but can be anything (the methods in this file do not care).</td>
+                    <td class="entry-paramname">
+                        <code>sizes</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Map of size names to integer values</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> Typically, this will be (e.g.):
+   {&quot;large&quot;:12, &quot;medium&quot;:12, &quot;small&quot;:12}
+ but can be anything (the methods in this file do not care).</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4820,9 +5586,9 @@ NOTE: this is generally framework-agnostic and size-key agnostic.</p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Same as saveCurrentContainerSizes but tries to extract the container sizes from a style/classes string.</p>
+                      <p class="lib-entry-shortdesc">Same as saveCurrentContainerSizes but tries to extract the container sizes from a style string.</p>
 <p>This is needed to know grid sizes because most of the facilities only support setting
-class name strings (except for @cell which supports columns/small/medium/large args).</p><p><strong>IMPL NOTE:</strong> For this method to work, the framework-/theme-specific code must override the abstract
+class name strings (except for <a href="standard/htmlStructure.html#entry-cell">@cell</a> which supports columns/small/medium/large args).</p><p><strong>IMPL NOTE:</strong> For this method to work, the framework-/theme-specific code must override the abstract
     function parseContainerSizesFromStyleStr.</p>                  </div>
             
               
@@ -4837,8 +5603,14 @@ class name strings (except for @cell which supports columns/small/medium/large a
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>style</code></td>
-                    <td class="entry-paramdesc">style/classes string containing grid size classes</td>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string containing grid size classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4910,8 +5682,14 @@ container sizes from a class names string.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>style</code></td>
-                    <td class="entry-paramdesc">style/classes string containing grid size classes</td>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Style string containing grid size classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -4922,7 +5700,7 @@ container sizes from a class names string.</p>
                   <div class="lib-entry-section-return">
                     <h4>Return Value</h4>
                     <p>
-a map/hash of size names to integer values.                    </p>
+a map of size names to integer values.                    </p>
                   </div>
             
 
@@ -5034,10 +5812,15 @@ Requires framework-specific logic.</p><p><strong>IMPL NOTE:</strong> For this me
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>maxSizes</code></td>
-                    <td class="entry-paramdesc">((int)|(map)) (default: 0) Max container sizes (grid size)
- This is can a map of per-key max container sizes OR a single number giving max size
- for all keys (usually same in most frameworks) OR zero to mean use defaults.</td>
+                    <td class="entry-paramname">
+                        <code>maxSizes</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((int)|(map), default: 0)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Max container sizes (grid size)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> This is can a map of per-key max container sizes OR a single number giving max size
+ for all keys (usually same in most frameworks) OR zero to mean use defaults.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -5087,19 +5870,35 @@ size factors.</p>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>sizesList</code></td>
-                    <td class="entry-paramdesc">list of hashes describing all (known) parent and current container sizes
- note that entries may be empty and should be skipped.</td>
+                    <td class="entry-paramname">
+                        <code>sizesList</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">List of hashes describing all (known) parent and current container sizes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"> <br/><strong>NOTE:</strong> Entries may be empty and should be skipped.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>maxSizes</code></td>
-                    <td class="entry-paramdesc">same as getAbsContainerSizeFactors maxSizes</td>
+                    <td class="entry-paramname">
+                        <code>maxSizes</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: 0)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> See <a href="#entry-getAbsContainerSizeFactors">#getAbsContainerSizeFactors</a> maxSizes parameter</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>cachedFactorsList</code></td>
-                    <td class="entry-paramdesc">list of cached factor results, same size and order as sizesList; each entry
-corresponds to the container at same index as the sizes in sizesList.
-if an entry is boolean, then a factor was not (yet) calculated for that container.</td>
+                    <td class="entry-paramname">
+                        <code>cachedFactorsList</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((list), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">List of cached factor results, of same size and order as sizesList</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Each entry corresponds to the container at same index as the sizes in sizesList.
+If an entry is boolean, then a factor was not (yet) calculated for that container.</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -5110,7 +5909,7 @@ if an entry is boolean, then a factor was not (yet) calculated for that containe
                   <div class="lib-entry-section-return">
                     <h4>Return Value</h4>
                     <p>
-a map/hash of size names to float values.                    </p>
+a map of size names to float values.                    </p>
                   </div>
             
 
@@ -5205,7 +6004,7 @@ a map/hash of size names to float values.                    </p>
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns a cato library location.</p>
 <p>Supported names: &quot;variables&quot;, &quot;template&quot;
-<strong>NOTE:</strong> this is currently render context-unaware
+<br/><strong>NOTE:</strong> this is currently render context-unaware
 Returns void if nothing.</p>                  </div>
             
               
@@ -5222,16 +6021,34 @@ Returns void if nothing.</p>                  </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>libName</code></td>
-                    <td class="entry-paramdesc">(variables|template) (required)</td>
+                    <td class="entry-paramname">
+                        <code>libName</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(variables|template, required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>renderPlatformType</code></td>
-                    <td class="entry-paramdesc">Caller should use getRenderPlatformType()</td>
+                    <td class="entry-paramname">
+                        <code>renderPlatformType</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: default)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Platform type</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Caller should use <a href="#entry-getRenderPlatformType">#getRenderPlatformType</a>().</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>renderContextType</code></td>
-                    <td class="entry-paramdesc">Caller should use getRenderContextType()</td>
+                    <td class="entry-paramname">
+                        <code>renderContextType</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: general)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Render context type</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">Caller should use <a href="#entry-getRenderContextType">#getRenderContextType</a>().</span>
+                    </td>
                   </tr>
               </table>
                       </div>
@@ -5260,9 +6077,7 @@ Returns void if nothing.</p>                  </div>
 meant as &quot;general&quot; context and for &quot;html&quot; and &quot;default&quot; platforms, or a EL-defined map</p>
 <p>The foramt is:
   ${[&#39;[platform]&#39;:&#39;component://...&#39;, ...]}
-  e.g. ${[&#39;&#39;html&#39;:&#39;component://...&#39;, &#39;xml&#39;:&#39;component://...&#39;, &#39;default&#39;:&#39;component://...&#39;]}</p><p>Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.
-Checks the resourceNames in the given order.
-&quot;default&quot; is a special map key; usually best avoided.</p>                  </div>
+  e.g. ${[&#39;&#39;html&#39;:&#39;component://...&#39;, &#39;xml&#39;:&#39;component://...&#39;, &#39;default&#39;:&#39;component://...&#39;]}</p><p>Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.</p><p>Checks the resourceNames in the given order.</p><p><strong>NOTE:</strong> &quot;default&quot; is a special map key; should be avoided.</p>                  </div>
             
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
@@ -5327,17 +6142,34 @@ Checks the resourceNames in the given order.
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
                   <tr>
-                    <td class="entry-paramname"><code>var</code></td>
-                    <td class="entry-paramdesc">Custom var to be printed (default:context)</td>
+                    <td class="entry-paramname">
+                        <code>var</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object), default: context)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Var to be printed</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>platform</code></td>
-                    <td class="entry-paramdesc">((boolean)|html|...) (default: true)
-true: lookup in current render</td>
+                    <td class="entry-paramname">
+                        <code>platform</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|html|..., default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The target platform (HTML, etc.)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">If true, looks up current render.</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="entry-paramname"><code>maxDepth</code></td>
-                    <td class="entry-paramdesc">default 5, to prevent endless recursion</td>
+                    <td class="entry-paramname">
+                        <code>maxDepth</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 5)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Max depth, to prevent endless recursions</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
                   </tr>
               </table>
                       </div>

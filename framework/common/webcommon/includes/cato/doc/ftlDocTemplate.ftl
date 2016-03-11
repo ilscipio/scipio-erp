@@ -22,6 +22,12 @@
       <title>${pageTitle?html}</title>
     </#if>
 
+<#-- 
+*************************************
+* STYLE *
+*************************************
+-->
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -48,72 +54,25 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-formalname {
   font-weight: bold;
 }
+
+.lib-entry-param-desc-extradesc {
+  font-size: 0.8em;
+}
+
+.lib-entry-params-details {
+  font-size: 0.8em;
+}
 </style>
 
   </head>
   <body>
   
   
-<#macro descEntryList listInfo topLevel=true>
-  <@descText text=listInfo.leadingText!"" />
-  <ul>
-    <#list listInfo.items as item>
-      <li>
-        <#if item?is_hash>
-          <@descEntryList listInfo=item topLevel=false/>
-        <#else>
-          <@descText text=item />
-        </#if>
-      </li>
-    </#list>
-  </ul>
-</#macro>  
-  
-<#-- Helper functions -->
-<#macro descEntryContent text>
-  <#local dataInfo = tmplHelper.parseDescEntry(text)>
-  <#if dataInfo.type == "title">
-    <h4><@labelText text=dataInfo.value!"" /></h4><#t>
-  <#elseif dataInfo.type == "list">
-    <div><@descEntryList listInfo=dataInfo.value /></div>
-  <#else>
-    <p><@descText text=dataInfo.value!"" /></p><#t>
-  </#if>
-</#macro>
-
-<#-- NOTE: some of these should be stripped completely, can't do it from here -->
-<#assign keyIntroWords = ["WARN", "WARNING", "TODO", "TODO\\?", "FIXME", "FIXME\\?", "DEV NOTE", "DEV NOTES", 
- "IMPL NOTE", "IMPL NOTES", "IMPLEMENTATION NOTES", "NOTE", "NOTES"]>
-<#assign keyIntroWordsStr = keyIntroWords?join("|")>
-<#function decorateText text>
-  <#return text?replace("("+keyIntroWordsStr+"):", "<strong>$1:</strong>", 'r')>
-</#function>
-
-<#macro preformedText text>
-  <pre>${decorateText(text?html)}</pre><#t><#-- ?replace("\n", "<br/>") -->
-</#macro>
-
-<#-- For titles and short labels -->
-<#macro labelText text>
-  ${decorateText(text?html)}<#t>
-</#macro>
-
-<#-- For longer descriptions -->
-<#macro descText text>
-  ${decorateText(text?html)}<#t>
-</#macro>
-
-<#-- reference to another entry -->
-<#macro entryRef name>
-  <#local searchRes = tmplHelper.findEntryGlobal(name, entryMap, libMap)!false>
-  <#if !searchRes?is_boolean>
-    <#if searchRes.libDocPath?has_content>
-      <a href="${makeInterLibUrl(searchRes.libDocPath, "entry-" + searchRes.rawName)}">${name?html}</a>
-    <#else>
-      <a href="#entry-${searchRes.rawName}">${name?html}</a>
-    </#if>
-  </#if>
-</#macro>
+<#-- 
+*************************************
+* LINK FUNCTIONS *
+*************************************
+-->
 
 <#function makeInterLibUrl targetLibDocPath targetName="">
   <#if !targetLibDocPath?ends_with(".html")>
@@ -126,7 +85,158 @@ table.entry-parameters td.entry-paramname {
     <#return relLibDocPath>
   </#if>
 </#function>
+  
+<#-- reference to another entry. name is either a full reference or name only, with or without @ or #. -->
+<#macro entryRef name>
+  <#local searchRes = tmplHelper.findEntryGlobal(name, entryMap, libMap)!false>
+  <#if !searchRes?is_boolean>
+    <#if searchRes.libDocPath?has_content>
+      <a href="${makeInterLibUrl(searchRes.libDocPath, "entry-" + searchRes.rawName)}">${name?html}</a>
+    <#else>
+      <a href="#entry-${searchRes.rawName}">${name?html}</a>
+    </#if>
+  </#if>
+</#macro>
 
+
+<#-- 
+*************************************
+* TEXT PARSING AND DECORATION *
+*************************************
+-->
+
+<#function createAutoLinks text>
+  <#local res = "">
+  <#list tmplHelper.splitByLibEntryRefs(text, entryMap, libMap) as entry>
+    <#if entry?is_hash>
+      <#-- got a match -->
+      <#local linkMarkup>
+        <#if entry.libDocPath?has_content>
+          <a href="${makeInterLibUrl(entry.libDocPath, "entry-" + entry.rawName)}">${entry.name?html}</a><#t>
+        <#else>
+          <a href="#entry-${entry.rawName}">${entry.name?html}</a><#t>
+        </#if>
+      </#local>
+      <#local res = res + linkMarkup>
+    <#else>
+      <#-- it's just text, OR an entry that didn't resolve -->
+      <#local res = res + entry>
+    </#if>
+  </#list>
+  <#return res>
+</#function>
+
+<#-- NOTE: some of these should be stripped completely, can't do it from here -->
+<#assign keyIntroWords = ["WARN", "WARNING", "TODO", "FIXME", 
+  "DEV NOTES?", "IMPL NOTES?", "IMPLEMENTATION NOTES?",
+  <#-- this matches "NOTE" alone, but exclude the ones above -->
+ "((?<!(DEV|IMPL|IMPLEMENTATION) )NOTES?)", 
+ "IMPORTANT"]>
+<#assign keyIntroWordsStr = keyIntroWords?join("|")>
+
+<#function highlightWords text>
+  <#return text?replace("(("+keyIntroWordsStr+")([?]:|[?]|:))", "<strong>$1</strong>", 'r')>
+</#function>
+
+<#-- creates line breaks before key into words if they aren't at beginning of text. 
+    hackish but should work out okay without having massive parsing attack.
+    Have to do this in two calls due to overlapping patterns
+     (?<!^) -->
+<#function parseIntroWords text>
+  <#return text?replace("(?<!^)(("+keyIntroWordsStr+")([?]:|[?]|:))", "<br/>$1", 'r')>
+</#function>
+
+<#-- high-level version of above -->
+<#function decorateText text>
+  <#-- NOTE: always parse before highlight -->
+  <#return createAutoLinks(highlightWords(parseIntroWords(text)))>
+</#function>
+
+<#-- 
+*************************************
+* BASIC TEXT WRAPPERS *
+*************************************
+-->
+
+
+<#-- NOTE: don't decorateText this because usually contains examples and markup -->
+<#macro preformedText text>
+  <pre>${highlightWords(text?html)}</pre><#t><#-- ?replace("\n", "<br/>") -->
+</#macro>
+
+<#-- For titles and short labels -->
+<#macro labelText text>
+  ${text?html}<#t>
+</#macro>
+
+<#-- For longer descriptions -->
+<#macro descText text>
+  ${decorateText(text?html)}<#t>
+</#macro>
+
+<#-- 
+*************************************
+* HIGH LEVEL ELEM WRAPPERS *
+*************************************
+-->
+  
+<#macro descList listInfo topLevel=true>
+  <#if listInfo.leadingText?has_content>
+    <@descText text=listInfo.leadingText />
+  </#if>
+  <ul>
+    <#list listInfo.items as item>
+      <li>
+        <#if item.items?has_content>
+          <@descList listInfo=item topLevel=false/>
+        <#else>
+          <@descText text=item.leadingText!"" />
+        </#if>
+      </li>
+    </#list>
+  </ul>
+</#macro>  
+
+<#macro descContent text>
+  <#local dataInfo = tmplHelper.parseDesc(text)>
+  <#if dataInfo.type == "title">
+    <h4><@labelText text=dataInfo.value!"" /></h4><#t>
+  <#elseif dataInfo.type == "list">
+    <div><@descList listInfo=dataInfo.value /></div>
+  <#else>
+    <p><@descText text=dataInfo.value!"" /></p><#t>
+  </#if>
+</#macro>
+
+
+<#function parseDescContentNew text>
+  <#local res = "">
+  <#list tmplHelper.splitByLists(text) as entry>
+    <#if entry?is_string>
+      <#local textMarkup><@descText text=entry /></#local>
+      <#local res = res + textMarkup>
+    <#elseif (entry.type!"") == "list">
+      <#local listMarkup><@descList listInfo=entry /></#local>
+      <#local res = res + listMarkup>
+    <#else>
+      <#-- shouldn't happen... -->
+    </#if>
+  </#list>
+  <#return res>
+</#function>
+
+<#-- will have better list parsing... 
+   TODO: missing title parsing -->
+<#macro descContentNew text>
+  ${parseDescContentNew(text)}<#t>
+</#macro>
+
+  
+<#-- 
+*************************************
+* MAIN PAGE *
+*************************************
+-->  
   
     <div>
       <#if pageTitle?has_content>
@@ -138,7 +248,7 @@ table.entry-parameters td.entry-paramname {
 
       <#if pageDesc?has_content>
         <#list tmplHelper.splitToParagraphs(pageDesc) as paragraph>
-          <@descEntryContent text=paragraph />
+          <@descContent text=paragraph />
         </#list>
       </#if>
     </div>
@@ -235,8 +345,15 @@ table.entry-parameters td.entry-paramname {
                 <#list paramDescMap?keys as paramName>
                   <#assign paramDesc = paramDescMap[paramName]!"">
                   <tr>
-                    <td class="entry-paramname"><code>${paramName?html}</code></td>
-                    <td class="entry-paramdesc"><@descText text=paramDesc.text!"" /></td>
+                    <td class="entry-paramname">
+                        <code>${paramName?html}</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <#-- TODO? the type str can be highlighted by is currently not parsed -->
+                      <span class="lib-entry-param-desc-typeinfo"><code>${(paramDesc.typeStr!"")?html}</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"><@descText text=paramDesc.shortDesc!"" /></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"><@descText text=paramDesc.extraDesc!"" /></span>
+                    </td>
                   </tr>
                 </#list>
               </table>
@@ -280,7 +397,6 @@ table.entry-parameters td.entry-paramname {
                     <#if entry.isAdvancedArgs>
                       <div class="lib-entry-params-details">
                         <p>
-                          <em>
                       <#if entry.type == "function">
                         <strong>NOTE:</strong> This function implements an advanced arguments interface emulating named
                             parameters using maps, and the parameters above may not be positional. See <a href="${makeInterLibUrl("standard/htmlTemplate")}">standard/htmlTemplate</a> for details.
@@ -288,7 +404,6 @@ table.entry-parameters td.entry-paramname {
                         <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
                             regular macro invocations. See <a href="${makeInterLibUrl("standard/htmlTemplate")}">standard/htmlTemplate</a> for details.
                       </#if>
-                          </em>
                         </p>
                       </div>
                     </#if>
@@ -308,7 +423,7 @@ table.entry-parameters td.entry-paramname {
                     </#if>
                     <#if (entrySection.extraDesc)?has_content>
                       <#list tmplHelper.splitToParagraphs(entrySection.extraDesc) as paragraph>
-                        <@descEntryContent text=paragraph />
+                        <@descContent text=paragraph />
                       </#list>
                     </#if>
                   </div>

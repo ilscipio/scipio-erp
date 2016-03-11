@@ -30,7 +30,7 @@ Since this is very foundation specific, this function may be dropped in future i
     <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
-    type                    = (inline|magellan|breadcrumbs) (default: inline)
+    type                    = (inline|magellan|breadcrumbs, default: inline)
     class                   = ((css-class)) CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -142,11 +142,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     should use set/getRequestVar and/or stack.            
                     
   * Parameters *
-    type                    = (generic|section|section-inline|main|tab|subtab|button|...) (default: generic) The menu type.
+    type                    = (generic|section|section-inline|main|tab|subtab|button|..., default: generic) The menu type
                               General:
                               * generic: any content, but specific type should be preferred.
-    inlineItems             = ((boolean)) (default: false) If true, generate only items, not menu container
-    class                   = ((css-class)) (default: -based on menu type-) CSS classes for menu
+    inlineItems             = ((boolean), default: false) If true, generate only items, not menu container
+    class                   = ((css-class), default: -based on menu type-) CSS classes for menu
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
@@ -162,7 +162,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
                               same as @menuitem macro parameters.
                               alternatively, the items can be specified as nested content.
-    preItems                = ((list)) Special-case list of maps of items, added before items and #nested.
+    preItems                = ((list)) Special-case list of maps of items, added before items and #nested
                               excluded from sorting.
                               templates should generally avoid use unless specific need, but may be used by other macros.
     postItems               = ((list)) Special-case list of maps of items, added after items and #nested
@@ -175,10 +175,10 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                               through items list of hashes, currently does not apply to 
                               nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
                               normally case-insensitive.
-    nestedFirst             = ((boolean)) (default: false) If true, use nested items before items list, otherwise items list always first
+    nestedFirst             = ((boolean), default: false) If true, use nested items before items list, otherwise items list always first
                               Usually should use only one of alternatives, but is versatile.
-    htmlwrap                = (ul|div|span) (default: ul)
-    specialType             = (button-dropdown|) (default: -none-)
+    htmlwrap                = (ul|div|span, default: ul)
+    specialType             = (button-dropdown|, default: -none-)
                               DEV NOTE: each specialType could have its own styles hash menu_special_xxx entries
 -->
 <#assign menu_defaultArgs = {
@@ -327,10 +327,10 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     survive direct FTL file includes.
              
   * Parameters *
-    type                    = (generic|link|text|submit) (default: generic) Menu item (content) type.
+    type                    = (generic|link|text|submit, default: generic) Menu item (content) type
                               Values:
                               * generic: any generic content, but specific types should be preferred.
-    class                   = ((css-class)) (default: -based on menu type-) CSS classes for menu item
+    class                   = ((css-class), default: -based on menu type-) CSS classes for menu item
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
@@ -349,22 +349,22 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     contentStyle            = Legacy menu item content style
     contentName             = Content name attrib (name="" on <a> link)
     contentAttribs          = ((map)) Extra menu item content attributes (for <a>, <span> or <input> element, especially those with dashes in names)
-    text                    = Text to use as content.
+    text                    = Text to use as content
                               For now, ALWAYS use this argument to specify text, not nested content.
                               TODO: Clarify nested content usage (because may have nested menus?)
     href                    = Content link, for "link" type
                               Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)
     onClick                 = onClick (for content elem)
     title                   = Logical title attribute of content
-    disabled                = ((boolean)) (default: false) Whether disabled
-    selected                = ((boolean)) (default: false) Whether selected or not
-    active                  = ((boolean)) (default: false) Whether active or not
+    disabled                = ((boolean), default: false) Whether disabled
+    selected                = ((boolean), default: false) Whether selected or not
+    active                  = ((boolean), default: false) Whether active or not
     nestedContent           = Alternative to #nested content, so can be passed in @menu items hash list
     nestedMenu              = Alternative to nestedContent and #nested content, is a hash of @menu attribs
                               for menu to use as sub-menu.
-    wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following).
-    nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text).
-    htmlwrap                = (li|span|div) (default: -from global styles-) (fallback default: li) Wrapping HTML element
+    wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following)
+    nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text)
+    htmlwrap                = (li|span|div, default: -from global styles-) (fallback default: li) Wrapping HTML element
     inlineItem              = ((boolean)) If true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
@@ -532,25 +532,25 @@ functionality.
     </@paginate>            
                     
   * Parameters *
-   mode                     = (content|single) (default: single)
+   mode                     = (content|single, default: single)
                               * content: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
                                 NOTE: in overwhelmingly most cases, this mode should be preferred, as it offers more control to the theme.
                               * single: produces a single pagination menu (layout argument has no effect)
-   type                     = (default) (default: default) Type of the pagination menu itself
+   type                     = (default, default: default) Type of the pagination menu itself
                               * default: default cato pagination menu
-   layout                   = (default|top|bottom|both) (default: default) Type of layout, only meaningful for "content" mode
+   layout                   = (default|top|bottom|both, default: default) Type of layout, only meaningful for "content" mode
                               * default: "pagination_layout" from styles hash, otherwise both
                               * top: no more than one menu, always at top
                               * bottom: no more than one menu, always at bottom
                               * both: always two menus, top and bottom
-   position                 = (top|bottom|) (default: -empty-) Optional position indicator, only makes sense in single mode.
+   position                 = (top|bottom|, default: -empty-) Optional position indicator, only makes sense in single mode.
                               If specified, it may lead to the pagination not rendering depending on resolved value of layout.
                               In content mode (preferred), this is handled automatically.
-   noResultsMode            = (default|hide|disable) (default: default)
+   noResultsMode            = (default|hide|disable, default: default)
                               * default: "pagination_noresultsmode" from styles hash, otherwise hide. may depend on mode argument.
                               * hide: hide menu when no results
                               * disable: disable but show controls when no results (TODO?: not implemented)
-   enabled                  = ((boolean)) (default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.
+   enabled                  = ((boolean), default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.
                               For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url                      = Base Url to be used for pagination
    class                    = ((css-class)) CSS classes 
@@ -561,7 +561,7 @@ functionality.
    viewIndex                = ((int)) Page currently displayed
    viewSize                 = ((int)) Maximum number of items displayed
                               NOTE: this should be decided earlier in rendering (data prep) and a valid value MUST be passed.
-   forcePost                = ((boolean)) (default: false) Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
+   forcePost                = ((boolean), default: false) Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr                 = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
    viewIndexFirst           = ((int)) First viewIndex value number (0 or 1, only affects param values, not display)
    showCount                = ((boolean)) If true show "Displaying..." count or string provided in countMsg; if false don't; empty string is let markup/theme decide
@@ -575,13 +575,13 @@ functionality.
                               pagination controls while still allowing some decorations (depending on styling).
                               NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering.
    previousViewSize         = ((int)) Used if paginate state is off. if not specified, it will use a default from general.properties.
-   paginateOffViewSize      = a viewSize value send when turning off pagination via toggle. default is specified in general.properties.
-   viewSizeSelection        = ((boolean)) (default: false) Currently officially unsupported.
+   paginateOffViewSize      = ((int), default: -in general.properties-) A viewSize value send when turning off pagination via toggle
+   viewSizeSelection        = ((boolean), default: false) Currently officially unsupported.
                               DEV NOTE: only here for testing purposes
    altParam                 = Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE
-   viewIndexString,         
-   viewSizeString,
-   paginateToggleString     = Specific param names to use (default VIEW_INDEX / VIEW_SIZE / PAGING)
+   viewIndexString          = (default: VIEW_INDEX) Specific param name to use        
+   viewSizeString           = (default: VIEW_SIZE) Specific param name to use        
+   paginateToggleString     = (default: PAGING) Specific param name to use     
    paramPrefix              = (default: -empty-) Prefix added to param names. Some screens need "~".
                               NOTE: Does not affect paramStr - caller must handle.
    paramDelim               = (default: "&amp;") Param delimiter. Some screens need "/".
@@ -775,7 +775,7 @@ functionality.
     listItemsOnly           = ((boolean)) Only show core paginate items, no container
     paginateToggle          = ((boolean)) If true, include a control to toggle pagination on or off
     paginateOn              = ((boolean)) This tells if current state is on or off (but doesn't prevent whole macro)
-    position                = (top|bottom|) Informs the macro and markup of how/where the menu is used.
+    position                = (top|bottom|) Informs the macro and markup of how/where the menu is used
 -->
 <#assign paginate_core_defaultArgs = {
   "paginateClass":"", "paginateFirstClass":"", "viewIndex":1, "lowIndex":0, "highIndex":0, "realHighIndex":-1, "listSize":0, "viewSize":1, 
@@ -1139,7 +1139,7 @@ Renders a menu in a tree fashion.
     </@treemenu>
                     
   * Parameters *
-    treeMenuLibrary         = (jsTree) (default: jsTree)
+    treeMenuLibrary         = (jsTree, default: jsTree)
     inlineItems             = ((boolean)) If true, generate only items, not menu container    
     id                      = Menu ID    
     attribs                 = ((map)) Map of other tree menu attribs

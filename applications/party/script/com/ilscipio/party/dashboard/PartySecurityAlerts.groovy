@@ -1,6 +1,5 @@
 import javolution.util.FastList
 
-import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.entity.condition.EntityCondition
@@ -8,7 +7,7 @@ import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.model.DynamicViewEntity
 import org.ofbiz.entity.model.ModelKeyMap
-import org.ofbiz.webapp.stats.ServerHitBin;
+import org.ofbiz.entity.util.EntityUtilProperties
 
 String iScope = context.intervalScope != null ? context.intervalScope : "month"; //day|week|month|year
 

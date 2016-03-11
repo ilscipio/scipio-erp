@@ -5,18 +5,18 @@
                 <@tr valign="bottom" class="header-row">
                     <@th>${uiLabelMap.CommonFrom}</@th>
                     <@th>${uiLabelMap.CommonTo}</@th>
-                    <@th>${uiLabelMap.CommonSubject}</@th>
+                    <@th>${uiLabelMap.PartySubject}</@th>
                     <@th>${uiLabelMap.CommonType}</@th>
                     <@th>${uiLabelMap.CommonDate}</@th>
                 </@tr>
             </@thead>
             <#list lastCommunications as lastCommunication>
                 <@tr>
-                    <@td>${lastCommunication.partyIdFrom!}</@td>                    
-                    <@td>${lastCommunication.partyIdTo!}</@td>
-                    <@td>${lastCommunication.subject!}</@td>
-                    <@td>${lastCommunication.communicationEventTypeId!}</@td>
-                    <@td>${lastCommunication.entryDate?string('yyyy-MM-dd HH:mm:ss')!}</@td>
+                    <@td><a href="<@ofbizUrl>viewprofile?partyId=${lastCommunication.partyIdFrom!}</@ofbizUrl>">${lastCommunication.fromPersonFullName!}</a></@td>                    
+                    <@td><a href="<@ofbizUrl>viewprofile?partyId=${lastCommunication.partyIdTo!}</@ofbizUrl>">${lastCommunication.toPersonFullName!}</a></@td>
+                    <@td><a href="<@ofbizUrl>ViewCommunicationEvent?communicationEventId=${lastCommunication.commEventId!}</@ofbizUrl>">${lastCommunication.subject!}</a></@td>
+                    <@td>${lastCommunication.commEventType!}</@td>
+                    <@td>${lastCommunication.date?string('yyyy-MM-dd HH:mm')!}</@td>
                 </@tr>
             </#list>        
         </@table>

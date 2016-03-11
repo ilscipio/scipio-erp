@@ -146,22 +146,28 @@ under the License.
                 <!-- <set field="titleProperty" value="PageTitleFindParty"/> -->
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                <set field="titleProperty" value="PartyManager"/>
+                <set field="titleProperty" value="PartyUserManagement"/>
+                <set field="viewSize" value="10" type="Integer"/>
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+		                        <screenlet title="${uiLabelMap.PartyUserActivity}">
+			                        <container style="${styles.grid_row}">		                                
+			                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+			                                 <include-screen name="LoggedInUsersScreen" location="component://party/widget/partymgr/VisitScreens.xml"/>
+			                            </container>
+			                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            <include-screen name="CatoNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                        </container>
+			                        </container>
+		                        </screenlet>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <!-- <include-screen name="ListPartyCommEvents" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/> -->
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
                                 <include-screen name="CatoLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>                                
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
@@ -246,7 +252,7 @@ under the License.
                         </not>
                     </condition>
                      <widgets>
-                       <screenlet title="${uiLabelMap.PartyCommunications}">
+                       <screenlet title="${uiLabelMap.PartyCommunication}">
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyLastCommunications.ftl"/></html>
                             </platform-specific>

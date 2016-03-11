@@ -50,7 +50,7 @@ userLoginAndHistoryList = from(dve).where(EntityCondition.makeCondition(
         EntityCondition.makeCondition(exprsList, EntityJoinOperator.OR),
         EntityOperator.AND,
         EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate)
-        )).orderBy("disabledDateTime", "lastUpdatedStamp").queryList();
+        )).orderBy("lastUpdatedStamp DESC").queryList();
 
 securityAlerts = [];
 for (userLoginAndHistory in userLoginAndHistoryList) {
@@ -60,20 +60,23 @@ for (userLoginAndHistory in userLoginAndHistoryList) {
         hsDate = UtilDateTime.toCalendar(serverHit.hitStartDateTime);
         hitStartDate = Calendar.getInstance();
         hitStartDate.set(hsDate.get(Calendar.YEAR), hsDate.get(Calendar.MONTH), hsDate.get(Calendar.DATE), hsDate.get(Calendar.HOUR_OF_DAY), hsDate.get(Calendar.MINUTE), hsDate.get(Calendar.SECOND));
+        hitStartDate.set(Calendar.MILLISECOND, 0);
 
         fDate = UtilDateTime.toCalendar(userLoginAndHistory.fromDate);
         fromDate = Calendar.getInstance();
-        fromDate.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));        
+        fromDate.set(fDate.get(Calendar.YEAR), fDate.get(Calendar.MONTH), fDate.get(Calendar.DATE), fDate.get(Calendar.HOUR_OF_DAY), fDate.get(Calendar.MINUTE), fDate.get(Calendar.SECOND));  
+        fromDate.set(Calendar.MILLISECOND, 0);
         if (hitStartDate.getTimeInMillis() == fromDate.getTimeInMillis()) {
+//            Debug.log("Matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDate.getTimeInMillis());
             securityAlert = UtilMisc.toMap("userLoginId", userLoginAndHistory.userLoginId, "enabled", userLoginAndHistory.enabled, 
                 "successfulLogin", userLoginAndHistory.successfulLogin, "contentId", serverHit.contentId, "requestUrl", serverHit.requestUrl,
                 "disabledDateTime", userLoginAndHistory.disabledDateTime, "serverIpAddress", serverHit.serverIpAddress, "fromDate", fromDate.getTime());
             securityAlerts.add(securityAlert);
-//            Debug.log("userLoginId ==========> " + userLoginAndHistory.userLoginId +  " enabled ========>  " + userLoginAndHistory.enabled + " successfulLogin ========> " + userLoginAndHistory.successfulLogin
-//                    + "   visitId =========> " + userLoginAndHistory.visitId
-//                    + "   fromDate ========> " + userLoginAndHistory.fromDate);
             break;
+        } else {
+//            Debug.log("Not matching dates [" + serverHit.visitId + "]: hitStartDate ======> " + hitStartDate.getTimeInMillis() + "  UHL.fromDate =========> " + fromDate.getTimeInMillis() + "    diff ====> " + (fromDate.getTimeInMillis() - hitStartDate.getTimeInMillis()));
         }
     }
 }
+context.listSize = securityAlerts.size();
 context.securityAlerts = securityAlerts;

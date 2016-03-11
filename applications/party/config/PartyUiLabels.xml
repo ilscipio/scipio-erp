@@ -2851,6 +2851,9 @@
         <value xml:lang="zh">账户</value>
         <value xml:lang="zh_TW">帳戶</value>
     </property>
+    <property key="PartyAccountLocked">
+        <value xml:lang="en">Account Locked</value>
+    </property>
     <property key="PartyActive">
         <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
@@ -4394,6 +4397,12 @@
         <value xml:lang="vi">Sự kiện liên lạc: ${parameters.commnicationEventId} không tìm thấy</value>
         <value xml:lang="zh">沟通事件标识：没有找到${parameters.commnicationEventId}</value>
         <value xml:lang="zh_TW">通訊事件識別:沒有找到${parameters.commnicationEventId}</value>
+    </property>
+    <property key="PartyCommunication">
+        <value xml:lang="en">Communication</value>
+    </property>
+    <property key="PartyLastCommunication">
+        <value xml:lang="en">Last Communication</value>
     </property>
     <property key="PartyCommunications">
         <value xml:lang="de">Kommunikationen</value>
@@ -7601,6 +7610,9 @@
         <value xml:lang="vi">Danh sách loại</value>
         <value xml:lang="zh">类型列表</value>
         <value xml:lang="zh_TW">表列類型</value>
+    </property>
+    <property key="PartyLoginFailed">
+        <value xml:lang="en">Login Failed</value>
     </property>
     <property key="PartyLoggedInUsers">
         <value xml:lang="de">Angemeldete Benutzer</value>
@@ -12427,6 +12439,12 @@
         <value xml:lang="vi">Loại tác nhân</value>
         <value xml:lang="zh">会员类型标识</value>
         <value xml:lang="zh_TW">團體類型識別</value>
+    </property>
+    <property key="PartyUserActivity">
+        <value xml:lang="en">User Activity</value>
+    </property>
+    <property key="PartyUserManagement">
+        <value xml:lang="en">User Management</value>
     </property>
     <property key="PartyUnableToLocatePurpose">
         <value xml:lang="de">Bestimmung kann nicht gefunden werden; Löschen nicht möglich</value>

@@ -62,6 +62,11 @@ table.entry-parameters td.entry-paramname {
 .lib-entry-params-details {
   font-size: 0.8em;
 }
+
+ul {
+  margin-top: 0.3em;
+  margin-bottom: 0.4em;
+}
 </style>
 
   </head>
@@ -135,15 +140,18 @@ table.entry-parameters td.entry-paramname {
 <#assign keyIntroWordsStr = keyIntroWords?join("|")>
 
 <#function highlightWords text>
-  <#return text?replace("(("+keyIntroWordsStr+")([?]:|[?]|:))", "<strong>$1</strong>", 'r')>
+  <#-- obsolete: this will be handled better by parser
+  <#return text?replace("(("+keyIntroWordsStr+")([?]:|[?]|:))", "<strong>$1</strong>", 'r')>-->
+  <#return text>
 </#function>
 
-<#-- creates line breaks before key into words if they aren't at beginning of text. 
+<#-- obsolete: creates line breaks before key into words if they aren't at beginning of text. 
     hackish but should work out okay without having massive parsing attack.
-    Have to do this in two calls due to overlapping patterns
-     (?<!^) -->
+    Have to do this in two calls due to overlapping patterns-->
 <#function parseIntroWords text>
-  <#return text?replace("(?<!^)(("+keyIntroWordsStr+")([?]:|[?]|:))", "<br/>$1", 'r')>
+  <#-- obsolete: this will be handled better by parser
+  <#return text?replace("(?<!^)(("+keyIntroWordsStr+")([?]:|[?]|:))", "<br/>$1", 'r')>-->
+  <#return text>
 </#function>
 
 <#-- high-level version of above -->
@@ -157,7 +165,6 @@ table.entry-parameters td.entry-paramname {
 * BASIC TEXT WRAPPERS *
 *************************************
 -->
-
 
 <#-- NOTE: don't decorateText this because usually contains examples and markup -->
 <#macro preformedText text>
@@ -179,57 +186,67 @@ table.entry-parameters td.entry-paramname {
 * HIGH LEVEL ELEM WRAPPERS *
 *************************************
 -->
-  
-<#macro descList listInfo topLevel=true>
-  <#if listInfo.leadingText?has_content>
-    <@descText text=listInfo.leadingText />
-  </#if>
+
+<#macro complexContentEntry entry paragraphs=false headingLevel=4>
+    <#if entry?is_string>
+      <#-- just text -->
+      <#if paragraphs && entry?has_content><p><#else><span></#if>
+        <@descText text=entry />
+      <#if paragraphs && entry?has_content></p><#else></span></#if>
+    <#else>
+      <#if entry.type == "title">
+        <#-- * My Title * -->
+        <h${headingLevel}><@labelText text=entry.value!"" /></h${headingLevel}>
+      <#elseif entry.type == "note">
+        <#-- NOTE: my value -->
+        <#if entry.value?has_content>
+          <#if entry.ownLine && paragraphs><p><#else><#if entry.ownLine><br/></#if><span></#if>
+            <strong><@labelText text=entry.labelAndSep!"" /> </strong>
+            <#if entry.value?is_string>
+              <@descText text=entry.value!"" />
+            <#elseif (entry.value.type!"") == "list">
+              <#-- The note's value may be a list -->
+              <@complexList listInfo=entry.value headingLevel=headingLevel />
+            <#else>
+              <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED NOTE VALUE TYPE</strong>
+            </#if>
+          <#if entry.ownLine && paragraphs></p><#else></span></#if>
+        </#if>
+      <#elseif entry.type == "indent">
+        <#-- indented, treat as pre/code -->
+        <@preformedText text=entry.value!"" />
+      <#elseif entry.type == "list">
+        <#-- bullet lists -->
+        <div><@complexList listInfo=entry headingLevel=headingLevel /></div>
+      <#else>
+        <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED COMPLEX ENTRY TYPE</strong>
+      </#if>
+    </#if>
+</#macro>
+
+<#macro complexList listInfo topLevel=true headingLevel=4>
   <ul>
     <#list listInfo.items as item>
       <li>
-        <#if item.items?has_content>
-          <@descList listInfo=item topLevel=false/>
+        <#if item?is_string>
+          <@descText text=item />
         <#else>
-          <@descText text=item.leadingText!"" />
+          <#-- list item is complex, must iterate -->
+          <#list item as entry>
+            <@complexContentEntry entry=entry paragraphs=false headingLevel=headingLevel />
+          </#list>
         </#if>
       </li>
     </#list>
   </ul>
 </#macro>  
 
-<#macro descContent text>
-  <#local dataInfo = tmplHelper.parseDesc(text)>
-  <#if dataInfo.type == "title">
-    <h4><@labelText text=dataInfo.value!"" /></h4><#t>
-  <#elseif dataInfo.type == "list">
-    <div><@descList listInfo=dataInfo.value /></div>
-  <#else>
-    <p><@descText text=dataInfo.value!"" /></p><#t>
-  </#if>
-</#macro>
-
-
-<#function parseDescContentNew text>
-  <#local res = "">
-  <#list tmplHelper.splitByLists(text) as entry>
-    <#if entry?is_string>
-      <#local textMarkup><@descText text=entry /></#local>
-      <#local res = res + textMarkup>
-    <#elseif (entry.type!"") == "list">
-      <#local listMarkup><@descList listInfo=entry /></#local>
-      <#local res = res + listMarkup>
-    <#else>
-      <#-- shouldn't happen... -->
-    </#if>
+<#macro complexContent text paragraphs=false headingLevel=4>
+  <#list tmplHelper.splitByMarkupElems(text) as entry>
+    <@complexContentEntry entry=entry paragraphs=paragraphs headingLevel=headingLevel />
   </#list>
-  <#return res>
-</#function>
-
-<#-- will have better list parsing... 
-   TODO: missing title parsing -->
-<#macro descContentNew text>
-  ${parseDescContentNew(text)}<#t>
 </#macro>
+
 
   
 <#-- 
@@ -240,16 +257,19 @@ table.entry-parameters td.entry-paramname {
   
     <div>
       <#if pageTitle?has_content>
-        <h1><@labelText text=pageTitle /></h1>
+        <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
       </#if>
+        <h2>Template Building Documentation</h2>
       <#if libFilename?has_content>
-        <p><em>${libFilename?html}</em></p>
+        <p><em><span class="lib-filename">${libFilename?html}</span></em></p>
       </#if>
 
       <#if pageDesc?has_content>
-        <#list tmplHelper.splitToParagraphs(pageDesc) as paragraph>
-          <@descContent text=paragraph />
+        <div class="lib-pagedesc">
+        <#list tmplHelper.splitToParagraphs(pageDesc) as part>
+          <@complexContent text=part paragraphs=true/>
         </#list>
+        </div>
       </#if>
     </div>
     
@@ -352,7 +372,7 @@ table.entry-parameters td.entry-paramname {
                       <#-- TODO? the type str can be highlighted by is currently not parsed -->
                       <span class="lib-entry-param-desc-typeinfo"><code>${(paramDesc.typeStr!"")?html}</code></span>
                       <span class="lib-entry-param-desc-shortdesc"><@descText text=paramDesc.shortDesc!"" /></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><@descText text=paramDesc.extraDesc!"" /></span>
+                      <span class="lib-entry-param-desc-extradesc"><@complexContent text=paramDesc.extraDesc!"" paragraphs=false/></span>
                     </td>
                   </tr>
                 </#list>
@@ -422,9 +442,11 @@ table.entry-parameters td.entry-paramname {
                       <p class="lib-entry-shortdesc">${entrySections.mainDesc.shortDesc?html}</p>
                     </#if>
                     <#if (entrySection.extraDesc)?has_content>
+                      <div class="lib-entry-extradesc">
                       <#list tmplHelper.splitToParagraphs(entrySection.extraDesc) as paragraph>
-                        <@descContent text=paragraph />
+                        <@complexContent text=paragraph />
                       </#list>
+                      </div>
                     </#if>
                   </div>
                 <#elseif entrySectionName == "examples">

@@ -69,7 +69,7 @@ DEV NOTES:
                               server root, containing webapp context root and servlet path; if webSiteId specified, 
                               this should specified relative like intra-webapp (unless absPath forced to true).
                               (New in Cato)
-    absPath                 = ((boolean), default: -depends on type-) (fallback default: false)       
+    absPath                 = ((boolean), default: -depends on type-, fallback default: false)       
                               If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
                               If explicit false (stock Ofbiz default), the passed uri should be relative to control servlet or webapp context.
                               If not specified, will attempt for figure out based on the uri passed and other flags.
@@ -87,7 +87,7 @@ DEV NOTES:
                               Will determine the specific target webapp to use.
                               NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
                               (Stock arg, some fixes in Cato)
-    controller              = ((boolean), default: -depends on type-) (fallback default: true)
+    controller              = ((boolean), default: -depends on type-, fallback default: true)
                               If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
                               use information from the controller to generate the link.
                               If false, the link is treated as pointing to any arbitrary servlet or resource.
@@ -309,7 +309,7 @@ FIXME: This is out of date with @ofbizUrl enhancements
 If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
  ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
-               Form (note: order of arguments is strict; args will be stripped): 
+               Form (NOTE: order of arguments is strict; args will be stripped): 
                  ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
                  
   * Parameters *
@@ -320,7 +320,7 @@ The following URI forms are currently interpreted and transformed:
   <#if uri?starts_with("ofbizUrl://")>
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "ofbizUrl">
-      <#-- note: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
+      <#-- NOTE: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
       <#local res><@ofbizUrl fullPath=uriDesc.isFullPath()?c secure=uriDesc.isSecure()?c encode=uriDesc.isEncode()?c>${uriDesc.getBaseUriString()}</@ofbizUrl></#local>
       <#--<#local res = "uri: " + uriDesc.getBaseUriString() + "; fullPath: " + uriDesc.isFullPath()?c + "; secure: " + uriDesc.isSecure()?c + "; encode: " + uriDesc.isEncode()?c>-->
       <#return res>

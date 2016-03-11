@@ -364,7 +364,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               for menu to use as sub-menu.
     wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following)
     nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text)
-    htmlwrap                = (li|span|div, default: -from global styles-) (fallback default: li) Wrapping HTML element
+    htmlwrap                = (li|span|div, default: -from global styles-, fallback default: li) Wrapping HTML element
     inlineItem              = ((boolean)) If true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
@@ -561,7 +561,8 @@ functionality.
    viewIndex                = ((int)) Page currently displayed
    viewSize                 = ((int)) Maximum number of items displayed
                               NOTE: this should be decided earlier in rendering (data prep) and a valid value MUST be passed.
-   forcePost                = ((boolean), default: false) Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
+   forcePost                = ((boolean), default: false) Always use POST for non-ajax browsing 
+                              NOTE: even if false, large requests may be coerced to POST.
    paramStr                 = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
    viewIndexFirst           = ((int)) First viewIndex value number (0 or 1, only affects param values, not display)
    showCount                = ((boolean)) If true show "Displaying..." count or string provided in countMsg; if false don't; empty string is let markup/theme decide
@@ -826,7 +827,7 @@ functionality.
     </#if>
   </#if>
   
-  <#-- note: possible that data was paginated even if enabled false, but don't bother right now. 
+  <#-- NOTE: possible that data was paginated even if enabled false, but don't bother right now. 
       seems pagination is hardcoded into a lot of ofbiz (so may be paginated even if form widget had paginate off). -->  
   <#if enabled>
   
@@ -979,7 +980,7 @@ functionality.
     <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", countMsgLabel, messageMap, locale)!"">
   </#if>
 
-  <#-- note: (listSize > minPageSize) implies (listSize > 0); some cases this gets called with listSize zero -->
+  <#-- NOTE: (listSize > minPageSize) implies (listSize > 0); some cases this gets called with listSize zero -->
   <#if paginateOn && (listSize > minPageSize)>
     
       <#local itemRange = 2/>
@@ -997,7 +998,7 @@ functionality.
     
             <#-- NOTE: must use submitPaginationPost JS function to force send as POST for some requests, because Ofbiz security feature prevents
                  GET params passed to controller service event when request is https="true".
-                 note: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
+                 NOTE: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
                  FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
                     currently non-js falls back to GET only, won't always work -->
   

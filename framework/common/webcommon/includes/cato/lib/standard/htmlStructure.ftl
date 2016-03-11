@@ -476,7 +476,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     titleType               = (|default|..., default: default) Title type. Used to determine style
                               Currently only "default" supported.
                               Type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
-    titleBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-) (fallback default: 0)
+    titleBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
                               * none: prevents color class.
     class                   = ((css-class)) CSS classes 
                               Supports prefixes:
@@ -484,10 +484,10 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
-    linkTarget              = (|_blank|(boolean)|..., default: -from global styles-) (fallback default: -empty-) Target for link element
+    linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
     id                      = Field ID
-    color                   = (none|0|1|2|3|4|5|6|7|..., default: -from global styles) (fallback default: 0)
+    color                   = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
                               * none: prevents color class.
     icon                    = Icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image                   = Background image URL (icon won't be shown if not empty)
@@ -496,13 +496,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               * cover: this is currently the default. fills tile.
                               * contain: show whole image in tile.
                               Type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
-    imageBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-) (fallback default: none)
+    imageBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: none)
                               * none: prevents color class.
     overlayType             = (|default|..., default: default) Overlay type
                               Cato standard supported types (extensible by theme):
                               * slide-up: this is currently the default.
                               Type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
-    overlayBgColor          = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-) (fallback default: 0)
+    overlayBgColor          = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
                               * none: prevents color class.
 -->
 <#assign tile_defaultArgs = {
@@ -780,7 +780,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 
   <#if open>
   <#-- level logic begin -->
-    <#-- note: request obj only available because of macro renderer initial context mod -->
+    <#-- NOTE: request obj only available because of macro renderer initial context mod -->
     <#local sLevel = getCurrentSectionLevel()>
     <#local prevSectionLevel = sLevel>
     <#local dummy = setCurrentSectionLevel(sLevel+1)>
@@ -909,7 +909,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
           <#else>
             <#local menuIdArg = "">
           </#if>
-          <#if menuClass?has_content> <#-- note: don't use defaultMenuClass here; @menu will figure it out instead -->
+          <#if menuClass?has_content> <#-- NOTE: don't use defaultMenuClass here; @menu will figure it out instead -->
             <#if menuClass == "none">
               <#local menuClassArg = "=">
             <#else>
@@ -1096,7 +1096,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
         <@cell open=true close=false class=compileClassArg(class) />
           ${menuTitleContent}
-          <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+          <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
           <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
           <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>

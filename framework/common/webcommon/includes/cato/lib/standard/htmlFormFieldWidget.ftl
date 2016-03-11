@@ -399,7 +399,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
     title="" tooltip="" inlineLabel=false origLabel=origLabel origArgs={} passArgs={} catchArgs...>
-  <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
+  <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
   <#local inputId = "">

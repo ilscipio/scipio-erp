@@ -323,11 +323,11 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                               or not possible to know in advance, in which case caller must specify this flag.
                               Currently, this setting affects the following:
                                 * Responsive tables
-    autoAltRows             = ((boolean), default: -from global styles-) (fallback default: false)
+    autoAltRows             = ((boolean), default: -from global styles-, fallback default: false)
     firstRowAlt             = ((boolean), default: false)
     inheritAltRows          = ((boolean)) Only for nested tables: If true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots         = ((boolean)) Whether use alt row logic in foot or not
-    cellspacing             = ((int), default: -from global styles-) (fallback default: -empty-) Traditional cellspacing
+    cellspacing             = ((int), default: -from global styles-, fallback default: -empty-) Traditional cellspacing
                               Should be avoided in modern templates.
     open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Map of other legacy <table> attributes (mainly for those with dash in name)
@@ -413,8 +413,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
     <#-- also set in @thead -->
     <#local dummy = setRequestVar("catoCurrentTableHasHeader", hasHeader)!>
-    <#-- note: catoCurrentTableRowAltFlag should always be boolean
-         note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
+    <#-- NOTE: catoCurrentTableRowAltFlag should always be boolean
+         NOTE: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
     <#if firstRowAlt?is_boolean>
       <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", firstRowAlt)!>
       <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
@@ -429,7 +429,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
       <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
       <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", false)!>
     </#if>
-    <#-- note: this var may be empty string (none) -->
+    <#-- NOTE: this var may be empty string (none) -->
     <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
     <#local style = "">
     <#local useResponsive = ((responsive?is_boolean && responsive == true) || responsiveOptions?has_content || (scrollable?is_boolean && scrollable == true))
@@ -711,7 +711,7 @@ Defines a table footer with advanced generating functionality. Analogous to HTML
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                      
   * Parameters *
-    type                    = (generic|content|meta|util, default: -dependent on table type-) (fallback default: "generic")
+    type                    = (generic|content|meta|util, default: -dependent on table type-, fallback default: "generic")
                               In complete absence of global styles, default is "generic".
                               In default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
                               Standard types:
@@ -821,13 +821,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   </@tr_markup>
   <#if close>
     <#if !(useAlt?is_boolean && useAlt == false)>
-      <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
+      <#-- NOTE: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
       <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
         <#local catoCurrentTableRowAltFlag = !alt>
         <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
       </#if>
     </#if>
-    <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
+    <#-- NOTE: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
     <#local catoCurrentTableLastRowAlt = alt>
     <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
   </#if>

@@ -282,7 +282,7 @@
     },
     "table_default_scrollable_options" : { <#-- this is only used for tables not marked to use responsive but need scrollable=true -->
         "fixedHeader" : false,
-        "scrollX" : true,   <#-- note: this option gets overridden -->
+        "scrollX" : true,   <#-- NOTE: this option gets overridden -->
         "info" : false,
         "paging" : false,
         "searching" : false,
@@ -759,7 +759,7 @@
 
   <#-- Alert Box -->
     "alert_wrap" : "alert-box",    <#-- Bootstrap: "alert" -->
-    "alert_prefix_type" : "",             <#-- Bootstrap: "alert-"; Note: This may be removed -->
+    "alert_prefix_type" : "",             <#-- Bootstrap: "alert-"; NOTE: This may be removed -->
     "alert_type_info" : "info",
     "alert_type_success" : "success",
     "alert_type_warning" : "warning",
@@ -821,7 +821,7 @@
     "fields_default_alt1_checkboxtype" : "simple",
 
     <#-- no left label area (usually for very short forms) -->
-    "fields_default_nolabels_labeltype" : "horizontal", <#-- note: this should be "none" in principle, but this is used to implement collapsedinlinelabel. labelarea false is good enough. -->
+    "fields_default_nolabels_labeltype" : "horizontal", <#-- NOTE: this should be "none" in principle, but this is used to implement collapsedinlinelabel. labelarea false is good enough. -->
     "fields_default_nolabels_labelposition" : "left",
     "fields_default_nolabels_labelarea" : false,
     "fields_default_nolabels_labelareaexceptions" : "", 

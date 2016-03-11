@@ -789,9 +789,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               By default, this is empty string (use @fields type default), and if no styles defaults,
     labelAreaConsume        = ((boolean), default: true) If set to false, will prevent the label area from consuming (displaying) the label
                               The label will trickle down into an inline area if one exists for the field type.
-    inlineLabelArea         = ((boolean), default: -from global styles-) (fallback default: false) Manual override for inline label logic
+    inlineLabelArea         = ((boolean), default: -from global styles-, fallback default: false) Manual override for inline label logic
                               In general can be left to macro.
-    inlineLabel             = ((boolean), default: -from global styles-) (fallback default: false) Manual override for inline label logic
+    inlineLabel             = ((boolean), default: -from global styles-, fallback default: false) Manual override for inline label logic
                               In general can be left to macro.
                               NOTE: Often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip                 = Small field description - to be displayed to the customer
@@ -890,10 +890,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * textfind *
     opValue                 = The selected operator (value)
-    ignoreCaseValue         = ((boolean), default: true), the ignore case checkbox (current value)
+    ignoreCaseValue         = ((boolean), default: true) The ignore case checkbox current value
                               The default should be same as form widget default (text-find's "ignore-case" in widget-form.xsd).
-    hideOptions             = ((boolean), default: false). If true, don't show select options
-    hideIgnoreCase          = ((boolean), default: false). If true, hide case sensitivity boolean
+    hideOptions             = ((boolean), default: false) If true, don't show select options
+    hideIgnoreCase          = ((boolean), default: false) If true, hide case sensitivity boolean
     titleClass              = ((css-class)) CSS classes, extra classes for title
     
     * rangefind *
@@ -902,33 +902,34 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     titleClass              = ((css-class)) CSS classes, extra classes for title
     
     * select *
-    multiple                = allow multiple select true/false
+    multiple                = ((boolean), default: false) Allow multiple select
     items                   = ((list)) List of maps, if specified, generates options from list of maps 
                               list of {"value": (value), "description": (label), "selected": (true/false)} maps
                               NOTE: selected is currently ignored for non-multiple (uses currentValue instead)
                               if items list not specified, manual #nested content options can be specified instead.
-    allowEmpty              = default false; if true, will add an empty option
+    allowEmpty              = ((boolean), default: false) If true, will add an empty option
     currentValue            = currently selected value/key (only for non-multiple)
-    currentFirst            = default false; if true (and multiple false), will add a "first" item with current value selected, if there is one
-    currentDescription      = if currentFirst true, this is used as first's description if specified
-    defaultValue            = optional selected option value for when none otherwise selected
-    manualItemsOnly         = optional boolean hint caller may specify to say that this select should
+    currentFirst            = ((boolean), default: false) If true (and multiple false), will add a "first" item with current value selected, if there is one
+    currentDescription      = If currentFirst true, this is used as first's description if specified
+    defaultValue            = Optional selected option value for when none otherwise selected
+    manualItemsOnly         = ((boolean)) Optional boolean hint that caller may specify to say that this select should
                               contain exclusively manually generated items. 
                               by default, this is based on whether the items arg is specified or not.
-    manualItems             = optional boolean hint caller may sometimes need to give macro to say that #nested contains
+    manualItems             = ((boolean)) optional boolean hint caller may sometimes need to give macro to say that #nested contains
                               manual options, but not exclusively. 
                               by default, this is based on whether the items arg is specified or not (NOT whether
                               there is any nested content or not).
                               if specifying both items arg AND #nested content (discouraged), this should be manually set to true.
-    asmSelectArgs           = optional map of args passed to @asmSelectScript to transform a multiple type select into
-                              a jquery asmselect. usually only valid if multiple is true.
-    formName                = name of form containing the field
-    formId                  = id of form containing the field
-    title                   = title attribute of <select> element
+    asmSelectArgs           = ((map)) Optional map of args to pass to @asmSelectScript to transform a multiple type select into a jQuery asmselect select
+                              Usually only valid if multiple is true.
+    formName                = Name of form containing the field
+    formId                  = ID of form containing the field
+    title                   = Title attribute of <select> element
     
     * option *
-    text                    = option label (can also specify as #nested)
-    value                   = value (sent to server)
+    text                    = Option label 
+                              Can an also be specified as #nested.
+    value                   = Value, sent to server uopn submit
     selected                = ((boolean))
     
     * lookup *
@@ -936,8 +937,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     fieldFormName           = Contains the lookup window form name
     * checkbox (single mode) *
     value                   = Y/N
-    currentValue            = current value, used to check if should be checked
-    checked                 = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
+    currentValue            = Current value, used to check if should be checked
+    checked                 = ((boolean)|, default: -empty-) Override checked state 
+                              If set to boolean, overrides currentValue logic
     checkboxType            = (default|..., default: default)
                               Generic:
                               * default: default theme checkbox
@@ -946,11 +948,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
-                              list of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
     inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line
-                              note this takes effect whether single-item or multiple-item radio.
+                              NOTE: this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
     defaultValue            = Default value, determines checked (convenience option; used when currentValue empty; can also be sequence)
@@ -958,8 +960,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * radio (single mode) *
     value                   = Y/N, only used if single radio item mode (items not specified)
-    currentValue            = current value, used to check if should be checked
-    checked                 = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
+    currentValue            = Current value, used to check if should be checked
+    checked                 = ((boolean)|, default: -empty-) Override checked state 
+                              If set to boolean, overrides currentValue logic
     radioType               = (default|..., default: default)
                               Generic:
                               * default: default theme radio
@@ -968,7 +971,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * radio (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items radio generated with map entries in provided list as arguments
-                              list of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
     inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line

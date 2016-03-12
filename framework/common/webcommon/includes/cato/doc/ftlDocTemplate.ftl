@@ -3,6 +3,8 @@
 *
 * Invoke by running
 *   ant docs-ftl-cato
+* OR
+*   ant docs-ftl-cato-ftlonly (no java build)
 * in root project folder.
 *
 * See FtlDocCompiler class for data model details.

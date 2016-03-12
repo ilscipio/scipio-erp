@@ -199,8 +199,8 @@
     <@row>
         <@cell columns=6>
             <@slider id="" class="" controls=true indicator=false>
-                <@slide link="#" image="https://placehold.it/1000x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
-                <@slide title="This is a title" link="#" image="https://placehold.it/1000x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+                <@slide link="#" image="https://placehold.it/800x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+                <@slide title="This is a title" link="#" image="https://placehold.it/800x300"></@slide>
             </@slider>
         </@cell>
         <@cell columns=6></@cell>

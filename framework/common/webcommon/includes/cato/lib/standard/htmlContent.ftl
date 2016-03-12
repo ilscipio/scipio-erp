@@ -1381,6 +1381,7 @@ Creates a slider wrapper.
 
 <#-- @chart main markup - theme override -->
 <#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" controls=true indicator=true origArgs={} passArgs={} catchArgs...>
+    <#if !sliderId?has_content><#local sliderId = "cato_slider_${sliderIdNum}"/></#if>
     <#local dataOptions>
         <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
     </#local>

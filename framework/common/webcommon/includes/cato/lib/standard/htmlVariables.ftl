@@ -780,9 +780,10 @@
     
   <#-- Slider -->
     "slider_container" : "example-orbit-content",   <#-- Bootstrap: "carousel slide" -->
+    "slider_wrap" : "",                             <#-- Bootstrap: "carousel-inner" -->
     "slide_container" : "",
     "slide_image" : "",        
-    "slide_content" : "orbit-caption",         <#-- Bootstrap: "carousel-caption" -->
+    "slide_content" : "orbit-caption",              <#-- Bootstrap: "carousel-caption" -->
     "slide_linktarget" : "_blank",
 
   <#-- Chart -->

@@ -1335,3 +1335,121 @@ Chart data entry.
   </#if>
 </#macro>
 
+<#-- 
+*************
+* Slider
+************
+Creates a slider wrapper.
+
+  * Usage Examples *  
+    <@slider>
+        <@slide title="" image="" link="/myUrl.html">
+            // content
+        </@slide> 
+    </@slide>              
+                    
+  * Parameters *
+    title                   = ((string), default: -empty-) Data Title
+    id                      = ((string), default: -empty-) Slider id
+    class                   = ((css-class)) Heading element CSS classes
+                              Supports prefixes:
+                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    controls                = ((boolean), default: true) Left / Right navigation
+    indicator               = ((boolean), default: true) Bullet indicators
+    
+    
+  * Related *
+    @slide
+-->
+<#assign chart_defaultArgs = {
+  "title":"", "id":"","class":"","controls":true,"indicator":true, "passArgs":{}
+}>
+<#macro slider args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.slider_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+
+  <#local sliderIdNum = getRequestVar("catoSliderIdNum")!0>
+  <#local sliderIdNum = sliderIdNum + 1 />
+  <#local dummy = setRequestVar("catoSliderIdNum", sliderIdNum)>
+  <#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>
+    
+  <@slider_markup sliderId=id!sliderId sliderIdNum=sliderIdNum class=class title=title controls=controls indicator=indicator
+        origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
+</#macro>
+
+<#-- @chart main markup - theme override -->
+<#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" controls=true indicator=true origArgs={} passArgs={} catchArgs...>
+    <#local dataOptions>
+        <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
+    </#local>
+    <#if title?has_content><@heading>${title!}</@heading></#if>
+    <div class="${styles.slider_container!""}" data-orbit id="${sliderId!""}" <#if dataOptions?has_content>data-options="${dataOptions!""}"</#if>>
+      <#nested/>
+    </div>
+</#macro>
+
+<#-- 
+*************
+* Slide
+************
+Slider data entry - a single slide.
+
+  * Usage Examples *  
+    <@slide title="Slide #1" image="">
+       // content
+    </@tile>
+
+  * Parameters *
+    title                   = ((string), default: -empty-) Data Title
+    class                   = ((css-class)) CSS classes 
+                              Supports prefixes:
+                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    link                    = Link URL around nested content
+                              WARN: can only use if no other links inside nested content
+    linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
+                              If boolean, false prevents any; true will allow global styles hash lookup.
+    image                   = Background image URL
+
+  * Related *
+    @slider
+-->
+<#assign slide_defaultArgs = {
+  "title":"", "class":"", "link":"", "linkTarget":true, "image":"", "passArgs":{}
+}>
+<#macro slide args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.slide_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <#local stylePrefix = "slide_">
+  
+  <#if linkTarget?is_boolean && linkTarget == false>
+    <#local linkTarget = "">
+  <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
+    <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
+  </#if>
+
+  <@slide_markup class=class image=image link=link linkTarget=linkTarget title=title origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
+</#macro>
+
+<#-- @chartdata main markup - theme override -->
+<#macro slide_markup class="" image="" link="" linkTarget="" title="" origArgs={} passArgs={} catchArgs...>
+    <#local slideIdNum = getRequestVar("catoSlideIdNum")!0>
+    <#local slideIdNum = slideIdNum + 1 />
+    <#local dummy = setRequestVar("catoSlideIdNum", slideIdNum)>
+    <#local slideId = "slide_${renderSeqNumber!}_${slideIdNum!}"/>
+    <div data-orbit-slide="${slideId!}" class="${styles.slide_container!}">
+        <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+        <div>
+        <#if title?has_content><h2>${title!}</h2></#if>
+        <#if image?has_content>
+        <img src="${image!}"/>
+        </#if>
+              <#local nestedContent><#nested></#local>
+              <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+        </div>
+        <#if link?has_content></a></#if>
+    </div>
+</#macro>

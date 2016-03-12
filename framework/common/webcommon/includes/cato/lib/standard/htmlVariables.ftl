@@ -777,6 +777,13 @@
 
   <#-- Modal -->
     "modal_wrap" : "reveal-modal",
+    
+  <#-- Slider -->
+    "slider_container" : "example-orbit-content",   <#-- Bootstrap: "carousel slide" -->
+    "slide_container" : "",
+    "slide_image" : "",        
+    "slide_content" : "orbit-caption",         <#-- Bootstrap: "carousel-caption" -->
+    "slide_linktarget" : "_blank",
 
   <#-- Chart -->
     "chart_legend" : "chart-legend",
@@ -789,7 +796,6 @@
     "progress_state_alert" : "alert",
     "progress_state_info" : "info",
     "progress_state_success" : "success",
-
 
   <#-- Fields 
        fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for

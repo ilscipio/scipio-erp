@@ -184,6 +184,30 @@
 </@section>
 
 <@section>
+    <@heading attribs=makeMagTargetAttribMap("modal") id="modal">Modal</@heading>
+    <@row>
+        <@cell columns=12>
+            <@modal id="uniqueModalId" label="click me">
+               Communication is not possible. The shuttle has no power. Using the gravitational pull of a star to slingshot back in time? We are going to Starbase Montgomery for Engineering consultations prompted by minor read-out anomalies. Probes have recorded unusual levels of geological activity in all five planetary systems. Assemble a team. Look at records of the Drema quadrant. Would these scans detect artificial transmissions as well as natural signals?
+            </@modal>
+        </@cell>
+    </@row>
+</@section>
+
+<@section>
+    <@heading attribs=makeMagTargetAttribMap("slider") id="slider">Slider</@heading>
+    <@row>
+        <@cell columns=6>
+            <@slider id="" class="" controls=true indicator=false>
+                <@slide link="#" image="https://placehold.it/1000x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+                <@slide title="This is a title" link="#" image="https://placehold.it/1000x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+            </@slider>
+        </@cell>
+        <@cell columns=6></@cell>
+    </@row>
+</@section>
+
+<@section>
     <@heading attribs=makeMagTargetAttribMap("charts") id="charts" level=2>Charts</@heading>
     <#-- CATO: Deprecated
     <@heading level=3>Foundation</@heading>

@@ -308,9 +308,10 @@ FIXME: This is out of date with @ofbizUrl enhancements
 
 If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
- ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
-               Form (NOTE: order of arguments is strict; args will be stripped): 
-                 ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
+* ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
+  Form: 
+    ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
+  NOTE: Order of arguments is strict; args will be stripped.
                  
   * Parameters *
     url                     = uri to interpret for known formats and, if matching, to produce URL
@@ -639,7 +640,7 @@ Splits a style classes string into a Set of unique elements, not preserving orde
 ************
 Joins style names in a proper style string of class names.
 
-  * Usage Example *   
+  * Usage Examples *   
     <#assign myVar = joinStyleNames("class1", "", " class3")>
        
   * Parameters *
@@ -658,7 +659,7 @@ Joins style names in a proper style string of class names.
 ************
 Joins style names in a proper style string of class names.
 
-  * Usage Example *   
+  * Usage Examples *   
     <#assign myVar = joinStyleNames(["class1", "", " class3"])>
        
   * Parameters *
@@ -949,13 +950,13 @@ an FTL wrapper, which wrecks all subsequent type checks. And others.
 TODO?: This is currently inefficient; but must guarantee immutability.
     Note currently forced to implement in FTL (not java transform) if want to exploit "+" operator.
     
-IMPL NOTE: it's part of this function's interface that any of the arguments for which ?has_content is false,
-    will not be used. this covers the cases where non-map types are passed as well ("", [], etc.).
-    sometimes an empty non-map type will be passed, should be considered valid.
-    shouldn't need to check for non-empty non-map types however, those are all clear coding errors.
-    e.g., this is used at beginning of macros that take inlineArgs... or inlineAttribs...
-    they count on this method to handle empty sequence case.
-    they also depend on this for the toSimple=true conversion.
+IMPL NOTE: It's part of this function's interface that any of the arguments for which ?has_content is false,
+    will not be used. This covers the cases where non-map types are passed as well ("", [], etc.).
+    Sometimes an empty non-map type will be passed, should be considered valid.
+    Shouldn't need to check for non-empty non-map types however, as those are all clear coding errors.
+    e.g., This is used at beginning of macros that take inlineArgs... or inlineAttribs...
+    They count on this method to handle empty sequence case.
+    They also depend on this for the toSimple=true conversion.
 
   * Parameters *
     first                   = ((map), required) The first map
@@ -2638,11 +2639,11 @@ Returns void if nothing.
 Gets a lib location from a theme resources variable which contains an expression, which can be either a straight component:// location
 meant as "general" context and for "html" and "default" platforms, or a EL-defined map
 
-The foramt is:
+The format is:
   ${['[platform]':'component://...', ...]}
   e.g. ${[''html':'component://...', 'xml':'component://...', 'default':'component://...']}
   
-Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.
+Intended for use with VT_STL_VAR_LOC, VT_STL_TMPLT_LOC and variants.
 
 Checks the resourceNames in the given order.
 
@@ -2672,7 +2673,7 @@ Useful for determining current vars in context.
 
 NOTE: since is in utilities.ftl, keep generic and check platform.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@printVars />           
                     
   * Parameters *

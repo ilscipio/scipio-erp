@@ -20,7 +20,7 @@ Opens an HTML document and header section.
 
 IMPL NOTE: Beware of whitespace.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@htmlHeadOpen />            
                     
   * Parameters *
@@ -65,7 +65,7 @@ Optional scripts include modifier. Modifies the @script calls within it.
 
 NOTE: This is NOT associated with any HTML element nor does it define any.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@scripts output=true> <#- guarantees the @script calls will output content to page at this location ->
       <@script>
         jQuery(document).ready(function() {
@@ -102,11 +102,11 @@ NOTE: This is NOT associated with any HTML element nor does it define any.
 ************
 Inline script wrapper. By default, makes a javascript block.
 
-NOTE: Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).
+NOTE: Unlike others, this macro explicitly currently cannot support open/close structure (only htmlwrap).
 
 DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@script>
         jQuery(document).ready(function() {
             alert("Page loaded.");
@@ -180,12 +180,12 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
          
   * Parameters *
     url                     = Controller request uri
-    output                  = ((boolean)) If true, the include must be output in the markup where the macro is used
-                              and should never be delegated. In most cases this should be omitted.  
+    output                  = ((boolean)) If true, forces the macro to write the markup/content immediately
+                              Prevents delegating this script include. In most template usage this should be omitted.  
                               DEV NOTE: If not specified, "" or false for now simply accumulates the names  
-                                and will be included by decorator in footer.
-    htmlwrap                = ((boolean), default: false) Whether to wrap in @script - 
-                              NOTE: Default is FALSE for this one
+                                  and will be included by decorator in footer.
+    htmlwrap                = ((boolean), default: false) Whether to wrap in @script
+                              NOTE: Default is FALSE for this macro (unlike others).
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false output="">
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>

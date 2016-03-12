@@ -252,20 +252,19 @@ Creates a grid cell.
 ************   
 OVERRIDE. Parses container sizes from a class/style string.
 
-* Container size method overrides* 
+* Container size method overrides * 
 
 These provide framework-/theme-specific overriding implementations of the placeholder functions of the
 saveCurrentContainerSizes and related utilities lib functions.
 
-NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
-    same.
-NOTE: catchArgs... is in case of interface changes. Not used.
+NOTES: 
+* Implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the same.
+* catchArgs... is in case of interface changes. Not used.
 
-DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
-    should be confirmed...
+TODO: 
+* These could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
+* These should be general enough to work for both foundation and bootstrap, but should be confirmed...
     
-TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
-
   * Related *
     utilities#parseContainerSizesFromStyleStr
 -->
@@ -355,7 +354,7 @@ Creates a grid list.
 
 Since this is very foundation specific, this function may be dropped in future installations
 
-  * Usage Example *  
+  * Usage Examples *  
     <@grid>
         <li>Text or <a href="">Anchor</a></li>
     </@grid>            
@@ -461,7 +460,7 @@ Creates a very basic wrapper for tiles (can be used in metro designs).
 Please be aware that this is neither based on standard bootstrap, nor foundation. 
 It is loosely based on http://metroui.org.ua/tiles.html 
 
-  * Usage Example *  
+  * Usage Examples *  
     <@tile size="small">
        // content
     </@tile>
@@ -477,7 +476,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               Currently only "default" supported.
                               Type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
     titleBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
-                              * none: prevents color class.
+                              * none: Prevents color class.
     class                   = ((css-class)) CSS classes 
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -488,19 +487,19 @@ It is loosely based on http://metroui.org.ua/tiles.html
                               If boolean, false prevents any; true will allow global styles hash lookup.
     id                      = Field ID
     color                   = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
-                              * none: prevents color class.
+                              * none: Prevents color class.
     icon                    = Icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image                   = Background image URL (icon won't be shown if not empty)
     imageType               = (|default|..., default: default) Image type for styling
                               Cato standard supported types (extensible by theme):
-                              * cover: this is currently the default. fills tile.
-                              * contain: show whole image in tile.
+                              * cover: This is currently the default. fills tile.
+                              * contain: Show whole image in tile.
                               Type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
     imageBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: none)
                               * none: prevents color class.
     overlayType             = (|default|..., default: default) Overlay type
                               Cato standard supported types (extensible by theme):
-                              * slide-up: this is currently the default.
+                              * slide-up: This is currently the default.
                               Type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
     overlayBgColor          = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
                               * none: prevents color class.
@@ -672,7 +671,7 @@ levels manually, but most often should let @section menu handle the level calcul
 
 IMPL NOTE: This has dependencies on some non-structural macros.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@section attr="">
         Inner Content
     </@section>            

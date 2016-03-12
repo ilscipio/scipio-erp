@@ -5,6 +5,7 @@
       <title>Generic Cato FTL Utilities.</title>
 
 
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -58,61 +59,49 @@ pre {
   
     <div>
         <h1 class="lib-pagetitle">Generic Cato FTL Utilities.</h1>
-        <h2>Template Building Documentation</h2>
+        <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">utilities.ftl</span></em></p>
 
         <div class="lib-pagedesc">
-      <p>
+        <p>
 A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies,
 part of standard Cato Freemarker API.
 Generally CSS-framework-agnostic.
 Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
-Automatically included at all times.      </p>
-      <p>
-NOTES:
-      </p>
-        <div>  <ul>
+Automatically included at all times.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
       <li>
-      <span>
-Macros expect to be called using named arguments, except where otherwise noted.      </span>
+        <span>
+Macros expect to be called using named arguments, except where otherwise noted.        </span>
       </li>
       <li>
-      <span>
+        <span>
 Functions in Freemarker only support positional arguments, but some Cato functions support
-an &quot;args&quot; argument as a map, which emulates named arguments.      </span>
+an &quot;args&quot; argument as a map, which emulates named arguments.        </span>
       </li>
       <li>
-      <span>
+        <span>
 Default markup-producing macros are found in htmlTemplate.ftl.
-Utilities found in utilities.ftl should not contain their logic in general.      </span>
+Utilities found in utilities.ftl should not contain their logic in general.        </span>
       </li>
   </ul>
-</div>
-      <p>
-IMPLEMENTATION NOTES:
-      </p>
-        <div>  <ul>
+          </div>
+          <div class="lib-text-note">
+            <strong>IMPLEMENTATION NOTES: </strong>
+  <ul>
       <li>
-      <span>
-Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.      </span>
+        <span>
+Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.        </span>
       </li>
       <li>
-      <span>
+        <span>
 It&#39;s important that these macros remain generic (and that the include for these utilities remains
-completely static) so that any macro or function here can easily be interchanged with a transform (Java class).      </span>
+completely static) so that any macro or function here can easily be interchanged with a transform (Java class).        </span>
       </li>
   </ul>
-</div>
-      <p>
-TODO:
-      </p>
-        <div>  <ul>
-      <li>
-      <span>
-Turn more of these into transforms.      </span>
-      </li>
-  </ul>
-</div>
+          </div>
         </div>
     </div>
     
@@ -366,13 +355,19 @@ Turn more of these into transforms.      </span>
     
 
 
+
+
       <hr />  
 
       <a name="section-TEMPLATING API UTILITIES"></a>
       <div class="lib-section">
          
           <h2 class="lib-section-title">TEMPLATING API UTILITIES</h2>
-    
+
+          <p>        <span>
+Intended for use anywhere in production templates and templating macros.        </span>
+</p>
+
           
           <hr />
           <a name="entry-ofbizUrl"></a>
@@ -381,43 +376,20 @@ Turn more of these into transforms.      </span>
             <h3 class="lib-entry-title">ofbizUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 THIS IS THE MAIN STOCK OFBIZ URL MACRO. It may be modified with enhanced
-capabilities for Cato.      </span>
-      <span>
+capabilities for Cato.        </p>
+        <p>
 With Cato, boolean arguments can be given as booleans, string representation of booleans
-or empty string (signifies use defaults).      </span>
-      <span>
-DEV NOTES:
-      </span>
-        <div>  <ul>
-      <li>
-      <span>
-TODO: RequestHandler.makeLink has been modified noticeably in Ofbiz 14 and requires more review to integrate
-the code from Cato magnolia project
-      </span>
-        <div>  <ul>
-      <li>
-      <span>
-The inter-webapp is still complicated by need for webSiteId which stock apps don&#39;t have (and can&#39;t give)      </span>
-      </li>
-  </ul>
-</div>
-      </li>
-      <li>
-      <span>
-webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don&#39;t have webSiteIds and can&#39;t give them any)      </span>
-      </li>
-  </ul>
-</div>
+or empty string (signifies use defaults).        </p>
                       </div>
                   </div>
             
@@ -448,20 +420,19 @@ webSiteId arg below is from stock but does not fully work and will not work with
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)      </span>
+        <span>
+intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)        </span>
       </li>
       <li>
-      <span>
+        <span>
 inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
 The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
-It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.      </span>
+It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.        </span>
       </li>
   </ul>
 </div>
-      <span>
-
- (New in Cato)      </span>
+        <span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -472,9 +443,9 @@ It can be identified using either webSiteId or using an absolute full path to th
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Alias for type=&quot;inter-webapp&quot;</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true, same as type=&quot;inter-webapp&quot;; if false, same as type=&quot;&quot; (intra-webapp implied).
-(New in Cato)      </span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -485,13 +456,13 @@ If true, same as type=&quot;inter-webapp&quot;; if false, same as type=&quot;&qu
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">The request URI. May be specified as parameter or as #nested macro content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
 to webapp root, excluding webapp context root).
 For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
 server root, containing webapp context root and servlet path; if webSiteId specified,
 this should specified relative like intra-webapp (unless absPath forced to true).
-(New in Cato)      </span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -502,40 +473,42 @@ this should specified relative like intra-webapp (unless absPath forced to true)
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -depends on type-, fallback default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If explicit true, the passed uri should be an absolute path from server root (including context root and servlet path)
 If explicit false (stock Ofbiz default), the passed uri should be relative to control servlet or webapp context.
 If not specified, will attempt for figure out based on the uri passed and other flags.
 Current behavior when unspecified:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-For all intra-webapp links, absPath is assumed false.      </span>
+        <span>
+For all intra-webapp links, absPath is assumed false.        </span>
       </li>
       <li>
-      <span>
+        <span>
 For inter-webapp links:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-If webSiteId is not specified, absPath is assumed true.      </span>
+        <span>
+If webSiteId is not specified, absPath is assumed true.        </span>
       </li>
       <li>
-      <span>
-If webSiteId is specified, absPath is assumed false.
+        <span>
+If webSiteId is specified, absPath is assumed false.        </span>
+      </li>
+  </ul>
+</div>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Behavior when unspecified is NOT currently influenced by present of starting slash (&quot;/&quot;),
 to try to preserve compability with legacy Ofbiz behavior that accepted one for all link types.
-It is also ambiguous in the case of intra-webapp non-controller links.      </span>
-      </li>
-  </ul>
-</div>
-      </li>
-  </ul>
-</div>
-      <span>
-
-(New in Cato)      </span>
+It is also ambiguous in the case of intra-webapp non-controller links.          </div>
+        <span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -546,11 +519,15 @@ It is also ambiguous in the case of intra-webapp non-controller links.      </sp
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -current website or none-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Target web site ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 This usually should only be specified for inter-webapp links.
 Will determine the specific target webapp to use.
-NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.
-(Stock arg, some fixes in Cato)      </span>
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Some Ofbiz (stock) webapps do not have their own webSiteId, and this is considered normal.          </div>
+        <span>
+(Stock arg, some fixes in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -561,34 +538,33 @@ NOTE: Some Ofbiz (stock) webapps do not have their own webSiteId, and this is co
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -depends on type-, fallback default: true)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true (stock Ofbiz case), the link is treated as pointing to an Ofbiz controller request URI, and will
 use information from the controller to generate the link.
 If false, the link is treated as pointing to any arbitrary servlet or resource.
 Current behavior when unspecified:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
+        <span>
 If absPath is true, the uri will be checked to see whether it points to controller
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-This helps implementation of inter-webapp links.      </span>
+        <span>
+This helps implementation of inter-webapp links.        </span>
       </li>
   </ul>
 </div>
       </li>
       <li>
-      <span>
-Otherwise, generally defaults to true.      </span>
+        <span>
+Otherwise, generally defaults to true.        </span>
       </li>
   </ul>
 </div>
-      <span>
-
-(New in Cato)      </span>
+        <span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -599,13 +575,15 @@ Otherwise, generally defaults to true.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true, this will add the external login key as parameter.
-NOTE: This is currently FALSE by default in all cases including inter-webapp links
-      </span>
-<pre>while details are sorted out.</pre>      <span>
-
-(New in Cato)      </span>
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is currently FALSE by default in all cases including inter-webapp links
+while details are sorted out.          </div>
+        <span>
+(New in Cato)        </span>
 </span>
                     </td>
                   </tr>
@@ -616,14 +594,16 @@ NOTE: This is currently FALSE by default in all cases including inter-webapp lin
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true, forces a full URL with protocol (HTTP or HTTPS).
-WARN: MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
-      </span>
-<pre>marked as secure will always generate a secure URL, not a plain URL. Some control
-is sacrificed to allow this flag to be used safely and more easily.</pre>      <span>
-
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)      </span>
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+MODIFIED IN CATO: In Cato, specifying fullPath true for a controller request
+marked as secure will always generate a secure URL, not a plain URL. Some control
+is sacrificed to allow this flag to be used safely and more easily.          </div>
+        <span>
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
 </span>
                     </td>
                   </tr>
@@ -634,9 +614,9 @@ is sacrificed to allow this flag to be used safely and more easily.</pre>      <
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true, forces a full URL with secure protocol (HTTPS).
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)      </span>
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
 </span>
                     </td>
                   </tr>
@@ -647,9 +627,9 @@ If true, forces a full URL with secure protocol (HTTPS).
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
-(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)      </span>
+(Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
 </span>
                     </td>
                   </tr>
@@ -675,17 +655,17 @@ If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
             <h3 class="lib-entry-title">makeOfbizUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 This is useful to prevent bloating templates with &lt;#assign...&gt;&lt;<a href="#entry-ofbizUrl">@ofbizUrl</a>.../&gt;&lt;/#assign&gt; captures
-which is very frequent due to use of macros.      </span>
+which is very frequent due to use of macros.        </p>
                       </div>
                   </div>
             
@@ -707,16 +687,7 @@ which is very frequent due to use of macros.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Map of <a href="#entry-ofbizUrl">@ofbizUrl</a> arguments OR a string containing a uri (single parameter)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
-      </span>
-<pre>for functions, which would be unreadable here (makeOfbizUrl(&quot;main&quot;, false, false, true, true...))
-However majority of cases use only a URI so we can shortcut in that case.
-Freemarker doesn&#39;t support overloading so we basically implement it ourselves.
-Note that if we needed extra positional parameters for common cases, should keep the args map check on
-the first param only, otherwise it creates too many checks needed; this is
-consistent with macros anyway (you use either positional OR named params, you can&#39;t combine,
-so you use only args map or only positionals).</pre></span>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
               </table>
@@ -745,19 +716,19 @@ so you use only args map or only positionals).</pre></span>
             <h3 class="lib-entry-title">ofbizWebappUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizWebappUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizWebappUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.      </span>
-      <span>
-This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.      </span>
+but this is normally used to access another servlet, such as /products/GZ-1000.        </p>
+        <p>
+This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
                       </div>
                   </div>
             
@@ -814,20 +785,20 @@ This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWeba
             <h3 class="lib-entry-title">makeOfbizWebappUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizWebappUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizWebappUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.      </span>
-      <span>
+but this is normally used to access another servlet, such as /products/GZ-1000.        </p>
+        <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.
-h absPath=false, interWebapp=false, controller=false.      </span>
+h absPath=false, interWebapp=false, controller=false.        </p>
                       </div>
                   </div>
             
@@ -880,20 +851,20 @@ h absPath=false, interWebapp=false, controller=false.      </span>
             <h3 class="lib-entry-title">ofbizInterWebappUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizInterWebappUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizInterWebappUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The URI takes the basic and usual form /webappmountpoint/control/requesturi
-OR requesturi if webSiteId is specified and is a controller request.      </span>
-      <span>
+OR requesturi if webSiteId is specified and is a controller request.        </p>
+        <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with interWebapp=true and optional webSiteId; absPath is left to interpretation
-by the implementation or can be overridden; controller is left to interpretation or can be specified.      </span>
+by the implementation or can be overridden; controller is left to interpretation or can be specified.        </p>
                       </div>
                   </div>
             
@@ -951,24 +922,25 @@ by the implementation or can be overridden; controller is left to interpretation
             <h3 class="lib-entry-title">makeOfbizInterWebappUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizInterWebappUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizInterWebappUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL. Function version of @ofbizInterWebappUrl.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The URI takes the basic and usual form /webappmountpoint/control/requesturi
-OR requesturi if webSiteId is specified and is a controller request.      </span>
-      <span>
+OR requesturi if webSiteId is specified and is a controller request.        </p>
+        <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with interWebapp=true and optional webSiteId; absPath is left to interpretation
-by the implementation or can be overridden; controller is left to interpretation or can be specified.      </span>
-      <span>
-NOTE: If args is specified as map, &quot;webSiteId&quot; must be passed in args, not as argument.
-      </span>
-<pre>(This is intentional, to be consistent with macro invocations, emulated for functions)</pre>                      </div>
+by the implementation or can be overridden; controller is left to interpretation or can be specified.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If args is specified as map, &quot;webSiteId&quot; must be passed in args, not as argument.
+(This is intentional, to be consistent with macro invocations, emulated for functions)          </div>
+                      </div>
                   </div>
             
               
@@ -1021,19 +993,17 @@ NOTE: If args is specified as map, &quot;webSiteId&quot; must be passed in args,
             <h3 class="lib-entry-title">ofbizContentUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizContentUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>ofbizContentUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 THIS IS THE STOCK OFBIZ CONTENT URL MACRO. It may be modified with enhanced
-capabilities for Cato.      </span>
-      <span>
-TODO: Make this accept uri      </span>
+capabilities for Cato.        </p>
                       </div>
                   </div>
             
@@ -1055,8 +1025,8 @@ TODO: Make this accept uri      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">variant</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- (Stock Ofbiz parameter)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+(Stock Ofbiz parameter)        </span>
 </span>
                     </td>
                   </tr>
@@ -1082,8 +1052,8 @@ TODO: Make this accept uri      </span>
             <h3 class="lib-entry-title">makeOfbizContentUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizContentUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeOfbizContentUrl</code></span>
+                  </h4>
             </div>
             
               
@@ -1139,8 +1109,8 @@ TODO: Make this accept uri      </span>
             <h3 class="lib-entry-title">interpretRequestUri</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>interpretRequestUri</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>interpretRequestUri</code></span>
+                  </h4>
             </div>
             
               
@@ -1148,15 +1118,23 @@ TODO: Make this accept uri      </span>
                       <p class="lib-entry-shortdesc">Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
 Can help to cut down on macro URL arguments, but may be used anywhere.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-FIXME: This is out of date with <a href="#entry-ofbizUrl">@ofbizUrl</a> enhancements      </span>
-      <span>
+        <p>
 If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
- ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through <a href="#entry-ofbizUrl">@ofbizUrl</a>/makeOfbizUrl.
-      </span>
-<pre>Form (NOTE: order of arguments is strict; args will be stripped):
-  ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1</pre>                      </div>
+        </p>
+        <div>  <ul>
+      <li>
+        <span>
+ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through <a href="#entry-ofbizUrl">@ofbizUrl</a>/makeOfbizUrl.
+Form:
+        </span>
+<pre>ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1</pre>          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Order of arguments is strict; args will be stripped.          </div>
+      </li>
+  </ul>
+</div>
+                      </div>
                   </div>
             
               
@@ -1197,8 +1175,8 @@ The following URI forms are currently interpreted and transformed:
             <h3 class="lib-entry-title">addExtLoginKey</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addExtLoginKey</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addExtLoginKey</code></span>
+                  </h4>
             </div>
             
               
@@ -1255,8 +1233,8 @@ The following URI forms are currently interpreted and transformed:
             <h3 class="lib-entry-title">getLabel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getLabel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getLabel</code></span>
+                  </h4>
             </div>
             
               
@@ -1293,10 +1271,10 @@ The following URI forms are currently interpreted and transformed:
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(optional)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Resource name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 If label not found in uiLabelMap (preferred), falls back to lookup in this
 resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
-a whole file for one label.      </span>
+a whole file for one label.        </span>
 </span>
                     </td>
                   </tr>
@@ -1317,16 +1295,17 @@ a whole file for one label.      </span>
             <h3 class="lib-entry-title">getPropertyValue</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyValue</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyValue</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets property or void/null if missing or has no content.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: Always use default value (&quot;!&quot;) or other test operator!      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Always use default value (&quot;!&quot;) or other test operator!          </div>
                       </div>
                   </div>
             
@@ -1384,22 +1363,20 @@ NOTE: Always use default value (&quot;!&quot;) or other test operator!      </sp
             <h3 class="lib-entry-title">getPropertyMsg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyMsg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyMsg</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets property or empty string if missing (same behavior as UtilProperties).</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Uses locales. Meant for resource bundles / UI labels.
 Will use context locale if none specified.
 If msgArgs not specified, property is given access to context for substitute values (occasionally
 this is used in Ofbiz screens).
-If msgArgs is a sequence, they are passed instead of context to the property.      </span>
-      <span>
-TODO: implement as transform.      </span>
+If msgArgs is a sequence, they are passed instead of context to the property.        </p>
                       </div>
                   </div>
             
@@ -1474,16 +1451,14 @@ TODO: implement as transform.      </span>
             <h3 class="lib-entry-title">getPropertyMsgFromLocExpr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyMsgFromLocExpr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPropertyMsgFromLocExpr</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets property or empty string if missing (same behavior as UtilProperties).</p>
                       <div class="lib-entry-extradesc">
-      <span>
-TODO: implement as transform.      </span>
                       </div>
                   </div>
             
@@ -1507,8 +1482,8 @@ TODO: implement as transform.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Resource name and property name separated with &quot;#&quot;, or name alone</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- If name alone, assumes CommonUiLabels for resource.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If name alone, assumes CommonUiLabels for resource.        </span>
 </span>
                     </td>
                   </tr>
@@ -1558,8 +1533,8 @@ TODO: implement as transform.      </span>
             <h3 class="lib-entry-title">getTextLabelFromExpr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getTextLabelFromExpr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getTextLabelFromExpr</code></span>
+                  </h4>
             </div>
             
               
@@ -1567,10 +1542,10 @@ TODO: implement as transform.      </span>
                       <p class="lib-entry-shortdesc">Convenience label identifier parsing function that accepts a string in multiple formats
 that may designate a label or property as label.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 If textExpr starts with &quot;#LABEL:&quot;, the following name is taken from uiLabelMap.
 If textExpr starts with &quot;#PROP:&quot;, the following location/name is passed through to getPropertyMsgFromLocExpr
-If no such prefix in textExpr, returns the text as-is.      </span>
+If no such prefix in textExpr, returns the text as-is.        </p>
                       </div>
                   </div>
             
@@ -1634,16 +1609,17 @@ If no such prefix in textExpr, returns the text as-is.      </span>
             <h3 class="lib-entry-title">addParamDelimToUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamDelimToUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamDelimToUrl</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Adds a param delimiter to end of url if needed.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: 2016-01-21: New special case: if paramDelim is &quot;/&quot; or contains &quot;/&quot;, treat differently (because trumps &quot;?&quot;)      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+2016-01-21: New special case: if paramDelim is &quot;/&quot; or contains &quot;/&quot;, treat differently (because trumps &quot;?&quot;)          </div>
                       </div>
                   </div>
             
@@ -1687,8 +1663,8 @@ NOTE: 2016-01-21: New special case: if paramDelim is &quot;/&quot; or contains &
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;?&quot;)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Query string delimiter, usually &quot;?&quot;</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Only significant if paramDelim does not contain &quot;/&quot;      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Only significant if paramDelim does not contain &quot;/&quot;        </span>
 </span>
                     </td>
                   </tr>
@@ -1709,8 +1685,8 @@ Only significant if paramDelim does not contain &quot;/&quot;      </span>
             <h3 class="lib-entry-title">addParamsToStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamsToStr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamsToStr</code></span>
+                  </h4>
             </div>
             
               
@@ -1789,8 +1765,8 @@ Only significant if paramDelim does not contain &quot;/&quot;      </span>
             <h3 class="lib-entry-title">splitStrParams</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStrParams</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStrParams</code></span>
+                  </h4>
             </div>
             
               
@@ -1849,8 +1825,8 @@ where DELIM is specified delimiter (&amp; &amp;amp; , ; etc.).</p>
             <h3 class="lib-entry-title">trimParamStrDelims</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>trimParamStrDelims</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>trimParamStrDelims</code></span>
+                  </h4>
             </div>
             
               
@@ -1907,8 +1883,8 @@ where DELIM is specified delimiter (&amp; &amp;amp; , ; etc.).</p>
             <h3 class="lib-entry-title">splitStyleNames</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStyleNames</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStyleNames</code></span>
+                  </h4>
             </div>
             
               
@@ -1961,8 +1937,8 @@ a sequence of style names, in same order as input.                    </p>
             <h3 class="lib-entry-title">splitStyleNamesToSet</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStyleNamesToSet</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>splitStyleNamesToSet</code></span>
+                  </h4>
             </div>
             
               
@@ -2015,8 +1991,8 @@ a java Set of style names (can be seen as sequence)                    </p>
             <h3 class="lib-entry-title">joinStyleNames</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>joinStyleNames</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>joinStyleNames</code></span>
+                  </h4>
             </div>
             
               
@@ -2026,7 +2002,7 @@ a java Set of style names (can be seen as sequence)                    </p>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;#assign myVar = joinStyleNames(&quot;class1&quot;, &quot;&quot;, &quot; class3&quot;)&gt;
 </pre>                  </div>
             
@@ -2075,8 +2051,8 @@ a string of combined style names                    </p>
             <h3 class="lib-entry-title">joinStyleNamesList</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>joinStyleNamesList</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>joinStyleNamesList</code></span>
+                  </h4>
             </div>
             
               
@@ -2086,7 +2062,7 @@ a string of combined style names                    </p>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;#assign myVar = joinStyleNames([&quot;class1&quot;, &quot;&quot;, &quot; class3&quot;])&gt;
 </pre>                  </div>
             
@@ -2135,16 +2111,17 @@ a string of combined style names                    </p>
             <h3 class="lib-entry-title">getStyleNamesByPrefix</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getStyleNamesByPrefix</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getStyleNamesByPrefix</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns all style names with given prefix, as sequence.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: now recognizes special syntax cato class args.      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+now recognizes special syntax cato class args.          </div>
                       </div>
                   </div>
             
@@ -2209,16 +2186,17 @@ true if class/style string contains given style, false otherwise                
             <h3 class="lib-entry-title">containsStyleName</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>containsStyleName</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>containsStyleName</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns true if class/style string contains given style.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: now recognizes special syntax cato class args.      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+now recognizes special syntax cato class args.          </div>
                       </div>
                   </div>
             
@@ -2278,8 +2256,8 @@ true if class/style string contains given style, false otherwise                
             <h3 class="lib-entry-title">containsStyleNamePrefix</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>containsStyleNamePrefix</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>containsStyleNamePrefix</code></span>
+                  </h4>
             </div>
             
               
@@ -2343,8 +2321,8 @@ true if class/style string contains given style prefix, false otherwise         
             <h3 class="lib-entry-title">removeStyleNames</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>removeStyleNames</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>removeStyleNames</code></span>
+                  </h4>
             </div>
             
               
@@ -2352,8 +2330,9 @@ true if class/style string contains given style prefix, false otherwise         
                       <p class="lib-entry-shortdesc">Removes style classes from a style string.
 strips lead/trailing space.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: now recognizes special syntax cato class args.      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+now recognizes special syntax cato class args.          </div>
                       </div>
                   </div>
             
@@ -2386,8 +2365,8 @@ NOTE: now recognizes special syntax cato class args.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((list)|(string), required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Name or mames to remove</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Sequence of names OR space-separated string of names OR single name      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Sequence of names OR space-separated string of names OR single name        </span>
 </span>
                     </td>
                   </tr>
@@ -2415,8 +2394,8 @@ the style string with names removed, reformatted, in same order as input        
             <h3 class="lib-entry-title">stripParamStrFromUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>stripParamStrFromUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>stripParamStrFromUrl</code></span>
+                  </h4>
             </div>
             
               
@@ -2462,8 +2441,8 @@ the style string with names removed, reformatted, in same order as input        
             <h3 class="lib-entry-title">addParamsToUrl</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamsToUrl</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addParamsToUrl</code></span>
+                  </h4>
             </div>
             
               
@@ -2542,8 +2521,8 @@ the style string with names removed, reformatted, in same order as input        
             <h3 class="lib-entry-title">escapeUrlParamDelims</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapeUrlParamDelims</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapeUrlParamDelims</code></span>
+                  </h4>
             </div>
             
               
@@ -2600,8 +2579,8 @@ the style string with names removed, reformatted, in same order as input        
             <h3 class="lib-entry-title">camelCaseToDashLowerName</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>camelCaseToDashLowerName</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>camelCaseToDashLowerName</code></span>
+                  </h4>
             </div>
             
               
@@ -2631,20 +2610,21 @@ the style string with names removed, reformatted, in same order as input        
             <h3 class="lib-entry-title">isObjectType</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>isObjectType</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>isObjectType</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Checks the given FTL object against a set of logical types.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-This is used to ensure type checks are valid across both native FTL types and java/groovy types received in context.      </span>
-      <span>
-WARN: The FTL built-in ?is_string and ?is_hash are insufficient for BeanModel-based widget context vars.
-      </span>
-<pre>In many cases you must use this function.</pre>                      </div>
+        <p>
+This is used to ensure type checks are valid across both native FTL types and java/groovy types received in context.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The FTL built-in ?is_string and ?is_hash are insufficient for BeanModel-based widget context vars.
+In many cases you must use this function.          </div>
+                      </div>
                   </div>
             
               
@@ -2668,21 +2648,21 @@ WARN: The FTL built-in ?is_string and ?is_hash are insufficient for BeanModel-ba
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-string: Anything meant to be a string WITHOUT being a more complex type.      </span>
+        <span>
+string: Anything meant to be a string WITHOUT being a more complex type.        </span>
       </li>
       <li>
-      <span>
+        <span>
 map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map)
-(simplemap or complexmap)      </span>
+(simplemap or complexmap)        </span>
       </li>
       <li>
-      <span>
-simplemap: Simple hash only (?keys to get elems).      </span>
+        <span>
+simplemap: Simple hash only (?keys to get elems).        </span>
       </li>
       <li>
-      <span>
-complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).      </span>
+        <span>
+complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).        </span>
       </li>
   </ul>
 </div>
@@ -2721,18 +2701,18 @@ complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet()
             <h3 class="lib-entry-title">copyObject</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>copyObject</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>copyObject</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Performs a shallow copy of an object (map or list).</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Usually not needed in FTL; provided for advanced usage.
 The resulting underlying type may differ from the original, but tries to keep the type similar when
-possible.      </span>
+possible.        </p>
                       </div>
                   </div>
             
@@ -2779,31 +2759,30 @@ possible.      </span>
             <h3 class="lib-entry-title">copyMap</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>copyMap</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>copyMap</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Performs a shallow copy of a map.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Usually not needed in FTL; for advanced usage. The resulting underlying type may differ from the
-original; in principle tries to preserve, but in most cases will create a simple FTL hash.      </span>
-      <span>
-NOTES:
-      </span>
-        <div>  <ul>
+original; in principle tries to preserve, but in most cases will create a simple FTL hash.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
       <li>
-      <span>
-copyObject will also work fine on maps, but this provides more map-specific options.      </span>
+        <span>
+copyObject will also work fine on maps, but this provides more map-specific options.        </span>
       </li>
       <li>
-      <span>
-This will only copy maps that don&#39;t have ?keys support if mode is include (&quot;i&quot;) and inExKeys specified.      </span>
+        <span>
+This will only copy maps that don&#39;t have ?keys support if mode is include (&quot;i&quot;) and inExKeys specified.        </span>
       </li>
   </ul>
-</div>
+          </div>
                       </div>
                   </div>
             
@@ -2839,12 +2818,12 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
                       <span class="lib-entry-param-desc-shortdesc">Optional mode flags</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-&quot;e&quot;: exclude listed keys      </span>
+        <span>
+&quot;e&quot;: exclude listed keys        </span>
       </li>
       <li>
-      <span>
-&quot;i&quot;: include only listed keys      </span>
+        <span>
+&quot;i&quot;: include only listed keys        </span>
       </li>
   </ul>
 </div>
@@ -2883,8 +2862,8 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
             <h3 class="lib-entry-title">toSimpleMap</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toSimpleMap</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toSimpleMap</code></span>
+                  </h4>
             </div>
             
               
@@ -2892,8 +2871,8 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
                       <p class="lib-entry-shortdesc">Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
 any copies.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.      </span>
+        <p>
+If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.        </p>
                       </div>
                   </div>
             
@@ -2940,8 +2919,8 @@ If the object is not a complex map but already another type of map, returns it a
             <h3 class="lib-entry-title">mapKeys</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapKeys</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mapKeys</code></span>
+                  </h4>
             </div>
             
               
@@ -2949,8 +2928,8 @@ If the object is not a complex map but already another type of map, returns it a
                       <p class="lib-entry-shortdesc">Gets the logical map keys from any map-like object, whether an FTL hash (?keys) or
 a bean-wrapped context var (.ketSet()).</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Unlike ?keys, behaves as expected on both maps from screen context and FTL.      </span>
+        <p>
+Unlike ?keys, behaves as expected on both maps from screen context and FTL.        </p>
                       </div>
                   </div>
             
@@ -2997,31 +2976,29 @@ Unlike ?keys, behaves as expected on both maps from screen context and FTL.     
             <h3 class="lib-entry-title">concatMaps</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>concatMaps</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>concatMaps</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Concatenates two maps similar to FTL &quot;+&quot; hash operator, but works with ofbiz context maps as well.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-By default, result is now always a simple map, so type is predictable.      </span>
-      <span>
+        <p>
+By default, result is now always a simple map, so type is predictable.        </p>
+        <p>
 Using &quot;+&quot; on screen context bean maps causes problems such as &quot;hiding&quot; of the bean map type underneath
-an FTL wrapper, which wrecks all subsequent type checks. And others.      </span>
-      <span>
-TODO?: This is currently inefficient; but must guarantee immutability.
-      </span>
-<pre>Note currently forced to implement in FTL (not java transform) if want to exploit &quot;+&quot; operator.</pre>      <span>
-IMPL NOTE: it&#39;s part of this function&#39;s interface that any of the arguments for which ?has_content is false,
-      </span>
-<pre>will not be used. this covers the cases where non-map types are passed as well (&quot;&quot;, [], etc.).
-sometimes an empty non-map type will be passed, should be considered valid.
-shouldn&#39;t need to check for non-empty non-map types however, those are all clear coding errors.
-e.g., this is used at beginning of macros that take inlineArgs... or inlineAttribs...
-they count on this method to handle empty sequence case.
-they also depend on this for the toSimple=true conversion.</pre>                      </div>
+an FTL wrapper, which wrecks all subsequent type checks. And others.        </p>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+It&#39;s part of this function&#39;s interface that any of the arguments for which ?has_content is false,
+will not be used. This covers the cases where non-map types are passed as well (&quot;&quot;, [], etc.).
+Sometimes an empty non-map type will be passed, should be considered valid.
+Shouldn&#39;t need to check for non-empty non-map types however, as those are all clear coding errors.
+e.g., This is used at beginning of macros that take inlineArgs... or inlineAttribs...
+They count on this method to handle empty sequence case.
+They also depend on this for the toSimple=true conversion.          </div>
+                      </div>
                   </div>
             
               
@@ -3093,8 +3070,8 @@ they also depend on this for the toSimple=true conversion.</pre>                
             <h3 class="lib-entry-title">evalToSimpleMap</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalToSimpleMap</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalToSimpleMap</code></span>
+                  </h4>
             </div>
             
               
@@ -3102,10 +3079,8 @@ they also depend on this for the toSimple=true conversion.</pre>                
                       <p class="lib-entry-shortdesc">Similar to toSimpleMap but if the object is a string, tries to ?eval it to a map;
 otherwise converts the map to a simple hash.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Enclosing braces are optional.      </span>
-      <span>
-TODO: implement as transform      </span>
+        <p>
+Enclosing braces are optional.        </p>
                       </div>
                   </div>
             
@@ -3147,18 +3122,18 @@ TODO: implement as transform      </span>
             <h3 class="lib-entry-title">toSet</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toSet</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toSet</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns a bean-wrapped java Set for a sequence or collection.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 If already a bean-wrapped Set, returns as-is; does not create a copy (this is analogous to toSimpleMap
 and also org.ofbiz.base.util.UtilMisc.toSet).
-If called without parameters, creates new empty set.      </span>
+If called without parameters, creates new empty set.        </p>
                       </div>
                   </div>
             
@@ -3180,8 +3155,8 @@ If called without parameters, creates new empty set.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((collection))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">(optional) The collection</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- If omitted, creates an empty Set.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If omitted, creates an empty Set.        </span>
 </span>
                     </td>
                   </tr>
@@ -3207,8 +3182,8 @@ If called without parameters, creates new empty set.      </span>
             <h3 class="lib-entry-title">compileProgressSuccessAction</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileProgressSuccessAction</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileProgressSuccessAction</code></span>
+                  </h4>
             </div>
             
               
@@ -3254,8 +3229,8 @@ If called without parameters, creates new empty set.      </span>
             <h3 class="lib-entry-title">getCurrentSectionLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCurrentSectionLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCurrentSectionLevel</code></span>
+                  </h4>
             </div>
             
               
@@ -3312,16 +3287,16 @@ If called without parameters, creates new empty set.      </span>
             <h3 class="lib-entry-title">getDefaultSectionLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultSectionLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultSectionLevel</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets default section level.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-This should almost never be used except in odd macro implementations.      </span>
+        <p>
+This should almost never be used except in odd macro implementations.        </p>
                       </div>
                   </div>
             
@@ -3358,16 +3333,16 @@ This should almost never be used except in odd macro implementations.      </spa
             <h3 class="lib-entry-title">setCurrentSectionLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setCurrentSectionLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setCurrentSectionLevel</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Sets current global section level manually.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a>.      </span>
+        <p>
+For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a>.        </p>
                       </div>
                   </div>
             
@@ -3420,8 +3395,8 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
             <h3 class="lib-entry-title">getCurrentHeadingLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCurrentHeadingLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCurrentHeadingLevel</code></span>
+                  </h4>
             </div>
             
               
@@ -3478,8 +3453,8 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
             <h3 class="lib-entry-title">getDefaultHeadingLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultHeadingLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultHeadingLevel</code></span>
+                  </h4>
             </div>
             
               
@@ -3520,16 +3495,16 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
             <h3 class="lib-entry-title">setCurrentHeadingLevel</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setCurrentHeadingLevel</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setCurrentHeadingLevel</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Set current global heading level manually.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a> (but a parent <a href="standard/htmlStructure.html#entry-section">@section</a> will restore heading upon closing).      </span>
+        <p>
+For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a> (but a parent <a href="standard/htmlStructure.html#entry-section">@section</a> will restore heading upon closing).        </p>
                       </div>
                   </div>
             
@@ -3582,22 +3557,14 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
             <h3 class="lib-entry-title">objectAsScript</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>objectAsScript</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>objectAsScript</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Output a Freemarker variable as a value in Javascript, JSON or similar script language.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-DEV NOTE: This is complicated in Ofbiz because Maps and objects from
-      </span>
-<pre>widget/java/groovy context don&#39;t behave same as FTL types.
-Currently can&#39;t use ?keys on Maps and generally for most types gotten from
-groovy context, the ?is_ don&#39;t work like you&#39;d expect (a lot of vars
-implement ?string and ?is_hash_ex that aren&#39;t really either of these, so leave for last)</pre>      <span>
-TODO: doesn&#39;t handle dates (ambiguous?)      </span>
                       </div>
                   </div>
             
@@ -3688,7 +3655,6 @@ TODO: doesn&#39;t handle dates (ambiguous?)      </span>
           </div>
           
       </div>
-      
 
       <hr />  
 
@@ -3696,7 +3662,11 @@ TODO: doesn&#39;t handle dates (ambiguous?)      </span>
       <div class="lib-section">
          
           <h2 class="lib-section-title">API-WRITING UTILITIES</h2>
-    
+
+          <p>        <span>
+Intended to assist implementation of template macros.        </span>
+</p>
+
           
           <hr />
           <a name="entry-mergeArgMaps"></a>
@@ -3705,8 +3675,8 @@ TODO: doesn&#39;t handle dates (ambiguous?)      </span>
             <h3 class="lib-entry-title">mergeArgMaps</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMaps</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMaps</code></span>
+                  </h4>
             </div>
             
               
@@ -3714,18 +3684,17 @@ TODO: doesn&#39;t handle dates (ambiguous?)      </span>
                       <p class="lib-entry-shortdesc">Merges cato macro inlineArgs/args/defaultArgs/overrideArgs argument maps for macros implementing
 the advanced argument interface.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The advanced interface follows the
-      </span>
-<pre>&lt;#macro name args={} inlineArgs...&gt;</pre>      <span>
-
-pattern, whereby inlineArgs map is merged over the args map, over defaults.      </span>
-      <span>
+        </p>
+<pre>&lt;#macro name args={} inlineArgs...&gt;</pre>        <p>
+pattern, whereby inlineArgs map is merged over the args map, over defaults.        </p>
+        <p>
 It cannot be used for the &#39;attribs={} inlineAttribs...&#39; pattern (see mergeAttribMaps).
-Instead, it can help in implementing that pattern within the &#39;args={} inlineArgs...&#39; pattern.      </span>
-      <span>
-This is specific to cato macro patterns and may contain extra handling besides concatenating maps.      </span>
-      <span>
+Instead, it can help in implementing that pattern within the &#39;args={} inlineArgs...&#39; pattern.        </p>
+        <p>
+This is specific to cato macro patterns and may contain extra handling besides concatenating maps.        </p>
+        <p>
 For one, this currently records the macro&#39;s static named args as passed in the defaultArgs and overrideArgs maps
 in a list of names with the key &quot;localArgNames&quot; in the resulting map.
 It will also append the names to a list read back from the incoming &quot;args&quot; map with
@@ -3735,40 +3704,36 @@ between delegating/overriding macro calls that make use of mergeArgMaps without
 having to recreate new intermediate maps. allArgNames keep track of all the explicit
 args used by all the macros in a call chain, which can then be used to identify
 the remaining &quot;extra&quot; arguments (analogous to varArgs in FTL&#39;s &lt;#macro varArgs...&gt;).
-WARN: in some cases allArgNames accumulation and reuse of maps could be undesirable.
-      </span>
-<pre>(currently workaround this by using localArgNames only and/or creating new intermediate maps).</pre>      <span>
-
-NOTE: currently the result may often contain duplicate names (is not a set).
-      </span>
-<pre>This is normal and should not be changed; code that uses these lists may make a Set if needed.</pre>      <span>
-
-TODO: current macros must be translated to exploit this mechanism.      </span>
-      <span>
+        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+in some cases allArgNames accumulation and reuse of maps could be undesirable.
+(currently workaround this by using localArgNames only and/or creating new intermediate maps).          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+currently the result may often contain duplicate names (is not a set).
+This is normal and should not be changed; code that uses these lists may make a Set if needed.          </div>
+        <p>
 The result is the caller can access any arg names in the resulting map which had a default
 value using simple syntax guaranteed not to cause missing values. e.g
-      </span>
+        </p>
 <pre>&lt;#macro name args={} inlineArgs...&gt;
   &lt;#local args = mergeArgMaps(inlineArgs, args, {&quot;myParam1&quot;:true})&gt;
   &lt;#if args.myParam1&gt;
     ...
   &lt;/#if&gt;
-&lt;/#macro&gt;</pre>      <span>
-
+&lt;/#macro&gt;</pre>        <p>
 OR
-      </span>
+        </p>
 <pre>&lt;#macro name args={} inlineArgs...&gt;
   &lt;#local args = mergeArgMaps(inlineArgs, args, {&quot;myParam1&quot;:true})&gt;
   &lt;#local dummy = localsPutAll(args)&gt;
   &lt;#if myParam1&gt;
     ...
   &lt;/#if&gt;
-&lt;/#macro&gt;</pre>      <span>
+&lt;/#macro&gt;</pre>        <p>
 This can also be used for functions, but for functions, the inlineArgs param should always
-be passed an empty hash (functions don&#39;t support named parameters).      </span>
-      <span>
-TODO: rewrite this macro using FTL transform; also see <a href="#entry-mergeArgMapsToLocals">@mergeArgMapsToLocals</a> below
-TODO?: may want helper booleans to control in/out allArgNames?      </span>
+be passed an empty hash (functions don&#39;t support named parameters).        </p>
                       </div>
                   </div>
             
@@ -3793,8 +3758,8 @@ TODO?: may want helper booleans to control in/out allArgNames?      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">The args map (normal priority)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- May be any type of map.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+May be any type of map.        </span>
 </span>
                     </td>
                   </tr>
@@ -3805,8 +3770,8 @@ TODO?: may want helper booleans to control in/out allArgNames?      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">The macro&#39;s inline args (high priority)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Expects either FTL hash or empty sequence (but not non-empty sequence).      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Expects either FTL hash or empty sequence (but not non-empty sequence).        </span>
 </span>
                     </td>
                   </tr>
@@ -3817,12 +3782,12 @@ Expects either FTL hash or empty sequence (but not non-empty sequence).      </s
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Arg defaults (lowest priority)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Expects an FTL hash only. The key names in this map are also used to
 create a list of the known arguments this macro accepts.
 As such, even if the macro does not need this map, it should pass it along
 with the names of all supported arguments.
-The names end up in the resulting map as localArgNames.      </span>
+The names end up in the resulting map as localArgNames.        </span>
 </span>
                     </td>
                   </tr>
@@ -3833,17 +3798,20 @@ The names end up in the resulting map as localArgNames.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Extra macro args that override all others (highest priority)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Expects an FTL hash ONLY (not context map).
 The names used here also count toward the localArgNames.
-NOTE: If a key is present in both defaultArgs and overrideArgs, it will result in
-      </span>
-<pre>two names added to localArgNames/allArgNames. The code that finally uses
-those lists should make a Set if it needs to.</pre>      <span>
-
-NOTE: This map is present for cases where the others are insufficient.
-      </span>
-<pre>but otherwise should avoid using this map when possible.</pre></span>
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If a key is present in both defaultArgs and overrideArgs, it will result in
+two names added to localArgNames/allArgNames. The code that finally uses
+those lists should make a Set if it needs to.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This map is present for cases where the others are insufficient.
+but otherwise should avoid using this map when possible.          </div>
+</span>
                     </td>
                   </tr>
               </table>
@@ -3863,8 +3831,8 @@ NOTE: This map is present for cases where the others are insufficient.
             <h3 class="lib-entry-title">mergeArgMapsBasic</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMapsBasic</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeArgMapsBasic</code></span>
+                  </h4>
             </div>
             
               
@@ -3914,8 +3882,8 @@ operations on them.</p>
             <h3 class="lib-entry-title">getCatoMacroDefaultArgs</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCatoMacroDefaultArgs</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getCatoMacroDefaultArgs</code></span>
+                  </h4>
             </div>
             
               
@@ -3923,15 +3891,11 @@ operations on them.</p>
                       <p class="lib-entry-shortdesc">Returns all the known args and default args for a cato macro that uses the advanced
 args pattern, where the macro resides in the given namespace (or namespace-like map).</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Basically, the macros should always have default values (in the event one was missing, this method
 should automatically give one such as empty string).
-If namespace is omitted, currently (2015-12-14), this will use &quot;.vars&quot; as the namespace.      </span>
-      <span>
-DEV NOTE: there could be some use for the ?namespace built-in somewhere around this function
-      </span>
-<pre>or more generally the default args, but so far elusive. only works on macro/function so
-maybe best not to rely on it.</pre>                      </div>
+If namespace is omitted, currently (2015-12-14), this will use &quot;.vars&quot; as the namespace.        </p>
+                      </div>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -3957,8 +3921,8 @@ maybe best not to rely on it.</pre>                      </div>
             <h3 class="lib-entry-title">mergeAttribMaps</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeAttribMaps</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>mergeAttribMaps</code></span>
+                  </h4>
             </div>
             
               
@@ -3966,18 +3930,17 @@ maybe best not to rely on it.</pre>                      </div>
                       <p class="lib-entry-shortdesc">Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros implementing
 a special attribs/inlineAttribs pattern for HTML element attributes.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 This is found in the
-      </span>
-<pre>&lt;#macro name arg1=&quot;&quot; arg2=&quot;&quot; ... argN=&quot;&quot; attribs={} inlineAttribs...&gt;</pre>      <span>
-
+        </p>
+<pre>&lt;#macro name arg1=&quot;&quot; arg2=&quot;&quot; ... argN=&quot;&quot; attribs={} inlineAttribs...&gt;</pre>        <p>
 pattern, whereby inlineAttribs map is merged over the attribs map, and these maps only contain extra
-element attributes.      </span>
-      <span>
+element attributes.        </p>
+        <p>
 This pattern is simpler but much less flexible than the &#39;args={} inlineArgs...&#39; pattern.
-They are different and NOT interchangeable.      </span>
-      <span>
-Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.      </span>
+They are different and NOT interchangeable.        </p>
+        <p>
+Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.        </p>
                       </div>
                   </div>
             
@@ -4006,8 +3969,8 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
             <h3 class="lib-entry-title">makeAttribMapFromArgs</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeAttribMapFromArgMap</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>makeAttribMapFromArgMap</code></span>
+                  </h4>
             </div>
             
               
@@ -4015,14 +3978,19 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
                       <p class="lib-entry-shortdesc">Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an &quot;attribs&quot;
 sub-map and blends them together logically to make an attribs map.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
-NOTE: this currently does not change the exclude lists (see <a href="#entry-mergeArgMaps">@mergeArgMaps</a>), but could in the future.      </span>
-      <span>
-NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus &quot;attribs&quot;, &quot;allArgNames&quot;, &quot;localArgNames&quot;, &quot;excludeNames&quot; and &quot;noExcludeNames&quot; members.      </span>
-      <span>
-Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.      </span>
+        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+this currently does not change the exclude lists (see <a href="#entry-mergeArgMaps">@mergeArgMaps</a>), but could in the future.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The resulting map does not contain only attribs. It may contain a large number of unrelated          </div>
+        <p>
+members plus &quot;attribs&quot;, &quot;allArgNames&quot;, &quot;localArgNames&quot;, &quot;excludeNames&quot; and &quot;noExcludeNames&quot; members.        </p>
+        <p>
+Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but implied logic differs.        </p>
                       </div>
                   </div>
             
@@ -4057,8 +4025,8 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
             <h3 class="lib-entry-title">getAttribMapAllExcludes</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAttribMapAllExcludes</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAttribMapAllExcludes</code></span>
+                  </h4>
             </div>
             
               
@@ -4067,8 +4035,6 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
 plus &quot;noExclude&quot; alternatives of all the aforementioned that prevent excludes.
 The result is returned as a bean-wrapped Set.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-TODO: implement as transform.      </span>
                       </div>
                   </div>
             
@@ -4104,8 +4070,8 @@ TODO: implement as transform.      </span>
             <h3 class="lib-entry-title">compileClassArg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileClassArg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileClassArg</code></span>
+                  </h4>
             </div>
             
               
@@ -4113,59 +4079,64 @@ TODO: implement as transform.      </span>
                       <p class="lib-entry-shortdesc">Compiles a class argument as common to most standard macros,
 producing a simple list of class names from a class arg, adding optional default.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: Default value may also be set prior to using addClassArgDefault on the class arg instead
-      </span>
-<pre>of passing as parameter.</pre>      <span>
-CLASS ARGUMENT FUNCTIONS      </span>
-      <span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Default value may also be set prior to using addClassArgDefault on the class arg instead
+of passing as parameter.          </div>
+        <p>
+CLASS ARGUMENT FUNCTIONS        </p>
+        <p>
 This function and the others below help parse class argument passed to macros.
-Not for use in templates.      </span>
-      <span>
+Not for use in templates.        </p>
+        <p>
 Macro class arguments can have essential (required) and non-essential (default)
 defaults and values added by the macro before producing the final class attribute.
 The essentials can&#39;t be omitted.
 The non-essentials in some cases you want to replace with value and other times
 you want to keep them but only add extra classes. Having multiple args for each elem
-class arg gets heavy.      </span>
-      <span>
+class arg gets heavy.        </p>
+        <p>
 So to address all the cases, these functions cause the class arg on all supporting macros
-to accept following values:      </span>
-      <span>
+to accept following values:        </p>
+        <p>
 - string with &quot;+&quot; prefix or empty string &quot;&quot;:
-      </span>
+        </p>
 <pre>means allow macro to add non-essential default classes.
 the class names after the &quot;+&quot; will be appended to any classes added
 by the macro, and will never replace macro defaults.
 this means the same as boolean true but with extra classes provided.
-in other words, appends extra classes.</pre>      <span>
-
+in other words, appends extra classes.</pre>        <p>
 - string with &quot;=&quot; prefix or non-empty string:
-      </span>
+        </p>
 <pre>means prevent macro from adding non-essential default classes.
 class names given will replace macro defaults, i.e. non-essential classes.
 macro may still add its own required classes.
 this is the same as boolean false but with replacement classes provided.
-in other words, replaces default (non-essential) classes.</pre>      <span>
+in other words, replaces default (non-essential) classes.</pre>        <p>
 In one or two cases the non-essential defaults are &quot;conditionally essential&quot;
 so class=&quot;=&quot; makes little sense, but we dont really need to handle that.
-NOTE: Not all macros support all the cases but the syntax is supported everywhere
-now anyway so doesn&#39;t matter to templates.      </span>
-      <span>
+        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Not all macros support all the cases but the syntax is supported everywhere          </div>
+        <p>
+now anyway so doesn&#39;t matter to templates.        </p>
+        <p>
 compileClassArg should usually be used as late as possible in macro:
-      </span>
-<pre>&lt;#local classes = compileClassArg(class)&gt;</pre>      <span>
-
+        </p>
+<pre>&lt;#local classes = compileClassArg(class)&gt;</pre>        <p>
 A defaultVal can be set which is the same as doing:
-      </span>
+        </p>
 <pre>&lt;#local class = addClassArgDefault(class, &quot;default-class&quot;)&gt;
-&lt;#local classes = compileClassArg(class)&gt;</pre>      <span>
-IMPORTANT:
+&lt;#local classes = compileClassArg(class)&gt;</pre>          <div class="lib-text-note">
+            <strong>IMPORTANT: </strong>
+          </div>
+        <p>
 Currently in some cases the logic above breaks too much compatibility. So it is not universally used
 for screen/form/menu widgets although often supported.
 For these, in some places an &quot;xxxExplicit&quot; version of functions are used instead which will only
 replace if explicitly prefixed with &quot;=&quot;, but not if no prefix. Otherwise, existing widget styles break
-the grid everywhere.      </span>
+the grid everywhere.        </p>
                       </div>
                   </div>
             
@@ -4192,8 +4163,8 @@ the grid everywhere.      </span>
             <h3 class="lib-entry-title">compileClassArgExplicit</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileClassArgExplicit</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>compileClassArgExplicit</code></span>
+                  </h4>
             </div>
             
               
@@ -4225,8 +4196,8 @@ for compatibility in some cases</p>
             <h3 class="lib-entry-title">compiledClassAttribStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>compiledClassAttribStr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>compiledClassAttribStr</code></span>
+                  </h4>
             </div>
             
               
@@ -4258,8 +4229,8 @@ with leading space.</p>
             <h3 class="lib-entry-title">compiledClassAttribStrExplicit</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>compiledClassAttribStrExplicit</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>compiledClassAttribStrExplicit</code></span>
+                  </h4>
             </div>
             
               
@@ -4290,8 +4261,8 @@ with leading space.</p>
             <h3 class="lib-entry-title">toClassArgAppending</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toClassArgAppending</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toClassArgAppending</code></span>
+                  </h4>
             </div>
             
               
@@ -4321,8 +4292,8 @@ with leading space.</p>
             <h3 class="lib-entry-title">toClassArgReplacing</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toClassArgReplacing</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toClassArgReplacing</code></span>
+                  </h4>
             </div>
             
               
@@ -4352,30 +4323,31 @@ with leading space.</p>
             <h3 class="lib-entry-title">addClassArg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArg</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Adds a required class, that must appear in class string.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: Does not influence the default value logic perceived by addClassArgDefault (user intention preserved).
-      </span>
-<pre>It does this by prefixing result with &quot;+&quot; string where necessary.</pre>      <span>
-ADD CLASS ARG FUNCTIONS      </span>
-      <span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Does not influence the default value logic perceived by addClassArgDefault (user intention preserved).
+It does this by prefixing result with &quot;+&quot; string where necessary.          </div>
+        <p>
+ADD CLASS ARG FUNCTIONS        </p>
+        <p>
 These functions take a template-level/logical cato macro &quot;class&quot; arg and add to it the given class.
-Should be called by the implementing macros only.      </span>
-      <span>
+Should be called by the implementing macros only.        </p>
+        <p>
 Depending on the previous value in class, non-essential (default) values may simply be discarded, but
-essentials (required) will always be added in some way, transforming the class value.      </span>
-      <span>
-The newClass parameter is a simple string literal and is not interpreted.      </span>
-      <span>
+essentials (required) will always be added in some way, transforming the class value.        </p>
+        <p>
+The newClass parameter is a simple string literal and is not interpreted.        </p>
+        <p>
 These are non-destructive except for addClassArgReplacing which always causes the string to become
-a replacing string (&quot;=&quot;).      </span>
+a replacing string (&quot;=&quot;).        </p>
                       </div>
                   </div>
             
@@ -4402,8 +4374,8 @@ a replacing string (&quot;=&quot;).      </span>
             <h3 class="lib-entry-title">addClassArgReplacing</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgReplacing</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgReplacing</code></span>
+                  </h4>
             </div>
             
               
@@ -4411,10 +4383,11 @@ a replacing string (&quot;=&quot;).      </span>
                       <p class="lib-entry-shortdesc">Special case of addClassArg where the required class will become a replacing string (&quot;=&quot; prefix),
 though will not squash previous values.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: This destroys information about what macro user requested and affects the default value logic
-      </span>
-<pre>perceived by addClassArgDefault.</pre>                      </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This destroys information about what macro user requested and affects the default value logic
+perceived by addClassArgDefault.          </div>
+                      </div>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -4440,8 +4413,8 @@ NOTE: This destroys information about what macro user requested and affects the 
             <h3 class="lib-entry-title">addClassArgDefault</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgDefault</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgDefault</code></span>
+                  </h4>
             </div>
             
               
@@ -4473,8 +4446,8 @@ It adds default if class is true, empty or starts with &quot;+&quot;.</p>
             <h3 class="lib-entry-title">addClassArgDefaultExplicit</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgDefaultExplicit</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addClassArgDefaultExplicit</code></span>
+                  </h4>
             </div>
             
               
@@ -4506,8 +4479,8 @@ for compatibility in some cases</p>
             <h3 class="lib-entry-title">combineClassArgs</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>combineClassArgs</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>combineClassArgs</code></span>
+                  </h4>
             </div>
             
               
@@ -4516,19 +4489,19 @@ for compatibility in some cases</p>
 The second almost always overrides the first, except when second is appending a class
 with &quot;+&quot;, in which case depends on the first.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Essentially it extends the intended use of the class arg to mean &quot;+&quot; also allows appending
-of previous values (in addition of being an appending value itself).      </span>
-      <span>
-NOTE: Even if the second arg is merely &quot;+&quot; (which usually means &quot;use defaults&quot; for cato macros),
-      </span>
-<pre>this method will return &quot;+&quot; and dismiss the first argument. &quot;+&quot; is not treated as
+of previous values (in addition of being an appending value itself).        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Even if the second arg is merely &quot;+&quot; (which usually means &quot;use defaults&quot; for cato macros),
+this method will return &quot;+&quot; and dismiss the first argument. &quot;+&quot; is not treated as
 pass-through here. This does not seem consistent,
 but is chosen explicitly so that caller/macro decides what the &quot;pass-through&quot; value
 is supposed to be. Here, we assume &quot;+&quot; was passed explicitly to override the first.
 We only treat &quot;+&quot; with an arg.
-In other words, can see this as another kludge for lack of null values in freemarker.
-TODO: review this</pre>                      </div>
+In other words, can see this as another kludge for lack of null values in freemarker.          </div>
+                      </div>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -4554,8 +4527,8 @@ TODO: review this</pre>                      </div>
             <h3 class="lib-entry-title">getPlainClassArgNames</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPlainClassArgNames</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getPlainClassArgNames</code></span>
+                  </h4>
             </div>
             
               
@@ -4585,8 +4558,8 @@ TODO: review this</pre>                      </div>
             <h3 class="lib-entry-title">getClassArgPrefix</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getClassArgPrefix</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getClassArgPrefix</code></span>
+                  </h4>
             </div>
             
               
@@ -4616,8 +4589,8 @@ TODO: review this</pre>                      </div>
             <h3 class="lib-entry-title">translateStyleStrClassesArg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrClassesArg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrClassesArg</code></span>
+                  </h4>
             </div>
             
               
@@ -4625,11 +4598,11 @@ TODO: review this</pre>                      </div>
                       <p class="lib-entry-shortdesc">Translates a class arg from a string-only representation to a FTL value which can be passed as
 macro args processed by compileClassArg.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Usually those macro args take true or false by default.      </span>
-      <span>
+        <p>
+Usually those macro args take true or false by default.        </p>
+        <p>
 Needed for string repr of booleans and because empty string &quot;&quot; may have different meanings
-depending on context. also translates booleans.      </span>
+depending on context. also translates booleans.        </p>
                       </div>
                   </div>
             
@@ -4664,8 +4637,8 @@ depending on context. also translates booleans.      </span>
             <h3 class="lib-entry-title">translateStyleStrBoolArg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrBoolArg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrBoolArg</code></span>
+                  </h4>
             </div>
             
               
@@ -4673,8 +4646,8 @@ depending on context. also translates booleans.      </span>
                       <p class="lib-entry-shortdesc">Translates a bool arg from a string-only representation to a FTL value which can be passed as
 macro args expected to be booleans.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Usually those macro args take &quot;&quot; by default, to mean default.      </span>
+        <p>
+Usually those macro args take &quot;&quot; by default, to mean default.        </p>
                       </div>
                   </div>
             
@@ -4709,8 +4682,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
             <h3 class="lib-entry-title">translateStyleStrNumberArg</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrNumberArg</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>translateStyleStrNumberArg</code></span>
+                  </h4>
             </div>
             
               
@@ -4718,8 +4691,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
                       <p class="lib-entry-shortdesc">Translates a number arg from a string-only representation to a FTL value which can be passed as
 macro args expected to be numbers.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Usually those macro args take &quot;&quot; by default, to mean default.      </span>
+        <p>
+Usually those macro args take &quot;&quot; by default, to mean default.        </p>
                       </div>
                   </div>
             
@@ -4754,8 +4727,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
             <h3 class="lib-entry-title">pushRequestStack</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>pushRequestStack</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>pushRequestStack</code></span>
+                  </h4>
             </div>
             
               
@@ -4782,8 +4755,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -4819,8 +4792,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
             <h3 class="lib-entry-title">popRequestStack</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>popRequestStack</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>popRequestStack</code></span>
+                  </h4>
             </div>
             
               
@@ -4846,8 +4819,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -4873,8 +4846,8 @@ Usually those macro args take &quot;&quot; by default, to mean default.      </s
             <h3 class="lib-entry-title">setLastRequestStack</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setLastRequestStack</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setLastRequestStack</code></span>
+                  </h4>
             </div>
             
               
@@ -4902,8 +4875,8 @@ do a pushRequestStack, and much more efficient.</p>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -4939,8 +4912,8 @@ do a pushRequestStack, and much more efficient.</p>
             <h3 class="lib-entry-title">readRequestStack</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>readRequestStack</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>readRequestStack</code></span>
+                  </h4>
             </div>
             
               
@@ -4967,8 +4940,8 @@ do a pushRequestStack, and much more efficient.</p>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -4994,8 +4967,8 @@ do a pushRequestStack, and much more efficient.</p>
             <h3 class="lib-entry-title">getRequestStackAsList</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestStackAsList</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestStackAsList</code></span>
+                  </h4>
             </div>
             
               
@@ -5022,8 +4995,8 @@ do a pushRequestStack, and much more efficient.</p>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request stack var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -5036,12 +5009,15 @@ do a pushRequestStack, and much more efficient.</p>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
+        <span>
 orig: Avoids a list copy.
-WARN: &quot;orig&quot; means the caller must ditch the list as soon as possible, before any
-      </span>
-<pre>more modifications to the stack; otherwise results will be unpredictable.
-It should only be used for optimization.</pre>      </li>
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+&quot;orig&quot; means the caller must ditch the list as soon as possible, before any
+more modifications to the stack; otherwise results will be unpredictable.
+It should only be used for optimization.          </div>
+      </li>
   </ul>
 </div>
 </span>
@@ -5069,16 +5045,16 @@ It should only be used for optimization.</pre>      </li>
             <h3 class="lib-entry-title">setRequestVar</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setRequestVar</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setRequestVar</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Sets a global var in request scope (request attributes, or if no request, globals).</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Values set by this method must be read using getRequestVar.      </span>
+        <p>
+Values set by this method must be read using getRequestVar.        </p>
                       </div>
                   </div>
             
@@ -5102,8 +5078,8 @@ Values set by this method must be read using getRequestVar.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -5126,18 +5102,18 @@ Values set by this method must be read using getRequestVar.      </span>
                       <span class="lib-entry-param-desc-shortdesc">Modes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-u: always unwrap the TemplateModel before storing (where possible)      </span>
+        <span>
+u: always unwrap the TemplateModel before storing (where possible)        </span>
       </li>
       <li>
-      <span>
-w: always keep TemplateModel as-is (wrapped) when storing      </span>
+        <span>
+w: always keep TemplateModel as-is (wrapped) when storing        </span>
       </li>
   </ul>
 </div>
-      <span>
-
-NOTE: &quot;u&quot; and &quot;w&quot; modes are usually unnecessary and should be avoided in most template and macro code.      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;u&quot; and &quot;w&quot; modes are usually unnecessary and should be avoided in most template and macro code.          </div>
 </span>
                     </td>
                   </tr>
@@ -5163,17 +5139,17 @@ NOTE: &quot;u&quot; and &quot;w&quot; modes are usually unnecessary and should b
             <h3 class="lib-entry-title">getRequestVar</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestVar</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRequestVar</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets a global var from request scope (request attributes, or if no request, globals).</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Should only be used to read values set by setRequestVar.
-Not meant to be used on regular request attributes.      </span>
+Not meant to be used on regular request attributes.        </p>
                       </div>
                   </div>
             
@@ -5195,8 +5171,8 @@ Not meant to be used on regular request attributes.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Global request var name</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Must be unique across all known types of contexts (request attribs, screen context, FTL globals)      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Must be unique across all known types of contexts (request attribs, screen context, FTL globals)        </span>
 </span>
                     </td>
                   </tr>
@@ -5222,8 +5198,8 @@ Not meant to be used on regular request attributes.      </span>
             <h3 class="lib-entry-title">varsPutAll</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>varsPutAll</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>varsPutAll</code></span>
+                  </h4>
             </div>
             
               
@@ -5263,12 +5239,12 @@ Not meant to be used on regular request attributes.      </span>
                       <span class="lib-entry-param-desc-shortdesc">Optional mode flags</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-e: Exclude listed keys      </span>
+        <span>
+e: Exclude listed keys        </span>
       </li>
       <li>
-      <span>
-i: Include only listed keys      </span>
+        <span>
+i: Include only listed keys        </span>
       </li>
   </ul>
 </div>
@@ -5307,8 +5283,8 @@ i: Include only listed keys      </span>
             <h3 class="lib-entry-title">globalsPutAll</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>globalsPutAll</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>globalsPutAll</code></span>
+                  </h4>
             </div>
             
               
@@ -5361,8 +5337,8 @@ i: Include only listed keys      </span>
             <h3 class="lib-entry-title">localsPutAll</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>localsPutAll</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>localsPutAll</code></span>
+                  </h4>
             </div>
             
               
@@ -5415,18 +5391,17 @@ i: Include only listed keys      </span>
             <h3 class="lib-entry-title">elemAttribStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>elemAttribStr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>elemAttribStr</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Prints a string of element attributes. (HTML, FO, XML)</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: This is a very generic function; for common implementation, see <a href="standard/htmlScript.html#entry-commonElemAttribStr">@commonElemAttribStr</a>.      </span>
-      <span>
-TODO: implement as transform.      </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is a very generic function; for common implementation, see <a href="standard/htmlScript.html#entry-commonElemAttribStr">@commonElemAttribStr</a>.          </div>
                       </div>
                   </div>
             
@@ -5457,9 +5432,9 @@ TODO: implement as transform.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Map of attribute-value pairs</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- It currently accepts string format as a fallback/legacy support, but this is highly discouraged
- and other args won&#39;t work with it.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+It currently accepts string format as a fallback/legacy support, but this is highly discouraged
+and other args won&#39;t work with it.        </span>
 </span>
                     </td>
                   </tr>
@@ -5530,20 +5505,19 @@ TODO: implement as transform.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Map of attrib names to substitute attrib names</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-NOTES:
-      </span>
-        <div>  <ul>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
       <li>
-      <span>
-If this is set, the exclude names should be the names of the subtitutes, not the input attrib names.      </span>
+        <span>
+If this is set, the exclude names should be the names of the subtitutes, not the input attrib names.        </span>
       </li>
       <li>
-      <span>
-This is applied after prefix ops are applied.      </span>
+        <span>
+This is applied after prefix ops are applied.        </span>
       </li>
   </ul>
-</div>
+          </div>
 </span>
                     </td>
                   </tr>
@@ -5594,18 +5568,19 @@ This is applied after prefix ops are applied.      </span>
             <h3 class="lib-entry-title">formattedDate</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedDate</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedDate</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Renders a formatted date.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-NOTE: formattedDate by default renders the &quot;date&quot; type but it also doubles as handler for the other types
-      </span>
-<pre>(which also have convenience wrappers below).</pre>                      </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+formattedDate by default renders the &quot;date&quot; type but it also doubles as handler for the other types
+(which also have convenience wrappers below).          </div>
+                      </div>
                   </div>
             
               
@@ -5641,8 +5616,8 @@ NOTE: formattedDate by default renders the &quot;date&quot; type but it also dou
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(date-time|timestamp|date|time, default: date)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-&quot;timestamp&quot; and &quot;date-time&quot; are synonymous.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+&quot;timestamp&quot; and &quot;date-time&quot; are synonymous.        </span>
 </span>
                     </td>
                   </tr>
@@ -5710,8 +5685,8 @@ NOTE: formattedDate by default renders the &quot;date&quot; type but it also dou
             <h3 class="lib-entry-title">formattedDateTime</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedDateTime</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedDateTime</code></span>
+                  </h4>
             </div>
             
               
@@ -5754,8 +5729,8 @@ NOTE: formattedDate by default renders the &quot;date&quot; type but it also dou
             <h3 class="lib-entry-title">formattedTime</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedTime</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>formattedTime</code></span>
+                  </h4>
             </div>
             
               
@@ -5798,16 +5773,16 @@ NOTE: formattedDate by default renders the &quot;date&quot; type but it also dou
             <h3 class="lib-entry-title">formatDate</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatDate</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatDate</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Formats a date.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-These functions return VOID (no value) if no or empty output, so default value operator can be used.      </span>
+        <p>
+These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
                       </div>
                   </div>
             
@@ -5846,16 +5821,16 @@ These functions return VOID (no value) if no or empty output, so default value o
             <h3 class="lib-entry-title">formatDateTime</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatDateTime</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatDateTime</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Formats a date-time value.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-These functions return VOID (no value) if no or empty output, so default value operator can be used.      </span>
+        <p>
+These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
                       </div>
                   </div>
             
@@ -5893,16 +5868,16 @@ These functions return VOID (no value) if no or empty output, so default value o
             <h3 class="lib-entry-title">formatTime</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatTime</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>formatTime</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Formats a time value.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-These functions return VOID (no value) if no or empty output, so default value operator can be used.      </span>
+        <p>
+These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
                       </div>
                   </div>
             
@@ -5940,8 +5915,8 @@ These functions return VOID (no value) if no or empty output, so default value o
             <h3 class="lib-entry-title">getHeadingElemSpecFromStyleStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getHeadingElemSpecFromStyleStr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getHeadingElemSpecFromStyleStr</code></span>
+                  </h4>
             </div>
             
               
@@ -5949,15 +5924,14 @@ These functions return VOID (no value) if no or empty output, so default value o
                       <p class="lib-entry-shortdesc">Parses a complex style string meant to describe a markup element and styles, notably heading,
 and converts to a hash of values.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The style strying is in the following format:
-      </span>
-<pre>containerElemType:containerClass;elemType:class;param1=val1,param2=val2</pre>      <span>
-
+        </p>
+<pre>containerElemType:containerClass;elemType:class;param1=val1,param2=val2</pre>        <p>
 &quot;h&quot; and &quot;heading&quot; elem types support + notation for relative, and for these types
-a level and relLevel are extracted.      </span>
-      <span>
-Note that the class portions may be prefixed with &quot;+&quot; as well for append-not-replace logic.      </span>
+a level and relLevel are extracted.        </p>
+        <p>
+Note that the class portions may be prefixed with &quot;+&quot; as well for append-not-replace logic.        </p>
                       </div>
                   </div>
             
@@ -5997,8 +5971,8 @@ Note that the class portions may be prefixed with &quot;+&quot; as well for appe
             <h3 class="lib-entry-title">extractPrefixedStyleNamesWithInt</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>extractPrefixedStyleNamesWithInt</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>extractPrefixedStyleNamesWithInt</code></span>
+                  </h4>
             </div>
             
               
@@ -6062,20 +6036,21 @@ a map of result names to integer values.                    </p>
             <h3 class="lib-entry-title">saveCurrentContainerSizes</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>saveCurrentContainerSizes</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>saveCurrentContainerSizes</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">This records current container (grid) sizes into a global stack</p>
                       <div class="lib-entry-extradesc">
-      <span>
-This makes it possible for inner containers to be aware of all the sizes applied to it and the general width.      </span>
-      <span>
-Every push should be followed by a pop.      </span>
-      <span>
-NOTE: This function is generally framework-agnostic and size-key agnostic.      </span>
+        <p>
+This makes it possible for inner containers to be aware of all the sizes applied to it and the general width.        </p>
+        <p>
+Every push should be followed by a pop.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This function is generally framework-agnostic and size-key agnostic.          </div>
                       </div>
                   </div>
             
@@ -6097,12 +6072,11 @@ NOTE: This function is generally framework-agnostic and size-key agnostic.      
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map), required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Map of size names to integer values</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Typically, this will be (e.g.):
-      </span>
-<pre>{&quot;large&quot;:12, &quot;medium&quot;:12, &quot;small&quot;:12}</pre>      <span>
-
- but can be anything (the methods in this file do not care).      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Typically, this will be (e.g.):
+        </span>
+<pre>{&quot;large&quot;:12, &quot;medium&quot;:12, &quot;small&quot;:12}</pre>        <span>
+but can be anything (the methods in this file do not care).        </span>
 </span>
                     </td>
                   </tr>
@@ -6123,21 +6097,22 @@ NOTE: This function is generally framework-agnostic and size-key agnostic.      
             <h3 class="lib-entry-title">saveCurrentContainerSizesFromStyleStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>saveCurrentContainerSizesFromStyleStr</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>saveCurrentContainerSizesFromStyleStr</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Same as saveCurrentContainerSizes but tries to extract the container sizes from a style string.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 This is needed to know grid sizes because most of the facilities only support setting
-class name strings (except for <a href="standard/htmlStructure.html#entry-cell">@cell</a> which supports columns/small/medium/large args).      </span>
-      <span>
-IMPL NOTE: For this method to work, the framework-/theme-specific code must override the abstract
-      </span>
-<pre>function parseContainerSizesFromStyleStr.</pre>                      </div>
+class name strings (except for <a href="standard/htmlStructure.html#entry-cell">@cell</a> which supports columns/small/medium/large args).        </p>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+For this method to work, the framework-/theme-specific code must override the abstract
+function parseContainerSizesFromStyleStr.          </div>
+                      </div>
                   </div>
             
               
@@ -6178,8 +6153,8 @@ IMPL NOTE: For this method to work, the framework-/theme-specific code must over
             <h3 class="lib-entry-title">unsetCurrentContainerSizes</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>unsetCurrentContainerSizes</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>unsetCurrentContainerSizes</code></span>
+                  </h4>
             </div>
             
               
@@ -6209,8 +6184,8 @@ IMPL NOTE: For this method to work, the framework-/theme-specific code must over
             <h3 class="lib-entry-title">parseContainerSizesFromStyleStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>parseContainerSizesFromStyleStr</code></span> (abstract/placeholder)</h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>parseContainerSizesFromStyleStr</code></span> (abstract/placeholder)
+                  </h4>
             </div>
             
               
@@ -6264,8 +6239,8 @@ a map of size names to integer values.                    </p>
             <h3 class="lib-entry-title">getCurrentContainerSizes</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getLastContainerSizes</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getLastContainerSizes</code></span>
+                  </h4>
             </div>
             
               
@@ -6295,8 +6270,8 @@ a map of size names to integer values.                    </p>
             <h3 class="lib-entry-title">getAllContainerSizes</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAllContainerSizes</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAllContainerSizes</code></span>
+                  </h4>
             </div>
             
               
@@ -6327,40 +6302,42 @@ and the current container size (if was added).</p>
             <h3 class="lib-entry-title">getAbsContainerSizeFactors</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAbsContainerSizeFactors</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getAbsContainerSizeFactors</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns a map of container size factors.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 The return map format is:
-      </span>
-<pre>{&quot;large&quot;:n1, &quot;medium&quot;:n2, &quot;small&quot;:n3}</pre>      <span>
-
+        </p>
+<pre>{&quot;large&quot;:n1, &quot;medium&quot;:n2, &quot;small&quot;:n3}</pre>        <p>
 where n1, n2, n3 are floating-point (NOT integer) values calculated from the combination of all
-grid sizes of all the current parent containers.      </span>
-      <span>
-NOTE: The above is only an example; this method is framework-agnostic.      </span>
-      <span>
+grid sizes of all the current parent containers.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The above is only an example; this method is framework-agnostic.          </div>
+        <p>
 These numbers can be used to approximate the current absolute column width in grid sizes,
 in the absence of interfering CSS. It will only be useful if the parent containers save their
 sizes in the stack using saveCurrentContainerSizesFromStyleStr or saveCurrentContainerSizes, and pop appropriately.
-Requires framework-specific logic.      </span>
-      <span>
-IMPL NOTE: For this method to work, the framework-/theme-specific code must override the abstract
-      </span>
-<pre>function evalAbsContainerSizeFactors.
+Requires framework-specific logic.        </p>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+For this method to work, the framework-/theme-specific code must override the abstract
+function evalAbsContainerSizeFactors.
 ALTERNATIVELY, the framework-/theme-specific code may override getAbsContainerSizeFactors
-if more specific parameters are needed.</pre>      <span>
-IMPL NOTE: The calculated factors are saved in their own stack and recalculated only when the main stack changes.
-      </span>
-<pre>The cached factors are also passed to evalAbsContainerSizeFactors so it may exploit them,
+if more specific parameters are needed.          </div>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+The calculated factors are saved in their own stack and recalculated only when the main stack changes.
+The cached factors are also passed to evalAbsContainerSizeFactors so it may exploit them,
 but evalAbsContainerSizeFactors will never be called if the last container&#39;s factors were already
 calculated (simple optimization). If need to bypass caching for some reason, theme
-would have to override getAbsContainerSizeFactors (not recommended).</pre>                      </div>
+would have to override getAbsContainerSizeFactors (not recommended).          </div>
+                      </div>
                   </div>
             
               
@@ -6381,9 +6358,9 @@ would have to override getAbsContainerSizeFactors (not recommended).</pre>      
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((int)|(map), default: 0)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Max container sizes (grid size)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- This is can a map of per-key max container sizes OR a single number giving max size
- for all keys (usually same in most frameworks) OR zero to mean use defaults.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+This is can a map of per-key max container sizes OR a single number giving max size
+for all keys (usually same in most frameworks) OR zero to mean use defaults.        </span>
 </span>
                     </td>
                   </tr>
@@ -6411,8 +6388,8 @@ would have to override getAbsContainerSizeFactors (not recommended).</pre>      
             <h3 class="lib-entry-title">evalAbsContainerSizeFactors</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalAbsContainerSizeFactors</code></span> (abstract/placeholder)</h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalAbsContainerSizeFactors</code></span> (abstract/placeholder)
+                  </h4>
             </div>
             
               
@@ -6441,8 +6418,9 @@ size factors.</p>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((list), required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">List of hashes describing all (known) parent and current container sizes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- NOTE: Entries may be empty and should be skipped.      </span>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Entries may be empty and should be skipped.          </div>
 </span>
                     </td>
                   </tr>
@@ -6463,9 +6441,9 @@ size factors.</p>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((list), default: -empty-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">List of cached factor results, of same size and order as sizesList</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Each entry corresponds to the container at same index as the sizes in sizesList.
-If an entry is boolean, then a factor was not (yet) calculated for that container.      </span>
+If an entry is boolean, then a factor was not (yet) calculated for that container.        </span>
 </span>
                     </td>
                   </tr>
@@ -6486,7 +6464,6 @@ a map of size names to float values.                    </p>
           </div>
           
       </div>
-      
 
       <hr />  
 
@@ -6494,7 +6471,11 @@ a map of size names to float values.                    </p>
       <div class="lib-section">
          
           <h2 class="lib-section-title">CONTEXT AND SYSTEM UTILITIES</h2>
-    
+
+          <p>        <span>
+Context and system utilities.        </span>
+</p>
+
           
           <hr />
           <a name="entry-getRenderContextType"></a>
@@ -6503,8 +6484,8 @@ a map of size names to float values.                    </p>
             <h3 class="lib-entry-title">getRenderContextType</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRenderContextType</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRenderContextType</code></span>
+                  </h4>
             </div>
             
               
@@ -6534,8 +6515,8 @@ a map of size names to float values.                    </p>
             <h3 class="lib-entry-title">getRenderPlatformType</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRenderPlatformType</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getRenderPlatformType</code></span>
+                  </h4>
             </div>
             
               
@@ -6565,18 +6546,22 @@ a map of size names to float values.                    </p>
             <h3 class="lib-entry-title">getDefaultCatoLibLocation</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultCatoLibLocation</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getDefaultCatoLibLocation</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Returns a cato library location.</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Supported names: &quot;variables&quot;, &quot;template&quot;
-NOTE: this is currently render context-unaware
-Returns void if nothing.      </span>
+        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+this is currently render context-unaware          </div>
+        <p>
+Returns void if nothing.        </p>
                       </div>
                   </div>
             
@@ -6610,8 +6595,8 @@ Returns void if nothing.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string), default: default)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Platform type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Caller should use <a href="#entry-getRenderPlatformType">#getRenderPlatformType</a>().      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Caller should use <a href="#entry-getRenderPlatformType">#getRenderPlatformType</a>().        </span>
 </span>
                     </td>
                   </tr>
@@ -6622,8 +6607,8 @@ Caller should use <a href="#entry-getRenderPlatformType">#getRenderPlatformType<
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string), default: general)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Render context type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Caller should use <a href="#entry-getRenderContextType">#getRenderContextType</a>().      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Caller should use <a href="#entry-getRenderContextType">#getRenderContextType</a>().        </span>
 </span>
                     </td>
                   </tr>
@@ -6644,8 +6629,8 @@ Caller should use <a href="#entry-getRenderContextType">#getRenderContextType</a
             <h3 class="lib-entry-title">getMacroLibraryLocationStaticFromResources</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getMacroLibraryLocationStaticFromResources</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>getMacroLibraryLocationStaticFromResources</code></span>
+                  </h4>
             </div>
             
               
@@ -6653,16 +6638,17 @@ Caller should use <a href="#entry-getRenderContextType">#getRenderContextType</a
                       <p class="lib-entry-shortdesc">Gets a lib location from a theme resources variable which contains an expression, which can be either a straight component:// location
 meant as &quot;general&quot; context and for &quot;html&quot; and &quot;default&quot; platforms, or a EL-defined map</p>
                       <div class="lib-entry-extradesc">
-      <span>
-The foramt is:
-      </span>
+        <p>
+The format is:
+        </p>
 <pre>${[&#39;[platform]&#39;:&#39;component://...&#39;, ...]}
-e.g. ${[&#39;&#39;html&#39;:&#39;component://...&#39;, &#39;xml&#39;:&#39;component://...&#39;, &#39;default&#39;:&#39;component://...&#39;]}</pre>      <span>
-Intended for use with VT_STL_VAR_LOC and VT_STL_TMPLT_LOC and variants.      </span>
-      <span>
-Checks the resourceNames in the given order.      </span>
-      <span>
-NOTE: &quot;default&quot; is a special map key; should be avoided.      </span>
+e.g. ${[&#39;&#39;html&#39;:&#39;component://...&#39;, &#39;xml&#39;:&#39;component://...&#39;, &#39;default&#39;:&#39;component://...&#39;]}</pre>        <p>
+Intended for use with VT_STL_VAR_LOC, VT_STL_TMPLT_LOC and variants.        </p>
+        <p>
+Checks the resourceNames in the given order.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+&quot;default&quot; is a special map key; should be avoided.          </div>
                       </div>
                   </div>
             
@@ -6683,7 +6669,6 @@ NOTE: &quot;default&quot; is a special map key; should be avoided.      </span>
           </div>
           
       </div>
-      
 
       <hr />  
 
@@ -6691,7 +6676,11 @@ NOTE: &quot;default&quot; is a special map key; should be avoided.      </span>
       <div class="lib-section">
          
           <h2 class="lib-section-title">DEV UTILITIES</h2>
-    
+
+          <p>        <span>
+For development and debugging purposes.        </span>
+</p>
+
           
           <hr />
           <a name="entry-printVars"></a>
@@ -6700,24 +6689,25 @@ NOTE: &quot;default&quot; is a special map key; should be avoided.      </span>
             <h3 class="lib-entry-title">printVars</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>printVars</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>printVars</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Iterates over all variable attributes &amp; functions and prints in table.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Useful for determining current vars in context.      </span>
-      <span>
-NOTE: since is in utilities.ftl, keep generic and check platform.      </span>
+        <p>
+Useful for determining current vars in context.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+since is in utilities.ftl, keep generic and check platform.          </div>
                       </div>
                   </div>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;@printVars /&gt;
 </pre>                  </div>
             
@@ -6751,8 +6741,8 @@ NOTE: since is in utilities.ftl, keep generic and check platform.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|html|..., default: true)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">The target platform (HTML, etc.)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-If true, looks up current render.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If true, looks up current render.        </span>
 </span>
                     </td>
                   </tr>
@@ -6776,7 +6766,6 @@ If true, looks up current render.      </span>
           </div>
           
       </div>
-      
 
     <footer id="footer">
       <div>

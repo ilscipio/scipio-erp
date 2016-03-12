@@ -5,6 +5,7 @@
       <title>Master HTML template include, standard Cato markup.</title>
 
 
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -58,123 +59,112 @@ pre {
   
     <div>
         <h1 class="lib-pagetitle">Master HTML template include, standard Cato markup.</h1>
-        <h2>Template Building Documentation</h2>
+        <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlTemplate.ftl</span></em></p>
 
         <div class="lib-pagedesc">
-      <p>
+        <p>
 A set of HTML templating macros, part of standard Cato Freemarker API.
 Automatically included at all times, unless overridden by properties or themes.
 Intended to be swappable.
-Includes all other default Cato macros.      </p>
-      <p>
-NOTES:
-      </p>
-        <div>  <ul>
+Includes all other default Cato macros.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
       <li>
-      <span>
-Currently targeted toward Foundation CSS.      </span>
+        <span>
+Currently targeted toward Foundation CSS.        </span>
       </li>
       <li>
-      <span>
-Macros expect to be called using named arguments, except where otherwise noted.      </span>
+        <span>
+Macros expect to be called using named arguments, except where otherwise noted.        </span>
       </li>
       <li>
-      <span>
+        <span>
 Functions in Freemarker only support positional arguments, but some Cato functions support
-an &quot;args&quot; argument as a map, which emulates named arguments.      </span>
+an &quot;args&quot; argument as a map, which emulates named arguments. This is also done
+as part of the advanced args interface (documented below).        </span>
       </li>
   </ul>
-</div>
-      <p>
-IMPLEMENTATION NOTES:
-      </p>
-        <div>  <ul>
+          </div>
+          <div class="lib-text-note">
+            <strong>IMPLEMENTATION NOTES: </strong>
+  <ul>
       <li>
-      <span>
-Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.      </span>
+        <span>
+Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.        </span>
       </li>
-  </ul>
-</div>
-      <p>
-DEV NOTES:
-      </p>
+      <li>
+        <span>
+Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
+and line endings. Must be spaces-only and LF-only line endings.
+        </span>
         <div>  <ul>
       <li>
-      <span>
-WARN: Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
-      </span>
-<pre>and line endings. Must be spaces-only and LF-only line endings.</pre>        <div>  <ul>
-      <li>
-      <span>
+        <span>
 In parser, bullets will create HTML lists, text encloding in two bullets (* *) will create
-a heading, notes with uppercase label and &quot;?&quot; or &quot;:&quot; prefix will be highlighted (support multi-
-line by indenting the next line), and indents alone will create preformatted text (usually code).      </span>
-      </li>
-  </ul>
-</div>
+a heading, notes with uppercase label and &quot;?:&quot; or &quot;:&quot; prefix will be highlighted (support multi-
+line by indenting the next line), and indents alone will create preformatted text (usually code).        </span>
       </li>
       <li>
-      <span>
-Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
-Even though it would be convenient, we can&#39;t allow a &quot;attribString&quot; arg because no way
-for macro to get attribs out of it if it needs them, cause problems.
-FIXME: Not all macros currently properly check attribMap for duplicate attribs
-      </span>
-<pre>of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).</pre>      </li>
+        <span>
+Small code bits may be surrounded by three brackets (like Trac tickets) to delineate code, <code>like this</code>.
+Indents may be enough in other cases.        </span>
+      </li>
   </ul>
 </div>
+      </li>
+  </ul>
+          </div>
         <h4>MACRO INTERFACES</h4>
-      <p>
-Cato standard macros have versatile interfaces.      </p>
-      <p>
+        <p>
+Cato standard macros have versatile interfaces.        </p>
+        <p>
 General remarks:
-      </p>
+        </p>
         <div>  <ul>
       <li>
-      <span>
-All macros expect to be invoked using named parameters only (always &lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> class=&quot;my-class&quot;&gt;, never &lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> &quot;my-class&quot;&gt;)      </span>
+        <span>
+All macros expect to be invoked using named parameters only (always <code>&lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> class=&quot;my-class&quot;&gt;</code>, never <code>&lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> &quot;my-class&quot;&gt;</code>)        </span>
       </li>
       <li>
-      <span>
+        <span>
 Many macros have advanced, low-level open/close controls for esoteric structure control where the macro
 markup open and close tags and logic needs to be split or skipped. Generally their defaults are true; must specify
-      </span>
-<pre>&lt;@macroname open=true close=false /&gt;</pre>      <span>
-
+        </span>
+<pre>&lt;@macroname open=true close=false /&gt;</pre>        <span>
 for open-only and
-      </span>
-<pre>&lt;@macroname close=true open=false /&gt;</pre>      <span>
-
+        </span>
+<pre>&lt;@macroname close=true open=false /&gt;</pre>        <span>
 for close-only.
-Use of these in templates is discouraged but occasionally forcefully needed.      </span>
+Use of these in templates is discouraged but occasionally forcefully needed.        </span>
       </li>
       <li>
-      <span>
-These patterns are often workarounds for limitations in the FTL language.      </span>
+        <span>
+These patterns are often workarounds for limitations in the FTL language.        </span>
       </li>
       <li>
-      <span>
+        <span>
 The advanced args pattern described below is primarily designed to be simple to use from templates, almost
 indistinguishable from regular macro calls, but more powerful.
 It also provides more power for theme overrides; however, theme overrides must be careful in their use of it;
-it&#39;s better for themes to use simple markup overrides instead, which do not use the advanced pattern.      </span>
+it&#39;s better for themes to use simple markup overrides instead, which do not use the advanced pattern.        </span>
       </li>
   </ul>
 </div>
-      <p>
+        <p>
 Template-facing macros (and advanced args pattern):
-      </p>
+        </p>
         <div>  <ul>
       <li>
-      <span>
+        <span>
 These macros such as <a href="../standard/htmlForm.html#entry-field">@field</a>, <a href="../standard/htmlStructure.html#entry-row">@row</a>, <a href="../standard/htmlContent.html#entry-heading">@heading</a>, etc. are meant to be
 used in templates and can also be overridden directly by themes (though not preferred method).
 Most of these use a versatile args pattern that looks like:
-      </span>
+        </span>
 <pre>&lt;#macro macroname args={} inlineArgs...&gt;</pre>      </li>
       <li>
-      <span>
+        <span>
 When called from templates, these macros accept regular inlined parameters as well as a map of parameters
 using the args map parameter. Intuitively, inline args have priority over args passed in the args map and in most cases simply override them.
 This pattern is especially needed for themes to override the templating-facing macros cleanly and to provide a way
@@ -187,103 +177,114 @@ both in args map or inlineArgs, but usually it&#39;s used to emulate HTML with m
 these are not declared in the default argument lists; see individual macro documentation;
 they are equivalent in usage to regular FTL interface macros that take extra attrbs as varargs
 e.g.
-      </span>
-<pre>&lt;#macro myhtmlmacro (...) inlineAttribs...&gt;</pre>      <span>
-
-IMPL NOTE: Extra attributions are handled by a system that records args names in a &quot;allArgNames&quot; member in
-      </span>
-<pre>the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.</pre>      </li>
+        </span>
+<pre>&lt;#macro myhtmlmacro (...) inlineAttribs...&gt;</pre>          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+Extra attributions are handled by a system that records args names in a &quot;allArgNames&quot; member in
+the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.          </div>
+      </li>
       <li>
-      <span>
-INTERFACE:
-      </span>
+        <span>
+Interface:
+        </span>
 <pre>&lt;#assign name_defaultArgs = { (...), &quot;passArgs&quot;:{} }&gt;
 &lt;#macro macroname args={} inlineArgs...&gt;</pre>        <div>  <ul>
       <li>
-      <span>
-args: macro args map. map of parameters to pass to the macro. it can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
-IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </span>
+        <span>
+args: Macro args map. Map of parameters to pass to the macro. It can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
+        </span>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+The implementation should pass this to mergeArgMaps or equivalent function (see examples).          </div>
       </li>
       <li>
-      <span>
-inlineArgs: macro inline args. map of parameters passed inline to the macro via usual macro call syntax.
+        <span>
+inlineArgs: Macro inline args. Map of parameters passed inline to the macro via usual macro call syntax.
 these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
-IMPL NOTE: the implementation should pass this to mergeArgMaps or equivalent function (see examples).      </span>
+        </span>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+The implementation should pass this to mergeArgMaps or equivalent function (see examples).          </div>
       </li>
       <li>
-      <span>
-passArgs: pass-through args. map of args that should be passed along the major calls made by this macro or in other words
-passed through the whole call stack. it allows arguments to pass through from the templating-facing macro
-to the internal implementations such as markup macros, similar to a context. this is needed especially to allow theme overrides
+        <span>
+passArgs: Pass-through args. Map of args that should be passed along the major calls made by this macro or in other words
+passed through the whole call stack. It allows arguments to pass through from the templating-facing macro
+to the internal implementations such as markup macros, similar to a context. This is needed especially to allow theme overrides
 to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
-be careful about using sufficiently unique names.
-IMPL NOTE: overriding macros should avoid overriding this map; always add new members to it instead.
-e.g.
-      </span>
+Be careful about using sufficiently unique names.
+        </span>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+Overriding macros should avoid overriding this map;
+always add new members to it instead. e.g.          </div>
 <pre>&lt;@somemacro passArgs=(passArgs + {&quot;myParam&quot;:&quot;myValue&quot;)&gt;</pre>      </li>
   </ul>
 </div>
       </li>
   </ul>
 </div>
-      <p>
+        <p>
 Markup macros (theme overrides):
-      </p>
+        </p>
         <div>  <ul>
       <li>
-      <span>
+        <span>
 These macros such as @row_markup, @heading_markup, etc. containing
 the &quot;_markup&quot; name are overridable by themes to provide alternative HTML and sometimes javascript markup.
 This is the simplest and preferred way to provide alternate markup.
 They do not have a versatile interface like the template-facing macros and are intentionally kept
 simple.
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
+        <span>
 Nevertheless, they have some requirements: these macros should always end their parameter list with
 a varargs catch-all parameter &quot;catchArgs...&quot; so that future changes do not backwards break compability
-with themes.      </span>
+with themes.        </span>
       </li>
   </ul>
 </div>
       </li>
       <li>
-      <span>
-INTERFACE:
-      </span>
+        <span>
+Interface:
+        </span>
 <pre>&lt;#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...&gt;</pre>        <div>  <ul>
       <li>
-      <span>
-origArgs: original caller&#39;s args. map of complex parameters usually roughly as they were received by the calling macro. rarely-used and should be
-avoided in favor of the other simpler macro arguments passed by the caller which are usually very similar. is
+        <span>
+origArgs: Original caller&#39;s args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
+avoided in favor of the other simpler macro arguments passed by the caller, which are usually very similar. Is
 needed in rare cases where the simpler macro arguments are too simplistic or don&#39;t provide all the information needed.
-NOTE: in general orig args do not come from a template-facing macro but from an intermediate macro
-      </span>
-<pre>(such as @fieldset_core or @field_input_widget). this is the intention, as the former would break
-abstraction too much. in many cases however, the calling macro may happen to be
-a template-facing macro. do not rely on this while using origArgs.</pre>      </li>
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+In general orig args do not come from a template-facing macro but from an intermediate macro
+(such as @fieldset_core or @field_input_widget). This is the intention, as the former would break
+abstraction too much. In many cases however, the calling macro may happen to be
+a template-facing macro. Do not rely on this while using origArgs.          </div>
+      </li>
       <li>
-      <span>
-passArgs: pass-through args. map of args that are passed through from the template-facing macro to the parent/caller macro to
-this macro or in other words passed through the whole call stack, similar to a context. this is needed especially to allow theme overrides
+        <span>
+passArgs: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to
+this macro or in other words passed through the whole call stack, similar to a context. This is needed especially to allow theme overrides
 to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
-be careful about using sufficiently unique names.      </span>
+Be careful about using sufficiently unique names.        </span>
       </li>
       <li>
-      <span>
-catchArgs: catch-all args. simply catches all the parameters the macro doesn&#39;t need to handle
-NOTE: the previous parameters may be omitted and caught with catchArgs if unused.      </span>
+        <span>
+catchArgs: Catch-all args. Simply catches all the parameters the macro doesn&#39;t need to handle
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The previous parameters may be omitted and caught with catchArgs if unused.          </div>
       </li>
   </ul>
 </div>
       </li>
   </ul>
 </div>
-      <p>
-DEV NOTE: TODO: although the main macro patterns are mostly in place, there are still open questions about (re-)implementation
-      </p>
-<pre>and optimization using transforms (see mergeArgMaps and related).</pre>        </div>
+        </div>
     </div>
     
 
@@ -303,6 +304,39 @@ DEV NOTE: TODO: although the main macro patterns are mostly in place, there are 
     </div>
     
 
+
+
+
+      <hr />  
+
+      <a name="section-EXTERNAL IMPORTS AND INCLUDES"></a>
+      <div class="lib-section">
+         
+          <h2 class="lib-section-title">EXTERNAL IMPORTS AND INCLUDES</h2>
+
+          <p>          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Assumes utilities.ftl and htmlVariables.ftl included.          </div>
+</p>
+
+          <p><em>(No public definitions in this section)</em></p>
+      </div>
+
+      <hr />  
+
+      <a name="section-API TEMPLATE MACROS AND INCLUDES"></a>
+      <div class="lib-section">
+         
+          <h2 class="lib-section-title">API TEMPLATE MACROS AND INCLUDES</h2>
+
+          <p>        <span>
+Code this file is responsible for defining. Intended for use in production templates.
+
+        </span>
+</p>
+
+          <p><em>(No public definitions in this section)</em></p>
+      </div>
 
     <footer id="footer">
       <div>

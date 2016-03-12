@@ -546,6 +546,7 @@ under the License.
     	<echo message="[docs-ftl-cato] Building Cato template-writer-friendly FTL lib docs..."/>
         <java classname="com.ilscipio.cato.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
             <arg value="cato-lib"/> <!-- lib format -->
+        	<arg value="templating"/> <!-- doc purpose -->
         	<arg value="framework/common/webcommon/includes/cato/lib"/> <!-- base source folder -->
             <arg value="doc/cato/templating/ftl/lib"/> <!-- base output folder -->
             <arg value="framework/common/webcommon/includes/cato/doc/ftlDocTemplate.ftl"/> <!-- doc template -->
@@ -563,6 +564,8 @@ under the License.
                 <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
             </classpath>
         </java>
+    	<!-- TODO?: same as above but for docPurpose "theming"... currently I don't see the need,
+    	     theme creators need to look at the FTL files in depth anyway, even with markup separation -->
         <echo message="[docs-ftl-cato] ========== Done Building (FTL docs) =========="/>
     </target>
 	

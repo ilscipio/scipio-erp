@@ -24,6 +24,35 @@
 
 <#-- 
 *************************************
+* SETTINGS *
+*************************************
+-->
+
+<#-- DEV NOTE: Currently this is targeting only "templating" docs.
+    There is some "theming" stuff still present that there's no easy mechanism to remove.
+    Am also leaving "IMPL NOTE" comments in for the time being. -->
+
+<#-- NOTE: currently targeting "templating" docs only -->
+<#assign docPurposes = ["templating", "theming", "dev"]>
+<#if !docPurpose?has_content || !docPurposes?seq_contains(docPurpose)>
+  <#global docPurpose = "dev">
+</#if>
+
+<#-- Uncomment this to see all:
+<#global docPurpose = "dev">-->
+
+<#-- Maps docPurpose to pat. This matches against the label part of the note, exluding "?" and ":" -->
+<#assign notesToOmitPats = {
+  <#--"templating" : "(DEV\\s+NOTES?|IMPL\\s+NOTES?|IMPLEMENTATION\\s+NOTES?|FIXME|TODO)",-->
+  "templating" : "(DEV\\s+NOTES?|FIXME|TODO)",
+  "theming" : "(DEV\\s+NOTES?|FIXME|TODO)",
+  "dev" : false
+}>
+
+
+
+<#-- 
+*************************************
 * STYLE *
 *************************************
 -->
@@ -159,10 +188,14 @@ pre {
   <#return text>
 </#function>
 
+<#function substituteCode text>
+  <#return text?replace("{{{", "<code>")?replace("}}}", "</code>")>
+</#function>
+
 <#-- high-level version of above -->
 <#function decorateText text>
   <#-- NOTE: always parse before highlight -->
-  <#return createAutoLinks(highlightWords(parseIntroWords(text)))>
+  <#return substituteCode(createAutoLinks(highlightWords(parseIntroWords(text))))>
 </#function>
 
 <#-- 
@@ -192,30 +225,38 @@ pre {
 *************************************
 -->
 
-<#macro complexContentEntry entry paragraphs=false headingLevel=4>
+<#macro complexContentEntry entry paragraphs=false headingLevel=4 isFirst=false isLast=false>
     <#if entry?is_string>
-      <#-- just text -->
-      <#if paragraphs && entry?has_content><p><#else><span></#if>
-        <@descText text=entry />
-      <#if paragraphs && entry?has_content></p><#else></span></#if>
+      <#if entry?has_content>
+        <#-- just text -->
+        <#if paragraphs><p><#else><span></#if>
+          <@descText text=entry />
+        <#if paragraphs></p><#else></span></#if>
+      </#if>
     <#else>
       <#if entry.type == "title">
         <#-- * My Title * -->
         <h${headingLevel}><@labelText text=entry.value!"" /></h${headingLevel}>
       <#elseif entry.type == "note">
         <#-- NOTE: my value -->
-        <#if entry.value?has_content>
-          <#if entry.ownLine && paragraphs><p><#else><#if entry.ownLine><br/></#if><span></#if>
+        <#if notesToOmitPats[docPurpose]?is_boolean || !entry.label?matches(notesToOmitPats[docPurpose]!"_NOTHING_")>
+          <#-- have to use div instead of p even if paragraphs==true because may contain a list
+              also use div instead of br/ too because simplifies a lot. -->
+          <#if entry.ownLine><div class="lib-text-note"><#else><span class="lib-text-note"></#if>
             <strong><@labelText text=entry.labelAndSep!"" /> </strong>
-            <#if entry.value?is_string>
-              <@descText text=entry.value!"" />
-            <#elseif (entry.value.type!"") == "list">
-              <#-- The note's value may be a list -->
-              <@complexList listInfo=entry.value headingLevel=headingLevel />
-            <#else>
-              <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED NOTE VALUE TYPE</strong>
+            <#if entry.value?has_content>
+              <#-- NOTE: we should always have a value in proper-formatted document, but if not, print
+                  the title above anyway... -->
+              <#if entry.value?is_string>
+                <@descText text=entry.value!"" />
+              <#elseif (entry.value.type!"") == "list">
+                <#-- The note's value may be a list -->
+                <@complexList listInfo=entry.value headingLevel=headingLevel />
+              <#else>
+                <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED NOTE VALUE TYPE</strong>
+              </#if>
             </#if>
-          <#if entry.ownLine && paragraphs></p><#else></span></#if>
+          <#if entry.ownLine></div><#else></span></#if>
         </#if>
       <#elseif entry.type == "indent">
         <#-- indented, treat as pre/code -->
@@ -238,7 +279,8 @@ pre {
         <#else>
           <#-- list item is complex, must iterate -->
           <#list item as entry>
-            <@complexContentEntry entry=entry paragraphs=false headingLevel=headingLevel />
+            <@complexContentEntry entry=entry paragraphs=false headingLevel=headingLevel 
+                isFirst=(entry_index == 0) isLast=(!entry_has_next)/>
           </#list>
         </#if>
       </li>
@@ -248,7 +290,8 @@ pre {
 
 <#macro complexContent text paragraphs=false headingLevel=4>
   <#list tmplHelper.splitByMarkupElems(text) as entry>
-    <@complexContentEntry entry=entry paragraphs=paragraphs headingLevel=headingLevel />
+    <@complexContentEntry entry=entry paragraphs=paragraphs headingLevel=headingLevel 
+        isFirst=(entry_index == 0) isLast=(!entry_has_next)/>
   </#list>
 </#macro>
 
@@ -264,7 +307,13 @@ pre {
       <#if pageTitle?has_content>
         <h1 class="lib-pagetitle"><@labelText text=pageTitle /></h1>
       </#if>
-        <h2>Template Building Documentation</h2>
+      <#if docPurpose == "templating">
+        <h2>Templating Documentation</h2>
+      <#elseif docPurpose == "theming">
+        <h2>Theming Documentation</h2>
+      <#else>
+        <h2>Dev Documentation</h2>
+      </#if>
       <#if libFilename?has_content>
         <p><em><span class="lib-filename">${libFilename?html}</span></em></p>
       </#if>
@@ -330,18 +379,25 @@ pre {
 
   <#list sectionMap?keys as sectionName> 
     <#assign section = sectionMap[sectionName]>
-    <#if section.entryMap?has_content>
+    <#-- print "none" below instead
+    <#if section.entryMap?has_content>-->
 
     <#if section.title?has_content>
       <hr />  
     </#if>
 
+    <#if section.entryMap?has_content || section.name != "default">
       <a name="section-${sectionName?html}"></a>
       <div class="lib-section">
         <#if section.title?has_content> <#-- NOTE: default section has no title -->
           <h2 class="lib-section-title"><@labelText text=section.title /></h2>
         </#if>
-    
+
+        <#if section.comment?has_content>
+          <p><@complexContent text=section.comment /></p>
+        </#if>
+
+      <#if section.entryMap?has_content>
         <#list section.entryMap?keys as entryName>
           <#assign entry = section.entryMap[entryName]>
           <#if entry.isImplemented>
@@ -359,8 +415,8 @@ pre {
             
             <div class="lib-entry-formal">
                <#-- type is "macro", "function" or "variable" -->
-               <h4><span class="lib-entry-type-text">${entry.type}</span> <span class="lib-entry-formalname"><code>${entryName?html}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if></h4>
-                  <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if>  
+               <h4><span class="lib-entry-type-text">${entry.type}</span> <span class="lib-entry-formalname"><code>${entryName?html}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if>
+                  <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if></h4>
             </div>
             
             <#global parametersSectionRendered = false>
@@ -448,8 +504,8 @@ pre {
                     </#if>
                     <#if (entrySection.extraDesc)?has_content>
                       <div class="lib-entry-extradesc">
-                      <#list tmplHelper.splitToParagraphs(entrySection.extraDesc) as paragraph>
-                        <@complexContent text=paragraph />
+                      <#list tmplHelper.splitToParagraphs(entrySection.extraDesc) as part>
+                        <@complexContent text=part paragraphs=true />
                       </#list>
                       </div>
                     </#if>
@@ -502,8 +558,10 @@ pre {
           
           </#if>
         </#list>
+      <#else>
+          <p><em>(No public definitions in this section)</em></p>
+      </#if>
       </div>
-      
     </#if>
   </#list>
 

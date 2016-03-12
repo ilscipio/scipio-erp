@@ -17,7 +17,7 @@
 ************
 Defines a form. Analogous to <form> HTML element.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@form name="myform">
       <@fields>
         <input type="hidden" ... />
@@ -159,7 +159,7 @@ Can be animated using Javascript manually or by using progressOptions argument.
 Presence of progressOptions activates use of CatoUploadProgress script for this progress bar by linking it 
 to a form submit.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@progress value=40/>             
     
     Javascript animation (manual):
@@ -184,8 +184,8 @@ to a form submit.
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                               * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    progressArgs            = ((map)) If present, attaches progress bar to an upload form with javascript-based progress and 
-                              attaches results to page using elem IDs and options specified via these arguments,
+    progressArgs            = ((map)) If present, attaches progress bar to an upload form with javascript-based progress
+                              Attaches results to page using elem IDs and options specified via these arguments,
                               which are passed to @progress macro (see @progress macro for supported options)
     progressOptions         = ((map)) Convenience parameter; same as passing:
                               progressArgs={"enabled":true, "progressOptions":progressOptions}
@@ -326,7 +326,7 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
 ************
 A visible fieldset, including the HTML element.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@fieldset title="">
         Inner Content
     </@fieldset>            
@@ -440,7 +440,7 @@ Can be omitted.
 May sometimes need multiple of these per form (so @form insufficient for this purpose),
 or even multiple per fieldset. 
 
-  * Usage Example * 
+  * Usage Examples * 
     <@fields>
       <@field attr="" />
       <@field attr="" />
@@ -457,18 +457,19 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type                        = (default|default-nolabels|default-compact|default-manual|generic, default: default) The type of fields arrangement. Affects layout and styling of contained fields
+    type                        = (default|default-nolabels|default-compact|default-manual|generic, default: default) The type of fields arrangement. 
+                                  Affects layout and styling of contained fields.
                                   Cato standard markup types:
                                   * default: default cato field arrangement. this is the type assumed when no @fields element is present.
-                                      currently, it mostly influences the label area (present for all @field types except submit).
+                                    currently, it mostly influences the label area (present for all @field types except submit).
                                   * default-nolabels: default cato field arrangement for common sets of fields with no labels.
-                                      it expects that @field entries won't be passed any labels.
+                                    it expects that @field entries won't be passed any labels.
                                   * default-compact: default cato field arrangement for fields that are in limited space.
-                                      by default, this means the labels will be arranged vertically with the fields.
+                                    by default, this means the labels will be arranged vertically with the fields.
                                   * default-manual: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
-                                      any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
+                                    any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
                                   * generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
-                                      make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
+                                    make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
                                   NOTE: For default-manual, generic and similar where styles hash does not specify a label area by default, 
                                       to show a label area for a field, it is NOT sufficient to specify label="xxx".
                                       You must specify both labelArea=true and label="xxx". label arg does not influence presence of label area.
@@ -476,14 +477,13 @@ or even multiple per fieldset.
                                       Generally, @field specifies label as pure data and theme decides where and how to display it.
                                       In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
     labelType                   = (horizontal|vertical|none, default: -type-specific-) Override for type of the field labels themselves
-                                  Values:
-                                  * horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
-                                      the implementation decides how to do this.
-                                      DEV NOTE: previously this was called "gridarea". But in the bootstrap code, this no longer makes sense.
-                                          It would be perfectly valid for us to add an extra type here called "gridarea" that specifically requires
-                                          a grid (TODO?). "horizontal" simply delegates the choice to the implementation.
+                                  * horizontal: A label area added to the left (or potentially to the right) a field, horizontally. 
+                                    the implementation decides how to do this.
+                                    DEV NOTE: previously this was called "gridarea". But in the bootstrap code, this no longer makes sense.
+                                        It would be perfectly valid for us to add an extra type here called "gridarea" that specifically requires
+                                        a grid (TODO?). "horizontal" simply delegates the choice to the implementation.
                                   * vertical: a label area added before (or potentially after) a field, vertically. 
-                                      the implementation decides how to do this.
+                                    the implementation decides how to do this.
                                   * none: no labels or label areas. Expects the @field macro won't be passed any.
                                   TODO: we should have types here that specifically request that either "gridarea" or "inline" are used for markup:
                                       gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
@@ -520,7 +520,7 @@ or even multiple per fieldset.
                                   NOTES:
                                   * This may overlap with some of the existing parameters above. Covers other cases not made explicit above.
                                   * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
-                                  EXAMPLE:
+                                  e.g.
                                     <@fields type="default" fieldArgs={"labelArea":false}>
 -->
 <#assign fields_defaultArgs = {
@@ -745,7 +745,7 @@ standard markup.
 
 NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argument.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@field attr="" /> <#- single field using default look ->
     
     <@fields type="default"> <#- single field using default look, same as previous ->
@@ -1026,7 +1026,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
     formatText              = ((boolean), default: false). If true, translates newlines to <br/> (and potentially other transformations); else untouched
                               WARN: The default for @field macro is now FALSE, which differs from the Ofbiz form widget default, which is true.
-                              WARN: TODO? It is possible the default may be changed to true for specific valueType.
+                              WARN: TODO?: It is possible the default may be changed to true for specific valueType.
                                   However, the default for "generic" will always be false.   
     
     * generic *
@@ -1312,7 +1312,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     </#if>
   </#if>
   
-  <#-- TODO? ensure boolean string because next calls don't yet support it as boolean -->
+  <#-- TODO?: ensure boolean string because next calls don't yet support it as boolean -->
   <#if tooltip?is_boolean>
     <#local tooltip = "">
   </#if>
@@ -1613,7 +1613,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break>        
       <#case "display">
-        <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
+        <#-- TODO?: may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
             can also partially detect type of value with ?is_, but is not enough... -->
         <#if !valueType?has_content || (valueType == "generic")>
           <#local displayType = "text">

@@ -17,12 +17,14 @@ Creates a navigation list, for example based on magellan-destination or breadcru
 
 Since this is very foundation specific, this function may be dropped in future installations
 
-  * Usage Example *  
+  * Usage Examples *  
+  
     <@nav type="">
         <li>Text or <a href="#">Anchor</a></li>
     </@nav>
     
-    Or:
+    OR
+    
     <@nav type="magellan">
         <@mli arrival="MyTargetAnchor">Text or <a href="#">Anchor</a></@mli>
     </@nav>
@@ -359,9 +361,10 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     disabled                = ((boolean), default: false) Whether disabled
     selected                = ((boolean), default: false) Whether selected or not
     active                  = ((boolean), default: false) Whether active or not
-    nestedContent           = Alternative to #nested content, so can be passed in @menu items hash list
-    nestedMenu              = Alternative to nestedContent and #nested content, is a hash of @menu attribs
-                              for menu to use as sub-menu.
+    nestedContent           = Macro arg alternative to #nested content
+                              This may be passed in @menu items list.
+    nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent and #nested content
+                              For menu to use as sub-menu.
     wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following)
     nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text)
     htmlwrap                = (li|span|div, default: -from global styles-, fallback default: li) Wrapping HTML element
@@ -523,7 +526,7 @@ menu item element must override this and provide a proper check.
 Creates a pagination menu, for example around a data table, using Ofbiz view pagination
 functionality.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@paginate mode="single" ... />
     <@paginate mode="content">
       <@table type="data-list">
@@ -550,7 +553,8 @@ functionality.
                               * default: "pagination_noresultsmode" from styles hash, otherwise hide. may depend on mode argument.
                               * hide: hide menu when no results
                               * disable: disable but show controls when no results (TODO?: not implemented)
-   enabled                  = ((boolean), default: true) Manual control to disable the entire macro, sometimes needed to work around FTL language.
+   enabled                  = ((boolean), default: true) Manual control to disable the entire macro
+                              Sometimes needed to work around FTL language.
                               For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url                      = Base Url to be used for pagination
    class                    = ((css-class)) CSS classes 
@@ -563,7 +567,9 @@ functionality.
                               NOTE: this should be decided earlier in rendering (data prep) and a valid value MUST be passed.
    forcePost                = ((boolean), default: false) Always use POST for non-ajax browsing 
                               NOTE: even if false, large requests may be coerced to POST.
-   paramStr                 = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
+   paramStr                 = Extra URL parameters in string format, escaped 
+                              e.g.
+                                param1=val1&amp;param2=val2
    viewIndexFirst           = ((int)) First viewIndex value number (0 or 1, only affects param values, not display)
    showCount                = ((boolean)) If true show "Displaying..." count or string provided in countMsg; if false don't; empty string is let markup/theme decide
    alwaysShowCount          = ((boolean)) If true, show count even if other pagination controls are supposed to be omitted
@@ -1129,12 +1135,14 @@ functionality.
 ************
 Renders a menu in a tree fashion.
 
-  * Usage Example *  
+  * Usage Examples *  
+  
     <@treemenu type="">
         <li>Text or <a href="#">Anchor</a></li>
     </@treemenu>
     
-    Or:
+    OR
+    
     <@treemenu type="magellan">
         <@treemenuitem arrival="MyTargetAnchor">Text or <a href="#">Anchor</a></@mli>
     </@treemenu>
@@ -1145,9 +1153,9 @@ Renders a menu in a tree fashion.
     id                      = Menu ID    
     attribs                 = ((map)) Map of other tree menu attribs
     data                    = ((object)) If jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
-                              Ssame as @treemenuitem macro parameters.
-    settings                = ((object)) if jsTree: 
-                              alternatively, the items can be specified as nested content.        
+                              Same as @treemenuitem macro parameters.
+    settings                = ((object)) If jsTree: settings
+                              Alternatively, the items can be specified as nested content.        
 -->
 <#assign treemenu_defaultArgs = {
   "library":"jsTree", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}

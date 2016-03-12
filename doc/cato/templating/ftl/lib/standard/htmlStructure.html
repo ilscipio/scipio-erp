@@ -5,6 +5,7 @@
       <title>Structural code (grid, tile, etc.) HTML template include, standard Cato markup.</title>
 
 
+
 <style type="text/css">
 table.entry-parameters {
   width: 100%;
@@ -58,22 +59,21 @@ pre {
   
     <div>
         <h1 class="lib-pagetitle">Structural code (grid, tile, etc.) HTML template include, standard Cato markup.</h1>
-        <h2>Template Building Documentation</h2>
+        <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlStructure.ftl</span></em></p>
 
         <div class="lib-pagedesc">
-      <p>
-Included by htmlTemplate.ftl.      </p>
-      <p>
-NOTES:
-      </p>
-        <div>  <ul>
+        <p>
+Included by htmlTemplate.ftl.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
       <li>
-      <span>
-May have implicit dependencies on other parts of Cato API.      </span>
+        <span>
+May have implicit dependencies on other parts of Cato API.        </span>
       </li>
   </ul>
-</div>
+          </div>
         </div>
     </div>
     
@@ -111,7 +111,8 @@ May have implicit dependencies on other parts of Cato API.      </span>
 
       <a name="section-default"></a>
       <div class="lib-section">
-            
+        
+
           
           <hr />
           <a name="entry-container"></a>
@@ -120,8 +121,8 @@ May have implicit dependencies on other parts of Cato API.      </span>
             <h3 class="lib-entry-title">Container</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>container</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>container</code></span>
+                  </h4>
             </div>
             
               
@@ -129,12 +130,12 @@ May have implicit dependencies on other parts of Cato API.      </span>
                       <p class="lib-entry-shortdesc">Simple container (whether used as grid element or not); basically macro version of HTML div element.
 This serves to add various hooks that may be needed around regular containers.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-For grid usage, <a href="#entry-row">@row</a>/<a href="#entry-cell">@cell</a> should be preferred.      </span>
-      <span>
+        <p>
+For grid usage, <a href="#entry-row">@row</a>/<a href="#entry-cell">@cell</a> should be preferred.        </p>
+        <p>
 Currently, this will scan classes for <a href="#entry-cell">@cell</a>-related grid sizes. this macro should always be
 used instead of div if the div contains grid size classes (but conversely, <a href="#entry-cell">@cell</a> should then be preferred
-to this one.      </span>
+to this one.        </p>
                       </div>
                   </div>
             
@@ -162,22 +163,34 @@ to this one.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Supports prefixes:
-      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)
- id                      = Container ID      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This type of element is expected to have no default classes.          </div>
 </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Container ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
                   <tr>
@@ -197,8 +210,9 @@ to this one.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Extra attributes for div (as inline args)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.      </span>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
 </span>
                     </td>
                   </tr>
@@ -230,8 +244,8 @@ NOTE: camelCase names are automatically converted to dash-separated-lowercase-na
             <h3 class="lib-entry-title">Row</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>row</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>row</code></span>
+                  </h4>
             </div>
             
               
@@ -273,17 +287,17 @@ NOTE: camelCase names are automatically converted to dash-separated-lowercase-na
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Supports prefixes:
-      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -338,8 +352,8 @@ NOTE: camelCase names are automatically converted to dash-separated-lowercase-na
             <h3 class="lib-entry-title">Cell</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>cell</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>cell</code></span>
+                  </h4>
             </div>
             
               
@@ -408,17 +422,17 @@ NOTE: camelCase names are automatically converted to dash-separated-lowercase-na
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Supports prefixes:
-      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -432,8 +446,8 @@ NOTE: camelCase names are automatically converted to dash-separated-lowercase-na
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 12)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Expected number of columns to be rendered</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Default only used if class empty and no column sizes specified.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Default only used if class empty and no column sizes specified.        </span>
 </span>
                     </td>
                   </tr>
@@ -514,8 +528,9 @@ Default only used if class empty and no column sizes specified.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">If true indicates last cell in row</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-NOTE: This is often optional in CSS frameworks; affects float alignment.      </span>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This is often optional in CSS frameworks; affects float alignment.          </div>
 </span>
                     </td>
                   </tr>
@@ -547,8 +562,8 @@ NOTE: This is often optional in CSS frameworks; affects float alignment.      </
             <h3 class="lib-entry-title">parseContainerSizesFromStyleStr</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>parseContainerSizesFromStyleStr</code></span></h4>
-                   <strong>(override)</strong>  
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>parseContainerSizesFromStyleStr</code></span>
+                   <strong>(override)</strong></h4>
             </div>
             
               
@@ -556,20 +571,22 @@ NOTE: This is often optional in CSS frameworks; affects float alignment.      </
                       <p class="lib-entry-shortdesc">OVERRIDE. Parses container sizes from a class/style string.</p>
                       <div class="lib-entry-extradesc">
         <h4>Container size method overrides</h4>
-      <span>
+        <p>
 These provide framework-/theme-specific overriding implementations of the placeholder functions of the
-saveCurrentContainerSizes and related utilities lib functions.      </span>
-      <span>
-NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
-      </span>
-<pre>same.</pre>      <span>
-
-NOTE: catchArgs... is in case of interface changes. Not used.      </span>
-      <span>
-DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
-      </span>
-<pre>should be confirmed...</pre>      <span>
-TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.      </span>
+saveCurrentContainerSizes and related utilities lib functions.        </p>
+          <div class="lib-text-note">
+            <strong>NOTES: </strong>
+  <ul>
+      <li>
+        <span>
+Implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the same.        </span>
+      </li>
+      <li>
+        <span>
+catchArgs... is in case of interface changes. Not used.        </span>
+      </li>
+  </ul>
+          </div>
                       </div>
                   </div>
             
@@ -605,18 +622,15 @@ TODO?: these could also parse style for tile classes and calculate approximate c
             <h3 class="lib-entry-title">evalAbsContainerSizeFactors</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalAbsContainerSizeFactors</code></span></h4>
-                   <strong>(override)</strong>  
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>evalAbsContainerSizeFactors</code></span>
+                   <strong>(override)</strong></h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">OVERRIDE. Calculates nested container size factors.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-TODO: Reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors
-      </span>
-<pre>and have this delegate to it</pre>                      </div>
+                      </div>
                   </div>
             
               
@@ -653,22 +667,22 @@ TODO: Reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.S
             <h3 class="lib-entry-title">Grid List</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>grid</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>grid</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Creates a grid list.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Since this is very foundation specific, this function may be dropped in future installations      </span>
+        <p>
+Since this is very foundation specific, this function may be dropped in future installations        </p>
                       </div>
                   </div>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;@grid&gt;
         &lt;li&gt;Text or &lt;a href=&quot;&quot;&gt;Anchor&lt;/a&gt;&lt;/li&gt;
     &lt;/@grid&gt;
@@ -697,17 +711,17 @@ Since this is very foundation specific, this function may be dropped in future i
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Supports prefixes:
-      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -741,10 +755,10 @@ Since this is very foundation specific, this function may be dropped in future i
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Default tiles type for tiles inside this element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 This same value is used as default for the <a href="#entry-tile">@tile</a> macro &quot;type&quot; attrib.
 However, in addition, type when specified here may also influence tile arrangement.
-See <a href="#entry-tile">@tile</a> macro &quot;type&quot; attrib for possible values.      </span>
+See <a href="#entry-tile">@tile</a> macro &quot;type&quot; attrib for possible values.        </span>
 </span>
                     </td>
                   </tr>
@@ -776,23 +790,23 @@ See <a href="#entry-tile">@tile</a> macro &quot;type&quot; attrib for possible v
             <h3 class="lib-entry-title">Tile</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>tile</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>tile</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Creates a very basic wrapper for tiles (can be used in metro designs).</p>
                       <div class="lib-entry-extradesc">
-      <span>
+        <p>
 Please be aware that this is neither based on standard bootstrap, nor foundation.
-It is loosely based on http://metroui.org.ua/tiles.html      </span>
+It is loosely based on http://metroui.org.ua/tiles.html        </p>
                       </div>
                   </div>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;@tile size=&quot;small&quot;&gt;
        // content
     &lt;/@tile&gt;
@@ -832,14 +846,14 @@ It is loosely based on http://metroui.org.ua/tiles.html      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(default|generic|(theme-specific), default: -inherited from tilesType on @grid element-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
- Provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as &quot;tile_xxx&quot; where xxx is type).
- Cato standard adds the following types by default:
-      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as &quot;tile_xxx&quot; where xxx is type).
+Cato standard adds the following types by default:
+        </span>
         <div>  <ul>
       <li>
-      <span>
-gallery1: tile with settings tailored to image gallery of normal-sized thumb images.      </span>
+        <span>
+gallery1: tile with settings tailored to image gallery of normal-sized thumb images.        </span>
       </li>
   </ul>
 </div>
@@ -873,9 +887,9 @@ gallery1: tile with settings tailored to image gallery of normal-sized thumb ima
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(|default|..., default: default)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Title type. Used to determine style</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Currently only &quot;default&quot; supported.
-Type style is looked up as: styles[&quot;type_overlay_&quot; + titleType?replace(&quot;-&quot;,&quot;_&quot;)].      </span>
+Type style is looked up as: styles[&quot;type_overlay_&quot; + titleType?replace(&quot;-&quot;,&quot;_&quot;)].        </span>
 </span>
                     </td>
                   </tr>
@@ -888,8 +902,8 @@ Type style is looked up as: styles[&quot;type_overlay_&quot; + titleType?replace
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-none: prevents color class.      </span>
+        <span>
+none: Prevents color class.        </span>
       </li>
   </ul>
 </div>
@@ -903,17 +917,17 @@ none: prevents color class.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -927,8 +941,9 @@ Supports prefixes:
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-WARN: can only use if no other links inside nested content      </span>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+can only use if no other links inside nested content          </div>
 </span>
                     </td>
                   </tr>
@@ -939,10 +954,19 @@ WARN: can only use if no other links inside nested content      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Target for link element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-If boolean, false prevents any; true will allow global styles hash lookup.
-      </span>
-<pre>id                      = Field ID</pre></span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean, false prevents any; true will allow global styles hash lookup.        </span>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Field ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
                   <tr>
@@ -954,8 +978,8 @@ If boolean, false prevents any; true will allow global styles hash lookup.
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-none: prevents color class.      </span>
+        <span>
+none: Prevents color class.        </span>
       </li>
   </ul>
 </div>
@@ -989,23 +1013,22 @@ none: prevents color class.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(|default|..., default: default)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Image type for styling</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Cato standard supported types (extensible by theme):
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-cover: this is currently the default. fills tile.      </span>
+        <span>
+cover: This is currently the default. fills tile.        </span>
       </li>
       <li>
-      <span>
-contain: show whole image in tile.      </span>
+        <span>
+contain: Show whole image in tile.        </span>
       </li>
   </ul>
 </div>
-      <span>
-
-Type style is looked up as: styles[&quot;type_image_&quot; + imageType?replace(&quot;-&quot;,&quot;_&quot;)].      </span>
+        <span>
+Type style is looked up as: styles[&quot;type_image_&quot; + imageType?replace(&quot;-&quot;,&quot;_&quot;)].        </span>
 </span>
                     </td>
                   </tr>
@@ -1018,8 +1041,8 @@ Type style is looked up as: styles[&quot;type_image_&quot; + imageType?replace(&
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-none: prevents color class.      </span>
+        <span>
+none: prevents color class.        </span>
       </li>
   </ul>
 </div>
@@ -1033,19 +1056,18 @@ none: prevents color class.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(|default|..., default: default)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Overlay type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Cato standard supported types (extensible by theme):
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-slide-up: this is currently the default.      </span>
+        <span>
+slide-up: This is currently the default.        </span>
       </li>
   </ul>
 </div>
-      <span>
-
-Type style is looked up as: styles[&quot;type_overlay_&quot; + overlayType?replace(&quot;-&quot;,&quot;_&quot;)].      </span>
+        <span>
+Type style is looked up as: styles[&quot;type_overlay_&quot; + overlayType?replace(&quot;-&quot;,&quot;_&quot;)].        </span>
 </span>
                     </td>
                   </tr>
@@ -1058,8 +1080,8 @@ Type style is looked up as: styles[&quot;type_overlay_&quot; + overlayType?repla
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
-none: prevents color class.      </span>
+        <span>
+none: prevents color class.        </span>
       </li>
   </ul>
 </div>
@@ -1094,27 +1116,30 @@ none: prevents color class.      </span>
             <h3 class="lib-entry-title">Section</h3>
             
             <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>section</code></span></h4>
-                    
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>section</code></span>
+                  </h4>
             </div>
             
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Creates a logical section with optional title and menu.</p>
                       <div class="lib-entry-extradesc">
-      <span>
-Automatically handles heading sizes and keeps track of section nesting for the whole rendering request, even across screens.render calls.      </span>
-      <span>
-NOTE: Use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current
-levels manually, but most often should let <a href="#entry-section">@section</a> menu handle the level calculations.      </span>
-      <span>
-IMPL NOTE: This has dependencies on some non-structural macros.      </span>
+        <p>
+Automatically handles heading sizes and keeps track of section nesting for the whole rendering request, even across screens.render calls.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Use getCurrentHeadingLevel and getCurrentSectionLevel functions if need to get current          </div>
+        <p>
+levels manually, but most often should let <a href="#entry-section">@section</a> menu handle the level calculations.        </p>
+          <div class="lib-text-note">
+            <strong>IMPL NOTE: </strong>
+This has dependencies on some non-structural macros.          </div>
                       </div>
                   </div>
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage Example</h4>
+                    <h4>Usage Examples</h4>
 <pre>    &lt;@section attr=&quot;&quot;&gt;
         Inner Content
     &lt;/@section&gt;
@@ -1167,22 +1192,34 @@ IMPL NOTE: This has dependencies on some non-structural macros.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes, on outer columns element (affects title)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-      </span>
-<pre>id                      = Section ID</pre>      </li>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
   </ul>
 </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+boolean false has no effect here          </div>
 </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Section ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
                   <tr>
@@ -1202,8 +1239,8 @@ Supports prefixes:
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Section title class</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-Supports complex expressions (rarely needed; usually headingLevel enough).      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports complex expressions (rarely needed; usually headingLevel enough).        </span>
 </span>
                     </td>
                   </tr>
@@ -1254,8 +1291,8 @@ Supports complex expressions (rarely needed; usually headingLevel enough).      
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Default heading level (same as headingLevel if autoHeadingLevel false)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-If empty string, use getDefaultHeadingLevel()      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If empty string, use getDefaultHeadingLevel()        </span>
 </span>
                     </td>
                   </tr>
@@ -1268,30 +1305,32 @@ If empty string, use getDefaultHeadingLevel()      </span>
                       <span class="lib-entry-param-desc-shortdesc">(optional) A macro, map of <a href="../standard/htmlNav.html#entry-menu">@menu</a> args, or string html markup of li elements only defining a menu</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
-      <span>
+        <span>
 macro: Should accept one argument named &quot;menuArgs&quot; which is default <a href="#entry-section">@section</a> menu args that can be passed
 directly to <a href="../standard/htmlNav.html#entry-menu">@menu</a> by caller, e.g.:
-      </span>
+        </span>
 <pre>&lt;#macro myMenuContent menuArgs&gt;
   &lt;@menu args=menuArgs&gt;
     &lt;@menuitem ... /&gt;
     &lt;@menuitem ... /&gt;
   &lt;/@menu&gt;
-&lt;/#macro&gt;</pre>      <span>
-
-The caller can override the section menu args as needed.      </span>
+&lt;/#macro&gt;</pre>        <span>
+The caller can override the section menu args as needed.        </span>
       </li>
       <li>
-      <span>
+        <span>
 map: These will simply be passed as &lt;<a href="../standard/htmlNav.html#entry-menu">@menu</a> args=menuContent /&gt; by <a href="#entry-section">@section</a>,
-with defaults added underneath (but user-passed args override).      </span>
+with defaults added underneath (but user-passed args override).        </span>
       </li>
       <li>
-      <span>
+        <span>
 string, markup: Should be &lt;li&gt; elements only, generated manually or using &lt;<a href="../standard/htmlNav.html#entry-menu">@menu</a> type=&quot;section&quot; ... inlineItems=true&gt;.
-WARN: if using <a href="../standard/htmlNav.html#entry-menu">@menu</a> to pre-generate the menu as string/html, the menu arguments such as &quot;type&quot; are lost and
-      </span>
-<pre>assumed to be &quot;section&quot; or &quot;section-inline&quot;.</pre>      </li>
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+if using <a href="../standard/htmlNav.html#entry-menu">@menu</a> to pre-generate the menu as string/html, the menu arguments such as &quot;type&quot; are lost and
+assumed to be &quot;section&quot; or &quot;section-inline&quot;.          </div>
+      </li>
   </ul>
 </div>
 </span>
@@ -1304,8 +1343,8 @@ WARN: if using <a href="../standard/htmlNav.html#entry-menu">@menu</a> to pre-ge
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(post-title|pre-title|inline-title, default: post-title)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
-This is a low-level control; avoid where possible.      </span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+This is a low-level control; avoid where possible.        </span>
 </span>
                     </td>
                   </tr>
@@ -1326,23 +1365,22 @@ This is a low-level control; avoid where possible.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">(optional) CSS classes, extra menu classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes:
-      </span>
+        </span>
         <div>  <ul>
       <li>
-      <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)      </span>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
-      <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)      </span>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
-      <span>
-
-This is a low-level control; avoid where possible.      </span>
+        <span>
+This is a low-level control; avoid where possible.        </span>
 </span>
                     </td>
                   </tr>
@@ -1373,9 +1411,9 @@ This is a low-level control; avoid where possible.      </span>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Optional content hint</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">      <span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
 When false, will add classes to indicate content is empty or treat as logically empty
-(workaround for lack of CSS :blank and possibly other browser limitations)      </span>
+(workaround for lack of CSS :blank and possibly other browser limitations)        </span>
 </span>
                     </td>
                   </tr>
@@ -1400,7 +1438,6 @@ When false, will add classes to indicate content is empty or treat as logically 
           </div>
           
       </div>
-      
 
     <footer id="footer">
       <div>

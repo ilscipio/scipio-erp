@@ -15,7 +15,7 @@
 ************
 Creates a modal UI element.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@modal id="dsadsa" attr="" >
         Modal Content 
     </@modal>        
@@ -59,7 +59,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
     it's an unexpected result, error or one that requires user action.
     For most cases, it is preferrable to use @commonMsg macro because it is higher-level.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@alert type="info">
         This is an alert!
     </@alert>            
@@ -109,7 +109,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 ************
 Creates a panel box.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@panel type="">
         This is a panel.
     </@panel>            
@@ -164,7 +164,7 @@ A template should not assume too much about the message markup, but the markup s
   translates to:
     <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
       
-  * Usage Example *  
+  * Usage Examples *  
     <@commonMsg type="result-norecord"/>            
              
   * Parameters *

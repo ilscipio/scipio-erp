@@ -15,7 +15,7 @@
 ************
 An HTML heading (title).
 
-  * Usage Example *  
+  * Usage Examples *  
     <@heading>My Title</@heading>         
                                  
   * Parameters *
@@ -36,7 +36,7 @@ An HTML heading (title).
                               If true, the global heading level is set to (calculated level for this heading) + 1.
                               NOTE: this is better handled through use of the @section macro. Mostly useful for h1.
                               DEV NOTE: default could be made to depend on calculated level.
-    containerElemType       = (div|, default: -empty-). if present, adds container around title or this elem type
+    containerElemType       = (div|, default: -empty-) If present, adds container around title or this elem type
     containerClass          = ((css-class)) Container element CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -134,7 +134,7 @@ An HTML heading (title).
 ************
 Creates a basic wrapper for code blocks.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@code type="java">
        // Some java code
     </@code>
@@ -198,9 +198,11 @@ Creates a responsive tables script (script only - no markup).
                               If true, guarantees table will be scrollable horizontally.
                               implementation of scrollable depends on macro and global styles (by default, uses responsive).
                               If explicitly set to false, prevents scrolling.
-                              (convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX)
-    fixedColumnsLeft        = ((integer)) Number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
-    fixedColumnsRight       = ((integer)) Number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
+                              Convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX.
+    fixedColumnsLeft        = ((integer)) Number of columns that are fixed on the left-hand side 
+                              (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns.
+    fixedColumnsRight       = ((integer)) Number of columns that are fixed on the right hand side 
+                              Convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns.
 -->
 <#assign tableResponsiveScript_defaultArgs = {
   "enabled" : true, "tableId" : "", "tableType" : "", "tableStyleName" : "", "responsive" : "", "scrollable" : "",
@@ -267,7 +269,7 @@ Required wrapper for all @table sub-element macros.
 TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
     overcomplicated at the moment.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@table type="data-list" id="my-table">
       <@thead>
         <@tr>
@@ -289,26 +291,26 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                               * STANDARD TYPES *
                               These types must always be recognized by all styles themes:
                               * generic: generic html table (free-form, complex); no features enabled by default.
-                                    similar to defining an html <table> manually, but more powerful.
+                                similar to defining an html <table> manually, but more powerful.
                               * DEFAULT STYLES TYPES *
                               WARN: these are WIP types, may not be enough (important part is to label things for easy search)
                               The following are currently recognized by the default cato styles (NOTE: targeted for backend):
                               * data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
-                                  similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
+                                similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
                               * data-list-multiform: virtually same as data-list, but expected to contain a multi-submit form, which
-                                  could change styling requirements.
-                                  this makes no real semantic difference from data-list to @table macro, but this type exists as analog
-                                  to form widget "multi" form type, so possible to style differently.
+                                could change styling requirements.
+                                this makes no real semantic difference from data-list to @table macro, but this type exists as analog
+                                to form widget "multi" form type, so possible to style differently.
                               * data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
-                                  there is no form widget equivalent of these and usually need some custom alt-row work.
+                                there is no form widget equivalent of these and usually need some custom alt-row work.
                               * summary: usually table with one or a few set rows of summary totals
-                                  e.g. order grand totals. 
-                                  TODO? review need for this type (should be converted?)
+                                e.g. order grand totals. 
+                                TODO?: review need for this type (should be converted?)
                               * fields: label-value pairs for display, side-by-side, usually no header, roughly
-                                  this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
-                                  legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
-                                  ultimately belong as @field and @row/@cell.
-                                  TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
+                                this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
+                                legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
+                                ultimately belong as @field and @row/@cell.
+                                TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
     class                   = ((css-class), default: -from global styles-) CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -322,7 +324,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                               @table will try to figure this out on its own, but in some cases it may not be possible
                               or not possible to know in advance, in which case caller must specify this flag.
                               Currently, this setting affects the following:
-                                * Responsive tables
+                              * Responsive tables
     autoAltRows             = ((boolean), default: -from global styles-, fallback default: false)
     firstRowAlt             = ((boolean), default: false)
     inheritAltRows          = ((boolean)) Only for nested tables: If true, all rows in nested tables will inherit alt from parent table row
@@ -436,7 +438,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
       && !(responsive?is_boolean && responsive == false)>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
-      <#-- TODO? this stack push is duplicating catoCurrentTableInfo above;
+      <#-- TODO?: this stack push is duplicating catoCurrentTableInfo above;
            could instead always push a stack and have child elems use readRequestStack instead of
            catoCurrentTableInfo; but requires change all the macros, and as-is this optimizes
            for FTLs somewhat, though also more error-prone... -->
@@ -717,13 +719,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                               Standard types:
                               * generic: free-form row with no assumptions on content.
                               * content: normal data or content row. exact meaning depends on table type.
-                                    note that for "data-complex" this definition is currently relaxed.
+                                note that for "data-complex" this definition is currently relaxed.
                               * meta: indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
-                                    meta rows are treated differently by default as are thead and tfoot rows.
-                                    exact meaning depends on table type.
+                                meta rows are treated differently by default as are thead and tfoot rows.
+                                exact meaning depends on table type.
                               * util: indicates this is a special utility-only row meant to hold no real data, 
-                                    such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
-                                    TODO: this isn't handled yet but SHOULD be used in templates anyhow.
+                                such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
+                                TODO: this isn't handled yet but SHOULD be used in templates anyhow.
     class                   = ((css-class)) CSS classes
                               Supports prefixes:
                               * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -733,10 +735,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     alt                     = ((boolean)) If specified, override the automatic auto-alt styling to specific value true or false (manual mode)
                               NOTE: At current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
                                   next row's alt (unless groupLast used explicit on next) logic.
-    groupLast               = ((boolean)) If specified, considers row logically grouped with last row;
-                              sets alt to exact same as last row
-    groupParent             = ((boolean)) Nested tables only, if specified, considers row logically grouped with parent row;
-                              sets alt to exact same as parent row
+    groupLast               = ((boolean)) If true, considers row logically grouped with last row
+                              Sets alt to exact same as last row.
+    groupParent             = ((boolean)) Nested tables only, if true, considers row logically grouped with parent row
+                              Sets alt to exact same as parent row.
     selected                = ((boolean), default: false) If specified and true marked as selected
     open, close             = ((boolean)) Advanced structure control, for esoteric cases
     attribs                 = ((map)) Map of other legacy <tr> attributes (mainly for those with dash in name)
@@ -884,7 +886,7 @@ Defines a table header cell. Analogous to <th> HTML element.
 Defines a table body cell. Analogous to <td> HTML element.
                     
   * Parameters *
-    (other)         = See @th.
+    (other)                 = See @th
 -->
 <#assign td_defaultArgs = {
   "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
@@ -910,7 +912,7 @@ Defines a table body cell. Analogous to <td> HTML element.
 Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
 DEPRECATED: use @table, @tr macros instead. 
 
-  * Usage Example *  
+  * Usage Examples *  
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
                     
   * Parameters *
@@ -945,13 +947,13 @@ Creates a pricing table wrapper.
 
 Since this is very foundation specific, this function may be dropped in future installations.
 
-  * Usage Example *  
+  * Usage Examples *  
     <@pul>
         <@pli>Text or <a href="">Anchor</a></@pli>
     </@pul>            
                     
   * Parameters *
-    title           = fieldset title
+    title                   = Fieldset title
 -->
 <#assign pul_defaultArgs = {
   "title":"", "passArgs":{}
@@ -1020,7 +1022,7 @@ Libraries used:
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
-  * Usage Example *  
+  * Usage Examples *  
     <@chart type="bar" >
         <@chartdata value="36" title="Peperoni"/> 
     </@chart>              

@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SideDeepCategory.groovy"/>
+                <script location="component://shop/script/com/ilscipio/shop/solr/SideDeepCategory.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/sidedeepcategory.ftl"/></html></platform-specific>

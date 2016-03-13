@@ -222,26 +222,29 @@ under the License.
     <screen name="leftbar">
         <section>
             <widgets>
+                    <include-screen name="sidedeepcategory" location="component://shop/widget/CatalogScreens.xml"/>
+                    <!--
                     <include-screen name="choosecatalog" location="component://shop/widget/CatalogScreens.xml"/>
                     <include-screen name="keywordsearchbox" location="component://shop/widget/CatalogScreens.xml"/>
-                    <!--include-screen name="sidedeepcategory" location="component://shop/widget/CatalogScreens.xml"/-->
+
                     <include-screen name="productCategories" location="component://shop/widget/CatalogScreens.xml"/>
                     <include-screen name="LayeredNavBar" location="component://shop/widget/CatalogScreens.xml"/>
                     <include-screen name="minireorderprods" location="component://shop/widget/CatalogScreens.xml"/>
-                    <include-screen name="signupforcontactlist" location="component://shop/widget/EmailContactListScreens.xml"/>
+                    <include-screen name="signupforcontactlist" location="component://shop/widget/EmailContactListScreens.xml"/>-->
             </widgets>
         </section>
     </screen>
     <screen name="rightbar">
         <section>
             <widgets>
+                    <!-- 
                     <include-screen name="minicart" location="component://shop/widget/CartScreens.xml"/>
                     <include-screen name="compareproductslist" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
                     <include-screen name="minipromotext" location="component://shop/widget/CartScreens.xml"/>
                     <include-screen name="miniassocprods" location="component://shop/widget/CatalogScreens.xml"/>
                     <include-screen name="minilastviewedcategories" location="component://shop/widget/CatalogScreens.xml"/>
                     <include-screen name="minilastviewedproducts" location="component://shop/widget/CatalogScreens.xml"/>
-                    <include-screen name="minilastproductsearches" location="component://shop/widget/CatalogScreens.xml"/>
+                    <include-screen name="minilastproductsearches" location="component://shop/widget/CatalogScreens.xml"/> -->
             </widgets>
         </section>
     </screen>
@@ -286,9 +289,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://shop/webapp/shop/main.ftl"/></html>
-                        </platform-specific>
+                        <include-screen name="CatoDashboardSlider"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -343,6 +344,27 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen>
+    
+    <!-- CATO: Widget implementation -->
+    <screen name="CatoDashboardSlider">
+        <section>
+            <actions>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                    </condition>
+                     <widgets>
+                       <screenlet>
+                           <platform-specific>
+                                <html><html-template location="component://shop/webapp/shop/dashboard/slider.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
         </section>
     </screen>
 </screens>

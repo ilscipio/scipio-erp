@@ -41,7 +41,7 @@ catLevel = res.get("categories");
 //Debug.logInfo("catList "+catLevel,"");
 context.currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId,false,dispatcher.getDispatchContext());
 context.catList = catLevel;
-context.topLevelList = ["DRAMATIC_WORKS_C","FICTION_C","NON_FICTION_C","POETRY_C","SYRACUS2_MOST_DOWN"];
+context.topLevelList = [topCategoryId];
 context.curCategoryId = curCategoryId;
 
 

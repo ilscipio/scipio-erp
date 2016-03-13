@@ -17,65 +17,42 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- variable setup and worker calls -->
-<#if (requestAttributes.topLevelList)??><#assign topLevelList = requestAttributes.topLevelList></#if>
-<#if (requestAttributes.curCategoryId)??><#assign curCategoryId = requestAttributes.curCategoryId></#if>
-
-<#-- looping macro -->
-<#macro categoryList parentCategory category wrapInBox>
-  <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")??>
-    <#assign categoryName = catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")>
-  <#else>
-    <#assign categoryName = category.categoryName!>
-  </#if>
-  <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")??>
-    <#assign categoryDescription = catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")>
-  <#else>
-    <#assign categoryDescription = category.description!>
-  </#if>
-  <#if curCategoryId?? && curCategoryId == category.productCategoryId>
-    <#assign browseCategoryButtonClass = "browsecategorybuttondisabled">
-  <#else>
-    <#assign browseCategoryButtonClass = "browsecategorybutton">
-  </#if>
-  <#local listEntries>
-        <li class="browsecategorytext">
-          <#if parentCategory?has_content>
-            <#assign parentCategoryId = parentCategory.productCategoryId/>
-          <#else>
-            <#assign parentCategoryId = ""/>
-          </#if>
-          <a href="<@ofbizCatalogAltUrl productCategoryId=category.productCategoryId previousCategoryId=parentCategoryId/>" class="${browseCategoryButtonClass}"><#if categoryName?has_content>${categoryName}<#else>${categoryDescription!""}</#if></a>
-
-  <#if (Static["org.ofbiz.product.category.CategoryWorker"].checkTrailItem(request, category.getString("productCategoryId"))) || (curCategoryId?? && curCategoryId == category.productCategoryId)>
-    <#local subCatList = Static["org.ofbiz.product.category.CategoryWorker"].getRelatedCategoriesRet(request, "subCatList", category.getString("productCategoryId"), true)>
-    <#if subCatList??>
-      <#list subCatList as subCat>
-        <ul class="browsecategorylist">
-          <@categoryList parentCategory=category category=subCat wrapInBox="N"/>
-        </ul>
-      </#list>
-    </#if>
-  </#if>
-  </li>
-  </#local>
-  <#if wrapInBox == "Y">
-    <#assign sectionTitle><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName!""}</#if></#assign>
-    <@section title=sectionTitle id="sidedeepcategory" class="+screenlet">
-      <ul class="browsecategorylist">
-        ${listEntries}
-      </ul>
-    </@section>
-  <#else>
-    ${listEntries}
-  </#if>
+<#macro categoryList productCategoryId level isMultiLevel path count>
+    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : productCategoryId!""}, true)/>
+    <#assign contentCategoryName=Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html")?if_exists>
+    <#assign contentCategoryDesc=Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "html")?if_exists>    
+    <#assign activeCategoryClass = "" />
+    <#if (curCategoryId?has_content && curCategoryId = productCategoryId) || currentCategoryPath.contains("/"+productCategoryId)><#assign activeCategoryClass = "header-menu-category-active"/></#if>
+    <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId/></#assign>
+    <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc?default("")}</#if> <#if count != "0">(${count})</#if></#assign>
+    <@menuitem type="link" href=categoryUrl!"" text=linkText!"" class="menu-${level} ${activeCategoryClass}"/>    
+    <#if isMultiLevel>
+        <#if currentCategoryPath.contains("/"+productCategoryId)>
+            <#assign nextLevel=level+1/>
+            <#if catList.get("menu-"+nextLevel)?has_content>
+                <#assign nextList = catList.get("menu-"+nextLevel) />
+                <@iterateList currentList=nextList currentLevel=nextLevel isMultiLevel=true />
+            </#if>
+        </#if>
+    </#if>        
 </#macro>
 
-<#if topLevelList?has_content>
-  <@section title=uiLabelMap.ProductBrowseCategories id="sidedeepcategory" class="+screenlet">
-    <ul class="browsecategorylist">
-      <#list topLevelList as category>
-        <@categoryList parentCategory="" category=category wrapInBox="N"/>
-      </#list>
-    </ul>
-  </@section>
+<#macro iterateList currentList currentLevel isMultiLevel>
+    <@menu id="menu-${currentLevel!0}" type="sidebar">
+    <#list currentList as item>
+        <@categoryList productCategoryId=item.catId! level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
+    </#list>
+    </@menu>
+</#macro>
+
+
+
+<#if catList?has_content>          
+       <@iterateList currentList=catList.get("menu-0") currentLevel=0 isMultiLevel=true/>
+<#elseif topLevelList?has_content>
+    <@menu id="menu-0" type="sidebar">
+        <#list topLevelList as productCategoryId>
+            <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count="0"/>
+        </#list>
+    </@menu>       
 </#if>

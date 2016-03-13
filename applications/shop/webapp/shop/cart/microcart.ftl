@@ -23,23 +23,18 @@ under the License.
     <#assign shoppingCartSize = 0>
 </#if>
 
-<@section id="microcart">
-        <#if (shoppingCartSize > 0)>
-            <p id="microCartNotEmpty">
-                ${uiLabelMap.EcommerceCartHas} <strong id="microCartQuantity">${shoppingCart.getTotalQuantity()}</strong>
-                <#if shoppingCart.getTotalQuantity() == 1>${uiLabelMap.OrderItem}<#else>${uiLabelMap.OrderItems}</#if>,
-                <strong id="microCartTotal"><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></strong>
-            </p>
-            <span id="microCartEmpty" style="display:none">${uiLabelMap.OrderShoppingCartEmpty}</span>
-        <#else>
-            <p>${uiLabelMap.OrderShoppingCartEmpty}</p>
-        </#if>
+<div id="microcart">
+            <a href="<@ofbizUrl>showcart</@ofbizUrl>">
+            <div id="microCartQuantity"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i><#--${shoppingCart.getTotalQuantity()}--></div>
+            <div id="microCartTotal"><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></div>
+            </a>
+    <#-- The following contains a list of various checkout options.
     <ul>
       <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>">[${uiLabelMap.OrderViewCart}]</a></li>
       <#if (shoppingCartSize > 0)>
             <#if !initialLocaleComplete?? || initialLocaleComplete?length == 2 >
                 <#if initialLocaleComplete?? && initialLocaleComplete?length == 2  && initialLocaleComplete == "fr">
-                    <#assign initialLocaleComplete = "fr_FR"><#-- same idea can be used with other default locale --> 
+                    <#assign initialLocaleComplete = "fr_FR">
                 <#else>
                     <#assign initialLocaleComplete = "en_US">
                 </#if>                              
@@ -58,4 +53,5 @@ under the License.
           <li class="disabled">[${uiLabelMap.EcommerceOnePageCheckout}]</li>
       </#if>
     </ul>
-</@section>
+    -->
+</div>

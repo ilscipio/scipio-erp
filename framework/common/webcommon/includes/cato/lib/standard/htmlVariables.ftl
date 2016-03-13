@@ -49,6 +49,7 @@
     "icon_button" : "fi-widget",
     "icon_button_value" : "&#xf214;",
     "icon_calendar" : "fi-calendar",
+    "icon_shopping_cart" : "fi-shopping-cart",
     "icon_arrow" : "fi-arrow-right",
     "icon_list" : "fi-list",
     "icon_user" : "fi-torso-female",

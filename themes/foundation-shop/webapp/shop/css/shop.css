@@ -1,0 +1,19 @@
+/*Header*/
+.top-bar {}
+#microcart {
+	display:block;
+	width: 120px;
+	padding-left: 5px;
+	padding-right: 5px;
+    text-decoration: none;
+}
+#microcart a {color:#fff;float: left;}
+#microCartQuantity {
+	float: left;
+	font-size: 28px;
+    width: 25%;
+    padding-right:8px;}
+#microCartTotal {
+	float: left;width: 75%;    
+	line-height: 2.8125rem;
+    padding: 0 0.9375rem;}

@@ -89,6 +89,8 @@ May have implicit dependencies on other parts of Cato API.        </span>
         <a href="#entry-mapOfbizFormTypeToTableType">mapOfbizFormTypeToTableType</a>, 
         <a href="#entry-pli">pli</a>, 
         <a href="#entry-pul">pul</a>, 
+        <a href="#entry-slide">slide</a>, 
+        <a href="#entry-slider">slider</a>, 
         <a href="#entry-table">table</a>, 
         <a href="#entry-tableResponsiveScript">tableResponsiveScript</a>, 
         <a href="#entry-tableRowClassAttribStr">tableRowClassAttribStr</a>, 
@@ -1987,6 +1989,281 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                      <h4>Related</h4>
                      <p>
                              <a href="#entry-chart">@chart</a>
+
+                     </p>
+                  </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-slider"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">Slider</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>slider</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Creates a slider wrapper.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>    &lt;@slider&gt;
+        &lt;@slide title=&quot;&quot; image=&quot;&quot; link=&quot;/myUrl.html&quot;&gt;
+            // content
+        &lt;/@slide&gt;
+    &lt;/@slide&gt;
+</pre>                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>title</code>, 
+                          <code>id</code>, 
+                          <code>class</code>, 
+                          <code>controls</code>, 
+                          <code>indicator</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>title</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Data Title</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Slider id</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>controls</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Left / Right navigation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>indicator</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Bullet indicators</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                             <a href="#entry-slide">@slide</a>
+
+                     </p>
+                  </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-slide"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">Slide</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>slide</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Slider data entry - a single slide.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>    &lt;@slide title=&quot;Slide #1&quot; image=&quot;&quot;&gt;
+       // content
+    &lt;/@tile&gt;
+</pre>                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>title</code>, 
+                          <code>class</code>, 
+                          <code>link</code>, 
+                          <code>linkTarget</code>, 
+                          <code>image</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>title</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Data Title</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>link</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+can only use if no other links inside nested content          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>linkTarget</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Target for link element</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean, false prevents any; true will allow global styles hash lookup.        </span>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>image</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Background image URL</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                             <a href="#entry-slider">@slider</a>
 
                      </p>
                   </div>  

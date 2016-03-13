@@ -278,13 +278,12 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleMain"/>
+                <set field="titleProperty" value=""/>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                <set field="randomSurveyGroup" value="testSurveyGroup"/>
-
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+                <set field="title" value=""/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -350,20 +349,12 @@ under the License.
     <!-- CATO: Widget implementation -->
     <screen name="CatoDashboardSlider">
         <section>
-            <actions>
-           </actions>
-           <widgets>
-                <section>
-                    <condition>
-                    </condition>
-                     <widgets>
-                       <screenlet>
-                           <platform-specific>
-                                <html><html-template location="component://shop/webapp/shop/dashboard/slider.ftl"/></html>
-                            </platform-specific>
-                       </screenlet>     
-                   </widgets>
-                </section>
+             <widgets>
+               <screenlet>
+                   <platform-specific>
+                        <html><html-template location="component://shop/webapp/shop/dashboard/slider.ftl"/></html>
+                    </platform-specific>
+               </screenlet>     
            </widgets>
         </section>
     </screen>

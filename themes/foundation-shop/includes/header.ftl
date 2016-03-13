@@ -208,6 +208,10 @@ under the License.
       <section class="top-bar-section">
         <!-- Right Nav Section -->
         <ul class="right">
+          <li class="has-form">
+            ${screens.render("component://shop/widget/CatalogScreens.xml#keywordsearchbox")}
+          </li>
+          <li class="divider"></li>
           <li class="has-dropdown not-click">
             <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
             <ul class="dropdown">       

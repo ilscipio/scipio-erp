@@ -17,12 +17,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+      <@row collapse=true>
+            <@cell columns=9>
+                <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) />
+            </@cell>
+            <@cell columns=3>
+              <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a>
+            </@cell>
+        </@row>
+    </form>
+
+<#-- CATO: Replaced by tiny form
 <@section title=uiLabelMap.ProductSearchCatalog id="keywordsearchbox">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <@fields type="default-manual"> <#-- no auto label areas or fancy things -->
-        <#-- Cato: don't hardcode these
-        <input type="hidden" name="VIEW_SIZE" value="10" />
-        <input type="hidden" name="PAGING" value="Y" />-->
+      <@fields type="default-manual">
         <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value=(requestParameters.SEARCH_STRING!) />
         
         <#if (0 < otherSearchProdCatalogCategories?size)>
@@ -63,3 +72,4 @@ under the License.
       </@fieldset>
     </form>
 </@section>
+-->

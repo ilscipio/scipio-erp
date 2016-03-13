@@ -93,7 +93,7 @@ if (product) {
     for (String key in solrProduct.keySet()) {
         if (key.endsWith("_" + request.getLocale().getLanguage())) {
             if (key.startsWith("title"))
-                context.title = solrProduct.get(key);
+                context.solrTitle = solrProduct.get(key);
             else if (key.startsWith("description"))
                 context.description =  solrProduct.get(key);
             else if (key.startsWith("longdescription"))

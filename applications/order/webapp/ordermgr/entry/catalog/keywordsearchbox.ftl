@@ -20,7 +20,7 @@ under the License.
 <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <@row collapse=true>
             <@cell columns=9>
-                <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) />
+                <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) collapse=true/>
             </@cell>
             <@cell columns=3>
               <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a>

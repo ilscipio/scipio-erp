@@ -144,7 +144,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     should use set/getRequestVar and/or stack.            
                     
   * Parameters *
-    type                    = (generic|section|section-inline|main|tab|subtab|button|..., default: generic) The menu type
+    type                    = (generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic) The menu type
                               General:
                               * generic: any content, but specific type should be preferred.
     inlineItems             = ((boolean), default: false) If true, generate only items, not menu container

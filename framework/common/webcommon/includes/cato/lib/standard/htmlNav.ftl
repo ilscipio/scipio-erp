@@ -1,6 +1,6 @@
 <#--
 * 
-* Navigation HTML template include, standard Cato markup.
+* Navigation HTML template include, standard Cato markup
 *
 * Included by htmlTemplate.ftl.
 *
@@ -35,8 +35,8 @@ Since this is very foundation specific, this function may be dropped in future i
     type                    = (inline|magellan|breadcrumbs, default: inline)
     class                   = ((css-class)) CSS classes
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)   
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)   
 -->
 <#assign nav_defaultArgs = {
   "type":"inline", "class":"", "passArgs":{}
@@ -146,12 +146,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   * Parameters *
     type                    = (generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic) The menu type
                               General:
-                              * generic: any content, but specific type should be preferred.
+                              * {{{generic}}}: any content, but specific type should be preferred.
     inlineItems             = ((boolean), default: false) If true, generate only items, not menu container
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
                               defaults are based on:
                                 styles["menu_" + type?replace("-","_")], or if missing from hash, falls back to
                                 styles["menu_default"]
@@ -160,14 +160,14 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                                   inline having priority.
     id                      = Menu ID
     style                   = Legacy menu HTML style attribute (for <ul> element)
-    attribs                 = ((maps)) Map of extra menu attribs (for <ul> element, especially those with dashes)
+    attribs                 = ((maps)) Other menu attributes (for <ul> element)
     items                   = ((list)) List of maps, where each hash contains arguments representing a menu item,
                               same as @menuitem macro parameters.
                               alternatively, the items can be specified as nested content.
-    preItems                = ((list)) Special-case list of maps of items, added before items and #nested
+    preItems                = ((list)) Special-case list of maps of items, added before items and nested content
                               excluded from sorting.
                               templates should generally avoid use unless specific need, but may be used by other macros.
-    postItems               = ((list)) Special-case list of maps of items, added after items and #nested
+    postItems               = ((list)) Special-case list of maps of items, added after items and nested content
                               excluded from sorting.
                               Avoid use unless specific need; may be needed by cato menu handling.
                               Templates should generally avoid use unless specific need, but may be used by other macros.
@@ -330,27 +330,26 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
              
   * Parameters *
     type                    = (generic|link|text|submit, default: generic) Menu item (content) type
-                              Values:
-                              * generic: any generic content, but specific types should be preferred.
+                              * {{{generic}}}: any generic content, but specific types should be preferred.
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu item
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
                               NOTE: for this macro, the inline "class" args is now logically combined with the "class"
                                   arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     id                      = Menu item ID
     style                   = Legacy menu item style (for <li> element)
-    attribs                 = ((map)) Extra menu item attributes (for <li> element, especially those with dashes in names)
+    attribs                 = ((map)) Extra menu item attributes (for <li> element)
     contentClass            = ((css-class)) CSS classes, for menu item content element (<a>, <span> or <input> element)
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly) 
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly) 
                               NOTE: for this macro, the inline "contentClass" args is now logically combined with the "contentClass"
                                   arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     contentId               = Menu item content ID
     contentStyle            = Legacy menu item content style
     contentName             = Content name attrib (name="" on <a> link)
-    contentAttribs          = ((map)) Extra menu item content attributes (for <a>, <span> or <input> element, especially those with dashes in names)
+    contentAttribs          = ((map)) Extra menu item content attributes (for <a>, <span> or <input> element)
     text                    = Text to use as content
                               For now, ALWAYS use this argument to specify text, not nested content.
                               TODO: Clarify nested content usage (because may have nested menus?)
@@ -361,9 +360,9 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     disabled                = ((boolean), default: false) Whether disabled
     selected                = ((boolean), default: false) Whether selected or not
     active                  = ((boolean), default: false) Whether active or not
-    nestedContent           = Macro arg alternative to #nested content
+    nestedContent           = Macro arg alternative to macro nested content
                               This may be passed in @menu items list.
-    nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent and #nested content
+    nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent arg and macro nested content
                               For menu to use as sub-menu.
     wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following)
     nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text)
@@ -536,31 +535,31 @@ functionality.
                     
   * Parameters *
    mode                     = (content|single, default: single)
-                              * content: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
+                              * {{{content}}}: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
                                 NOTE: in overwhelmingly most cases, this mode should be preferred, as it offers more control to the theme.
-                              * single: produces a single pagination menu (layout argument has no effect)
+                              * {{{single}}}: produces a single pagination menu (layout argument has no effect)
    type                     = (default, default: default) Type of the pagination menu itself
-                              * default: default cato pagination menu
+                              * {{{default}}}: default cato pagination menu
    layout                   = (default|top|bottom|both, default: default) Type of layout, only meaningful for "content" mode
-                              * default: "pagination_layout" from styles hash, otherwise both
-                              * top: no more than one menu, always at top
-                              * bottom: no more than one menu, always at bottom
-                              * both: always two menus, top and bottom
+                              * {{{default}}}: "pagination_layout" from styles hash, otherwise both
+                              * {{{top}}}: no more than one menu, always at top
+                              * {{{bottom}}}: no more than one menu, always at bottom
+                              * {{{both}}}: always two menus, top and bottom
    position                 = (top|bottom|, default: -empty-) Optional position indicator, only makes sense in single mode.
                               If specified, it may lead to the pagination not rendering depending on resolved value of layout.
                               In content mode (preferred), this is handled automatically.
    noResultsMode            = (default|hide|disable, default: default)
-                              * default: "pagination_noresultsmode" from styles hash, otherwise hide. may depend on mode argument.
-                              * hide: hide menu when no results
-                              * disable: disable but show controls when no results (TODO?: not implemented)
+                              * {{{default}}}: "pagination_noresultsmode" from styles hash, otherwise hide. may depend on mode argument.
+                              * {{{hide}}}: hide menu when no results
+                              * {{{disable}}}: disable but show controls when no results (TODO?: not implemented)
    enabled                  = ((boolean), default: true) Manual control to disable the entire macro
                               Sometimes needed to work around FTL language.
                               For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url                      = Base Url to be used for pagination
    class                    = ((css-class)) CSS classes 
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
    listSize                 = Size of the list in total
    viewIndex                = ((int)) Page currently displayed
    viewSize                 = ((int)) Maximum number of items displayed

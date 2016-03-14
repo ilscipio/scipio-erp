@@ -1,6 +1,6 @@
 <#--
 * 
-* Master HTML template include, standard Cato markup.
+* Master HTML template include, standard Cato markup
 *
 * A set of HTML templating macros, part of standard Cato Freemarker API.
 * Automatically included at all times, unless overridden by properties or themes.
@@ -76,12 +76,12 @@
 * * Interface:
 *     <#assign name_defaultArgs = { (...), "passArgs":{} }>
 *     <#macro macroname args={} inlineArgs...>
-*   * args: Macro args map. Map of parameters to pass to the macro. It can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
+*   * {{{args}}}: Macro args map. Map of parameters to pass to the macro. It can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
 *     IMPL NOTE: The implementation should pass this to mergeArgMaps or equivalent function (see examples).
-*   * inlineArgs: Macro inline args. Map of parameters passed inline to the macro via usual macro call syntax.
+*   * {{{inlineArgs...}}}: Macro inline args. Map of parameters passed inline to the macro via usual macro call syntax.
 *     these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
 *     IMPL NOTE: The implementation should pass this to mergeArgMaps or equivalent function (see examples).
-*   * passArgs: Pass-through args. Map of args that should be passed along the major calls made by this macro or in other words
+*   * {{{passArgs}}}: Pass-through args. Map of args that should be passed along the major calls made by this macro or in other words
 *     passed through the whole call stack. It allows arguments to pass through from the templating-facing macro 
 *     to the internal implementations such as markup macros, similar to a context. This is needed especially to allow theme overrides 
 *     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
@@ -101,18 +101,18 @@
 *     with themes.
 * * Interface:
 *     <#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...>
-*   * origArgs: Original caller's args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
+*   * {{{origArgs}}}: Original caller's args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
 *     avoided in favor of the other simpler macro arguments passed by the caller, which are usually very similar. Is 
 *     needed in rare cases where the simpler macro arguments are too simplistic or don't provide all the information needed.
 *     NOTE: In general orig args do not come from a template-facing macro but from an intermediate macro
 *         (such as @fieldset_core or @field_input_widget). This is the intention, as the former would break 
 *         abstraction too much. In many cases however, the calling macro may happen to be 
 *         a template-facing macro. Do not rely on this while using origArgs.
-*   * passArgs: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to 
+*   * {{{passArgs}}}: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to 
 *     this macro or in other words passed through the whole call stack, similar to a context. This is needed especially to allow theme overrides 
 *     to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
 *     Be careful about using sufficiently unique names.
-*   * catchArgs: Catch-all args. Simply catches all the parameters the macro doesn't need to handle
+*   * {{{catchArgs}}}: Catch-all args. Simply catches all the parameters the macro doesn't need to handle
 *     NOTE: The previous parameters may be omitted and caught with catchArgs if unused.
 *
 -->

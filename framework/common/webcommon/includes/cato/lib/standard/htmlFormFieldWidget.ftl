@@ -1,6 +1,6 @@
 <#--
 * 
-* Individual field widgets HTML template include, standard Cato markup.
+* Individual field widgets HTML template include, standard Cato markup
 *
 * Included by htmlForm.ftl.
 *

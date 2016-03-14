@@ -1,6 +1,6 @@
 <#--
 * 
-* Informational/notification element HTML template include, standard Cato markup.
+* Informational/notification element HTML template include, standard Cato markup
 *
 * Included by htmlTemplate.ftl.
 *
@@ -27,8 +27,8 @@ Creates a modal UI element.
                               NOTE: Has to be the full set of classes, e.g. "fa fa-fw fa-info"
     class                   = ((css-class)) CSS classes or additional classes for anchor
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
 -->
 <#assign modal_defaultArgs = {
   "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
@@ -68,8 +68,8 @@ NOTE: Should avoid using this for regular, common inlined message results such a
     type                    = (info|success|warning|secondary|alert|error), default info
     class                   = ((css-class)) CSS classes or additional classes for nested container
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign alert_defaultArgs = {
   "type":"info", "class":"", "id":"", "passArgs":{}
@@ -154,41 +154,42 @@ A template should not assume too much about the message markup, but the markup s
 
   * Usage from screen widgets *
 
-  <label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
-  xxx is the message type. e.g.: 
-    <label style="common-msg-error-perm" text="Permission Error" />
-  translates to:
-    <@commonMsg type="error-perm">Permission Error</@commonMsg>
-  Extra classes are also possible using colon syntax (combined with the usual "+" macro additive class instruction):
-    <label style="common-msg-error-perm:+myclass" text="Permission Error" />
-  translates to:
-    <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
-      
+<label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
+xxx is the message type. e.g.: 
+  <label style="common-msg-error-perm" text="Permission Error" />
+translates to:
+  <@commonMsg type="error-perm">Permission Error</@commonMsg>
+Extra classes are also possible using colon syntax (combined with the usual "+" macro additive class instruction):
+  <label style="common-msg-error-perm:+myclass" text="Permission Error" />
+translates to:
+  <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
+
   * Usage Examples *  
     <@commonMsg type="result-norecord"/>            
-             
+
   * Parameters *
     type                    = (default|generic|..., default: default) The type of message contained
                               Basic types:
-                              * default: default. in standard Cato markup, same as generic.
-                              * generic: no type specified (avoid using - prefer more specific)
+                              * {{{default}}}: default. in standard Cato markup, same as generic.
+                              * {{{generic}}}: no type specified (avoid using - prefer more specific)
                               Types recognizes by Cato standard markup (theme-defined types are possible):
-                              * result: an informational result from any kind of query. e.g., "No records found.".
+                              * {{{result}}}: an informational result from any kind of query. e.g., "No records found.".
                                     is a normal event that shouldn't distract user attention.
-                              * result-norecord: specific "No records found." message.
-                              * info: general information (NOTE: this is not really useful, but supported for completeness)
-                              * info-important: general important information
-                              * warning: general warning
-                              * fail: general non-fatal error
-                              * error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
-                              * error-perm: permission error
-                              * error-security: security error
+                              * {{{result-norecord}}}: specific "No records found." message.
+                              * {{{info}}}: general information (NOTE: this is not really useful, but supported for completeness)
+                              * {{{info-important}}}: general important information
+                              * {{{warning}}}: general warning
+                              * {{{fail}}}: general non-fatal error
+                              * {{{error}}}: general error message - typically an unexpected event or fatal error that should not happen in intended use.
+                              * {{{error-perm}}}: permission error
+                              * {{{error-security}}}: security error
     id                      = ID
     class                   = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
-    text                    = ((string)) Text. If a string is not specified, uses #nested instead
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+    text                    = ((string)) Text
+                              If a string is not specified, uses nested content instead.
 -->
 <#assign commonMsg_defaultArgs = {
   "type":"", "class":"", "id":"", "text":true, "passArgs":{}

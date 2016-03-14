@@ -1,6 +1,6 @@
 <#--
 * 
-* Generic Cato FTL Utilities.
+* General-purpose Cato Utilities
 *
 * A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies, 
 * part of standard Cato Freemarker API.
@@ -62,7 +62,7 @@ DEV NOTES:
     interWebapp             = ((boolean), default: false) Alias for type="inter-webapp"
                               If true, same as type="inter-webapp"; if false, same as type="" (intra-webapp implied).
                               (New in Cato)
-    uri                     = ((string), required) The request URI. May be specified as parameter or as #nested macro content
+    uri                     = ((string), required) The request URI. May be specified as parameter or as macro nested content
                               For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
                               to webapp root, excluding webapp context root).
                               For inter-webapp links, if no webSiteId is specified, this must be an absolute path from

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
+
+
+
+
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Content element HTML template include, standard Cato markup.</title>
-
-
+      <title>Content element HTML template include, standard Cato markup</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -54,11 +57,10 @@ pre {
 
   </head>
   <body>
-  
-  
+
   
     <div>
-        <h1 class="lib-pagetitle">Content element HTML template include, standard Cato markup.</h1>
+        <h1 class="lib-pagetitle">Content element HTML template include, standard Cato markup</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlContent.ftl</span></em></p>
 
@@ -224,11 +226,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -294,11 +296,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -321,8 +323,10 @@ Supports prefixes:
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Extra legacy h1-h6 attributes (as map, mainly for those with dash in name)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -331,7 +335,7 @@ Supports prefixes:
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes (inline args)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
@@ -439,7 +443,7 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Maps an Ofbiz form widget type to a @table macro type.</p>
+                      <p class="lib-entry-shortdesc">Maps an Ofbiz form widget type to a <a href="#entry-table">@table</a> macro type.</p>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -530,10 +534,10 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                         <code>tableStyleName</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Optimization: table style name (usually based on table type)</span><br/>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default: -based on table type-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Table style name (optimization)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-can be omitted and will determine automatically from table type        </span>
+Usually should be be omitted and will be determined automatically from table type.        </span>
 </span>
                     </td>
                   </tr>
@@ -547,8 +551,8 @@ can be omitted and will determine automatically from table type        </span>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 Currently, this relies on the jQuery plugin datatables.js (www.datatables.net) to generate responsive table.
 Can be combined with fixed column type.
-if explicitly set to false, will disable responsive regardless of defaults.
-default is dependent on table type (global styles).        </span>
+If explicitly set to false, will disable responsive regardless of defaults.
+The default depends on global styles, looked up using table type.        </span>
 </span>
                     </td>
                   </tr>
@@ -581,12 +585,12 @@ responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used.        </spa
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Scrolling control</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Scrolling control (convenience parameter)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 If true, guarantees table will be scrollable horizontally.
 implementation of scrollable depends on macro and global styles (by default, uses responsive).
 If explicitly set to false, prevents scrolling.
-Convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX.        </span>
+Currently, alias for responsiveOptions.scrollX.        </span>
 </span>
                     </td>
                   </tr>
@@ -596,9 +600,9 @@ Convenience and abstractive option; avoids having to specify responsive options;
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the left-hand side</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the left-hand side (convenience parameter)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-(convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns.        </span>
+Currently, alias for responsiveOptions.fixedColumns.leftColumns.        </span>
 </span>
                     </td>
                   </tr>
@@ -608,9 +612,9 @@ Convenience and abstractive option; avoids having to specify responsive options;
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the right hand side</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the right hand side  (convenience parameter)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns.        </span>
+Currently, alias for responsiveOptions.fixedColumns.rightColumns.        </span>
 </span>
                     </td>
                   </tr>
@@ -711,7 +715,7 @@ Required wrapper for all <a href="#entry-table">@table</a> sub-element macros.  
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(generic|(theme-specific), default: generic)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Table type</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <h4>STANDARD TYPES</h4>
         <span>
 These types must always be recognized by all styles themes:
@@ -719,7 +723,7 @@ These types must always be recognized by all styles themes:
         <div>  <ul>
       <li>
         <span>
-generic: generic html table (free-form, complex); no features enabled by default.
+<code>generic</code>: generic html table (free-form, complex); no features enabled by default.
 similar to defining an html &lt;table&gt; manually, but more powerful.        </span>
       </li>
   </ul>
@@ -728,39 +732,36 @@ similar to defining an html &lt;table&gt; manually, but more powerful.        </
 
         </span>
         <h4>DEFAULT STYLES TYPES</h4>
-          <div class="lib-text-note">
-            <strong>WARN: </strong>
-these are WIP types, may not be enough (important part is to label things for easy search)          </div>
         <span>
-The following are currently recognized by the default cato styles (NOTE: targeted for backend):
+The following are recognized by Cato standard markup:
         </span>
         <div>  <ul>
       <li>
         <span>
-data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
+<code>data-list</code>: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
 similar to a form widget &quot;list&quot; or &quot;multi&quot; table; intended to resemble these, to unify them.        </span>
       </li>
       <li>
         <span>
-data-list-multiform: virtually same as data-list, but expected to contain a multi-submit form, which
+<code>data-list-multiform</code>: virtually same as data-list, but expected to contain a multi-submit form, which
 could change styling requirements.
 this makes no real semantic difference from data-list to <a href="#entry-table">@table</a> macro, but this type exists as analog
 to form widget &quot;multi&quot; form type, so possible to style differently.        </span>
       </li>
       <li>
         <span>
-data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
+<code>data-complex</code>: record-containing table, but with complex structure (more than one row per record, separators, etc.)
 there is no form widget equivalent of these and usually need some custom alt-row work.        </span>
       </li>
       <li>
         <span>
-summary: usually table with one or a few set rows of summary totals
+<code>summary</code>: usually table with one or a few set rows of summary totals
 e.g. order grand totals.
         </span>
       </li>
       <li>
         <span>
-fields: label-value pairs for display, side-by-side, usually no header, roughly
+<code>fields</code>: label-value pairs for display, side-by-side, usually no header, roughly
 this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
 legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
 ultimately belong as <a href="../standard/htmlForm.html#entry-field">@field</a> and <a href="../standard/htmlStructure.html#entry-row">@row</a>/<a href="../standard/htmlStructure.html#entry-cell">@cell</a>.
@@ -768,6 +769,9 @@ ultimately belong as <a href="../standard/htmlForm.html#entry-field">@field</a> 
       </li>
   </ul>
 </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+These types are mainly targeted for backend applications.          </div>
 </span>
                     </td>
                   </tr>
@@ -784,11 +788,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -901,8 +905,10 @@ Should be avoided in modern templates.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Map of other legacy &lt;table&gt; attributes (mainly for those with dash in name)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -911,7 +917,7 @@ Should be avoided in modern templates.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes and values, inlined</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes and values</span><br/>
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
@@ -934,7 +940,7 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
             <strong>NOTE: </strong>
 <a href="#entry-table">@table</a> with default markup will automatically disable responsive on tables
 that have no <a href="#entry-thead">@thead</a> element and hasHeader=true is not specified.
-Responsive tables may break when no header is present; they may require a &lt;<a href="#entry-thead">@thead</a>&gt; element.          </div>
+Responsive tables may break when no header is present (may require a &lt;thead&gt; HTML element).          </div>
 </span>
                     </td>
                   </tr>
@@ -1114,7 +1120,7 @@ Responsive tables may break when no header is present; they may require a &lt;<a
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Helps define table rows. takes care of alt row styles. must have a parent @table wrapper.</p>
+                      <p class="lib-entry-shortdesc">Helps define table rows. takes care of alt row styles. must have a parent <a href="#entry-table">@table</a> wrapper.</p>
                   </div>
             
               
@@ -1144,7 +1150,7 @@ Responsive tables may break when no header is present; they may require a &lt;<a
                         <code>type</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|content|meta|util, default: -dependent on table type-, fallback default: &quot;generic&quot;)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|content|meta|util, default: -dependent on table type-, fallback default: generic)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 In complete absence of global styles, default is &quot;generic&quot;.
@@ -1154,23 +1160,23 @@ Standard types:
         <div>  <ul>
       <li>
         <span>
-generic: free-form row with no assumptions on content.        </span>
+<code>generic</code>: free-form row with no assumptions on content.        </span>
       </li>
       <li>
         <span>
-content: normal data or content row. exact meaning depends on table type.
+<code>content</code>: normal data or content row. exact meaning depends on table type.
 note that for &quot;data-complex&quot; this definition is currently relaxed.        </span>
       </li>
       <li>
         <span>
-meta: indicates this is a special info/status row (e.g. &quot;No Records Found&quot; message), not an actual content row.
+<code>meta</code>: indicates this is a special info/status row (e.g. &quot;No Records Found&quot; message), not an actual content row.
 meta rows are treated differently by default as are thead and tfoot rows.
 exact meaning depends on table type.        </span>
       </li>
       <li>
         <span>
-util: indicates this is a special utility-only row meant to hold no real data,
-such as: spacer rows (&lt;<a href="#entry-tr">@tr</a> type=&quot;util&quot;&gt;&lt;<a href="#entry-td">@td</a> colspan=3&gt;&lt;hr /&gt;&lt;/<a href="#entry-td">@td</a>&gt;&lt;/<a href="#entry-tr">@tr</a>&gt;)
+<code>util</code>: indicates this is a special utility-only row meant to hold no real data,
+such as: spacer rows (<code>&lt;@tr type=&quot;util&quot;&gt;&lt;@td colspan=3&gt;&lt;hr /&gt;&lt;/@td&gt;&lt;/@tr&gt;</code>)
         </span>
       </li>
   </ul>
@@ -1191,11 +1197,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -1286,8 +1292,10 @@ Sets alt to exact same as parent row.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Map of other legacy &lt;tr&gt; attributes (mainly for those with dash in name)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;tr&gt; attributes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -1296,7 +1304,7 @@ Sets alt to exact same as parent row.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;tr&gt; attributes and values, inlined</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;tr&gt; attributes and values</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -1366,11 +1374,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -1403,8 +1411,10 @@ Supports prefixes:
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Map of other legacy &lt;th&gt; and &lt;td&gt; attributes (mainly for those with dash in name)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;th&gt; and &lt;td&gt; attributes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -1515,7 +1525,7 @@ Supports prefixes:
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
-DEPRECATED: use @table, @tr macros instead.</p>
+DEPRECATED: use <a href="#entry-table">@table</a>, <a href="#entry-tr">@tr</a> macros instead.</p>
                   </div>
             
               
@@ -1551,11 +1561,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -1694,6 +1704,7 @@ Since this is very foundation specific, this function may be dropped in future i
                       </div>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -1703,6 +1714,20 @@ Since this is very foundation specific, this function may be dropped in future i
                           <code>passArgs</code>
                       </p>
                     </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(price|description|title|button default:empty)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -1711,6 +1736,7 @@ Since this is very foundation specific, this function may be dropped in future i
                         </p>
                       </div>
                   </div>
+            
 
               <div class="lib-entry-details">
                 <p>
@@ -1876,8 +1902,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-chartdata">@chartdata</a>
-
+                       <a href="#entry-chartdata">@chartdata</a>
                      </p>
                   </div>  
             
@@ -1988,8 +2013,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-chart">@chart</a>
-
+                       <a href="#entry-chart">@chart</a>
                      </p>
                   </div>  
             
@@ -2078,11 +2102,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -2124,8 +2148,7 @@ Supports prefixes:
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-slide">@slide</a>
-
+                       <a href="#entry-slide">@slide</a>
                      </p>
                   </div>  
             
@@ -2202,11 +2225,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -2263,8 +2286,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-slider">@slider</a>
-
+                       <a href="#entry-slider">@slider</a>
                      </p>
                   </div>  
             

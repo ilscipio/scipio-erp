@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
+
+
+
+
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Master HTML template include, standard Cato markup.</title>
-
-
+      <title>Master HTML template include, standard Cato markup</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -54,11 +57,10 @@ pre {
 
   </head>
   <body>
-  
-  
+
   
     <div>
-        <h1 class="lib-pagetitle">Master HTML template include, standard Cato markup.</h1>
+        <h1 class="lib-pagetitle">Master HTML template include, standard Cato markup</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlTemplate.ftl</span></em></p>
 
@@ -108,8 +110,16 @@ line by indenting the next line), and indents alone will create preformatted tex
       </li>
       <li>
         <span>
-Small code bits may be surrounded by three brackets (like Trac tickets) to delineate code, <code>like this</code>.
-Indents may be enough in other cases.        </span>
+Small code bits may be surrounded by three curly brackets (like Trac tickets) to delineate code, <code>like this</code>.
+Indents may be enough for other cases (but indents don&#39;t identify as code in HTML). The three curly brackets will also prevent auto-linking.        </span>
+      </li>
+      <li>
+        <span>
+To prevent auto-linking or other textual formatting (but not structural formatting), wrap in three parenthesis, like this.        </span>
+      </li>
+      <li>
+        <span>
+Supports limited <strong>bold</strong>, <em>italic</em>, <u>underline</u> in paragraphs (but not labels)        </span>
       </li>
   </ul>
 </div>
@@ -125,7 +135,7 @@ General remarks:
         <div>  <ul>
       <li>
         <span>
-All macros expect to be invoked using named parameters only (always <code>&lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> class=&quot;my-class&quot;&gt;</code>, never <code>&lt;<a href="../standard/htmlStructure.html#entry-row">@row</a> &quot;my-class&quot;&gt;</code>)        </span>
+All macros expect to be invoked using named parameters only (always <code>&lt;@row class=&quot;my-class&quot;&gt;</code>, never <code>&lt;@row &quot;my-class&quot;&gt;</code>)        </span>
       </li>
       <li>
         <span>
@@ -191,7 +201,7 @@ Interface:
 &lt;#macro macroname args={} inlineArgs...&gt;</pre>        <div>  <ul>
       <li>
         <span>
-args: Macro args map. Map of parameters to pass to the macro. It can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
+<code>args</code>: Macro args map. Map of parameters to pass to the macro. It can be a bean-wrapped map (from groovy/widgets) or simple FTL hash.
         </span>
           <div class="lib-text-note">
             <strong>IMPL NOTE: </strong>
@@ -199,7 +209,7 @@ The implementation should pass this to mergeArgMaps or equivalent function (see 
       </li>
       <li>
         <span>
-inlineArgs: Macro inline args. Map of parameters passed inline to the macro via usual macro call syntax.
+<code>inlineArgs...</code>: Macro inline args. Map of parameters passed inline to the macro via usual macro call syntax.
 these have priority over args and generally will replace entries in the args map, with rare exceptions where noted.
         </span>
           <div class="lib-text-note">
@@ -208,7 +218,7 @@ The implementation should pass this to mergeArgMaps or equivalent function (see 
       </li>
       <li>
         <span>
-passArgs: Pass-through args. Map of args that should be passed along the major calls made by this macro or in other words
+<code>passArgs</code>: Pass-through args. Map of args that should be passed along the major calls made by this macro or in other words
 passed through the whole call stack. It allows arguments to pass through from the templating-facing macro
 to the internal implementations such as markup macros, similar to a context. This is needed especially to allow theme overrides
 to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
@@ -253,7 +263,7 @@ Interface:
 <pre>&lt;#macro macroname_markup (...) origArgs={} passArgs={} catchArgs...&gt;</pre>        <div>  <ul>
       <li>
         <span>
-origArgs: Original caller&#39;s args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
+<code>origArgs</code>: Original caller&#39;s args. map of complex parameters usually roughly as they were received by the calling macro. Rarely-used and should be
 avoided in favor of the other simpler macro arguments passed by the caller, which are usually very similar. Is
 needed in rare cases where the simpler macro arguments are too simplistic or don&#39;t provide all the information needed.
         </span>
@@ -266,14 +276,14 @@ a template-facing macro. Do not rely on this while using origArgs.          </di
       </li>
       <li>
         <span>
-passArgs: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to
+<code>passArgs</code>: Pass-through args. Map of args that are passed through from the template-facing macro to the parent/caller macro to
 this macro or in other words passed through the whole call stack, similar to a context. This is needed especially to allow theme overrides
 to communicate with their markup macros without the use of globals, but it may be used for any other purpose.
 Be careful about using sufficiently unique names.        </span>
       </li>
       <li>
         <span>
-catchArgs: Catch-all args. Simply catches all the parameters the macro doesn&#39;t need to handle
+<code>catchArgs</code>: Catch-all args. Simply catches all the parameters the macro doesn&#39;t need to handle
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>

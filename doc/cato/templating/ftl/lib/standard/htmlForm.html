@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
+
+
+
+
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Form and field HTML template include, standard Cato markup.</title>
-
-
+      <title>Form and field HTML template include, standard Cato markup</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -54,11 +57,10 @@ pre {
 
   </head>
   <body>
-  
-  
+
   
     <div>
-        <h1 class="lib-pagetitle">Form and field HTML template include, standard Cato markup.</h1>
+        <h1 class="lib-pagetitle">Form and field HTML template include, standard Cato markup</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlForm.ftl</span></em></p>
 
@@ -185,11 +187,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -202,8 +204,10 @@ Supports prefixes:
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Extra attributes for HTML &lt;form&gt; element (as map - needed for names with dashes)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Extra attributes for HTML &lt;form&gt; element</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Needed for names containing dashes.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -212,7 +216,7 @@ Supports prefixes:
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Extra attributes for HTML &lt;form&gt; element (as inline macro args)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Extra attributes for HTML &lt;form&gt; element</span><br/>
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
@@ -301,27 +305,27 @@ In addition, supports:
         <div>  <ul>
       <li>
         <span>
-submitHook: one of:
+<code>submitHook</code>: one of:
         </span>
         <div>  <ul>
       <li>
         <span>
-formSubmit: The default        </span>
+<code>formSubmit</code>: The default        </span>
       </li>
       <li>
         <span>
-validate: Use jquery validate        </span>
+<code>validate</code>: Use jquery validate        </span>
       </li>
       <li>
         <span>
-none: Caller does manually        </span>
+<code>none</code>: Caller does manually        </span>
       </li>
   </ul>
 </div>
       </li>
       <li>
         <span>
-validateObjScript: If submitHook is &quot;validate&quot;, add this script text to jquery validate({...}) object body        </span>
+<code>validateObjScript</code>: If submitHook is &quot;validate&quot;, add this script text to jquery validate({...}) object body        </span>
       </li>
   </ul>
 </div>
@@ -457,11 +461,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -481,11 +485,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -515,11 +519,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -535,7 +539,7 @@ Supports prefixes:
                       <span class="lib-entry-param-desc-shortdesc">If present, attaches progress bar to an upload form with javascript-based progress</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 Attaches results to page using elem IDs and options specified via these arguments,
-which are passed to <a href="#entry-progress">@progress</a> macro (see <a href="#entry-progress">@progress</a> macro for supported options)        </span>
+which are passed to <a href="#entry-progress">@progress</a> macro (see @progress macro for supported options)        </span>
 </span>
                     </td>
                   </tr>
@@ -856,11 +860,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -881,11 +885,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -956,10 +960,10 @@ Supports prefixes:
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Fields helper that helps modify a set of @field definitions, or group of fields.
-Not associated with a visible element, as is @fieldset.
+                      <p class="lib-entry-shortdesc">Fields helper that helps modify a set of <a href="#entry-field">@field</a> definitions, or group of fields.
+Not associated with a visible element, as is <a href="#entry-fieldset">@fieldset</a>.
 Can be omitted.
-May sometimes need multiple of these per form (so @form insufficient for this purpose),
+May sometimes need multiple of these per form (so <a href="#entry-form">@form</a> insufficient for this purpose),
 or even multiple per fieldset.</p>
                   </div>
             
@@ -1026,27 +1030,27 @@ Cato standard markup types:
         <div>  <ul>
       <li>
         <span>
-default: default cato field arrangement. this is the type assumed when no <a href="#entry-fields">@fields</a> element is present.
+<code>default</code>: default cato field arrangement. this is the type assumed when no <a href="#entry-fields">@fields</a> element is present.
 currently, it mostly influences the label area (present for all <a href="#entry-field">@field</a> types except submit).        </span>
       </li>
       <li>
         <span>
-default-nolabels: default cato field arrangement for common sets of fields with no labels.
-it expects that <a href="#entry-field">@field</a> entries won&#39;t be passed any labels.        </span>
+<code>default-nolabels</code>: default cato field arrangement for common sets of fields with no labels.
+it expects that @field entries won&#39;t be passed any labels.        </span>
       </li>
       <li>
         <span>
-default-compact: default cato field arrangement for fields that are in limited space.
+<code>default-compact</code>: default cato field arrangement for fields that are in limited space.
 by default, this means the labels will be arranged vertically with the fields.        </span>
       </li>
       <li>
         <span>
-default-manual: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
+<code>default-manual</code>: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
 any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.        </span>
       </li>
       <li>
         <span>
-generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
+<code>generic</code>: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
 make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.        </span>
       </li>
   </ul>
@@ -1057,8 +1061,8 @@ For default-manual, generic and similar where styles hash does not specify a lab
 to show a label area for a field, it is NOT sufficient to specify label=&quot;xxx&quot;.
 You must specify both labelArea=true and label=&quot;xxx&quot;. label arg does not influence presence of label area.
 This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
-Generally, <a href="#entry-field">@field</a> specifies label as pure data and theme decides where and how to display it.
-In the majority of cases, this should rarely be used anyway; use another more appropriate <a href="#entry-fields">@fields</a> type instead.          </div>
+Generally, @field specifies label as pure data and theme decides where and how to display it.
+In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.          </div>
 </span>
                     </td>
                   </tr>
@@ -1072,18 +1076,18 @@ In the majority of cases, this should rarely be used anyway; use another more ap
                       <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
-horizontal: A label area added to the left (or potentially to the right) a field, horizontally.
+<code>horizontal</code>: A label area added to the left (or potentially to the right) a field, horizontally.
 the implementation decides how to do this.
         </span>
       </li>
       <li>
         <span>
-vertical: a label area added before (or potentially after) a field, vertically.
+<code>vertical</code>: a label area added before (or potentially after) a field, vertically.
 the implementation decides how to do this.        </span>
       </li>
       <li>
         <span>
-none: no labels or label areas. Expects the <a href="#entry-field">@field</a> macro won&#39;t be passed any.        </span>
+<code>none</code>: no labels or label areas. Expects the <a href="#entry-field">@field</a> macro won&#39;t be passed any.        </span>
       </li>
   </ul>
 </div>
@@ -1247,10 +1251,10 @@ radio and checkbox support special names: radio-single, radio-multi, checkbox-si
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">A map of <a href="#entry-field">@field</a> parameters that will be used as new defaults for each field call</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-This is an automated mechanism. The map will be blended over the standard <a href="#entry-field">@field</a> defaults before the invocation.
-In addition, contrary to the parameters, a map passed directly to <a href="#entry-fields">@fields</a> will be blended over both the <a href="#entry-field">@field</a> defaults
-AND over any defaults set in the styles for the given <a href="#entry-fields">@fields</a> type:
-{<a href="#entry-field">@field</a> regular defaults} + {fieldargs from styles hash} + {<a href="#entry-fields">@fields</a> fieldArgs direct arg}
+This is an automated mechanism. The map will be blended over the standard @field defaults before the invocation.
+In addition, contrary to the parameters, a map passed directly to <a href="#entry-fields">@fields</a> will be blended over both the @field defaults
+AND over any defaults set in the styles for the given @fields type:
+{@field regular defaults} + {fieldargs from styles hash} + {@fields fieldArgs direct arg}
         </span>
           <div class="lib-text-note">
             <strong>NOTES: </strong>
@@ -1418,23 +1422,23 @@ In the high-level role, the macro takes care of label area logic and alignment
 such that you will not get fields looking out of place even if they have no label,
 giving all the fields in a given form a default uniform look, which can be customized globally.        </p>
         <p>
-<a href="#entry-field">@field</a>&#39;s behavior can be customized for a set of fields using a parent <a href="#entry-fields">@fields</a> macro invocation
-as well as using the global styles hash (preferred where possible). A set of fields may be grouped under a <a href="#entry-fields">@fields</a>
-call with a <a href="#entry-fields">@fields</a> &quot;type&quot; selected, which will give all fields within it a predefined look
+@field&#39;s behavior can be customized for a set of fields using a parent <a href="#entry-fields">@fields</a> macro invocation
+as well as using the global styles hash (preferred where possible). A set of fields may be grouped under a @fields
+call with a @fields &quot;type&quot; selected, which will give all fields within it a predefined look
 and behavior. This behavior can be set in the global styles hash (preferred) or overridden directly
-in the <a href="#entry-fields">@fields</a> element.        </p>
+in the @fields element.        </p>
         <p>
-If no <a href="#entry-fields">@fields</a> element is used, by default <a href="#entry-field">@field</a> will behave the same as if it
-were surrounded by a <a href="#entry-fields">@fields</a> element with &quot;default&quot; type, which gives all fields a default
+If no @fields element is used, by default @field will behave the same as if it
+were surrounded by a @fields element with &quot;default&quot; type, which gives all fields a default
 look out of the box.        </p>
         <p>
-To use <a href="#entry-field">@field</a> as a low-level control, it should be given a parent <a href="#entry-fields">@fields</a> with &quot;generic&quot; type.        </p>
+To use @field as a low-level control, it should be given a parent @fields with &quot;generic&quot; type.        </p>
         <p>
-This system can accodomate custom <a href="#entry-fields">@fields</a> types, but a default set are provided in the cato
+This system can accodomate custom @fields types, but a default set are provided in the cato
 standard markup.        </p>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-All <a href="#entry-field">@field</a> arg defaults can be overridden by the <a href="#entry-fields">@fields</a> fieldArgs argument.          </div>
+All @field arg defaults can be overridden by the @fields fieldArgs argument.          </div>
                       </div>
                   </div>
             
@@ -1572,7 +1576,7 @@ parameter sections (groups of parameters), as there are type-specific field para
         <div>  <ul>
       <li>
         <span>
-generic: Means input defined manually with #nested. Mostly for grouping multiple sub-fields, but can be used anywhere.
+<code>generic</code>: Means input defined manually with nested content. Mostly for grouping multiple sub-fields, but can be used anywhere.
         </span>
 <pre>Specific field types should be preferred to manually defining content, where possible.</pre>      </li>
   </ul>
@@ -1600,10 +1604,10 @@ Presence of label arg does not guarantee a label area will be shown; this is con
 by labelArea (and labelType) and its defaults, optionally coming from <a href="#entry-fields">@fields</a> container.
 label arg is mainly to provide data; theme and other flags decide what to do with it.
 For generic parent fields, label type must be specified explicitly, e.g.
-  &lt;<a href="#entry-fields">@fields</a> type=&quot;generic&quot;&gt;&lt;<a href="#entry-field">@field</a> labelType=&quot;horizontal&quot; label=&quot;mylabel&quot;&gt;...&lt;/<a href="#entry-fields">@fields</a>&gt;          </div>
+  <code>&lt;@fields type=&quot;generic&quot;&gt;&lt;@field labelType=&quot;horizontal&quot; label=&quot;mylabel&quot;&gt;...&lt;/@fields&gt;</code>          </div>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-label area behavior may also be influenced by containing macros such as <a href="#entry-fields">@fields</a>          </div>
+label area behavior may also be influenced by containing macros such as @fields          </div>
 </span>
                     </td>
                   </tr>
@@ -1798,11 +1802,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -1822,11 +1826,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -2153,7 +2157,7 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">readonly</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">((boolean) Read-only</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2163,7 +2167,7 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> number of rows</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Number of rows</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2173,7 +2177,7 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> number of columns</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Number of columns</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2193,7 +2197,7 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">text/value, alternative to #nested content</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Text/value, alternative to nested content</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2208,7 +2212,7 @@ for this, can prefix with &quot;#LABEL:&quot; string which indicates to take the
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(date-time|timestamp|date|time, default: date-time)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">type of datetime</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Type of datetime</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 &quot;date-time&quot; and &quot;timestamp&quot; are synonymous.        </span>
 </span>
@@ -2234,14 +2238,14 @@ will be a full timestamp.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">shows requested title</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Title</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 If empty, markup/theme decides what to show.
-Can also be a special value in format &quot;#PROP:resource#propname&quot;. If no resource, taken from CommonUiLabels.
+Can also be a special value in format <code>&quot;#PROP:resource#propname&quot;</code> (if no <code>resource</code>, taken from CommonUiLabels).
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-Tooltip has priority over title.          </div>
+tooltip has priority over title.          </div>
 </span>
                     </td>
                   </tr>
@@ -2393,15 +2397,14 @@ The default should be same as form widget default (text-find&#39;s &quot;ignore-
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">List of maps, if specified, generates options from list of maps</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">List of maps; if specified, generates options from list of maps</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-list of {&quot;value&quot;: (value), &quot;description&quot;: (label), &quot;selected&quot;: (true/false)} maps
+List of {&quot;value&quot;: (value), &quot;description&quot;: (label), &quot;selected&quot;: (true/false)} maps
+If items list not specified, manual nested content options can be specified instead.
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
-selected is currently ignored for non-multiple (uses currentValue instead)          </div>
-        <span>
-if items list not specified, manual #nested content options can be specified instead.        </span>
+<code>selected</code> is currently ignored for non-multiple (uses <code>currentValue</code> instead).          </div>
 </span>
                     </td>
                   </tr>
@@ -2461,10 +2464,9 @@ if items list not specified, manual #nested content options can be specified ins
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Optional boolean hint that caller may specify to say that this select should</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Optional hint to say this select should contain exclusively manually generated items</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-contain exclusively manually generated items.
-by default, this is based on whether the items arg is specified or not.        </span>
+By default, this is determined based on whether the items arg is specified or not.        </span>
 </span>
                     </td>
                   </tr>
@@ -2474,12 +2476,11 @@ by default, this is based on whether the items arg is specified or not.        <
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">optional boolean hint caller may sometimes need to give macro to say that #nested contains</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Optional hint to say that nested content contains manual options (but not necessarily exclusively)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-manual options, but not exclusively.
-by default, this is based on whether the items arg is specified or not (NOT whether
+By default, this is determined based on whether the items arg is specified or not (NOT whether
 there is any nested content or not).
-if specifying both items arg AND #nested content (discouraged), this should be manually set to true.        </span>
+If specifying both items arg AND nested content (discouraged), this should be manually set to true.        </span>
 </span>
                     </td>
                   </tr>
@@ -2538,7 +2539,7 @@ Usually only valid if multiple is true.        </span>
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Option label</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Can an also be specified as #nested.        </span>
+May also be specified as nested.        </span>
 </span>
                     </td>
                   </tr>
@@ -2548,7 +2549,7 @@ Can an also be specified as #nested.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Value, sent to server uopn submit</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Value, sent to server upon submit</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2637,7 +2638,7 @@ Generic:
         <div>  <ul>
       <li>
         <span>
-default: default theme checkbox        </span>
+<code>default</code>: default theme checkbox        </span>
       </li>
   </ul>
 </div>
@@ -2647,7 +2648,7 @@ Cato standard theme:
         <div>  <ul>
       <li>
         <span>
-simple: guarantees a minimalistic checkbox        </span>
+<code>simple</code>: guarantees a minimalistic checkbox        </span>
       </li>
   </ul>
 </div>
@@ -2706,7 +2707,7 @@ the default can be overridden on a parent <a href="#entry-field">@field</a> or <
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience option; used when currentValue empty; can also be sequence)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2716,7 +2717,7 @@ the default can be overridden on a parent <a href="#entry-field">@field</a> or <
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean|), default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Convenience option (explicit false sets all to unchecked; leave empty &quot;&quot; for no setting)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Explicit false sets all to unchecked; leave empty &quot;&quot; for no setting (convenience parameter)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2770,7 +2771,7 @@ Generic:
         <div>  <ul>
       <li>
         <span>
-default: default theme radio        </span>
+<code>default</code>: default theme radio        </span>
       </li>
   </ul>
 </div>
@@ -2780,7 +2781,7 @@ Cato standard theme:
         <div>  <ul>
       <li>
         <span>
-See global styles hash.        </span>
+See global styles.        </span>
       </li>
   </ul>
 </div>
@@ -2880,12 +2881,14 @@ The default can be overridden on a parent <a href="#entry-field">@field</a> or <
               <table class="entry-parameters">
                   <tr>
                     <td class="entry-paramname">
-                        <code>&lt;#nested&gt;</code>
+                        <code>(nested)</code>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((markup))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Button(s) (&lt;<a href="#entry-field">@field</a> type=&quot;submit&quot;&gt; or manual &lt;input&gt;, &lt;a&gt;, &lt;button&gt;) to include</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-shortdesc">Button(s) to include</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+The buttons may be generated with <code>&lt;@field type=&quot;submit&quot;&gt;</code> or manual <code>&lt;input&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code> elements.        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -2896,7 +2899,7 @@ The default can be overridden on a parent <a href="#entry-field">@field</a> or <
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">If this is an upload form, arguments to pass to <a href="#entry-progress">@progress</a> macro</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-See <a href="#entry-progress">@progress</a> and <a href="#entry-progressScript">@progressScript</a> macros. should specify formSel, (progBarId and/or progTextBoxId), and others.        </span>
+See @progress and <a href="#entry-progressScript">@progressScript</a> macros. Should specify formSel, at least one of progBarId and progTextBoxId, and others.        </span>
 </span>
                     </td>
                   </tr>
@@ -2906,8 +2909,11 @@ See <a href="#entry-progress">@progress</a> and <a href="#entry-progressScript">
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Convenience parameter; same as passing:</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><pre>progressArgs={&quot;enabled&quot;:true, &quot;progressOptions&quot;:progressOptions}</pre></span>
+                      <span class="lib-entry-param-desc-shortdesc">Progress options (convenience parameter)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Same as passing:
+        </span>
+<pre>progressArgs={&quot;enabled&quot;:true, &quot;progressOptions&quot;:progressOptions}</pre></span>
                     </td>
                   </tr>
               </table>
@@ -2922,21 +2928,18 @@ See <a href="#entry-progress">@progress</a> and <a href="#entry-progressScript">
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>(submit|link|button|image|input-button, default: submit)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Submit element type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
-Values:
-        </span>
-        <div>  <ul>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
-submit: &lt;input type=&quot;submit&quot; ... /&gt;        </span>
+<code>submit</code>: <code>&lt;input type=&quot;submit&quot; ... /&gt;</code>        </span>
       </li>
       <li>
         <span>
-input-button: &lt;input type=&quot;button&quot; ... /&gt;        </span>
+<code>input-button</code>: <code>&lt;input type=&quot;button&quot; ... /&gt;</code>        </span>
       </li>
       <li>
         <span>
-link: &lt;a href=&quot;...&quot; ...&gt;...&lt;/a&gt;
+<code>link</code>: <code>&lt;a href=&quot;...&quot; ...&gt;...&lt;/a&gt;</code>
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
@@ -2945,16 +2948,16 @@ If not specified, generated href will cause form submit with form name (if found
       </li>
       <li>
         <span>
-button:        </span>
-          <span class="lib-text-note">
+<code>button</code>: <code>&lt;input type=&quot;button&quot; ... /&gt;</code>
+        </span>
+          <div class="lib-text-note">
             <strong>WARN: </strong>
-FIXME?: currently this is same as input-button: &lt;input type=&quot;button&quot; ... /&gt;          </span>
-        <span>
-This could change to &lt;button...&gt;...&lt;/button&gt; without notice...        </span>
+FIXME?: Currently this is same as input-button: <code>&lt;input type=&quot;button&quot; ... /&gt;</code>
+This could change to <code>&lt;button...&gt;...&lt;/button&gt;</code> without notice...          </div>
       </li>
       <li>
         <span>
-image: &lt;input type=&quot;image&quot; src=&quot;...&quot; .../&gt;        </span>
+<code>image</code>: <code>&lt;input type=&quot;image&quot; src=&quot;...&quot; .../&gt;</code>        </span>
       </li>
   </ul>
 </div>
@@ -3050,12 +3053,11 @@ image: &lt;input type=&quot;image&quot; src=&quot;...&quot; .../&gt;        </sp
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 &quot;date-time&quot; and &quot;timestamp&quot; are synonymous.
-Values:
         </span>
         <div>  <ul>
       <li>
         <span>
-generic: treated as arbitrary content, but text may still be interpreted        </span>
+<code>generic</code>: treated as arbitrary content, but text may still be interpreted        </span>
       </li>
   </ul>
 </div>
@@ -3088,7 +3090,7 @@ generic: treated as arbitrary content, but text may still be interpreted        
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Tooltip text,</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Tooltip text</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 May result in extra wrapping container.        </span>
 </span>
@@ -3100,14 +3102,13 @@ May result in extra wrapping container.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">. If true, translates newlines to &lt;br/&gt; (and potentially other transformations); else untouched</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">If true, translates newlines to HTML linebreaks (and potentially other transformations)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
-            <strong>WARN: </strong>
-The default for <a href="#entry-field">@field</a> macro is now FALSE, which differs from the Ofbiz form widget default, which is true.          </div>
+            <strong>NOTE: </strong>
+The default for <a href="#entry-field">@field</a> macro is currently false, which differs from the Ofbiz form widget default, which is true.          </div>
           <div class="lib-text-note">
             <strong>WARN: </strong>
-TODO?: It is possible the default may be changed to true for specific valueType.
-However, the default for &quot;generic&quot; will always be false.          </div>
+It is possible the default may be changed to true for specific valueTypes. However, the default for &quot;generic&quot; will always be false.          </div>
 </span>
                     </td>
                   </tr>

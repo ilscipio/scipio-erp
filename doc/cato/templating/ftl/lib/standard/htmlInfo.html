@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
+
+
+
+
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Informational/notification element HTML template include, standard Cato markup.</title>
-
-
+      <title>Informational/notification element HTML template include, standard Cato markup</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -54,11 +57,10 @@ pre {
 
   </head>
   <body>
-  
-  
+
   
     <div>
-        <h1 class="lib-pagetitle">Informational/notification element HTML template include, standard Cato markup.</h1>
+        <h1 class="lib-pagetitle">Informational/notification element HTML template include, standard Cato markup</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlInfo.ftl</span></em></p>
 
@@ -196,11 +198,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -296,11 +298,11 @@ Supports prefixes:
         <div>  <ul>
       <li>
         <span>
-&quot;+&quot;: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
       </li>
       <li>
         <span>
-&quot;=&quot;: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
       </li>
   </ul>
 </div>
@@ -425,14 +427,38 @@ errors (e.g. permission errors) and query results (e.g. &quot;No records found.&
         <p>
 This labels messages according to what they are and lets the theme decide on markup and styling based on content.        </p>
         <p>
-This is higher-level than <a href="#entry-alert">@alert</a> macro; <a href="#entry-alert">@alert</a> has a specific markup/display and its types are usually levels of severity,
+This is higher-level than <a href="#entry-alert">@alert</a> macro; @alert has a specific markup/display and its types are usually levels of severity,
 whereas <a href="#entry-commonMsg">@commonMsg</a> abstracts markup/display and its messages can be a combination of levels and specific meanings;
-<a href="#entry-alert">@alert</a>&#39;s goal is to grab user attention, whereas <a href="#entry-commonMsg">@commonMsg</a>&#39;s behavior depends on the type of message.        </p>
+@alert&#39;s goal is to grab user attention, whereas @commonMsg&#39;s behavior depends on the type of message.        </p>
         <p>
-<a href="#entry-commonMsg">@commonMsg</a> may use <a href="#entry-alert">@alert</a> to implement its markup.
+@commonMsg may use @alert to implement its markup.
 A template should not assume too much about the message markup, but the markup should be kept simple.        </p>
                       </div>
                   </div>
+            
+              
+                  <div class="lib-entry-section-usageFromScreenWidgets lib-entry-section-other">
+                    <h4>Usage from screen widgets</h4>
+        <p>
+&lt;label.../&gt; elements in screen widgets can be mapped to this macro using the special &quot;common-msg-xxx&quot; style name, where
+xxx is the message type. e.g.:
+        </p>
+<pre>&lt;label style=&quot;common-msg-error-perm&quot; text=&quot;Permission Error&quot; /&gt;</pre>        <p>
+translates to:
+        </p>
+<pre>&lt;@commonMsg type=&quot;error-perm&quot;&gt;Permission Error&lt;/@commonMsg&gt;</pre>        <p>
+Extra classes are also possible using colon syntax (combined with the usual &quot;+&quot; macro additive class instruction):
+        </p>
+<pre>&lt;label style=&quot;common-msg-error-perm:+myclass&quot; text=&quot;Permission Error&quot; /&gt;</pre>        <p>
+translates to:
+        </p>
+<pre>&lt;@commonMsg type=&quot;error-perm&quot; class=&quot;+myclass&quot;&gt;Permission Error&lt;/@commonMsg&gt;</pre>                  </div>
+            
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>    &lt;@commonMsg type=&quot;result-norecord&quot;/&gt;
+</pre>                  </div>
             
               
                   <div class="lib-entry-section-params">
@@ -447,6 +473,123 @@ A template should not assume too much about the message markup, but the markup s
                           <code>passArgs</code>
                       </p>
                     </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default|generic|..., default: default)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The type of message contained</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Basic types:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>default</code>: default. in standard Cato markup, same as generic.        </span>
+      </li>
+      <li>
+        <span>
+<code>generic</code>: no type specified (avoid using - prefer more specific)        </span>
+      </li>
+  </ul>
+</div>
+        <span>
+Types recognizes by Cato standard markup (theme-defined types are possible):
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>result</code>: an informational result from any kind of query. e.g., &quot;No records found.&quot;.
+        </span>
+<pre>is a normal event that shouldn&#39;t distract user attention.</pre>      </li>
+      <li>
+        <span>
+<code>result-norecord</code>: specific &quot;No records found.&quot; message.        </span>
+      </li>
+      <li>
+        <span>
+<code>info</code>: general information (NOTE: this is not really useful, but supported for completeness)        </span>
+      </li>
+      <li>
+        <span>
+<code>info-important</code>: general important information        </span>
+      </li>
+      <li>
+        <span>
+<code>warning</code>: general warning        </span>
+      </li>
+      <li>
+        <span>
+<code>fail</code>: general non-fatal error        </span>
+      </li>
+      <li>
+        <span>
+<code>error</code>: general error message - typically an unexpected event or fatal error that should not happen in intended use.        </span>
+      </li>
+      <li>
+        <span>
+<code>error-perm</code>: permission error        </span>
+      </li>
+      <li>
+        <span>
+<code>error-security</code>: security error        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes or additional classes for message container (innermost containing element)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>text</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Text</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If a string is not specified, uses nested content instead.        </span>
+</span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -455,25 +598,6 @@ A template should not assume too much about the message markup, but the markup s
                         </p>
                       </div>
                   </div>
-                  <div class="lib-entry-section-usageFromScreenWidgets lib-entry-section-other">
-                    <h4>Usage from screen widgets</h4>
-&lt;label.../&gt; elements in screen widgets can be mapped to this macro using the special &quot;common-msg-xxx&quot; style name, where
-  xxx is the message type. e.g.:
-    &lt;label style=&quot;common-msg-error-perm&quot; text=&quot;Permission Error&quot; /&gt;
-  translates to:
-    &lt;<a href="#entry-commonMsg">@commonMsg</a> type=&quot;error-perm&quot;&gt;Permission Error&lt;/<a href="#entry-commonMsg">@commonMsg</a>&gt;
-  Extra classes are also possible using colon syntax (combined with the usual &quot;+&quot; macro additive class instruction):
-    &lt;label style=&quot;common-msg-error-perm:+myclass&quot; text=&quot;Permission Error&quot; /&gt;
-  translates to:
-    &lt;<a href="#entry-commonMsg">@commonMsg</a> type=&quot;error-perm&quot; class=&quot;+myclass&quot;&gt;Permission Error&lt;/<a href="#entry-commonMsg">@commonMsg</a>&gt;                  </div>
-            
-              
-                  <div class="lib-entry-section-examples">
-                    <h4>Usage Examples</h4>
-<pre>    &lt;@commonMsg type=&quot;result-norecord&quot;/&gt;
-</pre>                  </div>
-            
-              
             
 
               <div class="lib-entry-details">

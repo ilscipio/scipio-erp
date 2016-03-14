@@ -1,6 +1,6 @@
 <#--
 * 
-* Form and field HTML template include, standard Cato markup.
+* Form and field HTML template include, standard Cato markup
 *
 * Included by htmlTemplate.ftl.
 *
@@ -32,10 +32,11 @@ Defines a form. Analogous to <form> HTML element.
                                   maybe it should cause to omit <form> element
     class                   = ((css-class)) CSS classes on form element itself
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)  
-    attribs                 = ((map)) Extra attributes for HTML <form> element (as map - needed for names with dashes)
-    inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element (as inline macro args)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+    attribs                 = ((map)) Extra attributes for HTML <form> element 
+                              Needed for names containing dashes.
+    inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign form_defaultArgs = {
@@ -94,11 +95,11 @@ for getFileUploadProgressStatus controller AJAX calls.
                               Occasionally needed in templates as FTL workaround.
     progressOptions         = ((map)) Elem IDs and options passed to CatoUploadProgress Javascript class
                               In addition, supports: 
-                              * submitHook: one of: 
-                                * formSubmit: The default
-                                * validate: Use jquery validate
-                                * none: Caller does manually 
-                              * validateObjScript: If submitHook is "validate", add this script text to jquery validate({...}) object body
+                              * {{{submitHook}}}: one of: 
+                                * {{{formSubmit}}}: The default
+                                * {{{validate}}}: Use jquery validate
+                                * {{{none}}}: Caller does manually 
+                              * {{{validateObjScript}}}: If submitHook is "validate", add this script text to jquery validate({...}) object body
                               See CatoUploadProgress javascript class for available options.
     htmlwrap                = ((boolean), default: true) If true, wrap in @script
 -->
@@ -173,17 +174,17 @@ to a form submit.
     type                    = (alert|success|info, default: info)
     class                   = ((css-class)) CSS classes
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) Classes added only on container
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     showValue               = Display value inside bar
     wrapClass               = ((css-class)) Classes added on outer wrapper only
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     progressArgs            = ((map)) If present, attaches progress bar to an upload form with javascript-based progress
                               Attaches results to page using elem IDs and options specified via these arguments,
                               which are passed to @progress macro (see @progress macro for supported options)
@@ -334,13 +335,13 @@ A visible fieldset, including the HTML element.
   * Parameters *
     class                   = ((css-class)) CSS classes 
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) CSS classes for wrapper 
                               Includes width in columns, or append only with "+".
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     id                      = Fieldset ID
     title                   = Fieldset title
     collapsed               = Show/hide the fieldset
@@ -460,15 +461,15 @@ or even multiple per fieldset.
     type                        = (default|default-nolabels|default-compact|default-manual|generic, default: default) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
                                   Cato standard markup types:
-                                  * default: default cato field arrangement. this is the type assumed when no @fields element is present.
+                                  * {{{default}}}: default cato field arrangement. this is the type assumed when no @fields element is present.
                                     currently, it mostly influences the label area (present for all @field types except submit).
-                                  * default-nolabels: default cato field arrangement for common sets of fields with no labels.
+                                  * {{{default-nolabels}}}: default cato field arrangement for common sets of fields with no labels.
                                     it expects that @field entries won't be passed any labels.
-                                  * default-compact: default cato field arrangement for fields that are in limited space.
+                                  * {{{default-compact}}}: default cato field arrangement for fields that are in limited space.
                                     by default, this means the labels will be arranged vertically with the fields.
-                                  * default-manual: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
+                                  * {{{default-manual}}}: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
                                     any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
-                                  * generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
+                                  * {{{generic}}}: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
                                     make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
                                   NOTE: For default-manual, generic and similar where styles hash does not specify a label area by default, 
                                       to show a label area for a field, it is NOT sufficient to specify label="xxx".
@@ -477,14 +478,14 @@ or even multiple per fieldset.
                                       Generally, @field specifies label as pure data and theme decides where and how to display it.
                                       In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
     labelType                   = (horizontal|vertical|none, default: -type-specific-) Override for type of the field labels themselves
-                                  * horizontal: A label area added to the left (or potentially to the right) a field, horizontally. 
+                                  * {{{horizontal}}}: A label area added to the left (or potentially to the right) a field, horizontally. 
                                     the implementation decides how to do this.
                                     DEV NOTE: previously this was called "gridarea". But in the bootstrap code, this no longer makes sense.
                                         It would be perfectly valid for us to add an extra type here called "gridarea" that specifically requires
                                         a grid (TODO?). "horizontal" simply delegates the choice to the implementation.
-                                  * vertical: a label area added before (or potentially after) a field, vertically. 
+                                  * {{{vertical}}}: a label area added before (or potentially after) a field, vertically. 
                                     the implementation decides how to do this.
-                                  * none: no labels or label areas. Expects the @field macro won't be passed any.
+                                  * {{{none}}}: no labels or label areas. Expects the @field macro won't be passed any.
                                   TODO: we should have types here that specifically request that either "gridarea" or "inline" are used for markup:
                                       gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
                                       The current implementation is unspecific.
@@ -765,7 +766,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     type                    = (|generic|..., default: generic) Form element type 
                               Supported values and their parameters are listed in this documentation as
                               parameter sections (groups of parameters), as there are type-specific field parameters.
-                              * generic: Means input defined manually with #nested. Mostly for grouping multiple sub-fields, but can be used anywhere.
+                              * {{{generic}}}: Means input defined manually with nested content. Mostly for grouping multiple sub-fields, but can be used anywhere.
                                   Specific field types should be preferred to manually defining content, where possible.
     label                   = Field label
                               For top-level @field elements and and parent fields, normally the label will get consumed
@@ -812,12 +813,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               the default is usually true unless prevented by other settings.
     class                   = ((css-class)) CSS classes for the field element (NOT the cell container!)
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) CSS classes, optional class for outer container 
                               Supports prefixes:
-                              * "+": causes the classes to append only, never replace defaults (same logic as empty string "")
-                              * "=": causes the classes to replace non-essential defaults (same as specifying a class name directly)
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     maxlength               = ((int)) Max allowed length 
                               e.g. For text inputs, max number of characters.
     id                      = Field ID (mainly for the widget)
@@ -865,23 +866,23 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     postfix                 = ((boolean), default: false) If set to true, attach submit button
     
     * textarea *
-    readonly                = readonly
-    rows                    = ((int)) number of rows
-    cols                    = ((int)) number of columns
+    readonly                = ((boolean) Read-only
+    rows                    = ((int)) Number of rows
+    cols                    = ((int)) Number of columns
     wrap                    = HTML5 wrap attribute
-    text, value             = text/value, alternative to #nested content
+    text, value             = Text/value, alternative to nested content
     
     * datetime *
-    dateType                = (date-time|timestamp|date|time, default: date-time) type of datetime
+    dateType                = (date-time|timestamp|date|time, default: date-time) Type of datetime
                               "date-time" and "timestamp" are synonymous.
     dateDisplayType         = (default|date|..., default: -same as dateType-). The visual display format of the date. Optional
                               If dateType is "date-time" (timestamp), it is possible to specify dateDisplayType="date" here.
                               This means the user will be presented with a short date only, but the data sent to the server
                               will be a full timestamp.
-    title                   = shows requested title
+    title                   = Title
                               If empty, markup/theme decides what to show.
-                              Can also be a special value in format "#PROP:resource#propname". If no resource, taken from CommonUiLabels.
-                              NOTE: Tooltip has priority over title.
+                              Can also be a special value in format {{{"#PROP:resource#propname"}}} (if no {{{resource}}}, taken from CommonUiLabels).
+                              NOTE: tooltip has priority over title.
     
     * datefind *
     dateType                = (-same as datetime-)
@@ -903,23 +904,21 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * select *
     multiple                = ((boolean), default: false) Allow multiple select
-    items                   = ((list)) List of maps, if specified, generates options from list of maps 
-                              list of {"value": (value), "description": (label), "selected": (true/false)} maps
-                              NOTE: selected is currently ignored for non-multiple (uses currentValue instead)
-                              if items list not specified, manual #nested content options can be specified instead.
+    items                   = ((list)) List of maps; if specified, generates options from list of maps 
+                              List of {"value": (value), "description": (label), "selected": (true/false)} maps
+                              If items list not specified, manual nested content options can be specified instead.
+                              NOTE: {{{selected}}} is currently ignored for non-multiple (uses {{{currentValue}}} instead).
     allowEmpty              = ((boolean), default: false) If true, will add an empty option
     currentValue            = currently selected value/key (only for non-multiple)
     currentFirst            = ((boolean), default: false) If true (and multiple false), will add a "first" item with current value selected, if there is one
     currentDescription      = If currentFirst true, this is used as first's description if specified
     defaultValue            = Optional selected option value for when none otherwise selected
-    manualItemsOnly         = ((boolean)) Optional boolean hint that caller may specify to say that this select should
-                              contain exclusively manually generated items. 
-                              by default, this is based on whether the items arg is specified or not.
-    manualItems             = ((boolean)) optional boolean hint caller may sometimes need to give macro to say that #nested contains
-                              manual options, but not exclusively. 
-                              by default, this is based on whether the items arg is specified or not (NOT whether
+    manualItemsOnly         = ((boolean)) Optional hint to say this select should contain exclusively manually generated items
+                              By default, this is determined based on whether the items arg is specified or not.
+    manualItems             = ((boolean)) Optional hint to say that nested content contains manual options (but not necessarily exclusively)
+                              By default, this is determined based on whether the items arg is specified or not (NOT whether
                               there is any nested content or not).
-                              if specifying both items arg AND #nested content (discouraged), this should be manually set to true.
+                              If specifying both items arg AND nested content (discouraged), this should be manually set to true.
     asmSelectArgs           = ((map)) Optional map of args to pass to @asmSelectScript to transform a multiple type select into a jQuery asmselect select
                               Usually only valid if multiple is true.
     formName                = Name of form containing the field
@@ -928,8 +927,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * option *
     text                    = Option label 
-                              Can an also be specified as #nested.
-    value                   = Value, sent to server uopn submit
+                              May also be specified as nested.
+    value                   = Value, sent to server upon submit
     selected                = ((boolean))
     
     * lookup *
@@ -942,9 +941,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               If set to boolean, overrides currentValue logic
     checkboxType            = (default|..., default: default)
                               Generic:
-                              * default: default theme checkbox
+                              * {{{default}}}: default theme checkbox
                               Cato standard theme:
-                              * simple: guarantees a minimalistic checkbox
+                              * {{{simple}}}: guarantees a minimalistic checkbox
     
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
@@ -955,8 +954,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               NOTE: this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
-    defaultValue            = Default value, determines checked (convenience option; used when currentValue empty; can also be sequence)
-    allChecked              = ((boolean|), default: -empty-) Convenience option (explicit false sets all to unchecked; leave empty "" for no setting)
+    defaultValue            = Default value, determines checked (convenience parameter; used when currentValue empty; can also be sequence)
+    allChecked              = ((boolean|), default: -empty-) Explicit false sets all to unchecked; leave empty "" for no setting (convenience parameter)
     
     * radio (single mode) *
     value                   = Y/N, only used if single radio item mode (items not specified)
@@ -965,9 +964,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               If set to boolean, overrides currentValue logic
     radioType               = (default|..., default: default)
                               Generic:
-                              * default: default theme radio
+                              * {{{default}}}: default theme radio
                               Cato standard theme:
-                              * See global styles hash.
+                              * See global styles.
     
     * radio (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items radio generated with map entries in provided list as arguments
@@ -987,23 +986,25 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     autocomplete            = ((boolean), default: true) If false, prevents autocomplete
     
     * submitarea *
-    <#nested>               = ((markup)) Button(s) (<@field type="submit"> or manual <input>, <a>, <button>) to include
+    (nested)                = ((markup)) Button(s) to include
+                              The buttons may be generated with {{{<@field type="submit">}}} or manual {{{<input>}}}, {{{<a>}}}, {{{<button>}}} elements.
     progressArgs            = ((map)) If this is an upload form, arguments to pass to @progress macro
-                              See @progress and @progressScript macros. should specify formSel, (progBarId and/or progTextBoxId), and others.
-    progressOptions         = ((map)) Convenience parameter; same as passing:
+                              See @progress and @progressScript macros. Should specify formSel, at least one of progBarId and progTextBoxId, and others.
+    progressOptions         = ((map)) Progress options (convenience parameter)
+                              Same as passing:
                                 progressArgs={"enabled":true, "progressOptions":progressOptions}      
                       
     * submit *
     submitType              = (submit|link|button|image|input-button, default: submit) Submit element type
-                              Values:
-                              * submit: <input type="submit" ... />
-                              * input-button: <input type="button" ... />
-                              * link: <a href="..." ...>...</a>
+                              * {{{submit}}}: {{{<input type="submit" ... />}}}
+                              * {{{input-button}}}: {{{<input type="button" ... />}}}
+                              * {{{link}}}: {{{<a href="..." ...>...</a>}}}
                                 NOTE: href should usually be specified for this, or explicitly set to boolean false if using onClick. 
                                     If not specified, generated href will cause form submit with form name (if found and not disabled).
-                              * button: WARN: FIXME?: currently this is same as input-button: <input type="button" ... />
-                                This could change to <button...>...</button> without notice...
-                              * image: <input type="image" src="..." .../>
+                              * {{{button}}}: {{{<input type="button" ... />}}}
+                                WARN: FIXME?: Currently this is same as input-button: {{{<input type="button" ... />}}}
+                                  This could change to {{{<button...>...</button>}}} without notice...
+                              * {{{image}}}: {{{<input type="image" src="..." .../>}}}
     text                    = Display text (also value for submitType "submit")                
     href                    = href for submitType "link"  
     src                     = Image url for submitType "image"    
@@ -1017,17 +1018,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     * display *
     valueType               = (image|text|currency|date|date-time|timestamp|accounting-number|generic, default: generic)
                               "date-time" and "timestamp" are synonymous.
-                              Values:
-                              * generic: treated as arbitrary content, but text may still be interpreted
-                              TODO: currently all are handled as text/generic (because formatting done in java in stock ofbiz)
+                              * {{{generic}}}: treated as arbitrary content, but text may still be interpreted
+                              TODO: Currently all are handled as text/generic (because formatting done in java in stock ofbiz)
     value                   = Display value or image URL
     description             = For image type: image alt
-    tooltip                 = Tooltip text,
+    tooltip                 = Tooltip text
                               May result in extra wrapping container.
-    formatText              = ((boolean), default: false). If true, translates newlines to <br/> (and potentially other transformations); else untouched
-                              WARN: The default for @field macro is now FALSE, which differs from the Ofbiz form widget default, which is true.
-                              WARN: TODO?: It is possible the default may be changed to true for specific valueType.
-                                  However, the default for "generic" will always be false.   
+    formatText              = ((boolean), default: false) If true, translates newlines to HTML linebreaks (and potentially other transformations)
+                              NOTE: The default for @field macro is currently false, which differs from the Ofbiz form widget default, which is true.
+                              WARN: It is possible the default may be changed to true for specific valueTypes. However, the default for "generic" will always be false.   
     
     * generic *
     tooltip                 = Tooltip text
@@ -1465,7 +1464,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local manualItemsOnly = !items?is_sequence>
         </#if>
         <#if !manualItems?is_boolean>
-          <#-- FIXME? this should be based on whether #nested has content, but don't want to invoke #nested twice -->
+          <#-- FIXME? this should be based on whether nested has content, but don't want to invoke #nested twice -->
           <#local manualItems = !items?is_sequence>
         </#if>
         <@field_select_widget name=name
@@ -1667,7 +1666,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 
 <#-- @field container markup - theme override 
     labelContent is generated by field_markup_labelarea.
-    #nested is the actual field widget (<input>, <select>, etc.). 
+    nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
 <#macro field_markup_container type="" class="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
+
+
+
+
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Generic Cato FTL Utilities.</title>
-
-
+      <title>General-purpose Cato Utilities</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -54,11 +57,10 @@ pre {
 
   </head>
   <body>
-  
-  
+
   
     <div>
-        <h1 class="lib-pagetitle">Generic Cato FTL Utilities.</h1>
+        <h1 class="lib-pagetitle">General-purpose Cato Utilities</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">utilities.ftl</span></em></p>
 
@@ -455,7 +457,7 @@ If true, same as type=&quot;inter-webapp&quot;; if false, same as type=&quot;&qu
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">The request URI. May be specified as parameter or as #nested macro content</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">The request URI. May be specified as parameter or as macro nested content</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 For intra-webapp links and with all macro defaults, this should be a controller URI, or if controller false, a relative servlet path (relative
 to webapp root, excluding webapp context root).
@@ -661,10 +663,10 @@ If true, pass through HttpServletResponse.encodeURL; otherwise, don&#39;t.
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.</p>
+                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL. Function version of the <a href="#entry-ofbizUrl">@ofbizUrl</a> macro.</p>
                       <div class="lib-entry-extradesc">
         <p>
-This is useful to prevent bloating templates with &lt;#assign...&gt;&lt;<a href="#entry-ofbizUrl">@ofbizUrl</a>.../&gt;&lt;/#assign&gt; captures
+This is useful to prevent bloating templates with <code>&lt;#assign...&gt;&lt;@ofbizUrl.../&gt;&lt;/#assign&gt;</code> captures
 which is very frequent due to use of macros.        </p>
                       </div>
                   </div>
@@ -699,8 +701,7 @@ which is very frequent due to use of macros.        </p>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizUrl">@ofbizUrl</a>
-
+                       <a href="#entry-ofbizUrl">@ofbizUrl</a>
                      </p>
                   </div>  
             
@@ -768,8 +769,7 @@ This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWeba
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizUrl">@ofbizUrl</a>
-
+                       <a href="#entry-ofbizUrl">@ofbizUrl</a>
                      </p>
                   </div>  
             
@@ -791,14 +791,13 @@ This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWeba
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.</p>
+                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of <a href="#entry-ofbizWebappUrl">@ofbizWebappUrl</a>.</p>
                       <div class="lib-entry-extradesc">
         <p>
 The URI takes the basic form /control/requesturi,
 but this is normally used to access another servlet, such as /products/GZ-1000.        </p>
         <p>
-This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.
-h absPath=false, interWebapp=false, controller=false.        </p>
+This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
                       </div>
                   </div>
             
@@ -832,10 +831,8 @@ h absPath=false, interWebapp=false, controller=false.        </p>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizWebappUrl">@ofbizWebappUrl</a>
-, 
-                             <a href="#entry-ofbizUrl">@ofbizUrl</a>
-
+                       <a href="#entry-ofbizWebappUrl">@ofbizWebappUrl</a>, 
+                       <a href="#entry-ofbizUrl">@ofbizUrl</a>
                      </p>
                   </div>  
             
@@ -905,8 +902,7 @@ by the implementation or can be overridden; controller is left to interpretation
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizUrl">@ofbizUrl</a>
-
+                       <a href="#entry-ofbizUrl">@ofbizUrl</a>
                      </p>
                   </div>  
             
@@ -928,7 +924,7 @@ by the implementation or can be overridden; controller is left to interpretation
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL. Function version of @ofbizInterWebappUrl.</p>
+                      <p class="lib-entry-shortdesc">Builds an Ofbiz navigation inter-webapp URL. Function version of <a href="#entry-ofbizInterWebappUrl">@ofbizInterWebappUrl</a>.</p>
                       <div class="lib-entry-extradesc">
         <p>
 The URI takes the basic and usual form /webappmountpoint/control/requesturi
@@ -974,10 +970,8 @@ If args is specified as map, &quot;webSiteId&quot; must be passed in args, not a
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizInterWebappUrl">@ofbizInterWebappUrl</a>
-, 
-                             <a href="#entry-ofbizUrl">@ofbizUrl</a>
-
+                       <a href="#entry-ofbizInterWebappUrl">@ofbizInterWebappUrl</a>, 
+                       <a href="#entry-ofbizUrl">@ofbizUrl</a>
                      </p>
                   </div>  
             
@@ -1058,7 +1052,7 @@ capabilities for Cato.        </p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl macro.</p>
+                      <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL. Function version of the <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a> macro.</p>
                   </div>
             
               
@@ -1092,8 +1086,7 @@ capabilities for Cato.        </p>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
-
+                       <a href="#entry-ofbizContentUrl">@ofbizContentUrl</a>
                      </p>
                   </div>  
             
@@ -1516,8 +1509,7 @@ If name alone, assumes CommonUiLabels for resource.        </span>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-getPropertyMsg">#getPropertyMsg</a>
-
+                       <a href="#entry-getPropertyMsg">#getPropertyMsg</a>
                      </p>
                   </div>  
             
@@ -3053,8 +3045,7 @@ They also depend on this for the toSimple=true conversion.          </div>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-mergeArgMaps">#mergeArgMaps</a>
-
+                       <a href="#entry-mergeArgMaps">#mergeArgMaps</a>
                      </p>
                   </div>  
             
@@ -3268,10 +3259,8 @@ If omitted, creates an empty Set.        </span>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlStructure.html#entry-section">@section</a>
-, 
-                             <a href="#entry-setCurrentSectionLevel">#setCurrentSectionLevel</a>
-
+                       <a href="standard/htmlStructure.html#entry-section">@section</a>, 
+                       <a href="#entry-setCurrentSectionLevel">#setCurrentSectionLevel</a>
                      </p>
                   </div>  
             
@@ -3316,8 +3305,7 @@ This should almost never be used except in odd macro implementations.        </p
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlStructure.html#entry-section">@section</a>
-
+                       <a href="standard/htmlStructure.html#entry-section">@section</a>
                      </p>
                   </div>  
             
@@ -3376,10 +3364,8 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlStructure.html#entry-section">@section</a>
-, 
-                             <a href="#entry-getCurrentSectionLevel">#getCurrentSectionLevel</a>
-
+                       <a href="standard/htmlStructure.html#entry-section">@section</a>, 
+                       <a href="#entry-getCurrentSectionLevel">#getCurrentSectionLevel</a>
                      </p>
                   </div>  
             
@@ -3434,10 +3420,8 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlContent.html#entry-heading">@heading</a>
-, 
-                             <a href="#entry-getDefaultHeadingLevel">#getDefaultHeadingLevel</a>
-
+                       <a href="standard/htmlContent.html#entry-heading">@heading</a>, 
+                       <a href="#entry-getDefaultHeadingLevel">#getDefaultHeadingLevel</a>
                      </p>
                   </div>  
             
@@ -3478,8 +3462,7 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlContent.html#entry-heading">@heading</a>
-
+                       <a href="standard/htmlContent.html#entry-heading">@heading</a>
                      </p>
                   </div>  
             
@@ -3504,7 +3487,7 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                       <p class="lib-entry-shortdesc">Set current global heading level manually.</p>
                       <div class="lib-entry-extradesc">
         <p>
-For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a> (but a parent <a href="standard/htmlStructure.html#entry-section">@section</a> will restore heading upon closing).        </p>
+For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section">@section</a> (but a parent @section will restore heading upon closing).        </p>
                       </div>
                   </div>
             
@@ -3538,10 +3521,8 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="standard/htmlContent.html#entry-heading">@heading</a>
-, 
-                             <a href="#entry-getCurrentHeadingLevel">#getCurrentHeadingLevel</a>
-
+                       <a href="standard/htmlContent.html#entry-heading">@heading</a>, 
+                       <a href="#entry-getCurrentHeadingLevel">#getCurrentHeadingLevel</a>
                      </p>
                   </div>  
             
@@ -4008,8 +3989,7 @@ Parameters are analogous to <a href="#entry-mergeArgMaps">#mergeArgMaps</a> but 
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-getAttribMapAllExcludes">#getAttribMapAllExcludes</a>
-
+                       <a href="#entry-getAttribMapAllExcludes">#getAttribMapAllExcludes</a>
                      </p>
                   </div>  
             
@@ -4098,21 +4078,28 @@ class arg gets heavy.        </p>
         <p>
 So to address all the cases, these functions cause the class arg on all supporting macros
 to accept following values:        </p>
-        <p>
-- string with &quot;+&quot; prefix or empty string &quot;&quot;:
-        </p>
-<pre>means allow macro to add non-essential default classes.
+        <div>  <ul>
+      <li>
+        <span>
+string with &quot;+&quot; prefix or empty string &quot;&quot;:
+means allow macro to add non-essential default classes.
 the class names after the &quot;+&quot; will be appended to any classes added
 by the macro, and will never replace macro defaults.
 this means the same as boolean true but with extra classes provided.
-in other words, appends extra classes.</pre>        <p>
-- string with &quot;=&quot; prefix or non-empty string:
-        </p>
-<pre>means prevent macro from adding non-essential default classes.
+in other words, appends extra classes.        </span>
+      </li>
+      <li>
+        <span>
+string with &quot;=&quot; prefix or non-empty string:
+means prevent macro from adding non-essential default classes.
 class names given will replace macro defaults, i.e. non-essential classes.
 macro may still add its own required classes.
 this is the same as boolean false but with replacement classes provided.
-in other words, replaces default (non-essential) classes.</pre>        <p>
+in other words, replaces default (non-essential) classes.        </span>
+      </li>
+  </ul>
+</div>
+        <p>
 In one or two cases the non-essential defaults are &quot;conditionally essential&quot;
 so class=&quot;=&quot; makes little sense, but we dont really need to handle that.
         </p>
@@ -4130,13 +4117,11 @@ A defaultVal can be set which is the same as doing:
 <pre>&lt;#local class = addClassArgDefault(class, &quot;default-class&quot;)&gt;
 &lt;#local classes = compileClassArg(class)&gt;</pre>          <div class="lib-text-note">
             <strong>IMPORTANT: </strong>
-          </div>
-        <p>
 Currently in some cases the logic above breaks too much compatibility. So it is not universally used
 for screen/form/menu widgets although often supported.
 For these, in some places an &quot;xxxExplicit&quot; version of functions are used instead which will only
 replace if explicitly prefixed with &quot;=&quot;, but not if no prefix. Otherwise, existing widget styles break
-the grid everywhere.        </p>
+the grid everywhere.          </div>
                       </div>
                   </div>
             
@@ -4235,7 +4220,7 @@ with leading space.</p>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Explicit version of #compiledClassAttribStr.</p>
+                      <p class="lib-entry-shortdesc">Explicit version of <a href="#entry-compiledClassAttribStr">#compiledClassAttribStr</a>.</p>
                   </div>
             
                   <div class="lib-entry-section-params">
@@ -4620,8 +4605,7 @@ depending on context. also translates booleans.        </p>
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-compileClassArg">#compileClassArg</a>
-
+                       <a href="#entry-compileClassArg">#compileClassArg</a>
                      </p>
                   </div>  
             
@@ -4665,8 +4649,7 @@ Usually those macro args take &quot;&quot; by default, to mean default.        <
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-compileClassArg">#compileClassArg</a>
-
+                       <a href="#entry-compileClassArg">#compileClassArg</a>
                      </p>
                   </div>  
             
@@ -4710,8 +4693,7 @@ Usually those macro args take &quot;&quot; by default, to mean default.        <
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-compileClassArg">#compileClassArg</a>
-
+                       <a href="#entry-compileClassArg">#compileClassArg</a>
                      </p>
                   </div>  
             
@@ -5660,16 +5642,11 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDateTime">@formattedDateTime</a>
-, 
-                             <a href="#entry-formattedTime">@formattedTime</a>
-, 
-                             <a href="#entry-formatDate">#formatDate</a>
-, 
-                             <a href="#entry-formatDateTime">#formatDateTime</a>
-, 
-                             <a href="#entry-formatTime">#formatTime</a>
-
+                       <a href="#entry-formattedDateTime">@formattedDateTime</a>, 
+                       <a href="#entry-formattedTime">@formattedTime</a>, 
+                       <a href="#entry-formatDate">#formatDate</a>, 
+                       <a href="#entry-formatDateTime">#formatDateTime</a>, 
+                       <a href="#entry-formatTime">#formatTime</a>
                      </p>
                   </div>  
             
@@ -5712,8 +5689,7 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDate">@formattedDate</a>
-
+                       <a href="#entry-formattedDate">@formattedDate</a>
                      </p>
                   </div>  
             
@@ -5756,8 +5732,7 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDate">@formattedDate</a>
-
+                       <a href="#entry-formattedDate">@formattedDate</a>
                      </p>
                   </div>  
             
@@ -5804,8 +5779,7 @@ These functions return VOID (no value) if no or empty output, so default value o
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDate">@formattedDate</a>
-
+                       <a href="#entry-formattedDate">@formattedDate</a>
                      </p>
                   </div>  
             
@@ -5851,8 +5825,7 @@ These functions return VOID (no value) if no or empty output, so default value o
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDate">@formattedDate</a>
-
+                       <a href="#entry-formattedDate">@formattedDate</a>
                      </p>
                   </div>  
             
@@ -5898,8 +5871,7 @@ These functions return VOID (no value) if no or empty output, so default value o
                   <div class="lib-entry-section-related">
                      <h4>Related</h4>
                      <p>
-                             <a href="#entry-formattedDate">@formattedDate</a>
-
+                       <a href="#entry-formattedDate">@formattedDate</a>
                      </p>
                   </div>  
             

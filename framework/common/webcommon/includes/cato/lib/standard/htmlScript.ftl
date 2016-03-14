@@ -1,6 +1,6 @@
 <#--
 * 
-* HTML document markup and script HTML template include, standard Cato markup.
+* HTML document markup and script HTML template include, standard Cato markup
 *
 * Included by htmlTemplate.ftl.
 *

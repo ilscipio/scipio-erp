@@ -80,13 +80,68 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://webtools/webapp/webtools/main.ftl"/></html></platform-specific>
+                     <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.WebtoolsServer}">
+                                    <container style="${styles.grid_row}">                                      
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">    
+                                            <include-screen name="CatoMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>                                                 
+                                        </container>
+                                        <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                            
+                                        </container>
+                                    </container>
+                                </screenlet>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
+                                                        
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
+    <!-- CATO: Dashboard widget implementation -->
+    <screen name="CatoMemoryInfo">
+        <section>
+            <actions>
+                <set field="chartType" value="pie"/>                                    
+                <set field="chartLibrary" value="chart"/>              
+                <set field="chartDatasets" value="1"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->
+                <set field="label1" value="${uiLabelMap.WebtoolsMemoryUsage}"/> <!-- 1st dataset label -->                                  
+                <script location="component://webtools/script/com/ilscipio/dashboard/MemoryInfo.groovy"/>
+                <!-- <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCache.groovy"/> -->
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="memoryInfo"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.WebtoolsSystemMemory}">
+                            <platform-specific>
+                                <html><html-template location="component://webtools/webapp/webtools/dashboard/MemoryInfo.ftl"/></html>                                                               
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    
     <screen name="server">
         <section>
             <actions>

@@ -1107,23 +1107,26 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     },
                     maintainAspectRatio: true,
                     tooltips: {
-                        mode: 'label'<#if labelUom1?has_content ||labelUom2?has_content>,
+                        mode: <#if type=="line" || type=="bar">'label'<#else>'single'</#if><#if (labelUom1?has_content ||labelUom2?has_content) >,
                         callbacks: {
-                            label: function(tooltipItem, data) {
+                            label: function(tooltipItem, data) {                                
                                 <#if labelUom1?has_content> 
                                     if(tooltipItem.datasetIndex == 0) {
-                                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                        <#escape x as x?html>
-                                             <#noescape>${Static["org.ofbiz.base.util.Debug"].log("labelUom1 ====================> " + labelUom1?string)}</#noescape>
-                                        </#escape>
-                                      
-                                        return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom1!}';
+                                        var datasetLabel = '';                                  
+                                        <#if type=="line" || type=="bar">
+                                             datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
+                                             return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom1!}';
+                                        <#elseif type="pie">
+                                             datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                             return datasetLabel + ' ${labelUom1!}';
+                                        <#else>
+                                            return datasetLabel;
+                                        </#if>
                                     }
                                 </#if>
                                 <#if labelUom2?has_content> 
                                     if(tooltipItem.datasetIndex == 1) {
                                         var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                        ${Static["org.ofbiz.base.util.Debug"].log("labelUom2 ====================> " + labelUom2)}
                                         return datasetLabel + ': ' + tooltipItem.yLabel + ' ${labelUom2!}';
                                     }
                                 </#if>
@@ -1132,7 +1135,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         </#if>
                     },
                     hover: {
-                        mode: 'label'
+                        mode: <#if type=="line" || type=="bar">'label'<#else>'single'</#if>
                     },
                     legend: {
                         position: 'bottom',
@@ -1145,59 +1148,64 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize
-                    }                 
-                    <#if type=="line" || type=="bar">,
-                    scales: {
-                        type: chartData.scaleType,
-                        display: chartData.scaleDisplay,
-                        xAxes: [{
-                            gridLines: {
-                                color: chartData.scaleGridLineColor
-                            },
-                            scaleLabel : {
-                                display: chartData.scaleLabelDisplay,
-                                <#if xlabel?has_content>labelString: '${xlabel!}',</#if>
-                                fontColor: chartData.scaleLabelFontColor,
-                                fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize                                
-                            },
-                            ticks: {
-                                display: true,
-                                autoSkip: true,
-                                padding:10,
-                                maxRotation:30,
-                                fontColor: chartData.scaleLabelFontColor,
-                                fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize
-                            }                            
-                          }],
-                        yAxes: [{
-                            scaleLabel : {
-                                display: chartData.scaleLabelDisplay,
-                                <#if ylabel?has_content>scaleLabel: '${ylabel!}',</#if>
-                                fontColor: chartData.scaleLabelFontColor,
-                                fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize
-                            },
-                            ticks: {
-                                display: true,
-                                autoSkip: true,                            
-                                fontColor: chartData.scaleLabelFontColor,
-                                fontFamily: chartData.scaleLabelFontFamily,
-                                fontSize: chartData.scaleLabelFontSize
-                            }
-                        }]
                     }
+                    <#if type=="line" || type=="bar">,
+                        scales: {
+                            type: chartData.scaleType,
+                            display: chartData.scaleDisplay,                        
+                            xAxes: [{
+                                gridLines: {
+                                    color: chartData.scaleGridLineColor
+                                },
+                                scaleLabel : {
+                                    display: chartData.scaleLabelDisplay,
+                                    <#if xlabel?has_content>labelString: '${xlabel!}',</#if>
+                                    fontColor: chartData.scaleLabelFontColor,
+                                    fontFamily: chartData.scaleLabelFontFamily,
+                                    fontSize: chartData.scaleLabelFontSize                                
+                                },
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    padding:10,
+                                    maxRotation:30,
+                                    fontColor: chartData.scaleLabelFontColor,
+                                    fontFamily: chartData.scaleLabelFontFamily,
+                                    fontSize: chartData.scaleLabelFontSize
+                                }                            
+                              }],
+                            yAxes: [{
+                                scaleLabel : {
+                                    display: chartData.scaleLabelDisplay,
+                                    <#if ylabel?has_content>scaleLabel: '${xlabel!}',</#if>
+                                    fontColor: chartData.scaleLabelFontColor,
+                                    fontFamily: chartData.scaleLabelFontFamily,
+                                    fontSize: chartData.scaleLabelFontSize
+                                },
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,                            
+                                    fontColor: chartData.scaleLabelFontColor,
+                                    fontFamily: chartData.scaleLabelFontFamily,
+                                    fontSize: chartData.scaleLabelFontSize
+                                }
+                            }]
+                        }
+                    <#elseif type=="pie">,                        
+                        scale: {
+                           type: chartData.scaleType,
+                           display: false
+                        }            
                     </#if>
-
                 };
             var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
                     {
+                    
                       <#if type=="line" || type=="bar">
-                      label: '${label1!}',
+                      label: '${label1!}',                      
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
                       borderColor: chartData.primaryStrokeColor,
@@ -1328,7 +1336,7 @@ Chart data entry.
   <#if chartLibrary=="foundation">
     <#if chartType = "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
-      <li data-y="${value!}" data-x="${chartDataIndex + 1}">${title!}</li>
+      <li data-y="${value!}" data-x="${chartDataIndex}">${title!}</li>
     <#else>
       <li data-value="${value!}">${title!}</li>
     </#if>

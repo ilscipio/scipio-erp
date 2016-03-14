@@ -177,6 +177,8 @@ under the License.
     <screen name="main-decorator">
         <section>
             <actions>
+                <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
+                <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
             </actions>
             <widgets>
                 <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
@@ -282,7 +284,7 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+                <script location="component://shop/script/com/ilscipio/shop/solr/Category.groovy"/>
                 <set field="title" value=""/>
             </actions>
             <widgets>

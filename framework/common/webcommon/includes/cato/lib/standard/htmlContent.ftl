@@ -980,6 +980,10 @@ Since this is very foundation specific, this function may be dropped in future i
 Creates a pricing table element/entry.
 
 Since this is very foundation specific, this function may be dropped in future installations.
+
+* Parameters *
+    type                   = (price|description|title|button default:empty)
+
 -->
 <#assign pli_defaultArgs = {
   "type":"", "passArgs":{}

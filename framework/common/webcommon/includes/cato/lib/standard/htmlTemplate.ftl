@@ -21,8 +21,10 @@
 *   * In parser, bullets will create HTML lists, text encloding in two bullets (* *) will create
 *     a heading, notes with uppercase label and "?:" or ":" prefix will be highlighted (support multi-
 *     line by indenting the next line), and indents alone will create preformatted text (usually code).
-*   * Small code bits may be surrounded by three brackets (like Trac tickets) to delineate code, {{{like this}}}.
-*     Indents may be enough in other cases.
+*   * Small code bits may be surrounded by three curly brackets (like Trac tickets) to delineate code, {{{like this}}}.
+*     Indents may be enough for other cases (but indents don't identify as code in HTML). The three curly brackets will also prevent auto-linking.
+*   * To prevent auto-linking or other textual formatting (but not structural formatting), wrap in three parenthesis, (((like this))).
+*   * Supports limited '''bold''', ''italic'', __underline__ in paragraphs (but not labels)
 *
 * DEV NOTES: 
 * * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.

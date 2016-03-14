@@ -777,7 +777,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                   by labelArea (and labelType) and its defaults, optionally coming from @fields container.
                                   label arg is mainly to provide data; theme and other flags decide what to do with it.
                                   For generic parent fields, label type must be specified explicitly, e.g.
-                                    <@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields> 
+                                    {{{<@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields>}}}
                               NOTE: label area behavior may also be influenced by containing macros such as @fields
     labelDetail             = Extra content (HTML) inserted with (after) label
     labelType               = Explicit label type (see @fields)

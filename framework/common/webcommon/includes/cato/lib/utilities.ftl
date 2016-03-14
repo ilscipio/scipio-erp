@@ -125,7 +125,7 @@ DEV NOTES:
 ************
 Builds an Ofbiz navigation URL. Function version of the @ofbizUrl macro.
 
-This is useful to prevent bloating templates with <#assign...><@ofbizUrl.../></#assign> captures
+This is useful to prevent bloating templates with {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
 which is very frequent due to use of macros.
 
   * Parameters *
@@ -184,7 +184,6 @@ The URI takes the basic form /control/requesturi,
 but this is normally used to access another servlet, such as /products/GZ-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
-h absPath=false, interWebapp=false, controller=false.
 
   * Parameters *
     (other)                 = See #makeOfbizUrl, @ofbizWebappUrl
@@ -1550,18 +1549,18 @@ class arg gets heavy.
 So to address all the cases, these functions cause the class arg on all supporting macros 
 to accept following values:
 
-- string with "+" prefix or empty string "": 
-    means allow macro to add non-essential default classes. 
-    the class names after the "+" will be appended to any classes added
-    by the macro, and will never replace macro defaults.
-    this means the same as boolean true but with extra classes provided.
-    in other words, appends extra classes.
-- string with "=" prefix or non-empty string: 
-    means prevent macro from adding non-essential default classes.
-    class names given will replace macro defaults, i.e. non-essential classes. 
-    macro may still add its own required classes.
-    this is the same as boolean false but with replacement classes provided.
-    in other words, replaces default (non-essential) classes.
+* string with "+" prefix or empty string "": 
+  means allow macro to add non-essential default classes. 
+  the class names after the "+" will be appended to any classes added
+  by the macro, and will never replace macro defaults.
+  this means the same as boolean true but with extra classes provided.
+  in other words, appends extra classes.
+* string with "=" prefix or non-empty string: 
+  means prevent macro from adding non-essential default classes.
+  class names given will replace macro defaults, i.e. non-essential classes. 
+  macro may still add its own required classes.
+  this is the same as boolean false but with replacement classes provided.
+  in other words, replaces default (non-essential) classes.
   
 In one or two cases the non-essential defaults are "conditionally essential" 
 so class="=" makes little sense, but we dont really need to handle that.
@@ -1573,13 +1572,12 @@ compileClassArg should usually be used as late as possible in macro:
 A defaultVal can be set which is the same as doing:
   <#local class = addClassArgDefault(class, "default-class")>
   <#local classes = compileClassArg(class)>
-  
-IMPORTANT:
-Currently in some cases the logic above breaks too much compatibility. So it is not universally used
-for screen/form/menu widgets although often supported.
-For these, in some places an "xxxExplicit" version of functions are used instead which will only
-replace if explicitly prefixed with "=", but not if no prefix. Otherwise, existing widget styles break
-the grid everywhere.
+
+IMPORTANT: Currently in some cases the logic above breaks too much compatibility. So it is not universally used
+  for screen/form/menu widgets although often supported.
+  For these, in some places an "xxxExplicit" version of functions are used instead which will only
+  replace if explicitly prefixed with "=", but not if no prefix. Otherwise, existing widget styles break
+  the grid everywhere.
 -->
 <#function compileClassArg class defaultVal="">
   <#if defaultVal?has_content>

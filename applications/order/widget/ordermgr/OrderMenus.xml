@@ -91,10 +91,11 @@ under the License.
             <link target="FindRequirements"/>
         </menu-item>
 
+        <!-- CATO: Disabled - requires BIRT 
         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
             <link target="OrderPurchaseReportOptions"/>
         </menu-item>
-
+         -->
         <menu-item name="stats" title="${uiLabelMap.CommonStats}">
             <link target="orderstats"/>
         </menu-item>

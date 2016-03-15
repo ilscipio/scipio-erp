@@ -822,6 +822,73 @@ Escapes the URL's parameter delimiters if they are not already escaped.
   </#if>
 </#function>
 
+
+<#-- 
+*************
+* urlContainsPathPart
+************
+Checks if the given URL contains the given path part, using proper delimiter checking.
+
+WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+
+  * Parameters *
+    url                     = (required) URL to check
+    pathPart                = (required) Path part
+                              e.g., {{{/GZ-1000}}}
+-->
+<#function urlContainsPathPart url pathPart>
+  <#if !url?has_content || !pathPart?has_content>
+    <#return false>
+  <#elseif pathPart == "/">
+    <#return true>
+  </#if>
+  <#if pathPart?starts_with("/")>
+    <#local pathPart = pathPart[1..]>
+  </#if>
+  <#if pathPart?ends_with("/")>
+    <#local pathPart = pathPart[0..<(pathPart?length - 1)]>
+  </#if>
+  <#return url?matches("^(.*/)?(" + pathPart + ")([?/#&;].*)?$")>
+</#function>
+
+<#-- 
+*************
+* urlStartsWithPathPart
+************
+Checks if the given URL path starts with the given path, using proper delimiter checking.
+
+WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+
+TODO: Implement (careful about absolute vs relative)
+
+  * Parameters *
+    url                     = (required) URL to check
+    pathPart                = (required) Path part
+-->
+<#-- NOT IMPLEMENTED
+<#function urlStartsWithPath url pathPart>
+</#function>
+-->
+
+<#-- 
+*************
+* urlEndsWithPathPart
+************
+Checks if the given URL path ends with the given path, using proper delimiter checking.
+
+WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+
+TODO: Implement (careful about absolute vs relative)
+
+  * Parameters *
+    url                     = (required) URL to check
+    pathPart                = (required) Path part
+-->
+<#-- NOT IMPLEMENTED
+<#function urlEndsWithPathPart url pathPart>
+</#function>
+-->
+
 <#-- 
 *************
 * camelCaseToDashLowerName

@@ -21,11 +21,16 @@ under the License.
     <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : productCategoryId}, true)/>
     <#assign contentCategoryName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html")!>
     <#assign contentCategoryDesc = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "html")!>    
-    <#assign activeCategoryClass = "" />
-    <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || currentCategoryPath.contains("/"+productCategoryId)><#assign activeCategoryClass = "header-menu-category-active"/></#if>
+    <#assign activeCategoryClassStr = "" />
+    <#assign active = false>
+    <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || urlContainsPathPart(StringUtil.wrapString(currentCategoryPath!""), productCategoryId)>
+      <#assign active = true>
+      <#-- Extra active class... added on top of active class from global styles -->
+      <#assign activeCategoryClassStr = " header-menu-category-active"/>
+    </#if>
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if count != "0">(${count})</#if></#assign>
-    <@menuitem type="link" href=categoryUrl!"" text=linkText!"" class="+menu-${level} ${activeCategoryClass}"/>    
+    <@menuitem type="link" href=categoryUrl!"" text=linkText!"" class="+menu-${level}"+activeCategoryClassStr active=active/>    
     <#if isMultiLevel>
         <#if currentCategoryPath.contains("/"+productCategoryId)>
             <#assign nextLevel=level+1/>

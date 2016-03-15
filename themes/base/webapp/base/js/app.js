@@ -39,6 +39,7 @@ function collapseFieldset(){
 
 $(function(){
 	$(document).foundation();
+	catoObjectFit();
 	collapseFieldset();
 	$('.ui-autocomplete').addClass('f-dropdown');
 	Pizza.init(); //Create charts
@@ -468,6 +469,29 @@ CatoUploadProgress.loadUiLabels = function() {
 	    CatoUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
 	}	
 };
+
+/**
+ * Object-fit fallback for IE (used by <@img> macro)
+ * Based on: 
+ * https://medium.com/@primozcigler/neat-trick-for-css-object-fit-fallback-on-edge-and-other-browsers-afbc53bbb2c3#.cwwk7mtx0
+ * 
+ * */
+function catoObjectFit(){
+	if ( ! Modernizr.object-fit ) {
+		  $('.cato-image-container').each(function () {
+		    var $container = $(this),
+		        imgUrl = $container.find('img').prop('src');
+		    if (imgUrl) {
+		      $container
+		        .css('backgroundImage', 'url(' + imgUrl + ')')
+		        .css('background-size','cover')
+		        .css('background-position','center center')
+		        .addClass('compat-object-fit');
+		    }  
+		  });
+		}
+	return false;
+}
 
 
 function checkboxToFormHiddenInput(checkboxElem, formSel) {

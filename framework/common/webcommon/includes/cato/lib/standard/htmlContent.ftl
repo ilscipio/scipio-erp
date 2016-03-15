@@ -986,7 +986,7 @@ Creates a pricing table element/entry.
 Since this is very foundation specific, this function may be dropped in future installations.
 
   * Parameters *
-    type                   = (price|description|title|button default:empty)
+    type                   = ((string) price|description|title|button, default:-empty-)
 -->
 <#assign pli_defaultArgs = {
   "type":"", "passArgs":{}
@@ -1433,7 +1433,7 @@ Slider data entry - a single slide.
     @slider
 -->
 <#assign slide_defaultArgs = {
-  "title":"", "class":"", "link":"", "linkTarget":true, "image":"", "passArgs":{}
+  "title":"", "class":"", "link":"", "linkTarget":false, "image":"", "passArgs":{}
 }>
 <#macro slide args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.slide_defaultArgs)>
@@ -1450,7 +1450,7 @@ Slider data entry - a single slide.
   <@slide_markup class=class image=image link=link linkTarget=linkTarget title=title origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
-<#-- @chartdata main markup - theme override -->
+<#-- @slide main markup - theme override -->
 <#macro slide_markup class="" image="" link="" linkTarget="" title="" origArgs={} passArgs={} catchArgs...>
     <#local slideIdNum = getRequestVar("catoSlideIdNum")!0>
     <#local slideIdNum = slideIdNum + 1 />
@@ -1466,6 +1466,59 @@ Slider data entry - a single slide.
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
         </div>
+        <#if link?has_content></a></#if>
+    </div>
+</#macro>
+
+
+<#-- 
+*************
+* img
+************
+Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit
+Relies on custom catoObjectFit Javascript function as a fallback for IE. 
+
+  * Usage Examples *  
+    <@img src="..." type="cover" height="" width=""/>
+
+  * Parameters *
+    src                     = (String) image location
+    class                   = ((css-class)) CSS classes 
+                              Supports prefixes:
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    type                    = ((String) none|fill|cover|contain|scale-down, default: cover) css3 object-fit
+    link                    = Link URL around nested content
+                              WARN: can only use if no other links inside nested content
+    linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
+                              If boolean, false prevents any; true will allow global styles hash lookup.
+    width                   = (String) container width, e.g. "12px" - acts as a max-width
+    height                  = (String) container height e.g. "12px" - acts as a max-height  
+-->
+<#assign img_defaultArgs = {
+  "src":"", "type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}
+}>
+<#macro img args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.img_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <#local stylePrefix = "img_">
+  
+  <#if linkTarget?is_boolean && linkTarget == false>
+    <#local linkTarget = "">
+  <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
+    <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
+  </#if>
+  <@img_markup class=class src=src type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+</#macro>
+
+<#-- @img main markup - theme override -->
+<#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
+    <#local imgContainer><#if width?has_content>width: ${width};</#if><#if height?has_content>height: ${height};</#if></#local>
+    <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
+    <div class="cato-image-container ${class}" style="${imgContainer}">
+        <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <img src="${src}" class="cato-image" style="${imgStyle}"/>
         <#if link?has_content></a></#if>
     </div>
 </#macro>

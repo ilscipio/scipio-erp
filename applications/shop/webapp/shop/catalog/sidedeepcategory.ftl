@@ -25,12 +25,12 @@ under the License.
     <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || currentCategoryPath.contains("/"+productCategoryId)><#assign activeCategoryClass = "header-menu-category-active"/></#if>
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if count != "0">(${count})</#if></#assign>
-    <@menuitem type="link" href=categoryUrl!"" text=linkText!"" class="menu-${level} ${activeCategoryClass}"/>    
+    <@menuitem type="link" href=categoryUrl!"" text=linkText!"" class="+menu-${level} ${activeCategoryClass}"/>    
     <#if isMultiLevel>
         <#if currentCategoryPath.contains("/"+productCategoryId)>
             <#assign nextLevel=level+1/>
             <#if catList.get("menu-"+nextLevel)?has_content>
-                <#assign nextList = catList.get("menu-"+nextLevel)! />
+                <#assign nextList = catList.get("menu-"+nextLevel) />
                 <@iterateList currentList=nextList currentLevel=nextLevel isMultiLevel=true />
             </#if>
         </#if>

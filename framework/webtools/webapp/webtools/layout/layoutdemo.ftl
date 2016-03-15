@@ -1039,25 +1039,25 @@
     <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-    <li><@ofbizUrl uri="main" webSiteId="WebStore"/></li>
+    <li><@ofbizUrl uri="main" webSiteId="CatoWebStore"/></li>
     <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" /></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="WebStore" /></li>
-    <li>${makeOfbizInterWebappUrl("/ecommerce/control/main")}</li>
-    <li>${makeOfbizInterWebappUrl("main", "WebStore")}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"WebStore", "extLoginKey": true})}</li>
-    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"WebStore", "extLoginKey": true})}</li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
+    <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" /></li>
+    <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
+    <li>${makeOfbizInterWebappUrl("main", "CatoWebStore")}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"CatoWebStore", "extLoginKey": true})}</li>
+    <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"CatoWebStore", "extLoginKey": true})}</li>
   </ul>
   
   <ul>Non-standard URLs:
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" webSiteId="WebStore" absPath=true /></li>
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=true /></li>
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="CatoWebStore" absPath=true /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=true /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
     <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false fullPath=true/></li>
-    <li><@ofbizInterWebappUrl uri="/ecommerce/control/main" controller=false secure=true/></li>
-    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="WebStore" controller=false /></li>
-    <li><@ofbizInterWebappUrl uri="main" webSiteId="WebStore" controller=true /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true/></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
+    <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="CatoWebStore" controller=false /></li>
+    <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" controller=true /></li>
     <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/webtools/control/main" /></li>
     <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/webtools/control/main" /></li>
     <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/webtools/control/main" /></li>

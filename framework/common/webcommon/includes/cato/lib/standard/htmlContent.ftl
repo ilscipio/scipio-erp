@@ -1516,7 +1516,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
 <#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${width};</#if><#if height?has_content>height: ${height};</#if></#local>
     <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
-    <div class="cato-image-container ${class}" style="${imgContainer}">
+    <div class="cato-image-container ${class}" style="${imgContainer}" catoFit="${type}">
         <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
             <img src="${src}" class="cato-image" style="${imgStyle}"/>
         <#if link?has_content></a></#if>

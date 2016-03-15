@@ -477,16 +477,22 @@ CatoUploadProgress.loadUiLabels = function() {
  * 
  * */
 function catoObjectFit(){
-	if ( ! Modernizr.object-fit ) {
+	Modernizr.addTest('objectfit',
+			!!Modernizr.prefixed('objectFit')
+		);
+	if ( !Modernizr.objectfit ) {
 		  $('.cato-image-container').each(function () {
 		    var $container = $(this),
 		        imgUrl = $container.find('img').prop('src');
 		    if (imgUrl) {
-		      $container
-		        .css('backgroundImage', 'url(' + imgUrl + ')')
-		        .css('background-size','cover')
-		        .css('background-position','center center')
-		        .addClass('compat-object-fit');
+		    	var type= $container.attr('catoFit');
+			    $container
+			    	.css('backgroundImage', 'url(' + imgUrl + ')')
+			    	.css('background-size',type)
+			        .css('background-repeat','no-repeat')
+			        .css('background-position','center center')
+			        .addClass('compat-object-fit');
+			    $container.find('img').css('opacity','0');
 		    }  
 		  });
 		}

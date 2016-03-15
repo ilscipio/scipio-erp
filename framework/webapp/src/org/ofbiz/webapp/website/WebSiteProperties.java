@@ -157,8 +157,9 @@ public final class WebSiteProperties {
         GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
         if (webSiteValue != null) {
             return from(webSiteValue);
+        } else {
+            throw new GenericEntityException("Cato: Could not find WebSite for webSiteId '" + webSiteId + "'");
         }
-        return null;
     }    
 
     private final String httpPort;
@@ -240,6 +241,9 @@ public final class WebSiteProperties {
         if (this == other) {
             return true;
         }
+        else if (other == null) {
+            return false;
+        }
         else if (!(other instanceof WebSiteProperties)) {
             return false;
         }
@@ -265,6 +269,9 @@ public final class WebSiteProperties {
     public boolean equalsWithHardDefaults(Object other) {
         if (this == other) {
             return true;
+        }
+        else if (other == null) {
+            return false;
         }
         else if (!(other instanceof WebSiteProperties)) {
             return false;

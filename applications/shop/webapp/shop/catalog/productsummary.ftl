@@ -39,9 +39,9 @@
     </#assign>
 
     <#assign productImage>
-        <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>">
-            <img src="<@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl>"/>
-        </a>
+        <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
+        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
+        <@img src=imgSrc!"" type="contain" link=link!"" width="100%" height="100px"/>
     </#assign>
 
     <#assign productDescription>
@@ -63,9 +63,7 @@
             <#if totalPrice?exists>
                 <@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/>
             <#else>
-                <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
-                        <@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/>
-                    <#elseif (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
+                <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
                         <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
                     <#else>
                         <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
@@ -80,7 +78,7 @@
             <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
                 <#if price.orderItemPriceInfos?exists>
                     <#list price.orderItemPriceInfos as orderItemPriceInfo>
-                        <div>${orderItemPriceInfo.description?if_exists}</div>
+                        ${orderItemPriceInfo.description?if_exists}
                     </#list>
                 </#if>
             </#if>
@@ -91,11 +89,8 @@
      <@pul title=productTitle!"">
         <#if smallImageUrl?has_content>
             <@pli>
-                ${productImage!""}
+               ${productImage!""}
             </@pli>
-        </#if>
-        <#if price.isSale?exists && price.isSale>
-            <@pli>${uiLabelMap.OrderOnSale}!</@pli>
         </#if>
         <#if productDescription?has_content>
         <@pli type="description">
@@ -105,6 +100,9 @@
          <@pli type="price">
             ${productPrice!""}
         </@pli>
+        <#if price.isSale?exists && price.isSale>
+            <@pli>${uiLabelMap.OrderOnSale}!</@pli>
+        </#if>
         <@pli type="button">
             <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.button_default!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>

@@ -146,7 +146,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
 
   <@scripts output=true> <#-- ensure @script elems here will always output -->
 
-    <title>${layoutSettings.companyName}<#if (page.title)?has_content>: ${page.title}<#elseif (page.titleProperty)?has_content>: ${uiLabelMap[page.titleProperty]}</#if></title>
+    <title>${layoutSettings.companyName}<#if title?has_content>: ${title}<#elseif titleProperty?has_content>: ${uiLabelMap[titleProperty]}</#if></title>
     
     <#if layoutSettings.shortcutIcon?has_content>
       <#assign shortcutIcon = layoutSettings.shortcutIcon/>
@@ -242,7 +242,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
   <#assign logoLinkURL = "${layoutSettings.commonHeaderImageLinkUrl}">
 </#if>
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
-<body class="<#if page?has_content && page.activeApp?has_content>app-${page.activeApp!}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> <#if userLogin??>page-auth<#else>page-noauth</#if>">
+<body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> <#if userLogin??>page-auth<#else>page-noauth</#if>">
 
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">

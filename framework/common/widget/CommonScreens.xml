@@ -170,7 +170,7 @@ under the License.
                         <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
                         <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
                         <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
-                        <set field="headerTitle" value="${title}" default-value="${uiLabelMap[page.titleProperty]}"/>
+                        <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
                     </actions>
                     <widgets />
                 </section>

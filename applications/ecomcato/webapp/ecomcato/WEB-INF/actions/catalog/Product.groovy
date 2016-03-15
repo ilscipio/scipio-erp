@@ -93,10 +93,13 @@ if (productId) {
         context.product = product;
         contentWrapper = new ProductContentWrapper(product, request);
 
+        // Cato: don't want page title overridden/forced by groovy
         if (pageTitle) {
-            context.title = pageTitle.textData;
+            //context.title = pageTitle.textData;
+            context.productTitle = pageTitle.textData;
         } else {
-            context.put("title", contentWrapper.get("PRODUCT_NAME"));
+            //context.put("title", contentWrapper.get("PRODUCT_NAME"));
+            context.put("productTitle", contentWrapper.get("PRODUCT_NAME"));
         }
 
         if (metaDescription) {

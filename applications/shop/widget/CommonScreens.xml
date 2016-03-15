@@ -45,7 +45,7 @@ under the License.
                 <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
                 <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl"/>
                 
-                <set field="headerTitle" value="${title}" default-value="${uiLabelMap[page.titleProperty]}"/>      
+                <set field="headerTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>      
                 <!-- The default (main) java scripts -->
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
@@ -280,12 +280,14 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="titleProperty" value=""/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
                 <script location="component://shop/script/com/ilscipio/shop/solr/Category.groovy"/>
+                <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
+                <set field="titleProperty" value=""/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

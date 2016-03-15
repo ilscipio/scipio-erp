@@ -184,7 +184,7 @@ under the License.
     <screen name="EditCategoryContentContent">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditCategoryContentContent"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
@@ -201,6 +201,8 @@ under the License.
                 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
+                
+                <set field="title" value="${uiLabelMap.PageTitleEditCategoryContentContent}: ${contentTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">

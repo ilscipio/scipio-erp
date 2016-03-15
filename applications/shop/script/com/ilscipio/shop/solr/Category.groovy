@@ -44,7 +44,9 @@ if (category) {
         detailScreen = category.detailScreen;
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
-    context.title = categoryContentWrapper.get("CATEGORY_NAME","html");
+    // Cato: don't want page title overridden/forced by groovy
+    //context.title = categoryContentWrapper.get("CATEGORY_NAME","html");
+    context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME","html");
     categoryDescription = categoryContentWrapper.get("DESCRIPTION","html");
     if (categoryDescription) {
         context.metaDescription = categoryDescription;

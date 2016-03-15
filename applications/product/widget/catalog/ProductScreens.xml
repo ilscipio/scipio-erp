@@ -1001,7 +1001,7 @@ under the License.
     <screen name="EditProductContentContent">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductContent"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
@@ -1010,6 +1010,7 @@ under the License.
                 <entity-one entity-name="ProductContent" value-field="productContent"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductSEO.groovy"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditProductContent}: ${productTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">

@@ -42,7 +42,10 @@ if ("RELATED_URL".equals(prodCatContentTypeId)) {
     if (contentList) {
         context.contentId = contentList.get(0).contentId;
         context.dataResourceId = contentList.get(0).dataResourceId;
-        context.title = contentList.get(0).drDataResourceName;
+        
+        // Cato: don't want page title overridden/forced by groovy
+        //context.title = contentList.get(0).drDataResourceName;
+        context.contentTitle = contentList.get(0).drDataResourceName;
         context.description = contentList.get(0).description;
         context.url = contentList.get(0).drObjectInfo;
         context.localeString = contentList.get(0).localeString;

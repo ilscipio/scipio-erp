@@ -24,7 +24,9 @@ if (productId) {
         if (productContent.productContentTypeId == "PAGE_TITLE") {
             contentTitle  = from("Content").where("contentId", productContent.contentId).queryOne();
             dataTextTitle  = from("ElectronicText").where("dataResourceId", contentTitle.dataResourceId).queryOne();
-            context.title = dataTextTitle.textData;
+            // Cato: don't want page title overridden/forced by groovy
+            //context.title = dataTextTitle.textData;
+            context.productTitle = dataTextTitle.textData;
         }
         if (productContent.productContentTypeId == "META_KEYWORD") {
             contentMetaKeyword  = from("Content").where("contentId", productContent.contentId).queryOne();

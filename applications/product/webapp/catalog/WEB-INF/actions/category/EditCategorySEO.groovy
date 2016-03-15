@@ -22,9 +22,11 @@ if (productCategoryId) {
     productCategoryContents  = from("ProductCategoryContent").where("productCategoryId", productCategoryId).queryList();
     productCategoryContents.each{ productCategoryContent->
         if (productCategoryContent.prodCatContentTypeId == "PAGE_TITLE") {
-            contentTitle  = from("Content").where("contentId", productCategoryContent.contentId).queryOne();
-            dataTextTitle  = from("ElectronicText").where("dataResourceId", contentTitle.dataResourceId).queryOne();
-            context.title = dataTextTitle.textData;
+            contentTitle = from("Content").where("contentId", productCategoryContent.contentId).queryOne();
+            dataTextTitle = from("ElectronicText").where("dataResourceId", contentTitle.dataResourceId).queryOne();
+            // Cato: don't want page title overridden/forced by groovy
+            //context.title = dataTextTitle.textData;
+            context.contentTitle = dataTextTitle.textData;
         }
         if (productCategoryContent.prodCatContentTypeId == "META_KEYWORD") {
             contentMetaKeyword  = from("Content").where("contentId", productCategoryContent.contentId).queryOne();

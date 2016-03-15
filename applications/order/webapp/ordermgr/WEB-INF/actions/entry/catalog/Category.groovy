@@ -81,10 +81,13 @@ if (category) {
     
     categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html");
 
+    // Cato: don't want page title overridden/forced by groovy
     if (pageTitle) {
-        context.title = pageTitle.textData;
+        //context.title = pageTitle.textData;
+        context.categoryTitle = pageTitle.textData;
     } else {
-        context.title = categoryContentWrapper.get("CATEGORY_NAME", "html");
+        //context.title = categoryContentWrapper.get("CATEGORY_NAME", "html");
+        context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "html");
     }
 
     if (metaDescription) {

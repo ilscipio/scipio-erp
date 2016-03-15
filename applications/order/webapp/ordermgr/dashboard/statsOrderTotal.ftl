@@ -29,7 +29,7 @@ under the License.
 <#assign fieldIdNum=fieldIdNum!0/>
 <#-- OrderOrdersTotals -->
 
-<#if title?has_content><@heading relLevel=1>${title!}</@heading></#if>
+<#if title?has_content><@heading relLevel=1>${title}</@heading></#if>
   <@chart type=chartType library=library xlabel=xlabel ylabel=ylabel label1=label1 label2=label2>
     <#if ((currData.isEmpty())!true) == false>
         <#list currData.keySet() as key>

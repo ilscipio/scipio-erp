@@ -136,9 +136,10 @@ under the License.
     <screen name="product">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleProductPage"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="configproductdetailScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
+                <set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">

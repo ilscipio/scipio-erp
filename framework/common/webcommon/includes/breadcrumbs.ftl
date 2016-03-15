@@ -29,6 +29,6 @@
     
     <#-- If there is neither any category or product information available, display the page title -->
     <#if !crumbs?has_content && !productContentWrapper??>
-        <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}"><#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></li>
+        <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}"><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap[titleProperty]}</#if></li>
     </#if>
 </@nav>

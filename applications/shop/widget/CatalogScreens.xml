@@ -158,12 +158,14 @@ under the License.
     <screen name="category">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleCategoryPage"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://shop/script/com/ilscipio/shop/solr/Category.groovy"/>
                 <!-- Open this commented section for the demo of Layered Navigation, navigate through Gizmo and Widgets categories to see it in action.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/LayeredNavigation.groovy"/>
                 <set field="detailScreen" value="LayeredCategoryDetail"/>
                  -->
+                <!--<set field="title" value="${uiLabelMap.PageTitleCategoryPage}: ${categoryTitle}"/>-->
+                <set field="title" value="${categoryTitle}"/>
                 <set field="activeSubMenuItem" value="LookupProductCategories"/>
             </actions>
             <widgets>
@@ -241,10 +243,12 @@ under the License.
     <screen name="product">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleProductPage"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
                 <set field="configproductdetailScreen" value="component://shop/widget/CatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
+                <!--<set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>-->
+                <set field="title" value="${productTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

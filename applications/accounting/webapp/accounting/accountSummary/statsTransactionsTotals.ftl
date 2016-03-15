@@ -9,7 +9,7 @@
         <#assign currData = chartDataMap[key] />
         <@cell columns=6>
             <@heading relLevel=1>
-                <#if title?has_content>${title!} - </#if>
+                <#if title?has_content>${title} - </#if>
                 <#if key = "C">${uiLabelMap.AccountingCreditAmount}<#elseif key == "D">${uiLabelMap.AccountingDebitAmount}</#if>
                 [${fromDate?string("MM/dd/yyyy")!} - ${thruDate?string("MM/dd/yyyy")!}]
             </@heading>            

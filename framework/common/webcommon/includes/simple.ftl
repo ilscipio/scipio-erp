@@ -18,7 +18,7 @@ under the License.
 -->
 <@htmlHeadOpen />
   <@scripts output=true>
-    <title>${layoutSettings.companyName!}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></title>
+    <title>${layoutSettings.companyName!}<#if title?has_content>: ${title}<#elseif titleProperty?has_content>: ${uiLabelMap[titleProperty]}</#if></title>
     <#if layoutSettings.shortcutIcon?has_content>
       <link rel="shortcut icon" href="<@ofbizContentUrl>${layoutSettings.shortcutIcon}</@ofbizContentUrl>" />
     </#if>

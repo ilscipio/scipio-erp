@@ -357,9 +357,10 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretRequestUri function)
     onClick                 = onClick (for content elem)
     title                   = Logical title attribute of content
-    disabled                = ((boolean), default: false) Whether disabled
-    selected                = ((boolean), default: false) Whether selected or not
-    active                  = ((boolean), default: false) Whether active or not
+    disabled                = ((boolean), default: false) Whether menu item disabled
+    active                  = ((boolean), default: false) Whether menu item active (current page)
+    selected                = ((boolean), default: false) Whether selected or not (selected but not necessarily current)
+                              NOTE: Currently this is not used much. It would be used for marking an item as preselected.
     nestedContent           = Macro arg alternative to macro nested content
                               This may be passed in @menu items list.
     nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent arg and macro nested content
@@ -1000,7 +1001,6 @@ functionality.
               <ul class="${styles.pagination_list!}">
       </#if>
   
-    
             <#-- NOTE: must use submitPaginationPost JS function to force send as POST for some requests, because Ofbiz security feature prevents
                  GET params passed to controller service event when request is https="true".
                  NOTE: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
@@ -1151,7 +1151,7 @@ Renders a menu in a tree fashion.
     inlineItems             = ((boolean)) If true, generate only items, not menu container    
     id                      = Menu ID    
     attribs                 = ((map)) Map of other tree menu attribs
-    data                    = ((object)) If jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
+    data                    = ((object)) If jsTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
                               Same as @treemenuitem macro parameters.
     settings                = ((object)) If jsTree: settings
                               Alternatively, the items can be specified as nested content.        

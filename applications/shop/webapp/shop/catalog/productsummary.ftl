@@ -14,7 +14,7 @@
     <#elseif solrProduct?has_content && solrProduct.smallImage?exists>
         <#assign smallImageUrl = solrProduct.smallImage>        
     <#elseif productContentWrapper?exists && productContentWrapper.get("LARGE_IMAGE_URL","html")?has_content>
-        <#assign smallImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")?if_exists>        
+        <#assign smallImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")!>        
     </#if>
     
 
@@ -48,7 +48,7 @@
         <#if solrProduct?exists && description?exists>
             ${description}
         <#elseif productContentWrapper?exists>
-            ${productContentWrapper.get("DESCRIPTION","html")?if_exists}<#if daysToShip?exists></#if>
+            ${productContentWrapper.get("DESCRIPTION","html")!}<#if daysToShip?exists></#if>
         </#if>
     </#assign>
 
@@ -78,7 +78,7 @@
             <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
                 <#if price.orderItemPriceInfos?exists>
                     <#list price.orderItemPriceInfos as orderItemPriceInfo>
-                        ${orderItemPriceInfo.description?if_exists}
+                        ${orderItemPriceInfo.description!}
                     </#list>
                 </#if>
             </#if>

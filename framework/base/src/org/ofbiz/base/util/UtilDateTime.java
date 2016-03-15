@@ -1284,6 +1284,10 @@ public class UtilDateTime {
         Map<String, Timestamp> result = FastMap.newInstance();
         Timestamp date = (UtilValidate.isNotEmpty(fromDate)) ? fromDate : UtilDateTime.nowTimestamp();
         switch (period) {
+        case "hour":
+            result.put("dateBegin", UtilDateTime.getHourStart(date, 1, timezone, locale));
+            result.put("dateEnd", UtilDateTime.getHourEnd(date, 1L, timezone, locale));
+            break;
         case "day":
             result.put("dateBegin", UtilDateTime.getDayStart(date));
             result.put("dateEnd", UtilDateTime.getDayEnd(date));
@@ -1328,6 +1332,9 @@ public class UtilDateTime {
         Map<String, Object> result = FastMap.newInstance();
         result.putAll(getPeriodInterval(period, fromDate, locale, timezone));
         switch (period) {
+        case "hour":
+            result.put("dateFormatter", new SimpleDateFormat("E, HH"));
+            break;
         case "day":
             result.put("dateFormatter", new SimpleDateFormat("yyyy-MM-dd"));
             break;

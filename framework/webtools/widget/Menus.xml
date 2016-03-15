@@ -43,9 +43,9 @@ under the License.
             <link target="myCertificates"/>
         </menu-item>
          -->
-        <menu-item name="server" title="${uiLabelMap.WebtoolsServer}">
+        <!-- <menu-item name="server" title="${uiLabelMap.WebtoolsServer}">
             <link target="LogView"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="entity" title="${uiLabelMap.WebtoolsEntityEngine}">
             <link target="entitymaint"/>
         </menu-item>

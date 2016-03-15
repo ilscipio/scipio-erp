@@ -89,15 +89,15 @@ under the License.
                                             <include-screen name="CatoMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>                                                 
                                         </container>
                                         <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                            
+                                            <include-screen name="CatoUserRequestCount" location="component://webtools/widget/CommonScreens.xml"/>
                                         </container>
                                     </container>
                                 </screenlet>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
-                                                        
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">         
+	                             <include-screen name="CatoLogView" location="component://webtools/widget/CommonScreens.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="CatoSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
@@ -141,33 +141,63 @@ under the License.
         </section>
     </screen>
     
-    
-    <screen name="server">
+    <screen name="CatoUserRequestCount">
         <section>
             <actions>
-                <set field="titleProperty" value="WebtoolsServer"/>
-                <set field="activeMainMenuItem" value="server"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://webtools/widget/Menus.xml" name="ServerSideBar"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://webtools/webapp/webtools/dashboard/server.ftl"/></html></platform-specific>
-                    </decorator-section>                    
-                </decorator-screen>
-            </widgets>
+                <set field="chartType" value="bar"/>                                    
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="hour"/>
+                <set field="chartIntervalCount" value="12"/>
+                <set field="chartDatasets" value="1"/>
+                <set field="xlabel" value=""/> <!-- x-axis label -->
+                <set field="ylabel" value=""/> <!-- y-axis label -->               
+                <set field="label1" value="${uiLabelMap.WebtoolsUserRequests}"/> <!-- 1st dataset label -->                                  
+                <script location="component://webtools/script/com/ilscipio/dashboard/UserRequestCount.groovy"/>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="userRequestCount"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet title="${uiLabelMap.WebtoolsUserRequests}">
+                            <platform-specific>
+                                <html><html-template location="component://webtools/webapp/webtools/dashboard/UserRequestCount.ftl"/></html>                                                               
+                            </platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+           </widgets>
         </section>
     </screen>
+    
+    <screen name="CatoLogView">
+         <section>
+             <actions>
+                 <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
+                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
+                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogConfiguration.groovy"/>                
+             </actions>
+             <widgets>
+                  <screenlet>
+                      <!-- <container style="button-bar">
+                          <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="${styles.link_run_sys} ${styles.action_reload}"/>
+                      </container>
+                      <container style="">
+                          <label style="">${uiLabelMap.WebtoolsLogFileName}:</label>
+                          <label style="">${logFileName}</label>
+                      </container> -->
+                      <platform-specific>
+                          <html><html-template location="component://webtools/webapp/webtools/log/logContent.ftl"/></html>
+                      </platform-specific>
+                  </screenlet>
+             </widgets>
+         </section>
+     </screen>
+    
+    
     <screen name="printStart">
         <section>
             <widgets>

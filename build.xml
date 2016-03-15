@@ -33,6 +33,8 @@ under the License.
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=512M"/>
+	<!-- Cato: New properties -->
+	<property name="solr.home" value="applications/solr/"/>
 
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
@@ -643,6 +645,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+        	<!-- Cato: solr home -->
+        	<jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -656,7 +660,9 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <arg value="start"/>
+            <!-- Cato: solr home -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        	<arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
@@ -666,6 +672,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -679,7 +687,9 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <arg value="start-batch"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        	<arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
@@ -693,6 +703,8 @@ under the License.
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-debug"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -703,6 +715,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
         </java>
@@ -716,7 +730,9 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <arg value="pos"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        	<arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
         </java>
     </target>
@@ -726,6 +742,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -739,13 +757,17 @@ under the License.
             <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
             <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
             <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <arg value="both"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        	<arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
     </target>
     <target name="stop"
             description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <java jar="ofbiz.jar" fork="true">
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -753,6 +775,8 @@ under the License.
     <target name="status"
             description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <java jar="ofbiz.jar" fork="true">
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
         </java>
@@ -768,6 +792,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
         </java>
     </target>
@@ -777,12 +803,16 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
         </java>
         <java jar="ofbiz.jar" fork="true">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO1"/>
         </java>
@@ -790,6 +820,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO2"/>
         </java>
@@ -800,6 +832,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed"/>
         </java>
@@ -810,6 +844,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext"/>
         </java>
@@ -820,6 +856,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
         </java>
@@ -830,6 +868,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
         </java>
@@ -841,6 +881,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
@@ -857,6 +899,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
         </java>
@@ -898,6 +942,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
         </java>
@@ -907,6 +953,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
@@ -932,6 +980,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
@@ -942,6 +992,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
@@ -960,6 +1012,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
         </java>
@@ -981,6 +1035,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
         </java>
@@ -990,6 +1046,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
@@ -1227,6 +1285,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
@@ -1261,6 +1321,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
@@ -1292,6 +1354,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="testlist"/>
             <arg file="runtime/test-list-build.xml"/>
             <arg value="-ant"/>
@@ -1306,6 +1370,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-case=${test.case}"/>
@@ -1336,6 +1402,8 @@ under the License.
         <jvmarg value="-Djava.compiler=NONE"/>
         <jvmarg value="-Xdebug"/>
         <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>
+        <!-- Cato: solr path -->
+        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
         <arg value="test"/>
         <arg value="-component=${test.component}"/>
         <arg value="-case=${test.case}"/>
@@ -1362,6 +1430,8 @@ under the License.
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>
+            <!-- Cato: solr path -->
+            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-suitename=${test.suiteName}"/>

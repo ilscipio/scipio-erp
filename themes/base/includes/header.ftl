@@ -146,7 +146,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
 
   <@scripts output=true> <#-- ensure @script elems here will always output -->
 
-    <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></title>
+    <title>${layoutSettings.companyName}<#if (page.title)?has_content>: ${page.title}<#elseif (page.titleProperty)?has_content>: ${uiLabelMap[page.titleProperty]}</#if></title>
     
     <#if layoutSettings.shortcutIcon?has_content>
       <#assign shortcutIcon = layoutSettings.shortcutIcon/>

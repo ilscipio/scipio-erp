@@ -19,6 +19,11 @@ under the License.
 -->
 
 <entity-engine-xml>
+
+    <!-- Cato: PLACEHOLDERS: These are currently overridden by ecommerce data -->
+    <ProdCatalog prodCatalogId="DemoCatalog" />
+    <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" />
+
     <ProductStore productStoreId="catoShop" storeName="CATO Shop" companyName="ilscipio GmbH" title="CATO"
         subtitle="Modern eCommerce" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
@@ -42,7 +47,7 @@ under the License.
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease" paymentCustomMethodId="GIFT_RELEASE_TEST"/>
 
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="PAYPAL_CONFIG"/>
-     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="WORLDPAY_CONFIG"/>
+    <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId="" paymentGatewayConfigId="WORLDPAY_CONFIG"/>
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_OFFLINE" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_COD" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="EXT_BILLACT" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService="" paymentCustomMethodId=""/>

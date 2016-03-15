@@ -32,7 +32,7 @@ under the License.
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.ProductLargeImage}</@td>
                   <#--CATO: The inline styles should probably be replaced by the th and img-thumgnail classes for foundation/bootstrap -->
-                  <@td colspan="3"><img src="${product.largeImageUrl!}" style="max-width: 100%; height: auto" width="100"/></@td>
+                  <@td colspan="3"><@img src="${product.largeImageUrl!}" height="150px" width="100%" type="contain"/></@td>
                 </@tr>
         </#if>
 

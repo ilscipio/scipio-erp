@@ -8,12 +8,14 @@
     <#assign crumbs = Static["org.ofbiz.product.category.CategoryWorker"].getTrail(request)!/>
     <#list crumbs as crumb>
           <#if crumb!="TOP">
+             <#assign crumbProdCategory = delegator.findOne("ProductCategory", {"productCategoryId":crumb}, true)/>
+             <#assign catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(crumbProdCategory, request)]
               <li class="${styles.nav_breadcrumb!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
                  <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}">
-                   <#if (catContentWrappers[crumb].get("CATEGORY_NAME","html"))?has_content>
-                     ${catContentWrappers[crumb].get("CATEGORY_NAME","html")}
-                   <#elseif (catContentWrappers[crumb].get("DESCRIPTION","html"))?has_content>
-                     ${catContentWrappers[crumb].get("DESCRIPTION","html")}
+                   <#if (catContentWrapper.get("CATEGORY_NAME","html"))?has_content>
+                     ${catContentWrapper.get("CATEGORY_NAME","html")}
+                   <#elseif (catContentWrapper.get("DESCRIPTION","html"))?has_content>
+                     ${catContentWrapper.get("DESCRIPTION","html")}
                    <#else>
                      ${crumb}
                    </#if>

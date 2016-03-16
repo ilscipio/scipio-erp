@@ -9,10 +9,10 @@
     <#list crumbs as crumb>
           <li class="${styles.nav_breadcrumb!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
              <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}">
-               <#if (catContentWrappers[crumb].get("CATEGORY_NAME"))?has_content>
-                 ${catContentWrappers[crumb].get("CATEGORY_NAME")}
-               <#elseif (catContentWrappers[crumb].get("DESCRIPTION"))?has_content>
-                 ${catContentWrappers[crumb].get("DESCRIPTION")}
+               <#if (catContentWrappers[crumb].get("CATEGORY_NAME","html"))?has_content>
+                 ${catContentWrappers[crumb].get("CATEGORY_NAME","html")}
+               <#elseif (catContentWrappers[crumb].get("DESCRIPTION","html"))?has_content>
+                 ${catContentWrappers[crumb].get("DESCRIPTION","html")}
                <#else>
                  ${crumb}
                </#if>
@@ -22,7 +22,7 @@
     </#list>
     <#-- We always assume that the product Detail page is the last page-->
     <#if productContentWrapper??>
-          <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">${productContentWrapper.get("PRODUCT_NAME")!}</li>
+          <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">${productContentWrapper.get("PRODUCT_NAME","html")!}</li>
     </#if>
     
     <#-- If there is neither any category or product information available, display the page title -->

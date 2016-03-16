@@ -28,6 +28,9 @@ under the License.
       <#-- Extra active class... added on top of active class from global styles -->
       <#assign activeCategoryClassStr = " header-menu-category-active"/>
     </#if>
+    <#-- FIXME: previousCategoryId has to be set to something here, but the following cause problems:
+      previousCategoryId - missing?
+      context.productCategoryId - causes weird nesting issues... -->
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId!""/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
     <@menuitem type="link" href=categoryUrl text=linkText class="+menu-${level}"+activeCategoryClassStr active=active/>    

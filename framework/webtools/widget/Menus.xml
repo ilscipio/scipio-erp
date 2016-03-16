@@ -60,11 +60,12 @@ under the License.
         </menu-item>
         <menu-item name="geoManagement" title="${uiLabelMap.WebtoolsGeoManagement}">
             <link target="FindGeo"/>
-        </menu-item>        
-        <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
+        </menu-item> 
+        <!-- CATO: Disabled for now -->       
+        <!-- <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="WebtoolsLayoutDemo" />
         </menu-item>

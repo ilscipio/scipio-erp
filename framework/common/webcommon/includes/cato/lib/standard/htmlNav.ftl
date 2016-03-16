@@ -140,13 +140,16 @@ second is cleaner to express.
 Note that both macros support arguments passed in a hash (or map) using the "args" argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
                   
-FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't need to.      
+FIXME?: Current code doesn't survive {{{screens.render}}} (uses #globals only)... but probably doesn't need to.      
     should use set/getRequestVar and/or stack.            
           
 * Nested Menus *
 
 Nested menus (sub-menus) will inherit the type of the parent if no type is specified. The macro will automatically
-try to determine is the menu is nested and the type of the parent, but these may be overridden.
+try to determine if the menu is nested and the type of the parent, but these may be overridden so a nested
+menu may behave as a top-level menu. Note the macro makes a distinction between sub-menus that are the same
+type as the parent and sub-menus that are a different type as the parent, which may require different
+handling.
 
 The submenu's main class may be set as altnested in global styles. 
           
@@ -191,7 +194,7 @@ The submenu's main class may be set as altnested in global styles.
     htmlwrap                = (ul|div|span, default: ul)
     specialType             = (button-dropdown|, default: -none-)
                               DEV NOTE: each specialType could have its own styles hash menu_special_xxx entries
-    isNestedMenu            = ((boolean)|, default: -automatic-) Override to tell the macro if it's nested or not
+    isNestedMenu            = ((boolean)|, default: -empty, automatic-) Override to tell the macro if it's nested or not
                               The menu macro will try to figure out if nested or not on its own. In rare custom code, this boolean may need to be specified,
                               in case it is needed a nested menu behaves as a top-level menu (by passing false).
     parentMenuType          = Manual override to tell macro what the parent menu type was

@@ -395,6 +395,7 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                     <div class="lib-entry-params-formal">
                       <p>
                           <code>type</code>, 
+                          <code>class</code>, 
                           <code>passArgs</code>
                       </p>
                     </div>
@@ -408,6 +409,30 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                       <span class="lib-entry-param-desc-typeinfo"><code>(html|java|css|javascript|log, default:html)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
                     </td>
                   </tr>
               </table>

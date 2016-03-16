@@ -365,17 +365,22 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               This may be passed in @menu items list.
     nestedMenu              = ((map)) Map of @menu arguments, alternative to nestedContent arg and macro nested content
                               For menu to use as sub-menu.
-    wrapNested              = ((boolean)) If true, nested content is wrapped in link or span element. default false (nested outside, following)
-    nestedFirst             = ((boolean)) If true, nested content comes before content elem. default false (comes after content elem/text)
+    wrapNested              = ((boolean), default: -true for type generic, false for all other types-) If true, nested content is wrapped in link or span element
+    nestedFirst             = ((boolean), default: false) If true, nested content comes before content elem
     htmlwrap                = (li|span|div, default: -from global styles-, fallback default: li) Wrapping HTML element
     inlineItem              = ((boolean)) If true, generate only items, not menu container
+    contentWrapper          = ((boolean)|div|..., default: false) For {{{generic}}} type items, controls the extra content wrapper around nested
+                              If true, a div will be added around nested; if any string, the given string will be used as the element.
+                              This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
+                              If false, no wrapper will be added.
+                              NOTE: This currently only works for {{{generic}}} type items. 
 -->
 <#assign menuitem_defaultArgs = {
   "type":"generic", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
-  "nestedContent":true, "nestedMenu":false, "wrapNested":false, "nestedFirst":false,
-  "htmlwrap":true, "inlineItem":false, "passArgs":{}
+  "nestedContent":true, "nestedMenu":false, "wrapNested":"", "nestedFirst":false,
+  "htmlwrap":true, "inlineItem":false, "contentWrapper":false, "passArgs":{}
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -409,6 +414,14 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#local htmlwrap = styles["menu_" + menuStyleName + "_item_htmlwrap"]!styles["menu_default_item_htmlwrap"]!true>
     <#if htmlwrap?is_boolean>
       <#local htmlwrap = htmlwrap?string("li", "")>
+    </#if>
+  </#if>
+
+  <#if !wrapNested?is_boolean>
+    <#if !type?has_content || type == "generic">
+      <#local wrapNested = true>
+    <#else>
+      <#local wrapNested = false>
     </#if>
   </#if>
 
@@ -461,8 +474,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#elseif type == "submit">
       <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
-      <#local hasContentInfo = (contentClass?has_content || contentId?has_content || contentStyle?has_content || contentAttribs?has_content || onClick?has_content)>
-      <#t><@menuitem_generic_markup hasContentInfo=hasContentInfo class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_generic_markup>
+      <#t><@menuitem_generic_markup contentWrapper=contentWrapper class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_generic_markup>
     </#if>
     <#t><#if !wrapNested && !nestedFirst>${nestedContent}</#if>
   </@menuitem_markup><#lt>
@@ -497,8 +509,11 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 </#macro>
 
 <#-- @menuitem type="generic" markup - theme override -->
-<#macro menuitem_generic_markup hasContentInfo=false class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
-  <#t><#if hasContentInfo><div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>></#if><#nested><#if hasContentInfo></div></#if>
+<#macro menuitem_generic_markup contentWrapper=false class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
+  <#if contentWrapper?is_boolean>
+    <#local contentWrapper = contentWrapper?string("div", "")>
+  </#if>
+  <#t><#if contentWrapper?has_content><${contentWrapper}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>></#if><#nested><#if contentWrapper?has_content></${contentWrapper}></#if>
 </#macro>
 
 <#-- 

@@ -29,33 +29,31 @@ under the License.
     <#-- Show the category branch -->
     <#assign crumbs = Static["org.ofbiz.product.category.CategoryWorker"].getTrail(request)/>
     <#list crumbs as crumb>
-         <#if catContentWrappers?? && catContentWrappers[crumb]??>
-            <#if useListElems>         
-              <li class="${styles.nav_breadcrumb!}">
-                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
-                   <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
-                     ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
-                   <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
-                     ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
-                   <#else>
-                     ${crumb}
-                   </#if>
-                 </a>
-              </li>
-            <#else>  
-               <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_link!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
-                 <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
-                   ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
-                 <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
-                   ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
-                 <#else>
-                   ${crumb}
-                 </#if>
-               </a>
-               <#if crumb_has_next> &gt;</#if>
-            </#if>  
-            <#assign previousCategoryId = crumb />
-         </#if>
+        <#if useListElems>         
+          <li class="${styles.nav_breadcrumb!}">
+             <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
+               <#if (catContentWrappers[crumb].get("CATEGORY_NAME", "html"))?has_content>
+                 ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
+               <#elseif (catContentWrappers[crumb].get("DESCRIPTION", "html"))?has_content>
+                 ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
+               <#else>
+                 ${crumb}
+               </#if>
+             </a>
+          </li>
+        <#else>  
+           <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_link!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
+             <#if (catContentWrappers[crumb].get("CATEGORY_NAME", "html"))?has_content>
+               ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
+             <#elseif (catContentWrappers[crumb].get("DESCRIPTION", "html"))?has_content>
+               ${catContentWrappers[crumb].get("DESCRIPTION", "html")}
+             <#else>
+               ${crumb}
+             </#if>
+           </a>
+           <#if crumb_has_next> &gt;</#if>
+        </#if>  
+        <#assign previousCategoryId = crumb />
     </#list>    
     <#-- Show the product, if there is one -->
     <#if productContentWrapper??>

@@ -7,20 +7,18 @@
     <#-- Show the category branch -->
     <#assign crumbs = Static["org.ofbiz.product.category.CategoryWorker"].getTrail(request)!/>
     <#list crumbs as crumb>
-         <#if catContentWrappers?? && catContentWrappers[crumb]??>
-              <li class="${styles.nav_breadcrumb!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
-                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}">
-                   <#if catContentWrappers[crumb].get("CATEGORY_NAME")??>
-                     ${catContentWrappers[crumb].get("CATEGORY_NAME")}
-                   <#elseif catContentWrappers[crumb].get("DESCRIPTION")??>
-                     ${catContentWrappers[crumb].get("DESCRIPTION")}
-                   <#else>
-                     ${crumb}
-                   </#if>
-                 </a>
-              </li>   
-            <#assign previousCategoryId = crumb />
-         </#if>
+          <li class="${styles.nav_breadcrumb!}<#if !crumb_has_next && !productContentWrapper??> ${styles.nav_breadcrumb_active!}</#if>">
+             <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.nav_breadcrumb_link!}">
+               <#if (catContentWrappers[crumb].get("CATEGORY_NAME"))?has_content>
+                 ${catContentWrappers[crumb].get("CATEGORY_NAME")}
+               <#elseif (catContentWrappers[crumb].get("DESCRIPTION"))?has_content>
+                 ${catContentWrappers[crumb].get("DESCRIPTION")}
+               <#else>
+                 ${crumb}
+               </#if>
+             </a>
+          </li>   
+        <#assign previousCategoryId = crumb />
     </#list>
     <#-- We always assume that the product Detail page is the last page-->
     <#if productContentWrapper??>

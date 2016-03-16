@@ -43,9 +43,9 @@ under the License.
             <link target="myCertificates"/>
         </menu-item>
          -->
-        <!-- <menu-item name="server" title="${uiLabelMap.WebtoolsServer}">
+        <menu-item name="server" title="${uiLabelMap.WebtoolsServer}">
             <link target="LogView"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="entity" title="${uiLabelMap.WebtoolsEntityEngine}">
             <link target="entitymaint"/>
         </menu-item>
@@ -69,7 +69,7 @@ under the License.
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
         <menu-item name="solrAdmin" title="${uiLabelMap.WebtoolsSolrAdmin}">
-            <link target="/solr/admin.html" url-mode="plain" />
+            <link target="/solr/admin.html" url-mode="plain" target-window="_blank"/>
         </menu-item>
     </menu>
     <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

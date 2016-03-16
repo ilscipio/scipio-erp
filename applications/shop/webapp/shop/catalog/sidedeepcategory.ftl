@@ -69,7 +69,7 @@ under the License.
 
 
 
-<#if catList?has_content>
+<#if catList?has_content && catList.get("menu-0")?has_content>
     <@iterateList currentList=(catList.get("menu-0")!) currentLevel=0 isMultiLevel=true/>
 <#elseif topLevelList?has_content>
     <@menu id="menu-0" type="sidebar">

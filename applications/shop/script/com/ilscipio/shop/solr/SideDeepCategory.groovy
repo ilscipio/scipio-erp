@@ -38,6 +38,7 @@ catLevel = [:];
 res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId,catalogId:currentCatalogId]);
 catLevel = res.get("categories");
 
+
 //Debug.logInfo("catList "+catLevel,"");
 context.currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId,false,dispatcher.getDispatchContext());
 context.catList = catLevel;

@@ -91,6 +91,7 @@
           This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. --> 
     <#-- Generic menu types -->
     "menu_generic" : "menu-type-generic",
+    "menu_generic_altnested" : "menu-type-generic",
     "menu_generic_type" : "menu-type-generic",  <#-- specific type style, normally already included in previous entry, but can reference individually -->
     "menu_generic_item" : "", 
     "menu_generic_itemdisabled" : "disabled", 
@@ -103,6 +104,7 @@
     "menu_generic_item_text" : "text-entry",
     "menu_generic_item_submit" : "", 
     "menu_button" : "button-group force-button menu-type-button",
+    "menu_button_altnested" : "menu-type-button",
     "menu_button_type" : "menu-type-button",
     "menu_button_item" : "",
     "menu_button_itemdisabled" : "disabled", 
@@ -115,6 +117,7 @@
     "menu_button_item_text" : "text-entry",
     "menu_button_item_submit" : "button tiny",
     "menu_button_dropdown" : "f-dropdown menu-type-button-dropdown",
+    "menu_button_dropdown_altnested" : "menu-type-button-dropdown",
     "menu_button_dropdown_type" : "menu-type-button-dropdown",
     "menu_button_dropdown_specialtype" : "button-dropdown",
     "menu_button_dropdown_mainbutton" : "button tiny dropdown",
@@ -130,6 +133,7 @@
     "menu_button_dropdown_item_submit" : "",
     <#-- Main navigation menus -->
     "menu_main" : "dropdown menu-type-main",
+    "menu_main_altnested" : "menu-type-main",
     "menu_main_type" : "menu-type-main",
     "menu_main_specialtype" : "main",       <#-- specialtype allows to reuse special markup across many custom menu types (specified here instead of hardcoding custom type checks in markup macros) -->
     "menu_main_wrap" : "has-dropdown not-click active",        
@@ -144,6 +148,7 @@
     "menu_main_item_text" : "text-entry",
     "menu_main_item_submit" : "", 
     "menu_sidebar" : "side-nav menu-type-sidebar",
+    "menu_sidebar_altnested" : "menu-type-sidebar",
     "menu_sidebar_type" : "menu-type-sidebar",
     "menu_sidebar_specialtype" : "sidebar",
     "menu_sidebar_wrap" :"", 
@@ -160,6 +165,7 @@
     "menu_sidebar_item_submit" : "", 
     <#-- Tab and secondary navigation menus-->
     "menu_tab" : "button-group force-button menu-type-tab", 
+    "menu_tab_altnested" : "menu-type-tab",
     "menu_tab_type" : "menu-type-tab", 
     "menu_tab_item" : "", 
     "menu_tab_itemdisabled" : "disabled", 
@@ -172,6 +178,7 @@
     "menu_tab_item_text" : "text-entry",
     "menu_tab_item_submit" : "button", 
     "menu_subtab" : "button-group force-button menu-type-subtab",
+    "menu_subtab_altnested" : "menu-type-subtab",
     "menu_subtab_type" : "menu-type-subtab",
     "menu_subtab_item" : "",
     "menu_subtab_itemdisabled" : "disabled", 
@@ -185,6 +192,7 @@
     "menu_subtab_item_submit" : "button tiny", 
     <#-- Default section menu -->
     "menu_section" : "button-group menu-type-section",
+    "menu_section_altnested" : "menu-type-section",
     "menu_section_type" : "menu-type-section",
     "menu_section_item" : "",
     "menu_section_itemdisabled" : "disabled", 
@@ -199,6 +207,7 @@
     <#-- Default section menu inlined with title
         FIXME: looks too big/clumsy with these buttons (floats right of title) -->
     "menu_section_inline" : "button-group menu-type-section-inline",
+    "menu_section_inline_altnested" : "menu-type-section-inline",
     "menu_section_inline_type" : "menu-type-section-inline",
     "menu_section_inline_item" : "",
     "menu_section_inline_itemdisabled" : "disabled", 
@@ -213,9 +222,11 @@
     <#-- default entry is used for any encountered menu types that have no specific entries in this hash, 
          and also for individual value fallbacks for values not defined in the type-specific entries above -->    
     "menu_default" : "menu-type-default",  
-    "menu_default_altnested" : "nested-sametype",               <#-- This is used as ALTERNATE to main "menu_default" class when 1) is child menu and 2) is of same type as parent -->
+    "menu_default_altnested" : "menu-type-default",     <#-- ALTERNATE to main "menu_default" class, used when 1) is child menu and 2) is of same type as parent -->
     "menu_default_type" : "menu-type-default", 
-    "menu_default_nested" : "nested",                           <#-- This class is ADDED to ALL menus detected or marked as nested -->
+    "menu_default_toplevel" : "toplevel",                               <#-- ADDED to ALL menus detected or marked as top-level -->
+    "menu_default_nested" : "nested",                                   <#-- ADDED to ALL menus detected or marked as nested -->
+    "menu_default_nestedsame" : "nested-sametype",                      <#-- ADDED to ALL menus detected or marked as nested AND that are of same type as parent -->
     "menu_default_htmlwrap" : true,
     "menu_default_item" : "", 
     "menu_default_item_htmlwrap" : true,

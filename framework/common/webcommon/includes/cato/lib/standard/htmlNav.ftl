@@ -233,16 +233,23 @@ The submenu's main class may be set as altnested in global styles.
     <#local isNestedMenu = (prevMenuInfo.type)??>
   </#if>
 
-  <#if !parentMenuType?has_content>
-    <#local parentMenuType = (prevMenuInfo.type)!"">
-  </#if>
-  <#local parentStyleName = parentMenuType?replace("-","_")>
-
+  <#local parentStyleName = "">
   <#local parentMenuSpecialType = "">
-  <#if parentMenuType?has_content>
-    <#-- make sure to look this up again because caller may override
-    <#local parentMenuSpecialType = (prevMenuInfo.specialType)!"">-->
-    <#local parentMenuSpecialType = styles["menu_" + parentStyleName + "_specialtype"]!"">
+  
+  <#if isNestedMenu>
+    <#if !parentMenuType?has_content>
+      <#local parentMenuType = (prevMenuInfo.type)!"">
+    </#if>
+    <#local parentStyleName = parentMenuType?replace("-","_")>
+    
+    <#if parentMenuType?has_content>
+      <#-- make sure to look this up again because caller may override
+      <#local parentMenuSpecialType = (prevMenuInfo.specialType)!"">-->
+      <#local parentMenuSpecialType = styles["menu_" + parentStyleName + "_specialtype"]!"">
+    </#if>
+  <#else>
+    <#-- force this off -->
+    <#local parentMenuType = "">
   </#if>
 
   <#if !type?has_content>
@@ -257,7 +264,6 @@ The submenu's main class may be set as altnested in global styles.
   <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
-
 
   <#if htmlwrap?is_boolean && htmlwrap == false>
     <#local htmlwrap = "">
@@ -275,9 +281,17 @@ The submenu's main class may be set as altnested in global styles.
     <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
   </#if>
 
+  <#-- Add this for all top-level menus (very generic identifier) -->
+  <#if !isNestedMenu>
+    <#local class = addClassArg(class, styles["menu_" + styleName + "_toplevel"]!styles["menu_default_toplevel"]!"")>
+  </#if>
+
   <#-- Add this for all nested menus (very generic identifier) -->
   <#if isNestedMenu>
     <#local class = addClassArg(class, styles["menu_" + styleName + "_nested"]!styles["menu_default_nested"]!"")>
+    <#if type == parentMenuType>
+      <#local class = addClassArg(class, styles["menu_" + styleName + "_nestedsame"]!styles["menu_default_nestedsame"]!"")>
+    </#if>
   </#if>
 
   <#if specialType?is_boolean && specialType == false>

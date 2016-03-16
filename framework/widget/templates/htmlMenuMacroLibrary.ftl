@@ -65,19 +65,22 @@ TODO/FIXME:
 </#if>
 <#--<p><@objectAsScript lang="raw" object=items /></p>-->
   <#local prevMenuInfo = readRequestStack("renderMenuStack")!{}>
-  <#local topLevel = !prevMenuInfo?has_content>
+  <#local topLevel = !(prevMenuInfo.type)??>
   <#local isNestedMenu = !topLevel>
   
-  <#if !parentMenuType?has_content>
-    <#local parentMenuType = (prevMenuInfo.type)!"">
-  </#if>
-  <#local parentStyleName = parentMenuType?replace("-","_")>
-
+  <#local parentMenuType = "">
+  <#local parentStyleName = "">
   <#local parentMenuSpecialType = "">
-  <#if parentMenuType?has_content>
-    <#-- make sure to look this up again because caller may override
-    <#local parentMenuSpecialType = (prevMenuInfo.specialType)!"">-->
-    <#local parentMenuSpecialType = styles["menu_" + parentStyleName + "_specialtype"]!"">
+  
+  <#if isNestedMenu>
+    <#local parentMenuType = (prevMenuInfo.type)!"">
+    <#local parentStyleName = parentMenuType?replace("-","_")>
+    
+    <#if parentMenuType?has_content>
+      <#-- make sure to look this up again because caller may override
+      <#local parentMenuSpecialType = (prevMenuInfo.specialType)!"">-->
+      <#local parentMenuSpecialType = styles["menu_" + parentStyleName + "_specialtype"]!"">
+    </#if>
   </#if>
 
   <#-- Extract menu types from style string, remove, and get global style -->
@@ -126,9 +129,17 @@ TODO/FIXME:
   </#if>
   <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
   
+  <#-- Add this for all top-level menus (very generic identifier) -->
+  <#if !isNestedMenu>
+    <#local class = addClassArg(class, styles["menu_" + styleName + "_toplevel"]!styles["menu_default_toplevel"]!"")>
+  </#if>  
+  
   <#-- Add this for all nested menus (very generic identifier) -->
   <#if isNestedMenu>
     <#local class = addClassArg(class, styles["menu_" + styleName + "_nested"]!styles["menu_default_nested"]!"")>
+    <#if type == parentMenuType>
+      <#local class = addClassArg(class, styles["menu_" + styleName + "_nestedsame"]!styles["menu_default_nestedsame"]!"")>
+    </#if>
   </#if>
   
   <#local mainButtonClass = "">

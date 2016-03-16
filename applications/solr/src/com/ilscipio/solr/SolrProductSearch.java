@@ -542,8 +542,6 @@ public abstract class SolrProductSearch {
 
             // iterate over actual results
             for (String elements : trailElements) {
-                // catIds must be greater than 3 chars
-                if (elements.length() > 3) {
                     Debug.logInfo("elements: " + elements, module);
                     String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx);
                     String[] categoryPathArray = categoryPath.split("/");
@@ -586,7 +584,6 @@ public abstract class SolrProductSearch {
                         }
                     }
                     catLevel.put("menu-" + level, categories);
-                }
             }
             result.put("categories", catLevel);
             result.put("numFound", (long) 0);

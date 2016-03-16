@@ -56,6 +56,72 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
 
 
 /* NAVIGATION */
+
+/* Cato: duplicated from "side-nav" mixin and modified */
+@mixin side-nav-nested(
+  $divider-color:$side-nav-divider-color,
+  $font-size:$side-nav-font-size,
+  $link-color:$side-nav-link-color,
+  $link-color-active:$side-nav-link-color-active,
+  $link-color-hover:$side-nav-link-color-hover,
+  $link-bg-hover:$side-nav-link-bg-hover) {
+  display: block;
+  font-family: $side-nav-font-family;
+  list-style-position: $side-nav-list-position;
+  // TODO?: this could maybe use a caret ">" image?
+  list-style-type: $side-nav-list-type;
+  //margin: 0;
+  margin-left: rem-calc(12);
+  //padding: $side-nav-padding;
+
+  li {
+    font-size: $font-size;
+    font-weight: $side-nav-font-weight;
+    margin: $side-nav-list-margin;
+
+    // Cato: added child selector here
+    > a:not(.button) {
+      color: $link-color;
+      display: block;
+      margin: $side-nav-link-margin;
+      padding: $side-nav-link-padding;
+      &:hover,
+      &:focus {
+        background: $link-bg-hover;
+        color: $link-color-hover;
+      }
+      &:active {
+        color: $link-color-active;
+      }
+    }
+
+    &.active > a:first-child:not(.button) {
+      color: $side-nav-link-color-active;
+      font-family: $side-nav-font-family-active;
+      font-weight: $side-nav-font-weight-active;
+    }
+
+    &.divider {
+      border-top: $side-nav-divider-size $side-nav-divider-style;
+      height: 0;
+      list-style: none;
+      padding: 0;
+      border-top-color: $divider-color;
+    }
+
+    &.heading {
+      color: $side-nav-heading-color;
+      font: {
+        size: $side-nav-heading-font-size;
+        weight: $side-nav-heading-font-weight;
+      }
+      text-transform: $side-nav-heading-text-transform;
+    }
+  }
+}
+
+
+
 .side-nav {
     margin-top:0px;
     background: #FAFAFA;
@@ -92,6 +158,18 @@ div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important
             background: rgba(0, 64, 84, 0.05);
             > a:first-child:not(.button) {
                 cursor: $sub-nav-active-cursor;
+            }
+        }
+    }
+    
+    /* Nested sidebar menu element */
+    .menu-type-sidebar.nested-sametype {
+        /* NOTE: this will clash with some of the above; best-effort */
+        @include side-nav-nested;
+        
+        li {
+            &.active {
+                background: inherit;
             }
         }
     }

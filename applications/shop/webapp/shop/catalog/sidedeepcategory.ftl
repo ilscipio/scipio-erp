@@ -33,7 +33,8 @@ under the License.
       context.productCategoryId - causes weird nesting issues... -->
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId!""/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
-    <@menuitem type="link" href=categoryUrl text=linkText class="+menu-${level}"+activeCategoryClassStr active=active/>    
+    <@menuitem type="generic" class="+menu-${level}"+activeCategoryClassStr active=active>
+        <a href="${categoryUrl!""}">${linkText}</a>
     <#if isMultiLevel>
         <#if currentCategoryPath.contains("/"+productCategoryId)>
             <#assign nextLevel=level+1/>
@@ -42,22 +43,33 @@ under the License.
                 <@iterateList currentList=nextList currentLevel=nextLevel isMultiLevel=true />
             </#if>
         </#if>
-    </#if>        
+    </#if>
+    </@menuitem>        
 </#macro>
 
 <#macro iterateList currentList currentLevel isMultiLevel>
-    <@menu id="menu-${currentLevel!0}" type="sidebar">
-      <#list currentList as item>
-        <#if item.catId?has_content>
-          <@categoryList productCategoryId=item.catId level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
-        </#if>
-      </#list>
-    </@menu>
+    <#if currentLevel==0>
+        <@menu id="menu-${currentLevel!0}" type="sidebar">
+          <#list currentList as item>
+            <#if item.catId?has_content>
+              <@categoryList productCategoryId=item.catId level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
+            </#if>
+          </#list>
+        </@menu>
+    <#else>
+        <@menu id="menu-${currentLevel!0}" type="">
+          <#list currentList as item>
+            <#if item.catId?has_content>
+              <@categoryList productCategoryId=item.catId level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
+            </#if>
+          </#list>
+        </@menu>
+    </#if>
 </#macro>
 
 
 
-<#if catList?has_content>          
+<#if catList?has_content>
     <@iterateList currentList=(catList.get("menu-0")!) currentLevel=0 isMultiLevel=true/>
 <#elseif topLevelList?has_content>
     <@menu id="menu-0" type="sidebar">

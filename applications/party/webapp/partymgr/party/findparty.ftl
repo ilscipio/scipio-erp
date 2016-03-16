@@ -272,13 +272,13 @@ under the License.
           <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">
-          <form name="searchorders_o_${rowCount}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/searchorders</@ofbizInterWebappUrl>">
-            <input type="hidden" name="lookupFlag" value="Y" />
-            <input type="hidden" name="hideFields" value="Y" />
-            <input type="hidden" name="partyId" value="${partyRow.partyId}" />
-            <input type="hidden" name="viewIndex" value="1" />
-            <input type="hidden" name="viewSize" value="20" />
-          </form>
+            <form name="searchorders_o_${rowCount}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/searchorders</@ofbizInterWebappUrl>">
+              <input type="hidden" name="lookupFlag" value="Y" />
+              <input type="hidden" name="hideFields" value="Y" />
+              <input type="hidden" name="partyId" value="${partyRow.partyId}" />
+              <input type="hidden" name="viewIndex" value="1" />
+              <input type="hidden" name="viewSize" value="20" />
+            </form>
           </@menuitem>
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>

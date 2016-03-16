@@ -20,7 +20,7 @@ under the License.
                      
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="generic" >
+        <@menuitem type="generic">
             <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
                  <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
@@ -46,7 +46,7 @@ under the License.
              </@modal>
         </@menuitem>
 
-        <@menuitem type="generic" >
+        <@menuitem type="generic">
             <@modal id="modal_new_promocodes_${productPromoId!}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</@heading>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">

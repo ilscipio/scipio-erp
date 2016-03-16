@@ -20,7 +20,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="generic" >
+        <@menuitem type="generic">
             <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                  <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
@@ -33,7 +33,7 @@ under the License.
              </@modal>
         </@menuitem>
 
-        <@menuitem type="generic" >
+        <@menuitem type="generic">
             <@modal id="modal_new_category_${productPromoId}" label=uiLabelMap.ProductAddPromoCategory class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoCategory}</@heading>
                 <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>" name="createProductPromoCategoryPromotions">
@@ -59,7 +59,7 @@ under the License.
            </@modal>
         </@menuitem>
 
-        <@menuitem type="generic" >
+        <@menuitem type="generic">
             <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoProduct}</@heading>
                  <form method="post" name="createpromoproductform" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
@@ -552,7 +552,7 @@ under the License.
 
         <@td align="center">
                 <@menu type="button">
-                    <@menuitem type="generic" >
+                    <@menuitem type="generic">
                         <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                                 <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
@@ -584,7 +584,7 @@ under the License.
                                 </form>
                             </@modal>
                     </@menuitem>
-                    <@menuitem type="generic" >
+                    <@menuitem type="generic">
                         <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductCreateAction}</@heading>
                                 <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
@@ -613,7 +613,7 @@ under the License.
                     </@menuitem>
 
                     <#if (productPromoConds.size() == 0 && productPromoActions.size() == 0)>
-                          <@menuitem type="generic" >
+                          <@menuitem type="generic">
                               <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@ofbizUrl>deleteProductPromoRule</@ofbizUrl>">
                                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />

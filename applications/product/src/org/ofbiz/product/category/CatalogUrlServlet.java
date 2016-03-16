@@ -88,15 +88,20 @@ public class CatalogUrlServlet extends HttpServlet {
             String lastPathElement = pathElements.get(pathElements.size() - 1);
             if (lastPathElement.startsWith("p_")) {
                 productId = lastPathElement.substring(2);
+                // Cato: remove for products only
+                pathElements.remove(pathElements.size() - 1);
             } else {
                 GenericValue productCategory =  EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", lastPathElement).cache(true).queryOne();
                 if (UtilValidate.isNotEmpty(productCategory)) {
                     categoryId = lastPathElement;
                 } else {
                     productId = lastPathElement;
+                    // Cato: remove for products only
+                    pathElements.remove(pathElements.size() - 1);
                 }
             }
-            pathElements.remove(pathElements.size() - 1);
+            // Cato: Don't remove this here; remove only for products
+            //pathElements.remove(pathElements.size() - 1);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in looking up ProductUrl or CategoryUrl with path info [" + pathInfo + "]: " + e.toString(), module);
         }

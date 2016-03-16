@@ -507,17 +507,7 @@ under the License.
                         <include-screen name="category"/>
                     </widgets>
                     <fail-widgets>
-                        <section>
-                            <condition>
-                                <if-empty field="category_id"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="newbreadcrumbs" share-scope="true"/>
-                            </widgets>
-                            <fail-widgets>
                                 <include-screen name="breadcrumbs" share-scope="true"/>
-                            </fail-widgets>
-                        </section>
                         <include-screen name="category-include" share-scope="true"/>
                     </fail-widgets>
                 </section>
@@ -529,19 +519,6 @@ under the License.
                    </widgets>
                 </section>
             </fail-widgets>
-        </section>
-    </screen>
-    <screen name="newbreadcrumbs">
-       <section>
-            <actions>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/ajaxbreadcrumbs.groovy"/>
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://shop/webapp/shop/catalog/ajaxbreadcrumbs.ftl"/></html>
-                </platform-specific>
-            </widgets>
         </section>
     </screen>
 </screens>

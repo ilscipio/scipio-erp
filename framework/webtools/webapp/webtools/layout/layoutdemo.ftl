@@ -173,6 +173,27 @@
   <@menuitem type="link" text="Menu Button 3" />
 </@menu>
 
+<p>Nested sub-menus (markup test only!)</p>
+<@menu type="button" class="+my-button-menu-class" id="my-button-menu">
+  <@menuitem type="link" text="Menu Button 1" />
+  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
+    <@menu class="+my-button-submenu-class" id="my-button-menu-sub">
+      <@menuitem type="link" text="Menu Button 4" />
+      <@menuitem type="link" text="Menu Button 5" contentClass="+${styles.disabled}">
+        <@menu class="+my-button-subsubmenu-class" id="my-button-menu-sub-sub">
+          <@menuitem type="link" text="Menu Button 7" />
+          <@menuitem type="link" text="Menu Button 8" contentClass="+${styles.disabled}"/>
+          <@menuitem type="link" text="Menu Button 9" contentClass="+${styles.button_color_green}">
+            <!-- nested menu item comment -->
+          </@menuitem>
+        </@menu>
+      </@menuitem>
+      <@menuitem type="link" text="Menu Button 6" contentClass="+${styles.button_color_green}"/>
+    </@menu>
+  </@menuitem>
+</@menu>
+
 </@section>                                     
 
 <@section>

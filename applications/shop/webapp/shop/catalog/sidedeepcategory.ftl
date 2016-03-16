@@ -33,9 +33,8 @@ under the License.
       context.productCategoryId - causes weird nesting issues... -->
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId!""/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
-    <@menuitem type="generic" class="+menu-${level} ${class}"+activeCategoryClassStr active=active>
-        <a href="${categoryUrl!""}">${linkText}</a>
-    <#if isMultiLevel>
+    <@menuitem type="link" href=categoryUrl text=linkText class="+menu-${level} ${class}"+activeCategoryClassStr active=active>
+      <#if isMultiLevel>
         <#if currentCategoryPath.contains("/"+productCategoryId)>
             <#assign nextLevel=level+1/>
             <#if catList.get("menu-"+nextLevel)?has_content>
@@ -43,7 +42,7 @@ under the License.
                 <@iterateList currentList=nextList currentLevel=nextLevel isMultiLevel=true />
             </#if>
         </#if>
-    </#if>
+      </#if>
     </@menuitem>        
 </#macro>
 

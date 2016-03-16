@@ -64,7 +64,21 @@ TODO/FIXME:
 <!-- ${boundaryComment} -->
 </#if>
 <#--<p><@objectAsScript lang="raw" object=items /></p>-->
-  <#local topLevel = !readRequestStack("renderMenuStack")??>
+  <#local prevMenuInfo = readRequestStack("renderMenuStack")!{}>
+  <#local topLevel = !prevMenuInfo?has_content>
+  <#local isNestedMenu = !topLevel>
+  
+  <#if !parentMenuType?has_content>
+    <#local parentMenuType = (prevMenuInfo.type)!"">
+  </#if>
+  <#local parentStyleName = parentMenuType?replace("-","_")>
+
+  <#local parentMenuSpecialType = "">
+  <#if parentMenuType?has_content>
+    <#-- make sure to look this up again because caller may override
+    <#local parentMenuSpecialType = (prevMenuInfo.specialType)!"">-->
+    <#local parentMenuSpecialType = styles["menu_" + parentStyleName + "_specialtype"]!"">
+  </#if>
 
   <#-- Extract menu types from style string, remove, and get global style -->
   <#local type = "">
@@ -75,12 +89,28 @@ TODO/FIXME:
     <#-- Use only the LAST type entry, so last overrides the first, without java having to do anything special -->
     <#local type = menuTypeStyles?last?substring(10)>
   </#if>
+
+  <#if !type?has_content>
+    <#if isNestedMenu && parentMenuType?has_content>
+      <#local type = parentMenuType>
+    <#else>
+      <#-- Do NOT use generic as default for widgets, for now
+      <#local type = "generic"> -->
+    </#if>
+  </#if>  
+
   <#local styleName = type?replace("-","_")>
   <#if (!styleName?has_content) || (!(styles["menu_" + styleName]!false)?is_string)>
     <#local styleName = "default">
   </#if>
-  <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
-  
+
+  <#if isNestedMenu && (type == parentMenuType)>
+    <#-- If nested menu of same type as parent, use alternate menu class -->
+    <#local class = addClassArgDefault(class, styles["menu_" + styleName + "_altnested"]!styles["menu_default_altnested"]!"")>
+  <#else>
+    <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
+  </#if>
+
   <#-- Count menu and make sure has ID -->
   <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
@@ -95,11 +125,19 @@ TODO/FIXME:
     <#local htmlwrap = htmlwrap?string("ul", "")>
   </#if>
   <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
+  
+  <#-- Add this for all nested menus (very generic identifier) -->
+  <#if isNestedMenu>
+    <#local class = addClassArg(class, styles["menu_" + styleName + "_nested"]!styles["menu_default_nested"]!"")>
+  </#if>
+  
   <#local mainButtonClass = "">
   <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
   
   <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
-    "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap}>
+    "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap,
+    "isNestedMenu":isNestedMenu, 
+    "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName}>
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
     <#list items as item>
@@ -108,7 +146,9 @@ TODO/FIXME:
           menuInfo=menuInfo />
     </#list>
   <#else>
-    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title htmlwrap=htmlwrap>
+    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
+        excludeAttribs=["class", "id", "style"] inlineItems=false mainButtonClass=mainButtonClass title=title 
+        htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType>
       <#list items as item>
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
@@ -150,7 +190,8 @@ TODO/FIXME:
   <#-- NOTE: our "selected" actually means "active" to the Cato macros -->
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
-      disabled=disabled active=selected><#rt>
+      disabled=disabled active=selected
+      isNestedMenu=menuInfo.isNestedMenu parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 

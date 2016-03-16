@@ -333,7 +333,7 @@ ${virtualVariantJavaScript!}
             <#if previousProductId??>
               <a href="<@ofbizCatalogAltUrl productCategoryId=(categoryId!) productId=(previousProductId!)/>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=(categoryId!)/>" class="${styles.link_nav_info_name!}">${(category.categoryName)?default(category.description)!}</a>
+            <a href="<@ofbizCatalogAltUrl productCategoryId=(categoryId!)/>" class="${styles.link_nav_info_name!}">${(category.categoryName)!(category.description)!(categoryId)!}</a>
             <#if nextProductId??>
               &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=(categoryId!) productId=(nextProductId!)/>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
             </#if>

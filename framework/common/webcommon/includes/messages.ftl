@@ -78,4 +78,15 @@ under the License.
         </@alert>
     </div>
   </#if>
+
+  <#-- Cato: only if it is gotten from context and needs to include explicit content only -->
+  <#if infoMessage?has_content>
+    <div id="main-info-box">
+        <@alert type="info">      
+          <#if infoMessage?has_content>
+            <#noescape>${StringUtil.wrapString(infoMessage)}</#noescape>
+          </#if>
+        </@alert>
+    </div>
+  </#if>
 </#escape>

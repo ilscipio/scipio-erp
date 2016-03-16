@@ -305,6 +305,10 @@ code {
     .TRACE {color:$aluminum;}
 }
 
+pre.scrollable {
+    max-height:500px;
+    overflow-x:scroll;
+}
 
 .postfix input[type="submit"], .postfix button, {
         background: $input-prefix-bg;

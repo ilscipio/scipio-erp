@@ -3352,6 +3352,9 @@
         <value xml:lang="zh">日志记录</value>
         <value xml:lang="zh_TW">日誌記錄</value>
     </property>
+    <property key="WebtoolsLogs">        
+        <value xml:lang="en">Logs</value>
+    </property>    
     <property key="WebtoolsMainPage">
         <value xml:lang="de">WebTools Startseite</value>
         <value xml:lang="en">Web Tools Main Page</value>
@@ -4915,6 +4918,9 @@
         <value xml:lang="zh">指定的实体</value>
         <value xml:lang="zh_TW">指定的資料實體</value>
     </property>
+    <property key="WebtoolsSolrAdmin">
+        <value xml:lang="en">Solr</value>
+    </property>
     <property key="WebtoolsSpecifiedEntity2">
         <value xml:lang="de">Entität 2</value>
         <value xml:lang="en">Entity2</value>
@@ -5181,6 +5187,9 @@
         <value xml:lang="zh">刷新页面</value>
         <value xml:lang="zh_TW">刷新頁面</value>
     </property>
+    <property key="WebtoolsStatsRequestsBy">
+        <value xml:lang="en">Requests by</value>
+    </property>
     <property key="WebtoolsStatsRequestId">
         <value xml:lang="de">Anfrage ID</value>
         <value xml:lang="en">Request ID</value>
@@ -5205,6 +5214,7 @@
         <value xml:lang="zh">请求统计</value>
         <value xml:lang="zh_TW">請求統計</value>
     </property>
+  
     <property key="WebtoolsStatsSinceServerStart">
         <value xml:lang="de">Serverstatistik (seit Start)</value>
         <value xml:lang="en">Stats Since Server Start</value>
@@ -5265,6 +5275,9 @@
         <value xml:lang="vi">Xem thống kê</value>
         <value xml:lang="zh">浏览统计</value>
         <value xml:lang="zh_TW">檢視統計</value>
+    </property>
+    <property key="WebtoolsStatsSystemMemory">
+        <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatusInvalid">
         <value xml:lang="de">Ungültiger Status</value>

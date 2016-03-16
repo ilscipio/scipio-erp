@@ -141,21 +141,26 @@ Creates a basic wrapper for code blocks.
     </@code>
                     
   * Parameters *
-    type                    = (html|java|css|javascript|log, default:html) 
+    type                    = (html|java|css|javascript|log, default:html)
+    class                   = ((css-class)) Heading element CSS classes
+                              Supports prefixes:
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign code_defaultArgs = {
-  "type":"html", "passArgs":{}
+  "type":"html", "class":"", "passArgs":{}
 }>
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@code_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
+  <#local class = addClassArgDefault(class, "")>
+  <@code_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
 </#macro>
 
 <#-- @code main markup - theme override -->
-<#macro code_markup type="" origArgs={} passArgs={} catchArgs...>
-  <pre><code data-language="${type!}"><#rt>
+<#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
+  <pre <@compiledClassAttribStr class=class />><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>

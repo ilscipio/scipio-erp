@@ -10183,7 +10183,13 @@ code .TRACE {
   color: #999999;
 }
 
-/* line 309, ../scss/_base.scss */
+/* line 308, ../scss/_base.scss */
+pre.scrollable {
+  max-height: 500px;
+  overflow-x: scroll;
+}
+
+/* line 313, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10196,62 +10202,62 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 321, ../scss/_base.scss */
+/* line 325, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 323, ../scss/_base.scss */
+/* line 327, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 330, ../scss/_base.scss */
+/* line 334, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 338, ../scss/_base.scss */
+/* line 342, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 344, ../scss/_base.scss */
+/* line 348, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 353, ../scss/_base.scss */
+/* line 357, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 357, ../scss/_base.scss */
+/* line 361, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 362, ../scss/_base.scss */
+/* line 366, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 367, ../scss/_base.scss */
+/* line 371, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 372, ../scss/_base.scss */
+/* line 376, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 376, ../scss/_base.scss */
+/* line 380, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10259,12 +10265,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 386, ../scss/_base.scss */
+/* line 390, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 391, ../scss/_base.scss */
+/* line 395, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10278,18 +10284,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 406, ../scss/_base.scss */
+  /* line 410, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 411, ../scss/_base.scss */
+  /* line 415, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 413, ../scss/_base.scss */
+  /* line 417, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10305,27 +10311,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 433, ../scss/_base.scss */
+/* line 437, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 437, ../scss/_base.scss */
+/* line 441, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 441, ../scss/_base.scss */
+/* line 445, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 446, ../scss/_base.scss */
+/* line 450, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 451, ../scss/_base.scss */
+/* line 455, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10338,87 +10344,87 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 464, ../scss/_base.scss */
+/* line 468, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 469, ../scss/_base.scss */
+/* line 473, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 475, ../scss/_base.scss */
+/* line 479, ../scss/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 481, ../scss/_base.scss */
+/* line 485, ../scss/_base.scss */
 .has-tip.field-tooltip-wrapper {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 489, ../scss/_base.scss */
+/* line 493, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 490, ../scss/_base.scss */
+/* line 494, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 491, ../scss/_base.scss */
+/* line 495, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 492, ../scss/_base.scss */
+/* line 496, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 493, ../scss/_base.scss */
+/* line 497, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 494, ../scss/_base.scss */
+/* line 498, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 499, ../scss/_base.scss */
+/* line 503, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 500, ../scss/_base.scss */
+/* line 504, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 501, ../scss/_base.scss */
+/* line 505, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 502, ../scss/_base.scss */
+/* line 506, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 503, ../scss/_base.scss */
+/* line 507, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 504, ../scss/_base.scss */
+/* line 508, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10431,7 +10437,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 517, ../scss/_base.scss */
+/* line 521, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10453,7 +10459,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 529, ../scss/_base.scss */
+/* line 533, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10469,7 +10475,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* terminate actions (like cancel order) */
-/* line 534, ../scss/_base.scss */
+/* line 538, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10486,7 +10492,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 541, ../scss/_base.scss */
+/* line 545, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10508,7 +10514,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 554, ../scss/_base.scss */
+/* line 558, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10524,7 +10530,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 560, ../scss/_base.scss */
+/* line 564, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10540,7 +10546,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 565, ../scss/_base.scss */
+/* line 569, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

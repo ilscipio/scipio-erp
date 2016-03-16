@@ -41,12 +41,14 @@ context.totalCacheMemory = totalCacheMemory;
 
 rt = Runtime.getRuntime();
 memoryInfo = [:];
-//maxMemoryMB = ((rt.maxMemory() / 1024) / 1024);
+maxMemoryMB = ((rt.maxMemory() / 1024) / 1024);
+context.maxMemoryMB = maxMemoryMB;
 //memoryInfo.put("Max Memory", maxMemoryMB);
-//Debug.log("Max memory ==========> " + maxMemoryMB + " MB");
+Debug.log("Max memory ==========> " + maxMemoryMB + " MB");
 //
 totalMemoryMB = ((rt.totalMemory() / 1024) / 1024);
 //memoryInfo.put("Total Memory", totalMemoryMB);
+context.totalMemoryMB = totalMemoryMB;
 Debug.log("Total memory ==========> " + totalMemoryMB + " MB");
 
 freeMemoryMB = ((rt.freeMemory() / 1024) / 1024);

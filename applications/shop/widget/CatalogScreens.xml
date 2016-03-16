@@ -273,8 +273,6 @@ under the License.
     <screen name="productdetail">
         <section>
             <actions>
-                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
-
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/ProductDetail.groovy"/>
             </actions>
             <widgets>

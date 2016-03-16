@@ -977,7 +977,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#-- @pul main markup - theme override -->
 <#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
   <ul class="${styles.pricing_wrap!}">
-    <@pli type="title">${title!}</@pli>
+    <#if title?has_content><@pli type="title">${title!}</@pli></#if>
     <#nested>
   </ul>
 </#macro>

@@ -17,3 +17,10 @@
 	float: left;width: 75%;    
 	line-height: 2.8125rem;
     padding: 0 0.9375rem;}
+    
+    
+/*Body*/
+/*Product Detail*/
+#product-price_old{color: #ccc;}
+#product-price{font-size: 1.3em;}
+#product-saved{font-size: 0.8em; color:#43ac6a;}

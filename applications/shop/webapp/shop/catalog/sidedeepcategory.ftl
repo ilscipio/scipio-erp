@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- variable setup and worker calls -->
-<#macro categoryList productCategoryId level isMultiLevel path count>
+<#macro categoryList productCategoryId level isMultiLevel path count class="">
     <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : productCategoryId}, true)/>
     <#assign contentCategoryName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html")!>
     <#assign contentCategoryDesc = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "html")!>    
@@ -33,7 +33,7 @@ under the License.
       context.productCategoryId - causes weird nesting issues... -->
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId!""/></#assign>
     <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
-    <@menuitem type="generic" class="+menu-${level}"+activeCategoryClassStr active=active>
+    <@menuitem type="generic" class="+menu-${level} ${class}"+activeCategoryClassStr active=active>
         <a href="${categoryUrl!""}">${linkText}</a>
     <#if isMultiLevel>
         <#if currentCategoryPath.contains("/"+productCategoryId)>
@@ -48,35 +48,30 @@ under the License.
 </#macro>
 
 <#macro iterateList currentList currentLevel isMultiLevel>
-    <#if currentLevel==0>
-        <@menu id="menu-${currentLevel!0}" type="sidebar">
+        <@menu id="menu-${currentLevel!0}" type="" class="+menu nested">
           <#list currentList as item>
             <#if item.catId?has_content>
               <@categoryList productCategoryId=item.catId level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
             </#if>
           </#list>
         </@menu>
-    <#else>
-        <@menu id="menu-${currentLevel!0}" type="">
-          <#list currentList as item>
-            <#if item.catId?has_content>
-              <@categoryList productCategoryId=item.catId level=currentLevel!0 isMultiLevel=isMultiLevel path=item.path!"" count=item.count/>
-            </#if>
-          </#list>
-        </@menu>
-    </#if>
 </#macro>
 
-
-
-<#if catList?has_content && catList.get("menu-0")?has_content>
-    <@iterateList currentList=(catList.get("menu-0")!) currentLevel=0 isMultiLevel=true/>
-<#elseif topLevelList?has_content>
+<#if catList?has_content || topLevelList?has_content>
     <@menu id="menu-0" type="sidebar">
-      <#list topLevelList as productCategoryId>
-        <#if productCategoryId?has_content><#-- Cato: strangely this is sometimes empty... -->
-          <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count="0"/>
+        <#if catList?has_content && catList.get("menu-0")?has_content><#-- CATO: Display each categoryItem -->
+          <@categoryList productCategoryId=topCategoryId level=0 isMultiLevel=false path="" count="0" class="${styles.menu_sidebar_itemdashboard!}"/>
+          <#list catList.get("menu-0") as item>
+            <#if item.catId?has_content>
+              <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count/>
+            </#if>
+          </#list>
+        <#elseif topLevelList?has_content><#-- Cato: Fallback for empty categories / catalogs -->
+          <#list topLevelList as productCategoryId>
+            <#if productCategoryId?has_content>
+              <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count="0"/>
+            </#if>
+          </#list>
         </#if>
-      </#list>
-    </@menu>       
+    </@menu>
 </#if>

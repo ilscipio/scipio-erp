@@ -842,17 +842,7 @@ Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretR
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether disabled</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>selected</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether selected or not</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Whether menu item disabled</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -862,8 +852,21 @@ Also supports ofbiz request URLs using the notation: ofbizUrl:// (see interpretR
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether active or not</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Whether menu item active (current page)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>selected</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Whether selected or not (selected but not necessarily current)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently this is not used much. It would be used for marking an item as preselected.          </div>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -1582,7 +1585,7 @@ Does not affect paramStr - caller must handle.          </div>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">If jsTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 Same as @treemenuitem macro parameters.        </span>
 </span>

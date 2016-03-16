@@ -44,6 +44,4 @@ context.currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWith
 context.catList = catLevel;
 context.topLevelList = [topCategoryId];
 context.curCategoryId = curCategoryId;
-
-
-
+context.topCategoryId = topCategoryId;

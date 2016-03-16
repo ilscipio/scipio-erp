@@ -88,6 +88,7 @@ May have implicit dependencies on other parts of Cato API.        </span>
         <a href="#entry-chartdata">chartdata</a>, 
         <a href="#entry-code">code</a>, 
         <a href="#entry-heading">heading</a>, 
+        <a href="#entry-img">img</a>, 
         <a href="#entry-mapOfbizFormTypeToTableType">mapOfbizFormTypeToTableType</a>, 
         <a href="#entry-pli">pli</a>, 
         <a href="#entry-pul">pul</a>, 
@@ -1721,7 +1722,7 @@ Since this is very foundation specific, this function may be dropped in future i
                         <code>type</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(price|description|title|button default:empty)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string) price|description|title|button, default:-empty-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
@@ -2289,6 +2290,157 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
                        <a href="#entry-slider">@slider</a>
                      </p>
                   </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-img"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">img</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>img</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit
+Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>    &lt;@img src=&quot;...&quot; type=&quot;cover&quot; height=&quot;&quot; width=&quot;&quot;/&gt;
+</pre>                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>src</code>, 
+                          <code>type</code>, 
+                          <code>class</code>, 
+                          <code>width</code>, 
+                          <code>height</code>, 
+                          <code>link</code>, 
+                          <code>linkTarget</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>src</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> image location</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((String) none|fill|cover|contain|scale-down, default: cover)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> css3 object-fit</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>link</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>WARN: </strong>
+can only use if no other links inside nested content          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>linkTarget</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Target for link element</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If boolean, false prevents any; true will allow global styles hash lookup.        </span>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>width</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> container width, e.g. &quot;12px&quot; - acts as a max-width</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>height</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> container height e.g. &quot;12px&quot; - acts as a max-height</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
             
 
               <div class="lib-entry-details">

@@ -158,7 +158,10 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-stripParamStrFromUrl">stripParamStrFromUrl</a>, 
                   <a href="#entry-toSet">toSet</a>, 
                   <a href="#entry-toSimpleMap">toSimpleMap</a>, 
-                  <a href="#entry-trimParamStrDelims">trimParamStrDelims</a>
+                  <a href="#entry-trimParamStrDelims">trimParamStrDelims</a>, 
+                  <a href="#entry-urlContainsPathPart">urlContainsPathPart</a>, 
+                  <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
+                  <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>
                 </p>
 </li>
             <li><a href="#section-API-WRITING UTILITIES">API-WRITING UTILITIES                </a><br/>
@@ -337,6 +340,9 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-translateStyleStrNumberArg">translateStyleStrNumberArg</a>, 
         <a href="#entry-trimParamStrDelims">trimParamStrDelims</a>, 
         <a href="#entry-unsetCurrentContainerSizes">unsetCurrentContainerSizes</a>, 
+        <a href="#entry-urlContainsPathPart">urlContainsPathPart</a>, 
+        <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
+        <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>, 
         <a href="#entry-varsPutAll">varsPutAll</a>
       </p>
     </div>
@@ -2552,6 +2558,71 @@ the style string with names removed, reformatted, in same order as input        
                       <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> Param delimiter for substitution</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-urlContainsPathPart"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">urlContainsPathPart</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>urlContainsPathPart</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Checks if the given URL contains the given path part, using proper delimiter checking.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The url and pathPart must not be escaped; use <code>StringUtil.wrapString</code>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>url</code>, 
+                          <code>pathPart</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>url</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> URL to check</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>pathPart</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Path part</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+e.g., <code>/GZ-1000</code>        </span>
+</span>
                     </td>
                   </tr>
               </table>

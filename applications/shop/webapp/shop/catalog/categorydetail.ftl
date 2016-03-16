@@ -22,11 +22,11 @@ under the License.
     <#if productCategory?exists  && solrProducts?has_content>
                 <@paginate mode="content" layout="both"  viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
                     <@grid columns=4>
-                    <#list solrProducts as solrProduct>
-                            <li>${setRequestAttribute("productId", solrProduct.productId)}
-                            ${screens.render(productsummaryScreen)}
-                            </li>
-                    </#list>
+                        <#list solrProducts as solrProduct>
+                                <li>${setRequestAttribute("productId", solrProduct.productId)}
+                                ${screens.render(productsummaryScreen)}
+                                </li>
+                        </#list>
                     </@grid>
                 </@paginate>
     <#else>

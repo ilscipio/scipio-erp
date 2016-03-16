@@ -147,7 +147,7 @@ under the License.
                 <script location="component://shop/script/com/ilscipio/shop/solr/SideDeepCategory.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/breadcrumbs.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

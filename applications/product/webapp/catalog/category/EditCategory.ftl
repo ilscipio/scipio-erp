@@ -93,13 +93,27 @@ function insertImageName(type,nameValue) {
               <@field type="lookup" label=uiLabelMap.CommonParent value=(productCategory.primaryParentCategoryId)?default('') formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
             </@cell>
         </@row>
+
+        <hr/>
+        
+        <@row>
+            <@cell columns=12>
+              <#assign fieldValue = "">
+              <#if productCategory?has_content>
+                <#assign fieldValue = productCategory.detailScreen!>
+              </#if>
+              <#-- Cato: FIXME?: tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;" -->
+              <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue />
+            </@cell>
+        </@row>
         <@row>
             <@cell columns=12>
               <@field type="textarea" label=uiLabelMap.CommonDescription name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></@field>
             </@cell>
         </@row>
+
         <@row>
-            <@cell columns=6>
+            <@cell columns=12>
             <#assign labelDetail>
                 <#if (productCategory.categoryImageUrl)??>
                     <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -117,12 +131,14 @@ function insertImageName(type,nameValue) {
                 </#if>
               </@field>
             </@cell>
-            <@cell columns=6>
-            <#assign labelDetail>
+        </@row>
+        <@row>
+            <@cell columns=12>
+              <#assign labelDetail>
                 <#if (productCategory.linkOneImageUrl)??>
                     <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                 </#if>
-            </#assign>
+              </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl labelDetail=labelDetail>
                 <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>
                 <#if productCategory?has_content>
@@ -137,12 +153,12 @@ function insertImageName(type,nameValue) {
             </@cell>
         </@row>
         <@row>
-            <@cell columns=6>
-            <#assign labelDetail>
+            <@cell columns=12>
+              <#assign labelDetail>
                 <#if (productCategory.linkTwoImageUrl)??>
                     <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
                 </#if>
-            </#assign>
+              </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkTwoImageUrl labelDetail=labelDetail>
                 <@field type="input" name="linkTwoImageUrl" value=((productCategory.linkTwoImageUrl)!) size="60" maxlength="255"/>
                 <#if productCategory?has_content>
@@ -155,16 +171,8 @@ function insertImageName(type,nameValue) {
                 </#if>
               </@field>
             </@cell>
-            <@cell columns=6>
-              <#assign fieldValue = "">
-              <#if productCategory?has_content>
-                <#assign fieldValue = productCategory.detailScreen!>
-              </#if>
-              <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue
-                tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;" />
-            </@cell>
         </@row>
-    
+
         <@row>
             <@cell>
               <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>

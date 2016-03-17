@@ -298,7 +298,7 @@ under the License.
                 </platform-specific>
                 <!-- render content area -->
                 
-                <container style="${styles.grid_row} fullWidth" id="content-main-section">
+                <container style="${styles.grid_row} ${styles.grid_theme}" id="content-main-section">
                     <section>
                         <condition>
                             <not>

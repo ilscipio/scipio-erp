@@ -9957,50 +9957,50 @@ div.form-field-entry div.field-entry-widget {
   border-radius: 3px;
 }
 
-/* line 190, ../scss/_base.scss */
+/* line 191, ../scss/_base.scss */
 li.name img {
   width: auto;
   height: 22px;
 }
 
 /* CONTENT */
-/* line 196, ../scss/_base.scss */
+/* line 197, ../scss/_base.scss */
 .align-right {
   text-align: right;
   word-break: normal;
 }
 
-/* line 201, ../scss/_base.scss */
+/* line 202, ../scss/_base.scss */
 .align-center {
   text-align: center;
   word-break: normal;
 }
 
-/* line 206, ../scss/_base.scss */
+/* line 207, ../scss/_base.scss */
 .amount {
   text-align: right;
   word-break: normal;
 }
 
-/* line 211, ../scss/_base.scss */
+/* line 212, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 216, ../scss/_base.scss */
+/* line 217, ../scss/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 222, ../scss/_base.scss */
+/* line 223, ../scss/_base.scss */
 h1 {
   margin-bottom: 1rem;
 }
 
-/* line 227, ../scss/_base.scss */
+/* line 228, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -10034,40 +10034,40 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 230, ../scss/_base.scss */
+/* line 231, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 232, ../scss/_base.scss */
+/* line 233, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 235, ../scss/_base.scss */
+/* line 236, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 241, ../scss/_base.scss */
+/* line 242, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 243, ../scss/_base.scss */
+/* line 244, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
-/* line 247, ../scss/_base.scss */
+/* line 248, ../scss/_base.scss */
 .reveal-modal {
   box-shadow: none;
 }
 @media only screen and (min-width: 40.0625em) {
-  /* line 247, ../scss/_base.scss */
+  /* line 248, ../scss/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 253, ../scss/_base.scss */
+/* line 254, ../scss/_base.scss */
 .page-noauth, .page-requirePasswordChange {
   background: url("/base-theme/images/background3.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -10076,22 +10076,22 @@ table.basic-table input {
   background-size: cover;
 }
 
-/* line 261, ../scss/_base.scss */
+/* line 262, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 269, ../scss/_base.scss */
+/* line 270, ../scss/_base.scss */
 .login-box #login-box-title h1 img {
   height: 22px;
   margin-right: 10px;
 }
-/* line 273, ../scss/_base.scss */
+/* line 274, ../scss/_base.scss */
 .login-box a {
   color: #008cba;
 }
-/* line 275, ../scss/_base.scss */
+/* line 276, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -10103,7 +10103,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 287, ../scss/_base.scss */
+  /* line 288, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -10112,27 +10112,27 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 291, ../scss/_base.scss */
+/* line 292, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 295, ../scss/_base.scss */
+/* line 296, ../scss/_base.scss */
 td {
   word-break: normal;
 }
 
-/* line 296, ../scss/_base.scss */
+/* line 297, ../scss/_base.scss */
 td.button-col {
   word-break: normal;
 }
 
-/* line 298, ../scss/_base.scss */
+/* line 299, ../scss/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 301, ../scss/_base.scss */
+/* line 302, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -10140,31 +10140,31 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 307, ../scss/_base.scss */
+/* line 308, ../scss/_base.scss */
 fieldset {
   border: none;
   padding-left: 0px;
   padding-right: 0px;
 }
-/* line 312, ../scss/_base.scss */
+/* line 313, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 319, ../scss/_base.scss */
+/* line 320, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 326, ../scss/_base.scss */
+/* line 327, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 330, ../scss/_base.scss */
+/* line 331, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -10172,7 +10172,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 337, ../scss/_base.scss */
+/* line 338, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -10180,7 +10180,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 344, ../scss/_base.scss */
+/* line 345, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -10188,7 +10188,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 351, ../scss/_base.scss */
+/* line 352, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10212,42 +10212,42 @@ pre {
   border-width: 1px;
 }
 
-/* line 373, ../scss/_base.scss */
+/* line 374, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 378, ../scss/_base.scss */
+/* line 379, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 380, ../scss/_base.scss */
+/* line 381, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 381, ../scss/_base.scss */
+/* line 382, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 382, ../scss/_base.scss */
+/* line 383, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 383, ../scss/_base.scss */
+/* line 384, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 386, ../scss/_base.scss */
+/* line 387, ../scss/_base.scss */
 pre.scrollable {
   max-height: 500px;
   overflow-x: scroll;
 }
 
-/* line 391, ../scss/_base.scss */
+/* line 392, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10260,62 +10260,62 @@ pre.scrollable {
   font-size: 1.2rem;
 }
 
-/* line 403, ../scss/_base.scss */
+/* line 404, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 405, ../scss/_base.scss */
+/* line 406, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 412, ../scss/_base.scss */
+/* line 413, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 420, ../scss/_base.scss */
+/* line 421, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 426, ../scss/_base.scss */
+/* line 427, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 435, ../scss/_base.scss */
+/* line 436, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 439, ../scss/_base.scss */
+/* line 440, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 444, ../scss/_base.scss */
+/* line 445, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 449, ../scss/_base.scss */
+/* line 450, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 454, ../scss/_base.scss */
+/* line 455, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 458, ../scss/_base.scss */
+/* line 459, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10323,12 +10323,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 468, ../scss/_base.scss */
+/* line 469, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 473, ../scss/_base.scss */
+/* line 474, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10342,18 +10342,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 488, ../scss/_base.scss */
+  /* line 489, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 493, ../scss/_base.scss */
+  /* line 494, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 495, ../scss/_base.scss */
+  /* line 496, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10369,27 +10369,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 515, ../scss/_base.scss */
+/* line 516, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 519, ../scss/_base.scss */
+/* line 520, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 523, ../scss/_base.scss */
+/* line 524, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 528, ../scss/_base.scss */
+/* line 529, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 533, ../scss/_base.scss */
+/* line 534, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10402,35 +10402,35 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 546, ../scss/_base.scss */
+/* line 547, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 551, ../scss/_base.scss */
+/* line 552, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 557, ../scss/_base.scss */
+/* line 558, ../scss/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 563, ../scss/_base.scss */
+/* line 564, ../scss/_base.scss */
 .has-tip.field-tooltip-wrapper {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /*Tabs*/
-/* line 571, ../scss/_base.scss */
+/* line 572, ../scss/_base.scss */
 ul.tabs {
   border-bottom: 1px solid #efefef;
 }
-/* line 573, ../scss/_base.scss */
+/* line 574, ../scss/_base.scss */
 ul.tabs li {
   position: relative;
   bottom: -1px;
@@ -10439,80 +10439,80 @@ ul.tabs li {
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 580, ../scss/_base.scss */
+/* line 581, ../scss/_base.scss */
 ul.tabs li.active {
   border-bottom: 1px solid #fff;
 }
 
-/* line 586, ../scss/_base.scss */
+/* line 587, ../scss/_base.scss */
 .tabs-content {
   border-left: 1px solid #efefef;
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 590, ../scss/_base.scss */
+/* line 591, ../scss/_base.scss */
 .tabs-content .content {
   padding: 20px;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 595, ../scss/_base.scss */
+/* line 596, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 596, ../scss/_base.scss */
+/* line 597, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 597, ../scss/_base.scss */
+/* line 598, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 598, ../scss/_base.scss */
+/* line 599, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 599, ../scss/_base.scss */
+/* line 600, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 600, ../scss/_base.scss */
+/* line 601, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 605, ../scss/_base.scss */
+/* line 606, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 606, ../scss/_base.scss */
+/* line 607, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 607, ../scss/_base.scss */
+/* line 608, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 608, ../scss/_base.scss */
+/* line 609, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 609, ../scss/_base.scss */
+/* line 610, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 610, ../scss/_base.scss */
+/* line 611, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10525,7 +10525,7 @@ ul.tabs li.active {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 623, ../scss/_base.scss */
+/* line 624, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10547,7 +10547,7 @@ ul.tabs li.active {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 635, ../scss/_base.scss */
+/* line 636, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10563,7 +10563,7 @@ ul.tabs li.active {
 }
 
 /* terminate actions (like cancel order) */
-/* line 640, ../scss/_base.scss */
+/* line 641, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10580,7 +10580,7 @@ ul.tabs li.active {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 647, ../scss/_base.scss */
+/* line 648, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10602,7 +10602,7 @@ ul.tabs li.active {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 660, ../scss/_base.scss */
+/* line 661, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10618,7 +10618,7 @@ ul.tabs li.active {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 666, ../scss/_base.scss */
+/* line 667, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10634,7 +10634,7 @@ ul.tabs li.active {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 671, ../scss/_base.scss */
+/* line 672, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

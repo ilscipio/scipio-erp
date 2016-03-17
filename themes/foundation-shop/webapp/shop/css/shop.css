@@ -1,5 +1,34 @@
 /*Header*/
-.top-bar {}
+.top-bar {
+    position:relative;
+    background: #f4f4f4;
+    border: 1px solid gainsboro;
+}
+
+.top-bar-section .has-form, .top-bar-section ul li,.top-bar-section li:not(.has-form) a:not(.button){
+	background:transparent;
+	color: #333;
+	
+}
+
+.top-bar-section li.divider{
+    border:none;
+}
+
+.sticky_animate {
+	top: 0;
+}
+.fixed {
+	opacity: 0.9;
+}
+
+.fixed  {
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
 #microcart {
 	display:block;
 	width: 120px;
@@ -7,7 +36,8 @@
 	padding-right: 5px;
     text-decoration: none;
 }
-#microcart a {color:#fff;float: left;}
+#microcart a {float: left;}
+#microcart a:hover,#microcart a:active  {color:#fff;}
 #microCartQuantity {
 	float: left;
 	font-size: 28px;
@@ -20,6 +50,14 @@
     
     
 /*Body*/
+
+.fullWidth {
+	 width: 100%;
+    max-width: 85em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /*Product Detail*/
 #product-price_old{color: #ccc;}
 #product-price{font-size: 1.3em;}

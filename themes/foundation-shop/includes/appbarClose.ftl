@@ -1,2 +1,7 @@
+                </ul>
+        </nav>
+        </div>
+        <div id="page-wrapper">
 
-<#include "component://base-theme/includes/appbarClose.ftl">
+            <div class="container-fluid sticky-animate">
+

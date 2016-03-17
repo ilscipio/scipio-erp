@@ -205,13 +205,6 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section>
-                    <decorator-section name="right-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <widgets>
-                                <include-screen name="rightbar"/>
-                            </widgets>
-                        </section>  
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

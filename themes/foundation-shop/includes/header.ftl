@@ -195,9 +195,8 @@ under the License.
           <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if> -->  
         </ul>
     </aside>
-    
-    
-    <nav class="top-bar hide-for-small" data-topbar role="navigation">
+    <div class="sticky">   
+    <nav class="top-bar hide-for-small" data-topbar role="navigation" data-options="sticky_on: large">
       <ul class="title-area">
         <li class="name">
             <h1><@logoMenu/></h1>   

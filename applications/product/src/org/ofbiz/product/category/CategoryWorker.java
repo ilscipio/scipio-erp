@@ -640,4 +640,19 @@ public class CategoryWorker {
         }
         return products;
     }
+    
+    /**
+     * Cato: Returns true only if the category ID is child of the given parent category ID.
+     */
+    public static boolean isCategoryChildOf(Delegator delegator, LocalDispatcher dispatcher, String parentProductCategoryId, String productCategoryId) {
+        try {
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                    .where("parentProductCategoryId", parentProductCategoryId, "productCategoryId", productCategoryId).queryList();
+            return !rollups.isEmpty();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return false;
+    }
+    
 }

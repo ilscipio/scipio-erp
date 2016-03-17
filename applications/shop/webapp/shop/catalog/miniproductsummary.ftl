@@ -17,22 +17,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if miniProduct??>
-        <#if solrProduct?has_content && solrProduct.mediumImage?exists>    
-            <#assign smallImageUrl = solrProduct.mediumImage>
-        <#elseif solrProduct?has_content && solrProduct.smallImage?exists>
-            <#assign smallImageUrl = solrProduct.smallImage>        
-        <#elseif miniProductContentWrapper?exists && miniProductContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
-            <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","html")!>        
-        </#if>
+    <#if solrProduct?has_content && solrProduct.mediumImage?exists>    
+        <#assign smallImageUrl = solrProduct.mediumImage>
+    <#elseif solrProduct?has_content && solrProduct.smallImage?exists>
+        <#assign smallImageUrl = solrProduct.smallImage>        
+    <#elseif miniProductContentWrapper?exists && miniProductContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
+        <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","html")!>        
+    </#if>
 
-        <#assign productImage>
-            <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
-            <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>">
-                <@img src=imgSrc!"" type="contain" link=link!"" width="100%" height="100px"/>
-            </a>
-        </#assign>
-        <@pul>
+    <#assign productImage>
+        <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
+        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
+        <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>">
+            <@img src=imgSrc!"" type="contain" link=link!"" width="100%" height="100px"/>
+        </a>
+    </#assign>
+    <@pul>
+        <#if priceResult.isSale?exists && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <#if smallImageUrl?has_content>
             <@pli>
                ${productImage!""}
@@ -40,7 +41,6 @@ under the License.
         </#if>
         <@pli type="description">
             ${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}
-            <#if price.isSale?exists && price.isSale> ${uiLabelMap.OrderOnSale}!  </#if>
          </@pli>
 
          <@pli>
@@ -53,7 +53,6 @@ under the License.
           </#if>
           <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass"></i></a>
         </@pli>
-        
-       
         </@pul>
+
 </#if>

@@ -50,7 +50,7 @@
 
 <@section title="">
     <@row>
-        <@cell columns=6>
+        <@cell columns=8>
             <#--
             <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","html")?if_exists />
             <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","html")?if_exists />
@@ -93,8 +93,9 @@
                     </#if>
             </#if>
         </@cell>
-        <@cell columns=6>
-            <div id="product-info">
+        <@cell columns=4>
+            <@panel>
+            <div id="product-info">               
                 <#if productContentWrapper.get("DESCRIPTION","html")?has_content><p>${productContentWrapper.get("DESCRIPTION","html")?if_exists}</p></#if>
                 <#-- for prices:
                     - if price < competitivePrice, show competitive or "Compare At" price
@@ -264,7 +265,7 @@
                     </#if>
             -->
         </div>
-
+        </@panel>
         <#-- CATO: Shopping list functionality - disabled for now
         <div id="product-shopping-list">
             <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">

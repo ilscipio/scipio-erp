@@ -24,3 +24,31 @@
 #product-price_old{color: #ccc;}
 #product-price{font-size: 1.3em;}
 #product-saved{font-size: 0.8em; color:#43ac6a;}
+.pricing-table {position:relative;}
+.ribbon {
+	width:85px;
+	height:88px;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    }
+.ribbon span{
+	position: relative;
+	padding: 7px 0;
+	left: -30px;
+	top: 15px;
+	display:block;
+	font-size:14px;
+    width: 120px;
+    padding:4px;
+    background-color: #43ac6a;
+    color:#fff; 
+    text-align: center;
+      -webkit-transform: rotate(-45deg);
+      -moz-transform:    rotate(-45deg);
+      -ms-transform:     rotate(-45deg);
+      -o-transform:      rotate(-45deg);
+    }
+    
+

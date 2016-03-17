@@ -87,6 +87,7 @@
     </#assign>
 
      <@pul title=productTitle!"">
+        <#if price.isSale?exists && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
         <#if smallImageUrl?has_content>
             <@pli>
                ${productImage!""}
@@ -100,9 +101,6 @@
          <@pli type="price">
             ${productPrice!""}
         </@pli>
-        <#if price.isSale?exists && price.isSale>
-            <@pli>${uiLabelMap.OrderOnSale}!</@pli>
-        </#if>
         <@pli type="button">
             <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.button_default!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>

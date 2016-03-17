@@ -50,18 +50,17 @@ under the License.
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
                 
-                <script location="component://shop/script/org/ofbiz/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->
-                <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP"/>
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId"/>
-                    <field-map field-name="themeResources" from-field="layoutSettings"/>
-                </service>
+                <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP" global="false"/>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
                 <entity-and list="webAnalyticsConfigs" entity-name="WebAnalyticsConfig">
                     <field-map field-name="webSiteId"/>
                 </entity-and>
+               
+               <!-- Default setup --> 
+               <script location="component://shop/script/org/ofbiz/EcommerceSetup.groovy"/>
+                
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">

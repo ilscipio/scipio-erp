@@ -10425,64 +10425,94 @@ input.field-inline, select.field-inline, textarea.field-inline {
   border-bottom: 0;
 }
 
-/* GENERAL ELEMENT COLORS */
+/*Tabs*/
 /* line 571, ../scss/_base.scss */
+ul.tabs {
+  border-bottom: 1px solid #efefef;
+}
+/* line 573, ../scss/_base.scss */
+ul.tabs li {
+  position: relative;
+  bottom: -1px;
+  border-top: 1px solid #efefef;
+  border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+/* line 580, ../scss/_base.scss */
+ul.tabs li.active {
+  border-bottom: 1px solid #fff;
+}
+
+/* line 586, ../scss/_base.scss */
+.tabs-content {
+  border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+/* line 590, ../scss/_base.scss */
+.tabs-content .content {
+  padding: 20px;
+}
+
+/* GENERAL ELEMENT COLORS */
+/* line 595, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 572, ../scss/_base.scss */
+/* line 596, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 573, ../scss/_base.scss */
+/* line 597, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 574, ../scss/_base.scss */
+/* line 598, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 575, ../scss/_base.scss */
+/* line 599, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 576, ../scss/_base.scss */
+/* line 600, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 581, ../scss/_base.scss */
+/* line 605, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 582, ../scss/_base.scss */
+/* line 606, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 583, ../scss/_base.scss */
+/* line 607, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 584, ../scss/_base.scss */
+/* line 608, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 585, ../scss/_base.scss */
+/* line 609, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 586, ../scss/_base.scss */
+/* line 610, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10495,7 +10525,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 599, ../scss/_base.scss */
+/* line 623, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10517,7 +10547,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 611, ../scss/_base.scss */
+/* line 635, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10533,7 +10563,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* terminate actions (like cancel order) */
-/* line 616, ../scss/_base.scss */
+/* line 640, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10550,7 +10580,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 623, ../scss/_base.scss */
+/* line 647, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10572,7 +10602,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 636, ../scss/_base.scss */
+/* line 660, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10588,7 +10618,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 642, ../scss/_base.scss */
+/* line 666, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10604,7 +10634,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 647, ../scss/_base.scss */
+/* line 671, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

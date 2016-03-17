@@ -302,7 +302,8 @@
                 ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
             </#if>
         </div>
-         -->
+         -->    <div class="shariff" ></div>
+
         </@cell>
     </@row>
         
@@ -317,81 +318,84 @@
 
     <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")?trim/>
     <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")?trim/>
-    <#if prodLongDescr?has_content || prodWarnings?has_content>
-        <@row>
-            <@cell columns=12>
-                <@heading>${uiLabelMap.CommonDescription}</@heading>
-                <#-- Long description of product -->
-                <p>${prodLongDescr!""}</p>
-                <#if warnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
 
-                <#-- Digital Download Files Associated with this Product -->
-                <div id="product-content-download">
-                    <#if downloadProductContentAndInfoList?has_content>            
-                        <p>${uiLabelMap.OrderDownloadFilesTitle}:</p>
-                        <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
-                            <p>${downloadProductContentAndInfo.contentName?if_exists}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></p>
-                        </#list>
-                    </#if>
-                </div>
-            </@cell>
-        </@row>
-    </#if>
-    <@row>
-        <@cell columns=12>
-                <@heading>${uiLabelMap.CommonInformation}</@heading>
-                <#-- Included quantities/pieces -->
-                <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
-                    <p id="product-specs-pieces-included">
-                        ${uiLabelMap.OrderPieces}: ${product.piecesIncluded}
-                    </p>
-                </#if>
-                <#if (product.quantityIncluded?exists && product.quantityIncluded != 0) || product.quantityUomId?has_content>
-                    <#assign quantityUom = product.getRelatedOneCache("QuantityUom")?if_exists />
-                    <p id="product-specs-quantity-included">
-                        ${uiLabelMap.CommonQuantity}: ${product.quantityIncluded?if_exists} ${((quantityUom.abbreviation)?default(product.quantityUomId))?if_exists}
-                    </p>
-                </#if>
-                <#if (product.weight?exists && product.weight != 0) || product.weightUomId?has_content>
-                    <#assign weightUom = product.getRelatedOneCache("WeightUom")?if_exists />
-                    <p id="product-specs-weight">
-                        ${uiLabelMap.CommonWeight}: ${product.weight?if_exists} ${((weightUom.abbreviation)?default(product.weightUomId))?if_exists}
-                    </p>
-                </#if>
-                <#if (product.productHeight?exists && product.productHeight != 0) || product.heightUomId?has_content>
-                    <#assign heightUom = product.getRelatedOneCache("HeightUom")?if_exists />
-                    <p id="product-specs-height">
-                        ${uiLabelMap.CommonHeight}: ${product.productHeight?if_exists} ${((heightUom.abbreviation)?default(product.heightUomId))?if_exists}
-                    </p>
-                </#if>
-                <#if (product.productWidth?exists && product.productWidth != 0) || product.widthUomId?has_content>
-                    <#assign widthUom = product.getRelatedOneCache("WidthUom")?if_exists />
-                    <p id="product-specs-width">
-                        ${uiLabelMap.CommonWidth}: ${product.productWidth?if_exists} ${((widthUom.abbreviation)?default(product.widthUomId))?if_exists}
-                    </p>
-                </#if>
-                <#if (product.productDepth?exists && product.productDepth != 0) || product.depthUomId?has_content>
-                    <#assign depthUom = product.getRelatedOneCache("DepthUom")?if_exists />
-                    <p id="product-specs-depth">
-                        ${uiLabelMap.CommonDepth}: ${product.productDepth?if_exists} ${((depthUom.abbreviation)?default(product.depthUomId))?if_exists}
-                    </p>
-                </#if>
-    
-                <#if daysToShip?exists>
-                    <p id="product-specs-days-to-ship">${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}!</p>
-                </#if>
-    
-                <#if disFeatureList?exists && 0 &lt; disFeatureList.size()>                
-                    <#list disFeatureList as currentFeature>
-                        <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
-                        <p>
-                            <#if disFeatureType.description?exists>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
-                        </p>
+
+
+
+    <@section>
+    <ul class="tabs" data-tab>
+      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
+      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonInformation}</a></li>
+    </ul>
+    <div class="tabs-content">
+         <div class="content active" id="panel11">
+            <#-- Long description of product -->
+            <p>${prodLongDescr!""}</p>
+            <#if warnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
+
+            <#-- Digital Download Files Associated with this Product -->
+                <#if downloadProductContentAndInfoList?has_content>            
+                    <p>${uiLabelMap.OrderDownloadFilesTitle}:</p>
+                    <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
+                        <p>${downloadProductContentAndInfo.contentName?if_exists}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></p>
                     </#list>
                 </#if>
-        </@cell>
-    </@row>
 
+        </div>
+            
+        <div class="content" id="panel21">
+            <#-- Included quantities/pieces -->
+            <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
+                <p id="product-specs-pieces-included">
+                    ${uiLabelMap.OrderPieces}: ${product.piecesIncluded}
+                </p>
+            </#if>
+            <#if (product.quantityIncluded?exists && product.quantityIncluded != 0) || product.quantityUomId?has_content>
+                <#assign quantityUom = product.getRelatedOneCache("QuantityUom")?if_exists />
+                <p id="product-specs-quantity-included">
+                    ${uiLabelMap.CommonQuantity}: ${product.quantityIncluded?if_exists} ${((quantityUom.abbreviation)?default(product.quantityUomId))?if_exists}
+                </p>
+            </#if>
+            <#if (product.weight?exists && product.weight != 0) || product.weightUomId?has_content>
+                <#assign weightUom = product.getRelatedOneCache("WeightUom")?if_exists />
+                <p id="product-specs-weight">
+                    ${uiLabelMap.CommonWeight}: ${product.weight?if_exists} ${((weightUom.abbreviation)?default(product.weightUomId))?if_exists}
+                </p>
+            </#if>
+            <#if (product.productHeight?exists && product.productHeight != 0) || product.heightUomId?has_content>
+                <#assign heightUom = product.getRelatedOneCache("HeightUom")?if_exists />
+                <p id="product-specs-height">
+                    ${uiLabelMap.CommonHeight}: ${product.productHeight?if_exists} ${((heightUom.abbreviation)?default(product.heightUomId))?if_exists}
+                </p>
+            </#if>
+            <#if (product.productWidth?exists && product.productWidth != 0) || product.widthUomId?has_content>
+                <#assign widthUom = product.getRelatedOneCache("WidthUom")?if_exists />
+                <p id="product-specs-width">
+                    ${uiLabelMap.CommonWidth}: ${product.productWidth?if_exists} ${((widthUom.abbreviation)?default(product.widthUomId))?if_exists}
+                </p>
+            </#if>
+            <#if (product.productDepth?exists && product.productDepth != 0) || product.depthUomId?has_content>
+                <#assign depthUom = product.getRelatedOneCache("DepthUom")?if_exists />
+                <p id="product-specs-depth">
+                    ${uiLabelMap.CommonDepth}: ${product.productDepth?if_exists} ${((depthUom.abbreviation)?default(product.depthUomId))?if_exists}
+                </p>
+            </#if>
+
+            <#if daysToShip?exists>
+                <p id="product-specs-days-to-ship">${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}!</p>
+            </#if>
+
+            <#if disFeatureList?exists && 0 &lt; disFeatureList.size()>                
+                <#list disFeatureList as currentFeature>
+                    <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
+                    <p>
+                        <#if disFeatureType.description?exists>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
+                    </p>
+                </#list>
+            </#if>
+        </div>
+    </div>
+    </@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
             <#if variantTree?exists && 0 &lt; variantTree.size()>

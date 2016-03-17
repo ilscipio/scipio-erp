@@ -565,6 +565,30 @@ input.field-inline, select.field-inline, textarea.field-inline {
  border-bottom: 0;
 }
 
+/*Tabs*/
+$tab-border-color: $tabs-navigation-bg-color;
+
+ul.tabs {
+  border-bottom: 1px solid $tab-border-color;
+  li {
+    position: relative;
+    bottom: -1px;
+    border-top: 1px solid $tab-border-color;
+    border-left: 1px solid $tab-border-color;
+    border-right: 1px solid $tab-border-color;
+    border-bottom: 1px solid $tab-border-color;
+    &.active {
+      border-bottom: 1px solid #fff;
+    }
+  }
+}
+
+.tabs-content {
+    border-left: 1px solid $tab-border-color;
+    border-right: 1px solid $tab-border-color;
+    border-bottom: 1px solid $tab-border-color;
+    .content {padding:20px;}
+}
 
 /* GENERAL ELEMENT COLORS */
 

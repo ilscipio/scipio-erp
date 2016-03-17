@@ -1159,8 +1159,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     }
                     <#if type=="line" || type=="bar">,
                         scales: {
-                            type: 'linear',
-                            display: chartData.scaleDisplay,                        
+                            type: chartData.scaleType,
+                            display: true,                        
                             xAxes: [{
                                 gridLines: {
                                     color: chartData.scaleGridLineColor
@@ -1201,7 +1201,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }
                     <#elseif type=="pie">,                        
                         scale: {
-                           type: 'linear',
+                           type: chartData.scaleType,
                            display: false
                         }            
                     </#if>

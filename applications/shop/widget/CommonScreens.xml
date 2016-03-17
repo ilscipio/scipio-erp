@@ -60,7 +60,6 @@ under the License.
                
                <!-- Default setup --> 
                <script location="component://shop/script/org/ofbiz/EcommerceSetup.groovy"/>
-                
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
@@ -72,11 +71,11 @@ under the License.
                                         <and>
                                             <or>
                                                 <if-empty-section section-name="left-column" />
-                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="true"/>
                                             </or>
                                             <or>
                                                 <if-empty-section section-name="right-column" />
-                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="true"/>
                                             </or>
                                         </and>
                                     </condition>
@@ -100,7 +99,7 @@ under the License.
                                             </not>
                                             <or>
                                                 <if-empty-section section-name="right-column" />
-                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="true"/>
                                             </or>
                                         </and>
                                     </condition>
@@ -118,7 +117,7 @@ under the License.
                                         <and>
                                             <or>
                                                 <if-empty-section section-name="left-column" />
-                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="true"/>
                                             </or>
                                             <not>
                                                 <or>

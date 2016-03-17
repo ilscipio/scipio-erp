@@ -68,29 +68,30 @@
                 <#assign productLargeImageUrl = firstLargeImage />
             </#if>
             <#if productLargeImageUrl?string?has_content>
-                    <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl></#assign>
-                    <@img src=largeImage!"" width="100%" height="300px" type="contain" class="product-image"/>
-                    <#-- CATO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
+                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl></#assign>
+            </#if>
+            <@img src=largeImage!"https://placehold.it/800x300" width="100%" height="300px" type="contain" class="product-image"/>
+            <#-- CATO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
+            <#if productAdditionalImage1?has_content>
+                <ul class="clearing-thumbs" data-clearing>
                     <#if productAdditionalImage1?has_content>
-                        <ul class="clearing-thumbs" data-clearing>
-                            <#if productAdditionalImage1?has_content>
-                                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage1?if_exists}</@ofbizContentUrl></#assign>
-                                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover" class=""/></li>
-                            </#if>
-                            <#if productAdditionalImage2?has_content>
-                                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage2?if_exists}</@ofbizContentUrl></#assign>
-                               <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
-                            </#if>
-                            <#if productAdditionalImage3?has_content>
-                                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage3?if_exists}</@ofbizContentUrl></#assign>
-                                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
-                            </#if>
-                            <#if productAdditionalImage4?has_content>
-                                <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage4?if_exists}</@ofbizContentUrl></#assign>
-                                <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
-                            </#if>
-                        </ul>
+                        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage1?if_exists}</@ofbizContentUrl></#assign>
+                        <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover" class=""/></li>
                     </#if>
+                    <#if productAdditionalImage2?has_content>
+                        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage2?if_exists}</@ofbizContentUrl></#assign>
+                       <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                    </#if>
+                    <#if productAdditionalImage3?has_content>
+                        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage3?if_exists}</@ofbizContentUrl></#assign>
+                        <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                    </#if>
+                    <#if productAdditionalImage4?has_content>
+                        <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productAdditionalImage4?if_exists}</@ofbizContentUrl></#assign>
+                        <li><@img src=largeImage!"" link=largeImage!"" width="auto" height="80px" type="cover"/></li>
+                    </#if>
+                </ul>
+
             </#if>
         </@cell>
         <@cell columns=4>

@@ -10,11 +10,11 @@
     </#if>    
     
     <#if solrProduct?has_content && solrProduct.mediumImage?exists>    
-        <#assign smallImageUrl = solrProduct.mediumImage>
+        <#assign smallImageUrl = solrProduct.mediumImage?trim>
     <#elseif solrProduct?has_content && solrProduct.smallImage?exists>
-        <#assign smallImageUrl = solrProduct.smallImage>        
+        <#assign smallImageUrl = solrProduct.smallImage?trim>        
     <#elseif productContentWrapper?exists && productContentWrapper.get("LARGE_IMAGE_URL","html")?has_content>
-        <#assign smallImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")!>        
+        <#assign smallImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")?trim>        
     </#if>
     
 
@@ -38,11 +38,14 @@
         ${productName}
     </#assign>
 
-    <#assign productImage>
+
+    <#if smallImageUrl?trim?has_content>
         <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
-        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
-        <@img src=imgSrc!"" type="contain" link=link!"" width="100%" height="100px"/>
-    </#assign>
+    <#else>
+        <#assign imgSrc="https://placehold.it/300x100"/>    
+    </#if>
+    <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
+    <#assign productImage><@img src=imgSrc!"" type="contain" link=imgLink!"" width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
         <#if solrProduct?exists && description?exists>
@@ -88,11 +91,9 @@
 
      <@pul title=productTitle!"">
         <#if price.isSale?exists && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
-        <#if smallImageUrl?has_content>
-            <@pli>
-               ${productImage!""}
-            </@pli>
-        </#if>
+        <@pli>
+           ${productImage!""}
+        </@pli>
         <#if productDescription?has_content>
         <@pli type="description">
             ${productDescription!""}       

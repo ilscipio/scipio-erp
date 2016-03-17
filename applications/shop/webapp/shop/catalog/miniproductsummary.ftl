@@ -25,20 +25,20 @@ under the License.
         <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","html")!>        
     </#if>
 
+    <#if smallImageUrl?has_content><#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
+    <#else>
+        <#assign imgSrc="https://placehold.it/300x100"/>
+    </#if>
+        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id productId=miniProduct.productId/></#assign>
+
     <#assign productImage>
-        <#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
-        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/></#assign>
-        <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>">
-            <@img src=imgSrc!"" type="contain" link=link!"" width="100%" height="100px"/>
-        </a>
+            <@img src=imgSrc!"https://placehold.it/300x100" type="contain" link=imgLink!"" width="100%" height="100px"/>
     </#assign>
     <@pul>
         <#if priceResult.isSale?exists && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
-        <#if smallImageUrl?has_content>
             <@pli>
                ${productImage!""}
             </@pli>
-        </#if>
         <@pli type="description">
             ${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}
          </@pli>

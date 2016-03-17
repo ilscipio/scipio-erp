@@ -1101,12 +1101,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <#assign chartDatasets=0/>
     </#if>
     <#if (chartDatasets < 1)><#local chartDatasets = 1 /></#if>
-    
-    <canvas id="${chartId!}" class="chart-data" height="300" width="500"></canvas>
+    <span class="chart-data">&nbsp;</span>
+    <canvas id="${chartId!}" height="300" width="500"></canvas>
     <@script>
         $(function(){
-            var chartDataEl = $('.chart-data:first-of-type');
-            var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
+            var chartDataEl = $('.chart-data').first();
+            var chartData = chartDataEl.sassToJs({pseudoEl:"::before", cssProperty: "content"});
             var options =  {
                     responsive: true, 
                     responsiveAnimationDuration: 0, 

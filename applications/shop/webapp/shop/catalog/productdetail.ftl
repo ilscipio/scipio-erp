@@ -133,10 +133,10 @@
                     <#assign currentPrice = oldPrice/>
                 </#if>
 
-                
+                <#-- CATO: Uncomment to mark a product that is on sale
                 <#if price.isSale?exists && price.isSale>
                     <p>${uiLabelMap.OrderOnSale}!</p>
-                </#if>
+                </#if>-->
                 
                 <p>
                 <#if oldPrice?has_content>
@@ -146,7 +146,9 @@
                 <#if currentPrice?has_content>
                     <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong><span>
                 </#if>
-
+                </p>
+                
+                <#-- CATO: Uncomment to display how much a user is saving by buying this product
                 <#if price.listPrice?exists && price.price?exists && price.price &lt; price.listPrice>
                     <span id="product-saved"><sup>
                         <#assign priceSaved = oldPrice - currentPrice />
@@ -155,7 +157,8 @@
                         <sup>
                     </span>
                 </#if>
-                </p>
+                -->
+
                 <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
                 <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
                     <#if price.orderItemPriceInfos?exists>
@@ -336,7 +339,7 @@
     </#if>
     <@row>
         <@cell columns=12>
-                <@heading>${uiLabelMap.CommonDimensions}</@heading>
+                <@heading>${uiLabelMap.CommonInformation}</@heading>
                 <#-- Included quantities/pieces -->
                 <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
                     <p id="product-specs-pieces-included">

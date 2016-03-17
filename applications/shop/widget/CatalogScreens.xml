@@ -145,6 +145,7 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://shop/script/com/ilscipio/shop/solr/SideDeepCategory.groovy"/>
+                <set field="useBreadcrumbsTitleFallback" type="Boolean" value="false" />
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html></platform-specific>

@@ -1,11 +1,15 @@
 
-<#macro breadcrumbs crumbs=true catContentWrappers={}>
-    <#-- Breadcrumbs -->
+<#macro breadcrumbs crumbs=true productContentWrapper="" catContentWrappers={} useTitleFallback="" showMain=true>
+    <#if !useTitleFallback?has_content>
+      <#local useTitleFallback = true>
+    </#if>
     <@nav type="breadcrumbs">
+      <#if showMain>
         <#-- Link to dashboard -->
         <li<@compiledClassAttribStr class=styles.nav_breadcrumb!/>>
           <a href="<@ofbizUrl>main</@ofbizUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>>${uiLabelMap.CommonMain}</a>
         </li>
+      </#if>
         
         <#-- Show the category branch -->
         <#if crumbs?is_boolean>
@@ -30,7 +34,7 @@
                   </#if>
                 </#if>
                 <#local elemClass = styles.nav_breadcrumb!>
-                <#if !crumb_has_next && !productContentWrapper??>
+                <#if !crumb_has_next && !productContentWrapper?has_content>
                   <#local elemClass = addClassArg(elemClass, styles.nav_breadcrumb_active!)>
                 </#if>
                 <li<@compiledClassAttribStr class=elemClass/>>
@@ -51,7 +55,7 @@
         </#list>
     
         <#-- We always assume that the product Detail page is the last in trail -->
-        <#if productContentWrapper??>
+        <#if productContentWrapper?has_content>
             <#local productText = (productContentWrapper.get("PRODUCT_NAME","html"))!>
             <#if !productText?has_content>
               <#local productText = (productContentWrapper.get("PRODUCT_ID","html"))!>
@@ -63,6 +67,7 @@
             </#if>
         </#if>
         
+      <#if useTitleFallback>
         <#-- If there is neither any category or product information available, display the page title -->
         <#if !crumbs?has_content && !productContentWrapper??>
             <#local titleText><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap[titleProperty]}</#if></#local>
@@ -72,8 +77,9 @@
               <li<@compiledClassAttribStr class=elemClass/>>${titleText}</li>
             </#if>
         </#if>
+      </#if>
     </@nav>
 </#macro>
 
-<@breadcrumbs catContentWrappers=catContentWrappers!{} />
+<@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!) useTitleFallback=(useBreadcrumbsTitleFallback!"")/>
 

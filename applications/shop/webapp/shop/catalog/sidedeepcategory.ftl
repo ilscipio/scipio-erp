@@ -60,19 +60,26 @@ under the License.
     <@menu id="menu-0" type="sidebar">
         <#if catList?has_content && catList.get("menu-0")?has_content><#-- CATO: Display each categoryItem -->
           <!-- current categories -->
-          <@categoryList productCategoryId=topCategoryId level=0 isMultiLevel=false path="" count="0" class=styles.menu_sidebar_itemdashboard!/>
+          <@categoryList productCategoryId=topCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard!/>
           <#list catList.get("menu-0") as item>
             <#if item.catId?has_content>
-              <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=topCategoryId!""/>
+              <#-- Cato: FIXME?: sanity check - each item should have as parent the top category - currently this is not always true -->
+              <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, topCategoryId, item.catId)>
+                <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=topCategoryId!""/>
+              <#else>
+                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: Side deep category " + item.catId + " not child of top category " + (topCategoryId!""), "sidedeepcategoryftl")>
+              </#if>
             </#if>
           </#list>
         <#elseif topLevelList?has_content><#-- Cato: Fallback for empty categories / catalogs -->
           <!-- top categories -->
           <#list topLevelList as productCategoryId>
             <#if productCategoryId?has_content>
-              <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count="0" previousCategoryId=topCategoryId!""/>
+              <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count=0 previousCategoryId=topCategoryId!""/>
             </#if>
           </#list>
         </#if>
     </@menu>
 </#if>
+
+

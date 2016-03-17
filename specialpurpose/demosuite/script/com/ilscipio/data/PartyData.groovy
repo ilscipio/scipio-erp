@@ -151,6 +151,7 @@ public Map createDemoParty() {
         try {
             Debug.log("Storing parties")
             delegator.storeAll(toBeStored);
+            result.put("generatedData", toBeStored);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                 "PartyErrorCannotStoreChanges", locale) + e.getMessage());

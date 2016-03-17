@@ -125,6 +125,7 @@ public Map createDemoWorkEffort() {
         try {
             Debug.log("Storing work efforts")
             delegator.storeAll(toBeStored);
+            result.put("generatedData", toBeStored);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
             "workEffortErrorCannotStoreChanges", locale) + e.getMessage());

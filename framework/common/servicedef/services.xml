@@ -816,5 +816,15 @@ under the License.
         <description>Resets a metric. See org.ofbiz.base.metrics.Metrics.</description>
         <attribute name="name" mode="IN" type="String" optional="false"/>
     </service>
+    
+    <!-- Cato services: Common demo data generator interface. 
+        Services must implement this interface in order to have the demo data generator using the common in/out attributes and also to be listed in the demoDataGenerator screen.
+    -->
+    <service name="demoDataGenerator" engine="interface">
+        <attribute name="num" type="Integer" mode="IN" optional="false"/>
+        <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="generatedData" type="java.util.ArrayList" mode="OUT"/>
+    </service>
 
 </services>

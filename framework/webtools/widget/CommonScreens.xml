@@ -86,7 +86,7 @@ under the License.
                         <container style="${styles.grid_large}12 ${styles.grid_cell}">
                            <section>
                                 <actions>
-                                    <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='demoGenerator'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
+                                    <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
                                 </actions>
                                 <widgets>
                                     <include-screen name="EventMessages" location="component://common/widget/CommonScreens.xml"/>
@@ -480,6 +480,43 @@ under the License.
                             </condition>
                             <widgets>
                                 <include-menu name="geoManagementSideBar" location="component://webtools/widget/Menus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for WEBTOOLS, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonDemoDataGeneratorDecorator">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="demoDataGeneratorServiceList"/>
+                <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="DemoDataGeneratorSideBar" location="component://webtools/widget/Menus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

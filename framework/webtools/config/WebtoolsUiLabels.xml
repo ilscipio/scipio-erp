@@ -440,6 +440,9 @@
         <value xml:lang="zh">Web工具</value>
         <value xml:lang="zh_TW">Web工具</value>
     </property>
+    <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="en">Demo Data Generator</value>
+    </property>
     <property key="PageTitleEditUtilCache">
         <value xml:lang="de">Util Cache bearbeiten</value>
         <value xml:lang="en">Edit Util Cache</value>
@@ -1567,6 +1570,12 @@
         <value xml:lang="en">Definition Location</value>
         <value xml:lang="zh">定义位置</value>
         <value xml:lang="zh_TW">定義位置</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorServiceList">
+        <value xml:lang="en">Data Generator Services</value>                
+    </property>
+    <property key="WebtoolsDemoDataGeneratorProviders">
+        <value xml:lang="en">Data Generator Providers</value>                
     </property>
     <property key="WebtoolsDeleteFiles">
         <value xml:lang="de">Dateien nachher löschen?</value>

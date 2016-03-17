@@ -621,14 +621,25 @@ under the License.
     </request-map>
     
     <!-- Cato: Demo data generator -->
-    <request-map uri="ListDemoDataGenerator">
+    <request-map uri="ListDemoDataGeneratorServices">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListDemoDataGenerator"/>
+        <response name="success" type="view" value="ListDemoDataGeneratorServices"/>
     </request-map>
-    <!-- <request-map uri="WebtoolsLayoutDemo">
+    <request-map uri="RunDemoDataGeneratorService">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="WebtoolsLayoutDemo"/>
-    </request-map> -->
+        <response name="success" type="view" value="RunDemoDataGeneratorService"/>
+    </request-map>
+    <request-map uri="DemoDataGeneratorResult">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="scheduleService"/>
+        <response name="success" type="view" value="DemoDataGeneratorResult"/>
+        <response name="sync_success" type="view" value="DemoDataGeneratorResult"/>
+        <response name="error" type="view" value="RunDemoDataGeneratorService"/>      
+    </request-map>
+    <request-map uri="ListDemoDataGeneratorProviders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListDemoDataGeneratorProviders"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -732,7 +743,11 @@ under the License.
     <view-map name="WebtoolsLayoutDemo" page="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo" type="screen"/>
     
     <!-- Cato: Demo data generator -->    
-    <view-map name="ListDemoDataGenerator" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGenerator"/>  
+    <view-map name="ListDemoDataGeneratorServices" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorServices"/>
+    <view-map name="RunDemoDataGeneratorService" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#RunDemoDataGeneratorService"/>
+    <view-map name="DemoDataGeneratorResult" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#DemoDataGeneratorResult"/>
+    <view-map name="ListDemoDataGeneratorProviders" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorProviders"/>
+  
 
     <!-- end of view mappings -->
 </site-conf>

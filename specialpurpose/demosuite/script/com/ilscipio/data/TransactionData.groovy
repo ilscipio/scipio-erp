@@ -157,6 +157,7 @@ public Map createDemoTransaction() {
         try {
             Debug.log("Storing transactions")
             delegator.storeAll(toBeStored);
+            result.put("generatedData", toBeStored);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
             "acctgTransErrorCannotStoreChanges", locale) + e.getMessage());

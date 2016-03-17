@@ -139,11 +139,14 @@ public Map createDemoOrder() {
     if (toBeStored.size() > 0) {
         try {
             delegator.storeAll(toBeStored);
+            result.put("generatedData", toBeStored);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
             "OrderErrorCannotStoreStatusChanges", locale) + e.getMessage());
         }
     }
+    
+   
     
     return result;
 }

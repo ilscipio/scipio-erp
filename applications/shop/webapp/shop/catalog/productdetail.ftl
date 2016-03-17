@@ -69,7 +69,7 @@
             </#if>
             <#if productLargeImageUrl?string?has_content>
                     <#assign largeImage><@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl></#assign>
-                    <@img src=largeImage!"" width="100%" height="300px" type="contain"/>
+                    <@img src=largeImage!"" width="100%" height="300px" type="contain" class="product-image"/>
                     <#-- CATO: We are using the clearing mechanism in foundation here. This may be migrated to the grid macro at a later stage. -->
                     <#if productAdditionalImage1?has_content>
                         <ul class="clearing-thumbs" data-clearing>
@@ -306,7 +306,7 @@
 
         </@cell>
     </@row>
-        
+</@section>        
 
         
 
@@ -316,13 +316,14 @@
     </div>
      -->   
 
+
+
+
+
+<@section>
     <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")?trim/>
     <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")?trim/>
 
-
-
-
-    <@section>
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
       <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonInformation}</a></li>
@@ -395,7 +396,8 @@
             </#if>
         </div>
     </div>
-    </@section>
+</@section>
+<@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
             <#if variantTree?exists && 0 &lt; variantTree.size()>

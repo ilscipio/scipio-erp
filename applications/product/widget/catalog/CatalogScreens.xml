@@ -56,18 +56,25 @@ under the License.
                 <set field="titleProperty" value="ProductCatalog"/>
                 <set field="activeSubMenuItem" value="ProductCatalog"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
-                <script location="component://product/script/com/ilscipio/product/catalog/EditProdCatalog.groovy"/>
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>                
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
-                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/EditProdCatalog.ftl"/></html></platform-specific>
+                            <include-screen name="CatoEditProdCatalog"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#EditProdCatalog -->
+    <screen name="CatoEditProdCatalog">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/EditProdCatalog.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

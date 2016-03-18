@@ -59,7 +59,7 @@ under the License.
                 </entity-and>
                
                <!-- Default setup --> 
-               <script location="component://shop/script/org/ofbiz/EcommerceSetup.groovy"/>
+               <script location="component://shop/script/com/ilscipio/shop/ShopSetup.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">

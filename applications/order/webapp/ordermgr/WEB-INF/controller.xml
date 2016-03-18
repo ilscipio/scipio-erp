@@ -790,7 +790,7 @@ under the License.
     </request-map>
 
     <!--
-        Quick Finalize Order reuses the ecommerce checkoutoptions widget and template. We need to
+        Quick Finalize Order reuses the [Cato: shop] checkoutoptions widget and template. We need to
         translate the controller requests here for use by ordermgr.  Note that the main entry point on submit is "checkout".
     -->
     <request-map uri="quickcheckout">

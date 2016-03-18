@@ -6,7 +6,7 @@
     <!-- context-param>
         <param-name>webSiteId</param-name>
         <param-value>@component-name@Site</param-value>
-        <description>A unique ID used to look up the WebSite entity. Only for component using a WebSite entity, like ecommerce</description>
+        <description>A unique ID used to look up the WebSite entity. Only for component using a WebSite entity, like [Cato: shop]</description>
     </context-param-->
     <context-param>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>

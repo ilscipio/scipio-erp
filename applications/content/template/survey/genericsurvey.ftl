@@ -198,7 +198,6 @@ under the License.
       <@tr close=true open=false />
     </#if>
 
-    <#-- -->
     <#if openMultiRespHeader>
       <#assign haveOpenMultiRespHeader = true/>
       <@tr width="100%" open=true close=false />

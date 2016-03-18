@@ -163,11 +163,12 @@ under the License.
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
+        <!-- Cato: No high-level functionality needed
         <menu-item name="WebSiteCMS" title="${uiLabelMap.ContentCMS}">
             <link target="WebSiteCms">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="WebSiteSEO" title="${uiLabelMap.ContentSEO}">
             <link target="WebSiteSeo">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>

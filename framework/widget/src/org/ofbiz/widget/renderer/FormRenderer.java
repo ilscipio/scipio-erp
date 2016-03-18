@@ -464,13 +464,21 @@ public class FormRenderer {
 //                        if (modelForm.getUseRowSubmit())
 //                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                        
+                        // Cato: There is currently an issue where sometimes the title separator gets printed
+                        // in BETWEEN cell items. I don't know what started causing this, but am adding a sanity
+                        // check boolean that will fix at least that specific problem (but there could be others).
+                        boolean cellOpened = false;
+                        
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
+                                cellOpened = true;
                             } else if (!modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+                                cellOpened = true;
                             }
 
                             // render title (unless this is a submit or a reset field)
@@ -478,15 +486,20 @@ public class FormRenderer {
 
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
+                                cellOpened = false;
                             } else if (!modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                                cellOpened = false;
                             }
 
                             if (innerFormFieldsIt.hasNext()) {
                                 // TODO: determine somehow if this is the last one... how?
                                 if (!modelForm.getSeparateColumns() && !modelFormField.getSeparateColumn()) {
-                                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
+                                    // Cato: ONLY do this if we know we have an open cell
+                                    if (cellOpened) {
+                                        formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
                                             modelFormField, false);
+                                    }
                                 }
                             }
                         }

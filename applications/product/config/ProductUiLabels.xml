@@ -15879,12 +15879,13 @@
         <value xml:lang="zh_TW">為其他檔中的畫面使用類似於</value>
     </property>
     <property key="ProductDetailSubScreenTooltip">
-        <value xml:lang="en">example: component://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
-        <value xml:lang="it">esempio: component://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
-        <value xml:lang="ja">例: component://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
-        <value xml:lang="vi">ví dụ: thành phần://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
-        <value xml:lang="zh">样例: component://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
-        <value xml:lang="zh_TW">範例: component://ecommerce/widget/CatalogScreens.xml#categorydetail</value>
+        <!-- Cato: Now points to shop -->
+        <value xml:lang="en">example: component://shop/widget/CatalogScreens.xml#categorydetail</value>
+        <value xml:lang="it">esempio: component://shop/widget/CatalogScreens.xml#categorydetail</value>
+        <value xml:lang="ja">例: component://shop/widget/CatalogScreens.xml#categorydetail</value>
+        <value xml:lang="vi">ví dụ: thành phần://shop/widget/CatalogScreens.xml#categorydetail</value>
+        <value xml:lang="zh">样例: component://shop/widget/CatalogScreens.xml#categorydetail</value>
+        <value xml:lang="zh_TW">範例: component://shop/widget/CatalogScreens.xml#categorydetail</value>
     </property>
     <property key="ProductDiameterUomId">
         <value xml:lang="en">Diameter Uom Id</value>

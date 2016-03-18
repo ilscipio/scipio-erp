@@ -1027,7 +1027,8 @@ under the License.
     <!-- Buy 1 Get 1 At 50% off with promo code, no limit -->
     <!-- 4 for $50 in set of products -->
     <ProductPromo productPromoId="9000" promoName="Test Promo 1" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
-        <promoText><![CDATA[Spend more than $100 on your favorite widgets and gizmos and get a free <a href="/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111">Micro Chrome Widget</a>!]]></promoText>
+        <!-- Cato: Now points to shop -->
+        <promoText><![CDATA[Spend more than $100 on your favorite widgets and gizmos and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=WG-1111">Micro Chrome Widget</a>!]]></promoText>
     </ProductPromo>
     <ProductPromo productPromoId="9010" promoName="Test Percent off product set " promoText="20% off any one item, either GZ-1005 (.NIT Gizmo) or GZ-1006 (Open Gizmo) with a limit of 1 per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9011" promoName="Test percent off entire purchase, no condition" promoText="10% off entire purchase" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -1037,10 +1038,12 @@ under the License.
     <ProductPromo productPromoId="9015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Purple Gizmo [GZ-5005], Rainbow Gizmo [GZ-1004], Round Gizmo [GZ-2644] or Square Gizmo [GZ-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9016" promoName="Test $ off products in categories" promoText="Get $500 off any item in the Small Gizmos [101] category, limit 1 per order, 2 per customer, 3 for entire promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9017" promoName="Test Gift with Amount of Specific Product" userEntered="Y" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0">
-        <promoText><![CDATA[Buy $50 of your favorite gizmos (all products in Gizmo [100] or sub-category) get a free <a href="/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>! Limit 2 per order.]]></promoText>
+        <!-- Cato: Now points to shop -->
+        <promoText><![CDATA[Buy $50 of your favorite gizmos (all products in Gizmo [100] or sub-category) get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>! Limit 2 per order.]]></promoText>
     </ProductPromo>
     <ProductPromo productPromoId="9018" promoName="Test Gift with Total Amount of Product" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
-        <promoText><![CDATA[Spend more than $150 on your favorite gizmos (all products in Gizmo [100] or sub-category) and get a free <a href="/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>!]]></promoText>
+        <!-- Cato: Now points to shop -->
+        <promoText><![CDATA[Spend more than $150 on your favorite gizmos (all products in Gizmo [100] or sub-category) and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>!]]></promoText>
     </ProductPromo>
     <ProductPromo productPromoId="9019" promoName="Test Percent off when Customer Orders over $1000 in 12 months" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
         <promoText><![CDATA[Spend more than $1000 in any 12 months on our fabulous Widgets and Gizmos and get a 5% discount.]]></promoText>

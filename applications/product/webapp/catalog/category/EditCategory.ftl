@@ -102,8 +102,9 @@ function insertImageName(type,nameValue) {
               <#if productCategory?has_content>
                 <#assign fieldValue = productCategory.detailScreen!>
               </#if>
-              <#-- Cato: FIXME?: tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;" -->
-              <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue />
+              <#-- Cato: Now points to shop -->
+              <@field type="input" label=uiLabelMap.ProductDetailScreen name="detailScreen" size="60" maxlength="250" value=fieldValue 
+                tooltip="${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://shop/widget/CatalogScreens.xml#categorydetail&quot;"/>
             </@cell>
         </@row>
         <@row>

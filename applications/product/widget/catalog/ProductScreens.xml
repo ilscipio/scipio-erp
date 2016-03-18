@@ -964,7 +964,8 @@ under the License.
                 <set field="activeSubMenuItem" value="EditProductContent"/>
                 <set field="labelTitleProperty" value="ProductContent"/>
 
-                <set field="layoutSettings.javaScripts[]" value="/ecommerce/images/productAdditionalView.js" global="true"/>
+                <!-- Cato: Now points to shop -->
+                <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
 
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>

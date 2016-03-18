@@ -185,7 +185,8 @@ under the License.
             <condition>
                 <not><if-empty field="productCategory"/></not>
             </condition>
-            <link target="/ecommerce/control/category" url-mode="plain" target-window="_blank">
+            <!-- Cato: Now points to shop -->
+            <link target="/shop/control/category" url-mode="plain" target-window="_blank">
                 <parameter param-name="category_id" from-field="productCategoryId"/>
             </link>
         </menu-item>

@@ -3,7 +3,7 @@
  */
 
 /*
- * This script is also referenced by the ecommerce's screens and
+ * This script is also referenced by the shop's screens and
  * should not contain order component's specific code.
  */
 

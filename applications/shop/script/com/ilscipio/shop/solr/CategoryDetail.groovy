@@ -17,7 +17,7 @@
  * under the License.
  */
 /*
- * NOTE: This script is also referenced by the ecommerce's screens and
+ * NOTE: This script is also referenced by the shop's screens and
  * should not contain order component's specific code.
  */
 

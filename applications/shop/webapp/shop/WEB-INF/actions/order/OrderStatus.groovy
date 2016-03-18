@@ -34,7 +34,7 @@ orderHeader = null;
 // we have a special case here where for an anonymous order the user will already be logged out, but the userLogin will be in the request so we can still do a security check here
 if (!userLogin) {
     userLogin = parameters.temporaryAnonymousUserLogin;
-    // This is another special case, when Order is placed by anonymous user from ecommerce and then Order is completed by admin(or any user) from Order Manager
+    // This is another special case, when Order is placed by anonymous user from shop and then Order is completed by admin(or any user) from Order Manager
     // then userLogin is not found when Order Complete Mail is send to user.
     if (!userLogin) {
         if (orderId) {

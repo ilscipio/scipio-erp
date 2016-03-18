@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.ecommerce.misc;
+package com.ilscipio.cato.shop.misc;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -107,22 +107,23 @@ public class ThirdPartyEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         GenericValue party = null;
 
-        java.net.URL ecommercePropertiesUrl = null;
+        // Cato: now points to shop
+        java.net.URL shopPropertiesUrl = null;
 
         try {
             // Cato: now points to shop
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
+            shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
-        String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.customer");
+        String store = UtilProperties.getPropertyValue(shopPropertiesUrl, "distributor.store.customer");
 
         if (store == null || store.toUpperCase().startsWith("N")) {
             return "success";
         }
 
-        String storeOnClick = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.onclick");
+        String storeOnClick = UtilProperties.getPropertyValue(shopPropertiesUrl, "distributor.store.onclick");
 
         if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N")) {
             return "success";
@@ -188,20 +189,21 @@ public class ThirdPartyEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         GenericValue party = null;
 
-        java.net.URL ecommercePropertiesUrl = null;
+        // Cato: now points to shop
+        java.net.URL shopPropertiesUrl = null;
 
         try {
             // Cato: now points to shop
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
+            shopPropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
-        String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.customer");
+        String store = UtilProperties.getPropertyValue(shopPropertiesUrl, "affiliate.store.customer");
 
         if (store == null || store.toUpperCase().startsWith("N"))
             return "success";
-        String storeOnClick = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.onclick");
+        String storeOnClick = UtilProperties.getPropertyValue(shopPropertiesUrl, "affiliate.store.onclick");
 
         if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N"))
             return "success";

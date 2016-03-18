@@ -50,7 +50,7 @@ under the License.
     <preprocessor>
         <!-- This event allows affilate/distributor entry on any page -->
         <event name="checkExternalLoginKey" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkExternalLoginKey"/>
-        <event name="setAssociationId" type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="setAssociationId"/>
+        <event name="setAssociationId" type="java" path="com.ilscipio.cato.shop.misc.ThirdPartyEvents" invoke="setAssociationId"/>
         <event name="checkTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeUrlParam"/>
         <event name="checkPartnerTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkPartnerTrackingCodeUrlParam"/>
         <event name="keepCartUpdated" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
@@ -64,7 +64,7 @@ under the License.
     -->
 
     <after-login>
-        <event name="updateAssociatedDistributor" type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
+        <event name="updateAssociatedDistributor" type="java" path="com.ilscipio.cato.shop.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
         <event name="keepCartUpdated" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
         <!-- after login, get everything from the auto-save list -->
         <event name="restoreAutoSaveList" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
@@ -130,7 +130,7 @@ under the License.
 
     <request-map uri="setdistributor">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="setAssociationId"/>
+        <event type="java" path="com.ilscipio.cato.shop.misc.ThirdPartyEvents" invoke="setAssociationId"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
@@ -1353,8 +1353,8 @@ under the License.
         <response name="shipping" type="view" value="shipsetting"/>
         <response name="options" type="view" value="optionsetting"/>
         <response name="payment" type="view" value="paymentoptions"/>
-        <response name="term" type="view" value="paymentoptions"/> <!-- this actually wants to go to a page to set the order terms, but for ecommerce we'll skip it and go to the payment options page -->
-        <response name="addparty" type="request" value="calcShipping"/> <!-- this actually wants to go to a page to set another party, but for ecommerce we'll skip it and go to the beginning of the chain for review and checkout -->
+        <response name="term" type="view" value="paymentoptions"/> <!-- this actually wants to go to a page to set the order terms, but for shop we'll skip it and go to the payment options page -->
+        <response name="addparty" type="request" value="calcShipping"/> <!-- this actually wants to go to a page to set another party, but for shop we'll skip it and go to the beginning of the chain for review and checkout -->
         <response name="paysplit" type="view" value="checkoutpayment"/>
         <response name="sales" type="request" value="calcShipping"/>
         <response name="error" type="request" value="finalizeOrderError"/>
@@ -1719,7 +1719,7 @@ under the License.
     <!-- ============== Janrain Engage ============== -->
     <request-map uri="janrainCheckLogin">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.ecommerce.janrain.JanrainHelper" invoke="janrainCheckLogin"/>
+        <event type="java" path="com.ilscipio.cato.shop.janrain.JanrainHelper" invoke="janrainCheckLogin"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
         <response name="userLoginMissing" type="request" value="newcustomer"/>

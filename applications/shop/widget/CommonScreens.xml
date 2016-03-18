@@ -59,7 +59,7 @@ under the License.
                 </entity-and>
                
                <!-- Default setup --> 
-               <script location="component://shop/script/com/ilscipio/shop/ShopSetup.groovy"/>
+               <script location="component://shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
@@ -276,7 +276,7 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
-                <script location="component://shop/script/com/ilscipio/shop/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
                 <set field="titleProperty" value=""/>

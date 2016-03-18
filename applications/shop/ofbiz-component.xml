@@ -24,8 +24,57 @@ under the License.
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoProduct.xml"/>
+    
+    <!-- seed data -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ShopSecurityData.xml"/>
+    
+    <!-- demo data: store -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStoreData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalStoreData.xml"/>
+
+    <!-- demo data: catalog - basic -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalCatalogData.xml"/>
+    
+    <!-- demo data: survey -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurveyData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurveyTestData.xml"/>
+    
+    <!-- demo data: content - basic -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishPointData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTemplateData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTopicData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFactoidData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRelatedData.xml"/>
+        
+    <!-- demo data: catalog - extended (configuration) -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogConfigurationData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogI18nData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogImageData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAdditionalViewData.xml"/>
+    
+    <!-- demo data: content - extended -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeContentData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentAltUrlData.xml"/>
+    
+    <!-- demo data: store config, shipping, parties -->
+    <!-- FIXME: for some reason rental shipping is required for main store shipping... order should be reversed -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalShippingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoShippingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTaxAuthorityData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderPartyData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoMarketingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoPurchasingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStandardCostingData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStoreGiftCertificateData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFinAccountData.xml"/>
+    
+    <!-- demo data: example/test records and history -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderTestData.xml"/>
     
     <webapp name="shop"
         title="CATO Commerce"

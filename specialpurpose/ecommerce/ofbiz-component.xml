@@ -26,6 +26,8 @@ under the License.
     <classpath type="dir" location="config"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/EcommerceTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/EcommerceSecurityData.xml"/>
+    
+    <!-- Cato: Demo data is now largely defined in /applications/shop, with minimum needed in data/DemoBasic.xml
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoProduct.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurvey.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalShipping.xml"/>
@@ -55,7 +57,10 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoProductAdditionalViewData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoPopularCategoriesData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentAltUrl.xml"/>
-    
+    -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBasic.xml"/>
+     
+     
     <webapp name="ecommerce"
         title="eCommerce"
         server="default-server"

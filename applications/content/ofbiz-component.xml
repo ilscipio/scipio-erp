@@ -34,7 +34,9 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/MimeTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/MimeTypeTemplate.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/DataCategoryData.xml"/>
+    <!-- Cato: no need for blog
     <entity-resource type="data" reader-name="seed" loader="main" location="data/BlogSeedData.xml"/>
+    -->
     <entity-resource type="data" reader-name="seed" loader="main" location="data/TemplateData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ContentSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ContentSecurityGroupDemoData.xml"/>
@@ -47,9 +49,11 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WebtoolsHelpData.xml"/>
 
     <entity-resource type="data" reader-name="demo" loader="main" location="data/UsersDemoData.xml"/>
+    <!-- Cato: no need for blog
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogPubPtData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogUsersData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBlogEntryData.xml"/>
+    -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/WebSitePublishPointData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CompDocData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ForumDemoData.xml"/>

@@ -88,7 +88,9 @@ under the License.
     <ContentType contentTypeId="PLACEHOLDER" description="Place Holder"/>
     <ContentType contentTypeId="WEB_SITE_PUB_PT" parentTypeId="PLACEHOLDER" hasTable="Y" description="Web Site Publish Point"/>
     <ContentType contentTypeId="FORUM_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="Forum Root"/>
+    <!-- Cato: blog unneeded
     <ContentType contentTypeId="BLOG_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="Blog Root"/>
+    -->
     <ContentType contentTypeId="FAQ_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="FAQ Root"/>
     <ContentType contentTypeId="DEPARTMENT" description="Department" parentTypeId="PLACEHOLDER"/>
     <ContentType contentTypeId="PEOPLE" description="People" parentTypeId="PLACEHOLDER"/>
@@ -180,7 +182,9 @@ under the License.
     <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
 
     <!-- website data -->
+    <!-- Cato: blog unneeded
     <WebSiteContentType webSiteContentTypeId="BLOG_ROOT" description="Blog Root" hasTable="N" parentTypeId=""/>
+    -->
     <WebSiteContentType webSiteContentTypeId="DEFAULT_PAGE" description="Default Page" hasTable="N" parentTypeId=""/>
     <WebSiteContentType webSiteContentTypeId="FORUM_ROOT" description="Forum Root" hasTable="N" parentTypeId=""/>
     <WebSiteContentType webSiteContentTypeId="MENU_ROOT" description="Menu Containers" hasTable="N" parentTypeId=""/>

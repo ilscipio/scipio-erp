@@ -918,10 +918,10 @@ public class DhlServices {
 
     public static Document createAccessRequestDocument(Delegator delegator, String shipmentGatewayConfigId, String resource) {
         Document eCommerceRequestDocument = UtilXml.makeEmptyXmlDocument("eCommerce");
-        Element eCommerceRequesElement = eCommerceRequestDocument.getDocumentElement();
-        eCommerceRequesElement.setAttribute("version", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "headVersion", resource, "shipment.dhl.head.version"));
-        eCommerceRequesElement.setAttribute("action", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "headAction", resource, "shipment.dhl.head.action"));
-        Element requestorRequestElement = UtilXml.addChildElement(eCommerceRequesElement, "Requestor", eCommerceRequestDocument);
+        Element eCommerceRequestElement = eCommerceRequestDocument.getDocumentElement();
+        eCommerceRequestElement.setAttribute("version", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "headVersion", resource, "shipment.dhl.head.version"));
+        eCommerceRequestElement.setAttribute("action", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "headAction", resource, "shipment.dhl.head.action"));
+        Element requestorRequestElement = UtilXml.addChildElement(eCommerceRequestElement, "Requestor", eCommerceRequestDocument);
         UtilXml.addChildElementValue(requestorRequestElement, "ID", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessUserId", resource, "shipment.dhl.access.userid"),
                 eCommerceRequestDocument);
         UtilXml.addChildElementValue(requestorRequestElement, "Password", getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessPassword", resource, "shipment.dhl.access.password"),

@@ -135,7 +135,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                                        <label style="heading">${uiLabelMap.PageTitleEditProductCatalog} [${prodCatalogId}]</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>

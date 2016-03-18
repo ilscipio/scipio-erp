@@ -51,6 +51,7 @@
         </field>
     </form>
 
+    <!-- Cato: Form moved to... -->
     <form name="EditProdCatalog" type="single" target="updateProdCatalog" title="" default-map-name="prodCatalog"
         header-row-style="header-row" default-entity-name="ProdCatalog"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="prodCatalog==null" target="createProdCatalog" />

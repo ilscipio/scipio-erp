@@ -90,15 +90,15 @@
 	<classpathentry kind="lib" path="framework/base/lib/scripting/jakarta-oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/ecj-4.4.2.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina-ha.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina-tribes.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-jasper.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-api.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-coyote.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-util.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-7.0.68-tomcat-juli.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-7.0.68-tomcat-juli-adapters.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina-ha.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina-tribes.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-catalina.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-jasper.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-api.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-7.0.68-tomcat-util.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-7.0.68-tomcat-juli.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-7.0.68-tomcat-juli-adapters.jar"/>
 	<classpathentry kind="lib" path="framework/entity/lib/commons-dbcp2-2.1.jar"/>
 	<classpathentry kind="lib" path="framework/geronimo/lib/geronimo-transaction-3.1.1.jar"/>
 	<classpathentry kind="lib" path="framework/service/lib/wsdl4j-1.6.2.jar"/>
@@ -146,6 +146,7 @@
 	<classpathentry kind="src" path="specialpurpose/example/src"/>
 	<classpathentry kind="src" path="specialpurpose/demosuite/src"/>
 	<classpathentry kind="src" path="applications/solr/src"/>
+	<classpathentry kind="src" path="applications/shop/src"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="lib" path="applications/solr/lib/solr-solrj-5.5.0.jar"/>

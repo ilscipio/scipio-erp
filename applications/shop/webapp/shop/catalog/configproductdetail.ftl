@@ -260,7 +260,7 @@ function getConfigDetails(event) {
         <div>${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}</div>
       </#if>
 
-      <#-- show tell a friend details only in ecommerce application -->
+      <#-- show tell a friend details only in shop application -->
       <div>&nbsp;</div>
       <div>
         <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>

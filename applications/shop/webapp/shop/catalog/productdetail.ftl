@@ -311,7 +311,7 @@
 
         
 
-    <#-- CATO: show tell a friend details only in ecommerce application     
+    <#-- CATO: show tell a friend details only in shop application     
     <div id="product-tell-a-friend">
         <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
     </div>

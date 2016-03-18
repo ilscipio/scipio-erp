@@ -201,7 +201,8 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="warning" text="A Product Store has not been defined for this ecommerce site."/>
+                                <!-- Cato: now points to shop -->
+                                <label style="warning" text="A Product Store has not been defined for this shop."/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

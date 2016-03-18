@@ -18,7 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <!-- for forum data see the forumdata.xml file in the content component -->
 
     <!-- NOTE DEJ20060610 This is just a skeleton for the most part and does not have complete content -->
     <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Ecommerce Content Categories"/>

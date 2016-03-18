@@ -19,6 +19,8 @@ under the License.
 -->
 
 <entity-engine-xml>
+
+    <!-- Cato: Unneeded
     <Party partyId="BLOGUSER_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <Person partyId="BLOGUSER_ADMIN" lastName="Blog" firstName="Admin"/>
     <UserLogin userLoginId="blog_admin" partyId="BLOGUSER_ADMIN" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
@@ -50,9 +52,11 @@ under the License.
     <ContentRole partyId="AUTHOR_BIGAL" roleTypeId="CONTENT_AUTHOR" contentId="BLOGROOTBIGAL" fromDate="2004-03-27 09:37:40.989"/>
     <ContentPurpose contentId="BLOGROOTBIGAL" contentPurposeTypeId="ARTICLE"/>
     <UserLoginSecurityGroup userLoginId="bigal" groupId="CONTENT_USER"  fromDate="2004-09-15 00:00:00.000"/>
+    -->
     <!-- Updating BLOGROOTBIGAL with bigal as creator so that he will be found as "owner" for subrecords.
          This is used in a screen permission test.
          -->
+    <!-- Cato: Unneeded
     <Party partyId="BLOG_USERS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_EDITORS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_ADMINS" partyTypeId="PARTY_GROUP"/>
@@ -85,14 +89,16 @@ under the License.
     <ContentRole partyId="AUTHOR_MADMAX" roleTypeId="CONTENT_AUTHOR" contentId="BLOGROOTMADMAX" fromDate="2004-03-27 09:37:40.989"/>
     <ContentPurpose contentId="BLOGROOTMADMAX" contentPurposeTypeId="ARTICLE"/>
     <UserLoginSecurityGroup userLoginId="madmax" groupId="CONTENT_USER"  fromDate="2004-09-15 00:00:00.000"/>
+    -->
     <!-- Updating biBLOGROOTMADMAXgal with madmax as creator so that he will be found as "owner" for subrecords.
          This is used in a screen permission test.
          -->
+    <!-- Cato: Unneeded
     <Content contentId="BLOGROOTMADMAX"
      createdByUserLogin="madmax"
      lastModifiedByUserLogin="madmax"
      createdDate="2004-10-16 17:32:31.285"
      lastModifiedDate="2004-10-16 17:32:31.291"/>
-
+    -->
 
 </entity-engine-xml>

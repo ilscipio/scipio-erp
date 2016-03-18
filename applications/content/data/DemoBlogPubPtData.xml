@@ -20,6 +20,7 @@ under the License.
 
 <entity-engine-xml>
 
+<!-- Cato: Unneeded
 <Content contentId="BLOGROOTBIGAL"  contentTypeId="WEB_SITE_PUB_PT"
  ownerContentId="BLOGROOT"
  contentName="Big Al"
@@ -62,4 +63,5 @@ under the License.
  lastModifiedByUserLogin="admin"
  createdDate="2007-01-22 17:32:33.988"
  lastModifiedDate="2007-01-22 17:32:33.988"/>
+--> 
 </entity-engine-xml>

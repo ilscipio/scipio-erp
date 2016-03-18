@@ -17,8 +17,8 @@
     specific language governing permissions and limitations
     under the License.
 -->
-
-<project name="OFBiz Special Purpose Applications Build" default="build" basedir=".">
+<!-- Cato: don't include this; invalid: default="build" -->
+<project name="OFBiz Special Purpose Applications Build" basedir=".">
     <filelist id="specialpurpose-builds" dir="specialpurpose"
         files="
         assetmaint/build.xml,

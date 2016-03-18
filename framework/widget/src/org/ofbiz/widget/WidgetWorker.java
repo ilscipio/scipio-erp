@@ -78,7 +78,8 @@ public final class WidgetWorker {
                 externalWriter.append(localRequestName);
             }
         } else if ("inter-app".equals(targetType)) {
-            // Cato: This is INCOMPLETE; we want to make sure this goes through response.encodeURL
+            // Cato: We want to pass this through encodeURL and smart inter-webapp building logic.
+            // NOTE: The use of localWriter and externalWriter here is dodgy, but should work.
             /*
             String fullTarget = localRequestName;
             localWriter.append(fullTarget);
@@ -91,17 +92,20 @@ public final class WidgetWorker {
                 }
                 localWriter.append("externalLoginKey=");
                 localWriter.append(externalLoginKey);
-            }*/
+            }
+            */
+            Appendable tempWriter = new StringWriter(); // Cato: DON'T use localWriter
             String fullTarget = localRequestName;
+            tempWriter.append(fullTarget);
             String externalLoginKey = (String) request.getAttribute("externalLoginKey");
             if (UtilValidate.isNotEmpty(externalLoginKey)) {
-                if (fullTarget.indexOf('?') == -1) {
-                    fullTarget += "?";
+                if (fullTarget.indexOf('?') < 0) {
+                    tempWriter.append('?');
                 } else {
-                    fullTarget += "&amp;";
+                    tempWriter.append("&amp;");
                 }
-                fullTarget += "externalLoginKey=" + externalLoginKey;
-                
+                tempWriter.append("externalLoginKey=");
+                tempWriter.append(externalLoginKey);
             }
             if (request != null && response != null) {
                 // Cato: We want to make sure this goes through encodeURL, and we now also want to send this
@@ -109,10 +113,9 @@ public final class WidgetWorker {
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
                 ServletContext servletContext = request.getSession().getServletContext();
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                externalWriter.append(rh.makeLinkAuto(request, response, fullTarget, true, true, null, null, fullPath, secure, encode));
-            }
-            else {
-                localWriter.append(fullTarget);
+                externalWriter.append(rh.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
+            } else {
+                localWriter = tempWriter;
             }
         } else if ("content".equals(targetType)) {
             appendContentUrl(localWriter, localRequestName, request);
@@ -126,7 +129,9 @@ public final class WidgetWorker {
             String localUrl = localWriter.toString();
             externalWriter.append(localUrl);
             boolean needsAmp = true;
-            if (localUrl.indexOf('?') == -1) {
+            // Cato: This needs to check externalWriter, which already contains localWriter
+            //if (localUrl.indexOf('?') == -1) {
+            if (externalWriter.toString().indexOf('?') < 0) {
                 externalWriter.append('?');
                 needsAmp = false;
             }

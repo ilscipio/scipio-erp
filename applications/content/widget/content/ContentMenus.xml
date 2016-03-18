@@ -22,7 +22,7 @@ under the License.
     <menu name="ContentAppBar" title="${uiLabelMap.ContentContentManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- Cato: Not using the high level functionality -->
         <menu-item name="websites" title="${uiLabelMap.ContentWebSites}"><link target="FindWebSite"/></menu-item>
-        <!--<menu-item name="survey" title="${uiLabelMap.ContentSurvey}"><link target="FindSurvey"/></menu-item>-->
+        <menu-item name="survey" title="${uiLabelMap.ContentSurvey}"><link target="FindSurvey"/></menu-item>
         <!--<menu-item name="Forum" title="${uiLabelMap.ContentForum}"><link target="findForumGroups"/></menu-item>-->
         <!--<menu-item name="Blog" title="${uiLabelMap.ContentBlog}"><link target="blogMain"/></menu-item>-->
         <menu-item name="Content" title="${uiLabelMap.ContentContent}"><link target="findContent"/></menu-item>

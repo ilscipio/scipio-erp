@@ -22,7 +22,7 @@ if (context.request != null) {
     // Is a web request. Simply get visualThemeId from associated store for now.
     productStoreId = null;
     
-    // FIXME? not sure if should allow session check here... but this is what ecommerce does
+    // FIXME? not sure if should allow session check here... but this is what ecommerce did in stock
     // via org.ofbiz.product.store.ProductStoreWorker.getProductStore(ServletRequest)
     HttpSession session = context.request.getSession(false);
     if (session != null && session.getAttribute("productStoreId") != null) {

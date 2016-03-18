@@ -16,8 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign janrainEnabled = getPropertyValue("ecommerce.properties", "janrain.enabled")!"">
-<#assign appName = getPropertyValue("ecommerce.properties", "janrain.appName")!"">
+<#-- Cato: now points to shop -->
+<#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
+<#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
 <#if janrainEnabled == "Y">
 <@script>
 (function() {

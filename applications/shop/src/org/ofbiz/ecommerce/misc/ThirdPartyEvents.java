@@ -110,7 +110,8 @@ public class ThirdPartyEvents {
         java.net.URL ecommercePropertiesUrl = null;
 
         try {
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
+            // Cato: now points to shop
+            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
@@ -190,7 +191,8 @@ public class ThirdPartyEvents {
         java.net.URL ecommercePropertiesUrl = null;
 
         try {
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
+            // Cato: now points to shop
+            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/shop.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }

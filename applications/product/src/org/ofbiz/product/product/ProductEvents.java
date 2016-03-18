@@ -977,7 +977,8 @@ public class ProductEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String emailType = "PRDS_TELL_FRIEND";
-        String defaultScreenLocation = "component://ecommerce/widget/EmailProductScreens.xml#TellFriend";
+        // Cato: now points to shop
+        String defaultScreenLocation = "component://shop/widget/EmailProductScreens.xml#TellFriend";
 
         GenericValue productStore = ProductStoreWorker.getProductStore(request);
         if (productStore == null) {

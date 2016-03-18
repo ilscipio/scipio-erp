@@ -55,7 +55,8 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
         orderId = "testOrder1000";
         issuerId = "0151";
         orderDiscription = "Test Order Description";
-        merchantReturnURL = "http://localhost:8080/ecommerce";
+        // Cato: default now points to shop
+        merchantReturnURL = "http://localhost:8080/shop";
     }
     
     public void testDirectoryRequest() throws Exception{

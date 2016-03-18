@@ -171,8 +171,6 @@ under the License.
             <widgets>
                 <include-screen name="breadcrumbs"/>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>
-                <!--<platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productdetail.ftl"/></html></platform-specific>-->
-                <!-- Warning: this ftl file in the order component is slightly different from that of the ecommerce one (the edit product link is shown) -->
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/productdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -183,13 +181,11 @@ under the License.
                 <set field="productsummaryScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary"/>
                 <set field="inlineProductDetailScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#inlineProductDetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/ProductDetail.groovy"/>
-                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>-->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/PrepareConfigForm.groovy"/>
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>
-                <!--<platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/configproductdetail.ftl"/></html></platform-specific>-->
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/configproductdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>

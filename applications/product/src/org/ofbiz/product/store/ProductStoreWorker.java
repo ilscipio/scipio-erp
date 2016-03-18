@@ -703,25 +703,26 @@ public class ProductStoreWorker {
     protected static Map<String, String> defaultProductStoreEmailScreenLocation = FastMap.newInstance();
 
     static {
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://ecommerce/widget/EmailOrderScreens.xml#OrderConfirmNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderCompleteNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://ecommerce/widget/EmailOrderScreens.xml#BackorderNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://ecommerce/widget/EmailOrderScreens.xml#OrderChangeNotice");
+        // Cato: now points to shop
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://ecommerce/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnAccept");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnComplete");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://ecommerce/widget/EmailReturnScreens.xml#ReturnCancel");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
+        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://ecommerce/widget/EmailGiftCardScreens.xml#GiftCardReload");
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
 
         defaultProductStoreEmailScreenLocation.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
 
         defaultProductStoreEmailScreenLocation.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://ecommerce/widget/EmailProductScreens.xml#TellFriend");
+        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
 
         defaultProductStoreEmailScreenLocation.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
     }

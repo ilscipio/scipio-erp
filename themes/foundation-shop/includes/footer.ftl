@@ -16,6 +16,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<@row class="other-content">
+    <@cell columns=4>
+      <i class="${styles.icon} ${styles.icon_prefix}laptop"></i>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum maiores alias ea sunt facilis impedit fuga dignissimos illo quaerat iure in nobis id quos, eaque nostrum! Unde, voluptates suscipit repudiandae!</p>
+    </@cell>
+    <@cell columns=4>
+      <i class="${styles.icon} ${styles.icon_prefix}html5"></i>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit impedit consequuntur at! Amet sed itaque nostrum, distinctio eveniet odio, id ipsam fuga quam minima cumque nobis veniam voluptates deserunt!</p>
+    </@cell>
+    <@cell columns=2>
+      <@heading>Work With Us</@heading>
+      <ul class="other-links">
+        <li><a href="#">What We Do</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Events</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">FAQ's</a></li>
+      <ul>
+    </@cell>
+    <@cell columns=2>      
+    <@heading>Follow Us!</@heading>
+      <ul class="other-links">
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">Instagram</a></li>
+      <ul>
+    </@cell>
+</@row>
+
 
     <#-- close the off-canvas menu -->
     <a class="exit-off-canvas"></a>
@@ -28,19 +58,13 @@ under the License.
 
 <#-- FOOTER SECTION -->
 <footer id="footer">
-    <#--
-    <div class="row"> 
-        <div class="${styles.grid_small!}12 ${styles.grid_medium!}4 ${styles.grid_large!}4 ${styles.grid_cell!}">
-            <p></p>
-        </div>
-    </div>-->
-    <div class="row">
-        <div class="${styles.grid_small!}12 ${styles.grid_medium!}12 ${styles.grid_large!}12 ${styles.grid_cell!} ${styles.text_center!}">
+    <@row>
+        <@cell columns=12>
          <small>
          ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>. <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>
-        </div>
-    </div>
+        </@cell>
+    </@row>
 </footer> <#-- END FOOTER -->
 
   <@scripts output=true> <#-- ensure @script elems here will always output -->

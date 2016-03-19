@@ -183,7 +183,12 @@ under the License.
 </#if>
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
 <body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> page-auth">
-
+<div class="header" id="header">
+    <@row>
+    <@cell>
+    </@cell>
+    </@row>
+</div>
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
 

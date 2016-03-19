@@ -303,7 +303,7 @@
                 ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
             </#if>
         </div>
-         -->    <div class="shariff" ></div>
+         -->    <div class="shariff" data-lang="${locale[0..1]!"en"}"></div>
 
         </@cell>
     </@row>

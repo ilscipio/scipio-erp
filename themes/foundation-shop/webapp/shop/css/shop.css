@@ -8,16 +8,14 @@ body {
     max-width: 85em;
     margin-left: auto;
     margin-right: auto;
-    height:80px;
+    height:68px;
     padding-top:10px;
 }
 
-.top-bar li.name img{height:50px;}
-
-.top-bar-section ul {}
+.top-bar li.name img{height:44px;}
 
 .top-bar-selection ul li {color:#333;}
-.top-bar-section ul li > a {color:#333; font-size: 1em;}
+.top-bar-section ul li > a {color:#333; }
 
 .top-bar-section .has-form, .top-bar-section ul li,.top-bar-section li:not(.has-form) a:not(.button){
 	background:transparent;
@@ -132,6 +130,8 @@ body {
 .other-links li {
   margin-top: .5em;
 }
+
+.pricing-table .title {}
 
 /*Product Detail*/
 #product-price_old{color: #ccc;}

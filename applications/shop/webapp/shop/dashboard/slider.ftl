@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-    <@slider id="" class="" controls=true indicator=true>
+    <@slider id="" controls=true indicator=true>
         <@slide link="#" image="https://unsplash.it/1330/480?random=1">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
         <@slide link="#" image="https://unsplash.it/1330/480?random=2">According to coordinates, we have travelled 7,000 light years and are located near the system J-25.</@slide>
     </@slider>

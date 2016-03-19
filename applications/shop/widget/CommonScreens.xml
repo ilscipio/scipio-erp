@@ -63,6 +63,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
+                    <decorator-section-include name="pre-content"/>
                     <decorator-section name="content-full-screen">
                         <section>
                             <widgets>
@@ -180,6 +181,15 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-content" >
+                        <section>
+                            <widgets>
+                                <container style="${styles.grid_row} ${styles.grid_theme}" id="pre-content-section">
+                                    <decorator-section-include name="pre-content"/>
+                                </container>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <widgets>
@@ -190,7 +200,7 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section>
-                    <decorator-section name="body">
+                    <decorator-section name="body" >
                         <section>
                             <condition>
                                 <not><if-empty field="globalContext.productStore"/></not>
@@ -283,6 +293,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-content">
+                    </decorator-section>
                     <decorator-section name="body">
                         <include-screen name="CatoDashboardSlider"/>
                     </decorator-section>

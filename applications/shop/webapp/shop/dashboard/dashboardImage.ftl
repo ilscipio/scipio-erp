@@ -17,5 +17,5 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-   <@img src="https://unsplash.it/900/480?random=1" width="100%" height="480px" type="bgcover"/>
+   <@img src="https://unsplash.it/1400/480?random=1" width="100%" height="480px" type="bgcover"/>
 </@section>

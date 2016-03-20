@@ -339,14 +339,6 @@ under the License.
         </section>
     </screen>
 
-    <screen name="detailImage">
-        <section>
-            <widgets>
-               <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/detailImage.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="tellafriend">
         <section>
             <actions>

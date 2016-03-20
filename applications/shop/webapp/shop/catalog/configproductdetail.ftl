@@ -24,7 +24,6 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 <@script>
-    var detailImageUrl = null;
      function setAddProductId(name) {
         document.addform.add_product_id.value = name;
         if (document.addform.quantity == null) return;
@@ -53,26 +52,6 @@ ${virtualJavaScript!}
     }
     function verifyConfig() {
         document.configform.submit();
-    }
-
-    function popupDetail() {
-        var defaultDetailImage = "${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}";
-        if (defaultDetailImage == null || defaultDetailImage == "null" || defaultDetailImage == "") {
-            defaultDetailImage = "_NONE_";
-        }
-
-        if (detailImageUrl == null || detailImageUrl == "null") {
-            detailImageUrl = defaultDetailImage;
-        }
-
-        if (detailImageUrl == "_NONE_") {
-            hack = document.createElement('span');
-            hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
-            return;
-        }
-        detailImageUrl = detailImageUrl.replace(/\&\#47;/g, "/");
-        popUp("<@ofbizUrl>detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
     }
 
     function toggleAmt(toggle) {

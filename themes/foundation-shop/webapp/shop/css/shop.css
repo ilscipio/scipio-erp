@@ -89,6 +89,15 @@ body {
 	margin-top:10px;
 	max-width:85em;}
 
+#pre-content-section div:first-child {
+	margin-top:0px;
+}
+
+#pre-content-section .row:last-child{
+	margin-bottom:0px;
+	
+}
+
 .other-content{
   background-color: #008cba;
   max-width: 85em;
@@ -160,6 +169,16 @@ body {
       -ms-transform:     rotate(-45deg);
       -o-transform:      rotate(-45deg);
     }
+
+/*Slider*/
+
+  .slick-slide {
+    margin: 0 10px;
+  }
+
+  .slick-list {
+    margin: 0 -10px;
+  }
     
 /*FOOTER*/
 footer {

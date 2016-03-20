@@ -1031,7 +1031,7 @@ Since this is very foundation specific, this function may be dropped in future i
 Creates a chart wrapper.
 
 Libraries used:
-Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
+Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss) - deprecated
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
   * Usage Examples *  
@@ -1041,7 +1041,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     
   * Parameters *
     type                    = (pie|bar|line, default: pie)
-    library                 = (foundation|chart, default: foundation)
+    library                 = (foundation|chart, default: chart) Uses either chart.js or foundation. 
+                               "foundation" is deprecated and requires additional seed data in order to run. 
+                               Uncomment "PIZZA AMORE" in component://base-theme/data/BaseThemeData.xml to use
     title                   = ((string), default: -empty-) Data Title
     xlabel                  = X-axis label
     ylabel                  = Y-axis label
@@ -1054,14 +1056,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     @chartdata
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
+  "type":"pie", "library":"chart", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
 
-  <#global chartLibrary = library!"foundation"/>
+  <#global chartLibrary = library!"chart"/>
   <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
   <#local chartIdNum = chartIdNum + 1 />
   <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
@@ -1375,15 +1377,18 @@ Creates a slider wrapper.
                               Supports prefixes:
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    library                 = (|owl|slick, default: -empty-) Uses either Owl carousel, Slick or foundation orbit. 
+                               "owl" & "slick" require additional seed data in order to run. 
+                               Uncomment "Owl" in component://base-theme/data/BaseThemeData.xml in order to use
     controls                = ((boolean), default: true) Left / Right navigation
     indicator               = ((boolean), default: true) Bullet indicators
-    
+    jsOptions               = (String) Additional js argument, included on js initialization
     
   * Related *
     @slide
 -->
 <#assign chart_defaultArgs = {
-  "title":"", "id":"","class":"","controls":true,"indicator":true, "passArgs":{}
+  "title":"", "library":"","id":"","class":"","controls":true,"indicator":true, "jsOptions":"","passArgs":{}
 }>
 <#macro slider args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.slider_defaultArgs)>
@@ -1395,20 +1400,45 @@ Creates a slider wrapper.
   <#local dummy = setRequestVar("catoSliderIdNum", sliderIdNum)>
   <#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>
     
-  <@slider_markup sliderId=id!sliderId sliderIdNum=sliderIdNum class=class title=title controls=controls indicator=indicator
-        origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
+  <@slider_markup sliderId=id!sliderId sliderIdNum=sliderIdNum class=class title=title library=library controls=controls indicator=indicator
+        jsOptions=jsOptions origArgs=origArgs passArgs=passArgs><#nested></@slider_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" controls=true indicator=true origArgs={} passArgs={} catchArgs...>
+<#macro slider_markup title="" sliderId="" sliderIdNum=0 class="" library="" controls=true indicator=true 
+        jsOptions="" origArgs={} passArgs={} catchArgs...>
     <#if !sliderId?has_content><#local sliderId = "cato_slider_${sliderIdNum}"/></#if>
-    <#local dataOptions>
-        <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
-    </#local>
     <#if title?has_content><@heading>${title!}</@heading></#if>
-    <div class="${styles.slider_container!""}" data-orbit id="${sliderId!""}" <#if dataOptions?has_content>data-options="${dataOptions!""}"</#if>>
-      <#nested/>
-    </div>
+    <#switch library>
+        <#case "owl">    
+            <div class="owl-carousel" class="${class}" id="${sliderId}">
+                <#nested/>
+            </div>
+            <script type="text/javascript">
+            $(document).ready(function(){
+                  $("#${sliderId!""}").owlCarousel({${jsOptions}});
+                });
+            </script>
+          <#break>
+        <#case "slick">
+            <div class="${class}" id="${sliderId}">
+                <#nested/>
+            </div>
+            <script type="text/javascript">
+            $(document).ready(function(){
+                  $("#${sliderId}").slick({${jsOptions}});
+                });
+            </script>
+          <#break>
+        <#default>
+            <#local dataOptions>
+                <#t>navigation_arrows:${controls?string("true","false")!"true"}; bullets:${indicator?string("true","false")!"true"};slide_number:false;
+            </#local>
+            
+            <div class="${class!""} ${styles.slider_container!""}" data-orbit id="${sliderId!""}" <#if dataOptions?has_content>data-options="${dataOptions!""}"</#if>>
+              <#nested/>
+            </div>
+    </#switch>
 </#macro>
 
 <#-- 
@@ -1428,6 +1458,8 @@ Slider data entry - a single slide.
                               Supports prefixes:
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    library                 = (|owl|slick, default: -empty-) Uses either Owl carousel, Slick or foundation orbit. 
+                               "owl" & "slick" require additional seed data in order to run. 
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
@@ -1438,7 +1470,7 @@ Slider data entry - a single slide.
     @slider
 -->
 <#assign slide_defaultArgs = {
-  "title":"", "class":"", "link":"", "linkTarget":false, "image":"", "passArgs":{}
+  "title":"", "class":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}
 }>
 <#macro slide args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.slide_defaultArgs)>
@@ -1452,27 +1484,42 @@ Slider data entry - a single slide.
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
 
-  <@slide_markup class=class image=image link=link linkTarget=linkTarget title=title origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
+  <@slide_markup class=class library=library image=image link=link linkTarget=linkTarget title=title origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
 <#-- @slide main markup - theme override -->
-<#macro slide_markup class="" image="" link="" linkTarget="" title="" origArgs={} passArgs={} catchArgs...>
+<#macro slide_markup class="" library="" image="" link="" linkTarget="" title="" origArgs={} passArgs={} catchArgs...>
     <#local slideIdNum = getRequestVar("catoSlideIdNum")!0>
     <#local slideIdNum = slideIdNum + 1 />
     <#local dummy = setRequestVar("catoSlideIdNum", slideIdNum)>
     <#local slideId = "slide_${renderSeqNumber!}_${slideIdNum!}"/>
-    <div data-orbit-slide="${slideId!}" class="${styles.slide_container!}">
-        <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
-        <div>
-        <#if title?has_content><h2>${title!}</h2></#if>
-        <#if image?has_content>
-        <img src="${image!}"/>
-        </#if>
-              <#local nestedContent><#nested></#local>
-              <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+    <#if library=="owl" || library=="slick">
+        <div id="${slideId!}" class="item">
+            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <div>
+            <#if title?has_content><h2>${title!}</h2></#if>
+            <#if image?has_content>
+            <img src="${image!}"/>
+            </#if>
+                  <#local nestedContent><#nested></#local>
+                  <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+            </div>
+            <#if link?has_content></a></#if>
         </div>
-        <#if link?has_content></a></#if>
-    </div>
+    <#else>
+        <div data-orbit-slide="${slideId!}" class="${styles.slide_container!}">
+            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <div>
+            <#if title?has_content><h2>${title!}</h2></#if>
+            <#if image?has_content>
+            <img src="${image!}"/>
+            </#if>
+                  <#local nestedContent><#nested></#local>
+                  <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
+            </div>
+            <#if link?has_content></a></#if>
+        </div>
+    </#if>
 </#macro>
 
 
@@ -1492,7 +1539,9 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                               Supports prefixes:
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    type                    = ((String) none|fill|cover|contain|scale-down, default: cover) css3 object-fit
+    type                    = ((String) none|fill|cover|contain|scale-down|bg-cover, default: cover) 
+                              * fill|cover|contain|scale-down = css3 object-fit
+                              * bgcover = css background cover
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
@@ -1520,10 +1569,31 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${width};</#if><#if height?has_content>height: ${height};</#if></#local>
-    <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
-    <div class="cato-image-container ${class}" style="${imgContainer}" catoFit="${type}">
-        <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
-            <img src="${src}" class="cato-image" style="${imgStyle}"/>
-        <#if link?has_content></a></#if>
-    </div>
+    <#switch type>
+        <#case "bgcover">
+            <#local imgStyle>
+                background:url('${src}') no-repeat center center fixed;        
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+                margin-bottom:0px;
+                display:block;
+                ${imgContainer}
+            </#local>
+            <div class="cato-image-container ${class}">
+                <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+                    <div style="${imgStyle}" class="cato-image"></div>
+                <#if link?has_content></a></#if>
+            </div>
+          <#break>
+        <#default>
+            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
+            <div class="cato-image-container ${class}" style="${imgContainer}" catoFit="${type}">
+                <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+                    <img src="${src}" class="cato-image" style="${imgStyle}"/>
+                <#if link?has_content></a></#if>
+            </div>
+    </#switch>
+    
 </#macro>

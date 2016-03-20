@@ -63,7 +63,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                    <decorator-section-include name="pre-content"/>
+                    <decorator-section name="pre-content">
+                        <decorator-section-include name="pre-content"/>
+                    </decorator-section>                
                     <decorator-section name="content-full-screen">
                         <section>
                             <widgets>
@@ -294,9 +296,34 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-content">
+                        <include-screen name="CatoDashboardImage"/>
                     </decorator-section>
                     <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <set field="category_id" value="100"/>
+                                <set field="VIEW_SIZE" value="12"/>
+                                <set field="VIEW_INDEX" value="1"/>
+                                <set field="VIEW_CLUSTER" value="4"/>
+                                <set field="VIEW_SCROLL_CLUSTER" value="4"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="CatoDashboardProductSlider"/>
+                            </widgets>
+                        </section>
                         <include-screen name="CatoDashboardSlider"/>
+                        <section>
+                            <actions>
+                                <set field="category_id" value="200"/>
+                                <set field="VIEW_SIZE" value="6"/>
+                                <set field="VIEW_INDEX" value="1"/>
+                                <set field="VIEW_CLUSTER" value="5"/>
+                                <set field="VIEW_SCROLL_CLUSTER" value="1"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="CatoDashboardMiniProductSlider"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -355,6 +382,17 @@ under the License.
     </screen>
     
     <!-- CATO: Widget implementation -->
+    <screen name="CatoDashboardImage">
+        <section>
+             <widgets>
+               <screenlet>
+                   <platform-specific>
+                        <html><html-template location="component://shop/webapp/shop/dashboard/dashboardImage.ftl"/></html>
+                    </platform-specific>
+               </screenlet>     
+           </widgets>
+        </section>
+    </screen>
     <screen name="CatoDashboardSlider">
         <section>
              <widgets>
@@ -363,6 +401,56 @@ under the License.
                         <html><html-template location="component://shop/webapp/shop/dashboard/slider.ftl"/></html>
                     </platform-specific>
                </screenlet>     
+           </widgets>
+        </section>
+    </screen>
+    <screen name="CatoDashboardProductSlider">
+        <section>
+            <actions>
+                <set field="parameters.category_id" from-field="category_id" default-value="100" global="true" type="String" /><!-- ProductCategoryId -->
+                <set field="parameters.VIEW_SIZE" from-field="VIEW_SIZE" default-value="12" global="true"/><!-- Number of products -->
+                <set field="parameters.VIEW_INDEX" from-field="VIEW_INDEX" default-value="1" global="true"/><!-- page of result-set -->
+                <set field="parameters.VIEW_CLUSTER" from-field="VIEW_CLUSTER" default-value="4" global="true"/><!-- items per row -->
+                <set field="parameters.VIEW_SCROLL_CLUSTER" from-field="VIEW_SCROLL_CLUSTER" default-value="4" global="true"/><!-- items to slide -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/CategoryDetail.groovy"/>
+            </actions>
+             <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                           <platform-specific>
+                                <html><html-template location="component://shop/webapp/shop/dashboard/productSlider.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>  
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    <screen name="CatoDashboardMiniProductSlider">
+        <section>
+            <actions>
+                <set field="parameters.category_id" from-field="category_id" default-value="100" global="true" type="String" /><!-- ProductCategoryId -->
+                <set field="parameters.VIEW_SIZE" from-field="VIEW_SIZE" default-value="12" global="true"/><!-- Number of products -->
+                <set field="parameters.VIEW_INDEX" from-field="VIEW_INDEX" default-value="1" global="true"/><!-- page of result-set -->
+                <set field="parameters.VIEW_CLUSTER" from-field="VIEW_CLUSTER" default-value="4" global="true"/><!-- items per row -->
+                <set field="parameters.VIEW_SCROLL_CLUSTER" from-field="VIEW_SCROLL_CLUSTER" default-value="4" global="true"/><!-- items to slide -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#miniproductsummary"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/CategoryDetail.groovy"/>
+            </actions>
+             <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                           <platform-specific>
+                                <html><html-template location="component://shop/webapp/shop/dashboard/productSlider.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>  
+                   </widgets>
+                </section>
            </widgets>
         </section>
     </screen>

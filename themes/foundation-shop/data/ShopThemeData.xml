@@ -70,4 +70,10 @@ under the License.
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="16"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/foundation-shop-theme/js/shariff/shariff.complete.js" sequenceId="17"/> <!-- Heise Shariff: Social Media Icons, includes font-awesome -->
+
+
+    <!-- ADD-ONS -->
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick.css" sequenceId="63"/> 
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick-theme.css" sequenceId="64"/> 
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/base-theme/bower_components/slick-carousel/slick/slick.js" sequenceId="65"/> 
 </entity-engine-xml>

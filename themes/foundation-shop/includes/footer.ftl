@@ -17,15 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@row class="other-content">
-    <@cell columns=4>
+    <@cell columns=3>
       <i class="${styles.icon} ${styles.icon_prefix}laptop"></i>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum maiores alias ea sunt facilis impedit fuga dignissimos illo quaerat iure in nobis id quos, eaque nostrum! Unde, voluptates suscipit repudiandae!</p>
     </@cell>
-    <@cell columns=4>
+    <@cell columns=3>
       <i class="${styles.icon} ${styles.icon_prefix}html5"></i>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit impedit consequuntur at! Amet sed itaque nostrum, distinctio eveniet odio, id ipsam fuga quam minima cumque nobis veniam voluptates deserunt!</p>
     </@cell>
-    <@cell columns=2>
+    <@cell columns=3>
       <@heading>Work With Us</@heading>
       <ul class="other-links">
         <li><a href="#">What We Do</a></li>
@@ -35,7 +35,7 @@ under the License.
         <li><a href="#">FAQ's</a></li>
       <ul>
     </@cell>
-    <@cell columns=2>      
+    <@cell columns=3>      
     <@heading>Follow Us!</@heading>
       <ul class="other-links">
         <li><a href="#">GitHub</a></li>

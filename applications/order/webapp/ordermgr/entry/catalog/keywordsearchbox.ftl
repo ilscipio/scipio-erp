@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+<form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl secure=true>keywordsearch</@ofbizUrl>">
       <@row collapse=true>
             <@cell columns=9>
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) collapse=true/>

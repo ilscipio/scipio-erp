@@ -19,6 +19,7 @@ catalogName = CatalogWorker.getCatalogName(request);
 productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
 context.productCategoryId = productCategoryId;
 
+
 /* NOTE DEJ20070220: this is a weird way to do this and caused unacceptable side effects as described in the related
  * comment in the Main.groovy file
  *

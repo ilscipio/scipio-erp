@@ -94,8 +94,8 @@ under the License.
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="catalogs"/>
-                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -125,8 +125,8 @@ under the License.
                                 </or>
                             </condition>
                             <actions>
-                                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                                <!-- <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/> -->
                             </actions>
                             <widgets>
                                 <section>
@@ -135,7 +135,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <label style="heading">${uiLabelMap.PageTitleEditProductCatalog} [${prodCatalogId}]</label>
+                                        <!-- <label style="heading">${uiLabelMap.PageTitleEditProductCatalog} [${prodCatalogId}]</label> -->
                                     </widgets>
                                     <fail-widgets>
                                         <section>

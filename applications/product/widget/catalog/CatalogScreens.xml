@@ -53,10 +53,11 @@ under the License.
     <screen name="EditProdCatalog">
         <section>
             <actions>
-                <set field="titleProperty" value="ProductCatalog"/>
                 <set field="activeSubMenuItem" value="ProductCatalog"/>
-                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>                
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>                
+                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" default-value="${uiLabelMap.ProductCatalog} &lt;${prodCatalogId}&gt;"/>         
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">

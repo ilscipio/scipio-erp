@@ -67,7 +67,7 @@ under the License.
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, topCategoryId, item.catId)>
                 <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=topCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: Side deep category " + item.catId + " not child of top category " + (topCategoryId!""), "sidedeepcategoryftl")>
+                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + " not child of top category " + (topCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
             </#if>
           </#list>

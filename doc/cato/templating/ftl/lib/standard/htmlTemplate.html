@@ -66,26 +66,20 @@ pre {
 
         <div class="lib-pagedesc">
         <p>
-A set of HTML templating macros, part of standard Cato Freemarker API.
+A set of HTML templating macros, part of standard Cato Freemarker API - master include.
 Automatically included at all times, unless overridden by properties or themes.
 Intended to be swappable.
-Includes all other default Cato macros.        </p>
+Includes all other default Cato standard markup macros.        </p>
+        <p>
+Alongside this master include exists a global variables and styles definition file,
+<code>htmlVariables.ftl</code>, which defines global styles used by most macros and utilities
+(currently has no HTML documentation - mostly relevant to theme writers - see source).        </p>
           <div class="lib-text-note">
             <strong>NOTES: </strong>
   <ul>
       <li>
         <span>
 Currently targeted toward Foundation CSS.        </span>
-      </li>
-      <li>
-        <span>
-Macros expect to be called using named arguments, except where otherwise noted.        </span>
-      </li>
-      <li>
-        <span>
-Functions in Freemarker only support positional arguments, but some Cato functions support
-an &quot;args&quot; argument as a map, which emulates named arguments. This is also done
-as part of the advanced args interface (documented below).        </span>
       </li>
   </ul>
           </div>
@@ -96,46 +90,25 @@ as part of the advanced args interface (documented below).        </span>
         <span>
 Macros should almost never use &quot;request&quot; object directly - use setRequestVar/getRequestVar/other.        </span>
       </li>
-      <li>
-        <span>
-Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
-and line endings. Must be spaces-only and LF-only line endings.
-        </span>
-        <div>  <ul>
-      <li>
-        <span>
-In parser, bullets will create HTML lists, text encloding in two bullets (* *) will create
-a heading, notes with uppercase label and &quot;?:&quot; or &quot;:&quot; prefix will be highlighted (support multi-
-line by indenting the next line), and indents alone will create preformatted text (usually code).        </span>
-      </li>
-      <li>
-        <span>
-Small code bits may be surrounded by three curly brackets (like Trac tickets) to delineate code, <code>like this</code>.
-Indents may be enough for other cases (but indents don&#39;t identify as code in HTML). The three curly brackets will also prevent auto-linking.        </span>
-      </li>
-      <li>
-        <span>
-To prevent auto-linking or other textual formatting (but not structural formatting), wrap in three parenthesis, like this.        </span>
-      </li>
-      <li>
-        <span>
-Supports limited <strong>bold</strong>, <em>italic</em>, <u>underline</u> in paragraphs (but not labels)        </span>
-      </li>
-  </ul>
-</div>
-      </li>
   </ul>
           </div>
-        <h4>MACRO INTERFACES</h4>
+        <h4>Macro Interfaces</h4>
         <p>
-Cato standard macros have versatile interfaces.        </p>
+Cato standard macros have versatile interfaces. There are template-facing macros (most of which support
+an advanced arguments interface) and a separate set of delegated macros for theme implementation (markup macros).        </p>
         <p>
-General remarks:
+<strong>General remarks:</strong>
         </p>
         <div>  <ul>
       <li>
         <span>
 All macros expect to be invoked using named parameters only (always <code>&lt;@row class=&quot;my-class&quot;&gt;</code>, never <code>&lt;@row &quot;my-class&quot;&gt;</code>)        </span>
+      </li>
+      <li>
+        <span>
+Functions in Freemarker only support positional arguments, but some Cato functions support
+an &quot;args&quot; argument as a map, which emulates named arguments. This is also done
+as part of the advanced args interface (documented below).        </span>
       </li>
       <li>
         <span>
@@ -151,7 +124,7 @@ Use of these in templates is discouraged but occasionally forcefully needed.    
       </li>
       <li>
         <span>
-These patterns are often workarounds for limitations in the FTL language.        </span>
+Patterns described here are often workarounds for limitations in the FTL language.        </span>
       </li>
       <li>
         <span>
@@ -163,7 +136,7 @@ it&#39;s better for themes to use simple markup overrides instead, which do not 
   </ul>
 </div>
         <p>
-Template-facing macros (and advanced args pattern):
+<strong>Template-facing macros (advanced args pattern):</strong>
         </p>
         <div>  <ul>
       <li>
@@ -235,7 +208,7 @@ always add new members to it instead. e.g.          </div>
   </ul>
 </div>
         <p>
-Markup macros (theme overrides):
+<strong>Markup macros (theme overrides):</strong>
         </p>
         <div>  <ul>
       <li>

@@ -480,9 +480,9 @@
         * action_scope_session (link_run_session): Affects logical user session only; sometimes may affect system state, but should not be a primary effect (e.g. user login, shopping cart update)
         * action_scope_local (link_run_local): Affects local page only (mostly for javascript actions in forms, UI element visibility toggles that affect only current page, etc.)
       * LONG TEXT LINKS: Every text link style has a _long version (link_xxx_long, link_long), which should be used when the text content is very long (definition of long depends on context).
-      * EXTERNAL LINKS: For external links and actions (https://www.google.com), simply use the above categories, and add this extra style:
+      * EXTERNAL LINKS: For external links and actions ({{{https://www.ilscipio.com}}}), simply use the above categories, and add this extra style:
         * action_external: Marks external links and foreign system contact
-          * e.g.: <a href="https://www.google.com" class="${styles.link_nav!} ${styles.action_external!}">Google</a>
+          * e.g.: {{{<a href="https://www.ilscipio.com" class="${styles.link_nav!} ${styles.action_external!}">Ilscipio</a>}}}
 
     OTHER TYPES:
       * NON-TEXT LINKS, MENU ITEMS, CUSTOM LINKS AND OTHER ELEMENTS: Image and other non-text links as well as non-link elements that trigger actions or identify with an action even without causing one (such as menu item <li> elements or any other UI element),
@@ -561,7 +561,7 @@
     "link_nav_info_number" :        "link-type-text action-nav action-secondary",                                                   <#-- the number of a record (index, sequence num, etc.) -->
     "link_nav_info_value" :         "link-type-text action-nav action-secondary",                                                   <#-- link containing a value of type not previously listed (or cannot be known statically) -->
     "link_nav_info_value_long" :    "link-type-text action-nav action-secondary link-long",                                         <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
-    "link_nav_info_uri" :           "link-type-text action-nav action-secondary",                                                   <#-- link containing a URL, path or other location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
+    "link_nav_info_uri" :           "link-type-text action-nav action-secondary",                                                   <#-- link containing a URL, path or other location as its text ({{{<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>}}}); may be IP, hostname, etc. -->
     "link_nav_info_text" :          "link-type-text action-nav action-secondary",                                                   <#-- link containing any kind of free-form text -->
     
   <#-- Colors -->

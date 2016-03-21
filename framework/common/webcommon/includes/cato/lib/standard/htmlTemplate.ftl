@@ -2,20 +2,27 @@
 * 
 * Master HTML template include, standard Cato markup
 *
-* A set of HTML templating macros, part of standard Cato Freemarker API.
+* A set of HTML templating macros, part of standard Cato Freemarker API - master include.
 * Automatically included at all times, unless overridden by properties or themes.
 * Intended to be swappable.
-* Includes all other default Cato macros.
+* Includes all other default Cato standard markup macros.
+*
+* Alongside this master include exists a global variables and styles definition file,
+* {{{htmlVariables.ftl}}}, which defines global styles used by most macros and utilities
+* (currently has no HTML documentation - mostly relevant to theme writers - see source).
 *
 * NOTES:
 * * Currently targeted toward Foundation CSS.
-* * Macros expect to be called using named arguments, except where otherwise noted.
-* * Functions in Freemarker only support positional arguments, but some Cato functions support
-*   an "args" argument as a map, which emulates named arguments. This is also done
-*   as part of the advanced args interface (documented below).
 *
 * IMPLEMENTATION NOTES: 
 * * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
+*
+* DEV NOTES: 
+* * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
+*   Even though it would be convenient, we can't allow a "attribStr" arg because no way
+*   for macro to get attribs out of it if it needs them.
+*   FIXME: Not all macros currently properly check attribMap for duplicate attribs
+*       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
 * * Documentation formatting is sensitive to whitespace, presence and number of asterisks (*),
 *   and line endings. Must be spaces-only and LF-only line endings.
 *   * In parser, bullets will create HTML lists, text encloding in two bullets (* *) will create
@@ -25,21 +32,22 @@
 *     Indents may be enough for other cases (but indents don't identify as code in HTML). The three curly brackets will also prevent auto-linking.
 *   * To prevent auto-linking or other textual formatting (but not structural formatting), wrap in three parenthesis, (((like this))).
 *   * Supports limited '''bold''', ''italic'', __underline__ in paragraphs (but not labels)
+*   * Make links using three greater-than/less-than signs: >>>utilities.ftl<<<
+*     Relative links are assumed to be from the root doc folder, NOT the current file, unless
+*     it is prefixed with "./" or "../" in which case it is assumed relative to current file: >>>../utilities.ftl<<<,  >>>./htmlContent.ftl<<<
+*     Text starting with http or https protocol are automatically linked.
+*     .ftl is changed to .html.
 *
-* DEV NOTES: 
-* * Some macros use attribs and inlineAttribs args to specify extra HTML attribs.
-*   Even though it would be convenient, we can't allow a "attribString" arg because no way
-*   for macro to get attribs out of it if it needs them.
-*   FIXME: Not all macros currently properly check attribMap for duplicate attribs
-*       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
-*
-*
-* * MACRO INTERFACES *
+* * Macro Interfaces *
 * 
-* Cato standard macros have versatile interfaces. 
+* Cato standard macros have versatile interfaces. There are template-facing macros (most of which support
+* an advanced arguments interface) and a separate set of delegated macros for theme implementation (markup macros).
 *
-* General remarks:
+* '''General remarks:'''
 * * All macros expect to be invoked using named parameters only (always {{{<@row class="my-class">}}}, never {{{<@row "my-class">}}})
+* * Functions in Freemarker only support positional arguments, but some Cato functions support
+*   an "args" argument as a map, which emulates named arguments. This is also done
+*   as part of the advanced args interface (documented below).
 * * Many macros have advanced, low-level open/close controls for esoteric structure control where the macro 
 *   markup open and close tags and logic needs to be split or skipped. Generally their defaults are true; must specify
 *     <@macroname open=true close=false /> 
@@ -47,13 +55,13 @@
 *     <@macroname close=true open=false /> 
 *   for close-only.
 *   Use of these in templates is discouraged but occasionally forcefully needed.
-* * These patterns are often workarounds for limitations in the FTL language.
+* * Patterns described here are often workarounds for limitations in the FTL language.
 * * The advanced args pattern described below is primarily designed to be simple to use from templates, almost
 *   indistinguishable from regular macro calls, but more powerful.
 *   It also provides more power for theme overrides; however, theme overrides must be careful in their use of it;
 *   it's better for themes to use simple markup overrides instead, which do not use the advanced pattern.
 *
-* Template-facing macros (and advanced args pattern): 
+* '''Template-facing macros (advanced args pattern):'''
 * * These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden directly by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: 
@@ -90,7 +98,7 @@
 *         always add new members to it instead. e.g. 
 *       <@somemacro passArgs=(passArgs + {"myParam":"myValue")>
 *
-* Markup macros (theme overrides): 
+* '''Markup macros (theme overrides):'''
 * * These macros such as @row_markup, @heading_markup, etc. containing
 *   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
 *   This is the simplest and preferred way to provide alternate markup.

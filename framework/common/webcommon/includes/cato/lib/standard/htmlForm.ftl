@@ -31,7 +31,7 @@ Defines a form. Analogous to <form> HTML element.
                               DEV NOTE: "display" is special for time being, probably rare or unused;
                                   maybe it should cause to omit <form> element
     class                   = ((css-class)) CSS classes on form element itself
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     attribs                 = ((map)) Extra attributes for HTML <form> element 
@@ -173,16 +173,16 @@ to a form submit.
                               If omitted, no progress bar per se will be created, but script will still be generated for progressOptions.progTextBoxId.
     type                    = (alert|success|info, default: info)
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) Classes added only on container
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     showValue               = Display value inside bar
     wrapClass               = ((css-class)) Classes added on outer wrapper only
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     progressArgs            = ((map)) If present, attaches progress bar to an upload form with javascript-based progress
@@ -334,12 +334,12 @@ A visible fieldset, including the HTML element.
                     
   * Parameters *
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) CSS classes for wrapper 
                               Includes width in columns, or append only with "+".
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     id                      = Fieldset ID
@@ -812,11 +812,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               It is strongly encouraged to leave this alone in most cases. In Cato standard markup,
                               the default is usually true unless prevented by other settings.
     class                   = ((css-class)) CSS classes for the field element (NOT the cell container!)
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     containerClass          = ((css-class)) CSS classes, optional class for outer container 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     maxlength               = ((int)) Max allowed length 

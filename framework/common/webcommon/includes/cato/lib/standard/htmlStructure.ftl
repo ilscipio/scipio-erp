@@ -24,7 +24,7 @@ to this one.
                     
   * Parameters *
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: This type of element is expected to have no default classes. 
@@ -75,14 +75,14 @@ to this one.
 ************
 Creates a grid row.
 
-  * Usage examples *  
+  * Usage Examples *  
     <@row attr="" >
         <@cell attr=""/>
     </@row>              
                     
   * Parameters *
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     alt                     = ((boolean), default: false) If true alternate row (odd), if false regular (even)
@@ -139,7 +139,7 @@ Creates a grid row.
 ************
 Creates a grid cell.
 
-  * Usage examples * 
+  * Usage Examples * 
     <@row attr="" >
         <@cell attr="">
             cell content goes in here!
@@ -166,7 +166,7 @@ Creates a grid cell.
                     
   * Parameters *
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     columns                 = ((int), default: 12) Expected number of columns to be rendered 
@@ -362,7 +362,7 @@ Since this is very foundation specific, this function may be dropped in future i
                     
   * Parameters *
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     columns                 = ((int), default: 5) Number of columns
@@ -479,7 +479,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     titleBgColor            = (none|0|1|2|3|4|5|6|7|..., default: -from global styles-, fallback default: 0)
                               * {{{none}}}: Prevents color class.
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     link                    = Link URL around nested content
@@ -680,7 +680,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   * Parameters *
     type                    = (generic, default: generic)
     class                   = ((css-class)) CSS classes, on outer columns element (affects title)
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: boolean false has no effect here
@@ -713,7 +713,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               This is a low-level control; avoid where possible.
     menuRole                = (nav-menu|paginate-menu, default: nav-menu)
     menuClass               = ((css-class)) (optional) CSS classes, extra menu classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               This is a low-level control; avoid where possible.

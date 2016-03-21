@@ -34,7 +34,7 @@ Since this is very foundation specific, this function may be dropped in future i
   * Parameters *
     type                    = (inline|magellan|breadcrumbs, default: inline)
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)   
 -->
@@ -161,7 +161,7 @@ The submenu's main class may be set as altnested in global styles.
                               * {{{generic}}}: any content, but specific type should be preferred.
     inlineItems             = ((boolean), default: false) If true, generate only items, not menu container
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
                               defaults are based on:
@@ -408,7 +408,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     type                    = (generic|link|text|submit, default: generic) Menu item (content) type
                               * {{{generic}}}: any generic content, but specific types should be preferred.
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu item
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
                               NOTE: for this macro, the inline "class" args is now logically combined with the "class"
@@ -417,7 +417,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     style                   = Legacy menu item style (for <li> element)
     attribs                 = ((map)) Extra menu item attributes (for <li> element)
     contentClass            = ((css-class)) CSS classes, for menu item content element (<a>, <span> or <input> element)
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly) 
                               NOTE: for this macro, the inline "contentClass" args is now logically combined with the "contentClass"
@@ -686,7 +686,7 @@ functionality.
                               For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url                      = Base Url to be used for pagination
    class                    = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
    listSize                 = Size of the list in total

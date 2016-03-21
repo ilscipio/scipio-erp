@@ -326,7 +326,7 @@ public abstract class TemplateHelper {
             Map<String, Object> info = FtlDocFileParser.makeObjectMap(modelMap);
             // Save group values (by index)
             for(int i = 0; i < groupKeyNames.length ; i++) {
-                if (groupKeyNames[i] != null && !groupKeyNames[i].isEmpty()) {
+                if (i < groupKeyNames.length && groupKeyNames[i] != null && !groupKeyNames[i].isEmpty()) {
                     info.put(groupKeyNames[i], m.group(i));
                 }
             }

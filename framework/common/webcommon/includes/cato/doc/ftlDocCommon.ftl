@@ -12,7 +12,7 @@
   <#if !targetLibDocPath?ends_with(".html")>
     <#local targetLibDocPath = targetLibDocPath + ".html">
   </#if>
-  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libDocPath)!""><#t>
+  <#local relLibDocPath = tmplHelper.getTargetRelLibDocPath(targetLibDocPath, libInfo.libDocPath)!""><#t>
   <#if targetName?has_content>
     <#return relLibDocPath + "#" + targetName>
   <#else>
@@ -101,24 +101,26 @@
 
 <#-- interprets {{{, ((( and auto-highlighted entry references -->
 <#macro interpretedText text autoEntryRefs=true escape=true>
-  <#list tmplHelper.splitByTextualElems(text, entryMap, libMap) as entry>
+  <#list tmplHelper.splitByTextualElems(text, entryMap, libMap, libInfo) as entry>
     <#if entry?is_hash>
       <#if entry.type == "entryref">
         <#-- NOTE: prevent duplicate refs via global record -->
         <#if autoEntryRefs && ((preventDuplicateEntryRefs!false) == false || !(currentRecordedEntryRefs!{})[entry.name]??)>
-          <@entryRef_markup entry=entry />
+          <@entryRef_markup entry=entry /><#t>
           <#-- Record the entry ref in global hashes for some custom stuff (NOTE: slow) -->
           <#global allRecordedEntryRefs = (allRecordedEntryRefs!{}) + {entry.name : "true"}>
           <#global currentRecordedEntryRefs = (currentRecordedEntryRefs!{}) + {entry.name : "true"}>
         <#else>
           <@decoratedText text=entry.origText escape=escape /><#t>
         </#if>
+      <#elseif entry.type == "link">
+        <a href="${entry.value}">${escapeText(entry.text, escape)}</a><#t>
       <#elseif entry.type == "text-raw">
         ${escapeText(entry.value, escape)}<#t>
       <#elseif entry.type == "text-code">
         <code>${escapeText(entry.value, escape)}</code><#t>
       <#else>
-        <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED TEXTUAL ELEM ENTRY TYPE</strong>
+        <strong style="font-color:red;">TEMPLATING ERROR: UNRECOGNIZED TEXTUAL ELEM ENTRY TYPE</strong><#t>
       </#if>
     <#else>
       <#-- it's just text, OR an entry that didn't resolve -->

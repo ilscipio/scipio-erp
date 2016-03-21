@@ -26,7 +26,7 @@ Creates a modal UI element.
     icon                    = Generates icon inside the link 
                               NOTE: Has to be the full set of classes, e.g. "fa fa-fw fa-info"
     class                   = ((css-class)) CSS classes or additional classes for anchor
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
 -->
@@ -67,7 +67,7 @@ NOTE: Should avoid using this for regular, common inlined message results such a
   * Parameters *
     type                    = (info|success|warning|secondary|alert|error), default info
     class                   = ((css-class)) CSS classes or additional classes for nested container
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
@@ -185,7 +185,7 @@ translates to:
                               * {{{error-security}}}: security error
     id                      = ID
     class                   = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
     text                    = ((string)) Text

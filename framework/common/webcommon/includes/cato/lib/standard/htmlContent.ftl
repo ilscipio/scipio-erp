@@ -27,7 +27,7 @@ An HTML heading (title).
                               NOTE: Does not consume a level.
     relLevel                = ((int), default: 0) Determines heading level by adding this number to current global heading level
     class                   = ((css-class)) Heading element CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     levelClassPrefix        = (default: "heading-level-") Prefix for level number class
@@ -38,7 +38,7 @@ An HTML heading (title).
                               DEV NOTE: default could be made to depend on calculated level.
     containerElemType       = (div|, default: -empty-) If present, adds container around title or this elem type
     containerClass          = ((css-class)) Container element CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)      
     containerId             = Container ID  
@@ -143,7 +143,7 @@ Creates a basic wrapper for code blocks.
   * Parameters *
     type                    = (html|java|css|javascript|log, default:html)
     class                   = ((css-class)) Heading element CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
@@ -318,7 +318,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                                 TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
                               NOTE: These types are mainly targeted for backend applications.
     class                   = ((css-class), default: -from global styles-) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               Defaults are looked up in global styles using:
@@ -734,7 +734,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                                 such as: spacer rows ({{{<@tr type="util"><@td colspan=3><hr /></@td></@tr>}}})
                                 TODO: this isn't handled yet but SHOULD be used in templates anyhow.
     class                   = ((css-class)) CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     id                      = Row ID
@@ -862,7 +862,7 @@ Defines a table header cell. Analogous to <th> HTML element.
                     
   * Parameters *
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     id                      = Cell ID
@@ -926,7 +926,7 @@ DEPRECATED: use @table, @tr macros instead.
                     
   * Parameters *
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     alt                     = ((boolean), default: false) If true is alternate row (odd), if false regular (even)
@@ -1374,7 +1374,7 @@ Creates a slider wrapper.
     title                   = ((string), default: -empty-) Data Title
     id                      = ((string), default: -empty-) Slider id
     class                   = ((css-class)) Heading element CSS classes
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     library                 = (|owl|slick, default: -empty-) Uses either Owl carousel, Slick or foundation orbit. 
@@ -1382,7 +1382,7 @@ Creates a slider wrapper.
                                Uncomment "Owl" in component://base-theme/data/BaseThemeData.xml in order to use
     controls                = ((boolean), default: true) Left / Right navigation
     indicator               = ((boolean), default: true) Bullet indicators
-    jsOptions               = (String) Additional js argument, included on js initialization
+    jsOptions               = (string) Additional js argument, included on js initialization
     
   * Related *
     @slide
@@ -1455,7 +1455,7 @@ Slider data entry - a single slide.
   * Parameters *
     title                   = ((string), default: -empty-) Data Title
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     library                 = (|owl|slick, default: -empty-) Uses either Owl carousel, Slick or foundation orbit. 
@@ -1527,27 +1527,27 @@ Slider data entry - a single slide.
 *************
 * img
 ************
-Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit
+Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit .
 Relies on custom catoObjectFit Javascript function as a fallback for IE. 
 
   * Usage Examples *  
     <@img src="..." type="cover" height="" width=""/>
 
   * Parameters *
-    src                     = (String) image location
+    src                     = (string) image location
     class                   = ((css-class)) CSS classes 
-                              Supports prefixes:
+                              Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
-    type                    = ((String) none|fill|cover|contain|scale-down|bg-cover, default: cover) 
+    type                    = (none|fill|cover|contain|scale-down|bg-cover, default: cover) 
                               * fill|cover|contain|scale-down = css3 object-fit
                               * bgcover = css background cover
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
-    width                   = (String) container width, e.g. "12px" - acts as a max-width
-    height                  = (String) container height e.g. "12px" - acts as a max-height  
+    width                   = (string) container width, e.g. "12px" - acts as a max-width
+    height                  = (string) container height e.g. "12px" - acts as a max-height  
 -->
 <#assign img_defaultArgs = {
   "src":"", "type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}

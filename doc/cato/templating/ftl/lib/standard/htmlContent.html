@@ -222,7 +222,7 @@ Does not consume a level.          </div>
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -292,7 +292,7 @@ this is better handled through use of the <a href="../standard/htmlStructure.htm
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Container element CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -419,7 +419,7 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -809,7 +809,7 @@ These types are mainly targeted for backend applications.          </div>
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -from global styles-)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -1218,7 +1218,7 @@ such as: spacer rows (<code>&lt;@tr type=&quot;util&quot;&gt;&lt;@td colspan=3&g
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -1395,7 +1395,7 @@ Needed for names containing dashes.        </span>
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -1582,7 +1582,7 @@ DEPRECATED: use <a href="#entry-table">@table</a>, <a href="#entry-tr">@tr</a> m
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -1790,8 +1790,8 @@ Since this is very foundation specific, this function may be dropped in future i
                       <div class="lib-entry-extradesc">
         <p>
 Libraries used:
-Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
-Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)        </p>
+Foundation Pizza: <a href="http://zurb.com/playground/pizza-amore-charts-and-graphs">http://zurb.com/playground/pizza-amore-charts-and-graphs</a> (customization through _base.scss) - deprecated
+Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a> (customization through _charsjs.scss)        </p>
                       </div>
                   </div>
             
@@ -1838,9 +1838,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                         <code>library</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: foundation)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: chart)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Uses either chart.js or foundation.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+ &quot;foundation&quot; is deprecated and requires additional seed data in order to run.
+ Uncomment &quot;PIZZA AMORE&quot; in component://base-theme/data/BaseThemeData.xml to use        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -2086,10 +2089,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                     <div class="lib-entry-params-formal">
                       <p>
                           <code>title</code>, 
+                          <code>library</code>, 
                           <code>id</code>, 
                           <code>class</code>, 
                           <code>controls</code>, 
                           <code>indicator</code>, 
+                          <code>jsOptions</code>, 
                           <code>passArgs</code>
                       </p>
                     </div>
@@ -2123,7 +2128,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)    
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -2136,6 +2141,19 @@ Supports prefixes:
       </li>
   </ul>
 </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>library</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+ &quot;owl&quot; &amp; &quot;slick&quot; require additional seed data in order to run.
+ Uncomment &quot;Owl&quot; in component://base-theme/data/BaseThemeData.xml in order to use        </span>
 </span>
                     </td>
                   </tr>
@@ -2156,6 +2174,16 @@ Supports prefixes:
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> Bullet indicators</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>jsOptions</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Additional js argument, included on js initialization</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -2220,6 +2248,7 @@ Supports prefixes:
                       <p>
                           <code>title</code>, 
                           <code>class</code>, 
+                          <code>library</code>, 
                           <code>link</code>, 
                           <code>linkTarget</code>, 
                           <code>image</code>, 
@@ -2246,7 +2275,7 @@ Supports prefixes:
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -2259,6 +2288,18 @@ Supports prefixes:
       </li>
   </ul>
 </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>library</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+ &quot;owl&quot; &amp; &quot;slick&quot; require additional seed data in order to run.        </span>
 </span>
                     </td>
                   </tr>
@@ -2339,7 +2380,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit
+                      <p class="lib-entry-shortdesc">Image tag - eases the positioning/styling of images with inline styles. Uses <a href="https://www.w3.org/TR/css3-images/#the-object-fit">https://www.w3.org/TR/css3-images/#the-object-fit</a> .
 Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
                   </div>
             
@@ -2372,7 +2413,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
                         <code>src</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> image location</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
@@ -2385,7 +2426,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Supports prefixes:
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
       <li>
@@ -2406,9 +2447,20 @@ Supports prefixes:
                         <code>type</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((String) none|fill|cover|contain|scale-down, default: cover)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> css3 object-fit</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(none|fill|cover|contain|scale-down|bg-cover, default: cover)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+fill|cover|contain|scale-down = css3 object-fit        </span>
+      </li>
+      <li>
+        <span>
+bgcover = css background cover        </span>
+      </li>
+  </ul>
+</div>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -2441,7 +2493,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
                         <code>width</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> container width, e.g. &quot;12px&quot; - acts as a max-width</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
@@ -2451,7 +2503,7 @@ If boolean, false prevents any; true will allow global styles hash lookup.      
                         <code>height</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(String)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> container height e.g. &quot;12px&quot; - acts as a max-height</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>

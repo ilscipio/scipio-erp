@@ -39,11 +39,17 @@ public abstract class FtlDocFileParser {
     public void setLibProperties(Map<String, Object> dataModel) throws IllegalFormatException {
         // get file name only 
         String libTopName = srcFile.getName();
-        dataModel.put("libTopName", FtlDocUtil.replaceExtension(libTopName, ""));
-        dataModel.put("libFilename", getLibFilename());
-        dataModel.put("libFormat", getLibFormat());
-        dataModel.put("libName", getLibName());
-        dataModel.put("libDocPath", getLibDocPath());
+        // make a separate hash as well, easier to pass around
+        Map<String, Object> libInfo = makeObjectMap();
+        libInfo.put("libTopName", FtlDocUtil.replaceExtension(libTopName, ""));
+        libInfo.put("libFilename", getLibFilename());
+        libInfo.put("libFormat", getLibFormat());
+        libInfo.put("libName", getLibName());
+        libInfo.put("libDocPath", getLibDocPath());
+        // map for easy passing
+        dataModel.put("libInfo", libInfo);
+        // putall for easy access
+        dataModel.putAll(libInfo);
     }
     
     public String getLibFilename() {

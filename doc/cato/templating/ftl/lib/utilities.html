@@ -66,11 +66,11 @@ pre {
 
         <div class="lib-pagedesc">
         <p>
-A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies,
+A set of standalone utility functions and macros, largely devoid of markup and independent from templating macros and styles and with minimal dependencies,
 part of standard Cato Freemarker API.
 Generally CSS-framework-agnostic.
 Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
-Automatically included at all times.        </p>
+Automatically included at all times, for all themes, independently of theme markup override files.        </p>
           <div class="lib-text-note">
             <strong>NOTES: </strong>
   <ul>
@@ -85,8 +85,13 @@ an &quot;args&quot; argument as a map, which emulates named arguments.        </
       </li>
       <li>
         <span>
-Default markup-producing macros are found in htmlTemplate.ftl.
+Default markup-producing macros are found in <a href="standard/htmlTemplate.html">standard/htmlTemplate.ftl</a>.
 Utilities found in utilities.ftl should not contain their logic in general.        </span>
+      </li>
+      <li>
+        <span>
+Except where otherwise required (placeholder/abstract), it is generally not intended for the
+declarations in this file to be overridden. Although possible to do from theme markup overrides, it is unsupported.        </span>
       </li>
   </ul>
           </div>
@@ -4130,15 +4135,10 @@ The result is returned as a bean-wrapped Set.</p>
                       <p class="lib-entry-shortdesc">Compiles a class argument as common to most standard macros,
 producing a simple list of class names from a class arg, adding optional default.</p>
                       <div class="lib-entry-extradesc">
-          <div class="lib-text-note">
-            <strong>NOTE: </strong>
-Default value may also be set prior to using addClassArgDefault on the class arg instead
-of passing as parameter.          </div>
         <p>
-CLASS ARGUMENT FUNCTIONS        </p>
-        <p>
-This function and the others below help parse class argument passed to macros.
-Not for use in templates.        </p>
+This function and the others related help parse class argument passed to macros.
+Generally not for use in templates (though may still be useful in some).        </p>
+        <h4>Macro Class Arguments</h4>
         <p>
 Macro class arguments can have essential (required) and non-essential (default)
 defaults and values added by the macro before producing the final class attribute.
@@ -4152,50 +4152,60 @@ to accept following values:        </p>
         <div>  <ul>
       <li>
         <span>
-string with &quot;+&quot; prefix or empty string &quot;&quot;:
-means allow macro to add non-essential default classes.
-the class names after the &quot;+&quot; will be appended to any classes added
+string with <code>+</code> prefix or empty string <code>&quot;&quot;</code>: Means allow macro to add non-essential default classes.
+The class names after the <code>+</code> will be appended to any classes added
 by the macro, and will never replace macro defaults.
-this means the same as boolean true but with extra classes provided.
-in other words, appends extra classes.        </span>
+This means the same as boolean true but with extra classes provided.
+In other words, appends extra classes.        </span>
       </li>
       <li>
         <span>
-string with &quot;=&quot; prefix or non-empty string:
-means prevent macro from adding non-essential default classes.
-class names given will replace macro defaults, i.e. non-essential classes.
-macro may still add its own required classes.
-this is the same as boolean false but with replacement classes provided.
-in other words, replaces default (non-essential) classes.        </span>
+string with <code>=</code> prefix or non-empty string: Means prevent macro from adding non-essential default classes.
+Class names given will replace macro defaults, i.e. non-essential classes.
+Macro may still add its own required classes.
+This is the same as boolean false but with replacement classes provided.
+In other words, replaces default (non-essential) classes.        </span>
       </li>
   </ul>
 </div>
         <p>
-In one or two cases the non-essential defaults are &quot;conditionally essential&quot;
-so class=&quot;=&quot; makes little sense, but we dont really need to handle that.
-        </p>
+In a few cases, the non-essential defaults are &quot;conditionally essential&quot;
+so <code>class=&quot;=&quot;</code> makes little sense, but usually doesn&#39;t warrant special handling.        </p>
           <div class="lib-text-note">
-            <strong>NOTE: </strong>
-Not all macros support all the cases but the syntax is supported everywhere          </div>
-        <p>
-now anyway so doesn&#39;t matter to templates.        </p>
-        <p>
-compileClassArg should usually be used as late as possible in macro:
-        </p>
-<pre>&lt;#local classes = compileClassArg(class)&gt;</pre>        <p>
-A defaultVal can be set which is the same as doing:
-        </p>
-<pre>&lt;#local class = addClassArgDefault(class, &quot;default-class&quot;)&gt;
-&lt;#local classes = compileClassArg(class)&gt;</pre>          <div class="lib-text-note">
-            <strong>IMPORTANT: </strong>
-Currently in some cases the logic above breaks too much compatibility. So it is not universally used
+            <strong>NOTES: </strong>
+  <ul>
+      <li>
+        <span>
+Not all macros act on all prefixes, though the syntax is always accepted.        </span>
+      </li>
+      <li>
+        <span>
+Currently, in some cases of traditional Ofbiz templating, the logic above breaks too much compatibility. So it is not universally used
 for screen/form/menu widgets although often supported.
-For these, in some places an &quot;xxxExplicit&quot; version of functions are used instead which will only
-replace if explicitly prefixed with &quot;=&quot;, but not if no prefix. Otherwise, existing widget styles break
-the grid everywhere.          </div>
+For these, in some places an <code>xxxExplicit</code> version of functions are used instead which will only
+replace if explicitly prefixed with <code>=</code>, but not if no prefix. Otherwise, existing widget styles break
+the grid everywhere.        </span>
+      </li>
+  </ul>
+          </div>
                       </div>
                   </div>
             
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>
+In macro implementations, compileClassArg should usually be used as late as possible:
+  &lt;#local classes = compileClassArg(class)&gt;
+or
+  &lt;#local classes = compileClassArg(class, &quot;default-class&quot;)&gt;
+
+Specifying the default value is the same as doing:
+  &lt;#local class = addClassArgDefault(class, &quot;default-class&quot;)&gt;
+  &lt;#local classes = compileClassArg(class)&gt;
+</pre>                  </div>
+            
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4207,6 +4217,15 @@ the grid everywhere.          </div>
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-addClassArg">#addClassArg</a>, 
+                       <a href="#entry-addClassArgDefault">#addClassArgDefault</a>, 
+                       <a href="#entry-compiledClassAttribStr">@compiledClassAttribStr</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -4407,6 +4426,7 @@ a replacing string (&quot;=&quot;).        </p>
                       </div>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4418,6 +4438,14 @@ a replacing string (&quot;=&quot;).        </p>
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-compileClassArg">#compileClassArg</a>, 
+                       <a href="#entry-addClassArgDefault">#addClassArgDefault</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -4446,6 +4474,7 @@ perceived by addClassArgDefault.          </div>
                       </div>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4457,6 +4486,14 @@ perceived by addClassArgDefault.          </div>
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-compileClassArg">#compileClassArg</a>, 
+                       <a href="#entry-addClassArg">#addClassArg</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -4479,6 +4516,7 @@ perceived by addClassArgDefault.          </div>
 It adds default if class is true, empty or starts with &quot;+&quot;.</p>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4490,6 +4528,14 @@ It adds default if class is true, empty or starts with &quot;+&quot;.</p>
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-compileClassArg">#compileClassArg</a>, 
+                       <a href="#entry-addClassArg">#addClassArg</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -4512,6 +4558,7 @@ It adds default if class is true, empty or starts with &quot;+&quot;.</p>
 for compatibility in some cases</p>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4523,6 +4570,14 @@ for compatibility in some cases</p>
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-compileClassArg">#compileClassArg</a>, 
+                       <a href="#entry-addClassArg">#addClassArg</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -4560,6 +4615,7 @@ In other words, can see this as another kludge for lack of null values in freema
                       </div>
                   </div>
             
+              
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
@@ -4571,6 +4627,14 @@ In other words, can see this as another kludge for lack of null values in freema
                     </div>
 
                   </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-compileClassArg">#compileClassArg</a>, 
+                       <a href="#entry-addClassArg">#addClassArg</a>
+                     </p>
+                  </div>  
+            
 
             
           </div>
@@ -5599,7 +5663,7 @@ This is applied after prefix ops are applied.        </span>
                         <code>noValToken</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((String))</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> When this value encountered, will include an attrib with no value</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
@@ -5980,7 +6044,7 @@ Note that the class portions may be prefixed with &quot;+&quot; as well for appe
             
               
                   <div class="lib-entry-section-examples">
-                    <h4>Usage examples</h4>
+                    <h4>Usage Examples</h4>
 <pre>    h3
     h3:headingclass
     h+3:headingclass

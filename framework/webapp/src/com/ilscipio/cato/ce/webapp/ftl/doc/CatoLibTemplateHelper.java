@@ -57,16 +57,42 @@ public class CatoLibTemplateHelper extends TemplateHelper {
                 textList.add(entryInfo);
             }
             else {
-                // Got nothing. Just add as regular text.
-                textList.add(ref);
+                // Got nothing. Just add as regular text, BUT if the previous was regular
+                // text, combine it so don't affect other parsing
+                if (textList.size() > 0) {
+                    Object lastText = textList.get(textList.size() - 1);
+                    if (lastText instanceof String) {
+                        textList.remove(textList.size() - 1);
+                        textList.add(((String) lastText) + ref);
+                    }
+                    else {
+                        textList.add(ref);
+                    }
+                }
+                else {
+                    textList.add(ref);
+                }
             }
 
             lastEndIndex = m.end();
         }
         
-        // Add last part
+        // Add last part, but combine with previous if was only text
         if (lastEndIndex < text.length()) {
-            textList.add(text.substring(lastEndIndex));
+            String finalPart = text.substring(lastEndIndex);
+            if (textList.size() > 0) {
+                Object lastText = textList.get(textList.size() - 1);
+                if (lastText instanceof String) {
+                    textList.remove(textList.size() - 1);
+                    textList.add(((String) lastText) + finalPart);
+                }
+                else {
+                    textList.add(finalPart);
+                }
+            }
+            else {
+                textList.add(finalPart);
+            }
         }
         return textList;
     }
@@ -79,18 +105,74 @@ public class CatoLibTemplateHelper extends TemplateHelper {
             "\\{\\{\\{(.*?)\\}\\}\\}"
             , Pattern.DOTALL);
     
+    private static final Pattern linkManualPat = Pattern.compile(
+            ">>>(.*?)<<<"
+            , Pattern.DOTALL);
+    
+    private static final Pattern linkAutoPat = Pattern.compile(
+            "(^|\\b)((https?|file)://([^)\\s\\n])+)"
+            , Pattern.DOTALL);
+    
+    @SuppressWarnings("unchecked")
+    private Object fixupLink(Object linkObj, Map<String, Map<String, Object>> entryMap, 
+            Map<String, Map<String, Object>> libMap, Map<String, Object> libInfo) {
+        if (linkObj instanceof Map && ((Map<String, Object>) linkObj).get("type").equals("link")) {
+            Map<String, Object> linkInfo = (Map<String, Object>) linkObj;
+            
+            msgHandler.logDebug(
+                    "====================================\n" + 
+                    "linkInfo: " + linkInfo.toString() + "\n" +
+                    "====================================");
+            
+            // FIXME?: Currently only support href==label
+            String value = (String) linkInfo.get("value");
+            
+            if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("file://")) {
+                // absolute, do nothing
+                linkInfo.put("text", value);
+            }
+            else if (value.startsWith("/")) {
+                // absolute to server, do nothing
+                linkInfo.put("text", value);
+            }
+            else if (value.startsWith("./")) {
+                // relative to current, just strip the prefix
+                value = value.substring(2);
+                linkInfo.put("text", value);
+            }
+            else if (value.startsWith("../")) {
+                // relative to current
+                linkInfo.put("text", value);
+            }
+            else {
+                String libDocPath = (String) libInfo.get("libDocPath");
+                linkInfo.put("text", value);
+                // relative to doc root. need to adjust the link.
+                value = getTargetRelLibDocPath(value, libDocPath);
+            }
+            if (value.endsWith(".ftl")) {
+                value = value.substring(0, value.length() - 4) + ".html";
+            }
+            linkInfo.put("value", value);
+            return linkInfo;
+        }
+        else {
+            return linkObj;
+        }
+    }
+    
     /**
      * Splits by [[[, ]]], {{{, }}}, and potential entry refs.
      */
     public List<Object> splitByTextualElems(String text, Map<String, Map<String, Object>> entryMap, 
-            Map<String, Map<String, Object>> libMap) {
+            Map<String, Map<String, Object>> libMap, Map<String, Object> libInfo) {
         List<Object> res;
         Map<String, Object> modelMap;
         List<Object> prevSplit;
         
         msgHandler.logDebug(
                 "====================================\n" + 
-                "splitByTextualElems\n" +
+                "splitByTextualElems: " + (text.length() > 400 ? text.substring(0, 399) : text) + "\n" +
                 "====================================");
         
         // split by raw text
@@ -121,6 +203,44 @@ public class CatoLibTemplateHelper extends TemplateHelper {
             if (part instanceof String) {
                 List<Object> listSplit = splitByLibEntryRefs((String) part, entryMap, libMap);
                 res.addAll(listSplit);
+            }
+            else {
+                res.add(part);
+            }
+        }
+        
+        // split remaining text parts by manual links
+        prevSplit = res;
+        res = new ArrayList<>();
+        modelMap = FtlDocFileParser.makeObjectMap();
+        modelMap.put("type", "link");
+        for(Object part : prevSplit) {
+            if (part instanceof String) {
+                List<Object> listSplit = splitByPat((String) part, linkManualPat, modelMap, "origText", "value");
+                List<Object> fixupListSplit = new ArrayList<Object>();
+                for(Object listObj : listSplit) {
+                    fixupListSplit.add(fixupLink(listObj, entryMap, libMap, libInfo));
+                }
+                res.addAll(fixupListSplit);
+            }
+            else {
+                res.add(part);
+            }
+        }
+        
+        // split remaining text parts by automatic links
+        prevSplit = res;
+        res = new ArrayList<>();
+        modelMap = FtlDocFileParser.makeObjectMap();
+        modelMap.put("type", "link");
+        for(Object part : prevSplit) {
+            if (part instanceof String) {
+                List<Object> listSplit = splitByPat((String) part, linkAutoPat, modelMap, "origText", null, "value");
+                List<Object> fixupListSplit = new ArrayList<Object>();
+                for(Object listObj : listSplit) {
+                    fixupListSplit.add(fixupLink(listObj, entryMap, libMap, libInfo));
+                }
+                res.addAll(fixupListSplit);
             }
             else {
                 res.add(part);

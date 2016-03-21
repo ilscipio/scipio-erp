@@ -2,20 +2,22 @@
 * 
 * General-purpose Cato Utilities
 *
-* A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies, 
+* A set of standalone utility functions and macros, largely devoid of markup and independent from templating macros and styles and with minimal dependencies, 
 * part of standard Cato Freemarker API.
 * Generally CSS-framework-agnostic. 
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
-* Automatically included at all times.
+* Automatically included at all times, for all themes, independently of theme markup override files.
 *
 * NOTES: 
 * * Macros expect to be called using named arguments, except where otherwise noted.
 * * Functions in Freemarker only support positional arguments, but some Cato functions support
 *   an "args" argument as a map, which emulates named arguments.
-* * Default markup-producing macros are found in htmlTemplate.ftl.
+* * Default markup-producing macros are found in >>>standard/htmlTemplate.ftl<<<.
 *   Utilities found in utilities.ftl should not contain their logic in general.
+* * Except where otherwise required (placeholder/abstract), it is generally not intended for the 
+*   declarations in this file to be overridden. Although possible to do from theme markup overrides, it is unsupported.
 *  
-* IMPLEMENTATION NOTES: 
+* IMPLEMENTATION NOTES:
 * * Macros should almost never use "request" object directly - use setRequestVar/getRequestVar/other.
 * * It's important that these macros remain generic (and that the include for these utilities remains
 *   completely static) so that any macro or function here can easily be interchanged with a transform (Java class).
@@ -1598,13 +1600,10 @@ TODO: implement as transform.
 Compiles a class argument as common to most standard macros,
 producing a simple list of class names from a class arg, adding optional default.
 
-NOTE: Default value may also be set prior to using addClassArgDefault on the class arg instead
-    of passing as parameter.
+This function and the others related help parse class argument passed to macros.
+Generally not for use in templates (though may still be useful in some).
 
-CLASS ARGUMENT FUNCTIONS
-
-This function and the others below help parse class argument passed to macros.
-Not for use in templates.
+* Macro Class Arguments *
 
 Macro class arguments can have essential (required) and non-essential (default)
 defaults and values added by the macro before producing the final class attribute. 
@@ -1616,35 +1615,43 @@ class arg gets heavy.
 So to address all the cases, these functions cause the class arg on all supporting macros 
 to accept following values:
 
-* string with "+" prefix or empty string "": 
-  means allow macro to add non-essential default classes. 
-  the class names after the "+" will be appended to any classes added
+* string with {{{+}}} prefix or empty string {{{""}}}: Means allow macro to add non-essential default classes. 
+  The class names after the {{{+}}} will be appended to any classes added
   by the macro, and will never replace macro defaults.
-  this means the same as boolean true but with extra classes provided.
-  in other words, appends extra classes.
-* string with "=" prefix or non-empty string: 
-  means prevent macro from adding non-essential default classes.
-  class names given will replace macro defaults, i.e. non-essential classes. 
-  macro may still add its own required classes.
-  this is the same as boolean false but with replacement classes provided.
-  in other words, replaces default (non-essential) classes.
+  This means the same as boolean true but with extra classes provided.
+  In other words, appends extra classes.
+* string with {{{=}}} prefix or non-empty string: Means prevent macro from adding non-essential default classes.
+  Class names given will replace macro defaults, i.e. non-essential classes. 
+  Macro may still add its own required classes.
+  This is the same as boolean false but with replacement classes provided.
+  In other words, replaces default (non-essential) classes.
   
-In one or two cases the non-essential defaults are "conditionally essential" 
-so class="=" makes little sense, but we dont really need to handle that.
-NOTE: Not all macros support all the cases but the syntax is supported everywhere 
-now anyway so doesn't matter to templates.
+In a few cases, the non-essential defaults are "conditionally essential" 
+so {{{class="="}}} makes little sense, but usually doesn't warrant special handling.
 
-compileClassArg should usually be used as late as possible in macro:
+NOTES: 
+* Not all macros act on all prefixes, though the syntax is always accepted.
+* Currently, in some cases of traditional Ofbiz templating, the logic above breaks too much compatibility. So it is not universally used
+  for screen/form/menu widgets although often supported.
+  For these, in some places an {{{xxxExplicit}}} version of functions are used instead which will only
+  replace if explicitly prefixed with {{{=}}}, but not if no prefix. Otherwise, existing widget styles break
+  the grid everywhere.
+  
+  * Usage Examples *
+  
+In macro implementations, compileClassArg should usually be used as late as possible:
   <#local classes = compileClassArg(class)>
-A defaultVal can be set which is the same as doing:
+or
+  <#local classes = compileClassArg(class, "default-class")>
+  
+Specifying the default value is the same as doing:
   <#local class = addClassArgDefault(class, "default-class")>
   <#local classes = compileClassArg(class)>
-
-IMPORTANT: Currently in some cases the logic above breaks too much compatibility. So it is not universally used
-  for screen/form/menu widgets although often supported.
-  For these, in some places an "xxxExplicit" version of functions are used instead which will only
-  replace if explicitly prefixed with "=", but not if no prefix. Otherwise, existing widget styles break
-  the grid everywhere.
+  
+  * Related *
+    #addClassArg
+    #addClassArgDefault
+    @compiledClassAttribStr
 -->
 <#function compileClassArg class defaultVal="">
   <#if defaultVal?has_content>
@@ -1749,6 +1756,10 @@ The newClass parameter is a simple string literal and is not interpreted.
 
 These are non-destructive except for addClassArgReplacing which always causes the string to become
 a replacing string ("=").
+
+  * Related *
+    #compileClassArg
+    #addClassArgDefault
 -->
 <#function addClassArg class newClass>
   <#if !newClass?has_content>
@@ -1770,6 +1781,10 @@ though will not squash previous values.
 
 NOTE: This destroys information about what macro user requested and affects the default value logic
     perceived by addClassArgDefault. 
+    
+  * Related *
+    #compileClassArg
+    #addClassArg
 -->
 <#function addClassArgReplacing class newClass>
   <#if !newClass?has_content>
@@ -1790,6 +1805,10 @@ NOTE: This destroys information about what macro user requested and affects the 
 ************
 Adds a class only if the class arg does not contain default-replacing classes. 
 It adds default if class is true, empty or starts with "+".
+
+  * Related *
+    #compileClassArg
+    #addClassArg
 -->
 <#function addClassArgDefault class newClass>
   <#if !newClass?has_content>
@@ -1810,6 +1829,10 @@ It adds default if class is true, empty or starts with "+".
 ************
 Version of addClassArgDefault that will only replace default if it explicitly starts with "="; needed
 for compatibility in some cases
+
+  * Related *
+    #compileClassArg
+    #addClassArg
 -->
 <#function addClassArgDefaultExplicit class newClass>
   <#if !newClass?has_content>
@@ -1843,6 +1866,10 @@ NOTE: Even if the second arg is merely "+" (which usually means "use defaults" f
     We only treat "+" with an arg.
     In other words, can see this as another kludge for lack of null values in freemarker.
     TODO: review this
+    
+  * Related *
+    #compileClassArg
+    #addClassArg
 -->
 <#function combineClassArgs first second>
   <#if second?starts_with("+") && (second?length > 1)>
@@ -2143,7 +2170,7 @@ TODO: implement as transform.
                                   * This is applied after prefix ops are applied.
     camelCaseToDashLowerNames   = ((boolean)) If true converts attrib names from camelCase to camel-case at the very end
     emptyValToken               = ((string)) When this value encountered, will include an empty attrib
-    noValToken                  = ((String)) When this value encountered, will include an attrib with no value
+    noValToken                  = ((string)) When this value encountered, will include an attrib with no value
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
@@ -2296,7 +2323,7 @@ a level and relLevel are extracted.
 
 Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
 
-  * Usage examples *
+  * Usage Examples *
     h3
     h3:headingclass
     h+3:headingclass

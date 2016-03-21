@@ -119,8 +119,9 @@ under the License.
     <ProductStoreCatalog productStoreId="9000" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
     <ProductStoreCatalog productStoreId="9000" prodCatalogId="TestCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
+    <!-- Cato: Removed
     <ProductStoreCatalog productStoreId="9000" prodCatalogId="GoogleCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="3"/>
-               
+    -->
              
     <ProductStoreSurveyAppl productStoreSurveyId="1000" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1000" productCategoryId="GC-101" fromDate="2003-11-24 16:00:02.467" surveyTemplate="component://content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1001" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1001" productCategoryId="GC-102" fromDate="2003-11-24 16:00:51.693" surveyTemplate="component://content/template/survey/genericsurvey.ftl"/>

@@ -25,7 +25,7 @@ under the License.
     <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
     <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="TestCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
-    <ProductCategory categoryName="Demo Browse Root"
+    <ProductCategory categoryName="Demo Catalog Root"
         longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory longDescription="long description of Gizmos"
         primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -172,12 +172,16 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="2012" contentId="2012-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="20111" contentId="20111-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
+    <!-- Cato: Don't include google catalog anymore - keep as reference for now? -->
+    <!-- Cato: Unneeded
     <ProdCatalog prodCatalogId="GoogleCatalog" catalogName="Google Catalog"/>
+    -->
     <!-- Cato: Don't associate with shop for now
     <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="GoogleCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="3"/>-->
                 
     <!-- Categories Specific to Google Base -->
-    <ProductCategory categoryName="Google Base Browse Root"
+    <!-- Cato: Unneeded
+    <ProductCategory categoryName="Google Base Catalog Root"
         longDescription="Google Base Primary Browse Root Category" productCategoryId="GOOGLE_BASE" productCategoryTypeId="GOOGLE_BASE_CATEGORY"/>
     <ProductCategory categoryName="Animals"
         primaryParentCategoryId="GOOGLE_BASE" productCategoryId="GB_ANIMALS" productCategoryTypeId="GOOGLE_BASE_CATEGORY"/>
@@ -218,7 +222,8 @@ under the License.
 
     <ProdCatalogCategory prodCatalogId="GoogleCatalog" productCategoryId="GOOGLE_BASE" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-        
+    -->
+    
     <Product productId="GZ-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Tiny Gizmo" internalName="Tiny Gizmo" description="The smallest gizmo in town." longDescription="This gizmo is very small and runs on solar power." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="GZ-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Nan Gizmo" internalName="Nan Gizmo" description="Indian style Nan gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="GZ-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Rainbow Gizmo" internalName="Rainbow Gizmo" description="The only multi-colored gizmo" longDescription="This is the original multi-colored gizmo, only available from OFBiz!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -895,6 +900,7 @@ under the License.
     <ProductCategoryMember productCategoryId="TSTLTDADMIN" productId="GZ-2644" fromDate="2003-03-04 18:55:14.547"/>
     
     <!-- Product Category Member records specific to Google Base -->
+    <!-- Cato: Unneeded
     <ProductCategoryMember productCategoryId="GB_HARDWARE" productId="GZ-1001" fromDate="2009-07-28 12:15:00.0"/>
     <ProductCategoryMember productCategoryId="GB_HARDWARE" productId="GZ-1000" fromDate="2009-07-28 12:15:00.0"/>
     <ProductCategoryMember productCategoryId="GB_HARDWARE" productId="GZ-1005" fromDate="2009-07-28 12:15:00.0"/>
@@ -928,7 +934,8 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GOOGLE_BASE" productCategoryId="GB_SOFTWARE"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GOOGLE_BASE" productCategoryId="GB_SPRTNG_GDS"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GOOGLE_BASE" productCategoryId="GB_TYS_GMS"/>
-
+    -->
+    
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>

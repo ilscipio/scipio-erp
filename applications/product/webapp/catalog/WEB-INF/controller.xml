@@ -1409,7 +1409,7 @@ under the License.
     </request-map>
     <request-map uri="updateProductCategoryToProdCatalog">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductCategoryToProdCatalog"/>
+        <event type="service-multi" path="" invoke="updateProductCategoryToProdCatalog"/>
         <response name="success" type="view" value="EditProdCatalogCategories"/>
         <response name="error" type="view" value="EditProdCatalogCategories"/>
     </request-map>

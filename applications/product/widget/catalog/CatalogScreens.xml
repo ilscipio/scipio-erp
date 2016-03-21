@@ -53,11 +53,11 @@ under the License.
     <screen name="EditProdCatalog">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="ProductCatalog"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>                
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" default-value="${uiLabelMap.ProductCatalog} &lt;${prodCatalogId}&gt;"/>         
+                <set field="title" default-value="${uiLabelMap.ProductCatalog} ${prodCatalogId}"/>         
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
@@ -107,7 +107,7 @@ under the License.
     <screen name="EditProdCatalogCategories">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductCatalogCategories"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="ProductCategories"/>
                 <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
@@ -115,24 +115,51 @@ under the License.
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="productCategoryId"/>
                 </entity-and>
-                <entity-condition entity-name="ProductCategory" list="productCategories">
+               <!--  <entity-condition entity-name="ProductCategory" list="productCategories">
                     <order-by field-name="description"/>
-                </entity-condition>
+                </entity-condition> -->
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>   
+                <set field="title" default-value="${uiLabelMap.ProductCatalogCategories} ${prodCatalogId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductAddCatalogProdCat}">
-                            <include-form name="addProductCategoryToProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        <!-- <screenlet title="${uiLabelMap.ProductAddCatalogProdCat}"> -->
+                        <screenlet>
+                            <include-screen name="CatoAddProductCategoryToProdCatalog" />
+                           <!--  <include-form name="addProductCategoryToProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/> -->
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogCategories}">
-                            <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        <screenlet title="${uiLabelMap.ProductCatalogCategoryList}">
+                           <!--  <include-form name="EditProdCatalogCategories" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="CatoProdCatalogCategoryList" />
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
+    <screen name="CatoAddProductCategoryToProdCatalog">
+        <section>
+            <actions>
+                <entity-condition entity-name="ProdCatalogCategoryType" list="prodCatalogCategoryTypes"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProductCategoryToProdCatalog.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="CatoProdCatalogCategoryList">
+        <section>
+            <actions>
+                
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogCategoryList.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="EditProdCatalogParties">
         <section>
             <actions>

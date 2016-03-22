@@ -16145,4 +16145,19 @@
         <value xml:lang="en">Media</value>
         <value xml:lang="fr">Médias</value>
     </property>
+    <property key="CommonLicense">
+        <value xml:lang="de">Lizenz</value>
+        <value xml:lang="en">License</value>
+        <value xml:lang="es">Licencia</value>
+        <value xml:lang="fr">License</value>
+        <value xml:lang="it">Licenza</value>
+        <value xml:lang="ja">ライセンス</value>
+        <value xml:lang="nl">Licentie</value>
+        <value xml:lang="ro">Licenta</value>
+        <value xml:lang="ru">Лицензия</value>
+        <value xml:lang="th">ใบอนุญาต</value>
+        <value xml:lang="vi">Bản cấp phép sử dụng</value>
+        <value xml:lang="zh">版权</value>
+        <value xml:lang="zh_TW">版權</value>
+    </property>
 </resource>

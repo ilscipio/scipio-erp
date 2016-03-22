@@ -558,7 +558,10 @@ public abstract class SolrProductSearch {
                 Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0);
                 QueryResponse cat = (QueryResponse) query.get("rows");
                 List<Map<String, Object>> categories = FastList.newInstance();
-
+                Long subNumFound = (Long) query.get("numFound");
+                if (subNumFound != null) {
+                    numFound += subNumFound;
+                }
                 List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
                 for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
                     FacetField field = (FacetField) catIterator.next();
@@ -584,7 +587,6 @@ public abstract class SolrProductSearch {
                                     catMap.put("parentCategory", null);
                                 }
                                 catMap.put("count", Long.toString(f.getCount()));
-                                numFound += f.getCount();
                                 categories.add(catMap);
                             }
                         }

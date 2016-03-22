@@ -1269,14 +1269,14 @@ TODO: doesn't handle dates (ambiguous?)
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
   <#if isObjectType("string", object)>
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
-    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+    <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_number> 
     ${object}<#t>
   <#elseif object?is_boolean>
     ${object?c}<#t>
   <#elseif object?is_date_like>
     <#-- TODO? -->
-    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+    <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_enumerable> 
     <#-- check this before string checks and hash because some of these from groovy 
         also implement ?string and ?is_hash_ex at same time (?).
@@ -1298,7 +1298,7 @@ TODO: doesn't handle dates (ambiguous?)
     <#else>{}</#if>
   <#elseif object?is_string> 
     <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
-    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+    <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#-- some of the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
   <#elseif objectAsScriptTreatInvalidNonFatal && object?is_hash && !object?is_string> 
     "__NONEXHASH__"<#t>
@@ -1308,12 +1308,18 @@ TODO: doesn't handle dates (ambiguous?)
     "__DIRECTIVE__"<#t>
   <#else>
     <#-- fallback, best-effort. -->
-    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+    <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   </#if> 
 </#macro>
 
 <#-- escapes a string to be placed within "" literals -->
 <#function escapeScriptString lang val escape=true>
+  <#-- 2016-03-21: prevent auto-escaping the screen widget context string variables -->
+  <#if isObjectType("string", val)>
+    <#local val = StringUtil.wrapString(val)?string>
+  <#else>
+    <#local val = val?string>
+  </#if>
   <#if escape>
     <#switch lang?lower_case>
       <#case "json">

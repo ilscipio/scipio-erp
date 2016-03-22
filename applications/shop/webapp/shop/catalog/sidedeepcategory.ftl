@@ -25,8 +25,9 @@ under the License.
     <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : productCategoryId}, true)/>
     <#assign contentCategoryName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html")!>
     <#assign contentCategoryDesc = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "html")!>    
+    <#assign isOnCurrentCatPath = urlContainsPathPart(StringUtil.wrapString(currentCategoryPath!""), productCategoryId)>
     <#assign active = false>
-    <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || urlContainsPathPart(StringUtil.wrapString(currentCategoryPath!""), productCategoryId)>
+    <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || isOnCurrentCatPath>
       <#assign active = true>
     </#if>
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
@@ -34,7 +35,9 @@ under the License.
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active>
       <#if isMultiLevel>
-        <#if currentCategoryPath.contains("/"+productCategoryId)>
+        <#-- Cato: NOTE: this code does not work properly, use urlContainsPathPart
+        <#if currentCategoryPath.contains("/"+productCategoryId)>-->
+        <#if isOnCurrentCatPath>
             <#assign nextLevel=level+1/>
             <#if catList.get("menu-"+nextLevel)?has_content>
                 <#assign nextList = catList.get("menu-"+nextLevel) />
@@ -58,28 +61,31 @@ under the License.
 
 <#if catList?has_content || topLevelList?has_content>
     <@menu id="menu-0" type="sidebar">
-        <#if catList?has_content && catList.get("menu-0")?has_content><#-- CATO: Display each categoryItem -->
-          <!-- current categories -->
-          <@categoryList productCategoryId=topCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard!/>
+        <#-- NOTE: don't use has_content on this for now, empty list means no sub-cats, missing list means no top cat selected -->
+        <#if catList?? && catList.get("menu-0")??><#-- CATO: Display each categoryItem -->
+          <#-- current categories -->
+          <@categoryList productCategoryId=baseCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard!/>
           <#list catList.get("menu-0") as item>
             <#if item.catId?has_content>
               <#-- Cato: FIXME?: sanity check - each item should have as parent the top category - currently this is not always true -->
-              <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, topCategoryId, item.catId)>
-                <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=topCategoryId!""/>
+              <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, item.catId)>
+                <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + " not child of top category " + (topCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
+                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
             </#if>
           </#list>
         <#elseif topLevelList?has_content><#-- Cato: Fallback for empty categories / catalogs -->
-          <!-- top categories -->
+          <#-- top categories -->
           <#list topLevelList as productCategoryId>
             <#if productCategoryId?has_content>
-              <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count=0 previousCategoryId=topCategoryId!""/>
+              <@categoryList productCategoryId=productCategoryId level=0 isMultiLevel=false path="" count=0 previousCategoryId=""/>
             </#if>
           </#list>
         </#if>
     </@menu>
 </#if>
 
+<!-- currentCategoryPath: ${StringUtil.wrapString(currentCategoryPath!"(none)")} -->
+<!-- baseCategoryId: ${baseCategoryId!"(none)"} -->
 

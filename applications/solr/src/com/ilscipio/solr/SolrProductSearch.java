@@ -544,6 +544,8 @@ public abstract class SolrProductSearch {
             // Add toplevel categories
             String[] trailElements = productCategoryId.split("/");
 
+            long numFound = 0;
+            
             // iterate over actual results
             for (String elements : trailElements) {
                 Debug.logInfo("elements: " + elements, module);
@@ -582,6 +584,7 @@ public abstract class SolrProductSearch {
                                     catMap.put("parentCategory", null);
                                 }
                                 catMap.put("count", Long.toString(f.getCount()));
+                                numFound += f.getCount();
                                 categories.add(catMap);
                             }
                         }
@@ -590,7 +593,7 @@ public abstract class SolrProductSearch {
                 catLevel.put("menu-" + level, categories);
             }
             result.put("categories", catLevel);
-            result.put("numFound", (long) 0);
+            result.put("numFound", numFound);
 
         } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());

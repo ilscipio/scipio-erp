@@ -13643,6 +13643,18 @@
     <property key="ProductCatalogCategoryList">
         <value xml:lang="en">Catalog Category List</value>
     </property>
+    <property key="ProductCatalogParties">
+        <value xml:lang="en">Catalog Parties</value>
+    </property>
+    <property key="ProductCatalogPartyList">
+        <value xml:lang="en">Catalog Party List</value>
+    </property>
+    <property key="ProductCatalogStores">
+        <value xml:lang="en">Catalog Stores</value>
+    </property>
+    <property key="ProductCatalogStoreList">
+        <value xml:lang="en">Catalog Store List</value>
+    </property>
     <property key="ProductCatalogEmptyWarning">
         <value xml:lang="en">If you don't populate a Catalog with Categories, it will not be shown in the Browse Catalogs/Categories tree</value>
         <value xml:lang="fr">Si vous ne créez pas de catégories pour un catalogue, il n'apparaitra pas dans l'arbre des Catalogues/catégories</value>

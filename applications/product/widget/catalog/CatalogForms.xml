@@ -108,6 +108,7 @@
         </field>
     </form>
 
+    <!-- Cato: AddProdCatalogToParty form moved to /cato-foundation/applications/product/widget/catalog/CatalogScreens.xml#CatoAddProdCatalogToParty (can't be removed yet, still references I haven't covered) -->
     <form name="AddProdCatalogToParty" type="single" target="addProdCatalogToParty" title="" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="addProdCatalogToParty" />
@@ -138,6 +139,7 @@
         </field>
     </form>
 
+    <!-- Cato: UpdateProdCatalogToParty form moved to /cato-foundation/applications/product/widget/catalog/CatalogScreens.xml#CatoProdCatalogPartyList (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateProdCatalogToParty" type="list" target="updateProdCatalogToParty" title="" list-name="prodCatalogRoleList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
@@ -178,6 +180,7 @@
         </field>
     </form>
 
+    <!-- Cato: CreateProductStoreCatalog form moved to /cato-foundation/applications/product/widget/catalog/CatalogScreens.xml#CatoAddProdCatalogToStore (can't be removed yet, still references I haven't covered) -->
     <form name="CreateProductStoreCatalog" type="single" target="createProdCatalogStore" title="" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="prodCatalogId" map-name="prodCatalog">
@@ -204,6 +207,7 @@
         </field>
     </form>
 
+    <!-- Cato: UpdateProductStoreCatalog form moved to /cato-foundation/applications/product/widget/catalog/CatalogScreens.xml#CatoProdCatalogStoreList (can't be removed yet, still references I haven't covered) -->
     <form name="UpdateProductStoreCatalog" type="list" target="updateProdCatalogStore" title="" list-name="productStoreCatalogList"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>

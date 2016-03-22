@@ -1433,7 +1433,7 @@ under the License.
     </request-map>
     <request-map uri="updateProdCatalogStore">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductStoreCatalog"/>
+        <event type="service-multi" path="" invoke="updateProductStoreCatalog"/>
         <response name="success" type="view" value="EditProdCatalogStores"/>
         <response name="error" type="view" value="EditProdCatalogStores"/>
     </request-map>
@@ -1491,7 +1491,7 @@ under the License.
     </request-map>
     <request-map uri="updateProdCatalogToParty">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProdCatalogToParty"/>
+        <event type="service-multi" path="" invoke="updateProdCatalogToParty"/>
         <response name="success" type="view" value="EditProdCatalogParties"/>
         <response name="error" type="view" value="EditProdCatalogParties"/>
     </request-map>

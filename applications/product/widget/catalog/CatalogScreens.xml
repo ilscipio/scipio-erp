@@ -109,15 +109,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="ProductCategories"/>
-                <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
-                    <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                    <order-by field-name="prodCatalogCategoryTypeId"/>
-                    <order-by field-name="sequenceNum"/>
-                    <order-by field-name="productCategoryId"/>
-                </entity-and>
-               <!--  <entity-condition entity-name="ProductCategory" list="productCategories">
-                    <order-by field-name="description"/>
-                </entity-condition> -->
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>   
                 <set field="title" default-value="${uiLabelMap.ProductCatalogCategories} ${prodCatalogId}"/>
             </actions>
@@ -149,10 +140,16 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#addProductCategoryToProdCatalog -->
      <screen name="CatoProdCatalogCategoryList">
         <section>
             <actions>
-                
+                 <entity-and entity-name="ProdCatalogCategory" list="prodCatalogCategories">
+                    <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
+                    <order-by field-name="prodCatalogCategoryTypeId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="productCategoryId"/>
+                </entity-and>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogCategoryList.ftl"/></html></platform-specific>
@@ -163,8 +160,44 @@ under the License.
     <screen name="EditProdCatalogParties">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductCatalogParties"/>
-                <set field="activeSubMenuItem" value="PartyParties"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="PartyParties"/>               
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>   
+                <set field="title" default-value="${uiLabelMap.ProductCatalogParties} ${prodCatalogId}"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <!-- <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="CatoAddProdCatalogToParty"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductCatalogPartyList}">
+                           <!--  <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
+                            <include-screen name="CatoProdCatalogPartyList"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#AddProdCatalogToParty -->
+    <screen name="CatoAddProdCatalogToParty">
+        <section>
+            <actions>
+                <entity-condition entity-name="RoleType" list="roleTypes">
+                    <order-by field-name="description"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProdCatalogToParty.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProdCatalogToParty -->
+    <screen name="CatoProdCatalogPartyList">
+        <section>
+            <actions>
                 <entity-and entity-name="ProdCatalogRole" list="prodCatalogRoleList">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>
@@ -172,24 +205,51 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogPartyList.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditProdCatalogStores">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="ProductStores"/>
+                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                <set field="title" default-value="${uiLabelMap.ProductCatalogStores} ${prodCatalogId}"/>
+            </actions>
+            <widgets>
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleAddProductCatalogParties}">
-                            <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        <screenlet>
+                            <include-screen name="CatoAddProdCatalogToStore"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogParties}">
-                            <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/>
+                        <screenlet title="${uiLabelMap.ProductCatalogStoreList}">
+                            <include-screen name="CatoProdCatalogStoreList"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="EditProdCatalogStores">
+    
+     <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
+    <screen name="CatoAddProdCatalogToStore">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductCatalogStores"/>
-                <set field="activeSubMenuItem" value="ProductStores"/>
+                <entity-condition entity-name="ProductStore" list="productStoreList">
+                    <order-by field-name="storeName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProdCatalogToStore.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#UpdateProductStoreCatalog -->
+    <screen name="CatoProdCatalogStoreList">
+        <section>
+            <actions>
                 <entity-and entity-name="ProductStoreCatalog" list="productStoreCatalogList">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>
@@ -197,16 +257,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleAddProductCatalogStores}">
-                            <include-form name="CreateProductStoreCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCatalogStores}">
-                            <include-form name="UpdateProductStoreCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogStoreList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

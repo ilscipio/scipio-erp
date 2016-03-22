@@ -535,6 +535,8 @@ public abstract class SolrProductSearch {
             
             List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
 
+            // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
+            // instead of check in loop...
             String productCategoryId = (String) context.get("productCategoryId") != null
                     ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();

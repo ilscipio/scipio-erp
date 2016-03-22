@@ -413,4 +413,44 @@ public class CatalogWorker {
             return null;
         }
     }
+    
+    
+    /**
+     * Cato: Returns the first root best-sell category for the current catalog.
+     */
+    public static String getCatalogBestSellCategoryId(ServletRequest request) {
+        return getCatalogPromotionsCategoryId(request, getCurrentCatalogId(request));
+    }
+
+    /**
+     * Cato: Returns the first root best-sell category for the current catalog.
+     */
+    public static String getCatalogBestSellCategoryId(ServletRequest request, String prodCatalogId) {
+        return getCatalogFirstCategoryId(request, "PCCT_BEST_SELL", prodCatalogId);
+    }
+    
+    
+    /**
+     * Cato: Returns the first root best-sell category for the current catalog.
+     */
+    public static String getCatalogFirstCategoryId(ServletRequest request, String prodCatalogCategoryTypeId) {
+        return getCatalogFirstCategoryId(request, prodCatalogCategoryTypeId, getCurrentCatalogId(request));
+    }
+
+    /**
+     * Cato: Returns the first root category of the given prodCatalogCategoryTypeId type for the current catalog.
+     */
+    public static String getCatalogFirstCategoryId(ServletRequest request, String prodCatalogCategoryTypeId, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, prodCatalogCategoryTypeId);
+
+        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
+    }
 }

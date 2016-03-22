@@ -14,15 +14,13 @@
         <#-- Show the category branch -->
         <#if crumbs?is_boolean>
           <#if crumbs>
-            <#local crumbs = Static["org.ofbiz.product.category.CategoryWorker"].getTrail(request)!/>
+            <#local crumbs = Static["org.ofbiz.product.category.CategoryWorker"].getTrailNoTop(request)!/>
           <#else>
             <#local crumbs = []>
           </#if>
         </#if>
         <#local previousCategoryId = "">
         <#list crumbs as crumb>
-            <#-- Cato: NOTE: TOP is also hardcoded in CategoryUrlTransform -->
-            <#if crumb!="TOP">
                 <#-- Cato: Try content wrappers set by screen first; if not there, lookup ourselves -->
                 <#local catContentWrapper = {}>
                 <#if (catContentWrappers[crumb])??>
@@ -49,8 +47,7 @@
                      </#if>
                      ${crumbText}<#t>
                    </a><#lt>
-                </li>
-            </#if>   
+                </li> 
             <#local previousCategoryId = crumb />
         </#list>
     

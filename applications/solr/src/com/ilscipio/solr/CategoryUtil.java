@@ -279,7 +279,13 @@ public abstract class CategoryUtil {
 			int level = Integer.parseInt(productCategories[0]);
 			int nextLevel = level+1;
 			productCategories[0] = ""+nextLevel;
-			return StringUtils.join(productCategories,"/");
+			// 2016-03-22: Preserve the original ending / if there was one
+			if (productCategoryId.endsWith("/")) {
+			    return StringUtils.join(productCategories,"/") + "/";
+			}
+			else {
+			    return StringUtils.join(productCategories,"/");
+			}
     	} catch(Exception e) {
     		return productCategoryId;
     	}

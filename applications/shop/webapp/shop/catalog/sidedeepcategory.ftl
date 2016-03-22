@@ -67,11 +67,13 @@ under the License.
           <@categoryList productCategoryId=baseCategoryId level=0 isMultiLevel=false path="" count=0 class=styles.menu_sidebar_itemdashboard!/>
           <#list catList.get("menu-0") as item>
             <#if item.catId?has_content>
-              <#-- Cato: FIXME?: sanity check - each item should have as parent the top category - currently this is not always true -->
+              <#-- Cato: sanity check - each item should have as parent the top category - should be able to remove this check later for speed, 
+                  but helps in case something went wrong with query -->
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, item.catId)>
                 <@categoryList productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
+                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Cato: WARN: Side deep category " + item.catId + 
+                    " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
             </#if>
           </#list>

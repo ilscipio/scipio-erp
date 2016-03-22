@@ -567,10 +567,15 @@ public abstract class SolrProductSearch {
                     String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, dctx, currentTrail);
                     String[] categoryPathArray = categoryPath.split("/");
                     level = Integer.parseInt(categoryPathArray[0]);
-                    String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                    String facetPrefix = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                    // 2016-03-22: IMPORTANT: the facetPrefix MUST end with / otherwise it will return unrelated categories!
+                    // solr facetPrefix is not aware of our path delimiters
+                    if (!facetPrefix.endsWith("/")) {
+                        facetPrefix += "/";
+                    }
                     // Debug.logInfo("categoryPath: "+categoryPath + "
-                    // facetQuery: "+facetQuery,module);
-                    Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0);
+                    // facetPrefix: "+facetPrefix,module);
+                    Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetPrefix, false, 0, 0);
                     QueryResponse cat = (QueryResponse) query.get("rows");
                     Long subNumFound = (Long) query.get("numFound");
                     if (subNumFound != null) {

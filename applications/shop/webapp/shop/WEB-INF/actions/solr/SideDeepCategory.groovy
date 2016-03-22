@@ -37,7 +37,6 @@ topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
 
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
-    // Cato: FIXME?: Currently something wrong with this query, returns bad categories (currently filtered by FTL)
     res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId, currentTrail:currentTrail]);
     catLevel = res.get("categories");
 }

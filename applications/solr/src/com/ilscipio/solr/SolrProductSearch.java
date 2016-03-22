@@ -546,48 +546,59 @@ public abstract class SolrProductSearch {
 
             long numFound = 0;
             
+            boolean isFirstElement = true;
+            
             // iterate over actual results
-            for (String elements : trailElements) {
-                Debug.logInfo("elements: " + elements, module);
-                String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx, currentTrail);
-                String[] categoryPathArray = categoryPath.split("/");
-                int level = Integer.parseInt(categoryPathArray[0]);
-                String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
-                // Debug.logInfo("categoryPath: "+categoryPath + "
-                // facetQuery: "+facetQuery,module);
-                Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0);
-                QueryResponse cat = (QueryResponse) query.get("rows");
+            for (String element : trailElements) {
+                Debug.logInfo("element: " + element, module);
                 List<Map<String, Object>> categories = FastList.newInstance();
-                Long subNumFound = (Long) query.get("numFound");
-                if (subNumFound != null) {
-                    numFound += subNumFound;
+                int level;
+                // 2016-03-22: Don't make a query for the first element, which is the count,
+                // but for compatibility, still make a map entry for it
+                if (isFirstElement) {
+                    level = 0;
+                    isFirstElement = false;
                 }
-                List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
-                for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
-                    FacetField field = (FacetField) catIterator.next();
-                    List<Count> catL = (List<Count>) field.getValues();
-                    if (catL != null) {
-                        for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                            FacetField.Count f = (FacetField.Count) catIter.next();
-                            if (f.getCount() > 0) {
-                                Map<String, Object> catMap = FastMap.newInstance();
-                                FastList<String> iName = FastList.newInstance();
-                                iName.addAll(Arrays.asList(f.getName().split("/")));
-                                // Debug.logInfo("topLevel "+topLevel,"");
-                                // int l = Integer.parseInt((String)
-                                // iName.getFirst());
-                                catMap.put("catId", iName.getLast());
-                                iName.removeFirst();
-                                String path = f.getName();
-                                catMap.put("path", path);
-                                if (level > 0) {
-                                    iName.removeLast();
-                                    catMap.put("parentCategory", StringUtils.join(iName, "/"));
-                                } else {
-                                    catMap.put("parentCategory", null);
+                else {
+                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, dctx, currentTrail);
+                    String[] categoryPathArray = categoryPath.split("/");
+                    level = Integer.parseInt(categoryPathArray[0]);
+                    String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                    // Debug.logInfo("categoryPath: "+categoryPath + "
+                    // facetQuery: "+facetQuery,module);
+                    Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0);
+                    QueryResponse cat = (QueryResponse) query.get("rows");
+                    Long subNumFound = (Long) query.get("numFound");
+                    if (subNumFound != null) {
+                        numFound += subNumFound;
+                    }
+                    List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
+                    for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
+                        FacetField field = (FacetField) catIterator.next();
+                        List<Count> catL = (List<Count>) field.getValues();
+                        if (catL != null) {
+                            for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
+                                FacetField.Count f = (FacetField.Count) catIter.next();
+                                if (f.getCount() > 0) {
+                                    Map<String, Object> catMap = FastMap.newInstance();
+                                    FastList<String> iName = FastList.newInstance();
+                                    iName.addAll(Arrays.asList(f.getName().split("/")));
+                                    // Debug.logInfo("topLevel "+topLevel,"");
+                                    // int l = Integer.parseInt((String)
+                                    // iName.getFirst());
+                                    catMap.put("catId", iName.getLast());
+                                    iName.removeFirst();
+                                    String path = f.getName();
+                                    catMap.put("path", path);
+                                    if (level > 0) {
+                                        iName.removeLast();
+                                        catMap.put("parentCategory", StringUtils.join(iName, "/"));
+                                    } else {
+                                        catMap.put("parentCategory", null);
+                                    }
+                                    catMap.put("count", Long.toString(f.getCount()));
+                                    categories.add(catMap);
                                 }
-                                catMap.put("count", Long.toString(f.getCount()));
-                                categories.add(catMap);
                             }
                         }
                     }

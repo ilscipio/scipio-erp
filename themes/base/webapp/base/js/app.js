@@ -42,10 +42,10 @@ $(function(){
 	catoObjectFit();
 	collapseFieldset();
 	$('.ui-autocomplete').addClass('f-dropdown');
-	Pizza.init(); //Create charts
 	
-	
-
+	if (typeof Pizza !== 'undefined') {
+		Pizza.init(); // Create charts
+	}
 });
 
 /* no longer needed; macros can decide where since patch

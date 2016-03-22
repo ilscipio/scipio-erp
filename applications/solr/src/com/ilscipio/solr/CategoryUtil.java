@@ -59,10 +59,10 @@ public abstract class CategoryUtil {
             //rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            // 2016-03-22: We need to order by sequenceNum first, THEN by fromDate, otherwise order/priority cannot be controlled from data ("sequenceNum", 
-            
-            
-            List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
+            // 2016-03-22: We need to order by sequenceNum first, THEN by fromDate, otherwise order/priority cannot be controlled from data and may be unpredictable
+            //List<String> orderBy = UtilMisc.toList("-fromDate");
+            List<String> orderBy = UtilMisc.toList("sequenceNum", "-fromDate");
+            List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, orderBy, null, true);
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                 /* 2016-03-22: This does not work properly and creates invalid trails. 
                  * Instead, use recursion.

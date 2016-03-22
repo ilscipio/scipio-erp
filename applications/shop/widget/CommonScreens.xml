@@ -381,6 +381,20 @@ under the License.
         </section>
     </screen>
     
+    <screen name="license">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://shop/webapp/shop/license.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- CATO: Widget implementation -->
     <screen name="CatoDashboardImage">
         <section>

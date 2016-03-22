@@ -105,6 +105,7 @@ under the License.
     <!-- General Request Mappings -->
     <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main" save-current-view="true"/></request-map>
     <request-map uri="policies"><security https="false" auth="false"/><response name="success" type="view" value="policies"/></request-map>
+    <request-map uri="license"><security https="false" auth="false"/><response name="success" type="view" value="license"/></request-map>
 
     <!-- Session Setting Requests -->
     <request-map uri="setSessionLocale">
@@ -1730,6 +1731,7 @@ under the License.
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://shop/widget/CommonScreens.xml#main"/>
     <view-map name="policies" type="screen" page="component://shop/widget/CommonScreens.xml#policies"/>
+    <view-map name="license" type="screen" page="component://shop/widget/CommonScreens.xml#license"/>
     <view-map name="login" type="screen" page="component://shop/widget/CommonScreens.xml#login"/>
     <view-map name="requirePasswordChange" type="screen" page="component://shop/widget/CommonScreens.xml#requirePasswordChange"/>
 

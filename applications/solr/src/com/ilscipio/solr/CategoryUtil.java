@@ -136,10 +136,14 @@ public abstract class CategoryUtil {
      * Returns categoryName with trail.
      * <p>
      * 2016-03-22: This now accepts a currentTrail needed because categories may have multiple trails.
-     * If not specified, the first trail is returned; if no perfect match, returns the closest one.
-     * CURRENTLY, it works like a hint rather than exact match.
+     * It is checked to help select the most appropriate of the multiple trails to return.
+     * If not specified, the first trail is returned; 
+     * CURRENTLY, it works like a hint rather than exact match - if no perfect match, returns the closest one.
      * FIXME?: it's possible we only want exact matches (exact) or matches containing the full currentTrail (containsFullTrail),
      * but I think it's safer for now to return closest-match.
+     * <p>
+     * NOTE: currentTrail should NOT contain the "TOP" category or the path length as first element.
+     * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getTrailNoTop}.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
     	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);

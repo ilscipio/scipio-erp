@@ -574,12 +574,14 @@ public class CategoryWorker {
                 }
 
                 String categoryId = category.getString("productCategoryId");
-                String categoryName = category.getString("categoryName");
-                if (UtilValidate.isEmpty(categoryName)) {
+
+                String categoryName = null;
+                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
+                if (UtilValidate.isNotEmpty(wrapper.get("CATEGORY_NAME", "html"))) {
+                    categoryName = wrapper.get("CATEGORY_NAME", "html").toString();
+                }
+                else {
                     categoryName = category.getString("productCategoryId");
-                    CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                    if (UtilValidate.isNotEmpty(wrapper.get("CATEGORY_NAME", "html")))
-                        categoryName = wrapper.get("CATEGORY_NAME", "html").toString();
                 }
 
                 // Debug.log("category name =========> " + categoryName);

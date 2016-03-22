@@ -555,6 +555,8 @@ public abstract class SolrProductSearch {
                 int level;
                 // 2016-03-22: Don't make a query for the first element, which is the count,
                 // but for compatibility, still make a map entry for it
+                // NOTE: I think this could be skipped entirely because level 0 is replaced/taken by the
+                // first category, but leaving in to play it safe
                 if (isFirstElement) {
                     level = 0;
                     isFirstElement = false;

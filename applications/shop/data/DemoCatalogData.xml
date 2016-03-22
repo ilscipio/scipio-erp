@@ -27,10 +27,38 @@ under the License.
 
     <ProductCategory categoryName="Demo Catalog Root"
         longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+    <!-- Cato: New categories 
+        NOTE: There are more special main categories (having CATALOG1 as parent) dispersed outside this file (from stock) -->
+    <ProductCategory longDescription="Clothing"
+        primaryParentCategoryId="CATALOG1" productCategoryId="500" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory longDescription="Menswear"
+            primaryParentCategoryId="500" productCategoryId="501" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory longDescription="Womenswear"
+            primaryParentCategoryId="500" productCategoryId="502" productCategoryTypeId="CATALOG_CATEGORY"/>
+        
+    <ProductCategory longDescription="Electronics"
+        primaryParentCategoryId="CATALOG1" productCategoryId="600" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory longDescription="Computers"
+            primaryParentCategoryId="600" productCategoryId="601" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory longDescription="Desktops and Laptops"
+                primaryParentCategoryId="601" productCategoryId="6011" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory longDescription="Software"
+                primaryParentCategoryId="601" productCategoryId="6012" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory longDescription="Computer Accessories"
+                primaryParentCategoryId="601" productCategoryId="6013" productCategoryTypeId="CATALOG_CATEGORY"/>
+                <ProductCategory longDescription="Peripherals"
+                    primaryParentCategoryId="6013" productCategoryId="60131" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory longDescription="MP3 Players"
+            primaryParentCategoryId="600" productCategoryId="602" productCategoryTypeId="CATALOG_CATEGORY"/>
+        
+
+    <!-- Cato: Old main categories (TODO: Remove) -->
     <ProductCategory longDescription="long description of Gizmos"
         primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory longDescription="long description of Widgets"
         primaryParentCategoryId="CATALOG1" productCategoryId="200" productCategoryTypeId="CATALOG_CATEGORY"/>
+    
     <ProductCategory longDescription="long description of Small Gizmos"
         primaryParentCategoryId="100" productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory longDescription="long description of Large Gizmos"
@@ -45,6 +73,8 @@ under the License.
         primaryParentCategoryId="201" productCategoryId="2012" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory longDescription="long description of Micro Widgets"
         primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
+        
+    <!-- Cato: Special categories -->
     <ProductCategory productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY" detailScreen="component://shop/widget/CatalogScreens.xml#categorydetailmatrix"/>
     <ProductCategory categoryName="Demo Default Search"
         longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
@@ -80,6 +110,24 @@ under the License.
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
 
+
+    <!-- Cato: New category links (TODO) -->
+    <!--
+    <ProductCategoryLink productCategoryId="100" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
+        titleText="See LGPL Gizmos" detailText="The LGPL license may be more restrictive than you would like, but we think you will like the gizmo anyway!"
+        imageUrl="/images/products/small/handshake_01.png"
+        sequenceNum="2" linkTypeEnumId="PCLT_SEARCH_PARAM"
+        linkInfo="SEARCH_CATEGORY_ID1=100&amp;SEARCH_SUB_CATEGORIES1=Y&amp;SEARCH_FEAT1=8000&amp;sortOrder=SortKeywordRelevancy&amp;sortAscending=N"/>
+    <ProductCategoryLink productCategoryId="100" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
+        titleText="Go To Google" detailText="If you cannot find the gizmo you want here, try it on Google."
+        imageUrl="http://www.google.com/intl/en_ALL/images/logo.gif"
+        sequenceNum="1" linkTypeEnumId="PCLT_ABS_URL"
+        linkInfo="http://www.google.com/"/>
+    <ProductCategoryLink productCategoryId="100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="3" linkTypeEnumId="PCLT_CAT_ID" linkInfo="101"/>
+    -->  
+
+    <!-- Cato: Old category links (TODO: Remove) -->
     <ProductCategoryLink productCategoryId="100" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
         titleText="See LGPL Gizmos" detailText="The LGPL license may be more restrictive than you would like, but we think you will like the gizmo anyway!"
         imageUrl="/images/products/small/handshake_01.png"
@@ -93,7 +141,98 @@ under the License.
     <ProductCategoryLink productCategoryId="100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="3" linkTypeEnumId="PCLT_CAT_ID" linkInfo="101"/>
         
-    <!-- Category Alternative URL -->
+            
+    <!-- Category Alternative URL -->    
+        
+    <!-- Cato: New Category Alternative URL -->
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="500-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR500-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="501-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR501-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="502-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR502-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="600-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR600-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="601-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR601-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="602-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR602-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6011-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6011-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6012-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6012-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6013-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6013-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="60131-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR60131-ALTEN" localeString="en_US"/>
+    
+    <ElectronicText dataResourceId="500-ALT" textData="clothing"/>
+    <ElectronicText dataResourceId="501-ALT" textData="clothing-men"/>
+    <ElectronicText dataResourceId="502-ALT" textData="clothing-women"/>
+    <ElectronicText dataResourceId="600-ALT" textData="electronics"/>
+    <ElectronicText dataResourceId="601-ALT" textData="computers"/>
+    <ElectronicText dataResourceId="602-ALT" textData="mp3-players"/>
+    <ElectronicText dataResourceId="6011-ALT" textData="desktop-laptops"/>
+    <ElectronicText dataResourceId="6012-ALT" textData="software"/>
+    <ElectronicText dataResourceId="6013-ALT" textData="accessories"/>
+    <ElectronicText dataResourceId="60131-ALT" textData="peripherals"/>
+    
+    <ElectronicText dataResourceId="DR500-ALTEN" textData="clothing"/>
+    <ElectronicText dataResourceId="DR501-ALTEN" textData="clothing-men"/>
+    <ElectronicText dataResourceId="DR502-ALTEN" textData="clothing-women"/>
+    <ElectronicText dataResourceId="DR600-ALTEN" textData="electronics"/>
+    <ElectronicText dataResourceId="DR601-ALTEN" textData="computers"/>
+    <ElectronicText dataResourceId="DR602-ALTEN" textData="mp3-players"/>
+    <ElectronicText dataResourceId="DR6011-ALTEN" textData="desktop-laptops"/>
+    <ElectronicText dataResourceId="DR6012-ALTEN" textData="software"/>
+    <ElectronicText dataResourceId="DR6013-ALTEN" textData="accessories"/>
+    <ElectronicText dataResourceId="DR60131-ALTEN" textData="peripherals"/>
+    
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="500-ALT" dataResourceId="500-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C500-ALTEN" dataResourceId="DR500-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="501-ALT" dataResourceId="501-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C501-ALTEN" dataResourceId="DR501-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="502-ALT" dataResourceId="502-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C502-ALTEN" dataResourceId="DR502-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="600-ALT" dataResourceId="600-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C600-ALTEN" dataResourceId="DR600-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="601-ALT" dataResourceId="601-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C601-ALTEN" dataResourceId="DR601-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="602-ALT" dataResourceId="602-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C601-ALTEN" dataResourceId="DR601-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6011-ALT" dataResourceId="6011-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6011-ALTEN" dataResourceId="DR6011-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6012-ALT" dataResourceId="6012-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6012-ALTEN" dataResourceId="DR6012-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6013-ALT" dataResourceId="6013-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6013-ALTEN" dataResourceId="DR6013-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="60131-ALT" dataResourceId="60131-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C60131-ALTEN" dataResourceId="DR60131-ALTEN"/>
+    
+    <ContentAssoc contentId="500-ALT" contentIdTo="C500-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="501-ALT" contentIdTo="C501-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="502-ALT" contentIdTo="C502-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="600-ALT" contentIdTo="C600-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="601-ALT" contentIdTo="C601-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="602-ALT" contentIdTo="C601-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="6011-ALT" contentIdTo="C6011-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="6012-ALT" contentIdTo="C6012-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="6013-ALT" contentIdTo="C6013-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="60131-ALT" contentIdTo="C60131-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="500" contentId="500-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="501" contentId="501-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="502" contentId="502-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="600" contentId="600-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="601" contentId="601-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="602" contentId="602-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6011" contentId="6011-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6012" contentId="6012-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6013" contentId="6013-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="60131" contentId="60131-ALT" fromDate="2001-05-13 12:00:00.0"/>
+        
+        
+    <!-- Cato: Old categories (TODO: Remove) -->    
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="101-ALT" localeString="en"/>
@@ -936,6 +1075,20 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GOOGLE_BASE" productCategoryId="GB_TYS_GMS"/>
     -->
     
+    <!--  Cato: New categories -->
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="500"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="501"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="502"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="600"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="601"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="602"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6011"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6012"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6013"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="6013" productCategoryId="60131"/>
+
+    
+    <!--  Cato: Old categories (TODO: Remove) -->
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>

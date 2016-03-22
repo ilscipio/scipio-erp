@@ -80,10 +80,15 @@ under the License.
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK02" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2004-09-24 15:09:47.338"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK03" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2004-09-24 15:09:55.279"/>
 
+    <!-- Cato: No need for configurable PC category
     <ProductCategory productCategoryId="PC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="PC-100"/>
+    -->
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
+    <!-- Cato: Put this in one of the new main categories instead
     <ProductCategoryMember productCategoryId="PC-100" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
+    -->
+    <ProductCategoryMember productCategoryId="601" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="ENCHILADAS" productTypeId="AGGREGATED" productName="Enchiladas" internalName="Enchiladas" description="Cheese enchiladas" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
@@ -225,8 +230,10 @@ under the License.
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
 
     <!-- alternative URL -->
+    <!-- Cato: Unneeded
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
+    -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FOOD-001-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC001-ALT" localeString="en"/>
@@ -276,8 +283,10 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PEPPERS-R-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPEPPERS-R-ALTEN" localeString="en_US"/>
     
+    <!-- Cato: Unneeded
     <ElectronicText dataResourceId="PC-100-ALT" textData="configurable-pcs"/>
-    <ElectronicText dataResourceId="FOOD-001-ALT" textData="configurable-foods"/>
+    -->
+    <ElectronicText dataResourceId="FOOD-001-ALT" textData="groceries"/>
     <ElectronicText dataResourceId="PC001-ALT" textData="configurable-pc"/>
     <ElectronicText dataResourceId="RAM1GB_BRAND-ALT" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="HD250GB_BRAND-ALT" textData="hd-250-gb"/>
@@ -302,8 +311,10 @@ under the License.
     <ElectronicText dataResourceId="PEPPERS-H-ALT" textData="hot-peppers"/>
     <ElectronicText dataResourceId="PEPPERS-R-ALT" textData="roasted-peppers"/>
     
+    <!-- Cato: Unneeded
     <ElectronicText dataResourceId="DRPC-100-ALTEN" textData="configurable-pcs"/>
-    <ElectronicText dataResourceId="DRFOOD-001-ALTEN" textData="configurable-foods"/>
+    -->
+    <ElectronicText dataResourceId="DRFOOD-001-ALTEN" textData="groceries"/>
     <ElectronicText dataResourceId="DRPC001-ALTEN" textData="configurable-pc"/>
     <ElectronicText dataResourceId="DRRAM1GB_BRAND-ALTEN" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="DRHD250GB_BRAND-ALT" textData="hd-250-gb"/>
@@ -328,8 +339,10 @@ under the License.
     <ElectronicText dataResourceId="DRPEPPERS-H-ALTEN" textData="hot-peppers"/>
     <ElectronicText dataResourceId="DRPEPPERS-R-ALTEN" textData="roasted-peppers"/>
     
+    <!-- Cato: Unneeded
     <Content contentId="PC-100-ALT" contentTypeId="DOCUMENT" dataResourceId="PC-100-ALT" localeString="en"/>
     <Content contentId="CPC-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
+    -->
     <Content contentId="FOOD-001-ALT" contentTypeId="DOCUMENT" dataResourceId="FOOD-001-ALT" localeString="en"/>
     <Content contentId="CFOOD-001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
     <Content contentId="PC001-ALT" contentTypeId="DOCUMENT" dataResourceId="PC001-ALT" localeString="en"/>
@@ -379,7 +392,9 @@ under the License.
     <Content contentId="PEPPERS-R-ALT" contentTypeId="DOCUMENT" dataResourceId="PEPPERS-R-ALT" localeString="en"/>
     <Content contentId="CPEPPERS-R-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPEPPERS-R-ALTEN" localeString="en_US"/>
     
+    <!-- Cato: Unneeded
     <ContentAssoc contentId="PC-100-ALT" contentIdTo="CPC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    -->
     <ContentAssoc contentId="FOOD-001-ALT" contentIdTo="CFOOD-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC001-ALT" contentIdTo="CPC001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="RAM1GB_BRAND-ALT" contentIdTo="CRAM1GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -405,7 +420,9 @@ under the License.
     <ContentAssoc contentId="PEPPERS-H-ALT" contentIdTo="CPEPPERS-H-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PEPPERS-R-ALT" contentIdTo="CPEPPERS-R-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
+    <!-- Cato: Unneeded
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-100" contentId="PC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    -->
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FOOD-001" contentId="FOOD-001-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <ProductContent productId="PC001" contentId="PC001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>

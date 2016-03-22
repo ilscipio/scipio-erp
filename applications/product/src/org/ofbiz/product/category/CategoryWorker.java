@@ -18,8 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.product.category;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -374,6 +376,28 @@ public class CategoryWorker {
         List<String> crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
         return crumb;
     }
+    
+    /**
+     * Cato: Version that returns a copy of the trail without the TOP category.
+     */
+    public static List<String> getTrailNoTop(ServletRequest request) {
+        List<String> fullTrail = getTrail(request);
+        List<String> res = null;
+        if (fullTrail != null) {
+            res = new ArrayList<String>(fullTrail.size());
+            Iterator<String> it = fullTrail.iterator();
+            if (it.hasNext()) {
+                String next = it.next(); // check first
+                if (!"TOP".equals(next)) {
+                    res.add(next);
+                }
+                while (it.hasNext()) {
+                    res.add(it.next());
+                }
+            }
+        }
+        return res;
+    }    
 
     public static List<String> setTrail(ServletRequest request, List<String> crumb) {
         HttpSession session = ((HttpServletRequest) request).getSession();

@@ -28,6 +28,8 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
+currentTrail = org.ofbiz.product.category.CategoryWorker.getTrailNoTop(request);
+
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";
 curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
@@ -36,7 +38,7 @@ topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
     // Cato: FIXME?: Currently something wrong with this query, returns bad categories (currently filtered by FTL)
-    res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId]);
+    res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId, currentTrail:currentTrail]);
     catLevel = res.get("categories");
 }
 
@@ -51,7 +53,8 @@ bestSellCategoryId = CatalogWorker.getCatalogBestSellCategoryId(request, current
 //Debug.logInfo("catList "+catLevel,"");
 currentCategoryPath = null;
 if (curCategoryId) {
-    currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, false, dispatcher.getDispatchContext());
+    currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, false, 
+        dispatcher.getDispatchContext(), currentTrail);
 }
 context.currentCategoryPath = currentCategoryPath;
 context.catList = catLevel;

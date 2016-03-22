@@ -27,6 +27,9 @@ import com.ilscipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
 module = "Breadcrumbs.groovy";
+
+currentTrail = org.ofbiz.product.category.CategoryWorker.getTrailNoTop(request);
+
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";
 curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";
@@ -44,7 +47,7 @@ productCategoryId = curCategoryId;
 validBreadcrumb = topCategoryId + "/";
 
 dctx = dispatcher.getDispatchContext();
-categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,dctx);
+categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,dctx,currentTrail);
 breadcrumbsList = FastList.newInstance();
 breadcrumbs = categoryPath.split("/");
 for (breadcrumb in breadcrumbs) {
@@ -69,10 +72,10 @@ I think there is a conceptual mistake here. The breadcrumbs don't really care if
 They are rather to be seen as a way of leading up to a certain directory
 
 if (curCategoryId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
     validBreadcrumb = curCategoryId;
 } else if (curProductId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
 }
 Debug.log("valid Breadcrubm  =========> " + validBreadcrumb);
 

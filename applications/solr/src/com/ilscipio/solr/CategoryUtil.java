@@ -50,44 +50,64 @@ public abstract class CategoryUtil {
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = FastList.newInstance();
-        String parentProductCategoryId = productCategoryId;
-        while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
+        // 2016-03-22: don't need a loop here due to change below
+        //String parentProductCategoryId = productCategoryId;
+        //while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
             // find product category rollup
-            try {
-                List<EntityCondition> rolllupConds = FastList.newInstance();
-                rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-                rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
-                if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                    List<List<String>> trailElementsAux = FastList.newInstance();
-                    trailElementsAux.addAll(trailElements);
-                    // add only categories that belong to the top category to trail
-                    for (GenericValue productCategoryRollup : productCategoryRollups) {
-                        String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                        parentProductCategoryId = trailCategoryId;
-                        List<String> trailElement = FastList.newInstance();
-                        if (!trailElements.isEmpty()) {
-                            for (List<String> trailList : trailElementsAux) {
-                                trailElement.add(trailCategoryId);
-                                trailElement.addAll(trailList);
-                                trailElements.remove(trailList);
-                                trailElements.add(trailElement);
-                            }
-                        } else {
+        try {
+            List<EntityCondition> rolllupConds = FastList.newInstance();
+            //rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
+            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            rolllupConds.add(EntityUtil.getFilterByDateExpr());
+            // 2016-03-22: We need to order by sequenceNum first, THEN by fromDate, otherwise order/priority cannot be controlled from data ("sequenceNum", 
+            
+            
+            List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
+            if (UtilValidate.isNotEmpty(productCategoryRollups)) {
+                /* 2016-03-22: This does not work properly and creates invalid trails. 
+                 * Instead, use recursion.
+                List<List<String>> trailElementsAux = FastList.newInstance();
+                trailElementsAux.addAll(trailElements);
+                // add only categories that belong to the top category to trail
+                for (GenericValue productCategoryRollup : productCategoryRollups) {
+                    String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                    parentProductCategoryId = trailCategoryId;
+                    List<String> trailElement = FastList.newInstance();
+                    if (!trailElements.isEmpty()) {
+                        for (List<String> trailList : trailElementsAux) {
                             trailElement.add(trailCategoryId);
-                            trailElement.add(productCategoryId);
+                            trailElement.addAll(trailList);
+                            trailElements.remove(trailList);
                             trailElements.add(trailElement);
                         }
+                    } else {
+                        trailElement.add(trailCategoryId);
+                        trailElement.add(productCategoryId);
+                        trailElements.add(trailElement);
                     }
-                } else {
-                    parentProductCategoryId = null;
                 }
+                */
+                
+                // For each parent cat, get its trails recursively and add our own
+                for (GenericValue productCategoryRollup : productCategoryRollups) {
+                    String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                    List<List<String>> parentTrails = getCategoryTrail(parentProductCategoryId, dctx);
+                    for (List<String> trail : parentTrails) {
+                        // WARN: modifying the parent trail in-place for speed
+                        trail.add(productCategoryId);
+                        trailElements.add(trail);
+                    }
+                }
+            } 
+            //} else {
+            //    parentProductCategoryId = null;
+            //}
 
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot generate trail from product category", module);
-            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot generate trail from product category; SOLR query or data may be incomplete!", module);
         }
-        if (trailElements.size() == 0) {
+        //}
+        if (trailElements.isEmpty()) {
             List<String> trailElement = FastList.newInstance();
         	trailElement.add(productCategoryId);
             trailElements.add(trailElement);
@@ -96,27 +116,62 @@ public abstract class CategoryUtil {
     }
     
     /**
-     * Returns categoryName with trail
+     * Returns categoryName with trail.
      */
+    public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx, List<String> currentTrail) {
+    	return getCategoryNameWithTrail(productCategoryId, true,  dctx, currentTrail);
+    }
+    
+    /* Commenting these out until all the callers are covered...
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-    	return getCategoryNameWithTrail(productCategoryId, true,  dctx);
+        return getCategoryNameWithTrail(productCategoryId, true,  dctx, null);
     }
 
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
+        return getCategoryNameWithTrail(productCategoryId, showDepth, dctx, null);
+    }
+    */
+    
+    /**
+     * Returns categoryName with trail.
+     * <p>
+     * 2016-03-22: This now accepts a currentTrail needed because categories may have multiple trails.
+     * If not specified, the first trail is returned; if no perfect match, returns the closest one.
+     * CURRENTLY, it works like a hint rather than exact match.
+     * FIXME?: it's possible we only want exact matches (exact) or matches containing the full currentTrail (containsFullTrail),
+     * but I think it's safer for now to return closest-match.
+     */
+    public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
     	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
-        String cm ="";
+        String cm = "";
         int i = 0;
-        for (List<String> trailElement : trailElements) {
-            for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
-                String trailString = (String) trailIter.next();
-                if (catMember.length() > 0){
-                	catMember.append("/");
-                	i++;
+        // 2016-03-22: This loop breaks because a category can have multiple trails.
+        // WORKAROUND: use a current trail hint, or if none provided, use the first trail returned.
+        //for (List<String> trailElement : trailElements) {
+        if (!trailElements.isEmpty()) {
+            List<String> trailElement = null;
+            if (UtilValidate.isNotEmpty(currentTrail)) {
+                // FIXME?: currently works like a hint, don't force exact matching
+                trailElement = findBestTrailMatch(trailElements, currentTrail, false, false);
+                if (trailElement == null) {
+                    trailElement = trailElements.get(0);
                 }
-                
-                catMember.append(trailString);
+            }
+            else {
+                trailElement = trailElements.get(0);
+            }
+            if (trailElement != null) {
+                for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
+                    String trailString = (String) trailIter.next();
+                    if (catMember.length() > 0){
+                    	catMember.append("/");
+                    	i++;
+                    }
+                    
+                    catMember.append(trailString);
+                }
             }
         }
         
@@ -130,6 +185,64 @@ public abstract class CategoryUtil {
         //Debug.logInfo("catMember "+cm,module);
     	return cm;
     }
+    
+    /**
+     * Finds best trail match.
+     * <p>
+     * If containFullTrail true, returns null if the best trail match does not fully contain the match trail;
+     * if false, this will return the longest-path match found.
+     * If exact true, has to match exactly.
+     */
+    public static List<String> findBestTrailMatch(List<List<String>> trails, List<String> matchTrail, boolean containFullTrail, boolean exact) {
+        List<String> best = null;
+        int partMatches = 0;
+        
+        for(List<String> candidateTrail : trails) {
+            int candidatePartMatches = 0;
+            Iterator<String> candidateIt = candidateTrail.iterator();
+            Iterator<String> matchIt = matchTrail.iterator();
+            while(candidateIt.hasNext() && matchIt.hasNext()) {
+                String candidatePart = candidateIt.next();
+                String matchPart = matchIt.next();
+                if (candidatePart.equals(matchPart)) {
+                    candidatePartMatches++;
+                }
+                else {
+                    break;
+                }
+            }
+            
+            if (candidatePartMatches == matchTrail.size() && matchTrail.size() == candidateTrail.size()) {
+                // Found exact match, return it right away as shortcut
+                return candidateTrail;
+            }
+            else {
+                if (candidatePartMatches > partMatches) {
+                    partMatches = candidatePartMatches;
+                    best = candidateTrail;
+                }
+            }
+        }
+        
+        if (exact) {
+            // If there was an exact match, it would have returned above
+            return null;
+        }
+        else {
+            if (containFullTrail) {
+                if (partMatches >= matchTrail.size()) {
+                    return best;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return best;
+            }
+        }
+    }
+    
     
     /**	
      * Returns nextLevel from trailed category.

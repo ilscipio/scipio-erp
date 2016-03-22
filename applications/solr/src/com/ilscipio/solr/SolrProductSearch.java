@@ -482,13 +482,15 @@ public abstract class SolrProductSearch {
             String catalogId = null;
             if (UtilValidate.isNotEmpty(context.get("catalogId")))
                 catalogId = (String) context.get("catalogId");
+            
+            List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
 
             // String productCategoryId = (String)
             // context.get("productCategoryId") != null ?
             // CategoryUtil.getCategoryNameWithTrail((String)
-            // context.get("productCategoryId"), dctx): null;
+            // context.get("productCategoryId"), dctx, currentTrail): null;
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx) : null;
+                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx, currentTrail) : null;
             Debug.logInfo("productCategoryId " + productCategoryId, module);
             Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
                     viewIndex, viewSize);
@@ -530,9 +532,11 @@ public abstract class SolrProductSearch {
             String catalogId = null;
             if (UtilValidate.isNotEmpty(context.get("catalogId")))
                 catalogId = (String) context.get("catalogId");
+            
+            List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
 
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx) : null;
+                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = FastMap.newInstance();
             Debug.logInfo("productCategoryId: " + productCategoryId, module);
@@ -543,7 +547,7 @@ public abstract class SolrProductSearch {
             // iterate over actual results
             for (String elements : trailElements) {
                     Debug.logInfo("elements: " + elements, module);
-                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx);
+                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx, currentTrail);
                     String[] categoryPathArray = categoryPath.split("/");
                     int level = Integer.parseInt(categoryPathArray[0]);
                     String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);

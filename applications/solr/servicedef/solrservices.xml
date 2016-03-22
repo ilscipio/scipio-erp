@@ -166,6 +166,7 @@ under the License.
         <attribute mode="IN" optional="true" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="productId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
+        <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
         <attribute mode="IN" optional="true" name="displayProducts" type="Boolean"/>
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Long"/>
@@ -180,6 +181,7 @@ under the License.
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
+        <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>

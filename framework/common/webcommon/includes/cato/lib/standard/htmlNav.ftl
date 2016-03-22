@@ -1307,8 +1307,8 @@ Renders a menu in a tree fashion.
         <#-- ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
         ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)} -->
         <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local>         
-        <#-- FIXME: I'm not sure why, but I must replace the # manually becase it gets encoded somewhere within objectAsScript -->
-        <#local treeMenuDataJson>${treeMenuDataJson?replace("&#x23;", "#")}</#local>
+        <#-- No longer need to escape this manually; @objectAsScript now prevents auto-escaping by screen context var wrappers -->
+        <#--<#local treeMenuDataJson>${treeMenuDataJson?replace("&#x23;", "#")}</#local>-->
         <#-- ${Static["org.ofbiz.base.util.Debug"].log("treeMenuDataJson ====> " + treeMenuDataJson)} -->  
         <#local nestedEvents><#nested></#local>
 

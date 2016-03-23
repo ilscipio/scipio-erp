@@ -25,7 +25,8 @@ under the License.
         <menu-item name="store" title="${uiLabelMap.ProductStores}"><link target="FindProductStore"/></menu-item>
         <menu-item name="pricerules" title="${uiLabelMap.ProductPrices}"><link target="FindProductPriceRules"/></menu-item>
         <menu-item name="promos" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromo"/></menu-item>
-        <menu-item name="Imagemanagement" title="${uiLabelMap.CommonMedia}"><link target="Imagemanagement"/></menu-item>
+        <!-- CATO - Remove; will be replaced with content app features -->
+        <!-- <menu-item name="Imagemanagement" title="${uiLabelMap.CommonMedia}"><link target="Imagemanagement"/></menu-item> -->
     </menu>
     <menu name="CatalogAppSideBar" title="${uiLabelMap.ProductCatalog}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- Already included in CommonSidebar 
@@ -691,7 +692,8 @@ under the License.
         <include-elements menu-name="ConfigItemTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <!-- CATO - Remove; will be replaced with content app features -->
+   <!--  <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
             <condition>
@@ -771,5 +773,5 @@ under the License.
     <menu name="ImageManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage">
         <include-elements menu-name="ImageManagementTabBar" recursive="includes-only" />
-    </menu>
+    </menu> -->
 </menus>

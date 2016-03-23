@@ -2681,7 +2681,8 @@ under the License.
     </request-map>
     
     <!-- ================ Image Management Requests ================= -->
-    <request-map uri="Imagemanagement"><security https="true" auth="true"/>
+    <!-- CATO - Remove; will be replaced with content app features -->
+<!--     <request-map uri="Imagemanagement"><security https="true" auth="true"/>
         <response name="success" type="view" value="Imagemanagement"/>
     </request-map>
     <request-map uri="ImageGallery">
@@ -2957,7 +2958,7 @@ under the License.
         <event type="service" path="" invoke="renameImage"/>
         <response name="success" type="view" value="ListImageManage"/>
         <response name="error" type="view" value="ListImageManage"/>
-    </request-map>
+    </request-map> -->
 
    <!-- ================ Lookup Requests ================= -->
     <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>
@@ -3266,7 +3267,8 @@ under the License.
     <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
 
     <!-- Image Management request mappings -->
-    <view-map name="Imagemanagement" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#Imagemanagement"/>
+    <!-- CATO - Remove; will be replaced with content app features -->
+<!--     <view-map name="Imagemanagement" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#Imagemanagement"/>
     <view-map name="ImageGallery" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageGallery" type="screen"/>
     <view-map name="ImageUpload" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageUpload" type="screen"/>
     <view-map name="ImageApprove" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageApprove" type="screen"/>
@@ -3290,6 +3292,6 @@ under the License.
     <view-map name="ListPeopleApproved" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#ListPeopleApproved"/>
     <view-map name="ListPeopleRejected" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#ListPeopleRejected"/>
     <view-map name="LookupImageFrame" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#LookupImageFrame"/>
-    <view-map name="ImageResize" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageResize"/>
+    <view-map name="ImageResize" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageResize"/> -->
     <!-- end of view mappings -->
 </site-conf>

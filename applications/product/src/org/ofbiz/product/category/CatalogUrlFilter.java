@@ -208,20 +208,12 @@ public class CatalogUrlFilter extends ContextFilter {
             urlBuilder.append("/" + CONTROL_MOUNT_POINT);
             
             if (UtilValidate.isNotEmpty(productId)) {
-                try {
-                    List<EntityCondition> conds = FastList.newInstance();
-                    conds.add(EntityCondition.makeCondition("productId", productId));
-                    conds.add(EntityUtil.getFilterByDateExpr());
-                    List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).orderBy("-fromDate").cache(true).queryList();
-                    if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                        GenericValue productCategoryMember = EntityUtil.getFirst(productCategoryMembers);
-                        productCategoryId = productCategoryMember.getString("productCategoryId");
-                    }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Cannot find product category for product: " + productId, module);
+                // Cato: factored out
+                String catId = getProductDefaultCategoryId(delegator, productId);
+                if (catId != null) {
+                    productCategoryId = catId;
                 }
                 urlBuilder.append("/" + PRODUCT_REQUEST);
-                
             } else {
                 urlBuilder.append("/" + CATEGORY_REQUEST);
             }
@@ -239,20 +231,10 @@ public class CatalogUrlFilter extends ContextFilter {
             
             // look for productCategoryId from productId
             if (UtilValidate.isNotEmpty(productId)) {
-                try {
-                    List<EntityCondition> rolllupConds = FastList.newInstance();
-                    rolllupConds.add(EntityCondition.makeCondition("productId", productId));
-                    rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                    List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember").where(rolllupConds).orderBy("-fromDate").cache(true).queryList();
-                    for (GenericValue productCategoryMember : productCategoryMembers) {
-                        String trailCategoryId = productCategoryMember.getString("productCategoryId");
-                        if (trailCategoryIds.contains(trailCategoryId)) {
-                            productCategoryId = trailCategoryId;
-                            break;
-                        }
-                    }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Cannot generate trail from product category", module);
+                // Cato: factored out
+                String catId = getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
+                if (catId != null) {
+                    productCategoryId = catId;
                 }
             }
 
@@ -262,34 +244,7 @@ public class CatalogUrlFilter extends ContextFilter {
             
             // generate trail elements from productCategoryId
             if (UtilValidate.isNotEmpty(productCategoryId)) {
-                List<String> trailElements = FastList.newInstance();
-                trailElements.add(productCategoryId);
-                String parentProductCategoryId = productCategoryId;
-                while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
-                    // find product category rollup
-                    try {
-                        List<EntityCondition> rolllupConds = FastList.newInstance();
-                        rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-                        rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                        List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("-fromDate").cache(true).queryList();
-                        if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                            // add only categories that belong to the top category to trail
-                            for (GenericValue productCategoryRollup : productCategoryRollups) {
-                                String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                                parentProductCategoryId = trailCategoryId;
-                                if (trailCategoryIds.contains(trailCategoryId)) {
-                                    trailElements.add(trailCategoryId);
-                                    break;
-                                }
-                            }
-                        } else {
-                            parentProductCategoryId = null;
-                        }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Cannot generate trail from product category", module);
-                    }
-                }
-                Collections.reverse(trailElements);
+                List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
                 
                 List<String> trail = CategoryWorker.getTrail(httpRequest);
                 if (trail == null) {
@@ -362,6 +317,86 @@ public class CatalogUrlFilter extends ContextFilter {
         // we're done checking; continue on
         chain.doFilter(request, response);
     }
+    
+    /**
+     * Cato: Stock code factored out from doGet.
+     */
+    public static String getProductDefaultCategoryId(Delegator delegator, String productId) {
+        String productCategoryId = null;
+        try {
+            List<EntityCondition> conds = FastList.newInstance();
+            conds.add(EntityCondition.makeCondition("productId", productId));
+            conds.add(EntityUtil.getFilterByDateExpr());
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).orderBy("-fromDate").cache(true).queryList();
+            if (UtilValidate.isNotEmpty(productCategoryMembers)) {
+                GenericValue productCategoryMember = EntityUtil.getFirst(productCategoryMembers);
+                productCategoryId = productCategoryMember.getString("productCategoryId");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot find product category for product: " + productId, module);
+        }
+        return productCategoryId;
+    }
+    
+    /**
+     * Cato: Stock code factored out from doGet.
+     */
+    public static String getProductMatchingCategoryId(Delegator delegator, String productId, List<String> categoryIds) {
+        String productCategoryId = null;
+        try {
+            List<EntityCondition> rolllupConds = FastList.newInstance();
+            rolllupConds.add(EntityCondition.makeCondition("productId", productId));
+            rolllupConds.add(EntityUtil.getFilterByDateExpr());
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember").where(rolllupConds).orderBy("-fromDate").cache(true).queryList();
+            for (GenericValue productCategoryMember : productCategoryMembers) {
+                String trailCategoryId = productCategoryMember.getString("productCategoryId");
+                if (categoryIds.contains(trailCategoryId)) {
+                    productCategoryId = trailCategoryId;
+                    break;
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot generate trail from product category", module);
+        }
+        return productCategoryId;
+    }    
+    
+    /**
+     * Cato: Stock code factored out from doGet.
+     */
+    public static List<String> getTrailElements(Delegator delegator, String productCategoryId, List<String> trailCategoryIds) {
+        List<String> trailElements = FastList.newInstance();
+        trailElements.add(productCategoryId);
+        String parentProductCategoryId = productCategoryId;
+        while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
+            // find product category rollup
+            try {
+                List<EntityCondition> rolllupConds = FastList.newInstance();
+                rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
+                rolllupConds.add(EntityUtil.getFilterByDateExpr());
+                List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("-fromDate").cache(true).queryList();
+                if (UtilValidate.isNotEmpty(productCategoryRollups)) {
+                    // add only categories that belong to the top category to trail
+                    for (GenericValue productCategoryRollup : productCategoryRollups) {
+                        String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                        parentProductCategoryId = trailCategoryId;
+                        if (trailCategoryIds.contains(trailCategoryId)) {
+                            trailElements.add(trailCategoryId);
+                            break;
+                        }
+                    }
+                } else {
+                    parentProductCategoryId = null;
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot generate trail from product category", module);
+            }
+        }
+        Collections.reverse(trailElements);
+        return trailElements;
+    }    
+    
+    
     
     public static String makeCategoryUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");

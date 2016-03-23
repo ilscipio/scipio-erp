@@ -729,6 +729,9 @@ public class CategoryWorker {
      * NOTE: is caching
      */
     public static boolean isCategoryTop(Delegator delegator, LocalDispatcher dispatcher, String productCategoryId) {
+        if (UtilValidate.isEmpty(productCategoryId)) {
+            return false;
+        }
         try {
             List<EntityCondition> rolllupConds = FastList.newInstance();
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
@@ -738,22 +741,98 @@ public class CategoryWorker {
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
-        return true; // if no data, technically should assume true
+        return false; // can't tell, return false to play it safe
     }
+    
+    /**
+     * Cato: Returns true only if the category ID is a top category.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryTop(ServletRequest request, String productCategoryId) {
+        return isCategoryTop((Delegator) request.getAttribute("delegator"), 
+                (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId);
+    }
+    
+    /**
+     * Cato: Returns true only if the category ID is a top category.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryContainsProduct(Delegator delegator, LocalDispatcher dispatcher, String productCategoryId, String productId) {
+        if (UtilValidate.isEmpty(productCategoryId) || UtilValidate.isEmpty(productId)) {
+            return false;
+        }
+        try {
+            List<EntityCondition> conds = FastList.newInstance();
+            conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            conds.add(EntityCondition.makeCondition("productId", productId));
+            conds.add(EntityUtil.getFilterByDateExpr());
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).cache(true).queryList();
+            return !productCategoryMembers.isEmpty();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return false; // can't tell, return false to play it safe
+    }
+    
+    /**
+     * Cato: Returns true only if the category contains the product, NON-recursive.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryContainsProduct(ServletRequest request, String productCategoryId, String productId) {
+        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"), 
+                (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId, productId);
+    }
+    
+    
     
     
     /**
-     * Cato: Returns a valid category path/trail (as parts) from the current request trail in session,
-     * without top.
+     * Cato: Returns a valid category path/trail (as parts) from the given trail,
+     * starting with the top category (but without the fake "TOP" category). 
+     * If none could be determined, returns null.
      * <p>
-     * In some circumstances, getTrail(NoTop) alone could work, but we need a method that guarantees
+     * In some circumstances, getTrailNoTop alone could work, but we need a method that guarantees
      * a full path because the trail may not always be reliable or formal enough.
+     * <p>
+     * FIXME: This does NOT currently verify that the category path is actually valid!
+     * We are relying on trailbuilding code elsewhere until can determine a reliable algorithm.
+     * <p>
+     * TODO?: This could try to produce better guesses in cases where top category is missing, instead
+     * of returning null? I don't know if this is always safe, would want an extra flag and maybe
+     * should not be the default behavior.
      */
-    public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
-        // TODO: for now trail is close
-        return getTrailNoTop(request);
+    public static List<String> getCategoryPathFromTrailAsList(ServletRequest request, List<String> trail) {
+        List<String> path = null;
+        //List<String> trail = getTrailNoTop(request);
+        // Get the last trail entry that is a top category. Usually this will be the first after "TOP",
+        // but the trail is sometimes strange, so need to guarantee at least that.
+        if (trail != null) {
+            ListIterator<String> it = trail.listIterator(trail.size());
+            while (it.hasPrevious() && path == null) {
+                String part = it.previous();
+                if (UtilValidate.isNotEmpty(part) && !"TOP".equals(part) && isCategoryTop(request, part)) {
+                    path = new ArrayList<String>(trail.subList(it.nextIndex(), trail.size()));
+                }
+            }
+        }
+        /* TODO: should validate the path here
+        if (path != null) {
+            
+        }*/
+        return path;
     }
     
+    /**
+     * Cato: Returns a valid category path/trail (as parts) from the current request trail in session,
+     * starting with the top category (but without the fake "TOP" category). 
+     * If none could be determined, returns null.
+     */
+    public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
+        return getCategoryPathFromTrailAsList(request, getTrail(request));
+    }
     
     /**
      * Cato: Checks the given trail for the last recorded top category ID, if any.
@@ -764,7 +843,7 @@ public class CategoryWorker {
     public static String getTopCategoryFromTrail(Delegator delegator, LocalDispatcher dispatcher, List<String> trail) {
         String catId = null;
         if (trail != null) {
-            ListIterator<String> it = trail.listIterator();
+            ListIterator<String> it = trail.listIterator(trail.size());
             while (it.hasPrevious()) {
                 catId = it.previous();
                 if (UtilValidate.isNotEmpty(catId) && !"TOP".equals(catId)) {
@@ -794,5 +873,31 @@ public class CategoryWorker {
     public static String getTopCategoryFromTrail(ServletRequest request) {
         return getTopCategoryFromTrail(request, getTrail(request));
     }
+    
+    
+    /**
+     * Cato: Attempts to determine a suitable category for the given product from given trail.
+     */
+    public static String getCategoryForProductFromTrail(ServletRequest request, String productId, List<String> trail) {
+        if (UtilValidate.isNotEmpty(productId)) {
+            if (trail != null && !trail.isEmpty()) {
+                String catId = trail.get(trail.size() - 1);
+                if (UtilValidate.isNotEmpty(catId) && !"TOP".equals(catId)) {
+                    if (CategoryWorker.isCategoryContainsProduct(request, catId, productId)) {
+                        return catId;
+                    }
+                }
+            }
+        }
+        return null;
+    }   
+    
+    /**
+     * Cato: Attempts to determine a suitable category for the given product from the trail in session.
+     */
+    public static String getCategoryForProductFromTrail(ServletRequest request, String productId) {
+        return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));
+    }
+    
     
 }

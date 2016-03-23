@@ -727,7 +727,7 @@ public class CategoryWorker {
      * In some circumstances, getTrail(NoTop) alone could work, but we need a method that guarantees
      * a full path because the trail may not always be reliable or formal enough.
      */
-    public static List<String> getCategoryPathPartsFromTrail(ServletRequest request) {
+    public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
         // TODO: for now trail is close
         return getTrailNoTop(request);
     }

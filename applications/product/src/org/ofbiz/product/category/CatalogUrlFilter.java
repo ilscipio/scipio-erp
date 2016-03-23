@@ -226,6 +226,12 @@ public class CatalogUrlFilter extends ContextFilter {
                 urlBuilder.append("/" + CATEGORY_REQUEST);
             }
 
+            // Cato: 2016-03-22: FIXME?: this getCatalogTopCategory call below 
+            // is currently left unchanged, but note that because of it,
+            // currently CatalogUrlFilter/ofbizCatalogAltUrl force browsing toward only the main top catalog category.
+            // It does not allow browsing any other top categories (best-selling, promotions, etc.).
+            // In some cases this is desirable, in others not.
+            
             // generate trail belong to a top category
             String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
             List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(httpRequest, "trailCategories", topCategoryId, false, false, true);
@@ -250,6 +256,10 @@ public class CatalogUrlFilter extends ContextFilter {
                 }
             }
 
+            // Cato: 2016-03-22: FIXME?: The loop below was found to cause invalid category paths in SOLR addToSolr
+            // (was very similar code) and had to be fixed there. I think there is a chance there may be bugs here as well,
+            // but I'm not certain.
+            
             // generate trail elements from productCategoryId
             if (UtilValidate.isNotEmpty(productCategoryId)) {
                 List<String> trailElements = FastList.newInstance();
@@ -293,6 +303,20 @@ public class CatalogUrlFilter extends ContextFilter {
                 }
                 trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
                 
+                // Cato: 2016-03-23: There is a high risk here that the trail does not contain the top
+                // category.
+                // If top category is not in trail, we'll prepend it to trailElements. 
+                // This will cause the trailElements to replace the whole trail in the code that follows
+                // because of the way setTrail with ID works.
+                // I'm not sure what the intention of stock code was in these cases, but I think
+                // this will simply prevent a lot of confusion and makes the trail more likely to be
+                // a valid category path.
+                if (trailElements.size() > 0) {
+                    if (!trail.contains(topCategoryId)) {
+                        trailElements.add(0, topCategoryId);
+                    }
+                }
+
                 if (trailElements.size() == 1) {
                     CategoryWorker.setTrail(request, trailElements.get(0), null);
                 } else if (trailElements.size() == 2) {

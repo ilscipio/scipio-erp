@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -705,17 +706,41 @@ public class CategoryWorker {
     
     /**
      * Cato: Returns true only if the category ID is child of the given parent category ID.
+     * <p>
+     * NOTE: is caching
      */
     public static boolean isCategoryChildOf(Delegator delegator, LocalDispatcher dispatcher, String parentProductCategoryId, String productCategoryId) {
         try {
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                    .where("parentProductCategoryId", parentProductCategoryId, "productCategoryId", productCategoryId).queryList();
+            List<EntityCondition> rolllupConds = FastList.newInstance();
+            rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
+            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            rolllupConds.add(EntityUtil.getFilterByDateExpr());
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
             return !rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
         return false;
     }
+    
+    /**
+     * Cato: Returns true only if the category ID is a top category.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryTop(Delegator delegator, LocalDispatcher dispatcher, String productCategoryId) {
+        try {
+            List<EntityCondition> rolllupConds = FastList.newInstance();
+            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            rolllupConds.add(EntityUtil.getFilterByDateExpr());
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            return rollups.isEmpty();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return true; // if no data, technically should assume true
+    }
+    
     
     /**
      * Cato: Returns a valid category path/trail (as parts) from the current request trail in session,
@@ -727,6 +752,47 @@ public class CategoryWorker {
     public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
         // TODO: for now trail is close
         return getTrailNoTop(request);
+    }
+    
+    
+    /**
+     * Cato: Checks the given trail for the last recorded top category ID, if any.
+     * This can be the catalog top category or a different one.
+     * <p>
+     * NOTE: is caching
+     */
+    public static String getTopCategoryFromTrail(Delegator delegator, LocalDispatcher dispatcher, List<String> trail) {
+        String catId = null;
+        if (trail != null) {
+            ListIterator<String> it = trail.listIterator();
+            while (it.hasPrevious()) {
+                catId = it.previous();
+                if (UtilValidate.isNotEmpty(catId) && !"TOP".equals(catId)) {
+                    if (isCategoryTop(delegator, dispatcher, catId)) {
+                        return catId;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    
+    /**
+     * Cato: Checks the given trail for the last recorded top category ID, if any.
+     * This can be the catalog top category or a different one.
+     */
+    public static String getTopCategoryFromTrail(ServletRequest request, List<String> trail) {
+        return getTopCategoryFromTrail((Delegator) request.getAttribute("delegator"), 
+                (LocalDispatcher) request.getAttribute("dispatcher"), trail);
+    }
+    
+    /**
+     * Cato: Checks the current trail for the last recorded top category ID, if any.
+     * This can be the catalog top category or a different one.
+     */
+    public static String getTopCategoryFromTrail(ServletRequest request) {
+        return getTopCategoryFromTrail(request, getTrail(request));
     }
     
 }

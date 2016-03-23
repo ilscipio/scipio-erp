@@ -16,7 +16,6 @@ Software Requirements
 * Java 1.7 (or greater) SDK
 * Apache ANT
 
-
 Recommended Development Tools
 * GIT Client
 * Eclipse Java IDE
@@ -24,14 +23,12 @@ Recommended Development Tools
  * Groovy-eclipse
  * Freemarker IDE editor (select from JBools tools plugin)
 
-
 Prerequisits
-In order to install CATO, the followong prerequisites must be installed properly:
+In order to install CATO, the following prerequisites must be installed properly:
 * Java 1.7 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
  * Validate Settings
-
 
 Installation
 In order to install, the following steps must be taken:
@@ -41,17 +38,15 @@ a. Linux ./ant load-demo
 b. OS X: ./ant load-demo
 c. Windows: ant.bat load-demo
 
-
 2. From the same command line run:
 a. Linux ./tools/startofbiz.sh
 b. OS X: bash /tools/startofbiz.sh
 c. Windows: /tools/startofbiz.bat
 
-3. To access the application visit:
+3. To access the application visit the OFBiz Dashboard:
 OFBiz Dashboard: http://localhost:8080/webtools
 
-
-To access the OFBiz Applications from the dashboard use:
+4. To access the OFBiz Applications from the Dashboard use:
 Username: admin
 Password: ofbiz
 
@@ -59,14 +54,11 @@ Password: ofbiz
                             Congratulations, you have installed CATO!
 
 
-
-
 Optional Configuration
 * OFBiz-related Configuration
   https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide
 * Memory allocation
   https://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide#ApacheOFBizTechnicalProductionSetupGuide-MemorySettings
-
 
 *****************
 * S U P P O R T *
@@ -78,8 +70,6 @@ https://github.com/catocommerce/cato/wiki
 You can get in touch with the community over at:
 
 http://forum.cato-commerce.com/
-
-
 
 *************
 * O F B I Z *
@@ -101,19 +91,18 @@ developers, the following page will help to get started:
 
 http://ofbiz.apache.org/community.html
 
-
 ***********************
 * D I S C L A I M E R *
 ***********************
-CATO and the CATO logo are trademarks of Ilscipio GmbH. 
+CATO Commerce and the CATO logo are trademarks of Ilscipio GmbH. 
 © Copyright CATO components 2014 Ilscipio GmbH.
 Apache OFBiz, Apache, the Apache feather logo are trademarks
  of The Apache Software Foundation.
 
-
 ***********************************
 * BIS Crypto TSU exception notice *
 ***********************************
+
    This distribution includes cryptographic software.  The country in
    which you currently reside may have restrictions on the import,
    possession, use, and/or re-export to another country, of

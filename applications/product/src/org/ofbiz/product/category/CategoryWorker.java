@@ -373,7 +373,12 @@ public class CategoryWorker {
 
     public static List<String> getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-        List<String> crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
+        // Cato: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
+        //List<String> crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
+        List<String> crumb = UtilGenerics.checkList(request.getAttribute("_BREAD_CRUMB_TRAIL_"));
+        if (crumb == null) {
+            crumb = UtilGenerics.checkList(session.getAttribute("_BREAD_CRUMB_TRAIL_"));
+        }
         return crumb;
     }
     
@@ -402,6 +407,8 @@ public class CategoryWorker {
     public static List<String> setTrail(ServletRequest request, List<String> crumb) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+        // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+        request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
         return crumb;
     }
 

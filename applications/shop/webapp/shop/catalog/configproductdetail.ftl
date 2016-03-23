@@ -424,7 +424,7 @@ function getConfigDetails(event) {
           <#list questions as question>
           <@tr>
             <@td>
-              <div>${question.question}</div>
+              <div>${StringUtil.wrapString(question.question!"")}</div>
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${StringUtil.wrapString(question.description!)}</div>

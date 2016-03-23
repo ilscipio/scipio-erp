@@ -122,16 +122,6 @@ public abstract class CategoryUtil {
     	return getCategoryNameWithTrail(productCategoryId, true,  dctx, currentTrail);
     }
     
-    /* Commenting these out until all the callers are covered...
-    public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, true,  dctx, null);
-    }
-
-    public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, showDepth, dctx, null);
-    }
-    */
-    
     /**
      * Returns categoryName with trail.
      * <p>
@@ -189,6 +179,26 @@ public abstract class CategoryUtil {
         //Debug.logInfo("catMember "+cm,module);
     	return cm;
     }
+    
+    /**
+     * Returns categoryName with trail. 
+     * <strong>WARN:</strong> You should usually call the overload
+     * with currentTrail instead {@link #getCategoryNameWithTrail(String, DispatchContext, List)}.
+     */
+    public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
+        return getCategoryNameWithTrail(productCategoryId, true,  dctx, null);
+    }
+
+    /**
+     * Returns categoryName with trail. 
+     * <strong>WARN:</strong> You should usually call the overload
+     * with currentTrail instead {@link #getCategoryNameWithTrail(String, Boolean, DispatchContext, List)}.
+     */
+    public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
+        return getCategoryNameWithTrail(productCategoryId, showDepth, dctx, null);
+    }
+
+    
     
     /**
      * Finds best trail match.

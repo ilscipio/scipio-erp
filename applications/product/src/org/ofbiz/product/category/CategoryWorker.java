@@ -404,13 +404,45 @@ public class CategoryWorker {
         return res;
     }    
 
-    public static List<String> setTrail(ServletRequest request, List<String> crumb) {
+    /**
+     * Sets breadcrumbs trail to the exact given value.
+     * <p>
+     * Cato: This is modified to accept a onlyIfNewInRequest boolean that will check to see
+     * if a breadcrumb was already set in the request. Default is false. 
+     * This is needed in some places to prevent squashing breadcrumbs set in servlets and filters.
+     */
+    public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-        session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
-        // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
-        request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+        if (onlyIfNewInRequest) {
+            // Cato: Check if was already set
+            if (request.getAttribute("_BREAD_CRUMB_TRAIL_") == null) {
+                session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+                // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+                request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+            }
+        }
+        else {
+            // Cato: stock case
+            session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+            // Cato: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
+            request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+        }
         return crumb;
     }
+    
+    /**
+     * Sets breadcrumbs trail to the exact given value.
+     */
+    public static List<String> setTrail(ServletRequest request, List<String> crumb) {
+        return setTrail(request, crumb, false);
+    }
+    
+    /**
+     * Cato: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
+     */
+    public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
+        return setTrail(request, crumb, true);
+    } 
 
     public static boolean checkTrailItem(ServletRequest request, String category) {
         List<String> crumb = getTrail(request);

@@ -287,7 +287,10 @@ public class TrackingCodeEvents {
         String prodCatalogId = trackingCode.getString("prodCatalogId");
         if (UtilValidate.isNotEmpty(prodCatalogId)) {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            CategoryWorker.setTrail(request, FastList.<String>newInstance());
+            // Cato: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+            // otherwise may lose work done by servlets and filters
+            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
+            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views

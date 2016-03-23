@@ -177,7 +177,10 @@ public class CatalogWorker {
         if (!fromSession) {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            CategoryWorker.setTrail(request, FastList.<String>newInstance());
+            // Cato: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+            // otherwise may lose work done by servlets and filters
+            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
+            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
         }
         return prodCatalogId;
     }

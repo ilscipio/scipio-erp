@@ -28,7 +28,7 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
-currentTrail = org.ofbiz.product.category.CategoryWorker.getTrailNoTop(request);
+currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";

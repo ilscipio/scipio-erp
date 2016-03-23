@@ -28,7 +28,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 
 module = "Breadcrumbs.groovy";
 
-currentTrail = org.ofbiz.product.category.CategoryWorker.getTrailNoTop(request);
+currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";

@@ -133,7 +133,7 @@ public abstract class CategoryUtil {
      * but I think it's safer for now to return closest-match.
      * <p>
      * NOTE: currentTrail should NOT contain the "TOP" category or the path length as first element.
-     * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getTrailNoTop}.
+     * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getCategoryPathFromTrailAsList}.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
     	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);

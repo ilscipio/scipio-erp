@@ -391,13 +391,10 @@ public class CategoryWorker {
         if (fullTrail != null) {
             res = new ArrayList<String>(fullTrail.size());
             Iterator<String> it = fullTrail.iterator();
-            if (it.hasNext()) {
+            while (it.hasNext()) {
                 String next = it.next(); // check first
                 if (!"TOP".equals(next)) {
                     res.add(next);
-                }
-                while (it.hasNext()) {
-                    res.add(it.next());
                 }
             }
         }

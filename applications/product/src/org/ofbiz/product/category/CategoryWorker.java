@@ -720,4 +720,16 @@ public class CategoryWorker {
         return false;
     }
     
+    /**
+     * Cato: Returns a valid category path/trail (as parts) from the current request trail in session,
+     * without top.
+     * <p>
+     * In some circumstances, getTrail(NoTop) alone could work, but we need a method that guarantees
+     * a full path because the trail may not always be reliable or formal enough.
+     */
+    public static List<String> getCategoryTrailFromTrail(ServletRequest request) {
+        // TODO: for now trail is close
+        return getTrailNoTop(request);
+    }
+    
 }

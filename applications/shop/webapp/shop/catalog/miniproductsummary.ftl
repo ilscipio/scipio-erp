@@ -29,7 +29,7 @@ under the License.
     <#else>
         <#assign imgSrc="https://placehold.it/300x100"/>
     </#if>
-        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id productId=miniProduct.productId/></#assign>
+        <#assign imgLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
 
     <#assign productImage>
             <@img src=imgSrc!"https://placehold.it/300x100" type="contain" link=imgLink!"" width="100%" height="100px"/>
@@ -51,7 +51,7 @@ under the License.
                 <@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/>
             </#if>
           </#if>
-          <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass"></i></a>
+          <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass"></i></a>
         </@pli>
         </@pul>
 

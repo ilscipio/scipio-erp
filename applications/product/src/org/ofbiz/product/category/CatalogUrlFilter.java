@@ -266,10 +266,17 @@ public class CatalogUrlFilter extends ContextFilter {
                 // I'm not sure what the intention of stock code was in these cases, but I think
                 // this will simply prevent a lot of confusion and makes the trail more likely to be
                 // a valid category path.
+                // EDIT: This behavior is now changed, see next comment
                 if (trailElements.size() > 0) {
-                    if (!trail.contains(topCategoryId)) {
-                        trailElements.add(0, topCategoryId);
-                    }
+                    // Cato: REVISION 2: we will ALWAYS add the top category to the trail
+                    // elements. It's needed because sometimes the code above will produce
+                    // entries incompatible with the current trail and it results in an
+                    // incomplete trail. Adding the top category should cause the code below
+                    // to reset much of the trail.
+                    //if (!trail.contains(topCategoryId)) {
+                    //    trailElements.add(0, topCategoryId);
+                    //}
+                    trailElements.add(0, topCategoryId);
                 }
 
                 if (trailElements.size() == 1) {

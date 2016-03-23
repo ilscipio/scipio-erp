@@ -256,9 +256,13 @@ public class CatalogUrlServlet extends HttpServlet {
         
         if (UtilValidate.isNotEmpty(productCategoryId)) {
             List<String> trailElements = CatalogUrlFilter.getTrailElements(delegator, productCategoryId, trailCategoryIds);
+
+            // Cato: NOTE: CatalogUrlFilter does another adjustment to trail
+            // here before we add topCategoryId, but I don't know why, and I think it will 
+            // make no difference because we add topCategoryId now.
+            
             if (trailElements.size() > 0) {
                 trailElements.add(0, topCategoryId);
-                
                 return trailElements;
             }
         }

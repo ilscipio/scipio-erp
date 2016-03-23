@@ -32,12 +32,13 @@ under the License.
           <#assign category = delegator.findOne("ProductCategory", {"productCategoryId":categoryId}, true)!>
           <#if category?has_content>
             <li class="browsecategorytext">
+              <#-- Cato: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
               <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")??>
-                <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")}</a>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME", "html")}</a>
               <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")??>
-                <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")}</a>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION", "html")}</a>
               <#else>
-                <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId/>" class="browsecategorybutton">${category.description!}</a>
+                <a href="<@ofbizCatalogUrl productCategoryId=categoryId/>" class="browsecategorybutton">${category.description!}</a>
               </#if>
             </li>
           </#if>

@@ -13913,9 +13913,12 @@
         <value xml:lang="zh">分类属性</value>
         <value xml:lang="zh_TW">分類屬性</value>
     </property>
+    <property key="ProductCategoryAttributeList">
+        <value xml:lang="en">Category Attribute List</value>
+    </property>
     <property key="ProductCategoryContent">
         <value xml:lang="de">Inhalt</value>
-        <value xml:lang="en">Content</value>
+        <value xml:lang="en">Category Content</value>
         <value xml:lang="es">Contenido</value>
         <value xml:lang="fr">Contenu</value>
         <value xml:lang="it">Contenuto</value>
@@ -13926,6 +13929,18 @@
         <value xml:lang="vi">Nội dung</value>
         <value xml:lang="zh">内容</value>
         <value xml:lang="zh_TW">內容</value>
+    </property>
+    <property key="ProductCategoryFeatures">
+        <value xml:lang="en">Category Features</value>
+    </property>
+    <property key="ProductCategoryParties">
+        <value xml:lang="en">Category Parties</value>
+    </property>
+    <property key="ProductCategoryProds">
+        <value xml:lang="en">Category Products</value>
+    </property>
+    <property key="ProductCategoryRollups">
+        <value xml:lang="en">Category Rollups</value>
     </property>
     <property key="ProductCategoryDescription">
         <value xml:lang="en">Category Description</value>
@@ -13966,7 +13981,7 @@
     </property>
     <property key="ProductCategoryLinks">
         <value xml:lang="de">Links</value>
-        <value xml:lang="en">Links</value>
+        <value xml:lang="en">Category Links</value>
         <value xml:lang="es">Enlaces</value>
         <value xml:lang="fr">Liens</value>
         <value xml:lang="it">Links</value>

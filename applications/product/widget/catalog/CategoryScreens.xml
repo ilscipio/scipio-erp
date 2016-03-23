@@ -149,7 +149,7 @@ under the License.
     <screen name="EditCategoryContent">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditCategoryContent"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
@@ -158,24 +158,27 @@ under the License.
                 <get-related-one value-field="productCategory" relation-name="ProductCategoryType" to-value-field="productCategoryType"/>
                 <set field="categoryContentOrderList[]" value="prodCatContentTypeId"/>
                 <get-related value-field="productCategory" relation-name="ProductCategoryContent" list="productCategoryContentList" order-by-list="categoryContentOrderList"/>
-
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes"/>
+                
+                <set field="title" default-value="${uiLabelMap.ProductCategoryContent} ${productCategoryId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductAddProductCategoryContentFromDate}">
-                            <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        <screenlet>
+                            <!-- <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                            <include-screen name="EditCategoryContentContent"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.ProductAddContentCategory}">
+                       <!--  <screenlet title="${uiLabelMap.ProductAddContentCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        </screenlet>
+                        </screenlet> -->
                         <screenlet title="${uiLabelMap.ProductUpdateCategoryContentAssoc}">
                             <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
-                        <platform-specific>
+                        <!-- CATO: To be removed -->
+                        <!-- <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
-                        </platform-specific>
+                        </platform-specific> -->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -199,36 +202,54 @@ under the License.
                 <set field="textDataMap.textDataResourceId" from-field="content.dataResourceId"/>
                 <set field="contentId" from-field="content.contentId"/>
                 
+                <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
+                     <order-by field-name="description"/>
+                 </entity-condition>
+                
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
                 
-                <set field="title" value="${uiLabelMap.PageTitleEditCategoryContentContent}: ${contentTitle}"/>
+                <!-- <set field="title" value="${uiLabelMap.PageTitleEditCategoryContentContent}: ${contentTitle}"/> -->
             </actions>
             <widgets>
-                <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
+                <!-- <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body"> -->
+                       <!--  <section>
                             <condition><not><if-empty field="contentId"/></not></condition>
                             <widgets>
                                 <link target="/content/control/gotoContent" text="${uiLabelMap.ContentContent} ${uiLabelMap.CommonPage}" url-mode="inter-app" style="${styles.link_nav} ${styles.action_view}">
                                     <parameter param-name="contentId"/>
                                 </link>
                             </widgets>
-                        </section>
-                        <screenlet title="${contentFormTitle}">
-                            <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        </section> -->
+                        <screenlet>
+                            <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                            <!-- <include-screen name="CatoEditCategoryContent"/> -->
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
+                     <!--    <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
                             <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
                             <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
+                        </screenlet> -->
+              <!--       </decorator-section>
+                </decorator-screen> -->
             </widgets>
         </section>
     </screen>
+<!--     <screen name="CatoEditCategoryContent">
+		<section>
+			<actions>
+			     <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
+			         <order-by field-name="description"/>
+			     </entity-condition>
+			</actions>
+			<widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
+			</widgets>
+		</section>
+    </screen> -->
     
     <screen name="EditCategoryRollup">
         <section>
@@ -315,7 +336,8 @@ under the License.
         </section>
     </screen>
     
-    <screen name="EditCategoryProdCatalogs">
+    <!-- CATO: To be removed -->
+    <!-- <screen name="EditCategoryProdCatalogs">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryProductCatalogs"/>
@@ -347,9 +369,10 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     
-    <screen name="EditCategoryFeatureCats">
+    <!-- CATO: To be removed -->
+    <!-- <screen name="EditCategoryFeatureCats">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryFeatureCategories"/>
@@ -389,9 +412,10 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
-     
-    <screen name="EditCategoryParties">
+    </screen> -->
+    
+    <!-- CATO: To be removed -->
+    <!-- <screen name="EditCategoryParties">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryParties"/>
@@ -421,15 +445,17 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     
-    <screen name="EditCategoryAttributes">
+    <!-- CATO: To be removed -->
+    <!-- <screen name="EditCategoryAttributes">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditCategoryAttributes"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditCategoryAttributes"/>
                 <set field="labelTitleProperty" value="ProductCategoryAttributes"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <set field="title" default-value="${uiLabelMap.ProductCategoryAttributes} ${productCategoryId}"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <entity-condition entity-name="ProductCategoryAttribute" list="categoryAttributes">
                     <condition-expr field-name="productCategoryId" from-field="productCategoryId"/>
@@ -438,17 +464,17 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleCreateCategoryAttributes}">
+                        <screenlet>
                             <include-form name="CreateProductCategoryAttribute" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditCategoryAttributes}">
+                        <screenlet title="${uiLabelMap.ProductCategoryAttributeList}">
                             <include-form name="EditProductCategoryAttributes" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
 
     <screen name="createProductInCategoryStart">
         <section>
@@ -495,7 +521,8 @@ under the License.
     </screen>
 
     <!-- ProductCategoryLinks Screen -->
-    <screen name="EditProductCategoryLinks">
+    <!-- CATO: To be removed -->
+    <!--  <screen name="EditProductCategoryLinks">
         <section>
             <actions>
                 <property-map resource="ProductEntityLabels" map-name="uiLabelMap" global="true"/>
@@ -521,5 +548,5 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
 </screens>

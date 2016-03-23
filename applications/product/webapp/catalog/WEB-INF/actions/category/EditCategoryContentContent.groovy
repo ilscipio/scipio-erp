@@ -30,6 +30,7 @@ if (!contentId) {
 }
 
 prodCatContentTypeId = parameters.prodCatContentTypeId;
+Debug.log("prodCatContentTypeId ===========> " + prodCatContentTypeId);
 context.contentFormName = "EditCategoryContentSimpleText";
 context.contentFormTitle = "${uiLabelMap.ProductUpdateSimpleTextContentCategory}";
 
@@ -65,3 +66,5 @@ if ("RELATED_URL".equals(prodCatContentTypeId)) {
     context.contentFormTitle = "${uiLabelMap.ProductUpdateDownloadContentCategory}";
     
 }
+context.prodCatContentTypeId = prodCatContentTypeId;
+Debug.log("contentFormName ===========> " + context.contentFormName);

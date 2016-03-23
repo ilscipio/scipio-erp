@@ -36,22 +36,22 @@ under the License.
     </menu>
 
     <menu name="CatalogTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ProductCatalog" title="${uiLabelMap.ProductCatalog}">
+        <menu-item name="ProductCatalog" title="${uiLabelMap.PageTitleEditProductCatalog}">
             <link target="EditProdCatalog">
                 <parameter param-name="prodCatalogId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductStores" title="${uiLabelMap.ProductStores}">
+        <menu-item name="ProductStores" title="${uiLabelMap.ProductCatalogStores}">
             <link target="EditProdCatalogStores">
                 <parameter param-name="prodCatalogId"/>
             </link>
         </menu-item>
-        <menu-item name="PartyParties" title="${uiLabelMap.PartyParties}">
+        <menu-item name="PartyParties" title="${uiLabelMap.ProductCatalogParties}">
             <link target="EditProdCatalogParties">
                 <parameter param-name="prodCatalogId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductCategories" title="${uiLabelMap.ProductCategories}">
+        <menu-item name="ProductCategories" title="${uiLabelMap.ProductCatalogCategories}">
             <link target="EditProdCatalogCategories">
                 <parameter param-name="prodCatalogId"/>
             </link>
@@ -121,32 +121,33 @@ under the License.
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryRollup" title="${uiLabelMap.ProductRollup}">
+        <menu-item name="EditCategoryRollup" title="${uiLabelMap.ProductCategoryRollups}">
             <link target="EditCategoryRollup">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryProducts" title="${uiLabelMap.ProductProducts}">
+        <menu-item name="EditCategoryProducts" title="${uiLabelMap.ProductCategoryProds}">
             <link target="EditCategoryProducts">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryProdCatalogs" title="${uiLabelMap.ProductCatalogs}">
+        <!-- CATO - To be demoved -->
+       <!--  <menu-item name="EditCategoryProdCatalogs" title="${uiLabelMap.ProductCatalogs}">
             <link target="EditCategoryProdCatalogs">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryFeatureCats" title="${uiLabelMap.ProductFeatureCats}">
+        <menu-item name="EditCategoryFeatureCats" title="${uiLabelMap.ProductCategoryFeatures}">
             <link target="EditCategoryFeatureCats">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryParties" title="${uiLabelMap.PartyParties}">
+        <menu-item name="EditCategoryParties" title="${uiLabelMap.ProductCategoryParties}">
             <link target="EditCategoryParties">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryAttributes" title="${uiLabelMap.ProductAttributes}">
+        <menu-item name="EditCategoryAttributes" title="${uiLabelMap.ProductCategoryAttributes}">
             <link target="EditCategoryAttributes">
                 <parameter param-name="productCategoryId"/>
             </link>
@@ -155,7 +156,7 @@ under the License.
             <link target="EditProductCategoryLinks">
                 <parameter param-name="productCategoryId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="CategoryTabBar" recursive="includes-only" />

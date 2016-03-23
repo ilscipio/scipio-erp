@@ -28,7 +28,11 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
+final module = "SideDeepCategoryGroovy";
+
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
+
+Debug.logInfo("currentTrail: " + currentTrail, module);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";
@@ -56,6 +60,9 @@ if (curCategoryId) {
         dispatcher.getDispatchContext(), currentTrail);
 }
 context.currentCategoryPath = currentCategoryPath;
+
+Debug.logInfo("currentCategoryPath: " + currentCategoryPath, module)
+
 context.catList = catLevel;
 topLevelList = [topCategoryId];
 if (promoCategoryId) {

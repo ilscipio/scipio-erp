@@ -191,7 +191,7 @@
                             <@field type="text" name="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
                         </#if>
                         <#if !product.virtualVariantMethodEnum?exists || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
-                            <#if variantTree?exists && (variantTree.size() &gt; 0)>
+                            <#if variantTree?exists && (variantTree.size() > 0)>
                                 <#list featureSet as currentType>
                                     <@field type="select" name="FT${currentType}" label=featureTypes.get(currentType)!"">
                                             <option>${featureTypes.get(currentType)}</option>
@@ -236,7 +236,7 @@
                                      </div>
                                  <#else> 
                                      <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                     <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>
+                                     <@field type="submit" submitType="link" href="javascript:addItem()" id="addToCart" name="addToCart" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>
                                  </#if>
                              <#else>
                                  <#if productStore?exists>
@@ -250,7 +250,7 @@
                                  </#if>
                              </#if>
                         <#else>
-                            <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
+                            <@field type="submit" submitType="link" href="javascript:addItem()" id="addToCart" name="addToCart" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
                         </#if>
                     </#if>
             </form>
@@ -464,10 +464,11 @@
 </@section>
 
 
-<#-- CATO: disabled JAVASCRIPT
 ${virtualJavaScript?if_exists}
 <script type="text/javascript">
 //<![CDATA[
+
+<#-- CATO: disabled JAVASCRIPT
     var detailImageUrl = null;
     function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -524,6 +525,8 @@ ${virtualJavaScript?if_exists}
         </#if>
         return isVirtual;
     }
+-->    
+    
     function addItem() {
        if (document.addform.add_product_id.value == 'NULL') {
            alert("Please select all of the required options.");
@@ -538,6 +541,7 @@ ${virtualJavaScript?if_exists}
        }
     }
 
+<#--
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
             changeObjectVisibility("add_amount", "visible");
@@ -683,6 +687,9 @@ ${virtualJavaScript?if_exists}
             block2.style.display = "none";
         }
     </#if>
+    
+-->    
+    
 //]]>
  </script>
 
@@ -700,4 +707,4 @@ ${virtualJavaScript?if_exists}
       </#list>
     </ul>
   </#if>
-</#macro>-->
+</#macro>

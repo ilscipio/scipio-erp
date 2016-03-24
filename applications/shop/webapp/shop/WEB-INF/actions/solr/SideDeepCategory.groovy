@@ -100,5 +100,6 @@ else {
 }
 context.baseCategoryId = baseCategoryId;
 
+context.catHelper = com.ilscipio.cato.shop.category.CategoryHelper.newInstance(context);
 
 

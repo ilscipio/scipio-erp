@@ -111,19 +111,19 @@
 
     <ContentAssoc contentId="CPC-101DESCEN" contentIdTo="CPC-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
-    <!-- Desktops and laptops category -->
-    <DataResource dataResourceId="DRPC-MA-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="DRPC-MA-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+    <!-- Systems category -->
+    <DataResource dataResourceId="DRPC-SYS-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-SYS-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="DRPC-MA-101DESCDE" textData="Desktops und Laptops"/>
-    <ElectronicText dataResourceId="DRPC-MA-101DESCEN" textData="Desktops and Laptops"/>
+    <ElectronicText dataResourceId="DRPC-SYS-101DESCDE" textData="Computersysteme"/>
+    <ElectronicText dataResourceId="DRPC-SYS-101DESCEN" textData="Computer Systems"/>
 
-    <Content contentId="CPC-MA-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-MA-101DESCDE" description="DESCRIPTION DE Desktops and Laptops" localeString="de"/>
-    <Content contentId="CPC-MA-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-MA-101DESCEN" description="DESCRIPTION EN Desktops and Laptops" localeString="en"/>
+    <Content contentId="CPC-SYS-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-SYS-101DESCDE" description="DESCRIPTION DE Computer Systems" localeString="de"/>
+    <Content contentId="CPC-SYS-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-SYS-101DESCEN" description="DESCRIPTION EN Computer Systems" localeString="en"/>
 
-    <ProductCategoryContent productCategoryId="PC-MA-101" contentId="CPC-MA-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+    <ProductCategoryContent productCategoryId="PC-SYS-101" contentId="CPC-SYS-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
 
-    <ContentAssoc contentId="CPC-MA-101DESCEN" contentIdTo="CPC-MA-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+    <ContentAssoc contentId="CPC-SYS-101DESCEN" contentIdTo="CPC-SYS-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
     <!-- Software category -->
     <DataResource dataResourceId="DRPC-SF-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
@@ -181,6 +181,20 @@
 
     <ContentAssoc contentId="CEL-MP3-101DESCEN" contentIdTo="CEL-MP3-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
+    <!-- Phones category -->
+    <DataResource dataResourceId="DREL-PHN-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DREL-PHN-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DREL-PHN-101DESCDE" textData="Handys"/>
+    <ElectronicText dataResourceId="DREL-PHN-101DESCEN" textData="Phones"/>
+
+    <Content contentId="CEL-PHN-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DREL-PHN-101DESCDE" description="DESCRIPTION DE Phones" localeString="de"/>
+    <Content contentId="CEL-PHN-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DREL-PHN-101DESCEN" description="DESCRIPTION EN Phones" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="EL-PHN-101" contentId="CEL-PHN-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CEL-PHN-101DESCEN" contentIdTo="CEL-PHN-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
     <!-- Media category -->
     <DataResource dataResourceId="DRMEDIA-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="DRMEDIA-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>

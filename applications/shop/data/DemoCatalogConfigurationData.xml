@@ -88,7 +88,7 @@ under the License.
     <!-- Cato: Put this in one of the new main categories instead
     <ProductCategoryMember productCategoryId="PC-100" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
     -->
-    <ProductCategoryMember productCategoryId="PC-MA-101" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PC-SYS-101" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="ENCHILADAS" productTypeId="AGGREGATED" productName="Enchiladas" internalName="Enchiladas" description="Cheese enchiladas" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>

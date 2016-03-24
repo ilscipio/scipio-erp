@@ -43,8 +43,8 @@ under the License.
         primaryParentCategoryId="CATALOG1" productCategoryId="ELTRN-100" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Computer" longDescription="Computer"
             primaryParentCategoryId="ELTRN-100" productCategoryId="PC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory description="Desktops and Laptops" longDescription="Desktops and Laptops (Machines)"
-                primaryParentCategoryId="PC-101" productCategoryId="PC-MA-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory description="Computer Systems" longDescription="Computer Systems (Desktops, Laptops, Tablets)"
+                primaryParentCategoryId="PC-101" productCategoryId="PC-SYS-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Software" longDescription="Software"
                 primaryParentCategoryId="PC-101" productCategoryId="PC-SF-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Computer Accessories" longDescription="Computer Accessories"
@@ -53,6 +53,8 @@ under the License.
                     primaryParentCategoryId="PC-AC-101" productCategoryId="PC-PR-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="MP3 Players" longDescription="MP3 Players"
             primaryParentCategoryId="ELTRN-100" productCategoryId="EL-MP3-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory description="Phones" longDescription="Phones"
+            primaryParentCategoryId="ELTRN-100" productCategoryId="EL-PHN-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         
     <ProductCategory description="Media" longDescription="Media Entertainment" 
         primaryParentCategoryId="CATALOG1" productCategoryId="MEDIA-100" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -218,8 +220,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="EL-MP3-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-MP3-101-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-MA-101-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-MA-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SYS-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SYS-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SF-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SF-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-AC-101-ALT" localeString="en"/>
@@ -252,6 +254,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMU-DL-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="RENT-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRRENT-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="EL-PHN-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-PHN-101-ALTEN" localeString="en_US"/>
     
     <ElectronicText dataResourceId="CLOTH-100-ALT" textData="clothing"/>
     <ElectronicText dataResourceId="DRCLOTH-100-ALTEN" textData="clothing"/>
@@ -265,8 +269,8 @@ under the License.
     <ElectronicText dataResourceId="DRPC-101-ALTEN" textData="computers"/>
     <ElectronicText dataResourceId="EL-MP3-101-ALT" textData="mp3-players"/>
     <ElectronicText dataResourceId="DREL-MP3-101-ALTEN" textData="mp3-players"/>
-    <ElectronicText dataResourceId="PC-MA-101-ALT" textData="desktops-laptops"/>
-    <ElectronicText dataResourceId="DRPC-MA-101-ALTEN" textData="desktops-laptops"/>
+    <ElectronicText dataResourceId="PC-SYS-101-ALT" textData="pc-systems"/>
+    <ElectronicText dataResourceId="DRPC-SYS-101-ALTEN" textData="pc-systems"/>
     <ElectronicText dataResourceId="PC-SF-101-ALT" textData="software"/>
     <ElectronicText dataResourceId="DRPC-SF-101-ALTEN" textData="software"/>
     <ElectronicText dataResourceId="PC-AC-101-ALT" textData="accessories"/>
@@ -299,6 +303,8 @@ under the License.
     <ElectronicText dataResourceId="DRMU-DL-101-ALTEN" textData="music-downloads"/>
     <ElectronicText dataResourceId="RENT-100-ALT" textData="rentals"/>
     <ElectronicText dataResourceId="DRRENT-100-ALTEN" textData="rentals"/>
+    <ElectronicText dataResourceId="EL-PHN-101-ALT" textData="phones"/>
+    <ElectronicText dataResourceId="DREL-PHN-101-ALTEN" textData="phones"/>
     
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="CLOTH-100-ALT" dataResourceId="CLOTH-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CCLOTH-100-ALTEN" dataResourceId="DRCLOTH-100-ALTEN"/>
@@ -312,8 +318,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-101-ALTEN" dataResourceId="DRPC-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="EL-MP3-101-ALT" dataResourceId="EL-MP3-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-101-ALTEN" dataResourceId="DRPC-101-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-MA-101-ALT" dataResourceId="PC-MA-101-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-MA-101-ALTEN" dataResourceId="DRPC-MA-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SYS-101-ALT" dataResourceId="PC-SYS-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SYS-101-ALTEN" dataResourceId="DRPC-SYS-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SF-101-ALT" dataResourceId="PC-SF-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SF-101-ALTEN" dataResourceId="DRPC-SF-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-AC-101-ALT" dataResourceId="PC-AC-101-ALT"/>
@@ -346,6 +352,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMU-DL-101-ALTEN" dataResourceId="DRMU-DL-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="RENT-100-ALT" dataResourceId="RENT-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CRENT-100-ALTEN" dataResourceId="DRRENT-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="EL-PHN-101-ALT" dataResourceId="EL-PHN-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CEL-PHN-101-ALTEN" dataResourceId="DREL-PHN-101-ALTEN"/>
     
     <ContentAssoc contentId="CLOTH-100-ALT" contentIdTo="CCLOTH-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="CL-MEN-101-ALT" contentIdTo="CCL-MEN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -353,7 +361,7 @@ under the License.
     <ContentAssoc contentId="ELTRN-100-ALT" contentIdTo="CELTRN-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="EL-MP3-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PC-MA-101-ALT" contentIdTo="CPC-MA-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-SYS-101-ALT" contentIdTo="CPC-SYS-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-SF-101-ALT" contentIdTo="CPC-SF-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-AC-101-ALT" contentIdTo="CPC-AC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-PR-101-ALT" contentIdTo="CPC-PR-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -370,14 +378,15 @@ under the License.
     <ContentAssoc contentId="MU-CD-101-ALT" contentIdTo="CMU-CD-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="MU-DL-101-ALT" contentIdTo="CMU-DL-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="RENT-100-ALT" contentIdTo="CRENT-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-
+    <ContentAssoc contentId="EL-PHN-101-ALT" contentIdTo="CEL-PHN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CLOTH-100" contentId="CLOTH-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CL-MEN-101" contentId="CL-MEN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CL-WMN-101" contentId="CL-WMN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="ELTRN-100" contentId="ELTRN-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-101" contentId="PC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-MP3-101" contentId="EL-MP3-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-MA-101" contentId="PC-MA-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SYS-101" contentId="PC-SYS-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SF-101" contentId="PC-SF-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-AC-101" contentId="PC-AC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-PR-101" contentId="PC-PR-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -394,7 +403,7 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-CD-101" contentId="MU-CD-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-DL-101" contentId="MU-DL-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="RENT-100" contentId="RENT-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
-
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-PHN-101" contentId="EL-PHN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- Cato: Old categories (TODO: Remove) -->    
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
@@ -1260,7 +1269,8 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="ELTRN-100" sequenceNum="020"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="PC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="EL-MP3-101"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-MA-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="EL-PHN-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SYS-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SF-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-AC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-AC-101" productCategoryId="PC-PR-101"/>

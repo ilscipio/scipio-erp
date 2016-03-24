@@ -436,6 +436,34 @@
 
     <ContentAssoc contentId="CPROMO-001DESCEN" contentIdTo="CPROMO-001DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
+    <!-- Services category -->
+    <DataResource dataResourceId="DRSERV-001DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSERV-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSERV-001DESCDE" textData="Dienstleistungen"/>
+    <ElectronicText dataResourceId="DRSERV-001DESCEN" textData="Services"/>
+
+    <Content contentId="CSERV-001DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001DESCDE" description="DESCRIPTION DE Services" localeString="de"/>
+    <Content contentId="CSERV-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001DESCEN" description="DESCRIPTION EN Services" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SERV-001" contentId="CSERV-001DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSERV-001DESCEN" contentIdTo="CSERV-001DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Subscriptions category -->
+    <DataResource dataResourceId="DRSUB-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSUB-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSUB-100DESCDE" textData="Abonnements"/>
+    <ElectronicText dataResourceId="DRSUB-100DESCEN" textData="Subscriptions"/>
+
+    <Content contentId="CSUB-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCDE" description="DESCRIPTION DE Subscriptions" localeString="de"/>
+    <Content contentId="CSUB-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCEN" description="DESCRIPTION EN Subscriptions" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SUB-100" contentId="CSUB-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSUB-100DESCEN" contentIdTo="CSUB-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
 
     <!-- PRODUCTS -->
 

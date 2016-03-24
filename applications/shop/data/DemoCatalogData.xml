@@ -52,6 +52,8 @@ under the License.
         <ProductCategory longDescription="MP3 Players"
             primaryParentCategoryId="600" productCategoryId="602" productCategoryTypeId="CATALOG_CATEGORY"/>
         
+    <ProductCategory longDescription="Subscriptions"
+        primaryParentCategoryId="CATALOG1" productCategoryId="SUB-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
 
     <!-- Cato: Old main categories (TODO: Remove) -->
     <ProductCategory longDescription="long description of Gizmos"
@@ -165,6 +167,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6013-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="60131-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR60131-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SUB-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSUB-100-ALTEN" localeString="en_US"/>
     
     <ElectronicText dataResourceId="500-ALT" textData="clothing"/>
     <ElectronicText dataResourceId="501-ALT" textData="clothing-men"/>
@@ -176,6 +180,7 @@ under the License.
     <ElectronicText dataResourceId="6012-ALT" textData="software"/>
     <ElectronicText dataResourceId="6013-ALT" textData="accessories"/>
     <ElectronicText dataResourceId="60131-ALT" textData="peripherals"/>
+    <ElectronicText dataResourceId="SUB-100-ALT" textData="subscriptions"/>
     
     <ElectronicText dataResourceId="DR500-ALTEN" textData="clothing"/>
     <ElectronicText dataResourceId="DR501-ALTEN" textData="clothing-men"/>
@@ -187,6 +192,7 @@ under the License.
     <ElectronicText dataResourceId="DR6012-ALTEN" textData="software"/>
     <ElectronicText dataResourceId="DR6013-ALTEN" textData="accessories"/>
     <ElectronicText dataResourceId="DR60131-ALTEN" textData="peripherals"/>
+    <ElectronicText dataResourceId="DRSUB-100-ALTEN" textData="subscriptions"/>
     
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="500-ALT" dataResourceId="500-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C500-ALTEN" dataResourceId="DR500-ALTEN"/>
@@ -208,6 +214,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6013-ALTEN" dataResourceId="DR6013-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="60131-ALT" dataResourceId="60131-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C60131-ALTEN" dataResourceId="DR60131-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="SUB-100-ALT" dataResourceId="SUB-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSUB-100-ALTEN" dataResourceId="DRSUB-100-ALTEN"/>
     
     <ContentAssoc contentId="500-ALT" contentIdTo="C500-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="501-ALT" contentIdTo="C501-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -219,6 +227,7 @@ under the License.
     <ContentAssoc contentId="6012-ALT" contentIdTo="C6012-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="6013-ALT" contentIdTo="C6013-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="60131-ALT" contentIdTo="C60131-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="SUB-100-ALT" contentIdTo="CSUB-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="500" contentId="500-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="501" contentId="501-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -230,7 +239,8 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6012" contentId="6012-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6013" contentId="6013-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="60131" contentId="60131-ALT" fromDate="2001-05-13 12:00:00.0"/>
-        
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SUB-100" contentId="SUB-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+
         
     <!-- Cato: Old categories (TODO: Remove) -->    
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
@@ -1086,6 +1096,7 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6012"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6013"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="6013" productCategoryId="60131"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUB-100"/>
 
     
     <!--  Cato: Old categories (TODO: Remove) -->

@@ -41,9 +41,11 @@
     <ProductStorePaymentSetting productStoreId="catoShop" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="ofbFaRefund" paymentCustomMethodId="FIN_REFUND_OFBIZ"/>
 
     <!-- product / category -->
-    <ProductCategory productCategoryId="FA-100" description="Account Activation" productCategoryTypeId="CATALOG_CATEGORY"/>
-
-    <Product productId="FA-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="FA-100" internalName="Financial Account Activation" productName="Financial Account Activation" description="Balance Account Activation" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <!-- Cato: unneeded
+    <ProductCategory productCategoryId="FA-100" description="Accounts" productCategoryTypeId="CATALOG_CATEGORY"/>
+    -->
+    
+    <Product productId="FA-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="SUB-100" internalName="Financial Account Activation" productName="Financial Account Activation" description="Balance Account Activation" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="FA-001-30" productTypeId="DIGITAL_GOOD" internalName="Financial Account Activation" productName="Financial Account Activation" description="Financial Account Activation" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="FA-001-50" productTypeId="DIGITAL_GOOD" internalName="Financial Account Activation" productName="Financial Account Activation" description="Financial Account Activation" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="FA-001-O" productTypeId="DIGITAL_GOOD" internalName="Financial Account Activation" productName="Financial Account Activation" description="Financial Account Activation" requireAmount="Y" amountUomTypeId="CURRENCY_MEASURE" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -56,11 +58,13 @@
     <ProductPrice productId="FA-001-50" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="50.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="FA-001-O" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
-    <ProductCategoryMember productCategoryId="FA-100" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="SUB-100" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
+    <!-- Cato: unneeded
     <ProductCategoryRollup parentProductCategoryId="CATALOG1" productCategoryId="FA-100" fromDate="2001-05-13 12:00:00.0"/>
-
+    -->
+    
     <ProductFeatureCategory productFeatureCategoryId="2100" description="Account Features"/>
     <ProductFeature productFeatureId="2101" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2100" description="$30.00" uomId="USD" numberSpecified="10.0" defaultSequenceNum="1"/>
     <ProductFeature productFeatureId="2102" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2100" description="$50.00" uomId="USD" numberSpecified="25.0" defaultSequenceNum="2"/>
@@ -89,8 +93,10 @@
     <ProductContent productId="FA-001" contentId="FA_ACTIVATION" productContentTypeId="FULFILLMENT_EXTASYNC" fromDate="2000-01-01 00:00:00"/>
     
     <!-- alternative URL -->
+    <!-- Cato: unneeded
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FA-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFA-100-ALTEN" localeString="en_US"/>
+    -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FA-001-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFA-001-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FA-001-30-ALT" localeString="en"/>
@@ -99,19 +105,25 @@
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFA-001-50-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FA-001-O-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFA-001-O-ALTEN" localeString="en_US"/>
-    <ElectronicText dataResourceId="FA-100-ALT" textData="account-activation"/>
+    <!-- Cato: unneeded
+    <ElectronicText dataResourceId="FA-100-ALT" textData="accounts"/>
+    -->
     <ElectronicText dataResourceId="FA-001-ALT" textData="financial-account-activation"/>
     <ElectronicText dataResourceId="FA-001-30-ALT" textData="financial-account-activation-30"/>
     <ElectronicText dataResourceId="FA-001-50-ALT" textData="financial-account-activation-50"/>
     <ElectronicText dataResourceId="FA-001-O-ALT" textData="financial-account-activation-o"/>
     
-    <ElectronicText dataResourceId="DRFA-100-ALTEN" textData="account-activation"/>
+    <!-- Cato: unneeded
+    <ElectronicText dataResourceId="DRFA-100-ALTEN" textData="accounts"/>
+    -->
     <ElectronicText dataResourceId="DRFA-001-ALTEN" textData="financial-account-activation"/>
     <ElectronicText dataResourceId="DRFA-001-30-ALTEN" textData="financial-account-activation-30"/>
     <ElectronicText dataResourceId="DRFA-001-50-ALTEN" textData="financial-account-activation-50"/>
     <ElectronicText dataResourceId="DRFA-001-O-ALTEN" textData="financial-account-activation-o"/>
+    <!-- Cato: unneeded
     <Content contentId="FA-100-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-100-ALT" localeString="en"/>
     <Content contentId="CFA-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFA-100-ALTEN" localeString="en_US"/>
+    -->
     <Content contentId="FA-001-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-ALT" localeString="en"/>
     <Content contentId="CFA-001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFA-001-ALTEN" localeString="en_US"/>
     <Content contentId="FA-001-30-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-30-ALT" localeString="en"/>
@@ -120,14 +132,22 @@
     <Content contentId="CFA-001-50-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFA-001-50-ALTEN" localeString="en_US"/>
     <Content contentId="FA-001-O-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-O-ALT" localeString="en"/>
     <Content contentId="CFA-001-O-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFA-001-O-ALTEN" localeString="en_US"/>
+    <!-- Cato: unneeded
     <ContentAssoc contentId="FA-100-ALT" contentIdTo="CFA-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    -->
     <ContentAssoc contentId="FA-001-ALT" contentIdTo="CFA-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FA-001-30-ALT" contentIdTo="CFA-001-30-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FA-001-50-ALT" contentIdTo="CFA-001-50-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FA-001-O-ALT" contentIdTo="CFA-001-O-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <!-- Cato: unneeded
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FA-100" contentId="FA-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    -->
     <ProductContent productId="FA-001" contentId="FA-001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="FA-001-30" contentId="FA-001-30-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="FA-001-50" contentId="FA-001-50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="FA-001-O" contentId="FA-001-O-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    
+    <!-- i18n -->
+    
+    
 </entity-engine-xml>

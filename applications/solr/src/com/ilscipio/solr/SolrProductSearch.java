@@ -488,9 +488,9 @@ public abstract class SolrProductSearch {
             // String productCategoryId = (String)
             // context.get("productCategoryId") != null ?
             // CategoryUtil.getCategoryNameWithTrail((String)
-            // context.get("productCategoryId"), dctx, currentTrail): null;
+            // context.get("productCategoryId"), catalogId, dctx, currentTrail): null;
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx, currentTrail) : null;
+                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             Debug.logInfo("productCategoryId " + productCategoryId, module);
             Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
                     viewIndex, viewSize);
@@ -538,7 +538,7 @@ public abstract class SolrProductSearch {
             // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
             // instead of check in loop...
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx, currentTrail) : null;
+                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = FastMap.newInstance();
             Debug.logInfo("productCategoryId: " + productCategoryId, module);
@@ -564,7 +564,7 @@ public abstract class SolrProductSearch {
                     isFirstElement = false;
                 }
                 else {
-                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, dctx, currentTrail);
+                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, catalogId, dctx, currentTrail);
                     String[] categoryPathArray = categoryPath.split("/");
                     level = Integer.parseInt(categoryPathArray[0]);
                     String facetPrefix = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);

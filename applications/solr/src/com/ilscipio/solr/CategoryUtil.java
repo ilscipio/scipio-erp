@@ -14,7 +14,9 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.DispatchContext;
 
 /**
@@ -117,8 +119,8 @@ public abstract class CategoryUtil {
     /**
      * Returns categoryName with trail.
      */
-    public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx, List<String> currentTrail) {
-    	return getCategoryNameWithTrail(productCategoryId, true,  dctx, currentTrail);
+    public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, DispatchContext dctx, List<String> currentTrail) {
+    	return getCategoryNameWithTrail(productCategoryId, catalogId, true,  dctx, currentTrail);
     }
     
     /**
@@ -134,7 +136,7 @@ public abstract class CategoryUtil {
      * NOTE: currentTrail should NOT contain the "TOP" category or the path length as first element.
      * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getCategoryPathFromTrailAsList}.
      */
-    public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
+    public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
     	List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
@@ -149,11 +151,11 @@ public abstract class CategoryUtil {
                 // FIXME?: currently works like a hint, don't force exact matching
                 trailElement = findBestTrailMatch(trailElements, currentTrail, false, false);
                 if (trailElement == null) {
-                    trailElement = trailElements.get(0);
+                    trailElement = getBestDefaultTrail(catalogId, dctx, trailElements);
                 }
             }
             else {
-                trailElement = trailElements.get(0);
+                trailElement = getBestDefaultTrail(catalogId, dctx, trailElements);
             }
             if (trailElement != null) {
                 for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
@@ -178,25 +180,80 @@ public abstract class CategoryUtil {
         //Debug.logInfo("catMember "+cm,module);
     	return cm;
     }
-    
+
     /**
      * Returns categoryName with trail. 
-     * <strong>WARN:</strong> You should usually call the overload
+     * @deprecated You should usually call the overload
      * with currentTrail instead {@link #getCategoryNameWithTrail(String, DispatchContext, List)}.
      */
+    @Deprecated
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, true,  dctx, null);
+        return getCategoryNameWithTrail(productCategoryId, null, true,  dctx, null);
     }
 
     /**
      * Returns categoryName with trail. 
-     * <strong>WARN:</strong> You should usually call the overload
+     * @deprecated You should usually call the overload
      * with currentTrail instead {@link #getCategoryNameWithTrail(String, Boolean, DispatchContext, List)}.
      */
+    @Deprecated
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, showDepth, dctx, null);
+        return getCategoryNameWithTrail(productCategoryId, null, showDepth, dctx, null);
     }
 
+    /**
+     * Returns the most appropriate default trail.
+     * <p>
+     * If there is more than one, it will try to pick one from a default browse root.
+     */
+    public static List<String> getBestDefaultTrail(String catalogId, DispatchContext dctx, List<List<String>> trails) {
+        if (trails == null || trails.isEmpty()) {
+            return null;
+        }
+        else if (trails.size() == 1) {
+            return trails.get(0);
+        }
+        else if (catalogId == null || catalogId.isEmpty()) {
+            return trails.get(0);
+        }
+        else {
+            List<String> best = null;
+            Integer bestIndex = null;
+            
+            List<GenericValue> topCats = CatalogWorker.getProdCatalogCategories(dctx.getDelegator(), catalogId, "PCCT_BROWSE_ROOT");
+            
+            for(List<String> trail : trails) {
+                if (trail != null && !trail.isEmpty()) {
+                    String catId = trail.get(0);
+                    int catIndex = 0;
+                    for(GenericValue cat : topCats) {
+                        if (cat.getString("productCategoryId").equals(catId)) {
+                            // the topCats were sorted by sequenceNum, so lower index is best
+                            if (best == null) {
+                                best = trail;
+                                bestIndex = catIndex;
+                            }
+                            else {
+                                if (catIndex < bestIndex) {
+                                    best = trail;
+                                    bestIndex = catIndex;
+                                }
+                            }
+                            break;
+                        }
+                        else {
+                            catIndex++;
+                        }
+                    }
+                }
+            }
+            if (best == null) {
+                best = trails.get(0);
+            }
+            return best;
+        }
+    }
+    
     
     
     /**

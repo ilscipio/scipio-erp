@@ -56,7 +56,7 @@ bestSellCategoryId = CatalogWorker.getCatalogBestSellCategoryId(request, current
 //Debug.logInfo("catList "+catLevel,"");
 currentCategoryPath = null;
 if (curCategoryId) {
-    currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, false, 
+    currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, currentCatalogId, false, 
         dispatcher.getDispatchContext(), currentTrail);
 }
 context.currentCategoryPath = currentCategoryPath;

@@ -47,7 +47,7 @@ productCategoryId = curCategoryId;
 validBreadcrumb = topCategoryId + "/";
 
 dctx = dispatcher.getDispatchContext();
-categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,dctx,currentTrail);
+categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
 breadcrumbsList = FastList.newInstance();
 breadcrumbs = categoryPath.split("/");
 for (breadcrumb in breadcrumbs) {

@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil.StringWrapper;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -635,14 +636,22 @@ public class CategoryWorker {
                 }
 
                 String categoryId = category.getString("productCategoryId");
-
+                
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                if (UtilValidate.isNotEmpty(wrapper.get("CATEGORY_NAME", "html"))) {
-                    categoryName = wrapper.get("CATEGORY_NAME", "html").toString();
+                StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "html");
+                if (categoryNameWrapper != null) {
+                    categoryName = categoryNameWrapper.toString();
                 }
-                else {
-                    categoryName = category.getString("productCategoryId");
+                if (UtilValidate.isEmpty(categoryName)) {
+                    // 2016-03-22: Some categories don't have a name but have description
+                    categoryNameWrapper = wrapper.get("DESCRIPTION", "html");
+                    if (categoryNameWrapper != null) {
+                        categoryName = categoryNameWrapper.toString();
+                    }
+                    if (UtilValidate.isEmpty(categoryName)) {
+                        categoryName = category.getString("productCategoryId");
+                    }
                 }
 
                 // Debug.log("category name =========> " + categoryName);

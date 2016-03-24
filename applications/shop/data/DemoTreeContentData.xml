@@ -75,10 +75,10 @@
     -->
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-102DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-102DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-PR-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-PR-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     
     <!-- Cato: Unneeded
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>

@@ -33,45 +33,56 @@ under the License.
 
     <!-- Cato: New categories and categories moved and renamed from other locations (all these have new IDs) -->
     <ProductCategory description="Clothing" longDescription="Clothing"
-        primaryParentCategoryId="CATALOG1" productCategoryId="500" productCategoryTypeId="CATALOG_CATEGORY"/>
+        primaryParentCategoryId="CATALOG1" productCategoryId="CLOTH-100" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Menswear" longDescription="Menswear"
-            primaryParentCategoryId="500" productCategoryId="501" productCategoryTypeId="CATALOG_CATEGORY"/>
+            primaryParentCategoryId="CLOTH-100" productCategoryId="CL-MEN-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Womenswear" longDescription="Womenswear"
-            primaryParentCategoryId="500" productCategoryId="502" productCategoryTypeId="CATALOG_CATEGORY"/>
+            primaryParentCategoryId="CLOTH-100" productCategoryId="CL-WMN-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         
     <ProductCategory description="Electronics" longDescription="Electronics"
-        primaryParentCategoryId="CATALOG1" productCategoryId="600" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory description="Computers" longDescription="Computers"
-            primaryParentCategoryId="600" productCategoryId="601" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory description="Desktops and Laptops" longDescription="Desktops and Laptops"
-                primaryParentCategoryId="601" productCategoryId="6011" productCategoryTypeId="CATALOG_CATEGORY"/>
+        primaryParentCategoryId="CATALOG1" productCategoryId="ELTRN-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory description="Computer" longDescription="Computer"
+            primaryParentCategoryId="ELTRN-100" productCategoryId="PC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory description="Desktops and Laptops" longDescription="Desktops and Laptops (Machines)"
+                primaryParentCategoryId="PC-101" productCategoryId="PC-MA-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Software" longDescription="Software"
-                primaryParentCategoryId="601" productCategoryId="6012" productCategoryTypeId="CATALOG_CATEGORY"/>
+                primaryParentCategoryId="PC-101" productCategoryId="PC-SF-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Computer Accessories" longDescription="Computer Accessories"
-                primaryParentCategoryId="601" productCategoryId="6013" productCategoryTypeId="CATALOG_CATEGORY"/>
+                primaryParentCategoryId="PC-101" productCategoryId="PC-AC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
                 <ProductCategory description="Peripherals" longDescription="Peripherals"
-                    primaryParentCategoryId="6013" productCategoryId="60131" productCategoryTypeId="CATALOG_CATEGORY"/>
+                    primaryParentCategoryId="PC-AC-101" productCategoryId="PC-PR-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="MP3 Players" longDescription="MP3 Players"
-            primaryParentCategoryId="600" productCategoryId="602" productCategoryTypeId="CATALOG_CATEGORY"/>
+            primaryParentCategoryId="ELTRN-100" productCategoryId="EL-MP3-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         
+    <ProductCategory description="Media" longDescription="Media Entertainment" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="MEDIA-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory description="Music" longDescription="Music"
+            primaryParentCategoryId="MEDIA-100" productCategoryId="MUSIC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory description="Music CDs" longDescription="Music CDs (Hard Copies)"
+                primaryParentCategoryId="MUSIC-101" productCategoryId="MU-CD-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+            <ProductCategory description="Music Downloads" longDescription="Downloadable Albums (MP3s and Files)"
+                primaryParentCategoryId="MUSIC-101" productCategoryId="MU-DL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+            
+    <ProductCategory description="Rentals" longDescription="Rental Products" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="RENT-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+
     <ProductCategory description="Subscriptions" longDescription="Subscriptions"
-        primaryParentCategoryId="CATALOG1" productCategoryId="SUB-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
+        primaryParentCategoryId="CATALOG1" productCategoryId="SUBS-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
     <ProductCategory description="Financial" longDescription="Financial"
         primaryParentCategoryId="CATALOG1" productCategoryId="FIN-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
     <ProductCategory description="Groceries" longDescription="Groceries" 
         primaryParentCategoryId="CATALOG1" productCategoryId="FOOD-100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory description="Services" longDescription="Services" 
         primaryParentCategoryId="CATALOG1" productCategoryId="SERV-100" productCategoryTypeId="CATALOG_CATEGORY"/>
-
     <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
         primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory description="Gift Card Purchase" longDescription="Gift Cards - Purchases" 
-        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory description="Gift Card Reload"  longDescription="Gift Cards - Reloads" 
-        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-102" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <!-- Cato: what is this one for? -->
-    <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
-        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-103" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
+        <ProductCategory description="Gift Card Purchase" longDescription="Gift Cards - Purchases" 
+            primaryParentCategoryId="GFTC-100" productCategoryId="GC-PR-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <ProductCategory description="Gift Card Reload"  longDescription="Gift Cards - Reloads" 
+            primaryParentCategoryId="GFTC-100" productCategoryId="GC-RL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+        <!-- Cato: what is this one for? Not in rollup. -->
+        <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
+            primaryParentCategoryId="GFTC-100" productCategoryId="GC-SP-101" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
 
     <ProductCategory description="Drop-Ship" longDescription="Drop-Ship Products" 
         primaryParentCategoryId="CATALOG1" productCategoryId="DROP-100" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -195,28 +206,28 @@ under the License.
     -->   
         
     <!-- Cato: New Category Alternative URL -->
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="500-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR500-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="501-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR501-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="502-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR502-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="600-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR600-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="601-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR601-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="602-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR602-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6011-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6011-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6012-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6012-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="6013-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR6013-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="60131-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR60131-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SUB-100-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSUB-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CLOTH-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCLOTH-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CL-MEN-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCL-MEN-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CL-WMN-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCL-WMN-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="ELTRN-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRELTRN-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="EL-MP3-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-MP3-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-MA-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-MA-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SF-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SF-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-AC-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-AC-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-PR-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-PR-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SUBS-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSUBS-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FIN-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFIN-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FOOD-100-ALT" localeString="en"/>
@@ -225,35 +236,45 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSERV-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-100-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-101-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-101-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-102-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-102-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-PR-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-PR-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-RL-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-RL-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DROP-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRDROP-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MEDIA-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMEDIA-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MUSIC-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMUSIC-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MU-CD-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMU-CD-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MU-DL-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMU-DL-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="RENT-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRRENT-100-ALTEN" localeString="en_US"/>
     
-    <ElectronicText dataResourceId="500-ALT" textData="clothing"/>
-    <ElectronicText dataResourceId="DR500-ALTEN" textData="clothing"/>
-    <ElectronicText dataResourceId="501-ALT" textData="clothing-men"/>
-    <ElectronicText dataResourceId="DR501-ALTEN" textData="clothing-men"/>
-    <ElectronicText dataResourceId="502-ALT" textData="clothing-women"/>
-    <ElectronicText dataResourceId="DR502-ALTEN" textData="clothing-women"/>
-    <ElectronicText dataResourceId="600-ALT" textData="electronics"/>
-    <ElectronicText dataResourceId="DR600-ALTEN" textData="electronics"/>
-    <ElectronicText dataResourceId="601-ALT" textData="computers"/>
-    <ElectronicText dataResourceId="DR601-ALTEN" textData="computers"/>
-    <ElectronicText dataResourceId="602-ALT" textData="mp3-players"/>
-    <ElectronicText dataResourceId="DR602-ALTEN" textData="mp3-players"/>
-    <ElectronicText dataResourceId="6011-ALT" textData="desktop-laptops"/>
-    <ElectronicText dataResourceId="DR6011-ALTEN" textData="desktop-laptops"/>
-    <ElectronicText dataResourceId="6012-ALT" textData="software"/>
-    <ElectronicText dataResourceId="DR6012-ALTEN" textData="software"/>
-    <ElectronicText dataResourceId="6013-ALT" textData="accessories"/>
-    <ElectronicText dataResourceId="DR6013-ALTEN" textData="accessories"/>
-    <ElectronicText dataResourceId="60131-ALT" textData="peripherals"/>
-    <ElectronicText dataResourceId="DR60131-ALTEN" textData="peripherals"/>
-    <ElectronicText dataResourceId="SUB-100-ALT" textData="subscriptions"/>
-    <ElectronicText dataResourceId="DRSUB-100-ALTEN" textData="subscriptions"/>
+    <ElectronicText dataResourceId="CLOTH-100-ALT" textData="clothing"/>
+    <ElectronicText dataResourceId="DRCLOTH-100-ALTEN" textData="clothing"/>
+    <ElectronicText dataResourceId="CL-MEN-101-ALT" textData="clothing-men"/>
+    <ElectronicText dataResourceId="DRCL-MEN-101-ALTEN" textData="clothing-men"/>
+    <ElectronicText dataResourceId="CL-WMN-101-ALT" textData="clothing-women"/>
+    <ElectronicText dataResourceId="DRCL-WMN-101-ALTEN" textData="clothing-women"/>
+    <ElectronicText dataResourceId="ELTRN-100-ALT" textData="electronics"/>
+    <ElectronicText dataResourceId="DRELTRN-100-ALTEN" textData="electronics"/>
+    <ElectronicText dataResourceId="PC-101-ALT" textData="computers"/>
+    <ElectronicText dataResourceId="DRPC-101-ALTEN" textData="computers"/>
+    <ElectronicText dataResourceId="EL-MP3-101-ALT" textData="mp3-players"/>
+    <ElectronicText dataResourceId="DREL-MP3-101-ALTEN" textData="mp3-players"/>
+    <ElectronicText dataResourceId="PC-MA-101-ALT" textData="desktops-laptops"/>
+    <ElectronicText dataResourceId="DRPC-MA-101-ALTEN" textData="desktops-laptops"/>
+    <ElectronicText dataResourceId="PC-SF-101-ALT" textData="software"/>
+    <ElectronicText dataResourceId="DRPC-SF-101-ALTEN" textData="software"/>
+    <ElectronicText dataResourceId="PC-AC-101-ALT" textData="accessories"/>
+    <ElectronicText dataResourceId="DRPC-AC-101-ALTEN" textData="accessories"/>
+    <ElectronicText dataResourceId="PC-PR-101-ALT" textData="peripherals"/>
+    <ElectronicText dataResourceId="DRPC-PR-101-ALTEN" textData="peripherals"/>
+    <ElectronicText dataResourceId="SUBS-100-ALT" textData="subscriptions"/>
+    <ElectronicText dataResourceId="DRSUBS-100-ALTEN" textData="subscriptions"/>
     <ElectronicText dataResourceId="FIN-100-ALT" textData="financial"/>
     <ElectronicText dataResourceId="DRFIN-100-ALTEN" textData="financial"/>
     <ElectronicText dataResourceId="FOOD-100-ALT" textData="groceries"/>
@@ -262,35 +283,45 @@ under the License.
     <ElectronicText dataResourceId="DRSERV-100-ALTEN" textData="services"/>
     <ElectronicText dataResourceId="GFTC-100-ALT" textData="gift-cards"/>
     <ElectronicText dataResourceId="DRGFTC-100-ALTEN" textData="gift-cards"/>
-    <ElectronicText dataResourceId="GFTC-101-ALT" textData="gift-cards-purchases"/>
-    <ElectronicText dataResourceId="DRGFTC-101-ALTEN" textData="gift-cards-purchases"/>
-    <ElectronicText dataResourceId="GFTC-102-ALT" textData="gift-cards-reloads"/>
-    <ElectronicText dataResourceId="DRGFTC-102-ALTEN" textData="gift-cards-reloads"/>
+    <ElectronicText dataResourceId="GC-PR-101-ALT" textData="gift-card-purchases"/>
+    <ElectronicText dataResourceId="DRGC-PR-101-ALTEN" textData="gift-card-purchases"/>
+    <ElectronicText dataResourceId="GC-RL-101-ALT" textData="gift-card-reloads"/>
+    <ElectronicText dataResourceId="DRGC-RL-101-ALTEN" textData="gift-card-reloads"/>
     <ElectronicText dataResourceId="DROP-100-ALT" textData="drop-ship"/>
     <ElectronicText dataResourceId="DRDROP-100-ALTEN" textData="drop-ship"/>
+    <ElectronicText dataResourceId="MEDIA-100-ALT" textData="media"/>
+    <ElectronicText dataResourceId="DRMEDIA-100-ALTEN" textData="media"/>
+    <ElectronicText dataResourceId="MUSIC-101-ALT" textData="music"/>
+    <ElectronicText dataResourceId="DRMUSIC-101-ALTEN" textData="music"/>
+    <ElectronicText dataResourceId="MU-CD-101-ALT" textData="music-cd"/>
+    <ElectronicText dataResourceId="DRMU-CD-101-ALTEN" textData="music-cd"/>
+    <ElectronicText dataResourceId="MU-DL-101-ALT" textData="music-downloads"/>
+    <ElectronicText dataResourceId="DRMU-DL-101-ALTEN" textData="music-downloads"/>
+    <ElectronicText dataResourceId="RENT-100-ALT" textData="rentals"/>
+    <ElectronicText dataResourceId="DRRENT-100-ALTEN" textData="rentals"/>
     
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="500-ALT" dataResourceId="500-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C500-ALTEN" dataResourceId="DR500-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="501-ALT" dataResourceId="501-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C501-ALTEN" dataResourceId="DR501-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="502-ALT" dataResourceId="502-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C502-ALTEN" dataResourceId="DR502-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="600-ALT" dataResourceId="600-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C600-ALTEN" dataResourceId="DR600-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="601-ALT" dataResourceId="601-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C601-ALTEN" dataResourceId="DR601-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="602-ALT" dataResourceId="602-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C601-ALTEN" dataResourceId="DR601-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6011-ALT" dataResourceId="6011-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6011-ALTEN" dataResourceId="DR6011-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6012-ALT" dataResourceId="6012-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6012-ALTEN" dataResourceId="DR6012-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="6013-ALT" dataResourceId="6013-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C6013-ALTEN" dataResourceId="DR6013-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="60131-ALT" dataResourceId="60131-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C60131-ALTEN" dataResourceId="DR60131-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="SUB-100-ALT" dataResourceId="SUB-100-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSUB-100-ALTEN" dataResourceId="DRSUB-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="CLOTH-100-ALT" dataResourceId="CLOTH-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CCLOTH-100-ALTEN" dataResourceId="DRCLOTH-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="CL-MEN-101-ALT" dataResourceId="CL-MEN-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CCL-MEN-101-ALTEN" dataResourceId="DRCL-MEN-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="CL-WMN-101-ALT" dataResourceId="CL-WMN-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CCL-WMN-101-ALTEN" dataResourceId="DRCL-WMN-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="ELTRN-100-ALT" dataResourceId="ELTRN-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CELTRN-100-ALTEN" dataResourceId="DRELTRN-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-101-ALT" dataResourceId="PC-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-101-ALTEN" dataResourceId="DRPC-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="EL-MP3-101-ALT" dataResourceId="EL-MP3-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-101-ALTEN" dataResourceId="DRPC-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-MA-101-ALT" dataResourceId="PC-MA-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-MA-101-ALTEN" dataResourceId="DRPC-MA-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SF-101-ALT" dataResourceId="PC-SF-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SF-101-ALTEN" dataResourceId="DRPC-SF-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-AC-101-ALT" dataResourceId="PC-AC-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-AC-101-ALTEN" dataResourceId="DRPC-AC-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-PR-101-ALT" dataResourceId="PC-PR-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-PR-101-ALTEN" dataResourceId="DRPC-PR-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="SUBS-100-ALT" dataResourceId="SUBS-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSUBS-100-ALTEN" dataResourceId="DRSUBS-100-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="FIN-100-ALT" dataResourceId="FIN-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CFIN-100-ALTEN" dataResourceId="DRFIN-100-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="FOOD-100-ALT" dataResourceId="FOOD-100-ALT"/>
@@ -299,50 +330,71 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSERV-100-ALTEN" dataResourceId="DRSERV-100-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-100-ALT" dataResourceId="GFTC-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-100-ALTEN" dataResourceId="DRGFTC-100-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-101-ALT" dataResourceId="GFTC-101-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-101-ALTEN" dataResourceId="DRGFTC-101-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-102-ALT" dataResourceId="GFTC-102-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-102-ALTEN" dataResourceId="DRGFTC-102-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GC-PR-101-ALT" dataResourceId="GC-PR-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGC-PR-101-ALTEN" dataResourceId="DRGC-PR-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GC-RL-101-ALT" dataResourceId="GC-RL-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGC-RL-101-ALTEN" dataResourceId="DRGC-RL-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="DROP-100-ALT" dataResourceId="DROP-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CDROP-100-ALTEN" dataResourceId="DRDROP-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="MEDIA-100-ALT" dataResourceId="MEDIA-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMEDIA-100-ALTEN" dataResourceId="DRMEDIA-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="MUSIC-101-ALT" dataResourceId="MUSIC-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMUSIC-101-ALTEN" dataResourceId="DRMUSIC-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="MU-CD-101-ALT" dataResourceId="MU-CD-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMU-CD-101-ALTEN" dataResourceId="DRMU-CD-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="MU-DL-101-ALT" dataResourceId="MU-DL-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMU-DL-101-ALTEN" dataResourceId="DRMU-DL-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="RENT-100-ALT" dataResourceId="RENT-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CRENT-100-ALTEN" dataResourceId="DRRENT-100-ALTEN"/>
     
-    <ContentAssoc contentId="500-ALT" contentIdTo="C500-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="501-ALT" contentIdTo="C501-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="502-ALT" contentIdTo="C502-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="600-ALT" contentIdTo="C600-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="601-ALT" contentIdTo="C601-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="602-ALT" contentIdTo="C601-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="6011-ALT" contentIdTo="C6011-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="6012-ALT" contentIdTo="C6012-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="6013-ALT" contentIdTo="C6013-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="60131-ALT" contentIdTo="C60131-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="SUB-100-ALT" contentIdTo="CSUB-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="CLOTH-100-ALT" contentIdTo="CCLOTH-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="CL-MEN-101-ALT" contentIdTo="CCL-MEN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="CL-WMN-101-ALT" contentIdTo="CCL-WMN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="ELTRN-100-ALT" contentIdTo="CELTRN-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="EL-MP3-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-MA-101-ALT" contentIdTo="CPC-MA-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-SF-101-ALT" contentIdTo="CPC-SF-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-AC-101-ALT" contentIdTo="CPC-AC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-PR-101-ALT" contentIdTo="CPC-PR-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="SUBS-100-ALT" contentIdTo="CSUBS-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FIN-100-ALT" contentIdTo="CFIN-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FOOD-100-ALT" contentIdTo="CFOOD-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SERV-100-ALT" contentIdTo="CSERV-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GFTC-100-ALT" contentIdTo="CGFTC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="GFTC-101-ALT" contentIdTo="CGFTC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="GFTC-102-ALT" contentIdTo="CGFTC-102-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="GC-PR-101-ALT" contentIdTo="CGC-PR-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="GC-RL-101-ALT" contentIdTo="CGC-RL-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="DROP-100-ALT" contentIdTo="CDROP-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="500" contentId="500-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="501" contentId="501-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="502" contentId="502-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="600" contentId="600-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="601" contentId="601-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="602" contentId="602-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6011" contentId="6011-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6012" contentId="6012-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6013" contentId="6013-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="60131" contentId="60131-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SUB-100" contentId="SUB-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ContentAssoc contentId="MEDIA-100-ALT" contentIdTo="CMEDIA-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="MUSIC-101-ALT" contentIdTo="CMUSIC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="MU-CD-101-ALT" contentIdTo="CMU-CD-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="MU-DL-101-ALT" contentIdTo="CMU-DL-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="RENT-100-ALT" contentIdTo="CRENT-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CLOTH-100" contentId="CLOTH-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CL-MEN-101" contentId="CL-MEN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CL-WMN-101" contentId="CL-WMN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="ELTRN-100" contentId="ELTRN-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-101" contentId="PC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-MP3-101" contentId="EL-MP3-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-MA-101" contentId="PC-MA-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SF-101" contentId="PC-SF-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-AC-101" contentId="PC-AC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-PR-101" contentId="PC-PR-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SUBS-100" contentId="SUBS-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FIN-100" contentId="FIN-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FOOD-100" contentId="FOOD-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SERV-100" contentId="SERV-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-100" contentId="GFTC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-101" contentId="GFTC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-102" contentId="GFTC-102-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GC-PR-101" contentId="GC-PR-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GC-RL-101" contentId="GC-RL-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="DROP-100" contentId="DROP-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MEDIA-100" contentId="MEDIA-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MUSIC-101" contentId="MUSIC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-CD-101" contentId="MU-CD-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-DL-101" contentId="MU-DL-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="RENT-100" contentId="RENT-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+
     
     <!-- Cato: Old categories (TODO: Remove) -->    
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
@@ -1202,30 +1254,35 @@ under the License.
     -->
     
     <!--  Cato: New categories -->
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="500" sequenceNum="010"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="501"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="502"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="600" sequenceNum="020"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="601"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="602"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6011"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6012"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6013"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="6013" productCategoryId="60131"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUB-100" sequenceNum="030"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="CLOTH-100" sequenceNum="010"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CLOTH-100" productCategoryId="CL-MEN-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CLOTH-100" productCategoryId="CL-WMN-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="ELTRN-100" sequenceNum="020"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="PC-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="EL-MP3-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-MA-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SF-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-AC-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-AC-101" productCategoryId="PC-PR-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUBS-100" sequenceNum="030"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FIN-100" sequenceNum="040"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FOOD-100" sequenceNum="050"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SERV-100" sequenceNum="060"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="GFTC-100"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GFTC-101" sequenceNum="070"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GFTC-102"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GC-PR-101" sequenceNum="070"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GC-RL-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="DROP-100" sequenceNum="080"/>
-        
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="MEDIA-100" sequenceNum="090"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MEDIA-100" productCategoryId="MUSIC-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-CD-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-DL-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="RENT-100" sequenceNum="100"/>
+
     <!--  Cato: Old categories (TODO: Remove) -->
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100" sequenceNum="200"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100" sequenceNum="900"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200" sequenceNum="210"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200" sequenceNum="910"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
@@ -1434,8 +1491,8 @@ under the License.
     <ProductCategory productCategoryId="GC-103" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
     -->
     
-    <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GFTC-102" internalName="Gift Card Reload" productName="Gift Card Reload" description="Add more money to your card!" requireAmount="Y" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
-    <Product productId="GC-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GFTC-101" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-RL-101" internalName="Gift Card Reload" productName="Gift Card Reload" description="Add more money to your card!" requireAmount="Y" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-PR-101" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C10" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C100" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C25" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -1469,22 +1526,22 @@ under the License.
     <ProductPrice productId="GC-001-HO" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductCategoryMember productCategoryId="GFTC-100" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="GFTC-100" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-102" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-CO" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H100" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-HO" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-RL-101" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-CO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-H10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-H100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-H25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-H50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-PR-101" productId="GC-001-HO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-SP-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-SP-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-SP-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-SP-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>

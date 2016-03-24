@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if miniProduct??>
-    <#if solrProduct?has_content && solrProduct.mediumImage?exists>    
+    <#if solrProduct?has_content && solrProduct.mediumImage??>    
         <#assign smallImageUrl = solrProduct.mediumImage>
-    <#elseif solrProduct?has_content && solrProduct.smallImage?exists>
+    <#elseif solrProduct?has_content && solrProduct.smallImage??>
         <#assign smallImageUrl = solrProduct.smallImage>        
-    <#elseif miniProductContentWrapper?exists && miniProductContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
+    <#elseif miniProductContentWrapper?? && miniProductContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
         <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","html")!>        
     </#if>
 
@@ -35,7 +35,7 @@ under the License.
             <@img src=imgSrc!"https://placehold.it/300x100" type="contain" link=imgLink!"" width="100%" height="100px"/>
     </#assign>
     <@pul>
-        <#if priceResult.isSale?exists && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
+        <#if priceResult.isSale?? && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
             <@pli>
                ${productImage!""}
             </@pli>

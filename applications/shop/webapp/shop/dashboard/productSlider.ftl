@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-    <#if productCategory?exists  && solrProducts?has_content>
+    <#if productCategory?? && solrProducts?has_content>
         <#assign jsOptions>
             slidesToShow: ${VIEW_CLUSTER!4},
             slidesToScroll: ${VIEW_SCROLL_CLUSTER!4},

@@ -293,7 +293,8 @@
         "info" : false,
         "paging" : false,
         "searching" : false,
-        "ordering" : true
+        "ordering" : true,
+        "order": []         <#-- prevents ordering upon initialization -->
     },
     "table_default_scrollable_options" : { <#-- this is only used for tables not marked to use responsive but need scrollable=true -->
         "fixedHeader" : false,

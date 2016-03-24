@@ -154,6 +154,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-ofbizInterWebappUrl">ofbizInterWebappUrl</a>, 
                   <a href="#entry-ofbizUrl">ofbizUrl</a>, 
                   <a href="#entry-ofbizWebappUrl">ofbizWebappUrl</a>, 
+                  <a href="#entry-rawString">rawString</a>, 
                   <a href="#entry-removeStyleNames">removeStyleNames</a>, 
                   <a href="#entry-setCurrentHeadingLevel">setCurrentHeadingLevel</a>, 
                   <a href="#entry-setCurrentSectionLevel">setCurrentSectionLevel</a>, 
@@ -324,6 +325,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-popRequestStack">popRequestStack</a>, 
         <a href="#entry-printVars">printVars</a>, 
         <a href="#entry-pushRequestStack">pushRequestStack</a>, 
+        <a href="#entry-rawString">rawString</a>, 
         <a href="#entry-readRequestStack">readRequestStack</a>, 
         <a href="#entry-removeStyleNames">removeStyleNames</a>, 
         <a href="#entry-saveCurrentContainerSizes">saveCurrentContainerSizes</a>, 
@@ -1293,6 +1295,57 @@ a whole file for one label.        </span>
           
           
           <hr />
+          <a name="entry-rawString"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">rawString</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rawString</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding.
+This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</code>, but further simplifies
+the resulting type.</p>
+                      <div class="lib-entry-extradesc">
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-getPropertyValue"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -1310,6 +1363,9 @@ a whole file for one label.        </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Always use default value (&quot;!&quot;) or other test operator!          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The result from this method is <strong>not</strong> HTML-encoded, as such values are normally code and not text messages.          </div>
                       </div>
                   </div>
             
@@ -1381,6 +1437,10 @@ Will use context locale if none specified.
 If msgArgs not specified, property is given access to context for substitute values (occasionally
 this is used in Ofbiz screens).
 If msgArgs is a sequence, they are passed instead of context to the property.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The resulting message is subject to automatic HTML encoding (by Ofbiz).
+Use <a href="#entry-rawString">#rawString</a> on the result to prevent escaping.          </div>
                       </div>
                   </div>
             
@@ -2592,7 +2652,7 @@ the style string with names removed, reformatted, in same order as input        
                       <div class="lib-entry-extradesc">
           <div class="lib-text-note">
             <strong>WARN: </strong>
-The url and pathPart must not be escaped; use <code>StringUtil.wrapString</code>.          </div>
+The url and pathPart must not be escaped; use <a href="#entry-rawString">#rawString</a>.          </div>
                       </div>
                   </div>
             
@@ -5519,6 +5579,9 @@ i: Include only listed keys        </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 This is a very generic function; for common implementation, see <a href="standard/htmlScript.html#entry-commonElemAttribStr">@commonElemAttribStr</a>.          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+If a context map is passed containing strings, they will not be auto-HTML-escaped by the renderer.          </div>
                       </div>
                   </div>
             
@@ -5893,6 +5956,9 @@ formattedDate by default renders the &quot;date&quot; type but it also doubles a
                       <div class="lib-entry-extradesc">
         <p>
 These functions return VOID (no value) if no or empty output, so default value operator can be used.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+The result is auto-HTML-escaped (where applicable); use <a href="#entry-rawString">#rawString</a> to prevent.          </div>
                       </div>
                   </div>
             

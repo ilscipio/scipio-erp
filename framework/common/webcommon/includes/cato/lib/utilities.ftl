@@ -146,10 +146,10 @@ which is very frequent due to use of macros.
 -->
 <#function makeOfbizUrl args>
   <#if isObjectType("map", args)> <#-- ?is_hash doesn't work right with context var strings and hashes -->
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") webSiteId=args.webSiteId!"" absPath=args.absPath!"" interWebapp=args.interWebapp!"" controller=args.controller!"" 
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") webSiteId=args.webSiteId!"" absPath=args.absPath!"" interWebapp=args.interWebapp!"" controller=args.controller!"" 
         extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) /></#local>
+    <#local res><@ofbizUrl uri=rawString(args) /></#local>
   </#if>
   <#return res>
 </#function>
@@ -196,10 +196,10 @@ This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by 
 -->
 <#function makeOfbizWebappUrl args>
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!false interWebapp=false controller=args.controller!false 
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=args.absPath!false interWebapp=false controller=args.controller!false 
         extLoginKey=args.extLoginKey!false fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath=false interWebapp=false controller=false 
+    <#local res><@ofbizUrl uri=rawString(args) absPath=false interWebapp=false controller=false 
         extLoginKey=false fullPath=fullPath secure=secure encode=encode /></#local>
   </#if>
   <#return res>
@@ -252,10 +252,10 @@ NOTE: If args is specified as map, "webSiteId" must be passed in args, not as ar
 -->
 <#function makeOfbizInterWebappUrl args webSiteId="">
   <#if isObjectType("map", args)>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
+    <#local res><@ofbizUrl uri=rawString(args.uri!"") absPath=args.absPath!"" interWebapp=true webSiteId=args.webSiteId!  
         controller=args.controller!"" extLoginKey=args.extLoginKey!"" fullPath=args.fullPath!"" secure=args.secure!"" encode=args.encode!"" /></#local>
   <#else>
-    <#local res><@ofbizUrl uri=StringUtil.wrapString(args) absPath="" interWebapp=true webSiteId=webSiteId
+    <#local res><@ofbizUrl uri=rawString(args) absPath="" interWebapp=true webSiteId=webSiteId
         controller="" extLoginKey="" fullPath="" secure="" encode="" /></#local>
   </#if>
   <#return res>
@@ -294,7 +294,7 @@ Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl m
     @ofbizContentUrl
 -->
 <#function makeOfbizContentUrl uri variant="">
-  <#local res><@ofbizContentUrl variant=variant>${StringUtil.wrapString(uri)}</@ofbizContentUrl></#local>
+  <#local res><@ofbizContentUrl variant=variant>${rawString(uri)}</@ofbizContentUrl></#local>
   <#return res>
 </#function>
 
@@ -318,7 +318,7 @@ The following URI forms are currently interpreted and transformed:
     url                     = uri to interpret for known formats and, if matching, to produce URL
 -->
 <#function interpretRequestUri uri>
-  <#local uri = StringUtil.wrapString(uri)?string>
+  <#local uri = rawString(uri)>
   <#if uri?starts_with("ofbizUrl://")>
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "ofbizUrl">
@@ -345,7 +345,7 @@ Adds the external login key to given url
     escape                  = ((boolean), default: true) If true, use escaped param delimiter
 -->
 <#function addExtLoginKey url escape=true>
-  <#return StringUtil.wrapString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(StringUtil.wrapString(url)?string, request, escape))?string>
+  <#return rawString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(rawString(url), request, escape))>
 </#function>
 
 <#-- 
@@ -378,11 +378,31 @@ Returns empty string if no label is found
 
 <#-- 
 *************
+* rawString
+************
+Returns the given string, free of Ofbiz auto HTML encoding. 
+This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
+the resulting type.
+
+TODO: implement as transform
+
+  * Parameters *
+    str                     = ((string), required) The string to return raw.
+-->
+<#function rawString str>
+  <#-- ?string turns it into a basic FTL string -->
+  <#return StringUtil.wrapString(str)?string> 
+</#function>
+
+<#-- 
+*************
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.
 
 NOTE: Always use default value ("!") or other test operator!
+
+NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages.
 
   * Parameters *
     resource                = (required) Resource name
@@ -390,9 +410,9 @@ NOTE: Always use default value ("!") or other test operator!
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getPropertyValue resource name>
-  <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
+  <#local value = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name)>
   <#if value?has_content>
-    <#return value>
+    <#return rawString(value)>
   </#if> <#- else return nothing (void/null) ->
 </#function>
 -->
@@ -408,6 +428,12 @@ Will use context locale if none specified.
 If msgArgs not specified, property is given access to context for substitute values (occasionally 
 this is used in Ofbiz screens).
 If msgArgs is a sequence, they are passed instead of context to the property.
+
+NOTE: The resulting message is subject to automatic HTML encoding (by Ofbiz). 
+    Use #rawString on the result to prevent escaping.
+    
+DEV NOTE: If this is ever implemented as transform, be careful to make sure the result is HTML-escaped
+    using the same method Ofbiz does! The escaping is now part of this method's interface.
 
 TODO: implement as transform.
 
@@ -426,12 +452,12 @@ TODO: implement as transform.
     </#if>
   </#if>
   <#if msgArgs?is_sequence>
-    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale)>
   <#elseif msgArgs?is_hash>
-    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale)>
   <#else>
     <#-- WARN: context variable _could_ be missing! -->
-    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context!{}, specLocale))?string>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context!{}, specLocale)>
   </#if>
 </#function>
 
@@ -505,6 +531,7 @@ NOTE: 2016-01-21: New special case: if paramDelim is "/" or contains "/", treat 
                               Only significant if paramDelim does not contain "/"
 -->
 <#function addParamDelimToUrl url paramDelim="&amp;" paramStarter="?">
+  <#local url = rawString(url)>
   <#if paramDelim?contains("/")>
     <#if url?ends_with(paramDelim)>
       <#return url>
@@ -545,7 +572,7 @@ Adds parameters from a hash to a URL param string (no full URL logic).
       <#local res = res + paramDelim>
     </#if>
     <#if includeEmpty || paramMap[key]?has_content>
-      <#local res = res + key + "=" + paramMap[key]!?string>
+      <#local res = res + key + "=" + rawString(paramMap[key]!"")>
     </#if>
   </#list>
   <#return res>
@@ -564,7 +591,7 @@ where DELIM is specified delimiter (& &amp; , ; etc.).
     paramDelim              = (default: "&amp;") Param delimiter
 -->
 <#function splitStrParams paramStr paramDelim="&amp;">
-  <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim)>
+  <#return rawString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim))>
 <#-- old FTL impl.
   <#local res = {}>
   <#local pairs = paramStr?split(paramDelim)>
@@ -756,7 +783,7 @@ NOTE: now recognizes special syntax cato class args.
   <#if namesToRemove?is_string> <#-- NOTE: this is only ok as long as we don't accept hashes here, else use isObjectType -->
     <#local namesToRemove = splitStyleNamesToSet(namesToRemove)>
   <#else>
-    <#local namesToRemove = Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(namesToRemove)>
+    <#local namesToRemove = Static["org.ofbiz.base.util.UtilMisc"].collectionToSet(namesToRemove)>
   </#if>
   <#local res = "">
   <#-- don't need regexp, multiple spaces don't affect result -->
@@ -831,7 +858,7 @@ Escapes the URL's parameter delimiters if they are not already escaped.
 ************
 Checks if the given URL contains the given path part, using proper delimiter checking.
 
-WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+WARN: The url and pathPart must not be escaped; use #rawString.
 
   * Parameters *
     url                     = (required) URL to check
@@ -859,7 +886,7 @@ WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
 ************
 Checks if the given URL path starts with the given path, using proper delimiter checking.
 
-WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+WARN: The url and pathPart must not be escaped; use #rawString.
 
 TODO: Implement (careful about absolute vs relative)
 
@@ -878,7 +905,7 @@ TODO: Implement (careful about absolute vs relative)
 ************
 Checks if the given URL path ends with the given path, using proper delimiter checking.
 
-WARN: The url and pathPart must not be escaped; use {{{StringUtil.wrapString}}}.
+WARN: The url and pathPart must not be escaped; use #rawString.
 
 TODO: Implement (careful about absolute vs relative)
 
@@ -898,7 +925,7 @@ TODO: Implement (careful about absolute vs relative)
 Converts camelCase to camel-case.
 -->
 <#function camelCaseToDashLowerName name>
-  <#return StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))?string>
+  <#return rawString(Static["com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))>
 </#function>
 
 
@@ -1119,7 +1146,7 @@ Widget-related progress success action compile (see widget-form.xsd form element
    progressSuccessAction    = (required) Progress success action
 -->
 <#function compileProgressSuccessAction progressSuccessAction>
-  <#return StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))?string>
+  <#return rawString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))>
 </#function>
 
 <#-- 
@@ -1316,7 +1343,7 @@ TODO: doesn't handle dates (ambiguous?)
 <#function escapeScriptString lang val escape=true>
   <#-- 2016-03-21: prevent auto-escaping the screen widget context string variables -->
   <#if isObjectType("string", val)>
-    <#local val = StringUtil.wrapString(val)?string>
+    <#local val = rawString(val)>
   <#else>
     <#local val = val?string>
   </#if>
@@ -2158,6 +2185,8 @@ Prints a string of element attributes. (HTML, FO, XML)
 
 NOTE: This is a very generic function; for common implementation, see @commonElemAttribStr.
 
+NOTE: If a context map is passed containing strings, they will not be auto-HTML-escaped by the renderer.
+
 TODO: implement as transform.
 
   * Parameters *
@@ -2180,8 +2209,8 @@ TODO: implement as transform.
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
-  <#if attribs?is_hash>
-    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
+  <#if isObjectType("map", attribs)>
+    <#t>${rawString(Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
       emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
@@ -2245,6 +2274,8 @@ Renders a formatted time value (convenience wrapper).
 Formats a date.
 
 These functions return VOID (no value) if no or empty output, so default value operator can be used.
+
+NOTE: The result is auto-HTML-escaped (where applicable); use #rawString to prevent.
 
   * Related *
     @formattedDate
@@ -2686,7 +2717,7 @@ html, xml, etc.; best-effort.
 -->
 <#function getRenderPlatformType>
   <#if screens??>
-    <#return StringUtil.wrapString(screens.getScreenStringRenderer().getRendererName()!"")?string>
+    <#return rawString(screens.getScreenStringRenderer().getRendererName()!"")>
   </#if>
 </#function>
 
@@ -2750,7 +2781,7 @@ NOTE: "default" is a special map key; should be avoided.
 <#function getMacroLibraryLocationStaticFromResources renderPlatformType resources resourceNames...>
   <#local res = Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, resourceNames)!"">
   <#if res?has_content>
-    <#return StringUtil.wrapString(res)?string>
+    <#return rawString(res)>
   </#if>
 </#function>
 

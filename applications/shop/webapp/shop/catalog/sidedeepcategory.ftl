@@ -31,7 +31,7 @@ under the License.
       <#assign active = true>
     </#if>
     <#assign categoryUrl><@ofbizCatalogUrl currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
-    <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#else>${contentCategoryDesc!""}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
+    <#assign linkText><#if contentCategoryName?has_content>${contentCategoryName}<#elseif contentCategoryDesc?has_content>${contentCategoryDesc!""}<#else>${productCategoryId}</#if> <#if (count?number > 0)>(${count})</#if></#assign>
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active>
       <#if isMultiLevel>

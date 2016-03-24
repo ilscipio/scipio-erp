@@ -23,9 +23,10 @@ under the License.
     <!-- Cato: This file is for catalog definitions that are transient or temporary in nature,
         i.e. in a real store would be calculated but for which we need static demo data for testing -->
 
-    <!-- Popular Category -->
-    <ProductCategory productCategoryId="CATALOG1_BEST_SELL" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Demo Best Selling"/>
-    <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Gizmos"/>
+    <!-- CATEGORIES -->
+
+    <!-- Cato: TODO: Redo all these -->
+    <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY"/>
     <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Widgets"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_BEST_SELL" fromDate="2010-01-01 12:00:00.0" sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BEST_SELL"/>
     <ProductCategoryRollup productCategoryId="BEST-SELL-1" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="01" fromDate="2010-01-01 12:00:00.0"/>
@@ -33,6 +34,32 @@ under the License.
     <ProductCategoryRollup productCategoryId="101" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryRollup productCategoryId="102" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryRollup productCategoryId="202" parentProductCategoryId="BEST-SELL-2" fromDate="2010-01-01 12:00:00.0"/>
+
+    <!-- Alternative URLs -->
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-1-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-1-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-2-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-2-ALTEN" localeString="en_US"/>
+  
+    <ElectronicText dataResourceId="BEST-SELL-1-ALT" textData="best-sell-1"/>
+    <ElectronicText dataResourceId="BEST-SELL-2-ALT" textData="best-sell-2"/>
+    <ElectronicText dataResourceId="DRBEST-SELL-1-ALTEN" textData="best-sell-1"/>
+    <ElectronicText dataResourceId="DRBEST-SELL-2-ALTEN" textData="best-sell-2"/>
+  
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-1-ALT" dataResourceId="BEST-SELL-1-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-1-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-2-ALT" dataResourceId="BEST-SELL-2-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-2-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
+    
+    <ContentAssoc contentId="BEST-SELL-1-ALT" contentIdTo="CBEST-SELL-1-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="BEST-SELL-2-ALT" contentIdTo="CBEST-SELL-2-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+  
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-1" contentId="BEST-SELL-1-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-2" contentId="BEST-SELL-2-ALT" fromDate="2001-05-13 12:00:00.0"/>
+
+
+    <!-- PRODUCTS (members) -->
+
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="GZ-1000" quantity="10" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="GZ-1001" quantity="8" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="GZ-1004" quantity="6" fromDate="2010-01-01 12:00:00.0"/>
@@ -42,21 +69,5 @@ under the License.
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-9944" quantity="5" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-1111" quantity="7" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-5569" quantity="1" fromDate="2010-01-01 12:00:00.0"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-1-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-1-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-2-ALTEN" localeString="en_US"/>
-    <ElectronicText dataResourceId="BEST-SELL-1-ALT" textData="best-sell-1"/>
-    <ElectronicText dataResourceId="BEST-SELL-2-ALT" textData="best-sell-2"/>
-    <ElectronicText dataResourceId="DRBEST-SELL-1-ALTEN" textData="best-sell-1"/>
-    <ElectronicText dataResourceId="DRBEST-SELL-2-ALTEN" textData="best-sell-2"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-1-ALT" dataResourceId="BEST-SELL-1-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-1-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-2-ALT" dataResourceId="BEST-SELL-2-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-2-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
-    <ContentAssoc contentId="BEST-SELL-1-ALT" contentIdTo="CBEST-SELL-1-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="BEST-SELL-2-ALT" contentIdTo="CBEST-SELL-2-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-1" contentId="BEST-SELL-1-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-2" contentId="BEST-SELL-2-ALT" fromDate="2001-05-13 12:00:00.0"/>
-
+ 
 </entity-engine-xml>

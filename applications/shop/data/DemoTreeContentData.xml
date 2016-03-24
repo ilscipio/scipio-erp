@@ -54,8 +54,15 @@
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+
+    <!-- Cato: Unneeded (moved and renamed below)
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-001DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+     -->
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+ 
+    <!-- Cato: Unneeded (moved and renamed below)
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
@@ -65,11 +72,20 @@
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    -->
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-102DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-102DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    
     <!-- Cato: Unneeded
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     -->
+    
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>

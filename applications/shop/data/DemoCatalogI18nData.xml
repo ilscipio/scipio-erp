@@ -25,9 +25,21 @@
 
     <!-- CATEGORIES -->
 
-    <!-- Cato: New categories -->
 
+    <!-- Cato: TEMPLATE (variables surrounded by underscores _XXX_)
+    <DataResource dataResourceId="DR_ID_DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DR_ID_DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
+    <ElectronicText dataResourceId="DR_ID_DESCDE" textData="_NAMEDE_"/>
+    <ElectronicText dataResourceId="DR_ID_DESCEN" textData="_NAMEEN_"/>
+
+    <Content contentId="C_ID_DESCDE" contentTypeId="DOCUMENT" dataResourceId="DR_ID_DESCDE" description="DESCRIPTION DE _NAMEEN_" localeString="de"/>
+    <Content contentId="C_ID_DESCEN" contentTypeId="DOCUMENT" dataResourceId="DR_ID_DESCEN" description="DESCRIPTION EN _NAMEEN_" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="_ID_" contentId="C_ID_DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="C_ID_DESCEN" contentIdTo="C_ID_DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    -->
 
     <!-- Clothing category -->
     <DataResource dataResourceId="DR500DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
@@ -168,6 +180,118 @@
     <ProductCategoryContent productCategoryId="602" contentId="C602DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
 
     <ContentAssoc contentId="C602DESCEN" contentIdTo="C602DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Groceries (foods) category (new, replacement) -->
+    <DataResource dataResourceId="DRFOOD-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRFOOD-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRFOOD-100DESCDE" textData="Lebensmittel"/>
+    <ElectronicText dataResourceId="DRFOOD-100DESCEN" textData="Groceries"/>
+
+    <Content contentId="CFOOD-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-100DESCDE" description="DESCRIPTION DE Groceries" localeString="de"/>
+    <Content contentId="CFOOD-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-100DESCEN" description="DESCRIPTION EN Groceries" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="FOOD-100" contentId="CFOOD-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CFOOD-100DESCEN" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Subscriptions category -->
+    <DataResource dataResourceId="DRSUB-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSUB-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSUB-100DESCDE" textData="Abonnements"/>
+    <ElectronicText dataResourceId="DRSUB-100DESCEN" textData="Subscriptions"/>
+
+    <Content contentId="CSUB-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCDE" description="DESCRIPTION DE Subscriptions" localeString="de"/>
+    <Content contentId="CSUB-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCEN" description="DESCRIPTION EN Subscriptions" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SUB-100" contentId="CSUB-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSUB-100DESCEN" contentIdTo="CSUB-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Financial category -->
+    <DataResource dataResourceId="DRFIN-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRFIN-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRFIN-100DESCDE" textData="Finanz"/>
+    <ElectronicText dataResourceId="DRFIN-100DESCEN" textData="Financial"/>
+
+    <Content contentId="CFIN-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFIN-100DESCDE" description="DESCRIPTION DE Financial" localeString="de"/>
+    <Content contentId="CFIN-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFIN-100DESCEN" description="DESCRIPTION EN Financial" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="FIN-100" contentId="CFIN-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CFIN-100DESCEN" contentIdTo="CFIN-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Services category (new, replacement) -->
+    <DataResource dataResourceId="DRSERV-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRSERV-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRSERV-100DESCDE" textData="Dienstleistungen"/>
+    <ElectronicText dataResourceId="DRSERV-100DESCEN" textData="Services"/>
+
+    <Content contentId="CSERV-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSERV-100DESCDE" description="DESCRIPTION DE Services" localeString="de"/>
+    <Content contentId="CSERV-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-100DESCEN" description="DESCRIPTION EN Services" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="SERV-100" contentId="CSERV-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CSERV-100DESCEN" contentIdTo="CSERV-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards category (new, replacement) -->
+    <DataResource dataResourceId="DRGFTC-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGFTC-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGFTC-100DESCDE" textData="Geschenkkarten"/>
+    <ElectronicText dataResourceId="DRGFTC-100DESCEN" textData="Gift Cards"/>
+
+    <Content contentId="CGFTC-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-100DESCDE" description="DESCRIPTION DE Gift Cards" localeString="de"/>
+    <Content contentId="CGFTC-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-100DESCEN" description="DESCRIPTION EN Gift Cards" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GFTC-100" contentId="CGFTC-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGFTC-100DESCEN" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards Purchase category (new, replacement) -->
+    <DataResource dataResourceId="DRGFTC-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGFTC-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGFTC-101DESCDE" textData="Geschenkkarten kaufen"/>
+    <ElectronicText dataResourceId="DRGFTC-101DESCEN" textData="Gift Card Purchase"/>
+
+    <Content contentId="CGFTC-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-101DESCDE" description="DESCRIPTION DE Gift Cards Purchase" localeString="de"/>
+    <Content contentId="CGFTC-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-101DESCEN" description="DESCRIPTION EN Gift Cards Purchase" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GFTC-101" contentId="CGFTC-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGFTC-101DESCEN" contentIdTo="CGFTC-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Gift Cards Reload category (new, replacement) -->
+    <DataResource dataResourceId="DRGFTC-102DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRGFTC-102DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRGFTC-102DESCDE" textData="Geschenkkarten Reload"/>
+    <ElectronicText dataResourceId="DRGFTC-102DESCEN" textData="Gift Card Reload"/>
+
+    <Content contentId="CGFTC-102DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-102DESCDE" description="DESCRIPTION DE Gift Cards Reload" localeString="de"/>
+    <Content contentId="CGFTC-102DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRGFTC-102DESCEN" description="DESCRIPTION EN Gift Cards Reload" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="GFTC-102" contentId="CGFTC-102DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+
+    <ContentAssoc contentId="CGFTC-102DESCEN" contentIdTo="CGFTC-102DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+
+    <!-- Drop-Ship (new, replacement) -->
+    <DataResource dataResourceId="DRDROP-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRDROP-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRDROP-100DESCDE" textData="Drop-Ship"/>
+    <ElectronicText dataResourceId="DRDROP-100DESCEN" textData="Drop-Ship"/>
+
+    <Content contentId="CDROP-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRDROP-100DESCDE" description="DESCRIPTION DE Drop-Ship" localeString="de"/>
+    <Content contentId="CDROP-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRDROP-100DESCEN" description="DESCRIPTION EN Drop-Ship" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="DROP-100" contentId="CDROP-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CDROP-100DESCEN" contentIdTo="CDROP-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
 
     <!-- Cato: Old categories (TODO: Remove) -->
@@ -335,6 +459,7 @@
     <ContentAssoc contentId="C202DESCEN" contentIdTo="C202DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
     <!-- Gift Cards category -->
+    <!-- Cato: Unneeded (renamed and moved) 
     <DataResource dataResourceId="DRGC-100DESCFR" dataResourceTypeId="ELECTRONIC_TEXT" localeString="fr"/>
     <DataResource dataResourceId="DRGC-100DESCIT" dataResourceTypeId="ELECTRONIC_TEXT" localeString="it"/>
     <DataResource dataResourceId="DRGC-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
@@ -351,8 +476,10 @@
 
     <ContentAssoc contentId="CGC-100DESCEN" contentIdTo="CGC-100DESCIT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
     <ContentAssoc contentId="CGC-100DESCEN" contentIdTo="CGC-100DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
-
+    -->
+    
     <!-- Gift Cards Purchase category -->
+    <!-- Cato: Unneeded (renamed and moved) 
     <DataResource dataResourceId="DRGC-101DESCFR" dataResourceTypeId="ELECTRONIC_TEXT" localeString="fr"/>
     <DataResource dataResourceId="DRGC-101DESCIT" dataResourceTypeId="ELECTRONIC_TEXT" localeString="it"/>
     <DataResource dataResourceId="DRGC-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
@@ -369,8 +496,10 @@
 
     <ContentAssoc contentId="CGC-101DESCEN" contentIdTo="CGC-101DESCIT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
     <ContentAssoc contentId="CGC-101DESCEN" contentIdTo="CGC-101DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
-
+    -->
+    
     <!-- Gift Cards Reload category -->
+    <!-- Cato: Unneeded (renamed and moved)  
     <DataResource dataResourceId="DRGC-102DESCFR" dataResourceTypeId="ELECTRONIC_TEXT" localeString="fr"/>
     <DataResource dataResourceId="DRGC-102DESCIT" dataResourceTypeId="ELECTRONIC_TEXT" localeString="it"/>
     <DataResource dataResourceId="DRGC-102DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
@@ -387,7 +516,8 @@
 
     <ContentAssoc contentId="CGC-102DESCEN" contentIdTo="CGC-102DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
     <ContentAssoc contentId="CGC-102DESCEN" contentIdTo="CGC-102DESCIT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
-
+    -->
+    
     <!-- Configurables PCs category -->
     <!-- Cato: unneeded
     <DataResource dataResourceId="DRPC-100DESCFR" dataResourceTypeId="ELECTRONIC_TEXT" localeString="fr"/>
@@ -409,19 +539,21 @@
     -->
     
     <!-- Configurables Foods category -->
+    <!-- Cato: Unneeded (renamed and moved)  
     <DataResource dataResourceId="DRFOOD-001DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="DRFOOD-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="DRFOOD-001DESCDE" textData="Lebensmittel"/>
-    <ElectronicText dataResourceId="DRFOOD-001DESCEN" textData="Groceries"/>
+    <ElectronicText dataResourceId="DRFOOD-001DESCDE" textData="Configurable Foods (DE)"/>
+    <ElectronicText dataResourceId="DRFOOD-001DESCEN" textData="Configurable Foods"/>
 
-    <Content contentId="CFOOD-001DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001DESCDE" description="DESCRIPTION DE Groceries" localeString="de"/>
-    <Content contentId="CFOOD-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001DESCEN" description="DESCRIPTION EN Groceries" localeString="en"/>
+    <Content contentId="CFOOD-001DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001DESCDE" description="DESCRIPTION DE Configurable Foods" localeString="de"/>
+    <Content contentId="CFOOD-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001DESCEN" description="DESCRIPTION EN Configurable Foods" localeString="en"/>
 
     <ProductCategoryContent productCategoryId="FOOD-001" contentId="CFOOD-001DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
 
     <ContentAssoc contentId="CFOOD-001DESCEN" contentIdTo="CFOOD-001DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
-
+    -->
+    
     <!-- Featured Products category -->
     <DataResource dataResourceId="DRPROMO-001DESCFR" dataResourceTypeId="ELECTRONIC_TEXT" localeString="fr"/>
     <DataResource dataResourceId="DRPROMO-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
@@ -437,6 +569,7 @@
     <ContentAssoc contentId="CPROMO-001DESCEN" contentIdTo="CPROMO-001DESCFR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
     <!-- Services category -->
+    <!-- Cato: Unneeded (renamed and moved)
     <DataResource dataResourceId="DRSERV-001DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="DRSERV-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
@@ -449,21 +582,7 @@
     <ProductCategoryContent productCategoryId="SERV-001" contentId="CSERV-001DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
 
     <ContentAssoc contentId="CSERV-001DESCEN" contentIdTo="CSERV-001DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
-
-    <!-- Subscriptions category -->
-    <DataResource dataResourceId="DRSUB-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="DRSUB-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
-
-    <ElectronicText dataResourceId="DRSUB-100DESCDE" textData="Abonnements"/>
-    <ElectronicText dataResourceId="DRSUB-100DESCEN" textData="Subscriptions"/>
-
-    <Content contentId="CSUB-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCDE" description="DESCRIPTION DE Subscriptions" localeString="de"/>
-    <Content contentId="CSUB-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSUB-100DESCEN" description="DESCRIPTION EN Subscriptions" localeString="en"/>
-
-    <ProductCategoryContent productCategoryId="SUB-100" contentId="CSUB-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
-
-    <ContentAssoc contentId="CSUB-100DESCEN" contentIdTo="CSUB-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
-
+    -->
 
     <!-- PRODUCTS -->
 

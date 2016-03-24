@@ -123,10 +123,12 @@ under the License.
     <WorkEffortAssoc workEffortIdFrom="ROUT11" workEffortIdTo="TASK12" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2007-12-27 12:00:00.0"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT11" workEffortIdTo="TASK13" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2007-12-27 12:00:00.0"/>
 
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategory productCategoryId="FOOD-001" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategoryRollup fromDate="2007-12-27 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FOOD-001"/>
+     -->
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="FOOD-001" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="FOOD-100" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
 
     <!-- Configurable product with virtual product options example -->
@@ -225,7 +227,7 @@ under the License.
     <WorkEffortAssoc workEffortIdFrom="PZROUT01" workEffortIdTo="PZTASK01" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2004-09-24 15:09:38.736"/>
     <WorkEffortAssoc workEffortIdFrom="PZROUT01" workEffortIdTo="PZTASK02" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2004-09-24 15:09:47.338"/>
 
-    <ProductCategoryMember productCategoryId="FOOD-001" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
+    <ProductCategoryMember productCategoryId="FOOD-100" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
 
@@ -234,8 +236,10 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FOOD-001-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
+    -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC001-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC001-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="RAM1GB_BRAND-ALT" localeString="en"/>
@@ -286,7 +290,9 @@ under the License.
     <!-- Cato: Unneeded
     <ElectronicText dataResourceId="PC-100-ALT" textData="configurable-pcs"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="FOOD-001-ALT" textData="groceries"/>
+    -->
     <ElectronicText dataResourceId="PC001-ALT" textData="configurable-pc"/>
     <ElectronicText dataResourceId="RAM1GB_BRAND-ALT" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="HD250GB_BRAND-ALT" textData="hd-250-gb"/>
@@ -314,7 +320,9 @@ under the License.
     <!-- Cato: Unneeded
     <ElectronicText dataResourceId="DRPC-100-ALTEN" textData="configurable-pcs"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="DRFOOD-001-ALTEN" textData="groceries"/>
+    -->
     <ElectronicText dataResourceId="DRPC001-ALTEN" textData="configurable-pc"/>
     <ElectronicText dataResourceId="DRRAM1GB_BRAND-ALTEN" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="DRHD250GB_BRAND-ALT" textData="hd-250-gb"/>
@@ -343,8 +351,10 @@ under the License.
     <Content contentId="PC-100-ALT" contentTypeId="DOCUMENT" dataResourceId="PC-100-ALT" localeString="en"/>
     <Content contentId="CPC-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <Content contentId="FOOD-001-ALT" contentTypeId="DOCUMENT" dataResourceId="FOOD-001-ALT" localeString="en"/>
     <Content contentId="CFOOD-001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
+    -->
     <Content contentId="PC001-ALT" contentTypeId="DOCUMENT" dataResourceId="PC001-ALT" localeString="en"/>
     <Content contentId="CPC001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC001-ALTEN" localeString="en_US"/>
     <Content contentId="RAM1GB_BRAND-ALT" contentTypeId="DOCUMENT" dataResourceId="RAM1GB_BRAND-ALT" localeString="en"/>
@@ -395,7 +405,9 @@ under the License.
     <!-- Cato: Unneeded
     <ContentAssoc contentId="PC-100-ALT" contentIdTo="CPC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <ContentAssoc contentId="FOOD-001-ALT" contentIdTo="CFOOD-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    -->
     <ContentAssoc contentId="PC001-ALT" contentIdTo="CPC001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="RAM1GB_BRAND-ALT" contentIdTo="CRAM1GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="HD250GB_BRAND-ALT" contentIdTo="CHD250GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -423,7 +435,9 @@ under the License.
     <!-- Cato: Unneeded
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-100" contentId="PC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     -->
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FOOD-001" contentId="FOOD-001-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    -->
     
     <ProductContent productId="PC001" contentId="PC001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="RAM1GB_BRAND" contentId="RAM1GB_BRAND-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>

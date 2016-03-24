@@ -25,37 +25,73 @@ under the License.
     <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
     <ProductStoreCatalog productStoreId="catoShop" prodCatalogId="TestCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
-    <ProductCategory categoryName="Demo Catalog Root"
+    <ProductCategory categoryName="Demo Catalog Root" description="Demo Catalog Root" 
         longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
 
-    <!-- Cato: New categories 
-        NOTE: There are more special main categories (having CATALOG1 as parent) dispersed outside this file (from stock) -->
-    <ProductCategory longDescription="Clothing"
+    <!-- Cato: NOTE: Most categories are now defined here except old Rental catalog/categories
+        and specific best-selling categories -->
+
+    <!-- Cato: New categories and categories moved and renamed from other locations (all these have new IDs) -->
+    <ProductCategory description="Clothing" longDescription="Clothing"
         primaryParentCategoryId="CATALOG1" productCategoryId="500" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory longDescription="Menswear"
+        <ProductCategory description="Menswear" longDescription="Menswear"
             primaryParentCategoryId="500" productCategoryId="501" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory longDescription="Womenswear"
+        <ProductCategory description="Womenswear" longDescription="Womenswear"
             primaryParentCategoryId="500" productCategoryId="502" productCategoryTypeId="CATALOG_CATEGORY"/>
         
-    <ProductCategory longDescription="Electronics"
+    <ProductCategory description="Electronics" longDescription="Electronics"
         primaryParentCategoryId="CATALOG1" productCategoryId="600" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory longDescription="Computers"
+        <ProductCategory description="Computers" longDescription="Computers"
             primaryParentCategoryId="600" productCategoryId="601" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory longDescription="Desktops and Laptops"
+            <ProductCategory description="Desktops and Laptops" longDescription="Desktops and Laptops"
                 primaryParentCategoryId="601" productCategoryId="6011" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory longDescription="Software"
+            <ProductCategory description="Software" longDescription="Software"
                 primaryParentCategoryId="601" productCategoryId="6012" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory longDescription="Computer Accessories"
+            <ProductCategory description="Computer Accessories" longDescription="Computer Accessories"
                 primaryParentCategoryId="601" productCategoryId="6013" productCategoryTypeId="CATALOG_CATEGORY"/>
-                <ProductCategory longDescription="Peripherals"
+                <ProductCategory description="Peripherals" longDescription="Peripherals"
                     primaryParentCategoryId="6013" productCategoryId="60131" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory longDescription="MP3 Players"
+        <ProductCategory description="MP3 Players" longDescription="MP3 Players"
             primaryParentCategoryId="600" productCategoryId="602" productCategoryTypeId="CATALOG_CATEGORY"/>
         
-    <ProductCategory longDescription="Subscriptions"
+    <ProductCategory description="Subscriptions" longDescription="Subscriptions"
         primaryParentCategoryId="CATALOG1" productCategoryId="SUB-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
+    <ProductCategory description="Financial" longDescription="Financial"
+        primaryParentCategoryId="CATALOG1" productCategoryId="FIN-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
+    <ProductCategory description="Groceries" longDescription="Groceries" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="FOOD-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Services" longDescription="Services" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="SERV-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
-    <!-- Cato: Old main categories (TODO: Remove) -->
+    <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Gift Card Purchase" longDescription="Gift Cards - Purchases" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Gift Card Reload"  longDescription="Gift Cards - Reloads" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-102" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <!-- Cato: what is this one for? -->
+    <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-103" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
+
+    <ProductCategory description="Drop-Ship" longDescription="Drop-Ship Products" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="DROP-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+
+    <!-- Cato: Special categories (NOTE: these still using old IDs) -->
+    <ProductCategory description="Promotions" longDescription="Promotions" 
+        productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY" detailScreen="component://shop/widget/CatalogScreens.xml#categorydetailmatrix"/>
+    <ProductCategory categoryName="Demo Default Search" description="Demo Default Search"
+        longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
+        productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
+    <ProductCategory categoryName="Main Quick Add" description="Main Quick Add"
+        longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
+    <ProductCategory categoryName="Widget Quick Add" description="Widget Quick Add"
+        longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+    <ProductCategory categoryName="Demo Best Selling" description="Demo Best Selling" longDescription="Demo Best Selling"
+        productCategoryId="CATALOG1_BEST_SELL" productCategoryTypeId="BEST_SELL_CATEGORY"/>
+        <!-- NOTE: The specific BEST-SELL categories are defined in DemoCatalogTransientData.xml -->
+
+    <!-- Cato: Old main categories - widgets and gizmos (TODO: Remove) -->
     <ProductCategory longDescription="long description of Gizmos"
         primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory longDescription="long description of Widgets"
@@ -76,15 +112,7 @@ under the License.
     <ProductCategory longDescription="long description of Micro Widgets"
         primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
         
-    <!-- Cato: Special categories -->
-    <ProductCategory productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY" detailScreen="component://shop/widget/CatalogScreens.xml#categorydetailmatrix"/>
-    <ProductCategory categoryName="Demo Default Search"
-        longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
-        productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
-    <ProductCategory categoryName="Main Quick Add"
-        longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
-    <ProductCategory categoryName="Widget Quick Add"
-        longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+    <!-- Cato: Other categories -->
 
     <ProductCategory categoryName="Test Limited Admin Category"
         longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -96,21 +124,22 @@ under the License.
     <ProductCategory categoryName="Test Cross Sell Category"
         longDescription="Test Cross Sell Category" productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
+    <!-- Catalog-category associations -->
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="2" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+        sequenceNum="02" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
 
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
+        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
 
 
     <!-- Cato: New category links (TODO) -->
@@ -146,6 +175,25 @@ under the License.
             
     <!-- Category Alternative URL -->    
         
+    <!-- Cato: TEMPLATE (variables surrounded by underscores _XXX_)
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="_ID_-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR_ID_-ALTEN" localeString="en_US"/>
+    
+    <ElectronicText dataResourceId="_ID_-ALT" textData="_ALTNAME_"/>
+    <ElectronicText dataResourceId="DR_ID_-ALTEN" textData="_ALTNAME_"/>
+    
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="_ID_-ALT" dataResourceId="_ID_-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C_ID_-ALTEN" dataResourceId="DR_ID_-ALTEN"/>
+    
+    <ContentAssoc contentId="_ID_-ALT" contentIdTo="C_ID_-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="_ID_" contentId="_ID_-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    -->
+        
+    <!-- Cato: Is this needed? was present for original SERV-001 category (now SERV-100) 
+    <DataResource dataResourceId="SERV-100-ALT" dataResourceTypeId="LINK" objectInfo="services-SERV-001-c"/>
+    -->   
+        
     <!-- Cato: New Category Alternative URL -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="500-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR500-ALTEN" localeString="en_US"/>
@@ -169,30 +217,57 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR60131-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SUB-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSUB-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FIN-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFIN-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FOOD-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFOOD-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SERV-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSERV-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GFTC-102-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGFTC-102-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DROP-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRDROP-100-ALTEN" localeString="en_US"/>
     
     <ElectronicText dataResourceId="500-ALT" textData="clothing"/>
-    <ElectronicText dataResourceId="501-ALT" textData="clothing-men"/>
-    <ElectronicText dataResourceId="502-ALT" textData="clothing-women"/>
-    <ElectronicText dataResourceId="600-ALT" textData="electronics"/>
-    <ElectronicText dataResourceId="601-ALT" textData="computers"/>
-    <ElectronicText dataResourceId="602-ALT" textData="mp3-players"/>
-    <ElectronicText dataResourceId="6011-ALT" textData="desktop-laptops"/>
-    <ElectronicText dataResourceId="6012-ALT" textData="software"/>
-    <ElectronicText dataResourceId="6013-ALT" textData="accessories"/>
-    <ElectronicText dataResourceId="60131-ALT" textData="peripherals"/>
-    <ElectronicText dataResourceId="SUB-100-ALT" textData="subscriptions"/>
-    
     <ElectronicText dataResourceId="DR500-ALTEN" textData="clothing"/>
+    <ElectronicText dataResourceId="501-ALT" textData="clothing-men"/>
     <ElectronicText dataResourceId="DR501-ALTEN" textData="clothing-men"/>
+    <ElectronicText dataResourceId="502-ALT" textData="clothing-women"/>
     <ElectronicText dataResourceId="DR502-ALTEN" textData="clothing-women"/>
+    <ElectronicText dataResourceId="600-ALT" textData="electronics"/>
     <ElectronicText dataResourceId="DR600-ALTEN" textData="electronics"/>
+    <ElectronicText dataResourceId="601-ALT" textData="computers"/>
     <ElectronicText dataResourceId="DR601-ALTEN" textData="computers"/>
+    <ElectronicText dataResourceId="602-ALT" textData="mp3-players"/>
     <ElectronicText dataResourceId="DR602-ALTEN" textData="mp3-players"/>
+    <ElectronicText dataResourceId="6011-ALT" textData="desktop-laptops"/>
     <ElectronicText dataResourceId="DR6011-ALTEN" textData="desktop-laptops"/>
+    <ElectronicText dataResourceId="6012-ALT" textData="software"/>
     <ElectronicText dataResourceId="DR6012-ALTEN" textData="software"/>
+    <ElectronicText dataResourceId="6013-ALT" textData="accessories"/>
     <ElectronicText dataResourceId="DR6013-ALTEN" textData="accessories"/>
+    <ElectronicText dataResourceId="60131-ALT" textData="peripherals"/>
     <ElectronicText dataResourceId="DR60131-ALTEN" textData="peripherals"/>
+    <ElectronicText dataResourceId="SUB-100-ALT" textData="subscriptions"/>
     <ElectronicText dataResourceId="DRSUB-100-ALTEN" textData="subscriptions"/>
+    <ElectronicText dataResourceId="FIN-100-ALT" textData="financial"/>
+    <ElectronicText dataResourceId="DRFIN-100-ALTEN" textData="financial"/>
+    <ElectronicText dataResourceId="FOOD-100-ALT" textData="groceries"/>
+    <ElectronicText dataResourceId="DRFOOD-100-ALTEN" textData="groceries"/>
+    <ElectronicText dataResourceId="SERV-100-ALT" textData="services"/>
+    <ElectronicText dataResourceId="DRSERV-100-ALTEN" textData="services"/>
+    <ElectronicText dataResourceId="GFTC-100-ALT" textData="gift-cards"/>
+    <ElectronicText dataResourceId="DRGFTC-100-ALTEN" textData="gift-cards"/>
+    <ElectronicText dataResourceId="GFTC-101-ALT" textData="gift-cards-purchases"/>
+    <ElectronicText dataResourceId="DRGFTC-101-ALTEN" textData="gift-cards-purchases"/>
+    <ElectronicText dataResourceId="GFTC-102-ALT" textData="gift-cards-reloads"/>
+    <ElectronicText dataResourceId="DRGFTC-102-ALTEN" textData="gift-cards-reloads"/>
+    <ElectronicText dataResourceId="DROP-100-ALT" textData="drop-ship"/>
+    <ElectronicText dataResourceId="DRDROP-100-ALTEN" textData="drop-ship"/>
     
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="500-ALT" dataResourceId="500-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C500-ALTEN" dataResourceId="DR500-ALTEN"/>
@@ -216,6 +291,20 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C60131-ALTEN" dataResourceId="DR60131-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="SUB-100-ALT" dataResourceId="SUB-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSUB-100-ALTEN" dataResourceId="DRSUB-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="FIN-100-ALT" dataResourceId="FIN-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CFIN-100-ALTEN" dataResourceId="DRFIN-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="FOOD-100-ALT" dataResourceId="FOOD-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CFOOD-100-ALTEN" dataResourceId="DRFOOD-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="SERV-100-ALT" dataResourceId="SERV-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CSERV-100-ALTEN" dataResourceId="DRSERV-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-100-ALT" dataResourceId="GFTC-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-100-ALTEN" dataResourceId="DRGFTC-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-101-ALT" dataResourceId="GFTC-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-101-ALTEN" dataResourceId="DRGFTC-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="GFTC-102-ALT" dataResourceId="GFTC-102-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CGFTC-102-ALTEN" dataResourceId="DRGFTC-102-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="DROP-100-ALT" dataResourceId="DROP-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CDROP-100-ALTEN" dataResourceId="DRDROP-100-ALTEN"/>
     
     <ContentAssoc contentId="500-ALT" contentIdTo="C500-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="501-ALT" contentIdTo="C501-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -228,6 +317,13 @@ under the License.
     <ContentAssoc contentId="6013-ALT" contentIdTo="C6013-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="60131-ALT" contentIdTo="C60131-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SUB-100-ALT" contentIdTo="CSUB-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="FIN-100-ALT" contentIdTo="CFIN-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="FOOD-100-ALT" contentIdTo="CFOOD-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="SERV-100-ALT" contentIdTo="CSERV-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="GFTC-100-ALT" contentIdTo="CGFTC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="GFTC-101-ALT" contentIdTo="CGFTC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="GFTC-102-ALT" contentIdTo="CGFTC-102-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="DROP-100-ALT" contentIdTo="CDROP-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="500" contentId="500-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="501" contentId="501-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -240,8 +336,14 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="6013" contentId="6013-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="60131" contentId="60131-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SUB-100" contentId="SUB-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
-
-        
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FIN-100" contentId="FIN-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FOOD-100" contentId="FOOD-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SERV-100" contentId="SERV-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-100" contentId="GFTC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-101" contentId="GFTC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GFTC-102" contentId="GFTC-102-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="DROP-100" contentId="DROP-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    
     <!-- Cato: Old categories (TODO: Remove) -->    
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR100-ALTEN" localeString="en_US"/>
@@ -721,37 +823,51 @@ under the License.
     <ProductContent productId="GZ-BASKET-PICK" contentId="GZ-BASKET-PICK-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
     <!-- test for service product type-->
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategory productCategoryId="SERV-001" description="Services" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategoryRollup fromDate="2008-12-02 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SERV-001"/>
-    <Product productId="SV-1000" productTypeId="SERVICE" primaryProductCategoryId="SERV-001" productName="Service product" internalName="Service type product" description="Service type product for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    -->
+    <Product productId="SV-1000" productTypeId="SERVICE" primaryProductCategoryId="SERV-100" productName="Service product" internalName="Service type product" description="Service type product for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="SV-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2008-12-02 12:00:00.0" price="1000" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin"/>
-    <ProductCategoryMember productCategoryId="SERV-001" productId="SV-1000" fromDate="2008-12-02 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="SERV-100" productId="SV-1000" fromDate="2008-12-02 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="SV-1000" fromDate="2008-12-02 12:00:00.0"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <DataResource dataResourceId="SERV-001-ALT" dataResourceTypeId="LINK" objectInfo="services-SERV-001-c"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SERV-001-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSERV-001-ALTEN" localeString="en_US"/>
+    -->
     <DataResource dataResourceId="SV-1000-ALT" dataResourceTypeId="LINK" objectInfo="service-product-SV-1000-p"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SV-1000-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSV-1000-ALTEN" localeString="en_US"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="SERV-001-ALT" textData="services"/>
     <ElectronicText dataResourceId="SERV-001-ALT" textData="service-product"/>
+    -->
     <ElectronicText dataResourceId="SV-1000-ALT"  textData="SV 1000 ALT"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="DRSERV-001-ALTEN" textData="services"/>
     <ElectronicText dataResourceId="DRSERV-001-ALTEN" textData="service-product"/>
+    -->
 
+    <!-- Cato: Unneeded (renamed and moved)
     <Content contentId="SERV-001-ALT" contentTypeId="DOCUMENT" dataResourceId="SERV-001-ALT" localeString="en"/>
     <Content contentId="CSERV-001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001-ALTEN" localeString="en_US"/>
+    -->
     <Content contentId="SV-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="SV-1000-ALT" localeString="en"/>
-    <Content contentId="CSV-1000-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001-ALTEN" localeString="en_US"/>
+    <Content contentId="CSV-1000-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRSV-1000-ALTEN" localeString="en_US"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ContentAssoc contentId="SERV-001-ALT" contentIdTo="CSERV-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    -->
     <ContentAssoc contentId="SV-1000-ALT" contentIdTo="CSV-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategoryContent productCategoryId="SERV-001" contentId="SERV-001-ALT" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    -->
     <ProductContent productId="SV-1000" contentId="SV-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
     <!-- test for service product type which is received to- and shipped from inventory-->
-    <Product productId="SV-1001" productTypeId="SERVICE_PRODUCT" primaryProductCategoryId="SERV-001" productName="Laundry service" internalName="Service type product which is received to- and shipped from inventory" description="Service type product which is received to- and shipped from inventory for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="SV-1001" productTypeId="SERVICE_PRODUCT" primaryProductCategoryId="SERV-100" productName="Laundry service" internalName="Service type product which is received to- and shipped from inventory" description="Service type product which is received to- and shipped from inventory for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="SV-1001" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-08-02 12:00:00.0" price="10.99" createdDate="2011-08-02 12:00:00.0" createdByUserLogin="admin"/>
-    <ProductCategoryMember productCategoryId="SERV-001" productId="SV-1001" fromDate="2011-08-02 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="SERV-100" productId="SV-1001" fromDate="2011-08-02 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="SV-1001" fromDate="2011-08-02 12:00:00.0"/>
     <DataResource dataResourceId="SV-1001-ALT" dataResourceTypeId="LINK" objectInfo="lanudry-service-SV-1001-p"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SV-1001-ALT" localeString="en"/>
@@ -765,7 +881,7 @@ under the License.
     <ProductContent productId="SV-1001" contentId="SV-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2011-08-02 12:00:00.0"/>
 
     <!-- test for the configurable product type which is received to- and shipped from inventory-->
-    <Product productId="CFSV1001" productTypeId="AGGREGATED_SERVICE" primaryProductCategoryId="SERV-001" productName="Scanning book service" internalName="The configurable product type which is received to- and shipped from inventory" description="The configurable product type which is received to- and shipped from inventory for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="CFSV1001" productTypeId="AGGREGATED_SERVICE" primaryProductCategoryId="SERV-100" productName="Scanning book service" internalName="The configurable product type which is received to- and shipped from inventory" description="The configurable product type which is received to- and shipped from inventory for demonstration use" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2008-12-02 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-12-02 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="SCAN_TYPE" productTypeId="SERVICE_PRODUCT" productName="Scanning Type" internalName="Scanning Type" description="Scanning Type" isVirtual="Y" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="SCAN-EC" productTypeId="SERVICE_PRODUCT" internalName="Economy Scanning type" productName="Economy Scanning type" description="Economy Scanning type" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="SCAN-ST" productTypeId="SERVICE_PRODUCT" internalName="Standard Scanning type" productName="Standard Scanning type" description="Standard Scanning type" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -828,7 +944,7 @@ under the License.
     <ProductConfigProduct configItemId="SCF0001" configOptionId="SCOP010" productId="METADATA" quantity="1"/>
     <ProductConfigProduct configItemId="SCF0001" configOptionId="SCOP011" productId="DVD" quantity="1"/>
     
-    <ProductCategoryMember productCategoryId="SERV-001" productId="CFSV1001" fromDate="2011-08-02 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="SERV-100" productId="CFSV1001" fromDate="2011-08-02 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="CFSV1001" fromDate="2011-08-02 12:00:00.0"/>
     <DataResource dataResourceId="CFSV1001-ALT" dataResourceTypeId="LINK" objectInfo="scanning-book-service-CFSV1001-p"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CFSV1001-ALT" localeString="en"/>
@@ -1086,24 +1202,30 @@ under the License.
     -->
     
     <!--  Cato: New categories -->
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="500"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="500" sequenceNum="010"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="501"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="500" productCategoryId="502"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="600"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="600" sequenceNum="020"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="601"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="600" productCategoryId="602"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6011"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6012"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="601" productCategoryId="6013"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="6013" productCategoryId="60131"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUB-100"/>
-
-    
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUB-100" sequenceNum="030"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FIN-100" sequenceNum="040"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FOOD-100" sequenceNum="050"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SERV-100" sequenceNum="060"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="GFTC-100"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GFTC-101" sequenceNum="070"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GFTC-100" productCategoryId="GFTC-102"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="DROP-100" sequenceNum="080"/>
+        
     <!--  Cato: Old categories (TODO: Remove) -->
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100" sequenceNum="200"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200" sequenceNum="210"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
@@ -1305,13 +1427,15 @@ under the License.
     <ProductPriceAction productPriceRuleId="9001" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" amount="18.95"/>
 
     <!-- example gift card product info -->
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategory productCategoryId="GC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory productCategoryId="GC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory productCategoryId="GC-102" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory productCategoryId="GC-103" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
-
-    <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-102" internalName="Gift Card Reload" productName="Gift Card Reload" description="Add more money to your card!" requireAmount="Y" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
-    <Product productId="GC-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-101" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    -->
+    
+    <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GFTC-102" internalName="Gift Card Reload" productName="Gift Card Reload" description="Add more money to your card!" requireAmount="Y" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GFTC-101" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C10" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C100" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
     <Product productId="GC-001-C25" productTypeId="DIGITAL_GOOD" internalName="Gift Card Activation" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -1343,37 +1467,41 @@ under the License.
     <ProductPrice productId="GC-001-H25" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="25.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="GC-001-H50" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="50.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="GC-001-HO" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="1.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductCategoryMember productCategoryId="GC-100" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-100" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-102" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-CO" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H100" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-HO" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-103" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-103" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-103" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="GC-103" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-100" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-100" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-102" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-CO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H100" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-H50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-101" productId="GC-001-HO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C25" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C50" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GFTC-103" productId="GC-001-C100" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-102"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="GC-100"/>
+    -->
+    <!-- Cato: Unneeded (renamed and moved)
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-100-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-102-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-102-ALTEN" localeString="en_US"/>
+    -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-002-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-002-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-001-ALT" localeString="en"/>
@@ -1399,9 +1527,11 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GC-001-HO-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGC-001-HO-ALTEN" localeString="en_US"/>
     
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="GC-100-ALT" textData="gift-cards"/>
     <ElectronicText dataResourceId="GC-101-ALT" textData="gift-cards-purchases"/>
     <ElectronicText dataResourceId="GC-102-ALT" textData="gift-cards-reloads"/>
+    -->
     <ElectronicText dataResourceId="GC-002-ALT" textData="gift-card-reload"/>
     <ElectronicText dataResourceId="GC-001-ALT" textData="gift-card-activation"/>
     <ElectronicText dataResourceId="GC-001-C10-ALT" textData="gift-card-activation-c10"/>
@@ -1415,9 +1545,11 @@ under the License.
     <ElectronicText dataResourceId="GC-001-H50-ALT" textData="gift-card-activation-h50"/>
     <ElectronicText dataResourceId="GC-001-HO-ALT" textData="gift-card-activation-ho"/>
     
+    <!-- Cato: Unneeded (renamed and moved)
     <ElectronicText dataResourceId="DRGC-100-ALTEN" textData="gift-cards"/>
     <ElectronicText dataResourceId="DRGC-101-ALTEN" textData="gift-cards-purchases"/>
     <ElectronicText dataResourceId="DRGC-102-ALTEN" textData="gift-cards-reloads"/>
+    -->
     <ElectronicText dataResourceId="DRGC-002-ALTEN" textData="gift-card-reload"/>
     <ElectronicText dataResourceId="DRGC-001-ALTEN" textData="gift-card-activation"/>
     <ElectronicText dataResourceId="DRGC-001-C10-ALTEN" textData="gift-card-activation-c10"/>
@@ -1431,12 +1563,14 @@ under the License.
     <ElectronicText dataResourceId="DRGC-001-H50-ALTEN" textData="gift-card-activation-h50"/>
     <ElectronicText dataResourceId="DRGC-001-HO-ALTEN" textData="gift-card-activation-ho"/>
     
+    <!-- Cato: Unneeded (renamed and moved)
     <Content contentId="GC-100-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-100-ALT" localeString="en"/>
     <Content contentId="CGC-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-100-ALTEN" localeString="en_US"/>
     <Content contentId="GC-101-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-101-ALT" localeString="en"/>
     <Content contentId="CGC-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-101-ALTEN" localeString="en_US"/>
     <Content contentId="GC-102-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-102-ALT" localeString="en"/>
     <Content contentId="CGC-102-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-102-ALTEN" localeString="en_US"/>
+    -->
     <Content contentId="GC-002-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-002-ALT" localeString="en"/>
     <Content contentId="CGC-002-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-002-ALTEN" localeString="en_US"/>
     <Content contentId="GC-001-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-ALT" localeString="en"/>
@@ -1462,9 +1596,11 @@ under the License.
     <Content contentId="GC-001-HO-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-HO-ALT" localeString="en"/>
     <Content contentId="CGC-001-HO-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGC-001-HO-ALTEN" localeString="en_US"/>
     
+    <!-- Cato: Unneeded (renamed and moved)
     <ContentAssoc contentId="GC-100-ALT" contentIdTo="CGC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GC-101-ALT" contentIdTo="CGC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GC-102-ALT" contentIdTo="CGC-102-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    -->
     <ContentAssoc contentId="GC-002-ALT" contentIdTo="CGC-002-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GC-001-ALT" contentIdTo="CGC-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GC-001-C10-ALT" contentIdTo="CGC-001-C10-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -1490,10 +1626,12 @@ under the License.
     <ProductContent productId="GC-001-H25" contentId="GC-001-H25-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="GC-001-H50" contentId="GC-001-H50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <!-- Cato: Unneeded (renamed and moved)
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GC-100" contentId="GC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GC-101" contentId="GC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="GC-102" contentId="GC-102-ALT" fromDate="2001-05-13 12:00:00.0"/>
-
+    -->
+    
     <ProductFeatureCategory productFeatureCategoryId="2000" description="Gift Card Features"/>
     <ProductFeature productFeatureId="2000" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Classic" defaultSequenceNum="1"/>
     <ProductFeature productFeatureId="2001" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Holiday" defaultSequenceNum="2"/>

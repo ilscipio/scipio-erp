@@ -13930,6 +13930,9 @@
         <value xml:lang="zh">内容</value>
         <value xml:lang="zh_TW">內容</value>
     </property>
+    <property key="ProductCategoryContentList">
+        <value xml:lang="en">Category Content List</value>
+    </property>
     <property key="ProductCategoryFeatures">
         <value xml:lang="en">Category Features</value>
     </property>

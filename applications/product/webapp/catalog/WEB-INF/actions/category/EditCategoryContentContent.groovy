@@ -17,54 +17,69 @@
  * under the License.
  */
 
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.util.*;
-import org.ofbiz.base.util.*;
-import java.sql.Timestamp;
+import org.ofbiz.base.util.*
+import org.ofbiz.entity.*
+import org.ofbiz.entity.util.*
 
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
-contentId = parameters.contentId;
-if (!contentId) {
-    contentId = null;
-}
+//context.contentId = requestAttributes.contentId;
 
-prodCatContentTypeId = parameters.prodCatContentTypeId;
-Debug.log("prodCatContentTypeId ===========> " + prodCatContentTypeId);
-context.contentFormName = "EditCategoryContentSimpleText";
-context.contentFormTitle = "${uiLabelMap.ProductUpdateSimpleTextContentCategory}";
-
-if (("PAGE_TITLE".equals(prodCatContentTypeId))||("META_KEYWORD".equals(prodCatContentTypeId))||("META_DESCRIPTION".equals(prodCatContentTypeId))) {
-    context.contentFormName = "EditCategoryContentSEO";
-    context.contentFormTitle = "${uiLabelMap.ProductUpdateSEOContentCategory}";
+// Show update form
+if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
+    prodCatContentTypeId = parameters.prodCatContentTypeId;
+    productCategoryContent = from("ProductCategoryContent").
+            where(["contentId" : parameters.contentId, "productCategoryId" : parameters.productCategoryId, "prodCatContentTypeId" : parameters.prodCatContentTypeId, "fromDate" : UtilDateTime.toTimestamp(parameters.fromDate)]).queryOne();
+    Debug.log("productCategoryContent =========> " + productCategoryContent);
+    if (productCategoryContent) {
+        context.productCategoryContent = productCategoryContent;
+        context.contentFormName = "EditCategoryContentSimpleText";
+        context.contentFormAction = "updateSimpleTextContentForCategory";
+        if (("PAGE_TITLE".equals(prodCatContentTypeId))||("META_KEYWORD".equals(prodCatContentTypeId))||("META_DESCRIPTION".equals(prodCatContentTypeId))) {
+            context.contentFormName = "EditCategoryContentSEO";
+            context.contentFormAction = "updateContentSEOForCategory";
+        } else if ("RELATED_URL".equals(prodCatContentTypeId)) {
+            context.contentFormName = "EditCategoryContentRelatedUrl";
+            context.contentFormAction = "updateRelatedUrlContentForCategory";
+            contentList = from("ContentDataResourceView").where("contentId", parameters.contentId).queryList();
+            if (contentList) {
+                context.contentDataResourceView = contentList.get(0);
+            }
+        } else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+            context.contentFormName = "EditCategoryContentDownload";
+            context.contentFormAction = "updateDownloadContentForCategory";
+            if("CATEGORY_IMAGE".equals(prodCatContentTypeId)){
+                context.dataResourceTypeId = "IMAGE_OBJECT";
+            }else{
+                context.dataResourceTypeId = "VIDEO_OBJECT";
+            }
+        }
+        content = productCategoryContent.getRelatedOne("Content", false);
+        context.content = content;
+        context.textDataMap = delegator.findOne("ElectronicText", ["dataResourceId" : content.dataResourceId], false);
+        context.prodCatContentTypeId = prodCatContentTypeId;
+    }
+    // Show create form
+} else if (UtilValidate.isEmpty(requestAttributes.contentId)) {    
+    prodCatContentTypeId = parameters.prodCatContentTypeId;
+    context.contentFormName = "EditCategoryContentSimpleText";
+    context.contentFormAction = "createSimpleTextContentForCategory";
+    if (("PAGE_TITLE".equals(prodCatContentTypeId))||("META_KEYWORD".equals(prodCatContentTypeId))||("META_DESCRIPTION".equals(prodCatContentTypeId))) {
+        context.contentFormName = "EditCategoryContentSEO";
+        context.contentFormAction = "updateContentSEOForCategory";
+    } else if ("RELATED_URL".equals(prodCatContentTypeId)) {
+        context.contentFormName = "EditCategoryContentRelatedUrl";
+        context.contentFormAction = "createRelatedUrlContentForCategory";
+    } else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+        context.contentFormName = "EditCategoryContentDownload";
+        context.contentFormAction = "createDownloadContentForCategory";
+    }
+    context.prodCatContentTypeId = prodCatContentTypeId;
+} else {
+    // New category content has been created
+    Debug.log("requestAttributes contentId ===============> " + requestAttributes.contentId);
 }
-if ("RELATED_URL".equals(prodCatContentTypeId)) {
-    contentList = from("ContentDataResourceView").where("contentId", contentId).queryList();
-    if (contentList) {
-        context.contentId = contentList.get(0).contentId;
-        context.dataResourceId = contentList.get(0).dataResourceId;
-        
-        // Cato: don't want page title overridden/forced by groovy
-        //context.title = contentList.get(0).drDataResourceName;
-        context.contentTitle = contentList.get(0).drDataResourceName;
-        context.description = contentList.get(0).description;
-        context.url = contentList.get(0).drObjectInfo;
-        context.localeString = contentList.get(0).localeString;
-    }
-    context.contentFormName = "EditCategoryContentRelatedUrl";
-    context.contentFormTitle = "${uiLabelMap.ProductUpdateRelatedURLContentCategory}";
-}else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
-    if (UtilValidate.isNotEmpty(content)) {
-        context.fileDataResourceId = content.dataResourceId;
-    }
-    if("CATEGORY_IMAGE".equals(prodCatContentTypeId)){
-        context.dataResourceTypeId = "IMAGE_OBJECT";
-    }else{
-        context.dataResourceTypeId = "VIDEO_OBJECT";
-    }
-    context.contentFormName = "EditCategoryContentDownload";
-    context.contentFormTitle = "${uiLabelMap.ProductUpdateDownloadContentCategory}";
-    
-}
-context.prodCatContentTypeId = prodCatContentTypeId;
-Debug.log("contentFormName ===========> " + context.contentFormName);
+//  context.contentFormTitle = "${uiLabelMap.ProductUpdateSEOContentCategory}";
+//  context.contentFormTitle = "${uiLabelMap.ProductUpdateRelatedURLContentCategory}";
+//  context.contentFormTitle = "${uiLabelMap.ProductUpdateSimpleTextContentCategory}";
+//  context.contentFormTitle = "${uiLabelMap.ProductUpdateDownloadContentCategory}";

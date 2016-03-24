@@ -62,7 +62,10 @@ under the License.
         <call-service service-name="createSimpleTextContent" in-map-name="createSimpleTextMap">
             <result-to-field result-name="contentId" field="createCategoryContentMap.contentId"/>
         </call-service>
-        <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap"/>
+        <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap">
+            <result-to-result result-name="contentId" />
+        </call-service>
+        
     </simple-method>
     <simple-method method-name="updateSimpleTextContentForCategory" short-description="Update Simple Text Content For Product Category">
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
@@ -165,7 +168,9 @@ under the License.
         </call-service>
         
         <set-service-fields service-name="createCategoryContent" map="parameters" to-map="createCategoryContentMap"/>
-        <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap"/>
+        <call-service service-name="createCategoryContent" in-map-name="createCategoryContentMap">
+            <result-to-result result-name="contentId" />
+        </call-service>
     </simple-method>
     <simple-method method-name="updateRelatedUrlContentForCategory" short-description="Update Related URL Content For Product Category">
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
@@ -208,7 +213,9 @@ under the License.
         </call-service>
 
         <set field="createCategoryContent.contentId" from-field="parameters.contentId"/>
-        <call-service service-name="createCategoryContent" in-map-name="createCategoryContent"/>
+        <call-service service-name="createCategoryContent" in-map-name="createCategoryContent">
+            <result-to-result result-name="contentId" />
+        </call-service>
     </simple-method>
     
     <simple-method method-name="updateDownloadContentForCategory" short-description="Update Download Content For Category">

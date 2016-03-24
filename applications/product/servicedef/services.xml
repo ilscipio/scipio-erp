@@ -927,7 +927,7 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
-        <!--<override name="contentId" optional="true" mode="INOUT"/>-->
+        <override name="contentId" optional="true" mode="INOUT"/>
     </service>
     <service name="updateCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="updateCategoryContent" auth="true">
@@ -949,7 +949,7 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
-        <override name="contentId" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
         <override name="fromDate" optional="true"/>
     </service>
     <service name="updateSimpleTextContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
@@ -979,7 +979,7 @@ under the License.
         <attribute name="description" type="String" mode="IN" optional="false"/>
         <attribute name="url" type="String" mode="IN" optional="false"/>
         <attribute name="localeString" type="String" mode="IN" optional="true"/>
-        <override name="contentId" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
         <override name="fromDate" optional="true"/>
     </service>
     <service name="updateRelatedUrlContentForCategory" engine="simple" default-entity-name="ProductCategoryContent"
@@ -1004,6 +1004,7 @@ under the License.
         <attribute mode="IN" name="_imageData_contentType" optional="true" type="String"/>
         <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute name="dataResourceTypeId" type="String" mode="IN" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
         <override name="prodCatContentTypeId" optional="false"/>
     </service>
     <service name="updateDownloadContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"

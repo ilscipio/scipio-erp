@@ -172,8 +172,9 @@ under the License.
                        <!--  <screenlet title="${uiLabelMap.ProductAddContentCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet> -->
-                        <screenlet title="${uiLabelMap.ProductUpdateCategoryContentAssoc}">
-                            <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        <screenlet title="${uiLabelMap.ProductCategoryContentList}">
+                            <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                            <include-screen name="CatoCategoryContentList"/>
                         </screenlet>
                         <!-- CATO: To be removed -->
                         <!-- <platform-specific>
@@ -181,6 +182,16 @@ under the License.
                         </platform-specific> -->
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoCategoryContentList"> 
+        <section>
+            <widgets>
+                <screenlet>
+                    <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryContentList.ftl"/></html></platform-specific>
+                </screenlet>
             </widgets>
         </section>
     </screen>
@@ -192,7 +203,7 @@ under the License.
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                <!-- <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <entity-one entity-name="ProductCategoryContent" value-field="categoryContent"/>
                 <entity-one entity-name="Content" value-field="content"/>
                 <entity-one entity-name="ElectronicText" value-field="electronicText" auto-field-map="false">
@@ -200,7 +211,7 @@ under the License.
                 </entity-one>
                 <set field="textDataMap.text" from-field="electronicText.textData"/>
                 <set field="textDataMap.textDataResourceId" from-field="content.dataResourceId"/>
-                <set field="contentId" from-field="content.contentId"/>
+                <set field="contentId" from-field="content.contentId"/> -->
                 
                 <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
                      <order-by field-name="description"/>

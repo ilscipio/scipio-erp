@@ -24,17 +24,14 @@ under the License.
         i.e. in a real store would be calculated but for which we need static demo data for testing.
         e.g. Best-selling -->
 
-    <!-- CATEGORIES -->
+    <!-- CATEGORIES (organizational) -->
 
     <!-- Cato: NOTE: These still remaining their old IDs -->
     <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Electronics"/>
-    <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Music"/>
+    <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Other"/>
   
     <ProductCategoryRollup productCategoryId="BEST-SELL-1" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="01" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryRollup productCategoryId="BEST-SELL-2" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="02" fromDate="2010-01-01 12:00:00.0"/>
-
-    <ProductCategoryRollup productCategoryId="EL-PHN-101" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryRollup productCategoryId="MU-DL-101" parentProductCategoryId="BEST-SELL-2" fromDate="2010-01-01 12:00:00.0"/>
 
     <!-- Alternative URLs -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-1-ALT" localeString="en"/>
@@ -44,7 +41,6 @@ under the License.
   
     <ElectronicText dataResourceId="BEST-SELL-1-ALT" textData="best-sell-1"/>
     <ElectronicText dataResourceId="DRBEST-SELL-1-ALTEN" textData="best-sell-1"/>
-
     <ElectronicText dataResourceId="BEST-SELL-2-ALT" textData="best-sell-2"/>
     <ElectronicText dataResourceId="DRBEST-SELL-2-ALTEN" textData="best-sell-2"/>
   
@@ -60,7 +56,13 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-2" contentId="BEST-SELL-2-ALT" fromDate="2001-05-13 12:00:00.0"/>
 
 
-    <!-- PRODUCTS (members) -->
+    <!-- CATEGORIES (members), best-selling -->
+    
+    <ProductCategoryRollup productCategoryId="EL-PHN-101" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryRollup productCategoryId="MU-DL-101" parentProductCategoryId="BEST-SELL-2" fromDate="2010-01-01 12:00:00.0"/>
+
+
+    <!-- PRODUCTS (members), best-selling -->
 
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1000" quantity="10" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1001" quantity="8" fromDate="2010-01-01 12:00:00.0"/>
@@ -68,8 +70,8 @@ under the License.
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1005" quantity="4" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="GZ-1006" quantity="2" fromDate="2010-01-01 12:00:00.0"/>
 
-    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-9943" quantity="3" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-9944" quantity="5" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="VH-9943" quantity="3" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="VH-9944" quantity="5" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-1111" quantity="7" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-5569" quantity="1" fromDate="2010-01-01 12:00:00.0"/>
  

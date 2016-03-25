@@ -48,7 +48,7 @@ under the License.
     <AgreementTerm agreementTermId="9001" invoiceItemTypeId="INV_FPROD_ITEM"  termTypeId="FIN_COMM_VARIABLE" agreementId="9000" agreementItemSeqId="0001" termValue="3" termDays="30"/> <!-- 3% commission on the price of every item -->
     <AgreementTerm agreementTermId="9002" invoiceItemTypeId="INV_FPROD_ITEM"  termTypeId="FIN_COMM_MIN" agreementId="9000" agreementItemSeqId="0001" termValue="0" termDays="30"/> <!-- No negative commission per unit (returns would still be negative) -->
     <!-- shows a virtual product can be used to model commission for all variants -->
-    <AgreementProductAppl agreementId="9000" agreementItemSeqId="0001" productId="WG-9943"/>
+    <AgreementProductAppl agreementId="9000" agreementItemSeqId="0001" productId="VH-9943"/>
 
     <!-- Some Demo Customers -->
 

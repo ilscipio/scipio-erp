@@ -414,6 +414,7 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="AUTO-100" contentId="AUTO-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- PRODUCTS -->
+    <!-- Cato: NOTE: These are not exhaustive; other products exist in the specialized data files -->
  
     <Product productId="PH-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 5" internalName="iPhone 5" description="The popular iPhone 5." longDescription="This iPhone is very small and supports all the latest applications." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="PH-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 6" internalName="iPhone 6" description="The popular iPhone 6." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -430,19 +431,18 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1005-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1005-ALTEN" localeString="en_US"/>
     
-    <ElectronicText dataResourceId="PH-1000-ALT" textData="tiny-gismo"/>
-    <ElectronicText dataResourceId="PH-1001-ALT" textData="nan-gismo"/>
-    <ElectronicText dataResourceId="PH-1004-ALT" textData="rainbow-gismo"/>
-    <ElectronicText dataResourceId="PH-1005-ALT" textData="dot-net-gismo"/>
-    
-    <ElectronicText dataResourceId="DRPH-1000-ALTEN" textData="tiny-gismo"/>
-    <ElectronicText dataResourceId="DRPH-1001-ALTEN" textData="nan-gismo"/>
-    <ElectronicText dataResourceId="DRPH-1004-ALTEN" textData="rainbow-gismo"/>
-    <ElectronicText dataResourceId="DRPH-1005-ALTEN" textData="dot-net-gismo"/>
+    <ElectronicText dataResourceId="PH-1000-ALT" textData="iphone5"/>
+    <ElectronicText dataResourceId="DRPH-1000-ALTEN" textData="iphone5"/>
+    <ElectronicText dataResourceId="PH-1001-ALT" textData="iphone6"/>
+    <ElectronicText dataResourceId="DRPH-1001-ALTEN" textData="iphone6"/>
+    <ElectronicText dataResourceId="PH-1004-ALT" textData="iphone7"/>
+    <ElectronicText dataResourceId="DRPH-1004-ALTEN" textData="iphone7"/>
+    <ElectronicText dataResourceId="PH-1005-ALT" textData="iphone-business"/>
+    <ElectronicText dataResourceId="DRPH-1005-ALTEN" textData="iphone-business"/>
     
     <DataResource dataResourceId="PH-1005-WARN" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataResourceName="PH-1005 Warning" isPublic="Y"/>
     <ElectronicText dataResourceId="PH-1005-WARN">
-        <textData><![CDATA[<b>*** WARNING: this gizmo is known to crash quite often and may malfunction or cease to function due to malicious misuse of certain features ***</b>]]></textData>
+        <textData><![CDATA[<b>*** Note: This iPhone requires a special business account signup upon receipt of the item to enable all business features. ***</b>]]></textData>
     </ElectronicText>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1000-ALT" dataResourceId="PH-1000-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1000-ALTEN" dataResourceId="DRPH-1000-ALTEN"/>
@@ -481,13 +481,14 @@ under the License.
 
     <Product productId="WG-1111" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="2.0"/>
     <Product productId="WG-5569" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Tiny Chrome Widget" internalName="Tiny Chrome Widget" description="Tiny Chrome Widget" longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="4.0"/>
-    <Product productId="WG-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget with variant explosion" internalName="Giant Widget variant explosion" virtualVariantMethodEnum="VV_VARIANTTREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
-    <Product productId="WG-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+  
+    <Product productId="VH-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="A40f Utility Vehicle (with variants)" internalName="A40f Utility Vehicle (with variants)" virtualVariantMethodEnum="VV_VARIANTTREE" description="A40f Utility Drump Truck" longDescription="The A40f is a robust dump truck, perfect for all home and industrial construction projects." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
+    <Product productId="VH-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="A40f-B3 Utility Vehicle" internalName="A40f-B3 Utility Vehicle" description="Black A40f-B3 Utility Vehicle" longDescription="The A40f is a robust dump truck, perfect for all home and industrial construction projects." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="VH-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="A40f-B4 Utility Vehicle" internalName="A40f-B4 Utility Vehicle" description="Black A40f-B4 Utility Vehicle with extra-large cabin" longDescription="The A40f is a robust dump truck, perfect for all home and industrial construction projects. This variant features an extra-large cabin." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="VH-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="A40f-S3 Utility Vehicle" internalName="A40f-S3 Utility Vehicle" description="Silver A40f-S3 Utility Vehicle" longDescription="The A40f is a robust dump truck, perfect for all home and industrial construction projects." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="VH-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="A40f-S4 Utility Vehicle" internalName="A40f-S4 Utility Vehicle" description="Silver A40f-S3 Utility Vehicle with extra-large cabin" longDescription="The A40f is a robust dump truck, perfect for all home and industrial construction projects. This variant features an extra-large cabin." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
 
-    <Product productId="WG-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget with feature explosion" internalName="Giant Widget feature Explosion" virtualVariantMethodEnum="VV_FEATURETREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item especially as it can have (almost) as many variants as you like" quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
+    <Product productId="VH-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Ford Mustang Sports Car (with features)" internalName="Ford Mustang Sports Car (with features)" virtualVariantMethodEnum="VV_FEATURETREE" description="Ford Mustang Sports Car" longDescription="The Ford Mustang is an elegant sports car perfect for any enthusiast." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
     
     <!-- Product Alternative URL -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GZ-1006-ALT" localeString="en"/>
@@ -518,58 +519,57 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-1111-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-5569-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-5569-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B3-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B3-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B4-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B4-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S3-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S3-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S4-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S4-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9944-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9944-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B3-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B3-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B4-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B4-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S3-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S3-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S4-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S4-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9944-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9944-ALTEN" localeString="en_US"/>
     
     <ElectronicText dataResourceId="GZ-1006-ALT" textData="open-gismo"/>
-    <ElectronicText dataResourceId="GZ-1006-1-ALT" textData="open-gismo-lgpl"/>
-    <ElectronicText dataResourceId="GZ-1006-2-ALT" textData="open-gismo-gpl"/>
-    <ElectronicText dataResourceId="GZ-1006-3-ALT" textData="open-gismo-bsd"/>
-    <ElectronicText dataResourceId="GZ-1006-3-ALT" textData="open-gismo-mit"/>
-    <ElectronicText dataResourceId="GZ-2002-ALT" textData="square-gismo"/>
-    <ElectronicText dataResourceId="GZ-2644-ALT" textData="round-gizmo"/>
-    <ElectronicText dataResourceId="GZ-5005-ALT" textData="purple-gizmo"/>
-    <ElectronicText dataResourceId="GZ-7000-ALT" textData="massive-gizmo"/>
-    <ElectronicText dataResourceId="GZ-8544-ALT" textData="big-gizmo"/>
-    <ElectronicText dataResourceId="GZ-9290-ALT" textData="his-her-gizmo"/>
-    <ElectronicText dataResourceId="WG-1111-ALT" textData="micro-chrome-widget"/>
-    <ElectronicText dataResourceId="WG-5569-ALT" textData="tiny-chrome-widget"/>
-    <ElectronicText dataResourceId="WG-9943-ALT" textData="giant-widget-with-variant-explosion"/>
-    <ElectronicText dataResourceId="WG-9943-B3-ALT" textData="giant-widget-b3"/>
-    <ElectronicText dataResourceId="WG-9943-B4-ALT" textData="giant-widget-b4"/>
-    <ElectronicText dataResourceId="WG-9943-S3-ALT" textData="giant-widget-s3"/>
-    <ElectronicText dataResourceId="WG-9943-S4-ALT" textData="giant-widget-s4"/>
-    <ElectronicText dataResourceId="WG-9944-ALT" textData="giant-widget-with-feature-explosion"/>
-    
     <ElectronicText dataResourceId="DRGZ-1006-ALTEN" textData="open-gismo"/>
+    <ElectronicText dataResourceId="GZ-1006-1-ALT" textData="open-gismo-lgpl"/>
     <ElectronicText dataResourceId="DRGZ-1006-1-ALTEN" textData="open-gismo-lgpl"/>
+    <ElectronicText dataResourceId="GZ-1006-2-ALT" textData="open-gismo-gpl"/>
     <ElectronicText dataResourceId="DRGZ-1006-2-ALTEN" textData="open-gismo-gpl"/>
+    <ElectronicText dataResourceId="GZ-1006-3-ALT" textData="open-gismo-bsd"/>
     <ElectronicText dataResourceId="DRGZ-1006-3-ALTEN" textData="open-gismo-bsd"/>
+    <ElectronicText dataResourceId="GZ-1006-3-ALT" textData="open-gismo-mit"/>
     <ElectronicText dataResourceId="DRGZ-1006-3-ALTEN" textData="open-gismo-mit"/>
+    <ElectronicText dataResourceId="GZ-2002-ALT" textData="square-gismo"/>
     <ElectronicText dataResourceId="DRGZ-2002-ALTEN" textData="square-gismo"/>
+    <ElectronicText dataResourceId="GZ-2644-ALT" textData="round-gizmo"/>
     <ElectronicText dataResourceId="DRGZ-2644-ALTEN" textData="round-gizmo"/>
+    <ElectronicText dataResourceId="GZ-5005-ALT" textData="purple-gizmo"/>
     <ElectronicText dataResourceId="DRGZ-5005-ALTEN" textData="purple-gizmo"/>
+    <ElectronicText dataResourceId="GZ-7000-ALT" textData="massive-gizmo"/>
     <ElectronicText dataResourceId="DRGZ-7000-ALTEN" textData="massive-gizmo"/>
+    <ElectronicText dataResourceId="GZ-8544-ALT" textData="big-gizmo"/>
     <ElectronicText dataResourceId="DRGZ-8544-ALTEN" textData="big-gizmo"/>
+    <ElectronicText dataResourceId="GZ-9290-ALT" textData="his-her-gizmo"/>
     <ElectronicText dataResourceId="DRGZ-9290-ALTEN" textData="his-her-gizmo"/>
+    <ElectronicText dataResourceId="WG-1111-ALT" textData="micro-chrome-widget"/>
     <ElectronicText dataResourceId="DRWG-1111-ALTEN" textData="micro-chrome-widget"/>
+    <ElectronicText dataResourceId="WG-5569-ALT" textData="tiny-chrome-widget"/>
     <ElectronicText dataResourceId="DRWG-5569-ALTEN" textData="tiny-chrome-widget"/>
-    <ElectronicText dataResourceId="DRWG-9943-ALTEN" textData="giant-widget-with-variant-explosion"/>
-    <ElectronicText dataResourceId="DRWG-9943-B3-ALTEN" textData="giant-widget-b3"/>
-    <ElectronicText dataResourceId="DRWG-9943-B4-ALTEN" textData="giant-widget-b4"/>
-    <ElectronicText dataResourceId="DRWG-9943-S3-ALTEN" textData="giant-widget-s3"/>
-    <ElectronicText dataResourceId="DRWG-9943-S4-ALTEN" textData="giant-widget-s4"/>
-    <ElectronicText dataResourceId="DRWG-9944-ALTEN" textData="giant-widget-with-feature-explosion"/>
+    <ElectronicText dataResourceId="VH-9943-ALT" textData="a40f-truck"/>
+    <ElectronicText dataResourceId="DRVH-9943-ALTEN" textData="a40f-truck"/>
+    <ElectronicText dataResourceId="VH-9943-B3-ALT" textData="a40f-b3-truck"/>
+    <ElectronicText dataResourceId="DRVH-9943-B3-ALTEN" textData="a40f-b3-truck"/>
+    <ElectronicText dataResourceId="VH-9943-B4-ALT" textData="a40f-b4-truck"/>
+    <ElectronicText dataResourceId="DRVH-9943-B4-ALTEN" textData="a40f-b4-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S3-ALT" textData="a40f-s3-truck"/>
+    <ElectronicText dataResourceId="DRVH-9943-S3-ALTEN" textData="a40f-s3-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S4-ALT" textData="a40f-s4-truck"/>
+    <ElectronicText dataResourceId="DRVH-9943-S4-ALTEN" textData="a40f-s4-truck"/>
+    <ElectronicText dataResourceId="VH-9944-ALT" textData="ford-mustang"/>
+    <ElectronicText dataResourceId="DRVH-9944-ALTEN" textData="ford-mustang"/>
     
     <Content contentId="GZ-1006-ALT" contentTypeId="DOCUMENT" dataResourceId="GZ-1006-ALT" localeString="en"/>
     <Content contentId="CGZ-1006-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRGZ-1006-ALTEN" localeString="en_US"/>
@@ -599,18 +599,18 @@ under the License.
     <Content contentId="CWG-1111-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-1111-ALTEN" localeString="en_US"/>
     <Content contentId="WG-5569-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-5569-ALT" localeString="en"/>
     <Content contentId="CWG-5569-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-5569-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9943-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9943-B3-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B3-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B3-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B3-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9943-B4-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B4-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B4-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B4-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9943-S3-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S3-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S3-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S3-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9943-S4-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S4-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S4-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S4-ALTEN" localeString="en_US"/>
-    <Content contentId="WG-9944-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9944-ALT" localeString="en"/>
-    <Content contentId="CWG-9944-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRWG-9944-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9943-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9943-B3-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B3-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B3-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B3-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9943-B4-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B4-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B4-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B4-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9943-S3-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S3-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S3-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S3-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9943-S4-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S4-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S4-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S4-ALTEN" localeString="en_US"/>
+    <Content contentId="VH-9944-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9944-ALT" localeString="en"/>
+    <Content contentId="CVH-9944-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9944-ALTEN" localeString="en_US"/>
     
     <ContentAssoc contentId="GZ-1006-ALT" contentIdTo="CGZ-1006-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="GZ-1006-1-ALT" contentIdTo="CGZ-1006-1-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -626,12 +626,12 @@ under the License.
     <ContentAssoc contentId="GZ-9290-ALT" contentIdTo="CGZ-9290-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="WG-1111-ALT" contentIdTo="CWG-1111-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="WG-5569-ALT" contentIdTo="CWG-5569-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-ALT" contentIdTo="CWG-9943-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-B3-ALT" contentIdTo="CWG-9943-B3-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-B4-ALT" contentIdTo="CWG-9943-B4-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S3-ALT" contentIdTo="CWG-9943-S3-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S4-ALT" contentIdTo="CWG-9943-S4-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9944-ALT" contentIdTo="CWG-9944-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-ALT" contentIdTo="CVH-9943-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B3-ALT" contentIdTo="CVH-9943-B3-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B4-ALT" contentIdTo="CVH-9943-B4-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S3-ALT" contentIdTo="CVH-9943-S3-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S4-ALT" contentIdTo="CVH-9943-S4-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9944-ALT" contentIdTo="CVH-9944-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductContent productId="GZ-1006" contentId="GZ-1006-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="GZ-1006-1" contentId="GZ-1006-1-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
@@ -649,12 +649,12 @@ under the License.
     
     <ProductContent productId="WG-1111" contentId="WG-1111-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="WG-5569" contentId="WG-5569-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9943" contentId="WG-9943-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9943-B3" contentId="WG-9943-B3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9943-B4" contentId="WG-9943-B4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9943-S3" contentId="WG-9943-S3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9943-S4" contentId="WG-9943-S4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="WG-9944" contentId="WG-9944-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9943" contentId="VH-9943-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9943-B3" contentId="VH-9943-B3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9943-B4" contentId="VH-9943-B4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9943-S3" contentId="VH-9943-S3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9943-S4" contentId="VH-9943-S4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="VH-9944" contentId="VH-9944-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
     <ProductPrice productId="PH-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="109.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="PH-1000" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="99.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -686,12 +686,12 @@ under the License.
     <ProductPrice productId="WG-5569" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-5569" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="60.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-5569" productPricePurposeId="PURCHASE" productPriceTypeId="MINIMUM_ORDER_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="100.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="922.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9944" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="523.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9944" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="594.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="WG-9944" productPricePurposeId="PURCHASE" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="320.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9943" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="275000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9943" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="235000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9943" productPricePurposeId="PURCHASE" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="300000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="523.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="594.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="320.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
     <!-- test Subscription product, a Gizmo Newsletter -->
     <Product productId="GZ-NEWS-1MO" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="SUBS-100" productName="Gizmo Newsletter 1 Month" internalName="Gizmo Newsletter 1 Month Subscription" description="A 1 month subscription to the Gizmo Newsletter: can be used immediately after purchase." longDescription="This newsletter will give you regular updates on the wonderful world of Gizmos!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -902,12 +902,12 @@ under the License.
     <ProductFeaturePrice productFeatureId="9000" productPriceTypeId="AVERAGE_COST" price="2.30" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
     <ProductFeature productFeatureId="9001" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Silver"/>
     <ProductFeaturePrice productFeatureId="9001" price="4.30" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductFeature productFeatureId="9002" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="3-Wheel"/>
+    <ProductFeature productFeatureId="9002" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="Regular"/>
     <ProductFeaturePrice productFeatureId="9002" price="5.30" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductFeature productFeatureId="9003" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="4-Wheel"/>
+    <ProductFeature productFeatureId="9003" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="Large"/>
     <ProductFeaturePrice productFeatureId="9003" price="2.30" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
 
-    <ProductFeatureIactn productFeatureId="9000" productFeatureIdTo="9002" productId="WG-9944" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
+    <ProductFeatureIactn productFeatureId="9000" productFeatureIdTo="9002" productId="VH-9944" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
 
     <ProductFeatureAppl productId="GZ-1006" productFeatureId="8000"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
@@ -931,38 +931,38 @@ under the License.
     <ProductFeatureAppl productId="GZ-1006-5" productFeatureId="8004"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
     
-    <ProductFeatureAppl productId="WG-9943" productFeatureId="9000"
+    <ProductFeatureAppl productId="VH-9943" productFeatureId="9000"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9943" productFeatureId="9001"
+    <ProductFeatureAppl productId="VH-9943" productFeatureId="9001"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="WG-9943" productFeatureId="9002"
+    <ProductFeatureAppl productId="VH-9943" productFeatureId="9002"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="3"/>
-    <ProductFeatureAppl productId="WG-9943" productFeatureId="9003"
+    <ProductFeatureAppl productId="VH-9943" productFeatureId="9003"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="4"/>
-    <ProductFeatureAppl productId="WG-9944" productFeatureId="9000"
+    <ProductFeatureAppl productId="VH-9944" productFeatureId="9000"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9944" productFeatureId="9001"
+    <ProductFeatureAppl productId="VH-9944" productFeatureId="9001"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="WG-9944" productFeatureId="9002"
+    <ProductFeatureAppl productId="VH-9944" productFeatureId="9002"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="3"/>
-    <ProductFeatureAppl productId="WG-9944" productFeatureId="9003"
+    <ProductFeatureAppl productId="VH-9944" productFeatureId="9003"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="4"/>
 
-    <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9000"
+    <ProductFeatureAppl productId="VH-9943-B3" productFeatureId="9000"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9002"
+    <ProductFeatureAppl productId="VH-9943-B3" productFeatureId="9002"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9000"
+    <ProductFeatureAppl productId="VH-9943-B4" productFeatureId="9000"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9003"
+    <ProductFeatureAppl productId="VH-9943-B4" productFeatureId="9003"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9001"
+    <ProductFeatureAppl productId="VH-9943-S3" productFeatureId="9001"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9002"
+    <ProductFeatureAppl productId="VH-9943-S3" productFeatureId="9002"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9001"
+    <ProductFeatureAppl productId="VH-9943-S4" productFeatureId="9001"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9003"
+    <ProductFeatureAppl productId="VH-9943-S4" productFeatureId="9003"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="GZ-1006"
@@ -976,17 +976,17 @@ under the License.
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="GZ-1006"
         productIdTo="GZ-1006-5" quantity="1.0" reason=""/>
     
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
-        productIdTo="WG-9943-B3" quantity="1.0" reason=""/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
-        productIdTo="WG-9943-B4" quantity="1.0" reason=""/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
-        productIdTo="WG-9943-S3" quantity="1.0" reason=""/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
-        productIdTo="WG-9943-S4" quantity="1.0" reason=""/>
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="VH-9943"
+        productIdTo="VH-9943-B3" quantity="1.0" reason=""/>
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="VH-9943"
+        productIdTo="VH-9943-B4" quantity="1.0" reason=""/>
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="VH-9943"
+        productIdTo="VH-9943-S3" quantity="1.0" reason=""/>
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="VH-9943"
+        productIdTo="VH-9943-S4" quantity="1.0" reason=""/>
 
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
-        productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
+        productIdTo="VH-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="WG-1111"
         productIdTo="WG-5569" quantity="1.0" reason="If you like chrome, but want it a little bigger, this is the one for you!"/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="GZ-2644"
@@ -995,16 +995,16 @@ under the License.
         productIdTo="GZ-2644" quantity="1.0" reason="These two are much more useful together."/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="GZ-2644"
         productIdTo="WG-5569" quantity="1.0" reason="These two are much more useful together."/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="VH-9943"
         productIdTo="GZ-2644" quantity="1.0" reason="This makes it look much better."/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="VH-9943"
         productIdTo="GZ-8544" quantity="1.0" reason="This makes it look much better."/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="VH-9943"
         productIdTo="WG-1111" quantity="1.0" reason="This makes it look much better."/>
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="WG-9943"
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_COMPLEMENT" productId="VH-9943"
         productIdTo="WG-5569" quantity="1.0" reason="This makes it look much better."/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
-        productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
+        productIdTo="VH-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
     <ProductCategoryMember productCategoryId="MU-DL-101" productId="GZ-DIG" sequenceNum="4" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="SUBS-100" productId="GZ-NEWS-1MO" sequenceNum="5" fromDate="2001-05-13 12:00:00.0"/>
@@ -1038,16 +1038,16 @@ under the License.
     <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PC-PR-101" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PC-PR-101" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="AUTO-100" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="AUTO-100" productId="WG-9944" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="AUTO-100" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="AUTO-100" productId="VH-9944" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PH-1000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PH-1001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PH-1004" fromDate="2001-05-13 12:00:00.0"/>
@@ -1061,10 +1061,10 @@ under the License.
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="TSTCSL" productId="PH-1000" fromDate="2003-03-04 18:49:31.464"/>
     <ProductCategoryMember productCategoryId="TSTCSL" productId="PH-1001" fromDate="2003-03-04 18:57:49.099"/>
     <ProductCategoryMember productCategoryId="TSTCSL" productId="PH-1004" fromDate="2003-03-04 18:51:06.45"/>
@@ -1085,10 +1085,10 @@ under the License.
     <ProductFacility productId="GZ-8544" facilityId="WebStoreWarehouse" minimumStock="20" reorderQuantity="50" daysToShip="1"/>
     <ProductFacility productId="WG-1111" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="WG-5569" facilityId="WebStoreWarehouse" minimumStock="15" reorderQuantity="40" daysToShip="2"/>
-    <ProductFacility productId="WG-9943-B3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="WG-9943-B4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="WG-9943-S3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="WG-9943-S4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-B3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-B4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-S3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-S4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="PH-1000" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="PH-1001" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="PH-1004" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
@@ -1130,13 +1130,13 @@ under the License.
         inventoryItemId="9006" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-5569" ownerPartyId="Company" currencyUomId="USD" unitCost="5.0"/>
     <InventoryItemDetail inventoryItemId="9006" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
 
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="WG-9943-B3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9010" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="WG-9943-B4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9011" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="WG-9943-S3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9012" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="WG-9943-S4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9013" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
 
     <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9021" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="GZ-1006-1" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
@@ -1518,94 +1518,94 @@ under the License.
     <ProductFeature productFeatureId="EC_REEL_STAND" description="Reel Stand" productFeatureCategoryId="1002" productFeatureTypeId="EQUIP_CLASS"/>
 
     <!-- Virtual-Variant Demo Product -->
-    <Product productId="WG-9943-B3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-B3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-B3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-B4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-B4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-S3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-S3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-S4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="VH-9943-S4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
     
     <!-- Association between the alternative product and the variant product -->
-    <ProductAssoc productId="WG-9943-B3-BX2" productIdTo="WG-9943-B3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-B3-BX5" productIdTo="WG-9943-B3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-B4-BX2" productIdTo="WG-9943-B4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-B4-BX5" productIdTo="WG-9943-B4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-S3-BX2" productIdTo="WG-9943-S3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-S3-BX5" productIdTo="WG-9943-S3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-S4-BX2" productIdTo="WG-9943-S4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
-    <ProductAssoc productId="WG-9943-S4-BX5" productIdTo="WG-9943-S4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-B3-BX2" productIdTo="VH-9943-B3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-B3-BX5" productIdTo="VH-9943-B3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-B4-BX2" productIdTo="VH-9943-B4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-B4-BX5" productIdTo="VH-9943-B4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-S3-BX2" productIdTo="VH-9943-S3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-S3-BX5" productIdTo="VH-9943-S3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-S4-BX2" productIdTo="VH-9943-S4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductAssoc productId="VH-9943-S4-BX5" productIdTo="VH-9943-S4" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
     
-    <ProductPrice productId="WG-9943-B3-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-B3-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-B4-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-B4-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-S3-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-S3-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-S4-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
-    <ProductPrice productId="WG-9943-S4-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-B3-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-B3-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-B4-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-B4-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-S3-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-S3-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-S4-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="800.0" createdDate="2000-01-01 00:00:00.0"/>
+    <ProductPrice productId="VH-9943-S4-BX5" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2000-01-01 00:00:00.0" price="2000.0" createdDate="2000-01-01 00:00:00.0"/>
     
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B3-BX2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B3-BX2-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B3-BX5-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B3-BX5-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B4-BX2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B4-BX2-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-B4-BX5-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-B4-BX5-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S3-BX2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S3-BX2-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S3-BX5-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S3-BX5-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S4-BX2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S4-BX2-ALT" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="WG-9943-S4-BX5-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRWG-9943-S4-BX5-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B3-BX2-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B3-BX2-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B3-BX5-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B3-BX5-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B4-BX2-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B4-BX2-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-B4-BX5-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-B4-BX5-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S3-BX2-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S3-BX2-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S3-BX5-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S3-BX5-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S4-BX2-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S4-BX2-ALT" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9943-S4-BX5-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S4-BX5-ALT" localeString="en_US"/>
     
-    <ElectronicText dataResourceId="WG-9943-B3-BX2-ALT" textData="giant-widget-b3-bx2"/>
-    <ElectronicText dataResourceId="WG-9943-B3-BX5-ALT" textData="giant-widget-b3-bx5"/>
-    <ElectronicText dataResourceId="WG-9943-B4-BX2-ALT" textData="giant-widget-b4-bx2"/>
-    <ElectronicText dataResourceId="WG-9943-B4-BX5-ALT" textData="giant-widget-b4-bx5"/>
-    <ElectronicText dataResourceId="WG-9943-S3-BX2-ALT" textData="giant-widget-s3-bx2"/>
-    <ElectronicText dataResourceId="WG-9943-S3-BX5-ALT" textData="giant-widget-s3-bx5"/>
-    <ElectronicText dataResourceId="WG-9943-S4-BX2-ALT" textData="giant-widget-s4-bx2"/>
-    <ElectronicText dataResourceId="WG-9943-S4-BX5-ALT" textData="giant-widget-s4-bx5"/>
+    <ElectronicText dataResourceId="VH-9943-B3-BX2-ALT" textData="giant-widget-b3-bx2"/>
+    <ElectronicText dataResourceId="VH-9943-B3-BX5-ALT" textData="giant-widget-b3-bx5"/>
+    <ElectronicText dataResourceId="VH-9943-B4-BX2-ALT" textData="giant-widget-b4-bx2"/>
+    <ElectronicText dataResourceId="VH-9943-B4-BX5-ALT" textData="giant-widget-b4-bx5"/>
+    <ElectronicText dataResourceId="VH-9943-S3-BX2-ALT" textData="giant-widget-s3-bx2"/>
+    <ElectronicText dataResourceId="VH-9943-S3-BX5-ALT" textData="giant-widget-s3-bx5"/>
+    <ElectronicText dataResourceId="VH-9943-S4-BX2-ALT" textData="giant-widget-s4-bx2"/>
+    <ElectronicText dataResourceId="VH-9943-S4-BX5-ALT" textData="giant-widget-s4-bx5"/>
     
-    <ElectronicText dataResourceId="DRWG-9943-B3-BX2-ALT" textData="giant-widget-b3-bx2"/>
-    <ElectronicText dataResourceId="DRWG-9943-B3-BX5-ALT" textData="giant-widget-b3-bx5"/>
-    <ElectronicText dataResourceId="DRWG-9943-B4-BX2-ALT" textData="giant-widget-b4-bx2"/>
-    <ElectronicText dataResourceId="DRWG-9943-B4-BX5-ALT" textData="giant-widget-b4-bx5"/>
-    <ElectronicText dataResourceId="DRWG-9943-S3-BX2-ALT" textData="giant-widget-s3-bx2"/>
-    <ElectronicText dataResourceId="DRWG-9943-S3-BX5-ALT" textData="giant-widget-s3-bx5"/>
-    <ElectronicText dataResourceId="DRWG-9943-S4-BX2-ALT" textData="giant-widget-s4-bx2"/>
-    <ElectronicText dataResourceId="DRWG-9943-S4-BX5-ALT" textData="giant-widget-s4-bx5"/>
+    <ElectronicText dataResourceId="DRVH-9943-B3-BX2-ALT" textData="giant-widget-b3-bx2"/>
+    <ElectronicText dataResourceId="DRVH-9943-B3-BX5-ALT" textData="giant-widget-b3-bx5"/>
+    <ElectronicText dataResourceId="DRVH-9943-B4-BX2-ALT" textData="giant-widget-b4-bx2"/>
+    <ElectronicText dataResourceId="DRVH-9943-B4-BX5-ALT" textData="giant-widget-b4-bx5"/>
+    <ElectronicText dataResourceId="DRVH-9943-S3-BX2-ALT" textData="giant-widget-s3-bx2"/>
+    <ElectronicText dataResourceId="DRVH-9943-S3-BX5-ALT" textData="giant-widget-s3-bx5"/>
+    <ElectronicText dataResourceId="DRVH-9943-S4-BX2-ALT" textData="giant-widget-s4-bx2"/>
+    <ElectronicText dataResourceId="DRVH-9943-S4-BX5-ALT" textData="giant-widget-s4-bx5"/>
     
-    <Content contentId="WG-9943-B3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B3-BX2-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B3-BX2-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-B3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B3-BX5-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B3-BX5-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-B4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B4-BX2-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B4-BX2-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-B4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-B4-BX5-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-B4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-B4-BX5-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-S3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S3-BX2-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S3-BX2-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-S3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S3-BX5-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S3-BX5-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-S4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S4-BX2-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S4-BX2-ALT" localeString="en_US"/>
-    <Content contentId="WG-9943-S4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="WG-9943-S4-BX5-ALT" localeString="en"/>
-    <Content contentId="CWG-9943-S4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRWG-9943-S4-BX5-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-B3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B3-BX2-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B3-BX2-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-B3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B3-BX5-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B3-BX5-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-B4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B4-BX2-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B4-BX2-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-B4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B4-BX5-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-B4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-B4-BX5-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-S3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S3-BX2-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S3-BX2-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-S3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S3-BX5-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S3-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S3-BX5-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-S4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S4-BX2-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S4-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S4-BX2-ALT" localeString="en_US"/>
+    <Content contentId="VH-9943-S4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S4-BX5-ALT" localeString="en"/>
+    <Content contentId="CVH-9943-S4-BX5-ALT" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S4-BX5-ALT" localeString="en_US"/>
     
-    <ContentAssoc contentId="WG-9943-B3-BX2-ALT" contentIdTo="CWG-9943-B3-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-B3-BX5-ALT" contentIdTo="CWG-9943-B3-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-B4-BX2-ALT" contentIdTo="CWG-9943-B4-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-B4-BX5-ALT" contentIdTo="CWG-9943-B4-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S3-BX2-ALT" contentIdTo="CWG-9943-S3-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S3-BX5-ALT" contentIdTo="CWG-9943-S3-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S4-BX2-ALT" contentIdTo="CWG-9943-S4-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="WG-9943-S4-BX5-ALT" contentIdTo="CWG-9943-S4-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B3-BX2-ALT" contentIdTo="CVH-9943-B3-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B3-BX5-ALT" contentIdTo="CVH-9943-B3-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B4-BX2-ALT" contentIdTo="CVH-9943-B4-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-B4-BX5-ALT" contentIdTo="CVH-9943-B4-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S3-BX2-ALT" contentIdTo="CVH-9943-S3-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S3-BX5-ALT" contentIdTo="CVH-9943-S3-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S4-BX2-ALT" contentIdTo="CVH-9943-S4-BX2-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="VH-9943-S4-BX5-ALT" contentIdTo="CVH-9943-S4-BX5-ALT" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
@@ -1664,14 +1664,16 @@ under the License.
     <ProductKeyword productId="SV-1000" keyword="demonstration" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CFSV1001" keyword="demonstration" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="WG-5569" keyword="widget" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="WG-9943" keyword="widget" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="VH-9943" keyword="a40f" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="VH-9943" keyword="truck" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="VH-9943" keyword="construction" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="VH-9944" keyword="mustang" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1000" keyword="phone" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="GZ-2644" keyword="small" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="SV-1001" keyword="service" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CFSV1001" keyword="service" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1000" keyword="iphone" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="GZ-8544" keyword="big" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="WG-9943" keyword="black" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="WG-1111" keyword="chrome" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="GZ-1006" keyword="standard" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     

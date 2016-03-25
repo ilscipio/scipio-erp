@@ -251,19 +251,19 @@
 
     <ContentAssoc contentId="CMU-DL-101DESCEN" contentIdTo="CMU-DL-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
     
-    <!-- Rentals category (new) -->
-    <DataResource dataResourceId="DRRENT-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="DRRENT-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+    <!-- Travel category (new) -->
+    <DataResource dataResourceId="DRTRVL-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRTRVL-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="DRRENT-100DESCDE" textData="Vermietungen"/>
-    <ElectronicText dataResourceId="DRRENT-100DESCEN" textData="Rentals"/>
+    <ElectronicText dataResourceId="DRTRVL-100DESCDE" textData="Reise"/>
+    <ElectronicText dataResourceId="DRTRVL-100DESCEN" textData="Travel"/>
 
-    <Content contentId="CRENT-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRRENT-100DESCDE" description="DESCRIPTION DE Rentals" localeString="de"/>
-    <Content contentId="CRENT-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRRENT-100DESCEN" description="DESCRIPTION EN Rentals" localeString="en"/>
+    <Content contentId="CTRVL-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRTRVL-100DESCDE" description="DESCRIPTION DE Travel" localeString="de"/>
+    <Content contentId="CTRVL-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRTRVL-100DESCEN" description="DESCRIPTION EN Travel" localeString="en"/>
 
-    <ProductCategoryContent productCategoryId="RENT-100" contentId="CRENT-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+    <ProductCategoryContent productCategoryId="TRVL-100" contentId="CTRVL-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
 
-    <ContentAssoc contentId="CRENT-100DESCEN" contentIdTo="CRENT-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    <ContentAssoc contentId="CTRVL-100DESCEN" contentIdTo="CTRVL-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
     <!-- Groceries (foods) category (new, replacement) -->
     <DataResource dataResourceId="DRFOOD-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>

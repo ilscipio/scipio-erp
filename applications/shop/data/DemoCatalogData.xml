@@ -67,8 +67,8 @@ under the License.
             <ProductCategory description="Music Downloads" longDescription="Downloadable Albums (MP3s and Files)"
                 primaryParentCategoryId="MUSIC-101" productCategoryId="MU-DL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             
-    <ProductCategory description="Rentals" longDescription="Rental Products" 
-        primaryParentCategoryId="CATALOG1" productCategoryId="RENT-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Travel" longDescription="Travel Products and Rentals" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="TRVL-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <ProductCategory description="Subscriptions" longDescription="Subscriptions"
         primaryParentCategoryId="CATALOG1" productCategoryId="SUBS-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
@@ -182,7 +182,7 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MEDIA-100" productCategoryId="MUSIC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-CD-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-DL-101"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="RENT-100" sequenceNum="100"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="TRVL-100" sequenceNum="100"/>
 
     <!--  Cato: Old categories (TODO: Remove) -->
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100" sequenceNum="900"/>
@@ -292,8 +292,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMU-CD-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MU-DL-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMU-DL-101-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="RENT-100-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRRENT-100-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="TRVL-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRTRVL-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="EL-PHN-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-PHN-101-ALTEN" localeString="en_US"/>
     
@@ -341,8 +341,8 @@ under the License.
     <ElectronicText dataResourceId="DRMU-CD-101-ALTEN" textData="music-cd"/>
     <ElectronicText dataResourceId="MU-DL-101-ALT" textData="music-downloads"/>
     <ElectronicText dataResourceId="DRMU-DL-101-ALTEN" textData="music-downloads"/>
-    <ElectronicText dataResourceId="RENT-100-ALT" textData="rentals"/>
-    <ElectronicText dataResourceId="DRRENT-100-ALTEN" textData="rentals"/>
+    <ElectronicText dataResourceId="TRVL-100-ALT" textData="rentals"/>
+    <ElectronicText dataResourceId="DRTRVL-100-ALTEN" textData="rentals"/>
     <ElectronicText dataResourceId="EL-PHN-101-ALT" textData="phones"/>
     <ElectronicText dataResourceId="DREL-PHN-101-ALTEN" textData="phones"/>
     
@@ -390,8 +390,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMU-CD-101-ALTEN" dataResourceId="DRMU-CD-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="MU-DL-101-ALT" dataResourceId="MU-DL-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CMU-DL-101-ALTEN" dataResourceId="DRMU-DL-101-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="RENT-100-ALT" dataResourceId="RENT-100-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CRENT-100-ALTEN" dataResourceId="DRRENT-100-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="TRVL-100-ALT" dataResourceId="TRVL-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CTRVL-100-ALTEN" dataResourceId="DRTRVL-100-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="EL-PHN-101-ALT" dataResourceId="EL-PHN-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CEL-PHN-101-ALTEN" dataResourceId="DREL-PHN-101-ALTEN"/>
     
@@ -417,7 +417,7 @@ under the License.
     <ContentAssoc contentId="MUSIC-101-ALT" contentIdTo="CMUSIC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="MU-CD-101-ALT" contentIdTo="CMU-CD-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="MU-DL-101-ALT" contentIdTo="CMU-DL-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="RENT-100-ALT" contentIdTo="CRENT-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="TRVL-100-ALT" contentIdTo="CTRVL-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="EL-PHN-101-ALT" contentIdTo="CEL-PHN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CLOTH-100" contentId="CLOTH-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -442,7 +442,7 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MUSIC-101" contentId="MUSIC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-CD-101" contentId="MU-CD-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-DL-101" contentId="MU-DL-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="RENT-100" contentId="RENT-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="TRVL-100" contentId="TRVL-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-PHN-101" contentId="EL-PHN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- Cato: Old categories (TODO: Remove) -->    

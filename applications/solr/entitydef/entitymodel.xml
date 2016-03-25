@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>SOLR Ofbiz Entities</title>
+    <description>None</description>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--  - com.ilscipio.solr -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- com.ilscipio.solr -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="SolrStatus" package-name="com.ilscipio.solr" title="SOLR Status Entity" never-cache="true">
+        <field name="solrId" type="id-ne"></field>
+        <field name="dataStatusId" type="id"></field>
+        <prim-key field="dataStatusId"/>
+        <relation type="one" fk-name="SOLR_DATA_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="dataStatusId" rel-field-name="statusId"/>
+        </relation>
+    </entity>
+
+</entitymodel>

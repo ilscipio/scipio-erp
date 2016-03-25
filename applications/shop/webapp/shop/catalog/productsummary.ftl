@@ -13,8 +13,8 @@
         <#assign smallImageUrl = solrProduct.mediumImage?trim>
     <#elseif solrProduct?has_content && solrProduct.smallImage??>
         <#assign smallImageUrl = solrProduct.smallImage?trim>        
-    <#elseif productContentWrapper?? && productContentWrapper.get("LARGE_IMAGE_URL","html")?has_content>
-        <#assign smallImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")?trim>        
+    <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
+        <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","html")?trim>        
     </#if>
     
 

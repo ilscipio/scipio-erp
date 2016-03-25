@@ -19,7 +19,7 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <Product productId="PC001" productTypeId="AGGREGATED" productName="Configurable PC" internalName="Configurable PC" description="Configurable PC" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
+    <Product productId="PC-1000" productTypeId="AGGREGATED" productName="Configurable PC" internalName="Configurable PC" description="Configurable PC" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
     <Product productId="RAM1GB_BRAND" productTypeId="FINISHED_GOOD" productName="RAM1GB" internalName="RAM 1 GB DDR2" description="1 GB Dual Channel DDR2 SDRAM" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="HD250GB_BRAND" productTypeId="FINISHED_GOOD" productName="HD250GB" internalName="HD 250 GB" description="250 GB Hard Drive" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="HD500GB_BRAND" productTypeId="FINISHED_GOOD" productName="HD500GB" internalName="HD 450 GB" description="500 GB Hard Drive" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
@@ -29,7 +29,7 @@ under the License.
     <Product productId="MOTHER_BOARD" productTypeId="FINISHED_GOOD" productName="MotherBoard" internalName="Motherboard" description="Motherboard" isVirtual="N" isVariant="N" billOfMaterialLevel="0"/>
     <Product productId="CPU-586" productTypeId="FINISHED_GOOD" productName="CPU 586" internalName="CPU intel 586" description="CPU intel 586" isVirtual="N" isVariant="N" billOfMaterialLevel="0"/>
     
-    <ProductPrice productId="PC001" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="50" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
+    <ProductPrice productId="PC-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="50" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
     <ProductPrice productId="RAM1GB_BRAND" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="115" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
     <ProductPrice productId="RAM1GB_BRAND" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:36.479" price="120" createdDate="2004-08-20 12:55:36.479" createdByUserLogin="admin"/>
     <ProductPrice productId="HD250GB_BRAND" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="220" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
@@ -65,37 +65,30 @@ under the License.
     <ProductConfigProduct configItemId="IT0002" configOptionId="OP005" productId="MOD_BRAND" quantity="1"/>
     <ProductConfigProduct configItemId="IT0003" configOptionId="OP006" productId="MOTHER_BOARD_ASS" quantity="1"/>
     
-    <ProductConfig productId="PC001" configItemId="IT0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" defaultConfigOptionId="OP001" isMandatory="Y"/>
-    <ProductConfig productId="PC001" configItemId="IT0001" sequenceNum="20" fromDate="2004-08-20 12:59:26.209" description="1st Hard Disk drive" defaultConfigOptionId="OP003" configTypeId="QUESTION" isMandatory="Y"/>
-    <ProductConfig productId="PC001" configItemId="IT0001" sequenceNum="30" fromDate="2004-08-20 12:59:26.209" description="2nd Hard Disk drive" configTypeId="QUESTION" isMandatory="N"/>
-    <ProductConfig productId="PC001" configItemId="IT0002" sequenceNum="40" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="N"/>
-    <ProductConfig productId="PC001" configItemId="IT0003" sequenceNum="00" fromDate="2004-08-20 12:59:26.209" configTypeId="STANDARD" isMandatory="Y"/>
+    <ProductConfig productId="PC-1000" configItemId="IT0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" defaultConfigOptionId="OP001" isMandatory="Y"/>
+    <ProductConfig productId="PC-1000" configItemId="IT0001" sequenceNum="20" fromDate="2004-08-20 12:59:26.209" description="1st Hard Disk drive" defaultConfigOptionId="OP003" configTypeId="QUESTION" isMandatory="Y"/>
+    <ProductConfig productId="PC-1000" configItemId="IT0001" sequenceNum="30" fromDate="2004-08-20 12:59:26.209" description="2nd Hard Disk drive" configTypeId="QUESTION" isMandatory="N"/>
+    <ProductConfig productId="PC-1000" configItemId="IT0002" sequenceNum="40" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="N"/>
+    <ProductConfig productId="PC-1000" configItemId="IT0003" sequenceNum="00" fromDate="2004-08-20 12:59:26.209" configTypeId="STANDARD" isMandatory="Y"/>
     
     <WorkEffort workEffortId="TASK01" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Stock out" description="Components" revisionNumber="1" fixedAssetId="DEMO_MACHINE_GROUP" estimatedMilliSeconds="600000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="TASK02" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Assembly" description="Assembly" revisionNumber="1" fixedAssetId="DEMO_MACHINE_GROUP" estimatedMilliSeconds="900000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="TASK03" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Test" description="Test" revisionNumber="1" fixedAssetId="DEMO_MACHINE_GROUP" estimatedMilliSeconds="450000" estimatedSetupMillis="20000"/>
     <WorkEffort workEffortId="ROUT01" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="PC assembly" description="PC Assembly" revisionNumber="1" quantityToProduce="0"/>
-    <WorkEffortGoodStandard workEffortId="ROUT01" productId="PC001" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2004-09-24 15:10:14.227"/>
+    <WorkEffortGoodStandard workEffortId="ROUT01" productId="PC-1000" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2004-09-24 15:10:14.227"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK01" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2004-09-24 15:09:38.736"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK02" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2004-09-24 15:09:47.338"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT01" workEffortIdTo="TASK03" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2004-09-24 15:09:55.279"/>
 
-    <!-- Cato: No need for configurable PC category
-    <ProductCategory productCategoryId="PC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="PC-100"/>
-    -->
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
-    <!-- Cato: Put this in one of the new main categories instead
-    <ProductCategoryMember productCategoryId="PC-100" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
-    -->
-    <ProductCategoryMember productCategoryId="PC-SYS-101" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PC001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC-1000" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PC-SYS-101" productId="PC-1000" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PC-1000" fromDate="2001-05-13 12:00:00.0"/>
 
-    <Product productId="ENCHILADAS" productTypeId="AGGREGATED" productName="Enchiladas" internalName="Enchiladas" description="Cheese enchiladas" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
+    <Product productId="ENCHL-01" productTypeId="AGGREGATED" productName="Enchiladas" internalName="Enchiladas" description="Cheese enchiladas" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <Product productId="FAJITA_BEEF" productTypeId="FINISHED_GOOD" productName="Fajita beef" internalName="Fajita beef" description="Fajita beef" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <Product productId="JALAPENOS" productTypeId="FINISHED_GOOD" productName="Jalapenos" internalName="Jalapenos" description="Jalapenos" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
 
-    <ProductPrice productId="ENCHILADAS" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="6" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
+    <ProductPrice productId="ENCHL-01" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="6" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <ProductPrice productId="FAJITA_BEEF" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="2" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <ProductPrice productId="FAJITA_BEEF" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="8" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
     <ProductPrice productId="JALAPENOS" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2007-12-27 12:00:00.0" price="0.75" createdDate="2007-12-27 12:00:00.0" createdByUserLogin="admin"/>
@@ -107,32 +100,28 @@ under the License.
     <ProductConfigOption configItemId="TEXMEX0000" configOptionId="OP011" configOptionName="OPT002" description="Fajita beef" sequenceNum="20"/>
     <ProductConfigOption configItemId="TEXMEX0001" configOptionId="OP012" configOptionName="OPT001" description="Jalapenos" sequenceNum="10"/>
 
-    <ProductConfigProduct configItemId="TEXMEX0000" configOptionId="OP010" productId="ENCHILADAS" quantity="1"/>
+    <ProductConfigProduct configItemId="TEXMEX0000" configOptionId="OP010" productId="ENCHL-01" quantity="1"/>
     <ProductConfigProduct configItemId="TEXMEX0000" configOptionId="OP011" productId="FAJITA_BEEF" quantity="1"/>
     <ProductConfigProduct configItemId="TEXMEX0001" configOptionId="OP012" productId="JALAPENOS" quantity="1"/>
 
-    <ProductConfig productId="ENCHILADAS" configItemId="TEXMEX0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" description="Enchiladas type" defaultConfigOptionId="OP010" configTypeId="QUESTION" isMandatory="Y"/>
-    <ProductConfig productId="ENCHILADAS" configItemId="TEXMEX0001" sequenceNum="20" fromDate="2004-08-20 12:59:26.209" description="Peppers" configTypeId="QUESTION" isMandatory="N"/>
+    <ProductConfig productId="ENCHL-01" configItemId="TEXMEX0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" description="Enchiladas type" defaultConfigOptionId="OP010" configTypeId="QUESTION" isMandatory="Y"/>
+    <ProductConfig productId="ENCHL-01" configItemId="TEXMEX0001" sequenceNum="20" fromDate="2004-08-20 12:59:26.209" description="Peppers" configTypeId="QUESTION" isMandatory="N"/>
 
     <WorkEffort workEffortId="TASK11" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Stock out" description="Components" revisionNumber="1" fixedAssetId="DEMO_FOOD_GROUP" estimatedMilliSeconds="600000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="TASK12" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Assembly" description="Assembly" revisionNumber="1" fixedAssetId="DEMO_FOOD_GROUP" estimatedMilliSeconds="900000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="TASK13" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Test" description="Test" revisionNumber="1" fixedAssetId="DEMO_FOOD_GROUP" estimatedMilliSeconds="450000" estimatedSetupMillis="20000"/>
     <WorkEffort workEffortId="ROUT11" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Food delivery" description="Food delivery" revisionNumber="1" quantityToProduce="0"/>
-    <WorkEffortGoodStandard workEffortId="ROUT11" productId="ENCHILADAS" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2007-12-27 12:00:00.0"/>
+    <WorkEffortGoodStandard workEffortId="ROUT11" productId="ENCHL-01" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2007-12-27 12:00:00.0"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT11" workEffortIdTo="TASK11" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2007-12-27 12:00:00.0"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT11" workEffortIdTo="TASK12" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2007-12-27 12:00:00.0"/>
     <WorkEffortAssoc workEffortIdFrom="ROUT11" workEffortIdTo="TASK13" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2007-12-27 12:00:00.0"/>
 
-    <!-- Cato: Unneeded (renamed and moved)
-    <ProductCategory productCategoryId="FOOD-001" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategoryRollup fromDate="2007-12-27 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="FOOD-001"/>
-     -->
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="FOOD-100" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="ENCHILADAS" fromDate="2007-12-27 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="ENCHL-01" fromDate="2007-12-27 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="FOOD-100" productId="ENCHL-01" fromDate="2007-12-27 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="ENCHL-01" fromDate="2007-12-27 12:00:00.0"/>
 
     <!-- Configurable product with virtual product options example -->
-    <Product productId="PIZZA" productTypeId="AGGREGATED" productName="Gold Pizza" internalName="Pizza" description="Create your own pizza" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
+    <Product productId="PIZZA-01" productTypeId="AGGREGATED" productName="Gold Pizza" internalName="Pizza" description="Create your own pizza" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
     <Product productId="DOUGH" productTypeId="FINISHED_GOOD" productName="Dough" internalName="Dough" description="Dough" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="SAUCE" productTypeId="FINISHED_GOOD" productName="Sauce" internalName="Sauce" description="Sauce" isVirtual="Y" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="SAUCE-TM" productTypeId="FINISHED_GOOD" internalName="Tomato Sauce with Mozzarella" productName="Tomato Sauce with Mozzarella" description="Tomato Sauce with Mozzarella" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -185,7 +174,7 @@ under the License.
     <ProductFeatureAppl productId="PEPPERS-H" productFeatureId="3011" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="2"/>
     <ProductFeatureAppl productId="PEPPERS-R" productFeatureId="3012" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="3"/>
 
-    <ProductPrice productId="PIZZA" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="5" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
+    <ProductPrice productId="PIZZA-01" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="5" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
     <ProductPrice productId="DOUGH" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="3" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
     <ProductPrice productId="SAUCE" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:36.479" price="1.5" createdDate="2004-08-20 12:55:36.479" createdByUserLogin="admin"/>
     <ProductPrice productId="SAUCE" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:36.479" price="1.5" createdDate="2004-08-20 12:55:36.479" createdByUserLogin="admin"/>
@@ -217,31 +206,22 @@ under the License.
     <ProductConfigProduct configItemId="PZ0001" configOptionId="PZOP003" productId="PEPPERS" quantity="1"/>
     <ProductConfigProduct configItemId="PZ0001" configOptionId="PZOP002" productId="SAUCE" quantity="1"/>
 
-    <ProductConfig productId="PIZZA" configItemId="PZ0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="Y"/>
-    <ProductConfig productId="PIZZA" configItemId="PZ0001" sequenceNum="30" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="N"/>
+    <ProductConfig productId="PIZZA-01" configItemId="PZ0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="Y"/>
+    <ProductConfig productId="PIZZA-01" configItemId="PZ0001" sequenceNum="30" fromDate="2004-08-20 12:59:26.209" configTypeId="QUESTION" isMandatory="N"/>
 
     <WorkEffort workEffortId="PZTASK01" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Stock out" description="Components" revisionNumber="1" fixedAssetId="DEMO_FOOD_GROUP" estimatedMilliSeconds="600000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="PZTASK02" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Preparation" description="Preparation" revisionNumber="1" fixedAssetId="DEMO_FOOD_GROUP" estimatedMilliSeconds="900000" estimatedSetupMillis="0"/>
     <WorkEffort workEffortId="PZROUT01" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Pizza preparation" description="Pizza preparation" revisionNumber="1" quantityToProduce="0"/>
-    <WorkEffortGoodStandard workEffortId="PZROUT01" productId="PIZZA" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2004-09-24 15:10:14.227"/>
+    <WorkEffortGoodStandard workEffortId="PZROUT01" productId="PIZZA-01" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2004-09-24 15:10:14.227"/>
     <WorkEffortAssoc workEffortIdFrom="PZROUT01" workEffortIdTo="PZTASK01" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2004-09-24 15:09:38.736"/>
     <WorkEffortAssoc workEffortIdFrom="PZROUT01" workEffortIdTo="PZTASK02" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2004-09-24 15:09:47.338"/>
 
-    <ProductCategoryMember productCategoryId="FOOD-100" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
-    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
-    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA" fromDate="2004-09-24 15:09:47.338"/>
+    <ProductCategoryMember productCategoryId="FOOD-100" productId="PIZZA-01" fromDate="2004-09-24 15:09:47.338"/>
+    <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="PIZZA-01" fromDate="2004-09-24 15:09:47.338"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA-01" fromDate="2004-09-24 15:09:47.338"/>
 
-    <!-- alternative URL -->
-    <!-- Cato: Unneeded
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-100-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FOOD-001-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
-    -->
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC001-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC001-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-1000-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-1000-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="RAM1GB_BRAND-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRRAM1GB_BRAND-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="HD250GB_BRAND-ALT" localeString="en"/>
@@ -258,14 +238,14 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMOTHER_BOARD-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CPU-586-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCPU-586-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="ENCHILADAS-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRENCHILADAS-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="ENCHL-01-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRENCHL-01-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="FAJITA_BEEF-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRFAJITA_BEEF-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="JALAPENOS-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRJALAPENOS-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PIZZA-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPIZZA-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PIZZA-01-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPIZZA-01-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DOUGH-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRDOUGH-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SAUCE-ALT" localeString="en"/>
@@ -287,13 +267,7 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PEPPERS-R-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPEPPERS-R-ALTEN" localeString="en_US"/>
     
-    <!-- Cato: Unneeded
-    <ElectronicText dataResourceId="PC-100-ALT" textData="configurable-pcs"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <ElectronicText dataResourceId="FOOD-001-ALT" textData="groceries"/>
-    -->
-    <ElectronicText dataResourceId="PC001-ALT" textData="configurable-pc"/>
+    <ElectronicText dataResourceId="PC-1000-ALT" textData="configurable-pc"/>
     <ElectronicText dataResourceId="RAM1GB_BRAND-ALT" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="HD250GB_BRAND-ALT" textData="hd-250-gb"/>
     <ElectronicText dataResourceId="HD500GB_BRAND-ALT" textData="hd-450-gb"/>
@@ -302,10 +276,10 @@ under the License.
     <ElectronicText dataResourceId="MOTHER_BOARD_ASS-ALT" textData="motherboard-assembly"/>
     <ElectronicText dataResourceId="MOTHER_BOARD-ALT" textData="motherboard"/>
     <ElectronicText dataResourceId="CPU-586-ALT" textData="cpu-intel-586"/>
-    <ElectronicText dataResourceId="ENCHILADAS-ALT" textData="enchiladas"/>
+    <ElectronicText dataResourceId="ENCHL-01-ALT" textData="enchiladas"/>
     <ElectronicText dataResourceId="FAJITA_BEEF-ALT" textData="fajita-beef"/>
     <ElectronicText dataResourceId="JALAPENOS-ALT" textData="jalapenos"/>
-    <ElectronicText dataResourceId="PIZZA-ALT" textData="pizza"/>
+    <ElectronicText dataResourceId="PIZZA-01-ALT" textData="pizza"/>
     <ElectronicText dataResourceId="DOUGH-ALT" textData="dough"/>
     <ElectronicText dataResourceId="SAUCE-ALT" textData="sauce"/>
     <ElectronicText dataResourceId="SAUCE-TM-ALT" textData="tomato-sauce-with-mozzarella"/>
@@ -317,13 +291,7 @@ under the License.
     <ElectronicText dataResourceId="PEPPERS-H-ALT" textData="hot-peppers"/>
     <ElectronicText dataResourceId="PEPPERS-R-ALT" textData="roasted-peppers"/>
     
-    <!-- Cato: Unneeded
-    <ElectronicText dataResourceId="DRPC-100-ALTEN" textData="configurable-pcs"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <ElectronicText dataResourceId="DRFOOD-001-ALTEN" textData="groceries"/>
-    -->
-    <ElectronicText dataResourceId="DRPC001-ALTEN" textData="configurable-pc"/>
+    <ElectronicText dataResourceId="DRPC-1000-ALTEN" textData="configurable-pc"/>
     <ElectronicText dataResourceId="DRRAM1GB_BRAND-ALTEN" textData="ram-1-gb-ddr2"/>
     <ElectronicText dataResourceId="DRHD250GB_BRAND-ALT" textData="hd-250-gb"/>
     <ElectronicText dataResourceId="DRHD500GB_BRAND-ALT" textData="hd-450-gb"/>
@@ -332,10 +300,10 @@ under the License.
     <ElectronicText dataResourceId="DMOTHER_BOARD_ASS" textData="motherboard-assembly"/>
     <ElectronicText dataResourceId="DRMOTHER_BOARD-ALTEN" textData="motherboard"/>
     <ElectronicText dataResourceId="DRCPU-586-ALTEN" textData="cpu-intel-586"/>
-    <ElectronicText dataResourceId="DRENCHILADAS-ALTEN" textData="enchiladas"/>
+    <ElectronicText dataResourceId="DRENCHL-01-ALTEN" textData="enchiladas"/>
     <ElectronicText dataResourceId="DRFAJITA_BEEF-ALTEN" textData="fajita-beef"/>
     <ElectronicText dataResourceId="DRJALAPENOS-ALTEN" textData="jalapenos"/>
-    <ElectronicText dataResourceId="DRPIZZA-ALTEN" textData="pizza"/>
+    <ElectronicText dataResourceId="DRPIZZA-01-ALTEN" textData="pizza"/>
     <ElectronicText dataResourceId="DRDOUGH-ALTEN" textData="dough"/>
     <ElectronicText dataResourceId="DRSAUCE-ALTEN" textData="sauce"/>
     <ElectronicText dataResourceId="DRSAUCE-TM-ALTEN" textData="tomato-sauce-with-mozzarella"/>
@@ -347,16 +315,8 @@ under the License.
     <ElectronicText dataResourceId="DRPEPPERS-H-ALTEN" textData="hot-peppers"/>
     <ElectronicText dataResourceId="DRPEPPERS-R-ALTEN" textData="roasted-peppers"/>
     
-    <!-- Cato: Unneeded
-    <Content contentId="PC-100-ALT" contentTypeId="DOCUMENT" dataResourceId="PC-100-ALT" localeString="en"/>
-    <Content contentId="CPC-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-100-ALTEN" localeString="en_US"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <Content contentId="FOOD-001-ALT" contentTypeId="DOCUMENT" dataResourceId="FOOD-001-ALT" localeString="en"/>
-    <Content contentId="CFOOD-001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFOOD-001-ALTEN" localeString="en_US"/>
-    -->
-    <Content contentId="PC001-ALT" contentTypeId="DOCUMENT" dataResourceId="PC001-ALT" localeString="en"/>
-    <Content contentId="CPC001-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC001-ALTEN" localeString="en_US"/>
+    <Content contentId="PC-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="PC-1000-ALT" localeString="en"/>
+    <Content contentId="CPC-1000-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-1000-ALTEN" localeString="en_US"/>
     <Content contentId="RAM1GB_BRAND-ALT" contentTypeId="DOCUMENT" dataResourceId="RAM1GB_BRAND-ALT" localeString="en"/>
     <Content contentId="CRAM1GB_BRAND-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRRAM1GB_BRAND-ALTEN" localeString="en_US"/>
     <Content contentId="HD250GB_BRAND-ALT" contentTypeId="DOCUMENT" dataResourceId="HD250GB_BRAND-ALT" localeString="en"/>
@@ -373,14 +333,14 @@ under the License.
     <Content contentId="CMOTHER_BOARD-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRMOTHER_BOARD-ALTEN" localeString="en_US"/>
     <Content contentId="CPU-586-ALT" contentTypeId="DOCUMENT" dataResourceId="CPU-586-ALT" localeString="en"/>
     <Content contentId="CCPU-586-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRCPU-586-ALTEN" localeString="en_US"/>
-    <Content contentId="ENCHILADAS-ALT" contentTypeId="DOCUMENT" dataResourceId="ENCHILADAS-ALT" localeString="en"/>
-    <Content contentId="CENCHILADAS-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRENCHILADAS-ALTEN" localeString="en_US"/>
+    <Content contentId="ENCHL-01-ALT" contentTypeId="DOCUMENT" dataResourceId="ENCHL-01-ALT" localeString="en"/>
+    <Content contentId="CENCHL-01-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRENCHL-01-ALTEN" localeString="en_US"/>
     <Content contentId="FAJITA_BEEF-ALT" contentTypeId="DOCUMENT" dataResourceId="FAJITA_BEEF-ALT" localeString="en"/>
     <Content contentId="CFAJITA_BEEF-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRFAJITA_BEEF-ALTEN" localeString="en_US"/>
     <Content contentId="JALAPENOS-ALT" contentTypeId="DOCUMENT" dataResourceId="JALAPENOS-ALT" localeString="en"/>
     <Content contentId="CJALAPENOS-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRJALAPENOS-ALTEN" localeString="en_US"/>
-    <Content contentId="PIZZA-ALT" contentTypeId="DOCUMENT" dataResourceId="PIZZA-ALT" localeString="en"/>
-    <Content contentId="CPIZZA-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPIZZA-ALTEN" localeString="en_US"/>
+    <Content contentId="PIZZA-01-ALT" contentTypeId="DOCUMENT" dataResourceId="PIZZA-01-ALT" localeString="en"/>
+    <Content contentId="CPIZZA-01-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPIZZA-01-ALTEN" localeString="en_US"/>
     <Content contentId="DOUGH-ALT" contentTypeId="DOCUMENT" dataResourceId="DOUGH-ALT" localeString="en"/>
     <Content contentId="CDOUGH-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRDOUGH-ALTEN" localeString="en_US"/>
     <Content contentId="SAUCE-ALT" contentTypeId="DOCUMENT" dataResourceId="SAUCE-ALT" localeString="en"/>
@@ -402,13 +362,7 @@ under the License.
     <Content contentId="PEPPERS-R-ALT" contentTypeId="DOCUMENT" dataResourceId="PEPPERS-R-ALT" localeString="en"/>
     <Content contentId="CPEPPERS-R-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRPEPPERS-R-ALTEN" localeString="en_US"/>
     
-    <!-- Cato: Unneeded
-    <ContentAssoc contentId="PC-100-ALT" contentIdTo="CPC-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <ContentAssoc contentId="FOOD-001-ALT" contentIdTo="CFOOD-001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    -->
-    <ContentAssoc contentId="PC001-ALT" contentIdTo="CPC001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-1000-ALT" contentIdTo="CPC-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="RAM1GB_BRAND-ALT" contentIdTo="CRAM1GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="HD250GB_BRAND-ALT" contentIdTo="CHD250GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="HD500GB_BRAND-ALT" contentIdTo="CHD500GB_BRAND-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -417,10 +371,10 @@ under the License.
     <ContentAssoc contentId="MOTHER_BOARD_ASS-ALT" contentIdTo="CMOTHER_BOARD_ASS" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="MOTHER_BOARD-ALT" contentIdTo="CMOTHER_BOARD-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="CPU-586-ALT" contentIdTo="CCPU-586-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="ENCHILADAS-ALT" contentIdTo="CENCHILADAS-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="ENCHL-01-ALT" contentIdTo="CENCHL-01-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="FAJITA_BEEF-ALT" contentIdTo="CFAJITA_BEEF-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="JALAPENOS-ALT" contentIdTo="CJALAPENOS-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PIZZA-ALT" contentIdTo="CPIZZA-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PIZZA-01-ALT" contentIdTo="CPIZZA-01-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="DOUGH-ALT" contentIdTo="CDOUGH-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SAUCE-ALT" contentIdTo="CSAUCE-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SAUCE-TM-ALT" contentIdTo="CSAUCE-TM-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -432,14 +386,7 @@ under the License.
     <ContentAssoc contentId="PEPPERS-H-ALT" contentIdTo="CPEPPERS-H-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PEPPERS-R-ALT" contentIdTo="CPEPPERS-R-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
-    <!-- Cato: Unneeded
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-100" contentId="PC-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    -->
-    <!-- Cato: Unneeded (renamed and moved)
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="FOOD-001" contentId="FOOD-001-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    -->
-    
-    <ProductContent productId="PC001" contentId="PC001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PC-1000" contentId="PC-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="RAM1GB_BRAND" contentId="RAM1GB_BRAND-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="HD250GB_BRAND" contentId="HD250GB_BRAND-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="HD500GB_BRAND" contentId="HD500GB_BRAND-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
@@ -448,10 +395,10 @@ under the License.
     <ProductContent productId="MOTHER_BOARD_ASS" contentId="MOTHER_BOARD_ASS-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="MOTHER_BOARD" contentId="MOTHER_BOARD-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CPU-586" contentId="CPU-586-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="ENCHILADAS" contentId="ENCHILADAS-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="ENCHL-01" contentId="ENCHL-01-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="FAJITA_BEEF" contentId="FAJITA_BEEF-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="JALAPENOS" contentId="JALAPENOS-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="PIZZA" contentId="PIZZA-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PIZZA-01" contentId="PIZZA-01-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="DOUGH" contentId="DOUGH-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SAUCE" contentId="SAUCE-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SAUCE-TM" contentId="SAUCE-TM-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>

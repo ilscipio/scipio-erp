@@ -40,17 +40,16 @@ under the License.
     <SurveyQuestionCategory surveyQuestionCategoryId="2001" description="Mini Cart section questions "/>
     <SurveyQuestionCategory surveyQuestionCategoryId="2101" description="Show Cart functionality questions "/>
     
-    <ProductStoreSurveyAppl productStoreSurveyId="1401" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1401" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1501" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1501" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1601" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1601" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1701" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1701" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1801" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1801" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1901" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1901" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="2001" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2001" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="2101" productStoreId="catoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2101" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1401" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1401" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1501" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1501" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1601" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1601" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1701" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1701" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1801" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1801" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1901" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="1901" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="2001" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2001" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="2101" productStoreId="CatoShop" surveyApplTypeId="TEST_SURVEY" surveyId="2101" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     
     <!--CHECKOUT PAGE-->
-    <!-- Cato: Now points to shop -->
     <SurveyQuestion surveyQuestionId="1401" surveyQuestionCategoryId="1401" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on the checkout link in minicart if the user is anonymous then page is displayed https://localhost:8443/shop/control/checkoutoptions"/>
     <SurveyQuestion surveyQuestionId="1402" surveyQuestionCategoryId="1401" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on the onePagecheckout link in Top navigator or minicart if the user is anonymous then page is displayed https://localhost:8443/shop/control/onePageCheckout"/>
     <SurveyQuestion surveyQuestionId="1403" surveyQuestionCategoryId="1401" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on the quickcheckout link in Top navigator or minicart if the user is anonymous then page is displayed https://localhost:8443/shop/control/quickcheckout"/>
@@ -96,7 +95,6 @@ under the License.
     <SurveyQuestion surveyQuestionId="1512" surveyQuestionCategoryId="1501" surveyQuestionTypeId="BOOLEAN" description="" question="If user is creates account successfully then he is able to login by his user Id ?"/>
     
     <!--VIEW / EDIT PROFILE PAGE-->
-    <!-- Cato: Now points to shop -->
     <SurveyQuestion surveyQuestionId="1601" surveyQuestionCategoryId="1601" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on Profile link it takes to https://localhost:8443/shop/control/viewprofile page in case the user is logged in ?"/>
     <SurveyQuestion surveyQuestionId="1602" surveyQuestionCategoryId="1601" surveyQuestionTypeId="BOOLEAN" description="" question="Does My Accounts section displays the name and email of the user corectly as entered?"/>
     <SurveyQuestion surveyQuestionId="1603" surveyQuestionCategoryId="1601" surveyQuestionTypeId="BOOLEAN" description="" question="Does the EDIT link redirects to the page https://localhost:8443/shop/control/editProfile"/>

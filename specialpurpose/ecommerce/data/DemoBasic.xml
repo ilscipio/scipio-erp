@@ -129,21 +129,23 @@ under the License.
     <ProductStoreSurveyAppl productStoreSurveyId="1003" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1003" fromDate="2003-12-05 19:22:40.925" surveyTemplate="component://ecommerce/templates/survey/minisurvey.ftl" resultTemplate="component://ecommerce/templates/survey/miniresult.ftl" sequenceNum="1"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1004" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1004" fromDate="2003-12-05 19:22:40.925" surveyTemplate="component://ecommerce/templates/survey/minisurvey.ftl" resultTemplate="component://ecommerce/templates/survey/miniresult.ftl" sequenceNum="1"/>
 
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9000" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9010" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9011" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9012" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9013" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9014" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9015" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9016" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9017" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9018" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9019" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9020" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
-    <ProductStorePromoAppl productStoreId="9000" productPromoId="9021" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7000" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7010" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7011" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7012" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7013" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7014" fromDate="2001-05-13 12:00:00.0" sequenceNum="5"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7015" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7016" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7017" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7018" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7019" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7020" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="7021" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <!-- 
     <ProductReview productId="GZ-1000" productRating="4.000000" productReview="Good" productReviewId="9000" productStoreId="9000" statusId="PRR_PENDING" userLoginId="DemoCustomer"/>
     <ProductReview productId="GZ-2644" productRating="5.000000" productReview="It's useful." productReviewId="9000" productStoreId="9000" statusId="PRR_APPROVED" userLoginId="DemoCustomer"/>
+    -->
     <ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y"
         purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="ofbGcAuthorize" paymentCustomMethodId="GIFT_AUTH_OFBIZ"/>

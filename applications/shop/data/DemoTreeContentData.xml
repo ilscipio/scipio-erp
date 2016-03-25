@@ -30,49 +30,10 @@
 
     <ContentAssoc contentId="PICTURE" contentIdTo="GZ-DIG" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
-
-    <!-- Cato: TODO?: Associate new categories content to this tree... -->
-
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C101DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C101DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C102DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C102DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C102DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C200DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C200DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C200DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2011DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2011DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2011DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2012DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2012DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C2012DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C201DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-
-    <!-- Cato: Unneeded (moved and renamed below)
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-001DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-     -->
+    <!-- Cato: TODO?: Associate new categories content to this tree? -->
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
  
-    <!-- Cato: Unneeded (moved and renamed below)
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-100DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-101DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-101DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-102DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    -->
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGFTC-100DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-PR-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
@@ -80,29 +41,12 @@
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CGC-RL-101DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     
-    <!-- Cato: Unneeded
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPC-100DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    -->
-    
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644DESCFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644DESCIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644NAMEFR" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ2644NAMEIT" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="C100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644NAMEDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
     <ContentAssoc contentId="GENERAL" contentIdTo="FACT_1" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="GENERAL" contentIdTo="FACT_2" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>

@@ -122,18 +122,18 @@
     <ContentAssoc contentId="CPC-SYS-101DESCEN" contentIdTo="CPC-SYS-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
     <!-- Software category -->
-    <DataResource dataResourceId="DRPC-SF-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="DRPC-SF-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+    <DataResource dataResourceId="DRPC-SW-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRPC-SW-101DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="DRPC-SF-101DESCDE" textData="Software"/>
-    <ElectronicText dataResourceId="DRPC-SF-101DESCEN" textData="Software"/>
+    <ElectronicText dataResourceId="DRPC-SW-101DESCDE" textData="Software"/>
+    <ElectronicText dataResourceId="DRPC-SW-101DESCEN" textData="Software"/>
 
-    <Content contentId="CPC-SF-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-SF-101DESCDE" description="DESCRIPTION DE Software" localeString="de"/>
-    <Content contentId="CPC-SF-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-SF-101DESCEN" description="DESCRIPTION EN Software" localeString="en"/>
+    <Content contentId="CPC-SW-101DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRPC-SW-101DESCDE" description="DESCRIPTION DE Software" localeString="de"/>
+    <Content contentId="CPC-SW-101DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPC-SW-101DESCEN" description="DESCRIPTION EN Software" localeString="en"/>
 
-    <ProductCategoryContent productCategoryId="PC-SF-101" contentId="CPC-SF-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
+    <ProductCategoryContent productCategoryId="PC-SW-101" contentId="CPC-SW-101DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2006-09-22 00:00:00.0"/>
 
-    <ContentAssoc contentId="CPC-SF-101DESCEN" contentIdTo="CPC-SF-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+    <ContentAssoc contentId="CPC-SW-101DESCEN" contentIdTo="CPC-SW-101DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
     <!-- Accessories category -->
     <DataResource dataResourceId="DRPC-AC-101DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
@@ -260,6 +260,20 @@
     <ProductCategoryContent productCategoryId="TRVL-100" contentId="CTRVL-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
 
     <ContentAssoc contentId="CTRVL-100DESCEN" contentIdTo="CTRVL-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Automotive category -->
+    <DataResource dataResourceId="DRAUTO-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRAUTO-100DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRAUTO-100DESCDE" textData="Automotive"/>
+    <ElectronicText dataResourceId="DRAUTO-100DESCEN" textData="Automotive"/>
+
+    <Content contentId="CAUTO-100DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRAUTO-100DESCDE" description="DESCRIPTION DE Automotive" localeString="de"/>
+    <Content contentId="CAUTO-100DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRAUTO-100DESCEN" description="DESCRIPTION EN Automotive" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="AUTO-100" contentId="CAUTO-100DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CAUTO-100DESCEN" contentIdTo="CAUTO-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
     <!-- Groceries (foods) category (new, replacement) -->
     <DataResource dataResourceId="DRFOOD-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>

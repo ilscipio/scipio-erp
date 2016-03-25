@@ -27,14 +27,14 @@ under the License.
     <!-- CATEGORIES -->
 
     <!-- Cato: NOTE: These still remaining their old IDs -->
-    <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY"/>
-    <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Widgets"/>
+    <ProductCategory productCategoryId="BEST-SELL-1" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Electronics"/>
+    <ProductCategory productCategoryId="BEST-SELL-2" productCategoryTypeId="BEST_SELL_CATEGORY" categoryName="Music"/>
   
     <ProductCategoryRollup productCategoryId="BEST-SELL-1" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="01" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryRollup productCategoryId="BEST-SELL-2" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="02" fromDate="2010-01-01 12:00:00.0"/>
 
     <ProductCategoryRollup productCategoryId="EL-PHN-101" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryRollup productCategoryId="MU-DL-101" parentProductCategoryId="BEST-SELL-1" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryRollup productCategoryId="MU-DL-101" parentProductCategoryId="BEST-SELL-2" fromDate="2010-01-01 12:00:00.0"/>
 
     <!-- Alternative URLs -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-1-ALT" localeString="en"/>

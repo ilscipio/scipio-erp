@@ -121,7 +121,7 @@ under the License.
     <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="ENCHL-01" fromDate="2007-12-27 12:00:00.0"/>
 
     <!-- Configurable product with virtual product options example -->
-    <Product productId="PIZZA-01" productTypeId="AGGREGATED" productName="Gold Pizza" internalName="Pizza" description="Create your own pizza" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
+    <Product productId="PIZZA-01" productTypeId="AGGREGATED" productName="Pizza" internalName="Pizza" description="Create your own pizza" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
     <Product productId="DOUGH" productTypeId="FINISHED_GOOD" productName="Dough" internalName="Dough" description="Dough" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="SAUCE" productTypeId="FINISHED_GOOD" productName="Sauce" internalName="Sauce" description="Sauce" isVirtual="Y" isVariant="N" billOfMaterialLevel="0" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     <Product productId="SAUCE-TM" productTypeId="FINISHED_GOOD" internalName="Tomato Sauce with Mozzarella" productName="Tomato Sauce with Mozzarella" description="Tomato Sauce with Mozzarella" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>

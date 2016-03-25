@@ -51,7 +51,7 @@ under the License.
             <ProductCategory description="Computer Systems" longDescription="Computer Systems (Desktops, Laptops, Tablets)"
                 primaryParentCategoryId="PC-101" productCategoryId="PC-SYS-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Software" longDescription="Software"
-                primaryParentCategoryId="PC-101" productCategoryId="PC-SF-101" productCategoryTypeId="CATALOG_CATEGORY"/>
+                primaryParentCategoryId="PC-101" productCategoryId="PC-SW-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Computer Accessories" longDescription="Computer Accessories"
                 primaryParentCategoryId="PC-101" productCategoryId="PC-AC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
                 <ProductCategory description="Peripherals" longDescription="Peripherals"
@@ -72,6 +72,9 @@ under the License.
             
     <ProductCategory description="Travel" longDescription="Travel Products and Rentals" 
         primaryParentCategoryId="CATALOG1" productCategoryId="TRVL-100" productCategoryTypeId="CATALOG_CATEGORY"/>
+
+    <ProductCategory description="Automotive" longDescription="Vehicles, Automobiles and Accessories" 
+        primaryParentCategoryId="CATALOG1" productCategoryId="AUTO-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <ProductCategory description="Subscriptions" longDescription="Subscriptions"
         primaryParentCategoryId="CATALOG1" productCategoryId="SUBS-100" productCategoryTypeId="CATALOG_CATEGORY"/>    
@@ -108,27 +111,6 @@ under the License.
         productCategoryId="CATALOG1_BEST_SELL" productCategoryTypeId="BEST_SELL_CATEGORY"/>
         <!-- NOTE: The specific BEST-SELL categories are defined in DemoCatalogTransientData.xml -->
 
-    <!-- Cato: Old main categories - widgets and gizmos (TODO: Remove) -->
-    <ProductCategory longDescription="long description of Gizmos"
-        primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Widgets"
-        primaryParentCategoryId="CATALOG1" productCategoryId="200" productCategoryTypeId="CATALOG_CATEGORY"/>
-    
-    <ProductCategory longDescription="long description of Small Gizmos"
-        primaryParentCategoryId="100" productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Large Gizmos"
-        primaryParentCategoryId="100" productCategoryId="102" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Small Widgets"
-        primaryParentCategoryId="200" productCategoryId="201" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Large Widgets"
-        primaryParentCategoryId="200" productCategoryId="202" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Mini Widgets"
-        primaryParentCategoryId="201" productCategoryId="2011" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Other Mini Widgets"
-        primaryParentCategoryId="201" productCategoryId="2012" productCategoryTypeId="CATALOG_CATEGORY"/>
-    <ProductCategory longDescription="long description of Micro Widgets"
-        primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
-        
     <!-- Cato: Other categories -->
     <ProductCategory categoryName="Test Limited Admin Category"
         longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -155,7 +137,7 @@ under the License.
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_BEST_SELL" fromDate="2010-01-01 12:00:00.0" 
         sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BEST_SELL"/>
     
-    <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-05-13 12:00:00.0"
+    <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="ELTRN-100" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="01" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
@@ -172,7 +154,7 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="EL-MP3-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="ELTRN-100" productCategoryId="EL-PHN-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SYS-101"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SF-101"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-SW-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-101" productCategoryId="PC-AC-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="PC-AC-101" productCategoryId="PC-PR-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="SUBS-100" sequenceNum="030"/>
@@ -188,48 +170,21 @@ under the License.
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-CD-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="MUSIC-101" productCategoryId="MU-DL-101"/>
     <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="TRVL-100" sequenceNum="100"/>
+    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="AUTO-100" sequenceNum="110"/>
 
-    <!--  Cato: Old categories (TODO: Remove) -->
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100" sequenceNum="900"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200" sequenceNum="910"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="201" productCategoryId="2012"/>
-    <ProductCategoryRollup fromDate="2001-05-13 12:00:00.0" parentProductCategoryId="2011" productCategoryId="20111"/>
-
-    <!-- Cato: New category links (TODO) -->
-    <!--
-    <ProductCategoryLink productCategoryId="100" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
-        titleText="See LGPL Gizmos" detailText="The LGPL license may be more restrictive than you would like, but we think you will like the gizmo anyway!"
+    <!-- Cato: Category links (examples) -->
+    <ProductCategoryLink productCategoryId="MUSIC-101" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
+        titleText="See LGPL Gizmos" detailText="The LGPL license may be more restrictive than you would like, but we think you will like our product anyway!"
         imageUrl="/images/products/small/handshake_01.png"
         sequenceNum="2" linkTypeEnumId="PCLT_SEARCH_PARAM"
         linkInfo="SEARCH_CATEGORY_ID1=100&amp;SEARCH_SUB_CATEGORIES1=Y&amp;SEARCH_FEAT1=8000&amp;sortOrder=SortKeywordRelevancy&amp;sortAscending=N"/>
-    <ProductCategoryLink productCategoryId="100" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
-        titleText="Go To Google" detailText="If you cannot find the gizmo you want here, try it on Google."
+    <ProductCategoryLink productCategoryId="MUSIC-101" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
+        titleText="Go To Google" detailText="If you cannot find the music you're looking for here, try it on Google."
         imageUrl="http://www.google.com/intl/en_ALL/images/logo.gif"
         sequenceNum="1" linkTypeEnumId="PCLT_ABS_URL"
         linkInfo="http://www.google.com/"/>
-    <ProductCategoryLink productCategoryId="100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
+    <ProductCategoryLink productCategoryId="MUSIC-101" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="3" linkTypeEnumId="PCLT_CAT_ID" linkInfo="101"/>
-    -->  
-
-    <!-- Cato: Old category links (TODO: Remove) -->
-    <ProductCategoryLink productCategoryId="100" linkSeqId="01" fromDate="2001-05-13 12:00:00.0"
-        titleText="See LGPL Gizmos" detailText="The LGPL license may be more restrictive than you would like, but we think you will like the gizmo anyway!"
-        imageUrl="/images/products/small/handshake_01.png"
-        sequenceNum="2" linkTypeEnumId="PCLT_SEARCH_PARAM"
-        linkInfo="SEARCH_CATEGORY_ID1=100&amp;SEARCH_SUB_CATEGORIES1=Y&amp;SEARCH_FEAT1=8000&amp;sortOrder=SortKeywordRelevancy&amp;sortAscending=N"/>
-    <ProductCategoryLink productCategoryId="100" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
-        titleText="Go To Google" detailText="If you cannot find the gizmo you want here, try it on Google."
-        imageUrl="http://www.google.com/intl/en_ALL/images/logo.gif"
-        sequenceNum="1" linkTypeEnumId="PCLT_ABS_URL"
-        linkInfo="http://www.google.com/"/>
-    <ProductCategoryLink productCategoryId="100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="3" linkTypeEnumId="PCLT_CAT_ID" linkInfo="101"/>
-        
             
     <!-- Category Alternative URL -->    
         
@@ -267,8 +222,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-MP3-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SYS-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SYS-101-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SF-101-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SF-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-SW-101-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-SW-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-AC-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPC-AC-101-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PC-PR-101-ALT" localeString="en"/>
@@ -301,6 +256,8 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRTRVL-100-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="EL-PHN-101-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DREL-PHN-101-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="AUTO-100-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRAUTO-100-ALTEN" localeString="en_US"/>
     
     <ElectronicText dataResourceId="CLOTH-100-ALT" textData="clothing"/>
     <ElectronicText dataResourceId="DRCLOTH-100-ALTEN" textData="clothing"/>
@@ -316,8 +273,8 @@ under the License.
     <ElectronicText dataResourceId="DREL-MP3-101-ALTEN" textData="mp3-players"/>
     <ElectronicText dataResourceId="PC-SYS-101-ALT" textData="pc-systems"/>
     <ElectronicText dataResourceId="DRPC-SYS-101-ALTEN" textData="pc-systems"/>
-    <ElectronicText dataResourceId="PC-SF-101-ALT" textData="software"/>
-    <ElectronicText dataResourceId="DRPC-SF-101-ALTEN" textData="software"/>
+    <ElectronicText dataResourceId="PC-SW-101-ALT" textData="software"/>
+    <ElectronicText dataResourceId="DRPC-SW-101-ALTEN" textData="software"/>
     <ElectronicText dataResourceId="PC-AC-101-ALT" textData="accessories"/>
     <ElectronicText dataResourceId="DRPC-AC-101-ALTEN" textData="accessories"/>
     <ElectronicText dataResourceId="PC-PR-101-ALT" textData="peripherals"/>
@@ -350,6 +307,8 @@ under the License.
     <ElectronicText dataResourceId="DRTRVL-100-ALTEN" textData="rentals"/>
     <ElectronicText dataResourceId="EL-PHN-101-ALT" textData="phones"/>
     <ElectronicText dataResourceId="DREL-PHN-101-ALTEN" textData="phones"/>
+    <ElectronicText dataResourceId="AUTO-100-ALT" textData="automotive"/>
+    <ElectronicText dataResourceId="DRAUTO-100-ALTEN" textData="automotive"/>
     
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="CLOTH-100-ALT" dataResourceId="CLOTH-100-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CCLOTH-100-ALTEN" dataResourceId="DRCLOTH-100-ALTEN"/>
@@ -365,8 +324,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-101-ALTEN" dataResourceId="DRPC-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SYS-101-ALT" dataResourceId="PC-SYS-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SYS-101-ALTEN" dataResourceId="DRPC-SYS-101-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SF-101-ALT" dataResourceId="PC-SF-101-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SF-101-ALTEN" dataResourceId="DRPC-SF-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-SW-101-ALT" dataResourceId="PC-SW-101-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-SW-101-ALTEN" dataResourceId="DRPC-SW-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-AC-101-ALT" dataResourceId="PC-AC-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPC-AC-101-ALTEN" dataResourceId="DRPC-AC-101-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="PC-PR-101-ALT" dataResourceId="PC-PR-101-ALT"/>
@@ -399,6 +358,8 @@ under the License.
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CTRVL-100-ALTEN" dataResourceId="DRTRVL-100-ALTEN"/>
     <Content contentTypeId="DOCUMENT" localeString="en" contentId="EL-PHN-101-ALT" dataResourceId="EL-PHN-101-ALT"/>
     <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CEL-PHN-101-ALTEN" dataResourceId="DREL-PHN-101-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="AUTO-100-ALT" dataResourceId="AUTO-100-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CAUTO-100-ALTEN" dataResourceId="DRAUTO-100-ALTEN"/>
     
     <ContentAssoc contentId="CLOTH-100-ALT" contentIdTo="CCLOTH-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="CL-MEN-101-ALT" contentIdTo="CCL-MEN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -407,7 +368,7 @@ under the License.
     <ContentAssoc contentId="PC-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="EL-MP3-101-ALT" contentIdTo="CPC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-SYS-101-ALT" contentIdTo="CPC-SYS-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PC-SF-101-ALT" contentIdTo="CPC-SF-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PC-SW-101-ALT" contentIdTo="CPC-SW-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-AC-101-ALT" contentIdTo="CPC-AC-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="PC-PR-101-ALT" contentIdTo="CPC-PR-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SUBS-100-ALT" contentIdTo="CSUBS-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -424,6 +385,7 @@ under the License.
     <ContentAssoc contentId="MU-DL-101-ALT" contentIdTo="CMU-DL-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="TRVL-100-ALT" contentIdTo="CTRVL-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="EL-PHN-101-ALT" contentIdTo="CEL-PHN-101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="AUTO-100-ALT" contentIdTo="CAUTO-100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CLOTH-100" contentId="CLOTH-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="CL-MEN-101" contentId="CL-MEN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -432,7 +394,7 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-101" contentId="PC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-MP3-101" contentId="EL-MP3-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SYS-101" contentId="PC-SYS-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SF-101" contentId="PC-SF-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-SW-101" contentId="PC-SW-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-AC-101" contentId="PC-AC-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="PC-PR-101" contentId="PC-PR-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="SUBS-100" contentId="SUBS-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
@@ -449,97 +411,15 @@ under the License.
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="MU-DL-101" contentId="MU-DL-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="TRVL-100" contentId="TRVL-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="EL-PHN-101" contentId="EL-PHN-101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    
-    <!-- Cato: Old categories (TODO: Remove) -->    
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="100-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR100-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="101-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR101-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="102-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR102-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="200-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR200-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="201-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR201-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="202-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR202-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="2011-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR2011-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="2012-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR2012-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="20111-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR20111-ALTEN" localeString="en_US"/>
-    
-    <ElectronicText dataResourceId="100-ALT" textData="gismos"/>
-    <ElectronicText dataResourceId="101-ALT" textData="small-gizmos"/>
-    <ElectronicText dataResourceId="102-ALT" textData="large-gizmos"/>
-    <ElectronicText dataResourceId="200-ALT" textData="widgets"/>
-    <ElectronicText dataResourceId="201-ALT" textData="small-widgets"/>
-    <ElectronicText dataResourceId="202-ALT" textData="large-widgets"/>
-    <ElectronicText dataResourceId="2011-ALT" textData="mini-widgets"/>
-    <ElectronicText dataResourceId="2012-ALT" textData="other-mini-widgets"/>
-    <ElectronicText dataResourceId="20111-ALT" textData="micro-widgets"/>
-    
-    <ElectronicText dataResourceId="DR100-ALTEN" textData="gismos"/>
-    <ElectronicText dataResourceId="DR101-ALTEN" textData="small-gizmos"/>
-    <ElectronicText dataResourceId="DR102-ALTEN" textData="large-gizmos"/>
-    <ElectronicText dataResourceId="DR200-ALTEN" textData="widgets"/>
-    <ElectronicText dataResourceId="DR201-ALTEN" textData="small-widgets"/>
-    <ElectronicText dataResourceId="DR202-ALTEN" textData="large-widgets"/>
-    <ElectronicText dataResourceId="DR2011-ALTEN" textData="mini-widgets"/>
-    <ElectronicText dataResourceId="DR2012-ALTEN" textData="other-mini-widgets"/>
-    <ElectronicText dataResourceId="DR20111-ALTEN" textData="micro-widgets"/>
-    
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="100-ALT" dataResourceId="100-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C100-ALTEN" dataResourceId="DR100-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="101-ALT" dataResourceId="101-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C101-ALTEN" dataResourceId="DR101-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="102-ALT" dataResourceId="102-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C102-ALTEN" dataResourceId="DR102-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="200-ALT" dataResourceId="200-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C200-ALTEN" dataResourceId="DR200-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="201-ALT" dataResourceId="201-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C201-ALTEN" dataResourceId="DR201-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="202-ALT" dataResourceId="202-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C201-ALTEN" dataResourceId="DR201-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="2011-ALT" dataResourceId="2011-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C2011-ALTEN" dataResourceId="DR2011-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="2012-ALT" dataResourceId="2012-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C2012-ALTEN" dataResourceId="DR2012-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="20111-ALT" dataResourceId="20111-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="C20111-ALTEN" dataResourceId="DR20111-ALTEN"/>
-    
-    <ContentAssoc contentId="100-ALT" contentIdTo="C100-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="101-ALT" contentIdTo="C101-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="102-ALT" contentIdTo="C102-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="200-ALT" contentIdTo="C200-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="201-ALT" contentIdTo="C201-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="202-ALT" contentIdTo="C201-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="2011-ALT" contentIdTo="C2011-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="2012-ALT" contentIdTo="C2012-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="20111-ALT" contentIdTo="C20111-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="100" contentId="100-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="101" contentId="101-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="102" contentId="102-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="200" contentId="200-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="201" contentId="201-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="202" contentId="202-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="2011" contentId="2011-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="2012" contentId="2012-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="20111" contentId="20111-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    
+    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="AUTO-100" contentId="AUTO-100-ALT" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- PRODUCTS -->
-    
-    <!-- TODO: Split these up by entity like others, otherwise seeding may be slow (?) -->
-    
  
     <Product productId="PH-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 5" internalName="iPhone 5" description="The popular iPhone 5." longDescription="This iPhone is very small and supports all the latest applications." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="PH-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 6" internalName="iPhone 6" description="The popular iPhone 6." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="PH-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 7" internalName="iPhone 7" description="The latest iPhone 7." longDescription="This is the lastest, cutting-edge iPhone." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="PH-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone Business" internalName="iPhone Business" description="M$ iPhone Large Business Model" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
-        <longDescription><![CDATA[This is a larger, business-oriented version of the popular iPhone.<br/><br/>It is recommended for those with advanced business needs.]]></longDescription>
+    <Product productId="PH-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone Business" internalName="iPhone Business" description="iPhone Large Business Model" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
+        <longDescription><![CDATA[This is a larger, business-oriented version of the popular iPhone.<br/><br/>It is recommended for those with advanced business requirements.]]></longDescription>
     </Product>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1000-ALTEN" localeString="en_US"/>
@@ -585,29 +465,29 @@ under the License.
     <ProductContent productId="PH-1005" contentId="PH-1005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="PH-1005" contentId="PH-1005-WARN" productContentTypeId="WARNINGS" fromDate="2001-05-13 12:00:00.0"/>
 
-    <Product productId="GZ-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo" internalName="Open Gizmo" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-1006-1" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (LGPL)" internalName="Open Gizmo (LGPL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-1006-2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (GPL)" internalName="Open Gizmo (GPL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-1006-3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (BSD)" internalName="Open Gizmo (BSD)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-1006-4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (MIT)" internalName="Open Gizmo (MIT)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-1006-5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (ASL2)" internalName="Open Gizmo (ASL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo" internalName="Open Gizmo" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006-1" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo (LGPL)" internalName="Open Gizmo (LGPL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006-2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo (GPL)" internalName="Open Gizmo (GPL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006-3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo (BSD)" internalName="Open Gizmo (BSD)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006-4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo (MIT)" internalName="Open Gizmo (MIT)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-1006-5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Open Gizmo (ASL2)" internalName="Open Gizmo (ASL)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     
-    <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Square Gizmo" internalName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" internalName="Round Gizmo" longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="7.0"/>
-    <Product productId="GZ-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Purple Gizmo" internalName="Purple Gizmo" description="The stylish gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-7000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Massive Gizmo" internalName="Massive Gizmo" description="The biggest gizmo ever" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="GZ-8544" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Big Gizmo" internalName="Big Gizmo" description="Big Gizmo w/ Legs" longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="12.0"/>
-    <Product productId="GZ-9290" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="His/Her Gizmo" internalName="His/Her Gizmo" description="A set of his/her gizmos" longDescription="The his/her gizmo is a perfect gift for your favorite couple. Once you try it out you&apos;ll want a set for yourself!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Square Gizmo" internalName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" internalName="Round Gizmo" longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="7.0"/>
+    <Product productId="GZ-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Purple Gizmo" internalName="Purple Gizmo" description="The stylish gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-7000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Massive Gizmo" internalName="Massive Gizmo" description="The biggest gizmo ever" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-8544" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Big Gizmo" internalName="Big Gizmo" description="Big Gizmo w/ Legs" longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="12.0"/>
+    <Product productId="GZ-9290" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="His/Her Gizmo" internalName="His/Her Gizmo" description="A set of his/her gizmos" longDescription="The his/her gizmo is a perfect gift for your favorite couple. Once you try it out you&apos;ll want a set for yourself!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
-    <Product productId="WG-1111" productTypeId="FINISHED_GOOD" primaryProductCategoryId="20111" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="2.0"/>
-    <Product productId="WG-5569" productTypeId="FINISHED_GOOD" primaryProductCategoryId="201" productName="Tiny Chrome Widget" internalName="Tiny Chrome Widget" description="Tiny Chrome Widget" longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="4.0"/>
-    <Product productId="WG-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget with variant explosion" internalName="Giant Widget variant explosion" virtualVariantMethodEnum="VV_VARIANTTREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
-    <Product productId="WG-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
-    <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="WG-1111" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="2.0"/>
+    <Product productId="WG-5569" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Tiny Chrome Widget" internalName="Tiny Chrome Widget" description="Tiny Chrome Widget" longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required." isVirtual="N" isVariant="N" quantityIncluded="50.0" weight="4.0"/>
+    <Product productId="WG-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget with variant explosion" internalName="Giant Widget variant explosion" virtualVariantMethodEnum="VV_VARIANTTREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
+    <Product productId="WG-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="WG-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
+    <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="N" isVariant="Y"/>
 
-    <Product productId="WG-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget with feature explosion" internalName="Giant Widget feature Explosion" virtualVariantMethodEnum="VV_FEATURETREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item especially as it can have (almost) as many variants as you like" quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
+    <Product productId="WG-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget with feature explosion" internalName="Giant Widget feature Explosion" virtualVariantMethodEnum="VV_FEATURETREE" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item especially as it can have (almost) as many variants as you like" quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
     
     <!-- Product Alternative URL -->
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GZ-1006-ALT" localeString="en"/>
@@ -814,7 +694,7 @@ under the License.
     <ProductPrice productId="WG-9944" productPricePurposeId="PURCHASE" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="320.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
     <!-- test Subscription product, a Gizmo Newsletter -->
-    <Product productId="GZ-NEWS-1MO" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="101" productName="Gizmo Newsletter 1 Month" internalName="Gizmo Newsletter 1 Month Subscription" description="A 1 month subscription to the Gizmo Newsletter: can be used immediately after purchase." longDescription="This newsletter will give you regular updates on the wonderful world of Gizmos!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-NEWS-1MO" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="SUBS-100" productName="Gizmo Newsletter 1 Month" internalName="Gizmo Newsletter 1 Month Subscription" description="A 1 month subscription to the Gizmo Newsletter: can be used immediately after purchase." longDescription="This newsletter will give you regular updates on the wonderful world of Gizmos!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <SubscriptionResource subscriptionResourceId="GZ-NEWS" description="Gizmo Newsletter" serviceNameOnExpiry="runSubscriptionExpired"/>
     <ProductSubscriptionResource productId="GZ-NEWS-1MO" subscriptionResourceId="GZ-NEWS" fromDate="2001-05-13 12:00:00.0" useTime="1" useTimeUomId="TF_mon" gracePeriodOnExpiry="1" gracePeriodOnExpiryUomId="TF_mon"/>
     <ProductPrice productId="GZ-NEWS-1MO" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="3.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -829,7 +709,7 @@ under the License.
     <ProductContent productId="GZ-NEWS-1MO" contentId="GZ-NEWS-1MO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>    
    
     <!-- test Digital Download product -->
-    <Product productId="GZ-DIG" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="101" productName="Digital Gizmo" internalName="Digital Gizmo" description="A digital gizmo: can be downloaded immediately after purchase." longDescription="This gizmo is part of an exciting new breed that needs no corporeal form: it is all digital! Buy and download it now!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="GZ-DIG" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="MU-DL-101" productName="Digital Gizmo" internalName="Digital Gizmo" description="A digital gizmo: can be downloaded immediately after purchase." longDescription="This gizmo is part of an exciting new breed that needs no corporeal form: it is all digital! Buy and download it now!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <DataResource dataResourceId="GZ-DIG" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="image/gif" dataResourceName="Digital Gizmo Image" objectInfo="framework/images/webapp/images/ofbiz_logo.gif"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="GZ-DIG-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRGZ-DIG-ALTEN" localeString="en_US"/>
@@ -846,8 +726,8 @@ under the License.
 
     <!-- test for marketing package -->
     <Product productId="EL-BASKET" productTypeId="MARKETING_PKG_AUTO" productName="Eletronics Basket" internalName="Auto-Assembled Electronics Basket"
-        description="Auto-Assembled Electronic Products Basket. Automatically assembled each time it's ordered."
-        longDescription="Auto-Assembled Electronic Products Basket. This item will be automatically assembled with production runs every time it's ordered, and the inventory counts for it are based on the quantity available and on hand for the component items."
+        description="Auto-Assembled Electronics Basket. Automatically assembled each time it's ordered."
+        longDescription="Auto-Assembled Electronics Basket. This item will be automatically assembled with production runs every time it's ordered, and the inventory counts for it are based on the quantity available and on hand for the component items."
         taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" requireInventory="N"/>
     <ProductPrice productId="EL-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
     <ProductPrice productId="EL-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
@@ -864,9 +744,9 @@ under the License.
     <ProductContent productId="EL-BASKET" contentId="EL-BASKET-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
     <!-- test for marketing package pick assembly -->
-    <Product productId="EL-BASKET-PICK" productTypeId="MARKETING_PKG_PICK" productName="Gizmo Basket Assembly Pick" internalName="Assembled Pick Gizmo Basket"
-        description="Assembled Pick Gizmo Basket.  Assembled during picking."
-        longDescription="Assembled Pick Gizmo Basket.  This item will be assembled during picking."
+    <Product productId="EL-BASKET-PICK" productTypeId="MARKETING_PKG_PICK" productName="Electronics Basket Assembly Pick" internalName="Assembled Pick Electronics Basket"
+        description="Assembled Pick Electronics Basket. Assembled during picking."
+        longDescription="Assembled Pick Electronics Basket. This item will be assembled during picking."
         taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N"/>
     <ProductPrice productId="EL-BASKET-PICK" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2007-01-01 12:00:00.0"/>
     <ProductPrice productId="EL-BASKET-PICK" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2007-01-01 12:00:00.0"/>
@@ -1126,41 +1006,40 @@ under the License.
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
         productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
-    <ProductCategoryMember productCategoryId="100" productId="GZ-DIG" sequenceNum="4" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-NEWS-1MO" sequenceNum="5" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="EL-BASKET" sequenceNum="6" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="EL-BASKET-PICK" sequenceNum="8" fromDate="2007-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MU-DL-101" productId="GZ-DIG" sequenceNum="4" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="SUBS-100" productId="GZ-NEWS-1MO" sequenceNum="5" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="EL-BASKET" sequenceNum="6" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="EL-BASKET-PICK" sequenceNum="8" fromDate="2007-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1000" sequenceNum="10" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1001" sequenceNum="11" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1004" sequenceNum="14" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1005" sequenceNum="15" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1006" sequenceNum="16" fromDate="2001-05-13 12:00:00.0"
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-1006" sequenceNum="16" fromDate="2001-05-13 12:00:00.0"
         comments="The Open Gizmo is compatibile with all other gimzos."/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-2002" sequenceNum="22" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-2644" sequenceNum="26" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-5005" sequenceNum="55" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-7000" sequenceNum="70" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-8544" sequenceNum="85" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-9290" sequenceNum="92" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-2002" sequenceNum="22" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-2644" sequenceNum="26" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-5005" sequenceNum="55" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-7000" sequenceNum="70" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-9290" sequenceNum="92" fromDate="2001-05-13 12:00:00.0"/>
 
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="101" productId="GZ-DIG" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="101" productId="GZ-NEWS-1MO" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-5005" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-DIG" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-NEWS-1MO" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1004" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1005" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2001-05-13 12:00:00.0"
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-1006" fromDate="2001-05-13 12:00:00.0"
         comments="Despite its low price, the Open Gizmo is quite large and powerful."/>
-    <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="202" productId="WG-9944" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-7000" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="AUTO-100" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="ELTRN-100" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PC-PR-101" productId="WG-5569" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PC-PR-101" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="AUTO-100" productId="WG-9943" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="AUTO-100" productId="WG-9944" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-05-13 12:00:00.0"/>
@@ -1295,17 +1174,17 @@ under the License.
     <ProductPromo productPromoId="7010" promoName="Test Percent off product set " promoText="20% off any one item, either PH-1005 (.NIT Gizmo) or GZ-1006 (Open Gizmo) with a limit of 1 per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7011" promoName="Test percent off entire purchase, no condition" promoText="10% off entire purchase" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7012" promoName="Test amount off order" promoText="$10 off entire purchase of $50 or more with promo code [7000], limit use of code to one per customer, limit for three uses total for the code" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="7013" promoName="Test buy X get Y free" promoText="Buy 3 Get 2 Free in the Widgets [200] or any sub-category (except the Small Widgets [201] category and sub-categories, but always including the Micro Widgets [20111] category), limit to two per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="7013" promoName="Test buy X get Y free" promoText="Buy 3 Get 2 Free in the Electronics [ELTRN-100] or any sub-category (except the Computer [PC-101] category and sub-categories, but always including the Computer Peripherals [PC-PR-101] category), limit to two per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7014" promoName="Test buy X get Y at Z% discount" promoText="Buy 1 Big Gizmo [GZ-8544] or Massive Gizmo [GZ-7000] Get 1 Purple Gizmo [GZ-5005] At 50% off with promo code [7001] (must be associated with Party or Email), no limit" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Purple Gizmo [GZ-5005], Rainbow Gizmo [PH-1004], Round Gizmo [GZ-2644] or Square Gizmo [GZ-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="7016" promoName="Test $ off products in categories" promoText="Get $500 off any item in the Small Gizmos [101] category, limit 1 per order, 2 per customer, 3 for entire promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="7016" promoName="Test $ off products in categories" promoText="Get $10 off any item in the Computer Software [PC-SW-101] category, limit 1 per order, 2 per customer, 3 for entire promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7017" promoName="Test Gift with Amount of Specific Product" userEntered="Y" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0">
         <!-- Cato: Now points to shop -->
-        <promoText><![CDATA[Buy $50 of your favorite music (all products in Music or sub-category) get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>! Limit 2 per order.]]></promoText>
+        <promoText><![CDATA[Buy $50 of your favorite music (all products in Music [MUSIC-101] or sub-category) get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>! Limit 2 per order.]]></promoText>
     </ProductPromo>
     <ProductPromo productPromoId="7018" promoName="Test Gift with Total Amount of Product" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
         <!-- Cato: Now points to shop -->
-        <promoText><![CDATA[Spend more than $150 on your favorite music (all products in Music or sub-category) and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>!]]></promoText>
+        <promoText><![CDATA[Spend more than $150 on your favorite music (all products in Music [MUSIC-101] or sub-category) and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=GZ-1006">Open Gizmo</a>!]]></promoText>
     </ProductPromo>
     <ProductPromo productPromoId="7019" promoName="Test Percent off when Customer Orders over $1000 in 12 months" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
         <promoText><![CDATA[Spend more than $1000 in any 12 months on our fabulous products and get a 5% discount.]]></promoText>
@@ -1330,7 +1209,7 @@ under the License.
     <ProductPromoAction productPromoId="7013" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="2.0" amount="100.0"/>
     <ProductPromoAction productPromoId="7014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="50.0"/>
     <ProductPromoAction productPromoId="7015" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_PRICE" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="4.0" amount="50.0"/>
-    <ProductPromoAction productPromoId="7016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="500.0"/>
+    <ProductPromoAction productPromoId="7016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="10.0"/>
     <ProductPromoAction productPromoId="7017" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="GZ-1006"/>
     <ProductPromoAction productPromoId="7018" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="GZ-1006"/>
     <ProductPromoAction productPromoId="7019" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="5.0"/>
@@ -1343,10 +1222,10 @@ under the License.
     <ProductPromoCond productPromoId="7018" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_TOTAL" operatorEnumId="PPC_GTE" condValue="150"/>
     <ProductPromoCond productPromoId="7019" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORST_HIST" operatorEnumId="PPC_GTE" condValue="1000" otherValue="12"/>
     <ProductPromoCond productPromoId="7020" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_RECURRENCE" operatorEnumId="PPC_EQ" condValue="205"/>
-    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="200" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
-    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="201" andGroupId="_NA_" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
-    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="20111" andGroupId="_NA_" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
-    <ProductPromoCategory productPromoId="7016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
+    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="ELTRN-100" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="PC-101" andGroupId="_NA_" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="7013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="PC-PR-101" andGroupId="_NA_" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
+    <ProductPromoCategory productPromoId="7016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="PC-SW-101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
     <ProductPromoCategory productPromoId="7017" productPromoRuleId="01" productPromoActionSeqId="_NA_" productPromoCondSeqId="01" productCategoryId="MUSIC-101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoCategory productPromoId="7018" productPromoRuleId="01" productPromoActionSeqId="_NA_" productPromoCondSeqId="01" productCategoryId="MUSIC-101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoProduct productPromoId="7010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="PH-1005" productPromoApplEnumId="PPPA_INCLUDE"/>
@@ -1639,14 +1518,14 @@ under the License.
     <ProductFeature productFeatureId="EC_REEL_STAND" description="Reel Stand" productFeatureCategoryId="1002" productFeatureTypeId="EQUIP_CLASS"/>
 
     <!-- Virtual-Variant Demo Product -->
-    <Product productId="WG-9943-B3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-B4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
-    <Product productId="WG-9943-S4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-B3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-B3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B3" internalName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-B4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-B4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget B4" internalName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-S3-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-S3-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S3" internalName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-S4-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="2" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
+    <Product productId="WG-9943-S4-BX5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Giant Widget S4" internalName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="Y" piecesIncluded="5" quantityUomId="OTH_box" virtualVariantMethodEnum="VV_VARIANTTREE"/>
     
     <!-- Association between the alternative product and the variant product -->
     <ProductAssoc productId="WG-9943-B3-BX2" productIdTo="WG-9943-B3" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
@@ -1737,8 +1616,8 @@ under the License.
     <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     
-    <Product productId="WG-1111-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="20111" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="2" quantityUomId="OTH_box"/>
-    <Product productId="WG-1111-BX4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="20111" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="4" quantityUomId="OTH_box"/>
+    <Product productId="WG-1111-BX2" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="2" quantityUomId="OTH_box"/>
+    <Product productId="WG-1111-BX4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-PR-101" productName="Micro Chrome Widget" internalName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." isVirtual="Y" isVariant="Y" quantityIncluded="50.0" weight="2.0" piecesIncluded="4" quantityUomId="OTH_box"/>
     <ProductAssoc productId="WG-1111-BX2" productIdTo="WG-1111" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
     <ProductAssoc productId="WG-1111-BX4" productIdTo="WG-1111" productAssocTypeId="ALTERNATIVE_PACKAGE" fromDate="2000-01-01 00:00:00.0"/>
     <ProductPrice productId="WG-1111-BX2" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="110.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -1761,12 +1640,12 @@ under the License.
     <ProductContent productId="WG-1111-BX4" contentId="WG-1111-BX4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     
     <!-- Demo product for rental shipping -->
-    <Product productId="RentalShip" productTypeId="ASSET_USAGE_OUT_IN" primaryProductCategoryId="201" productName="Rental Shipping" internalName="Rental Shipping" description="The Product For Test Rental of an asset which is shipped from and returned to inventory" reservMaxPersons="1" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin"/>
+    <Product productId="RentalShip" productTypeId="ASSET_USAGE_OUT_IN" primaryProductCategoryId="TRVL-100" productName="Rental Shipping" internalName="Rental Shipping" description="The Product For Test Rental of an asset which is shipped from and returned to inventory" reservMaxPersons="1" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin"/>
     <FixedAsset fixedAssetId="RentalShip" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
     <FixedAssetProduct productId="RentalShip" fixedAssetId="RentalShip" fixedAssetProductTypeId="FAPT_USE" fromDate="2011-09-01 12:00:00.0"/>
     <ProductPrice productId="RentalShip" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-09-01 12:00:00.0" price="15.99" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="RentalShip" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-09-01 12:00:00.0" price="15.0" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin" lastModifiedByUserLogin="admin"/>
-    <ProductCategoryMember productCategoryId="201" productId="RentalShip" fromDate="2011-09-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="TRVL-100" productId="RentalShip" fromDate="2011-09-01 12:00:00.0"/>
     <ProductFacility productId="RentalShip" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
     <ProductFacilityLocation productId="RentalShip" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" minimumStock="5" moveQuantity="20"/>
     <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="InventoryRentalShip" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="RentalShip" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>

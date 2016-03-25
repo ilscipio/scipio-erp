@@ -19,10 +19,10 @@ under the License.
 -->
 
 <entity-engine-xml>
-  <Product productId="PH-1000" smallImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/small.png" largeImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/large.png"/>
-  <Product productId="PH-1001" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-03/small.png" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-03/large.png"/>
-  <Product productId="PH-1004" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-04/small.png" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-04/large.png"/>
-  <Product productId="PH-1005" smallImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/small.png" largeImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/large.png"/>
+  <Product productId="PH-1000" smallImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone5-01/large.jpg"/>
+  <Product productId="PH-1001" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-03/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-03/large.jpg"/>
+  <Product productId="PH-1004" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-04/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-04/large.jpg"/>
+  <Product productId="PH-1005" smallImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/small.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/large.jpg"/>
 
   <Product productId="GZ-5005" smallImageUrl="/images/products/GZ-5005/small.png" largeImageUrl="/images/products/GZ-5005/large.png"/>
   <Product productId="GZ-1006" smallImageUrl="/images/products/GZ-1006/small.png" largeImageUrl="/images/products/GZ-1006/large.png"/>
@@ -37,9 +37,9 @@ under the License.
   <Product productId="WG-5569" smallImageUrl="/images/products/WG-5569/small.png" largeImageUrl="/images/products/WG-5569/large.png"/>
 
   <Product productId="PC-1000" smallImageUrl="/images/products/shop/gallery/02/tech/computer-670185/small.png" largeImageUrl="/images/products/shop/gallery/02/tech/computer-670185/large.png"/>
-  <Product productId="ENCHL-01" smallImageUrl="/images/products/shop/gallery/02/food/mexican-245240/small.png" largeImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/large.png"/>
-  <Product productId="PIZZA-01" smallImageUrl="/images/products/shop/gallery/02/food/american-1239081/small.png" largeImageUrl="/images/products/shop/gallery/02/food/pizza-329523/large.png"/>
+  <Product productId="ENCHL-01" smallImageUrl="/images/products/shop/gallery/02/food/mexican-245240/small.jpg" largeImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/large.jpg"/>
+  <Product productId="PIZZA-01" smallImageUrl="/images/products/shop/gallery/02/food/american-1239081/small.jpg" largeImageUrl="/images/products/shop/gallery/02/food/pizza-329523/large.jpg"/>
   
-  <Product productId="GC-001" smallImageUrl="/images/products/GC-001/small.png" largeImageUrl="/images/products/GC-001/large.png"/>
-  <Product productId="GC-002" smallImageUrl="/images/products/GC-002/small.png" largeImageUrl="/images/products/GC-002/large.png"/>
+  <Product productId="GC-001" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883638/small.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883638/large.png"/>
+  <Product productId="GC-002" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883642/small.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883642/large.png"/>
 </entity-engine-xml>

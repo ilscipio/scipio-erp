@@ -28,7 +28,7 @@
     <ContentAssoc contentId="TREE_ROOT" contentIdTo="GENERAL" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="TREE_ROOT" contentIdTo="STORE_POLICIES" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
-    <ContentAssoc contentId="PICTURE" contentIdTo="GZ-DIG" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PICTURE" contentIdTo="MP3-1000" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
     <!-- Cato: TODO?: Associate new categories content to this tree? -->
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CFOOD-100DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
@@ -43,10 +43,10 @@
     
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CPROMO-001DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
-    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="GZ-2644NAMEDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644DESCEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644DESCDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEEN" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
+    <ContentAssoc contentId="PROD_DESCRIPTION" contentIdTo="CAM-2644NAMEDE" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
 
     <ContentAssoc contentId="GENERAL" contentIdTo="CATO-FACT-02" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="GENERAL" contentIdTo="CATO-FACT-03" contentAssocTypeId="SUB_CONTENT" fromDate="2006-01-12 01:01:01" sequenceNum=""/>

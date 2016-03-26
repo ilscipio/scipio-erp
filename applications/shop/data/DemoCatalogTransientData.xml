@@ -68,11 +68,11 @@ under the License.
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1001" quantity="8" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1004" quantity="6" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="PH-1005" quantity="4" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="GZ-1006" quantity="2" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="BEST-SELL-1" productId="SW-1006" quantity="2" fromDate="2010-01-01 12:00:00.0"/>
 
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="VH-9943" quantity="3" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="VH-9944" quantity="5" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-1111" quantity="7" fromDate="2010-01-01 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="WG-5569" quantity="1" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="CDR-1111" quantity="7" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="KB-5569" quantity="1" fromDate="2010-01-01 12:00:00.0"/>
  
 </entity-engine-xml>

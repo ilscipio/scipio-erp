@@ -24,17 +24,22 @@ under the License.
   <Product productId="PH-1004" smallImageUrl="/images/products/shop/gallery/01/tech/iphone-04/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/iphone-04/large.jpg"/>
   <Product productId="PH-1005" smallImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/small.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/iphone-business-624712/large.jpg"/>
 
-  <Product productId="GZ-5005" smallImageUrl="/images/products/GZ-5005/small.png" largeImageUrl="/images/products/GZ-5005/large.png"/>
-  <Product productId="GZ-1006" smallImageUrl="/images/products/GZ-1006/small.png" largeImageUrl="/images/products/GZ-1006/large.png"/>
-  <Product productId="GZ-2002" smallImageUrl="/images/products/GZ-2002/small.png" largeImageUrl="/images/products/GZ-2002/large.png"/>
-  <Product productId="GZ-2644" smallImageUrl="/images/products/GZ-2644/small.png" largeImageUrl="/images/products/GZ-2644/large.png"/>
-  <Product productId="GZ-7000" smallImageUrl="/images/products/GZ-7000/small.png" largeImageUrl="/images/products/GZ-7000/large.png"/>
-  <Product productId="GZ-8544" smallImageUrl="/images/products/GZ-8544/small.png" largeImageUrl="/images/products/GZ-8544/large.png"/>
-  <Product productId="GZ-9290" smallImageUrl="/images/products/GZ-9290/small.png" largeImageUrl="/images/products/GZ-9290/large.png"/>
-  <Product productId="WG-1111" smallImageUrl="/images/products/WG-1111/small.png" largeImageUrl="/images/products/WG-1111/large.png"/>
+  <Product productId="CL-5005" smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/small.jpg" largeImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-01/large.jpg"/>
+  <Product productId="SW-1006" smallImageUrl="/images/products/shop/gallery/02/tech/software-417880/small.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/software-417880/large.jpg"/>
+  <Product productId="CD-2002" smallImageUrl="/images/products/shop/gallery/02/music/cd-158817/small.png" largeImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/large.jpg"/>
+  <Product productId="CAM-2644" smallImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-02/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/cam-retro-analogue-nikon-fm2-film-04/large.jpg"/>
+  <Product productId="CL-7000" smallImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/small.jpg" largeImageUrl="/images/products/shop/gallery/02/clothing/blouse-792803/large.jpg"/>
+  <Product productId="CL-8544" smallImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/small.jpg" largeImageUrl="/images/products/shop/gallery/02/clothing/socks-1123564/large.jpg"/>
+  <Product productId="MPL-9290" smallImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/small.png" largeImageUrl="/images/products/shop/gallery/02/tech/mp3-player-8609/large.png"/>
+  <Product productId="CDR-1111" smallImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/small.jpg" largeImageUrl="/images/products/shop/gallery/02/tech/compact-disk-1108240/large.jpg"/>
   <Product productId="VH-9943" smallImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/small.jpg" largeImageUrl="/images/products/shop/gallery/02/auto/dumptruck-1201106/large.jpg"/>
   <Product productId="VH-9944" smallImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/small.jpg" largeImageUrl="/images/products/shop/gallery/02/auto/sports-car-63930/large.jpg"/>
-  <Product productId="WG-5569" smallImageUrl="/images/products/WG-5569/small.png" largeImageUrl="/images/products/WG-5569/large.png"/>
+  <Product productId="KB-5569" smallImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/keyboard-02/large.jpg"/>
+
+  <Product productId="NEWS-01-1MO" smallImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/small.png" largeImageUrl="/images/products/shop/gallery/02/misc/letters-1132703/large.png"/>
+  <Product productId="MP3-1000" smallImageUrl="/images/products/shop/gallery/02/music/mp3-685022/small.jpg" largeImageUrl="/images/products/shop/gallery/02/music/paul-david-hewson-434928/large.jpg"/>
+  <Product productId="EL-BASKET" smallImageUrl="/images/products/shop/gallery/01/tech/ipad-01/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/ipad-01/large.jpg"/>
+  <Product productId="EL-BASKET-PICK" smallImageUrl="/images/products/shop/gallery/01/tech/ipad-01/small.jpg" largeImageUrl="/images/products/shop/gallery/01/tech/ipad-01/large.jpg"/>
 
   <Product productId="PC-1000" smallImageUrl="/images/products/shop/gallery/02/tech/computer-670185/small.png" largeImageUrl="/images/products/shop/gallery/02/tech/computer-670185/large.png"/>
   <Product productId="ENCHL-01" smallImageUrl="/images/products/shop/gallery/02/food/mexican-245240/small.jpg" largeImageUrl="/images/products/shop/gallery/02/food/enchilada-245236/large.jpg"/>

@@ -404,31 +404,31 @@
 
     <!-- PRODUCTS -->
 
-    <!-- GZ-2644 (Example) -->
-    <DataResource dataResourceId="GZ-2644DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="GZ-2644DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+    <!-- CAM-2644 (Example) -->
+    <DataResource dataResourceId="CAM-2644DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="CAM-2644DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="GZ-2644DESCDE" textData="Gizmo rond lumineux"/>
-    <ElectronicText dataResourceId="GZ-2644DESCEN" textData="Round Gizmo with lights"/>
+    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Gizmo rond lumineux"/>
+    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="Round Gizmo with lights"/>
 
-    <Content contentId="GZ-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="GZ-2644DESCDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
-    <Content contentId="GZ-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="GZ-2644DESCEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
+    <Content contentId="CAM-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
+    <Content contentId="CAM-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
 
-    <ProductContent productId="GZ-2644" contentId="GZ-2644DESCEN" productContentTypeId="DESCRIPTION" fromDate="2006-09-22 00:00:00.0"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644DESCEN" productContentTypeId="DESCRIPTION" fromDate="2006-09-22 00:00:00.0"/>
 
-    <ContentAssoc contentId="GZ-2644DESCEN" contentIdTo="GZ-2644DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+    <ContentAssoc contentId="CAM-2644DESCEN" contentIdTo="CAM-2644DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
-    <DataResource dataResourceId="GZ-2644NAMEDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
-    <DataResource dataResourceId="GZ-2644NAMEEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+    <DataResource dataResourceId="CAM-2644NAMEDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="CAM-2644NAMEEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="GZ-2644NAMEDE" textData="Gizmo Rond"/>
-    <ElectronicText dataResourceId="GZ-2644NAMEEN" textData="Round Gizmo"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Gizmo Rond"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEEN" textData="Round Gizmo"/>
 
-    <Content contentId="GZ-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="GZ-2644NAMEDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
-    <Content contentId="GZ-2644NAMEEN" contentTypeId="DOCUMENT" dataResourceId="GZ-2644NAMEEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
+    <Content contentId="CAM-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
+    <Content contentId="CAM-2644NAMEEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
 
-    <ProductContent productId="GZ-2644" contentId="GZ-2644NAMEEN" productContentTypeId="PRODUCT_NAME" fromDate="2006-09-22 00:00:00.0"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644NAMEEN" productContentTypeId="PRODUCT_NAME" fromDate="2006-09-22 00:00:00.0"/>
 
-    <ContentAssoc contentId="GZ-2644NAMEEN" contentIdTo="GZ-2644NAMEDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
+    <ContentAssoc contentId="CAM-2644NAMEEN" contentIdTo="CAM-2644NAMEDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-09-22 00:00:00.0"/>
 
 </entity-engine-xml>

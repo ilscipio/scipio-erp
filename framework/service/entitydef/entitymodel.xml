@@ -92,6 +92,7 @@ under the License.
     <extend-entity entity-name="JobSandbox">
         <field name="eventId" type="id">
             <description>Cato: Currently supports values: EVENT_STARTUP</description>
+            <!-- TODO: foreign entity relation -->
         </field>
     </extend-entity>
     <entity entity-name="RecurrenceInfo"

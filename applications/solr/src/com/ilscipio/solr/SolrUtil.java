@@ -17,9 +17,13 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 
 /**
  * Solr utility class.
@@ -250,4 +254,43 @@ public abstract class SolrUtil {
         return result;
     }
 
+    public static String getSolrDataStatusId(Delegator delegator) {
+        GenericValue solrStatus;
+        try {
+            solrStatus = EntityQuery.use(delegator).from("SolrStatus")
+                    .where("solrId", "SOLR-MAIN").cache(false).queryOne();
+            if (solrStatus == null) {
+                Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - seed data missing?", module);
+            }
+            else {
+                return solrStatus.getString("dataStatusId");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return null;
+    }
+    
+    public static boolean setSolrDataStatusId(Delegator delegator, String dataStatusId) {
+        GenericValue solrStatus;
+        try {
+            solrStatus = EntityQuery.use(delegator).from("SolrStatus")
+                    .where("solrId", "SOLR-MAIN").cache(false).queryOne();
+            //solrStatus = delegator.findOne("SolrStatus", UtilMisc.toMap("solrId", "SOLR-MAIN"), false);
+            if (solrStatus == null) {
+                Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - creating new", module);
+                solrStatus = delegator.create("SolrStatus", "solrId", "SOLR-MAIN", "dataStatusId", dataStatusId);
+            }
+            else {
+                solrStatus.setString("dataStatusId", dataStatusId);
+                solrStatus.store();
+            }
+            return true;
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return false;
+        }
+    }
+    
 }

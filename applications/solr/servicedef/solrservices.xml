@@ -40,7 +40,39 @@ under the License.
         <description>rebuild SOLR Index</description>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
         <attribute mode="IN" name="core" optional="true" type="String" />
-        
+        <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK
+            NOTE: unknown is treated as dirty. -->
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false" />
+        <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
+        <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
+    </service>
+    
+    <service name="rebuildSolrIndexIfDirty" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.solr.SolrProductSearch"
+        invoke="rebuildSolrIndex" debug="true" validate="true">
+        <description>rebuild SOLR Index if data status dirty (or unknown)</description>
+        <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
+        <attribute mode="IN" name="core" optional="true" type="String" />
+        <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK
+            NOTE: unknown is treated as dirty. -->
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
+        <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
+        <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
+        <!-- TODO: cleanup interface duplication (hackish) -->
+    </service>
+    
+    <service name="setSolrDataStatus" engine="java"
+        location="com.ilscipio.solr.SolrProductSearch"
+        invoke="setSolrDataStatus" debug="true" validate="true">
+        <description>Set SOLR data status ID</description>
+        <attribute mode="IN" name="dataStatusId" optional="false" type="String" />
+    </service>
+    
+    <service name="markSolrDataDirty" engine="java"
+        location="com.ilscipio.solr.SolrProductSearch"
+        invoke="setSolrDataStatus" debug="true" validate="true">
+        <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
     </service>
 
     <!--  Add to Solr Tree -->

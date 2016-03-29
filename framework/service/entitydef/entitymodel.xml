@@ -88,6 +88,12 @@ under the License.
             <index-field name="statusId"/>
         </index>
     </entity>
+    <!-- Cato: JobSandbox enhanced with special event field -->
+    <extend-entity entity-name="JobSandbox">
+        <field name="eventId" type="id">
+            <description>Cato: Currently supports values: STARTUP</description>
+        </field>
+    </extend-entity>
     <entity entity-name="RecurrenceInfo"
             package-name="org.ofbiz.service.schedule"
             title="Recurrence Info Entity">

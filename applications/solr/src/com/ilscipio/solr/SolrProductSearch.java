@@ -635,8 +635,21 @@ public abstract class SolrProductSearch {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = new Locale("de_DE");
 
+        // 2016-03-29: Only if dirty (or unknown)
+        Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
+        if (Boolean.TRUE.equals(onlyIfDirty)) {
+            String dataStatusId = SolrUtil.getSolrDataStatusId(delegator);
+            if ("SOLR_DATA_OK".equals(dataStatusId)) {
+                result = ServiceUtil.returnSuccess("SOLR data is already marked OK; not rebuilding");
+                result.put("numDocs", (int) 0);
+                result.put("executed", Boolean.FALSE);
+                return result;
+            }
+        }
+        
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
 
+        int numDocs = 0;
         try {
             if (UtilValidate.isNotEmpty(context.get("core")))
                 client = new HttpSolrClient(SolrUtil.solrUrl + "/" + context.get("core"));
@@ -645,7 +658,6 @@ public abstract class SolrProductSearch {
             // now lets fetch all products
             List<Map<String, Object>> solrDocs = FastList.newInstance();
             List<GenericValue> products = delegator.findList("Product", null, null, null, null, true);
-            int numDocs = 0;
             if (products != null) {
                 numDocs = products.size();
             }
@@ -712,6 +724,33 @@ public abstract class SolrProductSearch {
             Debug.logError(e, e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
         }
+        
+        // If success, mark data as good
+        if (ServiceUtil.isSuccess(result)) {
+            SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OK");
+        }
+        result.put("numDocs", numDocs);
+        result.put("executed", Boolean.TRUE);
+        
+        return result;
+    }
+    
+    
+    /**
+     * Marks SOLR data as dirty.
+     */
+    public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+        Map<String, Object> result;
+        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+        
+        boolean success = SolrUtil.setSolrDataStatusId(delegator, (String) context.get("dataStatusId"));
+        if (success) {
+            result = ServiceUtil.returnSuccess();
+        }
+        else {
+            result = ServiceUtil.returnError("Unable to set SOLR data status");
+        }
+        
         return result;
     }
 }

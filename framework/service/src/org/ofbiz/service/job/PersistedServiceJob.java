@@ -210,6 +210,10 @@ public class PersistedServiceJob extends GenericServiceJob {
                 newJob.set("currentRetryCount", new Long(0));
             }
             nextRecurrence = next;
+            
+            // Cato: Transfer the special new eventId field
+            newJob.set("eventId", jobValue.getString("eventId"));
+            
             delegator.createSetNextSeqId(newJob);
             if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
         }

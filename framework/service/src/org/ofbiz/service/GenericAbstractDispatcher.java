@@ -58,9 +58,12 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     }
 
     /**
+     * Cato: Modified to accept an eventId
+     * 
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
-    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
+    @Override
+    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException {
         Transaction suspendedTransaction = null;
         try {
             boolean beganTransaction = false;
@@ -68,7 +71,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             try {
                 beganTransaction = TransactionUtil.begin();
                 try {
-                    getJobManager().schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry);
+                    getJobManager().schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, eventId);
 
                     if (Debug.verboseOn()) {
                         Debug.logVerbose("[LocalDispatcher.schedule] : Current time : " + (new Date()).getTime(), module);
@@ -77,7 +80,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
                         Debug.logVerbose("[LocalDispatcher.schedule] : Interval     : " + interval, module);
                         Debug.logVerbose("[LocalDispatcher.schedule] : Count        : " + count, module);
                         Debug.logVerbose("[LocalDispatcher.schedule] : EndTime      : " + endTime, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : MazRetry     : " + maxRetry, module);
+                        Debug.logVerbose("[LocalDispatcher.schedule] : MaxRetry     : " + maxRetry, module);
+                        Debug.logVerbose("[LocalDispatcher.schedule] : Event ID     : " + eventId, module);
                     }
 
                 } catch (JobManagerException jme) {
@@ -110,9 +114,17 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             }
         }
     }
+    
+    /**
+     * Cato: This is now a delegating method
+     */
+    @Override
+    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
+        schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+    }
 
     public void schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException {
-        schedule(jobName, poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry);
+        schedule(jobName, poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry, (String) null);
     }
 
     public void addRollbackService(String serviceName, Map<String, ? extends Object> context, boolean persist) throws GenericServiceException {

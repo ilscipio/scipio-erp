@@ -110,6 +110,14 @@ public final class JobManager {
 
     private final Delegator delegator;
     private boolean crashedJobsReloaded = false;
+    
+    /**
+     * Cato: Determines if run-at-start jobs have been queued or not.
+     * <p>
+     * TODO?: later might need to substitute this with a more comprehensive
+     * queue or message stack ("EVENT_STARTUP", etc.).
+     */
+    private volatile boolean startupJobsQueued = false;
 
     private JobManager(Delegator delegator) {
         this.delegator = delegator;
@@ -183,28 +191,73 @@ public final class JobManager {
         EntityCondition baseCondition = EntityCondition.makeCondition(expressions);
         EntityCondition poolCondition = EntityCondition.makeCondition(poolsExpr, EntityOperator.OR);
         EntityCondition mainCondition = EntityCondition.makeCondition(UtilMisc.toList(baseCondition, poolCondition));
+        
+        // Cato: We must add to the main condition that the special new field eventId must be null
+        EntityCondition commonCondition = mainCondition;
+        mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", null));
+        
         EntityListIterator jobsIterator = null;
+        
         boolean beganTransaction = false;
+        
+        // Cato: first, add the run-at-startup jobs
+        if (!startupJobsQueued) {
+            try {
+                beganTransaction = TransactionUtil.begin();
+                if (!beganTransaction) {
+                    Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
+                    return poll;
+                }
+                
+                jobsIterator = queryStartupJobs(commonCondition);
+                
+                // NOTE: due to synchronization, we could have null here
+                if (jobsIterator != null) {
+                    // Cato: FIXME?: We currently ignore the limit for the startup jobs;
+                    // might want to find way to delay them to next poll, because we violate the limit request from caller...
+                    ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
+                    
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("Cato: Collected " + poll.size() + 
+                                " EVENT_STARTUP run-at-startup jobs for queuing", module);
+                    }
+                }
+
+                TransactionUtil.commit(beganTransaction);
+            } catch (Throwable t) {
+                String errMsg = "Exception thrown while polling JobSandbox: ";
+                try {
+                    TransactionUtil.rollback(beganTransaction, errMsg, t);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, "Exception thrown while rolling back transaction: ", module);
+                }
+                Debug.logWarning(t, errMsg, module);
+                return Collections.emptyList();
+            } finally {
+                if (jobsIterator != null) {
+                    try {
+                        jobsIterator.close();
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, module);
+                    }
+                }
+            }
+        }
+        
+        jobsIterator = null;
+        beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
             if (!beganTransaction) {
                 Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
                 return poll;
             }
+
             jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
-            GenericValue jobValue = jobsIterator.next();
-            while (jobValue != null) {
-                // Claim ownership of this value. Using storeByCondition to avoid a race condition.
-                List<EntityExpr> updateExpression = UtilMisc.toList(EntityCondition.makeCondition("jobId", EntityOperator.EQUALS, jobValue.get("jobId")), EntityCondition.makeCondition("runByInstanceId", EntityOperator.EQUALS, null));
-                int rowsUpdated = delegator.storeByCondition("JobSandbox", UtilMisc.toMap("runByInstanceId", instanceId), EntityCondition.makeCondition(updateExpression));
-                if (rowsUpdated == 1) {
-                    poll.add(new PersistedServiceJob(dctx, jobValue, null));
-                    if (poll.size() == limit) {
-                        break;
-                    }
-                }
-                jobValue = jobsIterator.next();
-            }
+            
+            // Cato: factored out into method
+            ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
+            
             TransactionUtil.commit(beganTransaction);
         } catch (Throwable t) {
             String errMsg = "Exception thrown while polling JobSandbox: ";
@@ -279,6 +332,54 @@ public final class JobManager {
         return poll;
     }
 
+    /**
+     * Cato: Takes ownership of job and adds to list.
+     * <p>
+     * Factored out from {@link #poll}.
+     */
+    protected void ownAndCollectJobs(DispatchContext dctx, Delegator delegator, int limit,
+            EntityListIterator jobsIterator, List<Job> poll) throws GenericEntityException {
+        if (limit < 0 || poll.size() < limit) {
+            GenericValue jobValue = jobsIterator.next();
+            while (jobValue != null) {
+                // Claim ownership of this value. Using storeByCondition to avoid a race condition.
+                List<EntityExpr> updateExpression = UtilMisc.toList(EntityCondition.makeCondition("jobId", EntityOperator.EQUALS, jobValue.get("jobId")), EntityCondition.makeCondition("runByInstanceId", EntityOperator.EQUALS, null));
+                int rowsUpdated = delegator.storeByCondition("JobSandbox", UtilMisc.toMap("runByInstanceId", instanceId), EntityCondition.makeCondition(updateExpression));
+                if (rowsUpdated == 1) {
+                    poll.add(new PersistedServiceJob(dctx, jobValue, null));
+                    if (limit >= 0 && poll.size() == limit) { // Cato: modified to support limit = -1
+                        break;
+                    }
+                }
+                jobValue = jobsIterator.next();
+            }
+        }
+    }
+    
+    /**
+     * Cato: Queries run-at-start Job entities if not already done.
+     * If already done, returns null.
+     * @throws GenericEntityException 
+     */
+    public synchronized EntityListIterator queryStartupJobs(EntityCondition commonCondition) throws GenericEntityException {
+        EntityListIterator res = null;
+        if (!startupJobsQueued) {
+            res = queryStartupJobsAlways(commonCondition);
+            startupJobsQueued = true;
+        }
+        return res;
+    }
+    
+    /**
+     * Cato: Queries run-at-start Job entities.
+     * <p>
+     * TODO: If commonCondition null, build it (requires more refactor); commonCondition should be optimization only
+     */
+    public EntityListIterator queryStartupJobsAlways(EntityCondition commonCondition) throws GenericEntityException {
+        EntityCondition mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", "EVENT_STARTUP"));
+        return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
+    }
+    
     public synchronized void reloadCrashedJobs() {
         assertIsRunning();
         if (crashedJobsReloaded) {
@@ -301,21 +402,32 @@ public final class JobManager {
             for (GenericValue job : crashed) {
                 try {
                     if (Debug.infoOn()) Debug.logInfo("Scheduling Job : " + job, module);
-                    String pJobId = job.getString("parentJobId");
-                    if (pJobId == null) {
-                        pJobId = job.getString("jobId");
+                    
+                    // Cato: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
+                    // reschedule anything. Otherwise, we may be running services during times at
+                    // which they were never meant to run and cause unexpected problems.
+                    if (job.getString("eventId") == null) {
+                        String pJobId = job.getString("parentJobId");
+                        if (pJobId == null) {
+                            pJobId = job.getString("jobId");
+                        }
+                        GenericValue newJob = GenericValue.create(job);
+                        newJob.set("statusId", "SERVICE_PENDING");
+                        newJob.set("runTime", now);
+                        newJob.set("previousJobId", job.getString("jobId"));
+                        newJob.set("parentJobId", pJobId);
+                        newJob.set("startDateTime", null);
+                        newJob.set("runByInstanceId", null);
+                        //don't set a recurrent schedule on the new job, run it just one time
+                        newJob.set("tempExprId", null);
+                        newJob.set("recurrenceInfoId", null);
+                        delegator.createSetNextSeqId(newJob);
                     }
-                    GenericValue newJob = GenericValue.create(job);
-                    newJob.set("statusId", "SERVICE_PENDING");
-                    newJob.set("runTime", now);
-                    newJob.set("previousJobId", job.getString("jobId"));
-                    newJob.set("parentJobId", pJobId);
-                    newJob.set("startDateTime", null);
-                    newJob.set("runByInstanceId", null);
-                    //don't set a recurrent schedule on the new job, run it just one time
-                    newJob.set("tempExprId", null);
-                    newJob.set("recurrenceInfoId", null);
-                    delegator.createSetNextSeqId(newJob);
+                    else {
+                        if (Debug.infoOn()) Debug.logInfo("Cato: Not rescheduling crashed job '" + job.getString("jobId") + 
+                                "' with event ID '" + job.getString("eventId") + "'", module);
+                    }
+                    
                     // set the cancel time on the old job to the same as the re-schedule time
                     job.set("statusId", "SERVICE_CRASHED");
                     job.set("cancelDateTime", now);
@@ -450,6 +562,56 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * Cato: Modified to accept an event ID.
+     * 
+     * @param jobName
+     *            The name of the job
+     *@param poolName
+     *            The name of the pool to run the service from
+     *@param serviceName
+     *            The name of the service to invoke
+     *@param context
+     *            The context for the service
+     *@param startTime
+     *            The time in milliseconds the service should run
+     *@param frequency
+     *            The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval
+     *            The interval of the frequency recurrence
+     *@param count
+     *            The number of times to repeat
+     *@param endTime
+     *            The time in milliseconds the service should expire
+     *@param maxRetry
+     *            The max number of retries on failure (-1 for no max)
+     *@param eventId
+     *            The triggering event
+     */
+    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
+            int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
+        // persist the context
+        String dataId = null;
+        try {
+            GenericValue runtimeData = delegator.makeValue("RuntimeData");
+            runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+            runtimeData = delegator.createSetNextSeqId(runtimeData);
+            dataId = runtimeData.getString("runtimeDataId");
+        } catch (GenericEntityException ee) {
+            throw new JobManagerException(ee.getMessage(), ee);
+        } catch (SerializeException se) {
+            throw new JobManagerException(se.getMessage(), se);
+        } catch (IOException ioe) {
+            throw new JobManagerException(ioe.getMessage(), ioe);
+        }
+        // schedule the job
+        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+    }
+    
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * Cato: This is now delegating.
      * 
      * @param jobName
      *            The name of the job
@@ -474,26 +636,88 @@ public final class JobManager {
      */
     public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
             int frequency, int interval, int count, long endTime, int maxRetry) throws JobManagerException {
-        // persist the context
-        String dataId = null;
-        try {
-            GenericValue runtimeData = delegator.makeValue("RuntimeData");
-            runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
-            runtimeData = delegator.createSetNextSeqId(runtimeData);
-            dataId = runtimeData.getString("runtimeDataId");
-        } catch (GenericEntityException ee) {
-            throw new JobManagerException(ee.getMessage(), ee);
-        } catch (SerializeException se) {
-            throw new JobManagerException(se.getMessage(), se);
-        } catch (IOException ioe) {
-            throw new JobManagerException(ioe.getMessage(), ioe);
-        }
-        // schedule the job
-        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry);
+        schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
     }
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * Cato: Modified to accept an event ID.
+     * 
+     * @param jobName
+     *            The name of the job
+     *@param poolName
+     *            The name of the pool to run the service from
+     *@param serviceName
+     *            The name of the service to invoke
+     *@param dataId
+     *            The persisted context (RuntimeData.runtimeDataId)
+     *@param startTime
+     *            The time in milliseconds the service should run
+     *@param frequency
+     *            The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval
+     *            The interval of the frequency recurrence
+     *@param count
+     *            The number of times to repeat
+     *@param endTime
+     *            The time in milliseconds the service should expire
+     *@param maxRetry
+     *            The max number of retries on failure (-1 for no max)
+     *@param eventId
+     *            The triggering event
+     * @throws IllegalStateException if the Job Manager is shut down.
+     */
+    public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
+            int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
+        assertIsRunning();
+        // create the recurrence
+        String infoId = null;
+        if (frequency > -1 && count != 0) {
+            try {
+                RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
+                infoId = info.primaryKey();
+            } catch (RecurrenceInfoException e) {
+                throw new JobManagerException(e.getMessage(), e);
+            }
+        }
+        // set the persisted fields
+        if (UtilValidate.isEmpty(jobName)) {
+            jobName = Long.toString((new Date().getTime()));
+        }
+        // Cato: now set eventId
+        Map<String, Object> jFields = UtilMisc.<String, Object> toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
+                "serviceName", serviceName, "statusId", "SERVICE_PENDING", "recurrenceInfoId", infoId, "runtimeDataId", dataId,
+                "eventId", eventId);
+        // set the pool ID
+        if (UtilValidate.isNotEmpty(poolName)) {
+            jFields.put("poolId", poolName);
+        } else {
+            try {
+                jFields.put("poolId", ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool());
+            } catch (GenericConfigException e) {
+                throw new JobManagerException(e.getMessage(), e);
+            }
+        }
+        // set the loader name
+        jFields.put("loaderName", delegator.getDelegatorName());
+        // set the max retry
+        jFields.put("maxRetry", Long.valueOf(maxRetry));
+        jFields.put("currentRetryCount", new Long(0));
+        // create the value and store
+        GenericValue jobV;
+        try {
+            jobV = delegator.makeValue("JobSandbox", jFields);
+            delegator.createSetNextSeqId(jobV);
+        } catch (GenericEntityException e) {
+            throw new JobManagerException(e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * Cato: Now delegating.
      * 
      * @param jobName
      *            The name of the job
@@ -519,45 +743,6 @@ public final class JobManager {
      */
     public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
             int count, long endTime, int maxRetry) throws JobManagerException {
-        assertIsRunning();
-        // create the recurrence
-        String infoId = null;
-        if (frequency > -1 && count != 0) {
-            try {
-                RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
-                infoId = info.primaryKey();
-            } catch (RecurrenceInfoException e) {
-                throw new JobManagerException(e.getMessage(), e);
-            }
-        }
-        // set the persisted fields
-        if (UtilValidate.isEmpty(jobName)) {
-            jobName = Long.toString((new Date().getTime()));
-        }
-        Map<String, Object> jFields = UtilMisc.<String, Object> toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
-                "serviceName", serviceName, "statusId", "SERVICE_PENDING", "recurrenceInfoId", infoId, "runtimeDataId", dataId);
-        // set the pool ID
-        if (UtilValidate.isNotEmpty(poolName)) {
-            jFields.put("poolId", poolName);
-        } else {
-            try {
-                jFields.put("poolId", ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool());
-            } catch (GenericConfigException e) {
-                throw new JobManagerException(e.getMessage(), e);
-            }
-        }
-        // set the loader name
-        jFields.put("loaderName", delegator.getDelegatorName());
-        // set the max retry
-        jFields.put("maxRetry", Long.valueOf(maxRetry));
-        jFields.put("currentRetryCount", new Long(0));
-        // create the value and store
-        GenericValue jobV;
-        try {
-            jobV = delegator.makeValue("JobSandbox", jFields);
-            delegator.createSetNextSeqId(jobV);
-        } catch (GenericEntityException e) {
-            throw new JobManagerException(e.getMessage(), e);
-        }
+        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
     }
 }

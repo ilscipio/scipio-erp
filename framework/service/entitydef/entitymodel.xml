@@ -91,7 +91,7 @@ under the License.
     <!-- Cato: JobSandbox enhanced with special event field -->
     <extend-entity entity-name="JobSandbox">
         <field name="eventId" type="id">
-            <description>Cato: Currently supports values: STARTUP</description>
+            <description>Cato: Currently supports values: EVENT_STARTUP</description>
         </field>
     </extend-entity>
     <entity entity-name="RecurrenceInfo"

@@ -446,7 +446,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   "otherValue":"", "otherFieldSize":"", "dDFCurrent":"", "defaultValue":"", "ajaxOptions":"", "frequency":"", "minChars":"",
   "choices":"", "autoSelect":"", "partialSearch":"", "partialChars":"", "ignoreCase":"", "fullSearch":"", "events":{}, 
   "ajaxEnabled":false, "title":"", "tooltip":"", "description":"", "manualItems":false, "manualItemsOnly":false, "collapse":false, 
-  "fieldTitleBlank":false, "inlineSelected":true, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
+  "fieldTitleBlank":false, "inlineSelected":true, "disabled":false, "asmSelectArgs":{}, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_select_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_select_widget_defaultArgs)>
@@ -504,7 +504,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel disabled=disabled origArgs=origArgs passArgs=passArgs><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -512,7 +512,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_select_tooltip!styles.field_default_tooltip!"")>
@@ -528,6 +528,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
     <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#--<#if size?has_content> size="${size}"</#if>-->
     <#if title?has_content> title="${title}"</#if><#t/>
+    <#if disabled> disabled="disabled"</#if><#t/>
   ><#lt/>
   <#if !manualItemsOnly>  
     <#if currentFirst && currentValue?has_content && !multiple>

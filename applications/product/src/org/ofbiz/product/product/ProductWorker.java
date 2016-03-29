@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -416,7 +417,7 @@ public class ProductWorker {
     }
 
     /**
-     *
+     * @deprecated Replaced by getProductFeatures
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      */
@@ -477,8 +478,72 @@ public class ProductWorker {
             Debug.logError(e, module);
         }
         return featureTypeFeatures;
+    }    
+    
+    /**
+     * CATO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
+     * @param product
+     * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
+     * */
+    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product) {
+        if (product == null) {
+            return null;
+        }
+        List <Map<String,Map<String,Object>>> featureTypeFeatures = FastList.newInstance();
+        try {
+            Delegator delegator = product.getDelegator();
+            List<GenericValue> featuresSorted = EntityQuery.use(delegator)
+                                                    .from("ProductFeatureAndAppl")
+                                                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
+                                                    .orderBy("productFeatureTypeId", "sequenceNum")
+                                                    .cache(true)
+                                                    .queryList();
+            for (GenericValue productFeatureAppl: featuresSorted) {
+            	Map featureType = null;
+            	// Map to previous featureType if exists
+            	for(Map ftype : featureTypeFeatures){
+            		String productFeatureTypeId = ftype.get("productFeatureTypeId") != null ? (String) ftype.get("productFeatureTypeId") :"";
+            		if(productFeatureTypeId.equals(productFeatureAppl.getString("productFeatureTypeId")))
+            		featureType = ftype;
+            	}
+            	// otherwise create a new featureType
+            	if(featureType == null){
+            		featureType = new FastMap<String,Object>();
+            		GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
+                    featureType.put("description",productFeatureType.getString("description"));
+                    featureType.put("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"));
+            		featureType.put("features", FastList.newInstance());
+            		featureTypeFeatures.add(featureType);
+            	}
+            	List features = (List) featureType.get("features");                
+                
+                // Add Product features
+                Map<String,String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
+                if (UtilValidate.isNotEmpty(productFeatureAppl.get("description"))) {
+                    featureData.put("description", productFeatureAppl.getString("description"));
+                } else {
+                    featureData.put("description", productFeatureAppl.getString("productFeatureId"));
+                }
+                List<GenericValue> productFeaturePrices = EntityQuery.use(delegator).from("ProductFeaturePrice")
+                        .where("productFeatureId", productFeatureAppl.getString("productFeatureId"), "productPriceTypeId", "DEFAULT_PRICE")
+                        .filterByDate()
+                        .queryList();
+                if (UtilValidate.isNotEmpty(productFeaturePrices)) {
+                    GenericValue productFeaturePrice = productFeaturePrices.get(0);
+                    if (UtilValidate.isNotEmpty(productFeaturePrice.get("price"))) {
+                        featureData.put("price", productFeaturePrice.getBigDecimal("price").toString());
+                        featureData.put("currencyUomId", productFeaturePrice.getString("currencyUomId"));
+                    }
+                }
+                features.add(featureData);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return featureTypeFeatures;
     }
-
+    
+    
     /**
      * For a given variant product, returns the list of features that would qualify it for
      * selection from the virtual product

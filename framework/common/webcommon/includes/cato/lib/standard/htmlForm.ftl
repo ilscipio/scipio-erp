@@ -1362,7 +1362,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               alert=alert 
                               cols=cols 
                               rows=rows 
-                              id=id 
+                              id=id
                               readonly=readonly 
                               value=value 
                               placeholder=placeholder
@@ -1470,7 +1470,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <@field_select_widget name=name
                                 class=class 
                                 alert=alert 
-                                id=id 
+                                id=id
+                                disabled=disabled 
                                 multiple=multiple
                                 formName=formName
                                 formId=formId

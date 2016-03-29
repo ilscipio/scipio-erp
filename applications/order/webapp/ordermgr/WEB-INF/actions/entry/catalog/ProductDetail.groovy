@@ -265,7 +265,7 @@ if (product) {
     // Special Variant Code
     if ("Y".equals(product.isVirtual)) {
         if ("VV_FEATURETREE".equals(ProductWorker.getProductVirtualVariantMethod(delegator, productId))) {
-            context.featureLists = ProductWorker.getSelectableProductFeaturesByTypesAndSeq(product);
+            context.featureLists = ProductWorker.getProductFeatures(product);
         } else {
             featureMap = runService('getProductFeatureSet', [productId : productId]);
             featureSet = featureMap.featureSet;
@@ -278,7 +278,7 @@ if (product) {
                 }
                 variantTree = variantTreeMap.variantTree;
                 imageMap = variantTreeMap.variantSample;
-                virtualVariant = variantTreeMap.virtualVariant;
+				virtualVariant = variantTreeMap.virtualVariant;
                 context.virtualVariant = virtualVariant;
                 if (variantTree) {
                     context.variantTree = variantTree;
@@ -308,98 +308,14 @@ if (product) {
                 if (featureOrder) {
                     context.featureOrderFirst = featureOrder[0];
                 }
-
+				
+				//CATO: The original OFBiz code was removed here. 
                 if (variantTree && imageMap) {
-                    jsBuf = new StringBuffer();
-                    jsBuf.append("<script language=\"JavaScript\" type=\"text/javascript\">");
-                    jsBuf.append("var DET = new Array(" + variantTree.size() + ");");
-                    jsBuf.append("var IMG = new Array(" + variantTree.size() + ");");
-                    jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
-                    jsBuf.append("var VIR = new Array(" + virtualVariant.size() + ");");
-                    jsBuf.append("var detailImageUrl = null;");
-                    featureOrder.eachWithIndex { feature, i ->
-                        jsBuf.append("OPT[" + i + "] = \"FT" + feature + "\";");
-                    }
-                    virtualVariant.eachWithIndex { variant, i ->
-                        jsBuf.append("VIR[" + i + "] = \"" + variant + "\";");
-                    }
-
-                    // build the top level
-                    topLevelName = featureOrder[0];
-                    jsBuf.append("function list" + topLevelName + "() {");
-                    jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options.length = 1;");
-                    jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options[0] = new Option(\"" + featureTypes[topLevelName] + "\",\"\",true,true);");
-                    if (variantTree) {
-                        featureOrder.each { featureKey ->
-                            jsBuf.append("document.forms[\"addform\"].elements[\"FT" + featureKey + "\"].options.length = 1;");
-                        }
-                        firstDetailImage = null;
-                        firstLargeImage = null;
-                        counter = 0;
-                        variantTree.each { key, value ->
-                            opt = null;
-                            if (featureOrder.size() == 1) {
-                                opt = value.iterator().next();
-                            } else {
-                                opt = counter as String;
-                            }
-                            // create the variant content wrapper
-                            contentWrapper = new ProductContentWrapper(imageMap[key], request);
-
-                            // initial image paths
-                            detailImage = contentWrapper.get("DETAIL_IMAGE_URL", "url") ?: productContentWrapper.get("DETAIL_IMAGE_URL", "url");
-                            largeImage = contentWrapper.get("LARGE_IMAGE_URL", "url") ?: productContentWrapper.get("LARGE_IMAGE_URL", "url");
-
-                            // full image URLs
-                            detailImageUrl = null;
-                            largeImageUrl = null;
-
-                            // append the content prefix
-                            if (detailImage) {
-                                detailImageUrl = (ContentUrlTag.getContentPrefix(request) + detailImage).toString();
-                            }
-                            if (largeImage) {
-                                largeImageUrl = ContentUrlTag.getContentPrefix(request) + largeImage;
-                            }
-
-                            jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
-                            jsBuf.append("DET[" + counter + "] = \"" + detailImageUrl +"\";");
-                            jsBuf.append("IMG[" + counter + "] = \"" + largeImageUrl +"\";");
-
-                            if (!firstDetailImage) {
-                                firstDetailImage = detailImageUrl;
-                            }
-                            if (!firstLargeImage) {
-                                firstLargeImage = largeImage;
-                            }
-                            counter++;
-                        }
-                        context.firstDetailImage = firstDetailImage;
-                        context.firstLargeImage = firstLargeImage;
-                    }
-                    jsBuf.append("}");
-
-                    // build dynamic lists
-                    if (variantTree) {
-                        variantTree.values().eachWithIndex { varTree, topLevelKeysCt ->
-                            cnt = "" + topLevelKeysCt;
-                            if (varTree instanceof Map) {
-                                jsBuf.append(buildNext(varTree, featureOrder, featureOrder[1], cnt, featureTypes));
-                            }
-                        }
-                    }
-
                     // make a list of variant sku with requireAmount
                     variantsRes = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_VARIANT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
                     variants = variantsRes.assocProducts;
                     variantPriceList = [];
                     if (variants) {
-                        amt = new StringBuffer();
-                        amt.append("function checkAmtReq(sku) { ");
-                        // Create the javascript to return the price for each variant
-                        variantPriceJS = new StringBuffer();
-                        variantPriceJS.append("function getVariantPrice(sku) { ");
-                        // Format to apply the currency code to the variant price in the javascript
                         if (productStore) {
                             localeString = productStore.defaultLocaleString;
                             if (localeString) {
@@ -440,10 +356,6 @@ if (product) {
                             } else {
                                 variantPriceMap = runService('calculatePurchasePrice', priceContext);
                             }
-                            amt.append(" if (sku == \"" + variant.productId + "\") return \"" + (variant.requireAmount ?: "N") + "\"; ");
-                            if (variantPriceMap && variantPriceMap.basePrice) {
-                                variantPriceJS.append("  if (sku == \"" + variant.productId + "\") return \"" + UtilFormatOut.formatCurrency(variantPriceMap.basePrice, currencyUomId, locale, 10) + "\"; ");
-                            }
                             
                             // make a list of virtual variants sku with requireAmount
                             virtualVariantsRes = runService('getAssociatedProducts', [productIdTo : variant.productId, type : "ALTERNATIVE_PACKAGE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
@@ -481,24 +393,16 @@ if (product) {
                                             }
                                         }
                                         variantPriceList.add(virtualPriceMap);
-                                        variantPriceJS.append("  if (sku == \"" + virtual.productId + "\") return \"" + UtilFormatOut.formatCurrency(variantPriceMap.basePrice, currencyUomId, locale, 10) + "\"; ");
                                     } else {
                                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
-                                        variantPriceJS.append("  if (sku == \"" + virtual.productId + "\") return \"" + UtilFormatOut.formatCurrency(variantPriceMap.price, currencyUomId, locale, 10) + "\"; ");
                                     }
                                 }
                                 
                             }
                         }
-                        amt.append(" } ");
-                        variantPriceJS.append(" } ");
                     }
                     context.variantPriceList = variantPriceList;
-                    jsBuf.append(amt.toString());
-                    jsBuf.append(variantPriceJS.toString());
-                    jsBuf.append("</script>");
-
-                    context.virtualJavaScript = jsBuf;
+					context.virtualVariants = virtualVariants;
                 }
             }
         }
@@ -506,9 +410,6 @@ if (product) {
         context.minimumQuantity= ShoppingCart.getMinimumOrderQuantity(delegator, priceMap.price, productId);
         if(isAlternativePacking){
             // get alternative product price when product doesn't have any feature 
-            jsBuf = new StringBuffer();
-            jsBuf.append("<script language=\"JavaScript\" type=\"text/javascript\">");
-            
             // make a list of variant sku with requireAmount
             virtualVariantsRes = runService('getAssociatedProducts', [productIdTo : productId, type : "ALTERNATIVE_PACKAGE", checkViewAllow : true, prodCatalogId : categoryId]);
             virtualVariants = virtualVariantsRes.assocProducts;
@@ -522,11 +423,7 @@ if (product) {
             virtualVariantPriceList = [];
             
             if(virtualVariants){
-                amt = new StringBuffer();
-                // Create the javascript to return the price for each variant
-                variantPriceJS = new StringBuffer();
-                variantPriceJS.append("function getVariantPrice(sku) { ");
-                
+                // Create the javascript to return the price for each variant    
                 virtualVariants.each { virtualAssoc ->
                     virtual = virtualAssoc.getRelatedOne("MainProduct", false);
                     // Get price from a virtual product
@@ -537,19 +434,12 @@ if (product) {
                         BigDecimal calculatedPrice = (BigDecimal)virtualPriceMap.get("price");
                         // Get the minimum quantity for variants if MINIMUM_ORDER_PRICE is set for variants.
                         virtualVariantPriceList.add(virtualPriceMap);
-                        variantPriceJS.append(" if (sku == \"" + virtual.productId + "\") return \"" + UtilFormatOut.formatCurrency(virtualPriceMap.basePrice, currencyUomId, locale, 10) + "\"; ");
                     } else {
                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
-                        variantPriceJS.append(" if (sku == \"" + virtual.productId + "\") return \"" + UtilFormatOut.formatCurrency(virtualPriceMap.price, currencyUomId, locale, 10) + "\"; ");
                     }
-                }
-                variantPriceJS.append(" } ");
-                
+                }                
                 context.virtualVariantPriceList = virtualVariantPriceList;
-                jsBuf.append(amt.toString());
-                jsBuf.append(variantPriceJS.toString());
-                jsBuf.append("</script>");
-                context.virtualVariantJavaScript = jsBuf;
+                context.virtualVariants = virtualVariants;
             }
         }
     }
@@ -592,49 +482,6 @@ if (product) {
 
     accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
     context.accessoryProducts = accessoryProducts.assocProducts;
-
-    /*
-      The following code is commented out because it is just an example of the business logic to retrieve products with a similar feature.
-
-    // get other cross-sell information: product with a common feature
-    commonProductFeatureId = "SYMPTOM";
-    // does this product have that feature?
-    commonProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", [productId : productId, productFeatureTypeId : commonProductFeatureId], ["sequenceNum", "defaultSequenceNum"], false);
-    if (commonProductFeatureAndAppls) {
-        commonProductFeatureIds = EntityUtil.getFieldListFromEntityList(commonProductFeatureAndAppls, "productFeatureId", true);
-
-        // now search for other products that have this feature
-        visitId = VisitHandler.getVisitId(session);
-
-        productSearchConstraintList = [];
-        productSearchConstraintList.add(new ProductSearch.FeatureSetConstraint(commonProductFeatureIds));
-        // make sure the view allow category is included
-        productSearchConstraintList = ProductSearchSession.ensureViewAllowConstraint(productSearchConstraintList, currentCatalogId, delegator);
-
-        // don't care about the sort on this one
-        resultSortOrder = null;
-
-        commonFeatureResultIdsOrig = ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
-        commonFeatureResultIds = [];
-        commonFeatureResultIdIter = commonFeatureResultIdsOrig.iterator();
-        while (commonFeatureResultIdIter.hasNext()) {
-            commonFeatureResultId = commonFeatureResultIdIter.next();
-            // filter out the current product
-            if (commonFeatureResultId.equals(productId)) {
-                continue;
-            }
-            // filter out all variants
-            commonProduct = delegator.findOne("Product", [productId : commonFeatureResultId], true);
-            if ("Y".equals(commonProduct?.isVariant)) {
-                continue;
-            }
-            commonFeatureResultIds.add(commonFeatureResultId);
-        }
-        if (commonFeatureResultIds) {
-            context.commonFeatureResultIds = commonFeatureResultIds;
-        }
-    }
-    */
 
     // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
     downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").cache(true).queryList();

@@ -47,8 +47,54 @@
         </@section>
       </#if>
     </#macro>
+<#if variantTree?has_content>
+    <@script>
+        <#-- CATO: Function to select a product variant  -->
+        var variantTree = <@objectAsScript lang="json" object=variantTree />;
+        var currentNode =[];
 
-<@section title="">
+        <#-- Product Variant - Option Updater
+             The following script takes into account that there may be a diverse selection of configuration options.
+             Each option is validated against the tree (the following select boxes invalidated) and reactivated, once the options
+             have been updated according to the variantTree. -->
+        function updateVariants(type, variantId, index){
+            if(variantId){
+                var selectNum = $('[id^=FT_]').length; // get number of select boxes
+                currentNode.splice(index); // reset the node information & remove anything beyond the current selection
+                for(i = currentNode.length+1; i <= selectNum; i++){
+                        $('#FT_'+i).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
+                        }
+                currentNode.push(variantId); // update the node path
+         
+                //get data from variantTree
+                var dataObject = variantTree;
+                var value ="";
+                currentNode.forEach(function (node,index) {
+                    dataObject = dataObject[node]; // traverse down the tree, based on our path
+                });
+                
+                if(index+1 == selectNum){
+                    if (typeof dataObject == 'string' || dataObject instanceof String) {
+                        $('#add_product_id').val(dataObject);
+                    } else {
+                        $('#add_product_id').val(dataObject[0]);
+                    }
+                }else{
+                    var nextIndex = index+1;
+                    var options = [];
+                    $('#FT_'+nextIndex).empty();
+                    $('#FT_'+nextIndex).append('<option value="">${uiLabelMap.EcommerceSelectOption}</option>');
+                    $.each(dataObject,function(object) { 
+                        $('#FT_'+nextIndex).append('<option value="'+object+'">'+object+'</option>');
+                    });                    
+                    $('#FT_'+nextIndex).prop( "disabled", false ); // activate next option
+                }
+            }          
+        }
+        
+    </@script>
+</#if>
+<@section>
     <@row>
         <@cell columns=8>
             <#--
@@ -175,31 +221,40 @@
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
                     <#assign inStock = true />
-                    
                     <#-- Variant Selection -->
                     <#if product.isVirtual?if_exists?upper_case == "Y">
                         <#if product.virtualVariantMethodEnum?if_exists == "VV_FEATURETREE" && featureLists?has_content>
-                            <input type="hidden" name="add_product_id" value="${product.productId}" />
+                            <input type="hidden" name="add_product_id" id="add_product_id" value="${product.productId}" />
                             <#list featureLists as featureList>
-                                <@field type="select" id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" label=feature.description!"">
-                                    <option value="select" selected="selected"> select option </option>
-                                    <#list featureList as feature>
+                                <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=featureList.description!"">
+                                    <option value="">${uiLabelMap.EcommerceSelectOption}</option>
+                                    <#list featureList.features as feature>
                                         <option value="${feature.productFeatureId}">${feature.description} <#if feature.price?exists>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId />)</#if></option>
                                     </#list>
                                 </@field>
                             </#list>
                             <@field type="text" name="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
                         </#if>
+                        
+                        <#-- CATO: It is possible to have a limited amount of variant combination. 
+                                   Therefore the available options are only displayed for the first variant and updated for the next based on the selected type. -->
                         <#if !product.virtualVariantMethodEnum?exists || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
                             <#if variantTree?exists && (variantTree.size() &gt; 0)>
                                 <#list featureSet as currentType>
-                                    <@field type="select" name="FT${currentType}" label=featureTypes.get(currentType)!"">
-                                            <option>${featureTypes.get(currentType)}</option>
-                                    </@field>
+                                    <#if currentType_index == 0>
+                                        <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
+                                            <option value="">${uiLabelMap.EcommerceSelectOption}</option>
+                                            <#list variantTree.keySet() as variant>
+                                                <option value="${variant}">${variant}</option>
+                                            </#list>
+                                        </@field>
+                                    <#else>
+                                        <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
+                                    </#if>
                                 </#list>
-                                <input type="hidden" name="add_product_id" value="NULL"/>
+                                <input type="hidden" name="add_product_id" id="add_product_id" value=""/>
                             <#else>
-                                <input type="hidden" name="add_product_id" value="NULL"/>
+                                <input type="hidden" name="add_product_id" id="add_product_id" value=""/>
                                 <#assign inStock = false />
                             </#if>
                         </#if>
@@ -230,19 +285,16 @@
                                          <label>End Date(yyyy-mm-dd)</label><input type="text" size="10" name="reservEnd"/><a href="javascript:call_cal_notime(document.addform.reservEnd, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
                                      </div>
                                      <div>
-                                         <#--td nowrap="nowrap" align="right">Number<br />of days<input type="text" size="4" name="reservLength"/>&nbsp;&nbsp;-->
                                          Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                                          Number of rooms<input type="text" size="5" name="quantity" value="1"/>
                                      </div>
                                  <#else> 
                                      <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                     <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>
                                  </#if>
                              <#else>
                                  <#if productStore?exists>
                                      <#if productStore.requireInventory?exists && productStore.requireInventory == "N">
                                          <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                         <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>
                                      <#else>
                                          <input name="quantity" id="quantity" value="1" type="hidden"/>
                                          <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage?exists>&mdash; ${product.inventoryMessage}</#if></span>
@@ -250,9 +302,10 @@
                                  </#if>
                              </#if>
                         <#else>
-                            <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
                         </#if>
                     </#if>
+                    <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
+
             </form>
             <#-- CATO: Review 
                 <#if variantPriceList?exists>
@@ -464,228 +517,7 @@
 </@section>
 
 
-<#-- CATO: disabled JAVASCRIPT
-${virtualJavaScript?if_exists}
-<script type="text/javascript">
-//<![CDATA[
-    var detailImageUrl = null;
-    function setAddProductId(name) {
-        document.addform.add_product_id.value = name;
-        if (document.addform.quantity == null) return;
-        if (name == '' || name == 'NULL' || isVirtual(name) == true) {
-            document.addform.quantity.disabled = true;
-            var elem = document.getElementById('product_id_display');
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        } else {
-            document.addform.quantity.disabled = false;
-            var elem = document.getElementById('product_id_display');
-            var txt = document.createTextNode(name);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        }
-    }
-    function setVariantPrice(sku) {
-        if (sku == '' || sku == 'NULL' || isVirtual(sku) == true) {
-            var elem = document.getElementById('variant_price_display');
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        }
-        else {
-            var elem = document.getElementById('variant_price_display');
-            var price = getVariantPrice(sku);
-            var txt = document.createTextNode(price);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        }
-    }
-    function isVirtual(product) {
-        var isVirtual = false;
-        <#if virtualJavaScript?exists>
-        for (i = 0; i < VIR.length; i++) {
-            if (VIR[i] == product) {
-                isVirtual = true;
-            }
-        }
-        </#if>
-        return isVirtual;
-    }
-    function addItem() {
-       if (document.addform.add_product_id.value == 'NULL') {
-           alert("Please select all of the required options.");
-           return;
-       } else {
-           if (isVirtual(document.addform.add_product_id.value)) {
-               document.location = '<@ofbizUrl>product?category_id=${categoryId?if_exists}&amp;product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
-               return;
-           } else {
-               document.addform.submit();
-           }
-       }
-    }
-
-    function toggleAmt(toggle) {
-        if (toggle == 'Y') {
-            changeObjectVisibility("add_amount", "visible");
-        }
-
-        if (toggle == 'N') {
-            changeObjectVisibility("add_amount", "hidden");
-        }
-    }
-
-    function findIndex(name) {
-        for (i = 0; i < OPT.length; i++) {
-            if (OPT[i] == name) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    function getList(name, index, src) {
-        currentFeatureIndex = findIndex(name);
-
-        if (currentFeatureIndex == 0) {
-            // set the images for the first selection
-            if (IMG[index] != null) {
-                if (document.images['mainImage'] != null) {
-                    document.images['mainImage'].src = IMG[index];
-                    detailImageUrl = DET[index];
-                }
-            }
-
-            // set the drop down index for swatch selection
-            document.forms["addform"].elements[name].selectedIndex = (index*1)+1;
-        }
-
-        if (currentFeatureIndex < (OPT.length-1)) {
-            // eval the next list if there are more
-            var selectedValue = document.forms["addform"].elements[name].options[(index*1)+1].value;
-            if (index == -1) {
-              <#if featureOrderFirst?exists>
-                var Variable1 = eval("list" + "${featureOrderFirst}" + "()");
-              </#if>
-            } else {
-                var Variable1 = eval("list" + OPT[(currentFeatureIndex+1)] + selectedValue + "()");
-            }
-            // set the product ID to NULL to trigger the alerts
-            setAddProductId('NULL');
-
-            // set the variant price to NULL
-            setVariantPrice('NULL');
-        } else {
-            // this is the final selection -- locate the selected index of the last selection
-            var indexSelected = document.forms["addform"].elements[name].selectedIndex;
-
-            // using the selected index locate the sku
-            var sku = document.forms["addform"].elements[name].options[indexSelected].value;
-
-            // set the product ID
-            setAddProductId(sku);
-
-            // set the variant price
-            setVariantPrice(sku);
-
-            // check for amount box
-            toggleAmt(checkAmtReq(sku));
-        }
-    }
-
-    function validate(x){
-        var msg=new Array();
-        msg[0]="Please use correct date format [yyyy-mm-dd]";
-
-        var y=x.split("-");
-        if(y.length!=3){ alert(msg[0]);return false; }
-        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]); return false; }
-        if(y[2].length==1){ y[2]="0"+y[2]; }
-        if((y[1].length>2)||(parseInt(y[1])>12)){ alert(msg[0]); return false; }
-        if(y[1].length==1){ y[1]="0"+y[1]; }
-        if(y[0].length>4){ alert(msg[0]); return false; }
-        if(y[0].length<4) {
-            if(y[0].length==2) {
-                y[0]="20"+y[0];
-            } else {
-                alert(msg[0]);
-                return false;
-            }
-        }
-        return (y[0]+"-"+y[1]+"-"+y[2]);
-    }
-
-    function additemSubmit(){
-        <#if product.productTypeId?if_exists == "ASSET_USAGE">
-        newdatevalue = validate(document.addform.reservStart.value);
-        if (newdatevalue == false) {
-            document.addform.reservStart.focus();
-        } else {
-            document.addform.reservStart.value = newdatevalue;
-            document.addform.submit();
-        }
-        <#else>
-        document.addform.submit();
-        </#if>
-    }
-
-    function addShoplistSubmit(){
-        <#if product.productTypeId?if_exists == "ASSET_USAGE">
-        if (document.addToShoppingList.reservStartStr.value == "") {
-            document.addToShoppingList.submit();
-        } else {
-            newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
-            if (newdatevalue == false) {
-                document.addToShoppingList.reservStartStr.focus();
-            } else {
-                document.addToShoppingList.reservStartStr.value = newdatevalue;
-                // document.addToShoppingList.reservStart.value = ;
-                document.addToShoppingList.reservStartStr.value.slice(0,9)+" 00:00:00.000000000";
-                document.addToShoppingList.submit();
-            }
-        }
-        <#else>
-        document.addToShoppingList.submit();
-        </#if>
-    }
-
-    <#if product.virtualVariantMethodEnum?if_exists == "VV_FEATURETREE" && featureLists?has_content>
-        function checkRadioButton() {
-            var block1 = document.getElementById("addCart1");
-            var block2 = document.getElementById("addCart2");
-            <#list featureLists as featureList>
-                <#list featureList as feature>
-                    <#if feature_index == 0>
-                        var myList = document.getElementById("FT${feature.productFeatureTypeId}");
-                         if (myList.options[0].selected == true){
-                             block1.style.display = "none";
-                             block2.style.display = "block";
-                             return;
-                         }
-                        <#break>
-                    </#if>
-                </#list>
-            </#list>
-            block1.style.display = "block";
-            block2.style.display = "none";
-        }
-    </#if>
-//]]>
- </script>
-
+<#-- CATO: uncomment to use unavailableVariants
 <#macro showUnavailableVarients>
   <#if unavailableVariants?exists>
     <ul>

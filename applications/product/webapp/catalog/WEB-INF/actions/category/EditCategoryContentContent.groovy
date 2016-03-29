@@ -27,9 +27,11 @@ uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
 // Show update form
 if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
+    fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)
+    Debug.log("req attr content Id " + requestAttributes.contentId + "parameters ====> " + parameters.contentId + "   " + parameters.productCategoryId + "   " + parameters.prodCatContentTypeId + "   " + fromDate);
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     productCategoryContent = from("ProductCategoryContent").
-            where(["contentId" : parameters.contentId, "productCategoryId" : parameters.productCategoryId, "prodCatContentTypeId" : parameters.prodCatContentTypeId, "fromDate" : UtilDateTime.toTimestamp(parameters.fromDate)]).queryOne();
+            where(["contentId" : parameters.contentId, "productCategoryId" : parameters.productCategoryId, "prodCatContentTypeId" : parameters.prodCatContentTypeId, "fromDate" : fromDate]).queryOne();
     Debug.log("productCategoryContent =========> " + productCategoryContent);
     if (productCategoryContent) {
         context.productCategoryContent = productCategoryContent;
@@ -40,11 +42,7 @@ if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId &
             context.contentFormAction = "updateContentSEOForCategory";
         } else if ("RELATED_URL".equals(prodCatContentTypeId)) {
             context.contentFormName = "EditCategoryContentRelatedUrl";
-            context.contentFormAction = "updateRelatedUrlContentForCategory";
-            contentList = from("ContentDataResourceView").where("contentId", parameters.contentId).queryList();
-            if (contentList) {
-                context.contentDataResourceView = contentList.get(0);
-            }
+            context.contentFormAction = "updateRelatedUrlContentForCategory";           
         } else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
             context.contentFormName = "EditCategoryContentDownload";
             context.contentFormAction = "updateDownloadContentForCategory";
@@ -54,6 +52,14 @@ if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId &
                 context.dataResourceTypeId = "VIDEO_OBJECT";
             }
         }
+        
+        if ("RELATED_URL".equals(prodCatContentTypeId) || "VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+            contentList = from("ContentDataResourceView").where("contentId", parameters.contentId).queryList();
+            if (contentList) {
+                context.contentDataResourceView = contentList.get(0);
+            }
+        }
+        
         content = productCategoryContent.getRelatedOne("Content", false);
         context.content = content;
         context.textDataMap = delegator.findOne("ElectronicText", ["dataResourceId" : content.dataResourceId], false);

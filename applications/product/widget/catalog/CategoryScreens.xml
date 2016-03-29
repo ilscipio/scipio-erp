@@ -63,7 +63,9 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
             </actions>
             <widgets>
+                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
+                    
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategory.ftl"/></html>
@@ -201,67 +203,32 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
-
-                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <!-- <entity-one entity-name="ProductCategory" value-field="productCategory"/>
-                <entity-one entity-name="ProductCategoryContent" value-field="categoryContent"/>
-                <entity-one entity-name="Content" value-field="content"/>
-                <entity-one entity-name="ElectronicText" value-field="electronicText" auto-field-map="false">
-                    <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
-                </entity-one>
-                <set field="textDataMap.text" from-field="electronicText.textData"/>
-                <set field="textDataMap.textDataResourceId" from-field="content.dataResourceId"/>
-                <set field="contentId" from-field="content.contentId"/> -->
-                
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>                
                 <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
                      <order-by field-name="description"/>
                  </entity-condition>
                 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
-                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
-                
-                <!-- <set field="title" value="${uiLabelMap.PageTitleEditCategoryContentContent}: ${contentTitle}"/> -->
-            </actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>            </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body"> -->
-                       <!--  <section>
-                            <condition><not><if-empty field="contentId"/></not></condition>
-                            <widgets>
-                                <link target="/content/control/gotoContent" text="${uiLabelMap.ContentContent} ${uiLabelMap.CommonPage}" url-mode="inter-app" style="${styles.link_nav} ${styles.action_view}">
-                                    <parameter param-name="contentId"/>
-                                </link>
-                            </widgets>
-                        </section> -->
-                        <screenlet>
-                            <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                            <!-- <include-screen name="CatoEditCategoryContent"/> -->
-                            <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
-                        </screenlet>
-                     <!--    <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
-                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
-                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        </screenlet> -->
-              <!--       </decorator-section>
-                </decorator-screen> -->
+
+                 <screenlet>
+                     <!-- CATO: Category content forms widgets have been replaced by a single ftl -->
+                     <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                     <!-- <include-screen name="CatoEditCategoryContent"/> -->
+                     <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
+                 </screenlet>
+                 <!-- CATO: To be removed -->
+                 <!--    <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
+                     <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                 </screenlet>
+                 <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                     <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                 </screenlet> -->
             </widgets>
         </section>
     </screen>
-<!--     <screen name="CatoEditCategoryContent">
-		<section>
-			<actions>
-			     <entity-condition list="productCategoryContentTypeList" entity-name="ProductCategoryContentType">
-			         <order-by field-name="description"/>
-			     </entity-condition>
-			</actions>
-			<widgets>
-                <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
-			</widgets>
-		</section>
-    </screen> -->
-    
+
     <screen name="EditCategoryRollup">
         <section>
             <actions>

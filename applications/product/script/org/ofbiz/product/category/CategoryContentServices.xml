@@ -48,7 +48,9 @@ under the License.
         <store-value value-field="lookedUpValue"/>
 
         <set-service-fields service-name="updateContent" map="parameters" to-map="updateContent"/>
-        <call-service service-name="updateContent" in-map-name="updateContent"/>
+        <call-service service-name="updateContent" in-map-name="updateContent">
+             <result-to-result result-name="contentId" />
+        </call-service>      
     </simple-method>
     <simple-method method-name="removeCategoryContent" short-description="Remove Content From Category">
         <make-value value-field="lookupPKMap" entity-name="ProductCategoryContent"/>
@@ -69,9 +71,11 @@ under the License.
     </simple-method>
     <simple-method method-name="updateSimpleTextContentForCategory" short-description="Update Simple Text Content For Product Category">
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
-        <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent"/>
+        <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent">
+            <result-to-result result-name="contentId" />
+        </call-service>
         <set-service-fields service-name="updateSimpleTextContent" map="parameters" to-map="updateSimpleText"/>
-        <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText"/>
+        <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText" />
     </simple-method>
     <simple-method method-name="updateContentSEOForCategory" short-description="Update SEO Content For Product Category">
         <if-not-empty field="parameters.title">
@@ -88,11 +92,14 @@ under the License.
                     <set field="electronicText.textData" from-field="parameters.title"/>
                     <store-value value-field="electronicText"/>
                 </if-not-empty>
+                <field-to-result field="productCategoryContent.contentId" result-name="contentId" />
             <else>
                 <set field="createTextContentMap.productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="createTextContentMap.prodCatContentTypeId" value="PAGE_TITLE"/>
                 <set field="createTextContentMap.text" from-field="parameters.title"/>
-                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap"/>
+                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap">
+                    <result-to-result result-name="contentId" />
+                </call-service>
             </else>
             </if-not-empty>
         </if-not-empty>
@@ -110,11 +117,14 @@ under the License.
                     <set field="electronicText.textData" from-field="parameters.metaKeyword"/>
                     <store-value value-field="electronicText"/>
                 </if-not-empty>
+                <field-to-result field="productCategoryContent.contentId" result-name="contentId" />
             <else>
                 <set field="createTextContentMap.productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="createTextContentMap.prodCatContentTypeId" value="META_KEYWORD"/>
                 <set field="createTextContentMap.text" from-field="parameters.metaKeyword"/>
-                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap"/>
+                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap">
+                    <result-to-result result-name="contentId" />
+                </call-service>
             </else>
             </if-not-empty>
         </if-not-empty>
@@ -132,11 +142,14 @@ under the License.
                     <set field="electronicText.textData" from-field="parameters.metaDescription"/>
                     <store-value value-field="electronicText"/>
                 </if-not-empty>
+                <field-to-result field="productCategoryContent.contentId" result-name="contentId" />
             <else>
                 <set field="createTextContentMap.productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="createTextContentMap.prodCatContentTypeId" value="META_DESCRIPTION"/>
                 <set field="createTextContentMap.text" from-field="parameters.metaDescription"/>
-                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap"/>
+                <call-service service-name="createSimpleTextContentForCategory" in-map-name="createTextContentMap">
+                    <result-to-result result-name="contentId" />
+                </call-service>
             </else>
             </if-not-empty>
         </if-not-empty>
@@ -186,7 +199,9 @@ under the License.
         <set field="updateContent.contentName" from-field="parameters.title"/>
         <set field="updateContent.description" from-field="parameters.description"/>
         <set field="updateContent.localeString" from-field="parameters.localeString"/>
-        <call-service service-name="updateContent" in-map-name="updateContent"/>
+        <call-service service-name="updateContent" in-map-name="updateContent">
+            <result-to-result result-name="contentId" />
+        </call-service>
     </simple-method>
     
     <simple-method method-name="createDownloadContentForCategory" short-description="Create Download Content For Category">
@@ -227,6 +242,8 @@ under the License.
         <call-service service-name="attachUploadToDataResource" in-map-name="attachMap"/>
         
         <set-service-fields service-name="updateCategoryContent" map="parameters" to-map="updateCategoryContent"/>
-        <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent"/>
+        <call-service service-name="updateCategoryContent" in-map-name="updateCategoryContent">
+            <result-to-result result-name="contentId" />
+        </call-service>
     </simple-method>
 </simple-methods>

@@ -25,7 +25,7 @@
                     <#assign productCategoryContentType = (productCategoryContent.getRelatedOne("ProductCategoryContentType", true))!>
                     <@tr>
                         <@td>
-                              <a href="<@ofbizUrl>EditCategoryContentContent</@ofbizUrl>" class="${styles.link_nav_info_name_long}">
+                              <a href="<@ofbizInterWebappUrl>/content/control/EditContent?contentId=${productCategoryContent.contentId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name_long}">
                                   ${productCategoryContent.contentId} 
                               </a>
                         </@td>
@@ -36,7 +36,7 @@
                                 <input name="productCategoryId" type="hidden" value="${parameters.productCategoryId}"/>
                                 <input name="contentId" type="hidden" value="${productCategoryContent.contentId}"/>
                                 <input name="prodCatContentTypeId" type="hidden" value="${productCategoryContent.prodCatContentTypeId}"/>
-                                <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate?string("MM/dd/yyyy HH:mm:ss")}"/>                                    
+                                <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate}"/>                                    
                                 <@field type="submit" submitType="link" href="javascript:document.UpdateCategoryContentAssoc_${productCategoryContent_index}.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>
                             </form>
                         </@td>

@@ -935,6 +935,7 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
     </service>
     <service name="removeCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="removeCategoryContent" auth="true">
@@ -959,11 +960,13 @@ under the License.
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true" allow-html="any"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
     </service>
 
     <service name="updateContentSEOForCategory" engine="simple"
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="updateContentSEOForCategory" auth="true">
         <description>Update SEO Content For Product Category</description>
+        <attribute name="contentId" optional="true" type="String" mode="INOUT"/>
         <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
         <attribute name="title" mode="IN" type="String" optional="true"/>
         <attribute name="metaKeyword" mode="IN" type="String" optional="true"/>
@@ -993,6 +996,7 @@ under the License.
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="url" type="String" mode="IN" optional="true"/>
         <attribute name="localeString" type="String" mode="IN" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
     </service>
 
     <service name="createDownloadContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
@@ -1016,6 +1020,7 @@ under the License.
         <attribute mode="IN" name="_imageData_contentType" optional="true" type="String"/>
         <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute name="fileDataResourceId" type="String" mode="IN" optional="true"/>
+        <override name="contentId" optional="true" mode="INOUT"/>
     </service>
 
     <!-- ProductFeatureDataResource services -->

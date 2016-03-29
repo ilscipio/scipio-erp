@@ -93,15 +93,15 @@
                         <#if content?has_content>
                             <#assign localeString=((content.localeString)!) />
                         </#if>
-                        <@field type="input" label=uiLabelMap.CommonLocaleString name="localeString" value=((localeString)!) />
+                        <@field type="input" label=uiLabelMap.ProductLocaleString name="localeString" value=((localeString)!) />
                     </@cell>
                 </@row>
                 <@row>
                     <@cell columns=12>
                         <#assign textData=((requestParameters.textData)!) />
                         <#if textDataMap?has_content>
-                            <#assign text=((textDataMap.textData)!) />
-                            <@field type="hidden" name="dataResourceId" value=textDataMap.dataResourceId />
+                            <#assign textData=((textDataMap.textData)!) />
+                            <@field type="hidden" name="textDataResourceId" value=textDataMap.dataResourceId />
                         </#if>
                         <@field type="textarea" label=uiLabelMap.CommonText name="text" cols=80 rows=10 value=((textData)!)/>
                     </@cell>
@@ -140,8 +140,7 @@
                     <@cell columns=12>
                         <#assign title=((requestParameters.title)!) />
                         <#if contentDataResourceView?has_content>
-                            <#assign title=((contentDataResourceView.drDataResourceName)!) />
-                            <@field type="hidden" name="dataResourceId" value="${contentDataResourceView.dataResourceId!}" />
+                            <#assign title=((contentDataResourceView.drDataResourceName)!) />                            
                         </#if> 
                         <@field type="input" required=true label=uiLabelMap.CommonTitle name="title" value=((title)!) size="50" />
                     </@cell>
@@ -170,7 +169,7 @@
                         <#assign localeString=((contentDataResourceView.localeString)!) />
                     </#if>
                     <@cell columns=12>
-                        <@field type="lookup" label=uiLabelMap.CommonLocaleString name="localeString" formName="EditCategoryContentRelatedUrl" fieldFormName="LookupLocale" value=((localeString)!) />
+                        <@field type="lookup" label=uiLabelMap.ProductLocaleString name="localeString" formName="EditCategoryContentRelatedUrl" fieldFormName="LookupLocale" value=((localeString)!) />
                     </@cell>
                 </@row>
             <#-- EditCategoryContentDownload Form -->
@@ -212,13 +211,17 @@
                 </@row>
                 <@row>
                     <@cell columns=12>
-                        <@field type="file" required=true label=uiLabelMap.ProductFile name="imageData" value=((file)!) />
-                        <#if dataResourceTypeId?has_content>
-                            <@field type="hidden" name="dataResourceTypeId" value="${dataResourceTypeId!}" />
+                        
+                        
+                        <@field type="file" required=true label=uiLabelMap.ProductFile name="imageData" id="imageData" placeholder=((contentDataResourceView.drDataResourceName)!)/>                            
+                        
+                        <#if contentDataResourceView?has_content>
+                            <@field type="hidden" name="dataResourceTypeId" value="${contentDataResourceView.drDataResourceTypeId!}" />                        
+                            <@field type="hidden" name="fileDataResourceId" value="${contentDataResourceView.dataResourceId!}" />
+                            <a href="<@ofbizInterWebappUrl>/content/control/ViewBinaryDataResource?dataResourceId=${contentDataResourceView.dataResourceId!}</@ofbizInterWebappUrl>">
+                                <@field type="display" value="${contentDataResourceView.drDataResourceName!}" />
+                            </a>
                         </#if>
-                        <#if content?has_content>
-                            <@field type="hidden" name="fileDataResourceId" value="${content.dataResourceId!}" />
-                        </#if> 
                     </@cell>
                 </@row>
             </#if>

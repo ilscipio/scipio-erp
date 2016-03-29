@@ -122,6 +122,8 @@ public class CoreEvents {
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
         String serviceCnt = (String) params.remove("SERVICE_COUNT");
         String retryCnt = (String) params.remove("SERVICE_MAXRETRY");
+        // Cato: Event ID
+        String eventId = (String) params.remove("SERVICE_EVENTID");
 
         // the frequency map
         Map<String, Integer> freqMap = new HashMap<String, Integer>();
@@ -303,6 +305,12 @@ public class CoreEvents {
             maxRetry = modelService.maxRetry;
         }
 
+        // Cato: Event ID
+        // TODO: more verification
+        if (eventId != null && eventId.isEmpty()) {
+            eventId = null;
+        }
+        
         // return the errors
         if (errorBuf.length() > 0) {
             request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
@@ -315,7 +323,8 @@ public class CoreEvents {
             if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").equals("Y")) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
             } else {
-                dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry);
+                // Cato: now pass eventId
+                dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);
             }
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.service_dispatcher_exception", locale);

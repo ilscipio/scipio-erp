@@ -84,11 +84,13 @@ ${virtualJavaScript!}
           </@row>
         </div>
         <@script>
-          jQuery("#${productInfoLinkId}").hover(function() {
-                  jQuery("#${productDetailId}").fadeIn("slow");
-              }, function () {
-                  jQuery("#${productDetailId}").fadeOut("fast");
-              });
+          jQuery("#${productInfoLinkId}").attr('title', jQuery("#${productDetailId}").remove().html());
+          jQuery("#${productInfoLinkId}").tooltip({
+              content: function(){
+                  return this.getAttribute("title");
+              },
+              tooltipClass: "popup",   
+          }); 
         </@script>
         <div class="productbuy">
           <#-- check to see if introductionDate hasn't passed yet -->

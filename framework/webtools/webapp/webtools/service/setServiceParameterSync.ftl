@@ -25,7 +25,9 @@ under the License.
   <#-- Cato: leave room for the label area because service parameter names can be long -->
   <@fields fieldArgs={"widgetPostfixColumns":8}>
     <#list serviceParameters as serviceParameter>
-      <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if serviceParameter.defaultValue?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${serviceParameter.defaultValue?string}</em>)</#if></#assign>
+      <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->
+      <#assign defaultValStr = serviceParameter.defaultValue!?string>
+      <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#assign>
       <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
     </#list>
   </@fields>

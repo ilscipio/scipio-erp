@@ -42,7 +42,7 @@ under the License.
         <attribute mode="IN" name="core" optional="true" type="String" />
         <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK
             NOTE: unknown is treated as dirty. -->
-        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false" />
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false"/>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
@@ -52,14 +52,18 @@ under the License.
         location="com.ilscipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndex" debug="true" validate="true">
         <description>rebuild SOLR Index if data status dirty (or unknown)</description>
-        <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
-        <attribute mode="IN" name="core" optional="true" type="String" />
-        <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK
-            NOTE: unknown is treated as dirty. -->
+        <implements service="rebuildSolrIndex" />
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
-        <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
-        <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
-        <!-- TODO: cleanup interface duplication (hackish) -->
+    </service>
+    
+    <service name="rebuildSolrIndexAuto" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.solr.SolrProductSearch"
+        invoke="rebuildSolrIndexAuto" debug="true" validate="true">
+        <description>rebuild SOLR Index - auto-run service</description>
+        <implements service="rebuildSolrIndex" />
+        <!-- NOTE: MUST use attribute here, not override, to prevent default-value -->
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" /> 
     </service>
     
     <service name="setSolrDataStatus" engine="java"

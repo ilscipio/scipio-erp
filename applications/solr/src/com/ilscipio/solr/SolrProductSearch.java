@@ -24,6 +24,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
@@ -32,6 +33,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
@@ -734,6 +736,59 @@ public abstract class SolrProductSearch {
         
         return result;
     }
+    
+    /**
+     * Rebuilds the solr index - auto run.
+     */
+    public static Map<String, Object> rebuildSolrIndexAuto(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+        Map<String, Object> result;
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean("solrconfig.properties", "solr.index.rebuild.autoRun.enabled", false);
+        
+        if (autoRunEnabled) {
+            Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
+            if (onlyIfDirty == null) {
+                onlyIfDirty = UtilProperties.getPropertyAsBoolean("solrconfig.properties", "solr.index.rebuild.autoRun.onlyIfDirty", false);
+            }
+            
+            Debug.logInfo("SOLR: auto-run index rebuild: starting (onlyIfDirty: " + onlyIfDirty + ")", module);
+
+            Map<String, Object> servCtx;
+            try {
+                servCtx = dctx.makeValidContext("rebuildSolrIndex", ModelService.IN_PARAM, context);
+                
+                servCtx.put("onlyIfDirty", onlyIfDirty);
+                
+                Map<String, Object> servResult = dispatcher.runSync("rebuildSolrIndex", servCtx);
+                
+                if (ServiceUtil.isSuccess(servResult)) {
+                    String respMsg = (String) servResult.get(ModelService.SUCCESS_MESSAGE);
+                    if (respMsg != null) {
+                        Debug.logInfo("SOLR: auto-run index rebuild: rebuildSolrIndex returned success: " + respMsg, module);
+                    } else {
+                        Debug.logInfo("SOLR: auto-run index rebuild: rebuildSolrIndex returned success", module);
+                    }
+                } else {
+                    Debug.logError("SOLR: auto-run index rebuild: rebuildSolrIndex returned an error: " + 
+                            ServiceUtil.getErrorMessage(servResult), module);
+                }
+
+                // Just pass it all back, hackish but should work
+                result = FastMap.newInstance();
+                result.putAll(servResult);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            
+        } else {
+            Debug.logInfo("SOLR: auto-run index rebuild: not running - disabled", module);
+            result = ServiceUtil.returnSuccess();
+        }
+
+        return result;
+    }    
     
     
     /**

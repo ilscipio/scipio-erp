@@ -75,7 +75,7 @@ under the License.
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
         <@field type="lookup" label=uiLabelMap.CommonUserLoginId id="userLoginId_sales" value=parameters.userLogin.userLoginId formName="salesentryform" name="userLoginId" fieldFormName="LookupUserLoginAndPartyDetails"/>
-        <@field type="lookup" label=uiLabelMap.OrderCustomer id="partyId" value='${thisPartyId!}' formName="salesentryform" name="partyId" fieldFormName="LookupCustomerName"/>
+        <@field type="lookup" label=uiLabelMap.OrderCustomer id="partyId" value=(thisPartyId!) formName="salesentryform" name="partyId" fieldFormName="LookupCustomerName"/>
       </form>
     </@section>
   </#if>

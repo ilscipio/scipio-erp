@@ -33,8 +33,8 @@ under the License.
     <!-- Cato: NOTE: Most categories are now defined here except old Rental catalog/categories (DemoRental*.xml)
         and specific best-selling categories (DemoCatalogTransientData.xml) -->
 
-    <ProductCategory categoryName="Demo Catalog Root" description="Demo Catalog Root" 
-        longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory categoryName="Demo Catalog" description="Demo Catalog" 
+        longDescription="Demo Catalog Primary Category Root" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <!-- Cato: New categories and categories moved and renamed from other locations (all these have new IDs) -->
     <ProductCategory description="Clothing" longDescription="Clothing"

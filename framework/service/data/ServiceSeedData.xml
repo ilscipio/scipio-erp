@@ -170,6 +170,14 @@ under the License.
     <TemporalExpression tempExprId="DAYOFMONTH_30" tempExprTypeId="DAY_OF_MONTH_RANGE" description="Day 30 of Month" integer1="30" integer2="30"/>
     <TemporalExpression tempExprId="DAYOFMONTH_31" tempExprTypeId="DAY_OF_MONTH_RANGE" description="Day 31 of Month" integer1="31" integer2="31"/>
 
+    <!-- Cato: Every-second expression, needed especially in combination with JobSandbox.eventId  -->
+    <TemporalExpression tempExprId="SECOND_EVERY" tempExprTypeId="FREQUENCY" description="Every second" integer1="13" integer2="1" />
+    <TemporalExpression tempExprId="MINUTE_EVERY" tempExprTypeId="FREQUENCY" description="Every minute" integer1="12" integer2="1" />
+    <TemporalExpression tempExprId="HOUR_EVERY" tempExprTypeId="FREQUENCY" description="Every hour" integer1="11" integer2="1" />
+    <TemporalExpression tempExprId="DAY_EVERY" tempExprTypeId="FREQUENCY" description="Every day" integer1="5" integer2="1" />
+    <TemporalExpression tempExprId="MONTH_EVERY" tempExprTypeId="FREQUENCY" description="Every month" integer1="2" integer2="1" />
+    <TemporalExpression tempExprId="YEAR_EVERY" tempExprTypeId="FREQUENCY" description="Every year" integer1="1" integer2="1" />
+
     <!-- TemporalExpression field details... -->
 
     <!-- The TemporalExpression field meanings depend upon what type of expression it is. The integer

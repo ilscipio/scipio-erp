@@ -13661,6 +13661,21 @@
     <property key="ProductAddExistingContentInCategory">
         <value xml:lang="en">Add Existing Content</value>
     </property>
+    <property key="ProductCategoryProductList">
+        <value xml:lang="en">Category Product List</value>
+    </property>
+    <property key="ProductCategoryProduct">
+        <value xml:lang="en">Category Product</value>
+    </property>
+    <property key="ProductCopyCategoryProductsToCategory">
+        <value xml:lang="en">Copy Category Products to Another Category</value>
+    </property>
+    <property key="ProductExpireAllCategoryProducts">
+        <value xml:lang="en">Expire All Category Products</value>
+    </property>
+    <property key="ProductRemoveExpiredCategoryProducts">
+        <value xml:lang="en">Remove Expired Category Products</value>
+    </property>
     <property key="ProductCatalogEmptyWarning">
         <value xml:lang="en">If you don't populate a Catalog with Categories, it will not be shown in the Browse Catalogs/Categories tree</value>
         <value xml:lang="fr">Si vous ne créez pas de catégories pour un catalogue, il n'apparaitra pas dans l'arbre des Catalogues/catégories</value>

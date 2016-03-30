@@ -25,12 +25,10 @@ uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
 // Show update form
 if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
-    fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)
-    Debug.log("req attr content Id " + requestAttributes.contentId + "parameters ====> " + parameters.contentId + "   " + parameters.productCategoryId + "   " + parameters.prodCatContentTypeId + "   " + fromDate);
+    fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)    
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     productCategoryContent = from("ProductCategoryContent").
-            where(["contentId" : parameters.contentId, "productCategoryId" : parameters.productCategoryId, "prodCatContentTypeId" : parameters.prodCatContentTypeId, "fromDate" : fromDate]).queryOne();
-    Debug.log("productCategoryContent =========> " + productCategoryContent);
+            where(["contentId" : parameters.contentId, "productCategoryId" : parameters.productCategoryId, "prodCatContentTypeId" : parameters.prodCatContentTypeId, "fromDate" : fromDate]).queryOne();    
     if (productCategoryContent) {
         context.productCategoryContent = productCategoryContent;
         context.contentFormName = "EditCategoryContentSimpleText";

@@ -278,38 +278,69 @@ under the License.
     <screen name="EditCategoryProducts">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditCategoryProducts"/>
                 <set field="activeSubMenuItem" value="EditCategoryProducts"/>
                 <set field="labelTitleProperty" value="ProductProducts"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryProducts.groovy"/>
+                
+                <set field="TabBarName" value="CategoryProductSubTabBar" />
+                <set field="title" default-value="${uiLabelMap.ProductCategoryProduct} ${productCategoryId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/AddCategoryProduct.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryProducts.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/MoveCategoryProduct.ftl"/></html>
-                        </platform-specific>
-                        <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/category/AddCategoryProduct.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                        <screenlet>
+	                        <platform-specific>
+	                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryProducts.ftl"/></html>
+	                        </platform-specific>
+                        </screenlet>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not><if-empty field="parameters.copyProductToCategory"/></not>
+                                    <if-compare value="Y" operator="equals" field="parameters.copyProductToCategory"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/category/MoveCategoryProduct.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not><if-empty field="parameters.expireAllCategoryProducts"/></not>
+                                    <if-compare value="Y" operator="equals" field="parameters.expireAllCategoryProducts"/>
+                                </and>
+                            </condition>
+                            <widgets>
                                 <platform-specific>
                                     <html><html-template location="component://product/webapp/catalog/category/ExpireCategoryProduct.ftl"/></html>
                                 </platform-specific>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <platform-specific>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not><if-empty field="parameters.removeExpiredCategoryProducts"/></not>
+                                    <if-compare value="Y" operator="equals" field="parameters.removeExpiredCategoryProducts"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                                 <platform-specific>
                                     <html><html-template location="component://product/webapp/catalog/category/RemoveCategoryProduct.ftl"/></html>
                                 </platform-specific>
-                            </container>
-                        </container>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

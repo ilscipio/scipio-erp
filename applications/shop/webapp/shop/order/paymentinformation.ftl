@@ -77,7 +77,7 @@ function shipBillAddr() {
           </#if>
 
           <@table width="100%" border="0" cellpadding="1" cellspacing="0">
-            <#if cart.getShippingContactMechId()?? && paymentMethodTypeId! != "GIFT_CARD">
+            <#if cart.getShippingContactMechId()?? && (paymentMethodTypeId!) != "GIFT_CARD">
               <@tr>
                 <@td width="26%" align="right" valign="top">
                   <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if useShipAddr??>checked="checked"</#if>/>

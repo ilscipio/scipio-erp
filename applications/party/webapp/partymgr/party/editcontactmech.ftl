@@ -120,7 +120,7 @@ under the License.
         <input type="hidden" name="partyId" value="${partyId}" />
         <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
   </#if>
-  <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
+  <#if "POSTAL_ADDRESS" == (mechMap.contactMechTypeId!)>
     <@field type="input" label=uiLabelMap.PartyToName size="50" maxlength="100" name="toName" value=(mechMap.postalAddress.toName)?default(request.getParameter('toName')!) />
     <@field type="input" label=uiLabelMap.PartyAttentionName size="50" maxlength="100" name="attnName" value=(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!) />
     <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="100" maxlength="255" name="address1" value=(mechMap.postalAddress.address1)?default(request.getParameter('address1')!) />
@@ -145,7 +145,7 @@ under the License.
     <@field type="display" label=uiLabelMap.PartyIsUsps>
         <#if isUsps>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if>
     </@field>
-  <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
+  <#elseif "TELECOM_NUMBER" == (mechMap.contactMechTypeId!)>
     <@field type="generic" label=uiLabelMap.PartyPhoneNumber>
         <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!) />
         -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!) />
@@ -155,7 +155,7 @@ under the License.
     <@field type="display" label="">
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]
     </@field>
-  <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
+  <#elseif "EMAIL_ADDRESS" == (mechMap.contactMechTypeId!)>
     <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="emailAddress" value=(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!) />
   <#else>
     <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="infoString" value=((mechMap.contactMech.infoString)!) />

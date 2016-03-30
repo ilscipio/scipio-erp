@@ -82,7 +82,7 @@ under the License.
                           <#else>
                               <@td valign="top">
                                   <div>
-                                    <#if orderHeader.statusId = "ORDER_CANCELLED" || orderHeader.statusId = "ORDER_COMPLETED">
+                                    <#if orderHeader.statusId == "ORDER_CANCELLED" || orderHeader.statusId == "ORDER_COMPLETED">
                                       <strong>
                                       <#if productId??>
                                         ${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}

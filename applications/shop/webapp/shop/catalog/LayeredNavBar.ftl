@@ -35,7 +35,7 @@ under the License.
       </#if>
     </#escape>
     <#list searchConstraintStrings as searchConstraintString>
-      <#if searchConstraintString.indexOf("Category: ") = -1 && searchConstraintString != "Exclude Variants">
+      <#if searchConstraintString.indexOf("Category: ") == -1 && searchConstraintString != "Exclude Variants">
         <div id="searchConstraints">&nbsp;<a href="<@ofbizUrl>category/~category_id=${productCategoryId}?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N<#if currentSearchCategory??>&amp;searchCategoryId=${currentSearchCategory.productCategoryId}</#if></@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
       </#if>
     </#list>

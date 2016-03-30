@@ -38,7 +38,7 @@ under the License.
     <#assign currentPeriod = false/>
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#assign indexMod7 = period_index % 7>
-    <#if indexMod7 = 0>
+    <#if indexMod7 == 0>
       <#-- FIXME: rearrange without open/close -->
       <@tr open=true close=false />
         <@td style=styleTdVal>
@@ -146,7 +146,7 @@ under the License.
     <#if !period_has_next && indexMod7 != 6>
     <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
     </#if>
-  <#if indexMod7 = 6 || !period_has_next>
+  <#if indexMod7 == 6 || !period_has_next>
   <#-- Cato: FIXME: don't want open/close -->
   <@tr close=true open=false />
   </#if>

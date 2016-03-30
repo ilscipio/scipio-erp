@@ -89,7 +89,7 @@ under the License.
         <#assign colspan><#if (emptySlots > 1)>${emptySlots}</#if></#assign>
         <@td colspan=colspan>&nbsp;</@td>
     </#if>
-    <#if maxConcurrentEntries = 0>
+    <#if maxConcurrentEntries == 0>
       <#assign width>${entryWidth?string("#")}%</#assign>
       <@td width=width>&nbsp;</@td>
     </#if>

@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
-  <#if parameters.view?has_content && parameters.view = "OISGA">
+  <#if parameters.view?has_content && parameters.view == "OISGA">
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -437,7 +437,7 @@ under the License.
               </#if>
               <#if orderShipmentInfoSummaryList?has_content>
                 <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
-                  <#if orderShipmentInfoSummary.shipGroupSeqId! == shipGroup.shipGroupSeqId!>
+                  <#if (orderShipmentInfoSummary.shipGroupSeqId!) == (shipGroup.shipGroupSeqId!)>
                     <div>
                       <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
                       ${uiLabelMap.CommonIdCode}: ${orderShipmentInfoSummary.trackingCode?default("[${uiLabelMap.OrderNotYetKnown}]")}

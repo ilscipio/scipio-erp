@@ -78,7 +78,7 @@
                     <#if (percentSaved?int > 0)><sup><small>(-${percentSaved?int}%)</small><sup></#if>
                 </#if>
             </#if>
-            <#if (showPriceDetails?? && (showPriceDetails!"N") == "Y")>
+            <#if showPriceDetails?? && (showPriceDetails!"N") == "Y">
                 <#if price.orderItemPriceInfos??>
                     <#list price.orderItemPriceInfos as orderItemPriceInfo>
                         ${orderItemPriceInfo.description!}

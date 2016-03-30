@@ -24,7 +24,7 @@ under the License.
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
-                <#if (productPromoCategory.includeSubCategories!) = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
+                <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
@@ -34,7 +34,7 @@ under the License.
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
-                <#if (productPromoCategory.includeSubCategories!) = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
+                <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
@@ -44,7 +44,7 @@ under the License.
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
-                <#if (productPromoCategory.includeSubCategories!) = "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
+                <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>

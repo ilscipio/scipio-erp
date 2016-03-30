@@ -241,7 +241,7 @@ under the License.
 <#if viewDetail?has_content>
   <#list pickMoveInfoList as pickMoveInfo>
     <#assign groupName = pickMoveInfo.groupName!>
-    <#if groupName! == viewDetail>
+    <#if (groupName!) == viewDetail>
       <#assign toPickList = pickMoveInfo.orderReadyToPickInfoList!>
     </#if>
   </#list>

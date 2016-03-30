@@ -34,7 +34,7 @@ under the License.
 <#macro child>
     <#assign contentIdTo="ECMT" + .node.@id[0]/>
     <#assign assocType="SUB_CONTENT"/>
-    <#if .node.@type = "content">
+    <#if .node.@type == "content">
         <#assign contentIdTo="ECMC" + .node.@id[0]/>
         <#assign assocType="PUBLISH_LINK"/>
     </#if>

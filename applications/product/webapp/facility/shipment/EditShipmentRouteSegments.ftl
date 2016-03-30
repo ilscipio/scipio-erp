@@ -165,8 +165,8 @@ under the License.
                 </div>
             </@td>
             <@td valign="top">
-                    <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
-                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
+                    <#if "UPS" == (shipmentRouteSegment.carrierPartyId!)>
+                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == (shipmentRouteSegment.carrierServiceStatusId!)>
                             <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
                             <br />
                             ${uiLabelMap.ProductShipmentUpsResidential}:
@@ -181,13 +181,13 @@ under the License.
                             <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.ProductVoidUpsShipment}</a>
                         </#if>
                     </#if>
-                    <#if "DHL" == shipmentRouteSegment.carrierPartyId!>
-                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
+                    <#if "DHL" == (shipmentRouteSegment.carrierPartyId!)>
+                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == (shipmentRouteSegment.carrierServiceStatusId!)>
                             <a href="javascript:document.dhlShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentDHL}</a>
                         </#if>
                     </#if>
-                    <#if "FEDEX" == shipmentRouteSegment.carrierPartyId!>
-                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
+                    <#if "FEDEX" == (shipmentRouteSegment.carrierPartyId!)>
+                        <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == (shipmentRouteSegment.carrierServiceStatusId!)>
                             <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentFedex}</a>
                             <br />
                             <#if shipmentMethodType?? && shipmentMethodType.shipmentMethodTypeId=="GROUND_HOME">

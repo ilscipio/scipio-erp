@@ -213,7 +213,7 @@ function getConfigDetails(event) {
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.OrderYourPrice}: <#if "Y" = (product.isVirtual!)>from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+            ${uiLabelMap.OrderYourPrice}: <#if "Y" == (product.isVirtual!)>from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
 
       </div>
       <#if price.listPrice?? && price.price?? && price.price < price.listPrice>

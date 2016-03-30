@@ -72,7 +72,7 @@ under the License.
                                         <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
                                         <#assign isDefault = false>
                                         <#if (currentCustomTimePeriod.parentPeriodId)??>
-                                            <#if currentCustomTimePeriod.customTimePeriodId = allCustomTimePeriod.customTimePeriodId>
+                                            <#if currentCustomTimePeriod.customTimePeriodId == allCustomTimePeriod.customTimePeriodId>
                                                 <#assign isDefault = true>
                                             </#if>
                                         </#if>
@@ -95,7 +95,7 @@ under the License.
                                     <#list periodTypes as periodType>
                                         <#assign isDefault = false>
                                         <#if (currentCustomTimePeriod.periodTypeId)??>
-                                            <#if currentCustomTimePeriod.periodTypeId = periodType.periodTypeId>
+                                            <#if currentCustomTimePeriod.periodTypeId == periodType.periodTypeId>
                                                 <#assign isDefault = true>
                                             </#if>
                                         </#if>
@@ -171,7 +171,7 @@ under the License.
                                             <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
                                             <#assign isDefault = false>
                                             <#if (currentCustomTimePeriod.parentPeriodId)??>
-                                                <#if currentCustomTimePeriod.customTimePeriodId = allCustomTimePeriod.customTimePeriodId>
+                                                <#if currentCustomTimePeriod.customTimePeriodId == allCustomTimePeriod.customTimePeriodId>
                                                     <#assign isDefault = true>
                                                 </#if>
                                             </#if>
@@ -190,7 +190,7 @@ under the License.
                                         <#list periodTypes as periodType>
                                             <#assign isDefault = false>
                                             <#if (customTimePeriod.periodTypeId)??>
-                                                <#if customTimePeriod.periodTypeId = periodType.periodTypeId>
+                                                <#if customTimePeriod.periodTypeId == periodType.periodTypeId>
                                                     <#assign isDefault = true>
                                                 </#if>
                                             </#if>
@@ -244,7 +244,7 @@ under the License.
                             <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
                             <#assign isDefault = false>
                             <#if currentCustomTimePeriod??>
-                                <#if currentCustomTimePeriod.customTimePeriodId = allCustomTimePeriod.customTimePeriodId>
+                                <#if currentCustomTimePeriod.customTimePeriodId == allCustomTimePeriod.customTimePeriodId>
                                     <#assign isDefault = true>
                                 </#if>
                             </#if>
@@ -264,7 +264,7 @@ under the License.
                         <#list periodTypes as periodType>
                             <#assign isDefault = false>
                             <#if newPeriodTypeId??>
-                                <#if newPeriodTypeId = periodType.periodTypeId>
+                                <#if newPeriodTypeId == periodType.periodTypeId>
                                     <#assign isDefault = true>
                                 </#if>
                             </#if>

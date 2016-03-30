@@ -178,7 +178,7 @@ under the License.
                             <@td>&nbsp;</@td>
                             <@td>${orderItemShipGrpInvRes.quantity}</@td>
                             <@td>${orderItemShipGrpInvRes.quantityNotAvailable?default("&nbsp;")}</@td>
-                            <#if originFacility?? && originFacility.facilityId == inventoryItem.facilityId!>
+                            <#if originFacility?? && originFacility.facilityId == (inventoryItem.facilityId!)>
                                 <@td>
                                     <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
                                     <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemShipGrpInvRes.orderId}"/>

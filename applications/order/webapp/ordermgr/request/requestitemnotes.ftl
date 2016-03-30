@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@menu type="button">
-<#if showAll = "false">
+<#if showAll == "false">
   <@menuitem type="link" href=makeOfbizUrl("requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=true") text=uiLabelMap.OrderShowAllNotes class="+${styles.action_run_sys!} ${styles.action_find!}" />
 <#else>
   <@menuitem type="link" href=makeOfbizUrl("requestitemnotes?custRequestId=${custRequestId}&amp;custRequestItemSeqId=${custRequestItemSeqId}&amp;showAll=false") text=uiLabelMap.OrderShowThisItemsNotes class="+${styles.action_run_sys!} ${styles.action_find!}" />

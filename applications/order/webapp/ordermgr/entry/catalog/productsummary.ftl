@@ -111,7 +111,7 @@ ${virtualJavaScript!}
           <#-- check to see if the product requires an amount -->
           <#elseif product.requireAmount?? && product.requireAmount == "Y">
             <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
-          <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">
+          <#elseif (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
             <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
           <#else>
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form">
@@ -200,7 +200,7 @@ ${virtualJavaScript!}
                   </#if>
 
                   <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                    ${uiLabelMap.OrderYourPrice}: <#if "Y" = (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                    ${uiLabelMap.OrderYourPrice}: <#if "Y" == (product.isVirtual!)>${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b>
                 <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>

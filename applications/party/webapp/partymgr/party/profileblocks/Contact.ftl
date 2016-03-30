@@ -59,7 +59,7 @@ under the License.
                     </#if>
                   </div>
                 </#list>
-                <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
+                <#if "POSTAL_ADDRESS" == contactMech.contactMechTypeId>
                   <#if contactMechMap.postalAddress?has_content>
                     <#assign postalAddress = contactMechMap.postalAddress>
                     ${setContextField("postalAddress", postalAddress)}
@@ -71,20 +71,20 @@ under the License.
                       <a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
                     </#if>
                   </#if>
-                <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
+                <#elseif "TELECOM_NUMBER" == contactMech.contactMechTypeId>
                   <#if contactMechMap.telecomNumber?has_content>
                     <#assign telecomNumber = contactMechMap.telecomNumber>
                     <div>
                       ${telecomNumber.countryCode!}
                       <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode!"000"}-</#if><#if telecomNumber.contactNumber?has_content>${telecomNumber.contactNumber?default("000-0000")}</#if>
                       <#if partyContactMech.extension?has_content>${uiLabelMap.PartyContactExt}&nbsp;${partyContactMech.extension}</#if>
-                        <#if !telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011">
+                        <#if !telecomNumber.countryCode?has_content || telecomNumber.countryCode == "011">
                           <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                           <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                     </div>
                   </#if>
-                <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
+                <#elseif "EMAIL_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
                     <#assign emailFormName = 'createEmail${contactMech.infoString?replace("&#64;","")?replace("&#x40;","")?replace(".","")?replace("@","")}'>
@@ -99,7 +99,7 @@ under the License.
                       <input name="communicationEventTypeId" value="EMAIL_COMMUNICATION" type="hidden"/>
                     </form><a class="${styles.link_run_sys!} ${styles.action_send!}" href="javascript:document['${emailFormName}'].submit()">${uiLabelMap.CommonSendEmail}</a>
                   </div>
-                <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
+                <#elseif "WEB_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>

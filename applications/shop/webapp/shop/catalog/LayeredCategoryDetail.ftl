@@ -86,13 +86,13 @@ under the License.
             ${setRequestAttribute("listIndex", productId_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <#if (tabCol?int = 1)><@tr open=true close=false /></#if>
+              <#if (tabCol?int == 1)><@tr open=true close=false /></#if>
                   <@td>
                       ${setRequestAttribute("optProductId", productId)}
                       ${setRequestAttribute("listIndex", productId_index)}
                       ${screens.render(productsummaryScreen)}
                   </@td>
-              <#if (tabCol?int = numCol)><@tr close=true open=false /></#if>
+              <#if (tabCol?int == numCol)><@tr close=true open=false /></#if>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>
            </#if>
         </#list>

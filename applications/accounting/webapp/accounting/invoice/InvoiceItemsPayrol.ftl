@@ -34,7 +34,7 @@ under the License.
                         </@row>
                         <#if PayrolList?has_content>
                             <#list PayrolList as payrolList>
-                                <#if payrolList.parentTypeId! == payrolGroup.invoiceItemTypeId!>
+                                <#if (payrolList.parentTypeId!) == (payrolGroup.invoiceItemTypeId!)>
                                     <@row>
                                         <@cell columns=6>${payrolList.description}</@cell>
                                         <@cell columns=3><@field type="input" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></@cell>

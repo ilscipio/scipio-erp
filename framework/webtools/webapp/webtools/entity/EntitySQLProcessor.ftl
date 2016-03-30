@@ -19,7 +19,7 @@ under the License.
     <form method="post" action="EntitySQLProcessor" name="EntitySQLCommand">
         <@field type="select" label=uiLabelMap.CommonGroup name="group">
                 <#list groups as group>
-                    <option value="${group}" <#if selGroup??><#if group = selGroup>selected="selected"</#if></#if>>${group}</option>
+                    <option value="${group}"<#if selGroup??><#if group == selGroup> selected="selected"</#if></#if>>${group}</option>
                 </#list>
         </@field>
         <@field type="textarea" label=uiLabelMap.WebtoolsSqlCommand name="sqlCommand" cols="100" rows="5">${sqlCommand!}</@field>

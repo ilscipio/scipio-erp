@@ -24,19 +24,19 @@ under the License.
 
 <#macro text text>
   <#list text?children as child>
-    <#if child?node_type = "text">
+    <#if child?node_type == "text">
       ${child}
-    <#elseif child?node_type = 'element' && child?node_name = "link">
+    <#elseif child?node_type == 'element' && child?node_name == "link">
       <a href="${child["@xl:href"]}">${child}</a>
-    <#elseif child?node_type = 'element' && child?node_name = "orderedlist">
+    <#elseif child?node_type == 'element' && child?node_name == "orderedlist">
      <@orderedlist node=child/>
-    <#elseif child?node_type = 'element' && child?node_name = "itemizedlist">
+    <#elseif child?node_type == 'element' && child?node_name == "itemizedlist">
      <@itemizedlist node=child/>
-    <#elseif child?node_type = 'element' && child?node_name = "mediaobject">
+    <#elseif child?node_type == 'element' && child?node_name == "mediaobject">
       <@mediaobject node=child/>
-    <#elseif child?node_type = 'element' && child?node_name = "emphasis">
+    <#elseif child?node_type == 'element' && child?node_name == "emphasis">
       <span class="${child["@role"]}">${child}</span>
-    <#elseif child?node_type = 'element' && child?node_name = "programlisting">
+    <#elseif child?node_type == 'element' && child?node_name == "programlisting">
       <pre>${child}</pre>
     </#if>
   </#list>
@@ -45,38 +45,38 @@ under the License.
 <#-- Cato: FIXME: hides cato macro of same name -->
 <#macro section inSection level first="no">
   <#list inSection.* as subSection>
-    <#if subSection?node_name = "title">
+    <#if subSection?node_name == "title">
       <#list subSection?children as subTitle>
-        <#if subTitle?node_type = "text">
-          <#if first = "yes">
+        <#if subTitle?node_type == "text">
+          <#if first == "yes">
             <h1>${subTitle}</h1>
           <#else>
             <br /><h${level}>${subTitle}</h${level}>
           </#if>
         <#else>
-          <#if subTitle?node_name = "anchor">
+          <#if subTitle?node_name == "anchor">
             <span id="${subTitle["@xml:id"]}" />
           </#if>
         </#if>
       </#list>
-    <#elseif subSection?node_name = "para">
+    <#elseif subSection?node_name == "para">
         <p><@para para=subSection/></p>
-    <#elseif subSection?node_name = "section">
+    <#elseif subSection?node_name == "section">
         <#assign levelPlus=level?number +1/>
         <@section inSection=subSection level="${levelPlus}"/>
-    <#elseif subSection?node_name = "orderedlist">
+    <#elseif subSection?node_name == "orderedlist">
         <@orderedlist node=subSection/>
-    <#elseif subSection?node_name  = "itemizedlist">
+    <#elseif subSection?node_name == "itemizedlist">
         <@itemizedlist node=subSection/>
-    <#elseif subSection?node_name  = "caution">
+    <#elseif subSection?node_name == "caution">
         <span class="caution"><@admonition node=subSection/></span>
-    <#elseif subSection?node_name  = "important">
+    <#elseif subSection?node_name == "important">
         <span class="important"><@admonition node=subSection/></span>
-    <#elseif subSection?node_name  = "note">
+    <#elseif subSection?node_name == "note">
         <span class="note"><@admonition node=subSection/></span>
-    <#elseif subSection?node_name  = "tip">
+    <#elseif subSection?node_name == "tip">
         <span class="tip"><@admonition node=subSection/></span>
-    <#elseif subSection?node_name  = "warning">
+    <#elseif subSection?node_name == "warning">
         <span class="warning"><@admonition node=subSection/></span>
     </#if>
   </#list>
@@ -84,7 +84,7 @@ under the License.
 
 <#macro listItems node>
   <#list node?children as item>
-    <#if item?node_type = "element" && item?node_name = "listitem">
+    <#if item?node_type == "element" && item?node_name == "listitem">
       <#list item.* as subpara>
         <li><@para para=subpara/></li>
       </#list>  
@@ -102,13 +102,13 @@ under the License.
 
 <#macro mediaobject node>
   <#list node?children as item>
-    <#if item?node_type = "element" && item?node_name = "imageobject">
+    <#if item?node_type == "element" && item?node_name == "imageobject">
         <#assign fileref = item.imagedata["@fileref"]/>
         <#assign depth = item.imagedata["@depth"]/>
         <#assign width = item.imagedata["@width"]/>
-    <#elseif item?node_type = "element" && item?node_name = "textobject">
+    <#elseif item?node_type == "element" && item?node_name == "textobject">
         <#assign alt = item.phrase/>
-    <#elseif item?node_type = "element" && item?node_name = "caption">
+    <#elseif item?node_type == "element" && item?node_name == "caption">
         <#assign caption = item/>
     </#if>
   </#list>
@@ -122,9 +122,9 @@ under the License.
 
 <#macro admonition node>
   <#list node.* as subSection>
-    <#if subSection?node_name = "title">
+    <#if subSection?node_name == "title">
       <h3>${subSection}</h3>
-    <#elseif subSection?node_name = "para">
+    <#elseif subSection?node_name == "para">
       <p><@para para=subSection/></p>
     </#if>
   </#list>

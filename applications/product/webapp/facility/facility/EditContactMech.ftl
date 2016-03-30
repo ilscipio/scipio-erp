@@ -134,7 +134,7 @@ under the License.
         <input type="hidden" name="facilityId" value="${facilityId}" />
     </#if>
 
-  <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
+  <#if "POSTAL_ADDRESS" == (mechMap.contactMechTypeId!)>
     <@field type="input" label=uiLabelMap.PartyToName size="30" maxlength="60" name="toName" value=(mechMap.postalAddress.toName)!(request.getParameter('toName')!) />
     <@field type="input" label=uiLabelMap.PartyAttentionName size="30" maxlength="60" name="attnName" value=(mechMap.postalAddress.attnName)!(request.getParameter('attnName')!) />
     <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="30" maxlength="30" name="address1" value=(mechMap.postalAddress.address1)!(request.getParameter('address1')!) />
@@ -156,7 +156,7 @@ under the License.
           ${countryGeo.get("geoName",locale)}
         </option>
     </@field>
-  <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
+  <#elseif "TELECOM_NUMBER" == (mechMap.contactMechTypeId!)>
     <@field type="generic" label=uiLabelMap.PartyPhoneNumber>
         <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(mechMap.telecomNumber.countryCode)!(request.getParameter('countryCode')!) />
         -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(mechMap.telecomNumber.areaCode)!(request.getParameter('areaCode')!) />
@@ -166,7 +166,7 @@ under the License.
     <@field type="display">
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
     </@field>
-  <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
+  <#elseif "EMAIL_ADDRESS" == (mechMap.contactMechTypeId!)>
     <@field type="input" label=(uiLabelMap.PartyEmailAddress!) required=true size="60" maxlength="255" name="emailAddress" value=(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!) />
   <#else>
     <@field type="input" label=(mechMap.contactMechType.get('description',locale)!) required=true size="60" maxlength="255" name="infoString" value=((mechMap.contactMech.infoString)!) />

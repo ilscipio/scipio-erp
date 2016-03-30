@@ -126,7 +126,7 @@ under the License.
           <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
     </#if>
 
-    <#if contactMechTypeId = "POSTAL_ADDRESS">
+    <#if contactMechTypeId == "POSTAL_ADDRESS">
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyToName}</@td>
         <@td>&nbsp;</@td>
@@ -195,7 +195,7 @@ under the License.
           </select>
         </@td>
       </@tr>
-    <#elseif contactMechTypeId = "TELECOM_NUMBER">
+    <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyPhoneNumber}</@td>
         <@td>&nbsp;</@td>
@@ -211,7 +211,7 @@ under the License.
         <@td>&nbsp;</@td>
         <@td>[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</@td>
       </@tr>
-    <#elseif contactMechTypeId = "EMAIL_ADDRESS">
+    <#elseif contactMechTypeId == "EMAIL_ADDRESS">
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyEmailAddress}</@td>
         <@td>&nbsp;</@td>

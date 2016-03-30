@@ -52,7 +52,7 @@ under the License.
     <@field type="select" label=uiLabelMap.ProductSupplier name="SEARCH_SUPPLIER_ID">
         <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
       <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
-        <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if (sessionAttributes.orderPartyId?? & sessionAttributes.orderPartyId = supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
+        <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if (sessionAttributes.orderPartyId?? & sessionAttributes.orderPartyId == supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
       </#list>
     </@field>
     <@field type="generic" label=uiLabelMap.CommonSortedBy>

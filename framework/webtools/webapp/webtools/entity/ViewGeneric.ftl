@@ -41,7 +41,7 @@ function ShowTab(lname) {
 
     <@menu type="button">
       <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <#if enableEdit = "false">
+      <#if enableEdit == "false">
         <#if hasCreatePermission>
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&amp;enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${curFindString}&amp;enableEdit=true") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
@@ -96,7 +96,7 @@ function ShowTab(lname) {
     
 
    
-    <#if enableEdit = "true" && ( hasUpdatePermission || hasCreatePermission)>
+    <#if enableEdit == "true" && ( hasUpdatePermission || hasCreatePermission)>
         <#assign alt_row = false>
            <@row>
             <@cell>
@@ -291,7 +291,7 @@ function ShowTab(lname) {
                           </@pli>
             
             <#else>
-                          <#if "one" = relation.type>
+                          <#if "one" == relation.type>
                             <#--
                                 <@pli>
                                   <b>${uiLabelMap.WebtoolsNoValueFoundFor}</b> ${relation.title}${relation.relatedTable}.

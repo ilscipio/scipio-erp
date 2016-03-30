@@ -781,8 +781,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
           <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
         <#elseif groupParent?is_boolean && groupParent == true>
           <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
-        <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false)==true)>
-          <#if ((catoCurrentTableInfo.inheritAltRows)!false)==true>
+        <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false) == true)>
+          <#if ((catoCurrentTableInfo.inheritAltRows)!false) == true>
             <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
           <#else>
             <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->
@@ -1343,8 +1343,8 @@ Chart data entry.
 
 <#-- @chartdata main markup - theme override -->
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} passArgs={} catchArgs...>
-  <#if chartLibrary=="foundation">
-    <#if chartType = "line">
+  <#if chartLibrary == "foundation">
+    <#if chartType == "line">
       <#global chartDataIndex =  chartDataIndex + 1 />
       <li data-y="${value!}" data-x="${chartDataIndex}">${title!}</li>
     <#else>

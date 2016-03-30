@@ -127,7 +127,7 @@ function lookupBom() {
             <#assign selectedFormula = (request.getParameter("estimateCalcMethod"))!>
         </#if>
         <#list formulae as formula>
-            <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected="selected"</#if>>${formula.get("description",locale)!}</option>
+            <option value="${formula.customMethodId}"<#if selectedFormula == formula.customMethodId> selected="selected"</#if>>${formula.get("description",locale)!}</option>
         </#list>
     </@field>
     <#if useValues>

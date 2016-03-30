@@ -169,7 +169,7 @@ under the License.
                   </#list>
                 </@table>
               </div>
-              <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot = "Y">
+              <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot == "Y">
                 <div style="margin-left: 30px;">
                   <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                     <@thead>

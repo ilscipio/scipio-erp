@@ -43,7 +43,7 @@ under the License.
         </#if>
 
         <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
-                <#if "Y" = (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                <#if "Y" == (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </#if>
     </#if>
             <div class="productbuy">

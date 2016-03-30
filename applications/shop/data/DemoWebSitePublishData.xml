@@ -19,10 +19,17 @@ under the License.
 -->
 <entity-engine-xml>
 
+    <!-- BASIC PUBLISH STRUCTURE -->
+
     <!-- NOTE DEJ20060610 This is just a skeleton for the most part and does not have complete content -->
-    <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Ecommerce Content Categories"/>
+    <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Shop Content Categories"/>
     <WebSiteContent webSiteId="CatoWebStore" contentId="WebStoreCONTENT" webSiteContentTypeId="PUBLISH_POINT" fromDate="2001-01-01 00:00:00"/>
 
+    <Content contentId="CNTELTRN" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Electronics" description="Electronics" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTELTRN" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTELTRN" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <!-- Cato: Unneeded - but keep as structure reference
     <Content contentId="CNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Gizmos" description="Gizmos" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
@@ -53,25 +60,26 @@ under the License.
 
     <Content contentId="CNTWIDGETSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTWIDGETS" contentName="Small Widgets" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="CNTWIDGETS" contentIdTo="CNTWIDGETSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    -->
 
+    <!-- STORE POLICIES -->
 
     <Content contentId="POLICY" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Policies" description="Policies" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="POLICY" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="POLICY" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
-
-    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
 
     <!-- An example of sub-content to be rendered by the root contentId (WebStoreCONTENT) and map-key (policies) -->
     <DataResource dataResourceId="STORE_POLICIES" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Store Policies"/>
     <ElectronicText dataResourceId="STORE_POLICIES">
         <textData><![CDATA[
             <div class="head2">Store Policies</div>
-            <div>This is just a demo store, so you might not really like our policies. Here there are any way:</div>
+            <div>This is a demo store with demo policies. They are as follows:</div>
             <div>
                 <ol>
-                    <li>If you send us money we'll keep it. So DON'T SEND US MONEY!</li>
-                    <li>We will never fulfill anything you order here. In fact, we haven't even bothered to create any of these products. They are all just made up.</li>
-                    <li>It might surprise you, but this <bold>is</bold> a for-profit store. We make money by selling you're contact information. You'd be surprised by how many suckers put in real personal data! We make tons on it! (NOT!) Don't worry, this is just a joke. If you've entered anything it's safe with us...</li>
+                    <li>All our products should be considered fictional.</li>
+                    <li>We will never fulfill anything you order here.</li>
+                    <li>We will not accept any real money for any of the products advertised and listed.</li>
+                    <li>We will not use your personal information in any way.</li>
                 </ol>
             </div>
         ]]></textData>
@@ -97,4 +105,41 @@ under the License.
         contentName="Store Policies 2" description="Store Policies 2 Description" mimeTypeId="text/html" localeString="en_US" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="STORE_POLICIES2" mapKey="policies2" contentAssocTypeId="SUB_CONTENT"
         fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+        
+        
+    <!-- FACTOID -->    
+        
+    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
+        
+    <DataResource dataResourceId="CATO-FACT-02" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="CATO-FACT-02" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+Downloadable music outsells hard-copy music CDs 2:1.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CATO-FACT-02" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-02" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Downloadable music outsells hard-copy music" description="Downloadable music outsells hard-copy music CDs 2:1." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="CATO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <DataResource dataResourceId="CATO-FACT-03" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="CATO-FACT-03" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+Phones are our most popular item.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CATO-FACT-03" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-03" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones most popular" description="Phones are our most popular item." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="CATO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <DataResource dataResourceId="CATO-FACT-04" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" statusId="CTNT_PUBLISHED" createdDate="2004-03-30 07:57:39.734" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.734" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:39.734" createdStamp="2004-03-30 07:57:39.734"/>
+    <ElectronicText dataResourceId="CATO-FACT-04" lastUpdatedStamp="2004-03-30 07:57:39.694" createdStamp="2004-03-30 07:57:39.694">
+        <textData><![CDATA[
+The resale value of our phones after five years is 46% higher than that of competitors.
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CATO-FACT-04" contentTypeId="DOCUMENT" ownerContentId="WebStoreFACTOID" dataResourceId="CATO-FACT-04" statusId="CTNT_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE" contentName="Phones hold value" description="Phones hold value." createdDate="2004-03-30 07:57:39.671" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:39.671" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.174" createdStamp="2004-03-30 07:57:39.671"/>
+    <ContentAssoc contentId="CATO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="PUBLISH_LINK" fromDate="2004-03-30 07:57:53.141" createdDate="2004-03-30 07:57:53.145" createdByUserLogin="admin" lastModifiedDate="2004-03-30 07:57:53.145" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-30 07:57:53.151" createdStamp="2004-03-30 07:57:53.151"/>
+
+    <ContentAssoc contentId="CATO-FACT-02" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CATO-FACT-03" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="CATO-FACT-04" contentIdTo="WebStoreFACTOID" contentAssocTypeId="SUB_CONTENT" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    
 </entity-engine-xml>

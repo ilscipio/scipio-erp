@@ -33,8 +33,8 @@ under the License.
     <#assign internalNameParts=internalName?split(".")/>
     <#assign firstPart=internalNameParts[0] />
     <#assign nowStamp=Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()/>
-    <#if firstPart == "WIDGETS">
-        <ContentAssoc contentId="CNTWIDGETS" contentIdTo="${contentId}" contentAssocTypeId="SUB_CONTENT" fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>
+    <#if firstPart == "ELTRN">
+        <ContentAssoc contentId="CNTELTRN" contentIdTo="${contentId}" contentAssocTypeId="SUB_CONTENT" fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>
     </#if>
 </#macro>
 

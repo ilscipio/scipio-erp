@@ -20,7 +20,10 @@
 <entity-engine-xml>
     <!-- Cato: Category and Product localization -->
 
-    <!-- CATEGORIES -->
+    <!-- NOTE: For these to take effect, the corresponding ProductCategory and Product fields must be omitted,
+        otherwise they override the data here -->
+
+    <!-- CATEGORIES (names) -->
 
     <!-- Cato: TEMPLATE (variables surrounded by underscores _XXX_)
     <DataResource dataResourceId="DR_ID_DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
@@ -36,6 +39,20 @@
 
     <ContentAssoc contentId="C_ID_DESCEN" contentIdTo="C_ID_DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
     -->
+
+    <!-- Root category -->
+    <DataResource dataResourceId="DRCATALOG1DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCATALOG1DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCATALOG1DESCDE" textData="Demo-Katalog"/>
+    <ElectronicText dataResourceId="DRCATALOG1DESCEN" textData="Demo Catalog"/>
+
+    <Content contentId="CCATALOG1DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCATALOG1DESCDE" description="DESCRIPTION DE Demo Catalog" localeString="de"/>
+    <Content contentId="CCATALOG1DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCATALOG1DESCEN" description="DESCRIPTION EN Demo Catalog" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1" contentId="CCATALOG1DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCATALOG1DESCEN" contentIdTo="CCATALOG1DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
     <!-- Clothing category -->
     <DataResource dataResourceId="DRCLOTH-100DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
@@ -387,7 +404,7 @@
 
     <ContentAssoc contentId="CDROP-100DESCEN" contentIdTo="CDROP-100DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
-    <!-- Featured Products category -->
+    <!-- Promotions category -->
     <DataResource dataResourceId="DRPROMO-001DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="DRPROMO-001DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
@@ -401,18 +418,74 @@
 
     <ContentAssoc contentId="CPROMO-001DESCEN" contentIdTo="CPROMO-001DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
 
+    <!-- Search category -->
+    <DataResource dataResourceId="DRCAT1SEARCHDESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1SEARCHDESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
+    <ElectronicText dataResourceId="DRCAT1SEARCHDESCDE" textData="Demo Standardsuche "/>
+    <ElectronicText dataResourceId="DRCAT1SEARCHDESCEN" textData="Demo Default Search"/>
+
+    <Content contentId="CCAT1SEARCHDESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1SEARCHDESCDE" description="DESCRIPTION DE Demo Default Search" localeString="de"/>
+    <Content contentId="CCAT1SEARCHDESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1SEARCHDESCEN" description="DESCRIPTION EN Demo Default Search" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_SEARCH" contentId="CCAT1SEARCHDESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1SEARCHDESCEN" contentIdTo="CCAT1SEARCHDESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+
+    <!-- Main Quick Add category -->
+    <DataResource dataResourceId="DRCAT1QKADD1DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1QKADD1DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1QKADD1DESCDE" textData="Haupt Quick Add"/>
+    <ElectronicText dataResourceId="DRCAT1QKADD1DESCEN" textData="Main Quick Add"/>
+
+    <Content contentId="CCAT1QKADD1DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD1DESCDE" description="DESCRIPTION DE Main Quick Add" localeString="de"/>
+    <Content contentId="CCAT1QKADD1DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD1DESCEN" description="DESCRIPTION EN Main Quick Add" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD1" contentId="CCAT1QKADD1DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1QKADD1DESCEN" contentIdTo="CCAT1QKADD1DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Electronics Quick Add category -->
+    <DataResource dataResourceId="DRCAT1QKADD2DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1QKADD2DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1QKADD2DESCDE" textData="Electronics Quick Add"/>
+    <ElectronicText dataResourceId="DRCAT1QKADD2DESCEN" textData="Electronics Quick Add"/>
+
+    <Content contentId="CCAT1QKADD2DESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD2DESCDE" description="DESCRIPTION DE Electronics Quick Add" localeString="de"/>
+    <Content contentId="CCAT1QKADD2DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1QKADD2DESCEN" description="DESCRIPTION EN Electronics Quick Add" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD2" contentId="CCAT1QKADD2DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1QKADD2DESCEN" contentIdTo="CCAT1QKADD2DESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    <!-- Best Selling category -->    
+    <DataResource dataResourceId="DRCAT1BSELLDESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
+    <DataResource dataResourceId="DRCAT1BSELLDESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
+
+    <ElectronicText dataResourceId="DRCAT1BSELLDESCDE" textData="Meistverkauft"/>
+    <ElectronicText dataResourceId="DRCAT1BSELLDESCEN" textData="Best Selling"/>
+
+    <Content contentId="CCAT1BSELLDESCDE" contentTypeId="DOCUMENT" dataResourceId="DRCAT1BSELLDESCDE" description="DESCRIPTION DE Best Selling" localeString="de"/>
+    <Content contentId="CCAT1BSELLDESCEN" contentTypeId="DOCUMENT" dataResourceId="DRCAT1BSELLDESCEN" description="DESCRIPTION EN Best Selling" localeString="en"/>
+
+    <ProductCategoryContent productCategoryId="CATALOG1_BEST_SELL" contentId="CCAT1BSELLDESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
+
+    <ContentAssoc contentId="CCAT1BSELLDESCEN" contentIdTo="CCAT1BSELLDESCDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2007-12-28 00:00:00.0"/>
+    
+    
     <!-- PRODUCTS -->
 
     <!-- CAM-2644 (Example) -->
     <DataResource dataResourceId="CAM-2644DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="CAM-2644DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Gizmo rond lumineux"/>
-    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="Round Gizmo with lights"/>
+    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Die retro analoge Nikon-Kamera mit FM2 Film"/>
+    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="The retro analog Nikon camera with FM2 film"/>
 
-    <Content contentId="CAM-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
-    <Content contentId="CAM-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
+    <Content contentId="CAM-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>
+    <Content contentId="CAM-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCEN" description="DESCRIPTION EN Nikon Analog Camera" localeString="en"/>
 
     <ProductContent productId="CAM-2644" contentId="CAM-2644DESCEN" productContentTypeId="DESCRIPTION" fromDate="2006-09-22 00:00:00.0"/>
 
@@ -421,11 +494,11 @@
     <DataResource dataResourceId="CAM-2644NAMEDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="CAM-2644NAMEEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Gizmo Rond"/>
-    <ElectronicText dataResourceId="CAM-2644NAMEEN" textData="Round Gizmo"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Nikon Analog Camera"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEEN" textData="Nikon Analog Camera"/>
 
-    <Content contentId="CAM-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEDE" description="DESCRIPTION DE Round Gizmo" localeString="de"/>
-    <Content contentId="CAM-2644NAMEEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEEN" description="DESCRIPTION EN Round Gizmo" localeString="en"/>
+    <Content contentId="CAM-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>
+    <Content contentId="CAM-2644NAMEEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEEN" description="DESCRIPTION EN Nikon Analog Camera" localeString="en"/>
 
     <ProductContent productId="CAM-2644" contentId="CAM-2644NAMEEN" productContentTypeId="PRODUCT_NAME" fromDate="2006-09-22 00:00:00.0"/>
 

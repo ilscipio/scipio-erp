@@ -31,7 +31,6 @@ under the License.
     <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
     <UserLogin userLoginId="DemoSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="DemoSupplier"/>
 
-
     <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
     <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" />
@@ -158,10 +157,10 @@ under the License.
     <SupplierProductFeature productFeatureId="8001" partyId="EuroSupplier" description="EURO-GPL"/>
     <SupplierProductFeature productFeatureId="8002" partyId="EuroSupplier" description="EURO-BSD"/>
     <SupplierProductFeature productFeatureId="8003" partyId="EuroSupplier" description="EURO-MIT"/>
-    <SupplierProductFeature productFeatureId="9000" partyId="EuroSupplier" description="Noir"/>
-    <SupplierProductFeature productFeatureId="9001" partyId="EuroSupplier" description="Argent"/>
-    <SupplierProductFeature productFeatureId="9002" partyId="EuroSupplier" description="a trois roues"/>
-    <SupplierProductFeature productFeatureId="9003" partyId="EuroSupplier" description="a quatre roues"/>
+    <SupplierProductFeature productFeatureId="9000" partyId="EuroSupplier" description="Black"/>
+    <SupplierProductFeature productFeatureId="9001" partyId="EuroSupplier" description="Silver"/>
+    <SupplierProductFeature productFeatureId="9002" partyId="EuroSupplier" description="Regular"/>
+    <SupplierProductFeature productFeatureId="9003" partyId="EuroSupplier" description="Large"/>
 
     <SupplierProductFeature productFeatureId="8000" partyId="BigSupplier" description="BIG-LGP"/>
     <SupplierProductFeature productFeatureId="8001" partyId="BigSupplier" description="BIG-GPL"/>
@@ -169,8 +168,8 @@ under the License.
     <SupplierProductFeature productFeatureId="8003" partyId="BigSupplier" description="BIG-MIT"/>
     <SupplierProductFeature productFeatureId="9000" partyId="BigSupplier" description="BIG-BLK"/>
     <SupplierProductFeature productFeatureId="9001" partyId="BigSupplier" description="BIG-SIL"/>
-    <SupplierProductFeature productFeatureId="9002" partyId="BigSupplier" description="BIG-3WL"/>
-    <SupplierProductFeature productFeatureId="9003" partyId="BigSupplier" description="BIG-4WL"/>
+    <SupplierProductFeature productFeatureId="9002" partyId="BigSupplier" description="BIG-REG"/>
+    <SupplierProductFeature productFeatureId="9003" partyId="BigSupplier" description="BIG-LG"/>
 
     <!-- supplier agreements -->
     <!-- The agreement header can be used to link directly two parties  -->

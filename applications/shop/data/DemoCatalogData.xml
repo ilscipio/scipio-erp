@@ -20,6 +20,13 @@ under the License.
 
 <entity-engine-xml>
 
+    <!-- Cato: NOTES: 
+      * Some of the IDs from old ecommerce stock data have been changed, but not all yet;
+        mostly those that have changed meaning or products completely or where the IDs were unsatisfactory.
+      * For every product or category field that has localized content (in DemoCatalogI18n.xml or other), the corresponding field
+        on Product and ProductCategory must be omitted; otherwise, they override the localized content.
+    -->
+
     <!-- CATALOGS -->
     
     <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" useQuickAdd="Y"/>
@@ -30,11 +37,14 @@ under the License.
 
     <!-- CATEGORIES -->
 
-    <!-- Cato: NOTE: Most categories are now defined here except old Rental catalog/categories (DemoRental*.xml)
-        and specific best-selling categories (DemoCatalogTransientData.xml) -->
+    <!-- Cato: NOTES: 
+      * Most categories are now defined here except old Rental catalog/categories (DemoRental*.xml)
+        and specific best-selling categories (DemoCatalogTransientData.xml) 
+      * Category names are in DemoCatalogI18n.xml 
+    -->
 
-    <ProductCategory categoryName="Demo Catalog" description="Demo Catalog" 
-        longDescription="Demo Catalog Primary Category Root" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory description="Demo Catalog Primary Category Root" longDescription="Demo Catalog Primary Category Root" 
+        productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <!-- Cato: New categories and categories moved and renamed from other locations (all these have new IDs) -->
     <ProductCategory description="Clothing" longDescription="Clothing"
@@ -48,7 +58,7 @@ under the License.
         primaryParentCategoryId="CATALOG1" productCategoryId="ELTRN-100" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Computer" longDescription="Computer"
             primaryParentCategoryId="ELTRN-100" productCategoryId="PC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory description="Computer Systems" longDescription="Computer Systems (Desktops, Laptops, Tablets)"
+            <ProductCategory description="Computer Systems (Desktops, Laptops, Tablets)" longDescription="Computer Systems (Desktops, Laptops, Tablets)"
                 primaryParentCategoryId="PC-101" productCategoryId="PC-SYS-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             <ProductCategory description="Software" longDescription="Software"
                 primaryParentCategoryId="PC-101" productCategoryId="PC-SW-101" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -61,19 +71,19 @@ under the License.
         <ProductCategory description="Phones" longDescription="Phones"
             primaryParentCategoryId="ELTRN-100" productCategoryId="EL-PHN-101" productCategoryTypeId="CATALOG_CATEGORY"/>
         
-    <ProductCategory description="Media" longDescription="Media Entertainment" 
+    <ProductCategory description="Media Entertainment" longDescription="Media Entertainment" 
         primaryParentCategoryId="CATALOG1" productCategoryId="MEDIA-100" productCategoryTypeId="CATALOG_CATEGORY"/>
         <ProductCategory description="Music" longDescription="Music"
             primaryParentCategoryId="MEDIA-100" productCategoryId="MUSIC-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory description="Music CDs" longDescription="Music CDs (Hard Copies)"
+            <ProductCategory description="Music CDs (Hard Copies)" longDescription="Music CDs (Hard Copies)"
                 primaryParentCategoryId="MUSIC-101" productCategoryId="MU-CD-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-            <ProductCategory description="Music Downloads" longDescription="Downloadable Albums (MP3s and Files)"
+            <ProductCategory description="Downloadable Albums (MP3s and Files)" longDescription="Downloadable Albums (MP3s and Files)"
                 primaryParentCategoryId="MUSIC-101" productCategoryId="MU-DL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
             
-    <ProductCategory description="Travel" longDescription="Travel Products and Rentals" 
+    <ProductCategory description="Travel Products and Rentals" longDescription="Travel Products and Rentals" 
         primaryParentCategoryId="CATALOG1" productCategoryId="TRVL-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
-    <ProductCategory description="Automotive" longDescription="Vehicles, Automobiles and Accessories" 
+    <ProductCategory description="Vehicles, Automobiles and Accessories" longDescription="Vehicles, Automobiles and Accessories" 
         primaryParentCategoryId="CATALOG1" productCategoryId="AUTO-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <ProductCategory description="Subscriptions" longDescription="Subscriptions"
@@ -86,41 +96,39 @@ under the License.
         primaryParentCategoryId="CATALOG1" productCategoryId="SERV-100" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
         primaryParentCategoryId="CATALOG1" productCategoryId="GFTC-100" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory description="Gift Card Purchase" longDescription="Gift Cards - Purchases" 
+        <ProductCategory description="Gift Cards - Purchases" longDescription="Gift Cards - Purchases" 
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-PR-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <ProductCategory description="Gift Card Reload"  longDescription="Gift Cards - Reloads" 
+        <ProductCategory description="Gift Cards - Reloads"  longDescription="Gift Cards - Reloads" 
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-RL-101" productCategoryTypeId="CATALOG_CATEGORY"/>
-        <!-- Cato: what is this one for? Not in rollup. -->
+        <!-- Cato: What is this one for? Not in rollup. -->
         <ProductCategory description="Gift Cards" longDescription="Gift Cards" 
             primaryParentCategoryId="GFTC-100" productCategoryId="GC-SP-101" productCategoryTypeId="GIFT_CARD_CATEGORY"/>
 
-    <ProductCategory description="Drop-Ship" longDescription="Drop-Ship Products" 
+    <ProductCategory description="Drop-Ship Products" longDescription="Drop-Ship Products" 
         primaryParentCategoryId="CATALOG1" productCategoryId="DROP-100" productCategoryTypeId="CATALOG_CATEGORY"/>
 
     <!-- Cato: Special categories (NOTE: these still using stock IDs) -->
     <ProductCategory description="Promotions" longDescription="Promotions" 
         productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY" detailScreen="component://shop/widget/CatalogScreens.xml#categorydetailmatrix"/>
-    <ProductCategory categoryName="Demo Default Search" description="Demo Default Search"
-        longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
+    <ProductCategory description="Demo Default Search" longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
         productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
-    <ProductCategory categoryName="Main Quick Add" description="Main Quick Add"
-        longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
-    <ProductCategory categoryName="Electronics Quick Add" description="Electronics Quick Add"
-        longDescription="Get all your electronics here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
-    <ProductCategory categoryName="Demo Best Selling" description="Demo Best Selling" longDescription="Demo Best Selling"
+    <ProductCategory description="Main Quick Add" longDescription="For quick orders, you have found the right place!" 
+        productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
+    <ProductCategory description="Electronics Quick Add" longDescription="Get all your electronics here!" 
+        productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
+    <ProductCategory description="Best Selling" longDescription="Demo Best Selling"
         productCategoryId="CATALOG1_BEST_SELL" productCategoryTypeId="BEST_SELL_CATEGORY"/>
         <!-- NOTE: The specific BEST-SELL categories are defined in DemoCatalogTransientData.xml -->
 
     <!-- Cato: Other categories -->
-    <ProductCategory categoryName="Test Limited Admin Category"
-        longDescription="Test Limited Admin Category" productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategory categoryName="Test Limited Admin Category" longDescription="Test Limited Admin Category" 
+        productCategoryId="TSTLTDADMIN" productCategoryTypeId="CATALOG_CATEGORY"/>
     <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin" roleTypeId="LTD_ADMIN" fromDate="2001-05-13 12:00:00.0"/>
     <!-- Adding this record to test role based security -->
     <ProductCategoryRole productCategoryId="TSTLTDADMIN" partyId="ltdadmin1" roleTypeId="LTD_ADMIN" fromDate="2001-05-13 12:00:00.0"/>
 
-    <ProductCategory categoryName="Test Cross Sell Category"
-        longDescription="Test Cross Sell Category" productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
-
+    <ProductCategory categoryName="Test Cross Sell Category" longDescription="Test Cross Sell Category" 
+        productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
     <!-- Catalog-category associations -->
     
@@ -422,48 +430,6 @@ under the License.
     <Product productId="PH-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone Business" internalName="iPhone Business" description="iPhone Large Business Model" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
         <longDescription><![CDATA[This is a larger, business-oriented version of the popular iPhone.<br/><br/>It is recommended for those with advanced business requirements.]]></longDescription>
     </Product>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1000-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1001-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1004-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1005-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1005-ALTEN" localeString="en_US"/>
-    
-    <ElectronicText dataResourceId="PH-1000-ALT" textData="iphone5"/>
-    <ElectronicText dataResourceId="DRPH-1000-ALTEN" textData="iphone5"/>
-    <ElectronicText dataResourceId="PH-1001-ALT" textData="iphone6"/>
-    <ElectronicText dataResourceId="DRPH-1001-ALTEN" textData="iphone6"/>
-    <ElectronicText dataResourceId="PH-1004-ALT" textData="iphone7"/>
-    <ElectronicText dataResourceId="DRPH-1004-ALTEN" textData="iphone7"/>
-    <ElectronicText dataResourceId="PH-1005-ALT" textData="iphone-business"/>
-    <ElectronicText dataResourceId="DRPH-1005-ALTEN" textData="iphone-business"/>
-    
-    <DataResource dataResourceId="PH-1005-WARN" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataResourceName="PH-1005 Warning" isPublic="Y"/>
-    <ElectronicText dataResourceId="PH-1005-WARN">
-        <textData><![CDATA[<b>*** Note: This iPhone requires a special business account signup upon receipt of the item to enable all business features. ***</b>]]></textData>
-    </ElectronicText>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1000-ALT" dataResourceId="PH-1000-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1000-ALTEN" dataResourceId="DRPH-1000-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1001-ALT" dataResourceId="PH-1001-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1001-ALTEN" dataResourceId="DRPH-1001-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1004-ALT" dataResourceId="PH-1004-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1004-ALTEN" dataResourceId="DRPH-1004-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1005-ALT" dataResourceId="PH-1005-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1005-ALTEN" dataResourceId="DRPH-1005-ALTEN"/>
-    
-    <ContentAssoc contentId="PH-1000-ALT" contentIdTo="CPH-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PH-1001-ALT" contentIdTo="CPH-1001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PH-1004-ALT" contentIdTo="CPH-1004-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="PH-1005-ALT" contentIdTo="CPH-1005-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    
-    <Content contentId="PH-1005-WARN" contentTypeId="DOCUMENT" dataResourceId="PH-1005-WARN" mimeTypeId="text/plain" contentName="PH-1005 Warning"/>
-    <ProductContent productId="PH-1000" contentId="PH-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="PH-1001" contentId="PH-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="PH-1004" contentId="PH-1004-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="PH-1005" contentId="PH-1005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductContent productId="PH-1005" contentId="PH-1005-WARN" productContentTypeId="WARNINGS" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="SW-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-SW-101" productName="LicenseToolPlus" internalName="LicenseToolPlus" description="LicenseToolPlus licensing helper application" longDescription="LicenseToolPlus is a program that helps you analyze your code and software to meet licensing criteria." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="SW-1006-1" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-SW-101" productName="LicenseToolPlus (LGPL)" internalName="LicenseToolPlus (LGPL)" description="LicenseToolPlus licensing helper application" longDescription="LicenseToolPlus is a program that helps you analyze your code and software to meet licensing criteria. This edition helps software conform to the LGPL license." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -473,8 +439,9 @@ under the License.
     <Product productId="SW-1006-5" productTypeId="FINISHED_GOOD" primaryProductCategoryId="PC-SW-101" productName="LicenseToolPlus (ASL2)" internalName="LicenseToolPlus (ASL)" description="LicenseToolPlus licensing helper application" longDescription="LicenseToolPlus is a program that helps you analyze your code and software to meet licensing criteria. This edition helps software conform to the ASL license." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     
     <Product productId="CD-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="MU-CD-101" productName="U2 - Greatest Hits (CD)" internalName="U2 - Greatest Hits (CD)" description="U2 - Greatest Hits (CD)" longDescription="A compilation of U2's greatest hits from every era." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="CAM-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" internalName="Nikon Analogue Camera" description="The retro analogue Nikon camera with FM2 film" longDescription="The retro analogue Nikon camera with FM2 film. Produces beautiful, natural photographs." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="7.0"/>
-    <Product productId="CL-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-MEN-101" productName="Men's Jacket" internalName="Men's Jacket" description="A styling men's jacket" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <!-- NOTE: Product name and description are omitted because they are specified as localized content -->
+    <Product productId="CAM-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" internalName="Nikon Analog Camera" longDescription="The retro analog Nikon camera with FM2 film. Produces beautiful, natural photographs." isVirtual="N" isVariant="N" quantityIncluded="100.0" weight="7.0"/>
+    <Product productId="CL-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-MEN-101" productName="Men's Jacket" internalName="Men's Jacket" description="A stylish men's jacket" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="CL-7000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-WMN-101" productName="Blouse" internalName="Blouse" description="A stylish woman's blouse" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="CL-8544" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-WMN-101" productName="Women's Socks" internalName="Women's Socks" description="Women's Socks" longDescription="Women's socks variety pack" isVirtual="N" isVariant="N" quantityIncluded="12" weight="1"/>
     <Product productId="MPL-9290" productTypeId="FINISHED_GOOD" primaryProductCategoryId="ELTRN-100" productName="Thumb MP3 Player" internalName="Thumb MP3 Player" description="A thumbdrive-like MP3 player" longDescription="This MP3 player provides high fedility sound and is easy on batteries. It can connect directly to a computer via USB like a thumb drive." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -490,7 +457,37 @@ under the License.
 
     <Product productId="VH-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Mustang Sports Car (with features)" internalName="Mustang Sports Car (with features)" virtualVariantMethodEnum="VV_FEATURETREE" description="Mustang Sports Car" longDescription="The Mustang is an elegant sports car perfect for any enthusiast." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
     
+    <Product productId="CL-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-MEN-101" productName="Men's T-Shirt" internalName="Men's T-Shirt" description="Men's T-Shirt" longDescription="A sleek T-Shirt in a variety of colors and sizes." isVirtual="Y" isVariant="N" weight="1"/>
+
+    
     <!-- Product Alternative URL -->
+    
+    <!-- Cato: TEMPLATE:
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="_ID_-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR_ID_-ALTEN" localeString="en_US"/>
+    
+    <ElectronicText dataResourceId="_ID_-ALT" textData="car-mustang"/>
+    <ElectronicText dataResourceId="DR_ID_-ALTEN" textData="car-mustang"/>
+    
+    <Content contentId="_ID_-ALT" contentTypeId="DOCUMENT" dataResourceId="_ID_-ALT" localeString="en"/>
+    <Content contentId="C_ID_-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DR_ID_-ALTEN" localeString="en_US"/>
+    
+    <ContentAssoc contentId="_ID_-ALT" contentIdTo="C_ID_-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+        
+    <ProductContent productId="_ID_" contentId="_ID_-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+        
+    <ProductPrice productId="_ID_" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="40000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="_ID_" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="35000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+     -->
+    
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1000-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1000-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1001-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1001-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1004-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1004-ALTEN" localeString="en_US"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1005-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRPH-1005-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SW-1006-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRSW-1006-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="SW-1006-1-ALT" localeString="en"/>
@@ -531,7 +528,17 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S4-ALTEN" localeString="en_US"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="VH-9944-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9944-ALTEN" localeString="en_US"/>
-    
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="CL-1000-ALT" localeString="en"/>
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRCL-1000-ALTEN" localeString="en_US"/>
+
+    <ElectronicText dataResourceId="PH-1000-ALT" textData="iphone5"/>
+    <ElectronicText dataResourceId="DRPH-1000-ALTEN" textData="iphone5"/>
+    <ElectronicText dataResourceId="PH-1001-ALT" textData="iphone6"/>
+    <ElectronicText dataResourceId="DRPH-1001-ALTEN" textData="iphone6"/>
+    <ElectronicText dataResourceId="PH-1004-ALT" textData="iphone7"/>
+    <ElectronicText dataResourceId="DRPH-1004-ALTEN" textData="iphone7"/>
+    <ElectronicText dataResourceId="PH-1005-ALT" textData="iphone-business"/>
+    <ElectronicText dataResourceId="DRPH-1005-ALTEN" textData="iphone-business"/>
     <ElectronicText dataResourceId="SW-1006-ALT" textData="license-tool-plus"/>
     <ElectronicText dataResourceId="DRSW-1006-ALTEN" textData="license-tool-plus"/>
     <ElectronicText dataResourceId="SW-1006-1-ALT" textData="license-tool-plus-lgpl"/>
@@ -544,8 +551,8 @@ under the License.
     <ElectronicText dataResourceId="DRSW-1006-3-ALTEN" textData="license-tool-plus-mit"/>
     <ElectronicText dataResourceId="CD-2002-ALT" textData="u2-greatest-hits"/>
     <ElectronicText dataResourceId="DRCD-2002-ALTEN" textData="u2-greatest-hits"/>
-    <ElectronicText dataResourceId="CAM-2644-ALT" textData="analogue-nikon-camera"/>
-    <ElectronicText dataResourceId="DRCAM-2644-ALTEN" textData="analogue-nikon-camera"/>
+    <ElectronicText dataResourceId="CAM-2644-ALT" textData="nikon-analog-camera"/>
+    <ElectronicText dataResourceId="DRCAM-2644-ALTEN" textData="nikon-analog-camera"/>
     <ElectronicText dataResourceId="CL-5005-ALT" textData="men-jacket"/>
     <ElectronicText dataResourceId="DRCL-5005-ALTEN" textData="men-jacket"/>
     <ElectronicText dataResourceId="CL-7000-ALT" textData="women-blouse"/>
@@ -570,7 +577,17 @@ under the License.
     <ElectronicText dataResourceId="DRVH-9943-S4-ALTEN" textData="a40f-s4-truck"/>
     <ElectronicText dataResourceId="VH-9944-ALT" textData="car-mustang"/>
     <ElectronicText dataResourceId="DRVH-9944-ALTEN" textData="car-mustang"/>
-    
+    <ElectronicText dataResourceId="CL-1000-ALT" textData="men-t-shirt"/>
+    <ElectronicText dataResourceId="DRCL-1000-ALTEN" textData="men-t-shirt"/>
+
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1000-ALT" dataResourceId="PH-1000-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1000-ALTEN" dataResourceId="DRPH-1000-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1001-ALT" dataResourceId="PH-1001-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1001-ALTEN" dataResourceId="DRPH-1001-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1004-ALT" dataResourceId="PH-1004-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1004-ALTEN" dataResourceId="DRPH-1004-ALTEN"/>
+    <Content contentTypeId="DOCUMENT" localeString="en" contentId="PH-1005-ALT" dataResourceId="PH-1005-ALT"/>
+    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CPH-1005-ALTEN" dataResourceId="DRPH-1005-ALTEN"/>
     <Content contentId="SW-1006-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-ALT" localeString="en"/>
     <Content contentId="CSW-1006-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRSW-1006-ALTEN" localeString="en_US"/>
     <Content contentId="SW-1006-1-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-1-ALT" localeString="en"/>
@@ -611,7 +628,13 @@ under the License.
     <Content contentId="CVH-9943-S4-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9943-S4-ALTEN" localeString="en_US"/>
     <Content contentId="VH-9944-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9944-ALT" localeString="en"/>
     <Content contentId="CVH-9944-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRVH-9944-ALTEN" localeString="en_US"/>
-    
+    <Content contentId="CL-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="CL-1000-ALT" localeString="en"/>
+    <Content contentId="CCL-1000-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRCL-1000-ALTEN" localeString="en_US"/>
+
+    <ContentAssoc contentId="PH-1000-ALT" contentIdTo="CPH-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PH-1001-ALT" contentIdTo="CPH-1001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PH-1004-ALT" contentIdTo="CPH-1004-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+    <ContentAssoc contentId="PH-1005-ALT" contentIdTo="CPH-1005-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SW-1006-ALT" contentIdTo="CSW-1006-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SW-1006-1-ALT" contentIdTo="CSW-1006-1-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="SW-1006-2-ALT" contentIdTo="CSW-1006-2-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -632,21 +655,24 @@ under the License.
     <ContentAssoc contentId="VH-9943-S3-ALT" contentIdTo="CVH-9943-S3-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="VH-9943-S4-ALT" contentIdTo="CVH-9943-S4-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
     <ContentAssoc contentId="VH-9944-ALT" contentIdTo="CVH-9944-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    
+    <ContentAssoc contentId="CL-1000-ALT" contentIdTo="CCL-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
+
+    <ProductContent productId="PH-1000" contentId="PH-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="PH-1005" contentId="PH-1005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006" contentId="SW-1006-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006-1" contentId="SW-1006-1-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006-2" contentId="SW-1006-2-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006-3" contentId="SW-1006-3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006-4" contentId="SW-1006-4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="SW-1006-5" contentId="SW-1006-5-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    
     <ProductContent productId="CD-2002" contentId="CD-2002-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CL-5005" contentId="CL-5005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CL-7000" contentId="CL-7000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="CL-8544" contentId="CL-8544-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="MPL-9290" contentId="MPL-9290-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
-    
     <ProductContent productId="CDR-1111" contentId="CDR-1111-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="KB-5569" contentId="KB-5569-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="VH-9943" contentId="VH-9943-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
@@ -655,7 +681,20 @@ under the License.
     <ProductContent productId="VH-9943-S3" contentId="VH-9943-S3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="VH-9943-S4" contentId="VH-9943-S4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
     <ProductContent productId="VH-9944" contentId="VH-9944-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductContent productId="CL-1000" contentId="CL-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
+    <!-- Product warnings -->
+    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="PH-1005-WARN" mimeTypeId="text/plain" dataResourceName="PH-1005 Warning" isPublic="Y"/>
+   
+    <ElectronicText dataResourceId="PH-1005-WARN">
+        <textData><![CDATA[<b>*** Note: This iPhone requires a special business account signup upon receipt of the item to enable all business features. ***</b>]]></textData>
+    </ElectronicText>
+    
+    <Content contentId="PH-1005-WARN" contentTypeId="DOCUMENT" dataResourceId="PH-1005-WARN" mimeTypeId="text/plain" contentName="PH-1005 Warning"/>
+    
+    <ProductContent productId="PH-1005" contentId="PH-1005-WARN" productContentTypeId="WARNINGS" fromDate="2001-05-13 12:00:00.0"/>
+
+    <!-- Product prices -->
     <ProductPrice productId="PH-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="109.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="PH-1000" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="99.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="PH-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2014-01-01 00:00:00.0" price="73.54" priceWithTax="73.54" priceWithoutTax="69.99" taxAmount="3.55" taxAuthGeoId="FRA" taxAuthPartyId="FRA_TA" taxInPrice="Y" taxPercentage="5.000000"/>
@@ -692,6 +731,8 @@ under the License.
     <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="40000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="35000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="VH-9944" productPricePurposeId="PURCHASE" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="30000.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="CL-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="14.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="CL-1000" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="13.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
     <!-- test Subscription product, a newsletter -->
     <Product productId="NEWS-01-1MO" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="SUBS-100" productName="Cato Newsletter 1 Month" internalName="Cato Newsletter 1 Month Subscription" description="A 1 month subscription to the Cato Newsletter: can be used immediately after purchase." longDescription="This newsletter will give you regular updates on the wonderful world of Cato!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -710,12 +751,12 @@ under the License.
    
     <!-- test Digital Download product -->
     <Product productId="MP3-1000" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="MU-DL-101" productName="U2 - Greatest Hits (MP3 Download)" internalName="U2 - Greatest Hits (MP3 Download)" description="A compilation of U2's greatest hits from every era." longDescription="A compilation of U2's greatest hits from every era, in downloadable MP3 format." taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <DataResource dataResourceId="MP3-1000" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="image/gif" dataResourceName="MP3 Download Image" objectInfo="framework/images/webapp/images/ofbiz_logo.gif"/>
+    <DataResource dataResourceId="MP3-1000" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 01" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 01.mp3"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="MP3-1000-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRMP3-1000-ALTEN" localeString="en_US"/>
     <ElectronicText dataResourceId="MP3-1000-ALT" textData="u2-greatest-hits-mp3"/>
     <ElectronicText dataResourceId="DRMP3-1000-ALTEN" textData="u2-greatest-hits-mp3"/>
-    <Content contentId="MP3-1000" contentTypeId="DOCUMENT" dataResourceId="MP3-1000" mimeTypeId="image/gif" contentName="ofbiz_logo.gif" description="Image of Digital Gizmo (actually the OFBiz logo)"/>
+    <Content contentId="MP3-1000" contentTypeId="DOCUMENT" dataResourceId="MP3-1000" mimeTypeId="audio/mpeg" contentName="Demo Artist - Demo Song 01.mp3" description="Digital MP3 Album - Track 01"/>
     <Content contentId="MP3-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="MP3-1000-ALT" localeString="en"/>
     <Content contentId="CMP3-1000-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DRMP3-1000-ALTEN" localeString="en_US"/>
     <ContentAssoc contentId="MP3-1000-ALT" contentIdTo="CMP3-1000-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
@@ -884,6 +925,9 @@ under the License.
     <ContentAssoc contentId="CFSV1001-ALT" contentIdTo="CCFSV1001-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-08-02 12:00:00.0"/>
     <ProductContent productId="CFSV1001" contentId="CFSV1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2011-08-02 12:00:00.0"/>
 
+
+    <!-- Products features -->
+    
     <ProductFeatureCategory productFeatureCategoryId="8000" description="License Features"/>
     <ProductFeatureCategoryAppl productFeatureCategoryId="8000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
 
@@ -908,6 +952,33 @@ under the License.
     <ProductFeaturePrice productFeatureId="9003" price="2.30" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
 
     <ProductFeatureIactn productFeatureId="9000" productFeatureIdTo="9002" productId="VH-9944" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
+
+    <ProductFeatureCategory productFeatureCategoryId="7100" description="Shirt Colors"/>
+    <ProductFeatureCategoryAppl productFeatureCategoryId="7100" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
+
+    <ProductFeature productFeatureId="7100" productFeatureCategoryId="7100" productFeatureTypeId="COLOR" description="Black"/>
+    <ProductFeaturePrice productFeatureId="7100" productPriceTypeId="DEFAULT_PRICE" price="0.00" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7101" productFeatureCategoryId="7100" productFeatureTypeId="COLOR" description="Blue"/>
+    <ProductFeaturePrice productFeatureId="7101" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7102" productFeatureCategoryId="7100" productFeatureTypeId="COLOR" description="Red"/>
+    <ProductFeaturePrice productFeatureId="7102" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7103" productFeatureCategoryId="7100" productFeatureTypeId="COLOR" description="Green"/>
+    <ProductFeaturePrice productFeatureId="7103" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7104" productFeatureCategoryId="7100" productFeatureTypeId="COLOR" description="Purple"/>
+    <ProductFeaturePrice productFeatureId="7104" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+
+    <ProductFeatureCategory productFeatureCategoryId="7150" description="Shirt Sizes"/>
+    <ProductFeatureCategoryAppl productFeatureCategoryId="7150" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
+
+    <ProductFeature productFeatureId="7150" productFeatureCategoryId="7150" productFeatureTypeId="SIZE" description="Regular"/>
+    <ProductFeaturePrice productFeatureId="7150" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7151" productFeatureCategoryId="7150" productFeatureTypeId="SIZE" description="Small"/>
+    <ProductFeaturePrice productFeatureId="7151" price="0.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7152" productFeatureCategoryId="7150" productFeatureTypeId="SIZE" description="Large"/>
+    <ProductFeaturePrice productFeatureId="7152" price="1.00" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+    <ProductFeature productFeatureId="7153" productFeatureCategoryId="7150" productFeatureTypeId="SIZE" description="Extra-Large"/>
+    <ProductFeaturePrice productFeatureId="7153" price="1.50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2000-01-01 00:00:00.0"/>
+
 
     <ProductFeatureAppl productId="SW-1006" productFeatureId="8000"
         productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
@@ -965,6 +1036,26 @@ under the License.
     <ProductFeatureAppl productId="VH-9943-S4" productFeatureId="9003"
         productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
 
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7100"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="01"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7101"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="02"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7102"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="03"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7103"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="04"/>    
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7104"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="05"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7150"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="06"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7151"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="07"/>
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7152"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="08"/>    
+    <ProductFeatureAppl productId="CL-1000" productFeatureId="7153"
+        productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-05-13 12:00:00.0" sequenceNum="09"/>
+    
+
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="SW-1006"
         productIdTo="SW-1006-1" quantity="1.0" reason=""/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="SW-1006"
@@ -985,7 +1076,10 @@ under the License.
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_VARIANT" productId="VH-9943"
         productIdTo="VH-9943-S4" quantity="1.0" reason=""/>
 
-    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="KB-5569"
+
+    <!-- Product complements/upgrade/substitutes -->
+
+    <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="VH-9944"
         productIdTo="VH-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_UPGRADE" productId="CDR-1111"
         productIdTo="KB-5569" quantity="1.0" reason="If you like chrome, but want it a little bigger, this is the one for you!"/>
@@ -1006,6 +1100,9 @@ under the License.
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="PH-1000"
         productIdTo="PH-1004" quantity="1.0" reason="The iPhone 7 supersedes the iPhone 5, although we still offer the iPhone 5 at a reasonable price."/>
 
+
+    <!-- Product Categories -->
+
     <ProductCategoryMember productCategoryId="MEDIA-100" productId="MP3-1000" sequenceNum="4" fromDate="2001-05-13 12:00:00.0"/>
     <!--<ProductCategoryMember productCategoryId="SUBS-100" productId="NEWS-01-1MO" sequenceNum="5" fromDate="2001-05-13 12:00:00.0"/>-->
     <ProductCategoryMember productCategoryId="ELTRN-100" productId="EL-BASKET" sequenceNum="6" fromDate="2001-05-13 12:00:00.0"/>
@@ -1020,6 +1117,7 @@ under the License.
     <ProductCategoryMember productCategoryId="CLOTH-100" productId="CL-5005" sequenceNum="55" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CLOTH-100" productId="CL-7000" sequenceNum="70" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="ELTRN-100" productId="MPL-9290" sequenceNum="92" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CLOTH-100" productId="CL-1000" sequenceNum="96" fromDate="2001-05-13 12:00:00.0"/>
 
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="EL-PHN-101" productId="PH-1001" fromDate="2001-05-13 12:00:00.0"/>
@@ -1038,6 +1136,7 @@ under the License.
     <ProductCategoryMember productCategoryId="PC-AC-101" productId="CDR-1111" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="AUTO-100" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="AUTO-100" productId="VH-9944" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="CL-MEN-101" productId="CL-1000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="CAM-2644" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="CL-8544" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="CDR-1111" fromDate="2001-05-13 12:00:00.0"/>
@@ -1078,6 +1177,9 @@ under the License.
     <!-- Added record to check role based permission for limited admin user -->
     <ProductCategoryMember productCategoryId="TSTLTDADMIN" productId="CAM-2644" fromDate="2003-03-04 18:55:14.547"/>
 
+
+    <!-- Product Facility/Stock -->
+
     <!-- some default product facility settings -->
     <ProductFacility productId="CAM-2644" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
     <ProductFacility productId="CL-8544" facilityId="WebStoreWarehouse" minimumStock="20" reorderQuantity="50" daysToShip="1"/>
@@ -1091,6 +1193,7 @@ under the License.
     <ProductFacility productId="PH-1001" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="PH-1004" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
     <ProductFacility productId="SV-1001" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="CL-1000" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
 
     <ProductFacilityLocation productId="CAM-2644" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01"/>
     <ProductFacilityLocation productId="CAM-2644" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" minimumStock="2" moveQuantity="5"/>
@@ -1104,6 +1207,7 @@ under the License.
     <ProductFacilityLocation productId="PH-1001" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" minimumStock="5" moveQuantity="20"/>
     <ProductFacilityLocation productId="PH-1004" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
     <ProductFacilityLocation productId="SV-1001" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="CL-1000" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
 
     <!-- some default inventory quantities, things are a bit underutilized without these... -->
     <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2008-08-01 08:00:00.000"
@@ -1127,7 +1231,10 @@ under the License.
     <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL04" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9006" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="KB-5569" ownerPartyId="Company" currencyUomId="USD" unitCost="5.0"/>
     <InventoryItemDetail inventoryItemId="9006" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
+        inventoryItemId="9007" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CL-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
+    <InventoryItemDetail inventoryItemId="9007" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="15" quantityOnHandDiff="15" accountingQuantityDiff="15"/>
+    
     <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9010" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
     <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
@@ -1156,7 +1263,8 @@ under the License.
     <InventoryItemDetail inventoryItemId="9028" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
     
 
-    <!-- Some additional test promotions -->
+    <!-- Additional test promotions -->
+    
     <!-- GWP example on >$100 purchase -->
     <!-- $ off items, any in category, limit use (try by order, customer, promo) -->
     <!-- 20% off any one item in product list, ie limit 1 per order -->
@@ -1165,41 +1273,38 @@ under the License.
     <!-- Buy 3 Get 2 Free in category, limit to two per order -->
     <!-- Buy 1 Get 1 At 50% off with promo code, no limit -->
     <!-- 4 for $50 in set of products -->
-    <ProductPromo productPromoId="7000" promoName="Test Promo 1" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
-        <!-- Cato: Now points to shop -->
-        <promoText><![CDATA[Spend more than $100 on your favorite widgets and gizmos and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=CDR-1111">Micro Chrome Widget</a>!]]></promoText>
+    <ProductPromo productPromoId="7000" promoName="Test free product with minimum purchase total" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
+        <promoText><![CDATA[Spend more than $100 on your favorite products and get a free <a href="/shop/control/product?category_id=PC-AC-101&amp;product_id=CDR-1111">CD-R Bunble</a>!]]></promoText>
     </ProductPromo>
-    <ProductPromo productPromoId="7010" promoName="Test Percent off product set " promoText="20% off any one item, either PH-1005 (iPhone Business) or SW-1006 (LicenseToolPlus) with a limit of 1 per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="7010" promoName="Test percent off product set" promoText="20% off any one item, either PH-1005 (iPhone Business) or SW-1006 (LicenseToolPlus) with a limit of 1 per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7011" promoName="Test percent off entire purchase, no condition" promoText="10% off entire purchase" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7012" promoName="Test amount off order" promoText="$10 off entire purchase of $50 or more with promo code [7000], limit use of code to one per customer, limit for three uses total for the code" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7013" promoName="Test buy X get Y free" promoText="Buy 3 Get 2 Free in the Electronics [ELTRN-100] or any sub-category (except the Computer [PC-101] category and sub-categories, but always including the Computer Peripherals [PC-PR-101] category), limit to two per order" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="7014" promoName="Test buy X get Y at Z% discount" promoText="Buy 1 Big Gizmo [CL-8544] or Massive Gizmo [CL-7000] Get 1 Purple Gizmo [CL-5005] At 50% off with promo code [7001] (must be associated with Party or Email), no limit" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="7015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Purple Gizmo [CL-5005], Rainbow Gizmo [PH-1004], Round Gizmo [CAM-2644] or Square Gizmo [CD-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="7014" promoName="Test buy X get Y at Z% discount" promoText="Buy 1 Women's Socks [CL-8544] or Blouse [CL-7000] Get 1 Men's Jacket [CL-5005] At 50% off with promo code [7001] (must be associated with Party or Email), no limit" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromo productPromoId="7015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Men's Jacket [CL-5005], iPhone 7 [PH-1004], Nikon Analog Camera [CAM-2644] or U2 Greatest Hits CD [CD-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="7016" promoName="Test $ off products in categories" promoText="Get $10 off any item in the Computer Software [PC-SW-101] category, limit 1 per order, 2 per customer, 3 for entire promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="7017" promoName="Test Gift with Amount of Specific Product" userEntered="Y" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0">
-        <!-- Cato: Now points to shop -->
-        <promoText><![CDATA[Buy $50 of your favorite music (all products in Music [MUSIC-101] or sub-category) get a free <a href="/shop/control/product?category_id=20111&amp;product_id=SW-1006">Open Gizmo</a>! Limit 2 per order.]]></promoText>
+    <ProductPromo productPromoId="7017" promoName="Test gift with amount of specific product" userEntered="Y" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0">
+        <promoText><![CDATA[Buy $50 of your favorite music (all products in Music [MUSIC-101] or sub-category) get a free copy of <a href="/shop/control/product?category_id=PC-SW-101&amp;product_id=SW-1006">TestLicencePlus</a>! Limit 2 per order.]]></promoText>
     </ProductPromo>
-    <ProductPromo productPromoId="7018" promoName="Test Gift with Total Amount of Product" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
-        <!-- Cato: Now points to shop -->
-        <promoText><![CDATA[Spend more than $150 on your favorite music (all products in Music [MUSIC-101] or sub-category) and get a free <a href="/shop/control/product?category_id=20111&amp;product_id=SW-1006">Open Gizmo</a>!]]></promoText>
+    <ProductPromo productPromoId="7018" promoName="Test gift with total amount of product" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
+        <promoText><![CDATA[Spend more than $150 on your favorite music (all products in Music [MUSIC-101] or sub-category) and get a free copy of <a href="/shop/control/product?category_id=PC-SW-101&amp;product_id=SW-1006">TestLicencePlus</a>!]]></promoText>
     </ProductPromo>
-    <ProductPromo productPromoId="7019" promoName="Test Percent off when Customer Orders over $1000 in 12 months" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
+    <ProductPromo productPromoId="7019" promoName="Test percent off when customer orders over $1000 in 12 months" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0">
         <promoText><![CDATA[Spend more than $1000 in any 12 months on our fabulous products and get a 5% discount.]]></promoText>
     </ProductPromo>
-    <ProductPromo productPromoId="7020" promoName="Test Promotion Recurrence - Happy hour" promoText="Get 1 Free [CDR-1111], between 15:00 - 18:00 at weekdays" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2008-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPromoRule productPromoId="7000" productPromoRuleId="01" ruleName="Rule 1: Free Widget"/>
-    <ProductPromoRule productPromoId="7010" productPromoRuleId="01" ruleName="Test Percent off rule"/>
+    <ProductPromo productPromoId="7020" promoName="Test promotion recurrence - happy hour" promoText="Get 1 Free CD-R Bundle [CDR-1111] between 15:00 - 18:00 at weekdays" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" createdDate="2008-01-01 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2008-01-01 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPromoRule productPromoId="7000" productPromoRuleId="01" ruleName="Rule 1: Free CD-R Bundle"/>
+    <ProductPromoRule productPromoId="7010" productPromoRuleId="01" ruleName="Test percent off rule"/>
     <ProductPromoRule productPromoId="7011" productPromoRuleId="01" ruleName="Test percent off order"/>
     <ProductPromoRule productPromoId="7012" productPromoRuleId="01" ruleName="Test amount off order"/>
-    <ProductPromoRule productPromoId="7013" productPromoRuleId="01" ruleName="Test bogo"/>
+    <ProductPromoRule productPromoId="7013" productPromoRuleId="01" ruleName="Test buy X get Y free"/>
     <ProductPromoRule productPromoId="7014" productPromoRuleId="01" ruleName="Test buy 1 get 1 at 50%"/>
     <ProductPromoRule productPromoId="7015" productPromoRuleId="01" ruleName="Test multiple promotion"/>
-    <ProductPromoRule productPromoId="7016" productPromoRuleId="01" ruleName="Dollar discount on Small Gizmos"/>
-    <ProductPromoRule productPromoId="7017" productPromoRuleId="01" ruleName="GWP for Gizmos Only"/>
-    <ProductPromoRule productPromoId="7018" productPromoRuleId="01" ruleName="GWP for Gizmos Only Not Counted"/>
-    <ProductPromoRule productPromoId="7019" productPromoRuleId="01" ruleName="Percent off for Ordered Sub-Total History"/>
-    <ProductPromoRule productPromoId="7020" productPromoRuleId="01" ruleName="Test Promotion Recurrence"/>
+    <ProductPromoRule productPromoId="7016" productPromoRuleId="01" ruleName="Dollar discount on software"/>
+    <ProductPromoRule productPromoId="7017" productPromoRuleId="01" ruleName="GWP for music only"/>
+    <ProductPromoRule productPromoId="7018" productPromoRuleId="01" ruleName="GWP for music only not counted"/>
+    <ProductPromoRule productPromoId="7019" productPromoRuleId="01" ruleName="Percent off for ordered sub-total history"/>
+    <ProductPromoRule productPromoId="7020" productPromoRuleId="01" ruleName="Test promotion recurrence"/>
     <ProductPromoAction productPromoId="7000" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="CDR-1111"/>
     <ProductPromoAction productPromoId="7010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="20.0"/>
     <ProductPromoAction productPromoId="7011" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="10.0"/>
@@ -1272,6 +1377,9 @@ under the License.
     <ProductPriceCond inputParamEnumId="PRIP_PRODUCT_ID" operatorEnumId="PRC_EQ" condValue="CDR-1111" productPriceCondSeqId="01" productPriceRuleId="9001"/>
     <ProductPriceCond inputParamEnumId="PRIP_PARTY_GRP_MEM" operatorEnumId="PRC_EQ" condValue="DemoCustCompany" productPriceCondSeqId="02" productPriceRuleId="9001"/>
     <ProductPriceAction productPriceRuleId="9001" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_FLAT" amount="18.95"/>
+
+
+    <!-- Gift Cards -->
 
     <!-- example gift card product info -->
     <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-RL-101" internalName="Gift Card Reload" productName="Gift Card Reload" description="Add more money to your card!" requireAmount="Y" returnable="N" includeInPromotions="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
@@ -1562,21 +1670,20 @@ under the License.
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRVH-9943-S4-BX5-ALT" localeString="en_US"/>
     
     <ElectronicText dataResourceId="VH-9943-B3-BX2-ALT" textData="a40f-b3-bx2-truck"/>
-    <ElectronicText dataResourceId="VH-9943-B3-BX5-ALT" textData="a40f-b3-bx5-truck"/>
-    <ElectronicText dataResourceId="VH-9943-B4-BX2-ALT" textData="a40f-b4-bx2-truck"/>
-    <ElectronicText dataResourceId="VH-9943-B4-BX5-ALT" textData="a40f-b4-bx5-truck"/>
-    <ElectronicText dataResourceId="VH-9943-S3-BX2-ALT" textData="a40f-s3-bx2-truck"/>
-    <ElectronicText dataResourceId="VH-9943-S3-BX5-ALT" textData="a40f-s3-bx5-truck"/>
-    <ElectronicText dataResourceId="VH-9943-S4-BX2-ALT" textData="a40f-s4-bx2-truck"/>
-    <ElectronicText dataResourceId="VH-9943-S4-BX5-ALT" textData="a40f-s4-bx5-truck"/>
-    
     <ElectronicText dataResourceId="DRVH-9943-B3-BX2-ALT" textData="a40f-b3-bx2-truck"/>
+    <ElectronicText dataResourceId="VH-9943-B3-BX5-ALT" textData="a40f-b3-bx5-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-B3-BX5-ALT" textData="a40f-b3-bx5-truck"/>
+    <ElectronicText dataResourceId="VH-9943-B4-BX2-ALT" textData="a40f-b4-bx2-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-B4-BX2-ALT" textData="a40f-b4-bx2-truck"/>
+    <ElectronicText dataResourceId="VH-9943-B4-BX5-ALT" textData="a40f-b4-bx5-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-B4-BX5-ALT" textData="a40f-b4-bx5-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S3-BX2-ALT" textData="a40f-s3-bx2-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-S3-BX2-ALT" textData="a40f-s3-bx2-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S3-BX5-ALT" textData="a40f-s3-bx5-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-S3-BX5-ALT" textData="a40f-s3-bx5-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S4-BX2-ALT" textData="a40f-s4-bx2-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-S4-BX2-ALT" textData="a40f-s4-bx2-truck"/>
+    <ElectronicText dataResourceId="VH-9943-S4-BX5-ALT" textData="a40f-s4-bx5-truck"/>
     <ElectronicText dataResourceId="DRVH-9943-S4-BX5-ALT" textData="a40f-s4-bx5-truck"/>
     
     <Content contentId="VH-9943-B3-BX2-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B3-BX2-ALT" localeString="en"/>
@@ -1652,31 +1759,35 @@ under the License.
     <!-- Demo product tags -->
     <ProductKeyword productId="PH-1000" keyword="iphone5" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1001" keyword="iphone6" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="CD-2002" keyword="gizmos" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="CAM-2644" keyword="gizmos" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="CL-5005" keyword="gizmos" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CD-2002" keyword="u2" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CD-2002" keyword="hits" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CAM-2644" keyword="camera" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CAM-2644" keyword="nikon" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CL-5005" keyword="jacket" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CDR-1111" keyword="red" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1004" keyword="iphone7" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CAM-2644" keyword="red" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="SV-1001" keyword="demonstration" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="SV-1000" keyword="demonstration" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CFSV1001" keyword="demonstration" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="KB-5569" keyword="widget" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="KB-5569" keyword="keyboard" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="VH-9943" keyword="a40f" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="VH-9943" keyword="truck" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="VH-9943" keyword="construction" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="VH-9944" keyword="mustang" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1000" keyword="phone" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="CAM-2644" keyword="small" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="SV-1001" keyword="service" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CFSV1001" keyword="service" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="PH-1000" keyword="iphone" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="CL-8544" keyword="big" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    <ProductKeyword productId="CDR-1111" keyword="chrome" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CDR-1111" keyword="disc" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
     <ProductKeyword productId="SW-1006" keyword="standard" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
-    
+    <ProductKeyword productId="CL-1000" keyword="shirt" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+    <ProductKeyword productId="CL-1000" keyword="tee" keywordTypeId="KWT_TAG" statusId="KW_APPROVED"/>
+
     <!-- Product review demo -->
     <ProductReview productId="PH-1000" productRating="4.000000" productReview="Good iPhone. Very easy to use." productReviewId="7000" productStoreId="CatoShop" statusId="PRR_PENDING" userLoginId="DemoCustomer"/>
     <ProductReview productId="CAM-2644" productRating="5.000000" productReview="It's useful." productReviewId="7001" productStoreId="CatoShop" statusId="PRR_APPROVED" userLoginId="DemoCustomer"/>
-    
+    <ProductReview productId="CL-1000" productRating="5.000000" productReview="Excellent, well-made shirt." productReviewId="7002" productStoreId="CatoShop" statusId="PRR_APPROVED" userLoginId="DemoCustomer"/>
+
 </entity-engine-xml>

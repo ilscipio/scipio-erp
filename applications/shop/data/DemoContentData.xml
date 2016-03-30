@@ -22,7 +22,7 @@ under the License.
     <contents>
         <content id="180000" name="rocketoperation" type="text/xml">
             <content_heading>Maintenance</content_heading>
-            <content_desc>How to operate the Rocket Launcher Widget</content_desc>
+            <content_desc>How to operate the Rocket Launcher</content_desc>
             <source id="001" name="Automation Groups"></source>
             <revision_number>11</revision_number>
             <expiration_date>2005-12-04</expiration_date>
@@ -80,7 +80,7 @@ Party TWO should look for the rocket itself.
 
         <content id="180001" name="rocketfuture" type="text/xml">
             <content_heading>Future</content_heading>
-            <content_desc>Future Directions in Rocket Launcher Widgets</content_desc>
+            <content_desc>Future Directions in Rocket Launchers</content_desc>
             <source id="001" name="Automation Groups"></source>
             <revision_number>11</revision_number>
             <expiration_date>2005-12-04</expiration_date>
@@ -89,7 +89,7 @@ Party TWO should look for the rocket itself.
             <content_text>
                 <![CDATA[
 <?xml version="1.0"?>
-<ask:document name="rocketfuture" type="procedure" xmlns:ask="http://www.automationgroups.com/dtd/ask/"><ask:title>Future Directions in Rocket Launcher Widgets</ask:title>
+<ask:document name="rocketfuture" type="procedure" xmlns:ask="http://www.automationgroups.com/dtd/ask/"><ask:title>Future Directions in Rocket Launchers</ask:title>
 <ask:body>
 <ask:section name="xprize"><ask:sectionTitle>X Prize</ask:sectionTitle>
 <p>
@@ -116,7 +116,7 @@ Planning on this operation is on-going.
 
         <content id="180002" name="rocketfuture2" type="text/xml">
             <content_heading>Future</content_heading>
-            <content_desc>Future Directions in Rocket Launcher Widgets - Marketing</content_desc>
+            <content_desc>Future Directions in Rocket Launchers - Marketing</content_desc>
             <source id="001" name="Automation Groups"></source>
             <revision_number>11</revision_number>
             <expiration_date>2005-12-04</expiration_date>
@@ -125,7 +125,7 @@ Planning on this operation is on-going.
             <content_text>
                 <![CDATA[
 <?xml version="1.0"?>
-<ask:document name="rocketfuture2" type="procedure" xmlns:ask="http://www.automationgroups.com/dtd/ask/"><ask:title>Future Directions in Rocket Launcher Widgets - Marketing</ask:title>
+<ask:document name="rocketfuture2" type="procedure" xmlns:ask="http://www.automationgroups.com/dtd/ask/"><ask:title>Future Directions in Rocket Launchers - Marketing</ask:title>
 <ask:body>
 <ask:section name="ensignia"><ask:sectionTitle>Ensignia</ask:sectionTitle>
 <p>

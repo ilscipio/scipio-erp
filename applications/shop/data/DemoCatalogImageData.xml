@@ -47,4 +47,7 @@ under the License.
   
   <Product productId="GC-001" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883638/small.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883638/large.png"/>
   <Product productId="GC-002" smallImageUrl="/images/products/shop/gallery/02/store/coupon-883642/small.png" largeImageUrl="/images/products/shop/gallery/02/store/coupon-883642/large.png"/>
+  
+  <Product productId="CL-1000" smallImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/small.png" largeImageUrl="/images/products/shop/gallery/02/clothing/t-shirt-template-1093333/large.png"/>
+  
 </entity-engine-xml>

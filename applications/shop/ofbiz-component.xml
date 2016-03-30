@@ -46,12 +46,11 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurveyTestData.xml"/>
     
     <!-- demo data: content - basic -->
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishPointData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTemplateData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTopicData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeData.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFactoidData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRelatedData.xml"/>
         
     <!-- demo data: catalog - extended (configuration) -->

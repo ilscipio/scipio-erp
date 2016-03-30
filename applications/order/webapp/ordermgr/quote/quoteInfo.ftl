@@ -86,7 +86,7 @@ under the License.
                     &nbsp;${uiLabelMap.CommonCurrency}
                 </@td>
                 <@td valign="top" width="80%">
-                    <#if currency??>${currency.get("description",locale)?default(quote.currencyUomId!)}</#if>
+                    <#if currency??>${currency.get("description",locale)!(quote.currencyUomId!)}</#if>
                 </@td>
             </@tr>
             <#-- quote currency -->
@@ -96,7 +96,7 @@ under the License.
                     &nbsp;${uiLabelMap.ProductProductStore}
                 </@td>
                 <@td valign="top" width="80%">
-                    <#if store??>${store.storeName?default(quote.productStoreId!)}</#if>
+                    <#if store??>${store.storeName!(quote.productStoreId!)}</#if>
                 </@td>
             </@tr>
         </@table>

@@ -129,7 +129,7 @@ under the License.
                             <@cell columns=6>
                               <hr/>
                               <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRouteSegments)>
-                              <#if "UPS" == (shipmentRouteSegment.carrierPartyId)!>
+                              <#if "UPS" == ((shipmentRouteSegment.carrierPartyId)!)>
                                 <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_nav_info_id!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
                               </#if>
                               <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">

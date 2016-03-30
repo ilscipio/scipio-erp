@@ -171,11 +171,11 @@ under the License.
                             <br />
                             ${uiLabelMap.ProductShipmentUpsResidential}:
                             <input type="checkbox" name="homeDeliveryType" value="Y" ${(shipmentRouteSegment.homeDeliveryType?has_content)?string("checked=\"checked\"","")} />
-                        <#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId!>
+                        <#elseif "SHRSCS_CONFIRMED" == (shipmentRouteSegment.carrierServiceStatusId!)>
                             <a href="javascript:document.upsShipmentAccept_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductAcceptUpsShipmentConfirmation}</a>
                             <br />
                             <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.ProductVoidUpsShipmentConfirmation}</a>
-                        <#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId!>
+                        <#elseif "SHRSCS_ACCEPTED" == (shipmentRouteSegment.carrierServiceStatusId!)>
                             <a href="javascript:document.upsTrackShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.ProductTrackUpsShipment}</a>
                             <br />
                             <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.ProductVoidUpsShipment}</a>

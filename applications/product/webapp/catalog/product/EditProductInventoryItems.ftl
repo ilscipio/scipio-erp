@@ -53,8 +53,8 @@ under the License.
             </@thead>
             <#list productInventoryItems as inventoryItem>
                <#-- NOTE: Delivered for serialized inventory means shipped to customer so they should not be displayed here any more -->
-               <#if showEmpty || (inventoryItem.inventoryItemTypeId! == "SERIALIZED_INV_ITEM" && inventoryItem.statusId! != "INV_DELIVERED")
-                              || (inventoryItem.inventoryItemTypeId! == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?? && inventoryItem.availableToPromiseTotal != 0) || (inventoryItem.quantityOnHandTotal?? && inventoryItem.quantityOnHandTotal != 0)))>
+               <#if showEmpty || ((inventoryItem.inventoryItemTypeId!) == "SERIALIZED_INV_ITEM" && (inventoryItem.statusId!) != "INV_DELIVERED")
+                              || ((inventoryItem.inventoryItemTypeId!) == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?? && inventoryItem.availableToPromiseTotal != 0) || (inventoryItem.quantityOnHandTotal?? && inventoryItem.quantityOnHandTotal != 0)))>
                     <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType", false)>
                     <#assign curStatusItem = inventoryItem.getRelatedOne("StatusItem", true)!>
                     <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation", false)!>
@@ -97,11 +97,11 @@ under the License.
                                 </#if>
                             </@td>
                             <@td align="right">${(inventoryItemDetailFirst.quantityOnHandDiff)!}</@td>
-                            <#if inventoryItem.inventoryItemTypeId! == "NON_SERIAL_INV_ITEM">
+                            <#if (inventoryItem.inventoryItemTypeId!) == "NON_SERIAL_INV_ITEM">
                                 <@td align="right">${(inventoryItem.availableToPromiseTotal)!"NA"}
                                     / ${(inventoryItem.quantityOnHandTotal)!"NA"}
                                 </@td>
-                            <#elseif inventoryItem.inventoryItemTypeId! == "SERIALIZED_INV_ITEM">
+                            <#elseif (inventoryItem.inventoryItemTypeId!) == "SERIALIZED_INV_ITEM">
                                 <@td align="right">&nbsp;${(inventoryItem.serialNumber)!}</@td>
                             <#else>
                                 <@td align="right" class="+${styles.text_color_alert!}">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)!})

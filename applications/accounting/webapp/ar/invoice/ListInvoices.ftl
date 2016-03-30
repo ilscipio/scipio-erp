@@ -113,7 +113,7 @@ under the License.
   <#assign invoiceList  =  invoices.getCompleteList() />
   <#assign eliClose = invoices.close() />
 </#if>
-<#if invoiceList?has_content && (parameters.noConditionFind)! == 'Y'>
+<#if invoiceList?has_content && (parameters.noConditionFind!) == 'Y'>
   <div>
     <span>${uiLabelMap.AccountingRunningTotalOutstanding} :</span>
     <span id="showInvoiceRunningTotal"></span>

@@ -17,7 +17,7 @@
                         <#if prodCatContentTypeId?has_content>
                             <#assign selectedKey = prodCatContentTypeId>                               
                         </#if>                           
-                        <option <#if selectedKey == productCategoryContentType.prodCatContentTypeId!> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                        <option <#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
                     </#list>
                 </@field>
                 <@row>
@@ -75,7 +75,7 @@
                     <#if prodCatContentTypeId?has_content>
                         <#assign selectedKey = prodCatContentTypeId>                               
                     </#if>                           
-                    <option <#if selectedKey == productCategoryContentType.prodCatContentTypeId!> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                    <option <#if selectedKey == (productCategoryContentType.prodCatContentTypeId!)> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
                 </#list>
             </@field>
             <@field type="submit" value=uiLabelMap.CommonCreate />        

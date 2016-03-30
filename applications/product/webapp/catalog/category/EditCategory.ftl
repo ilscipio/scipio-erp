@@ -77,10 +77,10 @@ function insertImageName(type,nameValue) {
                     <#list productCategoryTypes as productCategoryTypeData>
                         <#if requestParameters.productCategoryTypeId?has_content>
                             <#assign selectedKey = requestParameters.productCategoryTypeId>
-                        <#elseif (productCategory?has_content && productCategory.productCategoryTypeId! == productCategoryTypeData.productCategoryTypeId)>
+                        <#elseif (productCategory?has_content && (productCategory.productCategoryTypeId!) == productCategoryTypeData.productCategoryTypeId)>
                             <#assign selectedKey = productCategory.productCategoryTypeId>
                         </#if>
-                        <option<#if selectedKey == productCategoryTypeData.productCategoryTypeId!> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
+                        <option<#if selectedKey == (productCategoryTypeData.productCategoryTypeId!)> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                     </#list>
                 </@field>
             </@cell>

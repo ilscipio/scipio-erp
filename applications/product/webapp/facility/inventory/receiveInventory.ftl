@@ -125,7 +125,7 @@ under the License.
                   <option value=""></option>
                   <#if supplierPartyIds?has_content>
                     <#list supplierPartyIds as supplierPartyId>
-                      <option value="${supplierPartyId}" <#if supplierPartyId == parameters.partyId!> selected="selected"</#if>>
+                      <option value="${supplierPartyId}"<#if supplierPartyId == (parameters.partyId!)> selected="selected"</#if>>
                         [${supplierPartyId}] ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, true)}
                       </option>
                     </#list>

@@ -100,10 +100,10 @@ ${virtualJavaScript!}
           <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
             <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
-          <#elseif product.productTypeId! == "ASSET_USAGE">
+          <#elseif (product.productTypeId!) == "ASSET_USAGE">
             <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
           <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
-          <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE">
+          <#elseif (product.productTypeId!) == "AGGREGATED" || (product.productTypeId!) == "AGGREGATED_SERVICE">
             <a href="${productUrl}" class="$${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?? && product.isVirtual == "Y">
@@ -200,7 +200,7 @@ ${virtualJavaScript!}
                   </#if>
 
                   <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                    ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                    ${uiLabelMap.OrderYourPrice}: <#if "Y" = (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b>
                 <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>

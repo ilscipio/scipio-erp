@@ -169,9 +169,9 @@ under the License.
             <@row>
                 <@cell columns=6>
                     <select name="priority">
-                      <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
-                      <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
-                      <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
+                      <option value="1"<#if ((orderHeader.priority)!) == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
+                      <option value="2"<#if ((orderHeader.priority)!) == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
+                      <option value="3"<#if ((orderHeader.priority)!) == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
                     </select>
                 </@cell>
                 <@cell columns=6>
@@ -200,8 +200,8 @@ under the License.
                     <@cell columns=6>
         
                         <select name="invoicePerShipment">
-                          <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
-                          <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
+                          <option value="Y" <#if ((orderHeader.invoicePerShipment)!) == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
+                          <option value="N" <#if ((orderHeader.invoicePerShipment)!) == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
                         </select>
                     </@cell>
                     <@cell columns=6>

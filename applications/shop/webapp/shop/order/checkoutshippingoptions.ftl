@@ -131,7 +131,7 @@ function submitForm(form, mode, value) {
                   <input type="text" class="inputBox" name="correspondingPoId" size="15" value="${currentPoNumber!}"/>
                 </@td>
               </@tr>
-              <#if productStore.showCheckoutGiftOptions! != "N">
+              <#if (productStore.showCheckoutGiftOptions!) != "N">
               <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="2">

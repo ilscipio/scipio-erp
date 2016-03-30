@@ -96,7 +96,7 @@ under the License.
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>
-                                  <#if orderShipment.quantity?has_content & orderShipment.quantity!=0.0 >
+                                  <#if orderShipment.quantity?has_content & orderShipment.quantity != 0.0>
                       <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                                   <#else>
                                       <#assign shipmentItem = orderShipment.getShipmentItem()>

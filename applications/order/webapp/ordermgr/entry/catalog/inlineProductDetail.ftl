@@ -230,7 +230,7 @@ ${virtualJavaScript!}
  </@script>
 </#if>
 
-<#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+<#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
   <@script>
         function checkRadioButtoninline${inlineCounter}(inlineCounter, productId) {
         var add_product_id = 'add_product_id' + inlineCounter;
@@ -270,8 +270,8 @@ ${virtualJavaScript!}
     <@td align="right" valign="top" width="100%">
     <#--    <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>  -->
         <#assign inStock = true>
-        <#if product.isVirtual!?upper_case == "Y">
-        <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+        <#if (product.isVirtual!?upper_case) == "Y">
+        <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
             <#list featureLists as featureList>
                 <#list featureList as feature>
                     <#if feature_index == 0>
@@ -333,7 +333,7 @@ ${virtualJavaScript!}
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
           <div class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
-        <#elseif product.virtualVariantMethodEnum! != "VV_FEATURETREE">
+        <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
           <#if inStock>
             <#if product.requireAmount?default("N") == "Y">
               <#assign hiddenStyle = "visible">

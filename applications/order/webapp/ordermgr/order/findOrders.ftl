@@ -384,7 +384,7 @@ document.lookuporder.orderId.focus();
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOne("StatusItem", true)!>
             <#assign orderType = orderHeader.getRelatedOne("OrderType", true)!>
-            <#if (orderType.orderTypeId)! == "PURCHASE_ORDER">
+            <#if ((orderType.orderTypeId)!) == "PURCHASE_ORDER">
               <#assign displayParty = orh.getSupplierAgent()!>
             <#else>
               <#assign displayParty = orh.getPlacingParty()!>

@@ -20,7 +20,7 @@
                             <#if requestParameters.prodCatalogCategoryTypeId?has_content>
                                 <#assign selectedKey = requestParameters.prodCatalogCategoryTypeId>                               
                             </#if>                           
-                            <option <#if selectedKey == prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description",locale)}</option>
+                            <option <#if selectedKey == (prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description",locale)}</option>
                         </#list>
                     </@field>
                 </@cell>

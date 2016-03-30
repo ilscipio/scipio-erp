@@ -65,7 +65,7 @@ function doPublish() {
         <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" name="editProduct">
           <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${productId!}"/>
-            <#if (product.isVirtual)! == "Y">
+            <#if ((product.isVirtual)!) == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
             </#if>
             <@field type="display">${productId!}</@field>
@@ -75,7 +75,7 @@ function doPublish() {
         </form>
 </@section>
 
-<#if (product.isVirtual)! == "Y">
+<#if ((product.isVirtual)!) == "Y">
 <@section title=uiLabelMap.ProductSelectableFeatures>
         <!-- ***************************************************** Selectable features section -->
     <@row>
@@ -86,7 +86,7 @@ function doPublish() {
             <@field type="select" label=uiLabelMap.CommonType name="productFeatureTypeId" onChange="javascript:document.selectableFeatureTypeSelector.submit();">
                 <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
               <#list featureTypes as featureType>
-                <option<#if ((featureType.productFeatureTypeId)! == (productFeatureTypeId)!)> selected="selected"</#if> value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
+                <option<#if (((featureType.productFeatureTypeId)!) == (productFeatureTypeId!))> selected="selected"</#if> value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
               </#list>
             </@field>
           </@fields>
@@ -123,8 +123,8 @@ function doPublish() {
                     <@field type="input" name="description${idx}" size="70" maxlength="100" value=(selFeatureDesc[assocProduct.productId]!)/>
                 </@td>
                 <#assign checked=false/>
-                <#if ((assocProduct.smallImageUrl! != "") && (assocProduct.smallImageUrl! == product.smallImageUrl!) &&
-                      (assocProduct.smallImageUrl! != "") && (assocProduct.smallImageUrl! == product.smallImageUrl!)) >
+                <#if (((assocProduct.smallImageUrl!) != "") && ((assocProduct.smallImageUrl!) == (product.smallImageUrl!)) &&
+                      ((assocProduct.smallImageUrl!) != "") && ((assocProduct.smallImageUrl!) == (product.smallImageUrl!))) >
                     <#assign checked = true/>
                 </#if>
                 <@td><@field type="radio" checked=checked name="useImages" value=assocProduct.productId/></@td>
@@ -158,7 +158,7 @@ function doPublish() {
 </@section>
 </#if>
 
-<#if (product.isVariant)! == "Y">
+<#if ((product.isVariant)!) == "Y">
     <@section title=uiLabelMap.ProductDistinguishingFeatures>
         <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" name="distFeature">
           <@fields type="default-manual">
@@ -212,7 +212,7 @@ function doPublish() {
                     <@th>${uiLabelMap.ProductTD}</@th>
                 </@tr>
                 </@thead>
-        <#if (product.isVirtual)! == "Y">
+        <#if ((product.isVirtual)!) == "Y">
             <#assign idx=0/>
             <#list assocProducts as assocProduct>
                 <@tr valign="middle">

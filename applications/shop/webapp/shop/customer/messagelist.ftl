@@ -52,7 +52,7 @@ under the License.
 <#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
-            <#if parameters.showSent! == "true">
+            <#if (parameters.showSent!) == "true">
               <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
             <#else>
               <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
@@ -61,7 +61,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <#if parameters.showSent! == "true">
+        <#if (parameters.showSent!) == "true">
           <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewReceivedOnly />
         <#else>
           <@menuitem type="link" href=makeOfbizUrl("messagelist?showSent=true") text=uiLabelMap.EcommerceViewSent />

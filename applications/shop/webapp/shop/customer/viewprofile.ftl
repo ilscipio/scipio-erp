@@ -40,7 +40,7 @@ under the License.
       <#else>
         <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_show!}">${uiLabelMap.PartyShowOld}</a>
       </#if>
-      <#if (productStore.enableDigProdUpload)! == "Y">
+      <#if ((productStore.enableDigProdUpload)!) == "Y">
         <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button">${uiLabelMap.EcommerceDigitalProductUpload}</a>
       </#if>
     </@td>
@@ -146,7 +146,7 @@ under the License.
                   <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate.toString()})</#if>
                 </div>
               </#list>
-              <#if contactMech.contactMechTypeId! = "POSTAL_ADDRESS">
+              <#if (contactMech.contactMechTypeId!) == "POSTAL_ADDRESS">
                 <#assign postalAddress = partyContactMechValueMap.postalAddress! />
                 <div>
                   <#if postalAddress??>
@@ -156,7 +156,7 @@ under the License.
                     <#if postalAddress.address2?has_content>${postalAddress.address2}<br /></#if>
                     ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode!}
                     <#if postalAddress.countryGeoId?has_content><br />${postalAddress.countryGeoId}</#if>
-                    <#if (!postalAddress.countryGeoId?has_content || postalAddress.countryGeoId! = "USA")>
+                    <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
                       <#assign addr1 = postalAddress.address1! />
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
@@ -168,7 +168,7 @@ under the License.
                     ${uiLabelMap.PartyPostalInformationNotFound}.
                   </#if>
                   </div>
-              <#elseif contactMech.contactMechTypeId! = "TELECOM_NUMBER">
+              <#elseif (contactMech.contactMechTypeId!) == "TELECOM_NUMBER">
                 <#assign telecomNumber = partyContactMechValueMap.telecomNumber!>
                 <div>
                 <#if telecomNumber??>
@@ -183,10 +183,10 @@ under the License.
                   ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
                 </#if>
                 </div>
-              <#elseif contactMech.contactMechTypeId! = "EMAIL_ADDRESS">
+              <#elseif (contactMech.contactMechTypeId!) == "EMAIL_ADDRESS">
                   ${contactMech.infoString}
                   <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
-              <#elseif contactMech.contactMechTypeId! = "WEB_ADDRESS">
+              <#elseif (contactMech.contactMechTypeId!) == "WEB_ADDRESS">
                 <div>
                   ${contactMech.infoString}
                   <#assign openAddress = contactMech.infoString! />
@@ -240,7 +240,7 @@ under the License.
               <#assign giftCard = paymentMethodValueMap.giftCard! />
               <#assign eftAccount = paymentMethodValueMap.eftAccount! />
               <@tr>
-                <#if paymentMethod.paymentMethodTypeId! == "CREDIT_CARD">
+                <#if (paymentMethod.paymentMethodTypeId!) == "CREDIT_CARD">
                 <@td valign="top">
                     ${uiLabelMap.AccountingCreditCard}:
                     <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}&nbsp;</#if>
@@ -259,7 +259,7 @@ under the License.
                   <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
                             ${uiLabelMap.CommonUpdate}</a>
                 </@td>
-                <#elseif paymentMethod.paymentMethodTypeId! == "GIFT_CARD">
+                <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
                   <#if giftCard?has_content && giftCard.cardNumber?has_content>
                     <#assign giftCardNumber = "" />
                     <#assign pcardNumber = giftCard.cardNumber />
@@ -287,7 +287,7 @@ under the License.
                     <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
                             ${uiLabelMap.CommonUpdate}</a>
                   </@td>
-                  <#elseif paymentMethod.paymentMethodTypeId! == "EFT_ACCOUNT">
+                  <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
                   <@td valign="top">
                       ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
                       <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
@@ -482,7 +482,7 @@ under the License.
         <@td>${emailAddress.infoString!}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <#if (contactListParty.statusId! == "CLPT_ACCEPTED")>            
+          <#if ((contactListParty.statusId!) == "CLPT_ACCEPTED")>            
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistRejectForm${contactListParty_index}">
             <div>
               <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
@@ -495,7 +495,7 @@ under the License.
               <input type="submit" value="${uiLabelMap.EcommerceUnsubscribe}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
               </div>
             </form>
-          <#elseif (contactListParty.statusId! == "CLPT_PENDING")>
+          <#elseif ((contactListParty.statusId!) == "CLPT_PENDING")>
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>
@@ -507,7 +507,7 @@ under the License.
               <input type="submit" value="${uiLabelMap.EcommerceVerifySubscription}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
               </div>
             </form>
-          <#elseif (contactListParty.statusId! == "CLPT_REJECTED")>
+          <#elseif ((contactListParty.statusId!) == "CLPT_REJECTED")>
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistPendForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>

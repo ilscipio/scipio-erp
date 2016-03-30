@@ -220,7 +220,7 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                  <#if shipping == true>
-                  <#if productStore.showCheckoutGiftOptions! != "N" && giftEnable! != "N">
+                  <#if (productStore.showCheckoutGiftOptions!) != "N" && (giftEnable!) != "N">
                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                   <@tr>
                     <@td colspan="2">

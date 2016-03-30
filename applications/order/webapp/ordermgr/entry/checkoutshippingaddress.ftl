@@ -96,7 +96,7 @@ function toggleBillingAccount(box) {
              <div>&nbsp;${uiLabelMap.AccountingAgreementInformation}</div>
                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                  <#if agreements??>
-                   <#if agreements.size()!=1>
+                   <#if agreements.size() != 1>
                      <@tr>
                        <@td>&nbsp;</@td>
                        <@td align='left' valign='top' nowrap="nowrap">

@@ -116,7 +116,7 @@ under the License.
                 </@td>
             </@tr>
         </#if>
-        <#if orderType != "PURCHASE_ORDER" && (productStore.showCheckoutGiftOptions)! != "N">
+        <#if orderType != "PURCHASE_ORDER" && ((productStore.showCheckoutGiftOptions)!) != "N">
         <#-- gift settings -->
             <@tr>
                 <@td class="${styles.grid_large!}3">

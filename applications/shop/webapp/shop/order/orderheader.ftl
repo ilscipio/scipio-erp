@@ -29,7 +29,7 @@ under the License.
 <div class="columnLeft">
 <div class="screenlet">
   <h3>
-    <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y" && (orderHeader.statusId)! == "ORDER_COMPLETED" && roleTypeId! == "PLACING_CUSTOMER">
+    <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
       <a href="<@ofbizUrl fullPath="true">makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
     </#if>
     ${uiLabelMap.OrderOrder}
@@ -340,7 +340,7 @@ under the License.
             <#assign isGift = cart.getIsGift(groupIdx)?default("N")>
             <#assign giftMessage = cart.getGiftMessage(groupIdx)!>
           </#if>
-          <#if productStore.showCheckoutGiftOptions! != "N">
+          <#if (productStore.showCheckoutGiftOptions!) != "N">
           <li>
             ${uiLabelMap.OrderGift}?
             <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>

@@ -15,7 +15,7 @@
                             <#if requestParameters.roleTypeId?has_content>
                                 <#assign selectedKey = requestParameters.roleTypeId>                               
                             </#if>                           
-                            <option <#if selectedKey == roleType.roleTypeId!> selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}</option>
+                            <option <#if selectedKey == (roleType.roleTypeId!)> selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}</option>
                         </#list>
                     </@field>
                 </@cell>

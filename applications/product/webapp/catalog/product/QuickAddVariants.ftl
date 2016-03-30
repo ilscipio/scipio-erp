@@ -45,7 +45,7 @@ function clickAll(e) {
     }
 }
 </@script>
-<#if (product.isVirtual)! != "Y">
+<#if ((product.isVirtual)!) != "Y">
     <@alert type="warning">${uiLabelMap.ProductWarningProductNotVirtual}</@alert>
 </#if>
 <#if featureTypes?has_content && (featureTypes.size() > 0)>

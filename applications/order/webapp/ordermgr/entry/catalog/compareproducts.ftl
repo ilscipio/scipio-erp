@@ -27,7 +27,7 @@ under the License.
     <#assign price = productData.priceMap/>
     <#assign productUrl><@ofbizCatalogAltUrl productId=product.productId/></#assign>
     <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")/>
-    <#if smallImageUrl!?length == 0>
+    <#if (smallImageUrl!?length) == 0>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
         <@td style="width:${tdWidth?c}%;">
@@ -42,8 +42,8 @@ under the License.
             <#assign priceStyle = "regularPrice">
         </#if>
 
-        <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+        <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
+                <#if "Y" = (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </#if>
     </#if>
             <div class="productbuy">
@@ -54,12 +54,12 @@ under the License.
     <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)/>
                 <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
-    <#elseif product.productTypeId! == "ASSET_USAGE"/>
+    <#elseif (product.productTypeId!) == "ASSET_USAGE"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
-    <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN"/>
+    <#elseif (product.productTypeId!) == "ASSET_USAGE_OUT_IN"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
     <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
-    <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE"/>
+    <#elseif (product.productTypeId!) == "AGGREGATED" || (product.productTypeId!) == "AGGREGATED_SERVICE"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?? && product.isVirtual == "Y"/>
@@ -158,12 +158,12 @@ under the License.
     <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)/>
                 <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
-    <#elseif product.productTypeId! == "ASSET_USAGE"/>
+    <#elseif (product.productTypeId!) == "ASSET_USAGE"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
-    <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN"/>
+    <#elseif (product.productTypeId!) == "ASSET_USAGE_OUT_IN"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
     <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
-    <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE"/>
+    <#elseif (product.productTypeId!) == "AGGREGATED" || (product.productTypeId!) == "AGGREGATED_SERVICE"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?? && product.isVirtual == "Y"/>
@@ -178,7 +178,7 @@ under the License.
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
                 <a href="javascript:doPostViaParent('compare2FormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
-        <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
+        <#if prodCatMem?? && prodCatMem.quantity?? && (0.00 < prodCatMem.quantity?double)>
                 <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
         </#if>
     </#if>

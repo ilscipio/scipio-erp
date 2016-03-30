@@ -295,7 +295,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
         <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
-            <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
+            <#if styles.framework?has_content && styles.framework == "bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
       <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
     <#elseif styleSet.contains("menu-sidebar")>
       <#local remStyle = removeStyleNames(style, "menu-sidebar")>

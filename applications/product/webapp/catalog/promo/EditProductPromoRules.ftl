@@ -159,7 +159,7 @@ under the License.
                                       <#if condProductPromoCategory.includeSubCategories?has_content && condProductPromoCategory.includeSubCategories=="Y">
                                         ${uiLabelMap.CommonAnd} ${uiLabelMap.ProductSubCats}
                                       </#if>
-                                      <#if condProductPromoCategory.andGroupId?has_content && condProductPromoCategory.andGroupId!="_NA_"><br/>${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup} ${condProductPromoCategory.andGroupId}</#if>
+                                      <#if condProductPromoCategory.andGroupId?has_content && condProductPromoCategory.andGroupId != "_NA_"><br/>${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup} ${condProductPromoCategory.andGroupId}</#if>
                                 </li>
                             </#if>
                         </#list>

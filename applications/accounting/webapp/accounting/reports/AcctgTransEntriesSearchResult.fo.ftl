@@ -33,7 +33,7 @@ under the License.
                         <#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : organizationPartyId}, false))!>
                         <#if partyName.partyTypeId == "PERSON">
                             ${(partyName.firstName)!} ${(partyName.lastName)!}
-                        <#elseif (partyName.partyTypeId)! == "PARTY_GROUP">
+                        <#elseif ((partyName.partyTypeId)!) == "PARTY_GROUP">
                             ${(partyName.groupName)!}
                         </#if>
                     </fo:block>

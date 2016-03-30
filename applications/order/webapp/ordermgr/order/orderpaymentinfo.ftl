@@ -307,7 +307,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                 
             </#if>
           <#else>
-            <#if paymentMethod.paymentMethodTypeId! == "CREDIT_CARD">
+            <#if (paymentMethod.paymentMethodTypeId!) == "CREDIT_CARD">
               <#assign gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, null, false)>
               <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)!>
               <#if creditCard?has_content>
@@ -379,7 +379,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                   </#if>
                 </@td>
               </@tr>
-            <#elseif paymentMethod.paymentMethodTypeId! == "EFT_ACCOUNT">
+            <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
               <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
               <#if eftAccount?has_content>
                 <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
@@ -432,7 +432,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     </@cell>
                 </@row>
               </#if>
-            <#elseif paymentMethod.paymentMethodTypeId! == "GIFT_CARD">
+            <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
               <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
               <#if giftCard??>
                 <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>

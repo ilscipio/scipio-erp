@@ -31,17 +31,17 @@ under the License.
         <@commonMsg type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@commonMsg>
     </#if>
     <#if orderHeader??>
-        <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId! != "SALES_SHIPMENT">
+        <#if orderHeader.orderTypeId == "SALES_ORDER" && (shipment.shipmentTypeId!) != "SALES_SHIPMENT">
             <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</@heading>
-        <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId! != "PURCHASE_SHIPMENT" && shipment.shipmentTypeId! != "DROP_SHIPMENT">
+        <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && (shipment.shipmentTypeId!) != "PURCHASE_SHIPMENT" && (shipment.shipmentTypeId!) != "DROP_SHIPMENT">
             <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotPurchaseShipment}.</@heading>
         <#else>
             <@heading>${uiLabelMap.ProductNoteOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}.</@heading>
             <@heading>${uiLabelMap.ProductShipmentType}: ${shipment.shipmentTypeId!}.</@heading>
         </#if>
-        <#if shipment.shipmentTypeId! == "SALES_SHIPMENT">
+        <#if (shipment.shipmentTypeId!) == "SALES_SHIPMENT">
             <@heading>${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility??>${originFacility.facilityName!} [${originFacility.facilityId}]<#else><span class="${styles.text_color_alert!}">${uiLabelMap.ProductNotSet}</span></#if></@heading>
-        <#elseif shipment.shipmentTypeId! == "PURCHASE_SHIPMENT">
+        <#elseif (shipment.shipmentTypeId!) == "PURCHASE_SHIPMENT">
             <@heading>${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility??>${destinationFacility.facilityName!} [${destinationFacility.facilityId}]<#else><span class="${styles.text_color_alert!}">${uiLabelMap.ProductNotSet}</span></#if></@heading>
         </#if>
         <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>

@@ -23,7 +23,7 @@ under the License.
 <div class="screenlet">
   <h3>
       <#assign numColumns = 8>
-      <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+      <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
           <#assign numColumns = 11>
           <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.OrderAddAllToCart}</a><a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.OrderAddCheckedToCart}</a><a href="<@ofbizUrl fullPath="true">createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
       </#if>
@@ -47,7 +47,7 @@ under the License.
       <@th>${uiLabelMap.EcommerceUnitPrice}</@th>
       <@th>${uiLabelMap.OrderAdjustments}</@th>
       <@th>${uiLabelMap.CommonSubtotal}</@th>
-      <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+      <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
         <@th colspan="3"></@th>
       </#if>
     </@tr>
@@ -210,7 +210,7 @@ under the License.
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
-          <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+          <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
             <@td></@td>
             <@td>
               <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox"/>

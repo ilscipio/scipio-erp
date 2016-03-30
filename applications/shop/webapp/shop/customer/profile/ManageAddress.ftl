@@ -218,7 +218,7 @@ under the License.
       <#assign postalAddressFlag = "N" />
       <#list partyContactMechValueMaps as partyContactMechValueMap>
         <#assign contactMech = partyContactMechValueMap.contactMech! />
-        <#if contactMech.contactMechTypeId! = "POSTAL_ADDRESS">
+        <#if (contactMech.contactMechTypeId!) = "POSTAL_ADDRESS">
           <#assign partyContactMech = partyContactMechValueMap.partyContactMech! />
           <#if !(partyContactMechValueMap.partyContactMechPurposes?has_content)>
             <#assign postalAddressFlag = "Y" />
@@ -240,7 +240,7 @@ under the License.
                       </li>
                     <#if postalAddress.countryGeoId?has_content><li>${postalAddress.countryGeoId}</li></#if>
                     </ul>
-                    <#if (!postalAddress.countryGeoId?has_content || postalAddress.countryGeoId! = "USA")>
+                    <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) = "USA")>
                       <#assign addr1 = postalAddress.address1! />
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />

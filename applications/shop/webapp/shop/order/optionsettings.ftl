@@ -63,7 +63,7 @@ under the License.
           <input type="text" name="correspondingPoId" value="${shoppingCart.getPoNumber()!}"/>
         </div>
     </fieldset>
-    <#if productStore.showCheckoutGiftOptions! != "N">
+    <#if (productStore.showCheckoutGiftOptions!) != "N">
         <fieldset><legend>${uiLabelMap.OrderIsThisGift}</legend>
           <div>
             <input type="radio" id="is_gift_Y" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"/>

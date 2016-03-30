@@ -28,7 +28,7 @@ under the License.
 <#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
-            <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
+            <#if ((communicationEvent.partyIdFrom!) != (userLogin.partyId)!)>
               <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
             <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
@@ -36,7 +36,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
+        <#if ((communicationEvent.partyIdFrom!) != (userLogin.partyId)!)>
           <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text=uiLabelMap.PartyReply />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />

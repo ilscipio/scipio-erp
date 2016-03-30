@@ -20,7 +20,7 @@ under the License.
 <#-- gift card fields -->
   <input type="hidden" name="addGiftCard" value="Y"/>
   <#assign giftCard = giftCard!>
-  <#if paymentMethodTypeId! != "GIFT_CARD">
+  <#if (paymentMethodTypeId!) != "GIFT_CARD">
     <@tr type="util">
       <@td colspan="2"><hr /></@td>
     </@tr>
@@ -47,7 +47,7 @@ under the License.
       <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${giftCard.description!}"/>
     </@td>
   </@tr>
-  <#if paymentMethodTypeId! != "GIFT_CARD">
+  <#if (paymentMethodTypeId!) != "GIFT_CARD">
     <@tr>
       <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAmountToUse}</@td>
       <@td width="74%">

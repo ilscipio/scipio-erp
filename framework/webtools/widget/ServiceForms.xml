@@ -43,7 +43,14 @@ under the License.
         <field name="SERVICE_INTERVAL" title="${uiLabelMap.WebtoolsInterval}" tooltip="${uiLabelMap.WebtoolsForUseWithFrequency}"><text/></field>
         <field name="SERVICE_COUNT" title="${uiLabelMap.WebtoolsCount}" tooltip="${uiLabelMap.WebtoolsNumberOfTimeTheJobWillRun}"><text default-value="1"/></field>
         <field name="SERVICE_MAXRETRY" title="${uiLabelMap.WebtoolsMaxRetry}" tooltip="${uiLabelMap.WebtoolsNumberOfJobRetry}"><text default-value="0"/></field>
-        <field name="SERVICE_EVENTID" title="${uiLabelMap['StatusType.description.EVENT_STATUS']} ${uiLabelMap.CommonId}"><text/></field>
+        <field name="SERVICE_EVENTID" title="${uiLabelMap['StatusType.description.EVENT_STATUS']}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description} (${enumId})" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="SCH_EVENT_TYPE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
@@ -69,7 +76,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="eventId" title="${uiLabelMap['StatusType.description.EVENT_STATUS']} ${uiLabelMap.CommonId}" position="1"><text-find/></field>
+        <field name="eventId" title="${uiLabelMap['StatusType.description.EVENT_STATUS']}" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description} (${enumId})" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="SCH_EVENT_TYPE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" position="1">
             <submit button-type="button"/>
         </field>

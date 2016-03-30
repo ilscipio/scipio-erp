@@ -115,7 +115,7 @@ public final class JobManager {
      * Cato: Determines if run-at-start jobs have been queued or not.
      * <p>
      * TODO?: later might need to substitute this with a more comprehensive
-     * queue or message stack ("EVENT_STARTUP", etc.).
+     * queue or message stack ("SCH_EVENT_STARTUP", etc.).
      */
     private volatile boolean startupJobsQueued = false;
 
@@ -219,7 +219,7 @@ public final class JobManager {
                     
                     if (Debug.infoOn()) {
                         Debug.logInfo("Cato: Collected " + poll.size() + 
-                                " EVENT_STARTUP run-at-startup jobs for queuing", module);
+                                " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
                     }
                 }
 
@@ -376,7 +376,7 @@ public final class JobManager {
      * TODO: If commonCondition null, build it (requires more refactor); commonCondition should be optimization only
      */
     public EntityListIterator queryStartupJobsAlways(EntityCondition commonCondition) throws GenericEntityException {
-        EntityCondition mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", "EVENT_STARTUP"));
+        EntityCondition mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", "SCH_EVENT_STARTUP"));
         return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
     }
     

@@ -59,8 +59,13 @@ public abstract class SolrProductSearch {
         GenericValue productInstance = (GenericValue) context.get("instance");
         String productId = (String) productInstance.get("productId");
 
+        boolean indexed = false;
+        Boolean webappInitPassed = null;
+        boolean skippedDueToWebappInit = false;
+        
         if (SolrUtil.isSolrEcaEnabled()) {
-            if (SolrUtil.isSolrEcaWebappInitCheckPassed()) {
+            webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
+            if (webappInitPassed) {
                 Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
 
                 try {
@@ -78,21 +83,39 @@ public abstract class SolrProductSearch {
                         result = ServiceUtil.returnFailure(runMsg);
                     } else {
                         result = ServiceUtil.returnSuccess();
+                        indexed = true;
                     }
                 } catch (Exception e) {
                     Debug.logError(e, e.getMessage(), module);
                     result = ServiceUtil.returnError(e.toString());
                 }
             } else {
-                final String statusMsg = "Solr webapp not available; skipping indexing for productId '" + productId + "'";
-                Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+                if (Debug.verboseOn()) {
+                    final String statusMsg = "Solr webapp not available; skipping indexing for productId '" + productId + "'";
+                    Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+                }
                 result = ServiceUtil.returnSuccess();
+                skippedDueToWebappInit = true;
             }
         } else {
-            final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
-            Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+            if (Debug.verboseOn()) {
+                final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
+                Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+            }
             result = ServiceUtil.returnSuccess();
         }
+        
+        if (!indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
+            boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
+            if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
+                if (Debug.verboseOn()) {
+                    final String statusMsg = "Did not index productId '" + productId + "'; marking SOLR data as dirty (old)";
+                    Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+                }
+                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD");
+            }
+        }
+        
         return result;
     }
 
@@ -744,15 +767,15 @@ public abstract class SolrProductSearch {
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean("solrconfig.properties", "solr.index.rebuild.autoRun.enabled", false);
+        boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
         
         if (autoRunEnabled) {
             Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
             if (onlyIfDirty == null) {
-                onlyIfDirty = UtilProperties.getPropertyAsBoolean("solrconfig.properties", "solr.index.rebuild.autoRun.onlyIfDirty", false);
+                onlyIfDirty = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.onlyIfDirty", false);
             }
             
-            Debug.logInfo("SOLR: auto-run index rebuild: starting (onlyIfDirty: " + onlyIfDirty + ")", module);
+            Debug.logInfo("Solr: auto-run index rebuild: starting (onlyIfDirty: " + onlyIfDirty + ")", module);
 
             Map<String, Object> servCtx;
             try {
@@ -765,12 +788,12 @@ public abstract class SolrProductSearch {
                 if (ServiceUtil.isSuccess(servResult)) {
                     String respMsg = (String) servResult.get(ModelService.SUCCESS_MESSAGE);
                     if (respMsg != null) {
-                        Debug.logInfo("SOLR: auto-run index rebuild: rebuildSolrIndex returned success: " + respMsg, module);
+                        Debug.logInfo("Solr: auto-run index rebuild: rebuildSolrIndex returned success: " + respMsg, module);
                     } else {
-                        Debug.logInfo("SOLR: auto-run index rebuild: rebuildSolrIndex returned success", module);
+                        Debug.logInfo("Solr: auto-run index rebuild: rebuildSolrIndex returned success", module);
                     }
                 } else {
-                    Debug.logError("SOLR: auto-run index rebuild: rebuildSolrIndex returned an error: " + 
+                    Debug.logError("Solr: auto-run index rebuild: rebuildSolrIndex returned an error: " + 
                             ServiceUtil.getErrorMessage(servResult), module);
                 }
 
@@ -783,7 +806,7 @@ public abstract class SolrProductSearch {
             }
             
         } else {
-            Debug.logInfo("SOLR: auto-run index rebuild: not running - disabled", module);
+            Debug.logInfo("Solr: auto-run index rebuild: not running - disabled", module);
             result = ServiceUtil.returnSuccess();
         }
 

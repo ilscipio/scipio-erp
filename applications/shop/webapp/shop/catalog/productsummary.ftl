@@ -49,9 +49,9 @@
 
     <#assign productDescription>
         <#if solrProduct?? && description??>
-            ${description}
+            ${description}<#t>
         <#elseif productContentWrapper??>
-            ${productContentWrapper.get("DESCRIPTION","html")!}<#if daysToShip??></#if>
+            ${productContentWrapper.get("DESCRIPTION","html")!}<#--<#if daysToShip??></#if>--><#t>
         </#if>
     </#assign>
 

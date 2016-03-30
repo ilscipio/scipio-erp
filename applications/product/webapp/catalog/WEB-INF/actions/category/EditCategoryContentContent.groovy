@@ -23,8 +23,6 @@ import org.ofbiz.entity.util.*
 
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
-//context.contentId = requestAttributes.contentId;
-
 // Show update form
 if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
     fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)
@@ -81,9 +79,6 @@ if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId &
         context.contentFormAction = "createDownloadContentForCategory";
     }
     context.prodCatContentTypeId = prodCatContentTypeId;
-} else {
-    // New category content has been created
-    Debug.log("requestAttributes contentId ===============> " + requestAttributes.contentId);
 }
 //  context.contentFormTitle = "${uiLabelMap.ProductUpdateSEOContentCategory}";
 //  context.contentFormTitle = "${uiLabelMap.ProductUpdateRelatedURLContentCategory}";

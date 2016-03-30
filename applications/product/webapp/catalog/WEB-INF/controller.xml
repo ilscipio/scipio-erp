@@ -536,14 +536,19 @@ under the License.
     </request-map>
 
      <!-- ================ Category Content Assoc Requests ================= -->
-    <request-map uri="EditCategoryContentContent">
+     <request-map uri="addExistingContentInCategory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+    </request-map>
+   <!-- CATO: Remove -->
+   <!--  <request-map uri="EditCategoryContentContent">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContentContent"/>
     </request-map>
     <request-map uri="prepareAddContentToCategory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContentContent"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="addContentToCategory">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createCategoryContent"/>

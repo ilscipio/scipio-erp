@@ -201,17 +201,19 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="productCategory"/></not>
+                                        <and>
+                                            <not><if-empty field="productCategory"/></not>
+                                            <not><if-empty field="TabBarName"/></not>                                            
+                                        </and>                                        
                                     </condition>
                                     <widgets>
-                                        <!-- <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/> -->
-                                        <!-- <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label> -->
+                                        <include-menu name="${TabBarName}" location="component://product/widget/catalog/CatalogMenus.xml"/>                                        
                                     </widgets>
                                     <fail-widgets>
                                         <section>
-                                            <condition>
+                                            <!-- <condition>
                                                 <if-compare operator="not-equals" value="EditCategory" field="activeSubMenuItem"/>
-                                            </condition>
+                                            </condition> -->
                                             <widgets>
                                                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                             </widgets>

@@ -163,6 +163,8 @@ under the License.
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes"/>
                 
                 <set field="title" default-value="${uiLabelMap.ProductCategoryContent} ${productCategoryId}"/>
+                
+                <set field="TabBarName" value="CategoryContentSubTabBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">

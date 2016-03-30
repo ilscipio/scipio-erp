@@ -13655,6 +13655,12 @@
     <property key="ProductCatalogStoreList">
         <value xml:lang="en">Catalog Store List</value>
     </property>
+    <property key="ProductSelectProductCategoryContentTypeId">
+        <value xml:lang="en">Select Content Type</value>
+    </property>
+    <property key="ProductAddExistingContentInCategory">
+        <value xml:lang="en">Add Existing Content</value>
+    </property>
     <property key="ProductCatalogEmptyWarning">
         <value xml:lang="en">If you don't populate a Catalog with Categories, it will not be shown in the Browse Catalogs/Categories tree</value>
         <value xml:lang="fr">Si vous ne créez pas de catégories pour un catalogue, il n'apparaitra pas dans l'arbre des Catalogues/catégories</value>

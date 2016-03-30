@@ -1,25 +1,86 @@
 <@section title=sectionTitle>
-    <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
-        <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-        <@field type="select" label=uiLabelMap.ProductProdCatContentTypeId name="prodCatContentTypeId" size="1" required=true>
-            <option value="">--</option>
-            <#assign selectedKey = "">
-            <#list productCategoryContentTypeList as productCategoryContentType>
-                <#if prodCatContentTypeId?has_content>
-                    <#assign selectedKey = prodCatContentTypeId>                               
-                </#if>                           
-                <option <#if selectedKey == productCategoryContentType.prodCatContentTypeId!> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
-            </#list>
-        </@field>
+    
+    <#if parameters.addExistingContent?has_content>
+        <@modal id="addExistingContent" label="">
+            <form id="AddCategoryContentAssoc" name="AddCategoryContentAssoc" method="post" action="<@ofbizUrl>addContentToCategory</@ofbizUrl>">
+                <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />               
+                <@field type="hidden" name="searchType" value="STARTS_WITH" />
+                <@row>
+                    <@cell columns=12>                        
+                        <@field type="lookup" label=uiLabelMap.ProductContentId name="contentId" formName="AddCategoryContentAssoc" fieldFormName="LookupContent" value=((contentId)!) />
+                    </@cell>
+                </@row>
+                <@field type="select" label=uiLabelMap.ProductProdCatContentTypeId name="prodCatContentTypeId" size="1" required=true>
+                    <option value="">--</option>
+                    <#assign selectedKey = "">
+                    <#list productCategoryContentTypeList as productCategoryContentType>
+                        <#if prodCatContentTypeId?has_content>
+                            <#assign selectedKey = prodCatContentTypeId>                               
+                        </#if>                           
+                        <option <#if selectedKey == productCategoryContentType.prodCatContentTypeId!> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                    </#list>
+                </@field>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="datetime" label=uiLabelMap.CommonFrom required=true name="fromDate" value=((fromDate)!) size="25" maxlength="30" id="fromDate1"/>
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="datetime" label=uiLabelMap.CommonThru name="thruDate" value=((thruDate)!) size="25" maxlength="30" id="fromDate2"/>
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="datetime" label=uiLabelMap.FormFieldTitle_purchaseFromDate name="purchaseFromDate" value=((purchaseFromDate)!) size="25" maxlength="30" id="fromDate3"/>
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="datetime" label=uiLabelMap.FormFieldTitle_purchaseThruDate name="purchaseThruDate" value=((purchaseThruDate)!) size="25" maxlength="30" id="fromDate4"/>
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                         <@field type="input" label=uiLabelMap.ProductUseCountLimit name="useCountLimit" value=((useCountLimit)!) />
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="input" label=uiLabelMap.ProductUseTime name="useDaysLimit" value=((useDaysLimit)!) />
+                    </@cell>
+                </@row>
+                <@row>
+                    <@cell columns=12>
+                        <@field type="submit" name="Add" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}"/>
+                    </@cell>
+                </@row>
+            </form>
+        </@modal>
         <@script>
-            jQuery(document).ready(function() {
-                $('select[name=prodCatContentTypeId]').on('change', function(e) {
-                    document.forms['PrepareAddCategoryContentAssoc'].submit();
-                });
+            $(document).ready(function() { 
+                console.log("before revealing...");
+                $('#addExistingContent_modal').foundation('reveal','open');
             });
-        </@script>         
-    </form>
-    <#if prodCatContentTypeId?has_content>
+        </@script>
+    </#if>
+
+    <#if !prodCatContentTypeId?has_content>
+        <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
+            <@field type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+            <@field type="select" label=uiLabelMap.ProductSelectProductCategoryContentTypeId name="prodCatContentTypeId" size="1" required=true>
+                <option value="">--</option>
+                <#assign selectedKey = "">
+                <#list productCategoryContentTypeList as productCategoryContentType>
+                    <#if prodCatContentTypeId?has_content>
+                        <#assign selectedKey = prodCatContentTypeId>                               
+                    </#if>                           
+                    <option <#if selectedKey == productCategoryContentType.prodCatContentTypeId!> selected="selected"</#if> value="${productCategoryContentType.prodCatContentTypeId}">${productCategoryContentType.get("description",locale)}</option>
+                </#list>
+            </@field>
+            <@field type="submit" value=uiLabelMap.CommonCreate />        
+        </form>
+    <#else>
         <#assign fromDate=((requestParameters.fromDate)!) />
         <#if productCategoryContent?has_content>
             <#assign fromDate=((productCategoryContent.fromDate)!) />
@@ -54,7 +115,12 @@
             <@field type="hidden" name="prodCatContentTypeId" value="${prodCatContentTypeId!}" />
             <#if content?has_content>
                 <@field type="hidden" name="dataResourceId" value="${content.dataResourceId!}" />
-            </#if>            
+            </#if>          
+            <@row>
+                <@cell columns=12>
+                    <@field type="display" label=uiLabelMap.ProductProdCatContentTypeId name="prodCatContentTypeIdDisplay" value=prodCatContentTypeId />
+                </@cell>
+            </@row>
             <@row>
                 <@cell columns=12>
                     <#if productCategoryContent?has_content>

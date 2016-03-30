@@ -211,7 +211,7 @@ ${virtualJavaScript!}
     }
 
     function additemSubmit(){
-        <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+        <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
         newdatevalue = validate(document.addform.reservStart.value);
         if (newdatevalue == false) {
             document.addform.reservStart.focus();
@@ -225,7 +225,7 @@ ${virtualJavaScript!}
     }
 
     function addShoplistSubmit(){
-        <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+        <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
         if (document.addToShoppingList.reservStartStr.value == "") {
             document.addToShoppingList.submit();
         } else {
@@ -244,7 +244,7 @@ ${virtualJavaScript!}
         </#if>
     }
 
-    <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+    <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
         function checkRadioButton() {
             var block1 = document.getElementById("addCart1");
             var block2 = document.getElementById("addCart2");
@@ -355,8 +355,8 @@ ${virtualJavaScript!}
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
-             <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+            ${uiLabelMap.OrderYourPrice}: <#if "Y" = (product.isVirtual!)> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+             <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
             <#if product.reserv2ndPPPerc?? && product.reserv2ndPPPerc != 0><br /><span class="${priceStyle}">${uiLabelMap.ProductReserv2ndPPPerc}<#if !product.reservNthPPPerc?? || product.reservNthPPPerc == 0>${uiLabelMap.CommonUntil} ${product.reservMaxPersons!1}</#if> <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if product.reservNthPPPerc?? &&product.reservNthPPPerc != 0><br /><span class="${priceStyle}">${uiLabelMap.ProductReservNthPPPerc} <#if !product.reserv2ndPPPerc?? || product.reserv2ndPPPerc == 0>${uiLabelMap.ProductReservSecond} <#else> ${uiLabelMap.ProductReservThird} </#if> ${uiLabelMap.CommonUntil} ${product.reservMaxPersons!1}, ${uiLabelMap.ProductEach}: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if (!product.reserv2ndPPPerc?? || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?? || product.reservNthPPPerc == 0)><br />${uiLabelMap.ProductMaximum} ${product.reservMaxPersons!1} ${uiLabelMap.ProductPersons}.</#if>
@@ -439,8 +439,8 @@ ${virtualJavaScript!}
         </#if>
         <#assign inStock = true>
         <#-- Variant Selection -->
-        <#if product.isVirtual!?upper_case == "Y">
-          <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+        <#if (product.isVirtual!?upper_case) == "Y">
+          <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
             <#list featureLists as featureList>
                 <#list featureList as feature>
                     <#if feature_index == 0>
@@ -516,7 +516,7 @@ ${virtualJavaScript!}
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
           <div class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
-        <#elseif product.virtualVariantMethodEnum! != "VV_FEATURETREE">
+        <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
           <#if inStock>
             <#if product.requireAmount?default("N") == "Y">
               <#assign hiddenStyle = "visible">
@@ -527,7 +527,7 @@ ${virtualJavaScript!}
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonAmount}:</b></span>&nbsp;
               <input type="text" size="5" name="add_amount" value=""/>
             </div>
-            <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+            <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
               <@fields type="default-manual-widgetonly">
                 <@table type="fields" width="100%">
                 <@tr>
@@ -546,7 +546,7 @@ ${virtualJavaScript!}
                 </@table>
               </@fields>
             <#else>
-                <input type="text" size="5" name="quantity" value="1"<#if product.isVirtual!?upper_case == "Y"> disabled="disabled"</#if>/>
+                <input type="text" size="5" name="quantity" value="1"<#if (product.isVirtual!?upper_case) == "Y"> disabled="disabled"</#if>/>
             </#if>
             <#-- This calls addItem() so that variants of virtual products cant be added before distinguishing features are selected, it should not be changed to additemSubmit() -->
             <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
@@ -574,7 +574,7 @@ ${virtualJavaScript!}
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </select>
           &nbsp;&nbsp;
-          <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+          <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
               <@table type="fields"><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>
           <#else>
               <input type="text" size="5" name="quantity" value="1"/>

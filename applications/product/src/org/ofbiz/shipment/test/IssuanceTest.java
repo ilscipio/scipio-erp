@@ -51,7 +51,7 @@ public class IssuanceTest extends OFBizTestCase {
 
     public void testMultipleInventoryItemIssuance() throws Exception {
         String facilityId = "WebStoreWarehouse";
-        String productId="GZ-2644";
+        String productId="CAM-2644";
         String orderId="DEMO81015";
         String orderItemSeqId="00001";
         String shipGroupSeqId="00001";

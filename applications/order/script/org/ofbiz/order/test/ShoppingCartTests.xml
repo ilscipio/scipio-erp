@@ -96,7 +96,7 @@ under the License.
         <!-- Add Product Item to Shopping Cart -->
         <set field="prodCatalogId" value="DemoCatalog" type="String"/>
         <set field="index" value="0" type="Integer"/>
-        <set field="productId" value="GZ-2644" type="String"/>
+        <set field="productId" value="CAM-2644" type="String"/>
         <set field="quantity" value="5" type="BigDecimal"/>
         <set field="selectedAmount" value="0" type="BigDecimal"/>
         <set field="unitPrice" value="38.4" type="BigDecimal"/>
@@ -541,7 +541,7 @@ under the License.
 
         <set field="createQuoteItemMap.userLogin" from-field="userLogin"/>
         <set field="createQuoteItemMap.quoteId" from-field="quoteId"/>
-        <set field="createQuoteItemMap.productId" value="GZ-1000"/>
+        <set field="createQuoteItemMap.productId" value="PH-1000"/>
         <set field="createQuoteItemMap.quantity" value="10" type="BigDecimal"/>
         <set field="createQuoteItemMap.quoteUnitPrice" value="15.00" type="BigDecimal"/>
         <call-service service-name="createQuoteItem" in-map-name="createQuoteItemMap">
@@ -701,7 +701,7 @@ under the License.
         
         <entity-and entity-name="OrderItem" list="orderItems">
             <field-map field-name="orderId" from-field="orderMap.orderId"/>
-            <field-map field-name="productId" value="GZ-2644"/>
+            <field-map field-name="productId" value="CAM-2644"/>
         </entity-and>
         <first-from-list entry="orderItem" list="orderItems"/>
         

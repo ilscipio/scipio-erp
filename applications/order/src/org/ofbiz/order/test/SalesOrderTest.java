@@ -109,7 +109,7 @@ public class SalesOrderTest extends OFBizTestCase {
         ctx.put("orderAdjustments", orderAdjustments);
 
         List<GenericValue> orderItems = FastList.newInstance();
-        GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "GZ-2644", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
+        GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "CAM-2644", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
         orderItem.set("isPromo", "N");
         orderItem.set("isModifiedPrice", "N");
         orderItem.set("unitPrice", new BigDecimal("38.4"));
@@ -117,7 +117,7 @@ public class SalesOrderTest extends OFBizTestCase {
         orderItem.set("statusId", "ITEM_CREATED");
         orderItems.add(orderItem);
         
-        orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00002", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "GZ-1006-1", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
+        orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00002", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "SW-1006-1", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
         orderItem.set("isPromo", "N");
         orderItem.set("isModifiedPrice", "N");
         orderItem.set("unitPrice", new BigDecimal("1.99"));

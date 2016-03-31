@@ -65,7 +65,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response : ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-1000");
+            request.setParameter("add_product_id", "PH-1000");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
@@ -125,7 +125,7 @@ under the License.
         <set field="packInput.selInfo._1" value="Y"/>
         <set field="packInput.pkgInfo._1" value="1"/>
         <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="GZ-1000"/>
+        <set field="packInput.prdInfo._1" value="PH-1000"/>
         <set field="packInput.iteInfo._1" value="00001"/>
         <set field="packInput.wgtInfo._1" value="0"/>
         <set field="packInput.numPackagesInfo._1" value="1"/>
@@ -192,7 +192,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response = ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-1000");
+            request.setParameter("add_product_id", "PH-1000");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
@@ -251,7 +251,7 @@ under the License.
         <set field="packInput.selInfo._1" value="Y"/>
         <set field="packInput.pkgInfo._1" value="1"/>
         <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="GZ-1000"/>
+        <set field="packInput.prdInfo._1" value="PH-1000"/>
         <set field="packInput.iteInfo._1" value="00001"/>
         <set field="packInput.wgtInfo._1" value="0"/>
         <set field="packInput.numPackagesInfo._1" value="1"/>
@@ -310,7 +310,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response = ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-2644");
+            request.setParameter("add_product_id", "CAM-2644");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
@@ -376,7 +376,7 @@ under the License.
         <set field="packInput.selInfo._1" value="Y"/>
         <set field="packInput.pkgInfo._1" value="1"/>
         <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="GZ-2644"/>
+        <set field="packInput.prdInfo._1" value="CAM-2644"/>
         <set field="packInput.iteInfo._1" value="00001"/>
         <set field="packInput.wgtInfo._1" value="0"/>
         <set field="packInput.numPackagesInfo._1" value="1"/>
@@ -435,7 +435,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response = ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-2644");
+            request.setParameter("add_product_id", "CAM-2644");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
@@ -501,7 +501,7 @@ under the License.
         <set field="packInput.selInfo._1" value="Y"/>
         <set field="packInput.pkgInfo._1" value="1"/>
         <set field="packInput.qtyInfo._1" value="1"/>
-        <set field="packInput.prdInfo._1" value="GZ-2644"/>
+        <set field="packInput.prdInfo._1" value="CAM-2644"/>
         <set field="packInput.iteInfo._1" value="00001"/>
         <set field="packInput.wgtInfo._1" value="0"/>
         <set field="packInput.numPackagesInfo._1" value="1"/>

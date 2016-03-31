@@ -131,7 +131,7 @@ under the License.
             <field-map field-name="invoiceId" from-field="invoiceId"/>
         </entity-and>
         <iterate list="invoiceItems" entry="invoiceItem">
-            <if-compare field="invoiceItem.productId" operator="equals" value="WG-9943-B3">
+            <if-compare field="invoiceItem.productId" operator="equals" value="VH-9943-B3">
                 <set field="invoiceTotal" value="${invoiceTotal + (invoiceItem.quantity * (invoiceItem.amount * 3 / 100 + 1))}" type="BigDecimal"/>
             </if-compare>
         </iterate>

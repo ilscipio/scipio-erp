@@ -25,6 +25,7 @@ under the License.
         mostly those that have changed meaning or products completely or where the IDs were unsatisfactory.
       * For every product or category field that has localized content (in DemoCatalogI18n.xml or other), the corresponding field
         on Product and ProductCategory must be omitted; otherwise, they override the localized content.
+      * Some of the products here are referenced in tests and demo data in other applications (implied dependency on shop demo data, resolved with placeholders)
     -->
 
     <!-- CATALOGS -->

@@ -42,8 +42,8 @@ public Map createDemoOrder() {
     ];
     
     List<String> products = [
-            ["productId":"GZ-2644","itemDescription":"Round Gizmo","unitPrice":38.4,"unitListPrice":48.0],
-            ["productId":"WG-1111","itemDescription":"Micro Chrome Widget","unitPrice":59.99,"unitListPrice":60.0]
+            ["productId":"CAM-2644","itemDescription":"Nikon Analog Camera","unitPrice":38.4,"unitListPrice":48.0],
+            ["productId":"CDR-1111","itemDescription":"CD-R Writable Discs","unitPrice":59.99,"unitListPrice":60.0]
         ];
     
     Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");

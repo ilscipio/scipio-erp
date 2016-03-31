@@ -42,7 +42,7 @@ under the License.
         <set field="orderItemSeqId" value="00001"/>
         <set field="inventoryItemId" value="9001"/>
         <set field="quantity" value="2" type="BigDecimal"/>
-        <set field="productId" value="GZ-2644"/>
+        <set field="productId" value="CAM-2644"/>
 
         <entity-one entity-name="UserLogin" value-field="userLogin" auto-field-map="false">
             <field-map field-name="userLoginId" value="system"/>

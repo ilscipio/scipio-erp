@@ -38,7 +38,7 @@ under the License.
         </entity-one>
         <set field="request" from-field="parameters.request"/>
         <call-bsh><![CDATA[
-            request.setParameter("productId", "GZ-1000");
+            request.setParameter("productId", "PH-1000");
             request.setParameter("productTags", "test");
         ]]></call-bsh>
         <call-class-method method-name="addProductTags" class-name="org.ofbiz.product.product.ProductEvents" ret-field="result">
@@ -47,7 +47,7 @@ under the License.
         </call-class-method>
         <!-- Step 2 -->
         <entity-one entity-name="ProductKeyword" value-field="productKeyword">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="test"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -59,14 +59,14 @@ under the License.
         </assert>
         <!-- Step 3 -->
         <set field="updateProductKeywordMap.userLogin" from-field="systemUserLogin"/>
-        <set field="updateProductKeywordMap.productId" value="GZ-1000"/>
+        <set field="updateProductKeywordMap.productId" value="PH-1000"/>
         <set field="updateProductKeywordMap.keyword" value="test"/>
         <set field="updateProductKeywordMap.keywordTypeId" value="KWT_TAG"/>
         <set field="updateProductKeywordMap.statusId" value="KW_APPROVED"/>
         <call-service service-name="updateProductKeyword" in-map-name="updateProductKeywordMap"/>
         <!-- Step 4 -->
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="test"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -75,7 +75,7 @@ under the License.
         </assert>
         <!-- Step 5 -->
         <call-bsh><![CDATA[
-            request.setParameter("productId", "GZ-1000");
+            request.setParameter("productId", "PH-1000");
             request.setParameter("productTags", "'rock and roll' t-shirt red");
         ]]></call-bsh>
         <call-class-method method-name="addProductTags" class-name="org.ofbiz.product.product.ProductEvents" ret-field="result">
@@ -84,7 +84,7 @@ under the License.
         </call-class-method>
         <!-- Step 6 -->
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeyword1">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="rock and roll"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -96,7 +96,7 @@ under the License.
         </assert>
         
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeyword2">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="t-shirt"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -108,7 +108,7 @@ under the License.
         </assert>
         
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeyword3">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="red"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -120,7 +120,7 @@ under the License.
         </assert>
         <!-- Step 7 -->
         <entity-and entity-name="ProductKeyword" list="checkAllProductKeywordApproveList">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
             <field-map field-name="statusId" value="KW_PENDING"/>
         </entity-and>
@@ -134,7 +134,7 @@ under the License.
         </iterate>
         <!-- Step 8 -->
        <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove1">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="rock and roll"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -143,7 +143,7 @@ under the License.
         </assert>
         
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove2">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="t-shirt"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>
@@ -152,7 +152,7 @@ under the License.
         </assert>
         
         <entity-one entity-name="ProductKeyword" value-field="checkProductKeywordApprove3">
-            <field-map field-name="productId" value="GZ-1000"/>
+            <field-map field-name="productId" value="PH-1000"/>
             <field-map field-name="keyword" value="red"/>
             <field-map field-name="keywordTypeId" value="KWT_TAG"/>
         </entity-one>

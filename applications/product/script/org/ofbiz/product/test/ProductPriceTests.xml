@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="testCalculateProductPrice" short-description="Test case for service calculateProductPrice" login-required="false">
-        <set field="productId" value="GZ-2002"/>
+        <set field="productId" value="CD-2002"/>
         <entity-one entity-name="Product" value-field="product"/>
         <set field="serviceCtx.product" from-field="product"/>
         <call-service service-name="calculateProductPrice" in-map-name="serviceCtx">
@@ -37,7 +37,7 @@ under the License.
 
     <simple-method method-name="testCalculateProductPriceOfVariantProduct" short-description="Test case for service calculateProductPrice, when product is a variant and does not have product price" login-required="false">
         <!-- If product is a variant and no price is set, then default price of virtual product will be set -->
-        <set field="productId" value="GZ-1006-3"/>
+        <set field="productId" value="SW-1006-3"/>
         <entity-one entity-name="Product" value-field="product"/>
         <set field="serviceCtx.product" from-field="product"/>
         <call-service service-name="calculateProductPrice" in-map-name="serviceCtx">

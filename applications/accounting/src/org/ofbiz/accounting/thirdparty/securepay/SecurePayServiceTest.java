@@ -87,7 +87,7 @@ public class SecurePayServiceTest extends OFBizTestCase{
                 "orderId", "Demo1002", 
                 "orderItemSeqId", "00001", 
                 "orderItemTypeId", "PRODUCT_ORDER_ITEM", 
-                "productId", "GZ-1000",
+                "productId", "PH-1000",
                 "prodCatalogId", "DemoCatalog", 
                 "quantity" , new BigDecimal("2.000000"), 
                 "unitPrice", new BigDecimal("59.00"),

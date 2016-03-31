@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="testPackingServices" short-description="test packing services" login-required="false">
 
-        <set field="packSingleItemInMap.productId" value="GZ-2644"/>
+        <set field="packSingleItemInMap.productId" value="CAM-2644"/>
         <set field="packSingleItemInMap.orderId" value="DEMO10090"/>
         <set field="packSingleItemInMap.shipGroupSeqId" value="00001"/>
         <set field="packSingleItemInMap.quantity" value="2" type="BigDecimal"/>
@@ -168,7 +168,7 @@ under the License.
         </entity-one>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
         <set field="serviceCtx.facilityId" value="WebStoreWarehouse"/>
-        <set field="serviceCtx.productId" value="GZ-2644"/>
+        <set field="serviceCtx.productId" value="CAM-2644"/>
         <set field="serviceCtx.quantityAccepted" value="5" type="BigDecimal"/>
         <set field="serviceCtx.quantityRejected" value="0" type="BigDecimal"/>
         <set field="serviceCtx.unitCost" value="24" type="BigDecimal"/>

@@ -40,7 +40,7 @@ under the License.
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="createProductGroupOrderMap.userLogin" from-field="systemUserLogin"/>
-        <set field="createProductGroupOrderMap.productId" value="GZ-1000"/>
+        <set field="createProductGroupOrderMap.productId" value="PH-1000"/>
         <set field="createProductGroupOrderMap.fromDate" from-field="nowTimestamp"/>
         <set field="createProductGroupOrderMap.thruDate" from-field="thruDate"/>
         <set field="createProductGroupOrderMap.statusId" value="GO_CREATED"/>
@@ -80,7 +80,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response : ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-1000");
+            request.setParameter("add_product_id", "PH-1000");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
@@ -162,7 +162,7 @@ under the License.
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="createProductGroupOrderMap.userLogin" from-field="systemUserLogin"/>
-        <set field="createProductGroupOrderMap.productId" value="GZ-1001"/>
+        <set field="createProductGroupOrderMap.productId" value="PH-1001"/>
         <set field="createProductGroupOrderMap.fromDate" from-field="nowTimestamp"/>
         <set field="createProductGroupOrderMap.thruDate" from-field="thruDate"/>
         <set field="createProductGroupOrderMap.statusId" value="GO_CREATED"/>
@@ -202,7 +202,7 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : setOrderCurrencyAgreementShipDates, Response : ${result}"/>
         <call-bsh><![CDATA[
-            request.setParameter("add_product_id", "GZ-1001");
+            request.setParameter("add_product_id", "PH-1001");
         ]]></call-bsh>
         <call-class-method method-name="addToCart" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>

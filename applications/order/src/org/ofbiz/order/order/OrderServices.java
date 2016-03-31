@@ -4638,7 +4638,7 @@ public class OrderServices {
         Locale locale = (Locale) context.get("locale");
         ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "9000", "webStore", locale, "USD");
         try {
-            cart.addOrIncreaseItem("GZ-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
+            cart.addOrIncreaseItem("PH-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
         } catch (CartItemModifyException e) {
             Debug.logError(e, module);
         } catch (ItemNotFoundException e) {

@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="testGetInventoryAvailableByFacility" short-description="Test case for service getInventoryAvailableByFacility" login-required="false">
-        <set field="serviceCtx.productId" value="GZ-2644"/>
+        <set field="serviceCtx.productId" value="CAM-2644"/>
         <set field="serviceCtx.facilityId" value="WebStoreWarehouse"/>
         <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceCtx">
             <result-to-field result-name="quantityOnHandTotal"/>

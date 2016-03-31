@@ -26,7 +26,7 @@ under the License.
         <!-- Precondition : shipment is created from supplier and order items are issued  -->
         <!-- create a purchase order using following:
              Supplier : DemoSupplier
-             Item     : WG-1111
+             Item     : CDR-1111
              Quantity : 10 -->
 
         <!-- Post condition : Credit in account 214000 - UNINVOICED ITEM RECEIPT amount = grand total of order.
@@ -34,7 +34,7 @@ under the License.
 
         <!-- set few variables so that they can be changed easily to test with different values -->
         <set field="orderId" value="DEMO10091"/>
-        <set field="productId" value="GZ-2644"/>
+        <set field="productId" value="CAM-2644"/>
         <set field="orderItemSeqId" value="00001"/>
         <set field="shipmentId" value="9999"/>
 

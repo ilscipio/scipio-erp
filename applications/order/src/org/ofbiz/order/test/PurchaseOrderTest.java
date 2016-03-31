@@ -56,7 +56,7 @@ public class PurchaseOrderTest extends OFBizTestCase {
         ctx.put("currencyUom", "USD");
         ctx.put("productStoreId","9000");
 
-        GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "GZ-1000", "quantity", new BigDecimal("2"), "isPromo", "N"));
+        GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "PH-1000", "quantity", new BigDecimal("2"), "isPromo", "N"));
         orderItem.set("unitPrice", new BigDecimal("1399.5"));
         orderItem.set("unitListPrice", BigDecimal.ZERO);
         orderItem.set("isModifiedPrice", "N");

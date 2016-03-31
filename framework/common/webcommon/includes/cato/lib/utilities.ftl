@@ -161,7 +161,7 @@ which is very frequent due to use of macros.
 Builds an Ofbiz navigation intra-webapp, non-controller URL.
 
 The URI takes the basic form /control/requesturi, 
-but this is normally used to access another servlet, such as /products/GZ-1000.
+but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
 
@@ -183,7 +183,7 @@ This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by 
 Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.
 
 The URI takes the basic form /control/requesturi, 
-but this is normally used to access another servlet, such as /products/GZ-1000.
+but this is normally used to access another servlet, such as /products/PH-1000.
 
 This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
 
@@ -863,7 +863,7 @@ WARN: The url and pathPart must not be escaped; use #rawString.
   * Parameters *
     url                     = (required) URL to check
     pathPart                = (required) Path part
-                              e.g., {{{/GZ-1000}}}
+                              e.g., {{{/PH-1000}}}
 -->
 <#function urlContainsPathPart url pathPart>
   <#if !url?has_content || !pathPart?has_content>

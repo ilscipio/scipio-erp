@@ -96,14 +96,16 @@ if (productId) {
             //context.title = pageTitle.textData;
             context.productTitle = pageTitle.textData;
         } else {
-            //context.put("title", contentWrapper.get("PRODUCT_NAME", "html"));
-            context.put("productTitle", contentWrapper.get("PRODUCT_NAME", "html"));
+            // Cato: NOTE: There is no need to encrypt as HTML here because the screen will automatically
+            // encode and we are causing double-encoding
+            //context.put("title", contentWrapper.get("PRODUCT_NAME", "raw"));
+            context.put("productTitle", contentWrapper.get("PRODUCT_NAME", "raw"));
         }
 
         if (metaDescription) {
             context.metaDescription = metaDescription.textData;
         } else {
-            context.put("metaDescription", contentWrapper.get("DESCRIPTION", "html"));
+            context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw"));
         }
 
         if (metaKeywords) {

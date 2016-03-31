@@ -97,15 +97,16 @@ if (productId) {
             context.productTitle = pageTitle.textData;
         } else {
             // Cato: NOTE: There is no need to encrypt as HTML here because the screen will automatically
-            // encode and we are causing double-encoding
-            //context.put("title", contentWrapper.get("PRODUCT_NAME", "raw"));
-            context.put("productTitle", contentWrapper.get("PRODUCT_NAME", "raw"));
+            // encode and we are causing forced/hard-to-manage double-encoding in string substitutions
+            // WARN: when using "raw" this way, you should always call toString()!
+            //context.put("title", contentWrapper.get("PRODUCT_NAME", "raw").toString());
+            context.put("productTitle", contentWrapper.get("PRODUCT_NAME", "raw").toString());
         }
 
         if (metaDescription) {
             context.metaDescription = metaDescription.textData;
         } else {
-            context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw"));
+            context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw").toString());
         }
 
         if (metaKeywords) {

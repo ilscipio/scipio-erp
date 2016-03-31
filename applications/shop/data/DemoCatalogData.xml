@@ -457,7 +457,7 @@ under the License.
 
     <Product productId="VH-9944" productTypeId="FINISHED_GOOD" primaryProductCategoryId="AUTO-100" productName="Mustang Sports Car (with features)" internalName="Mustang Sports Car (with features)" virtualVariantMethodEnum="VV_FEATURETREE" description="Mustang Sports Car" longDescription="The Mustang is an elegant sports car perfect for any enthusiast." quantityIncluded="10.0" weight="22.0" isVirtual="Y" isVariant="N"/>
     
-    <Product productId="CL-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-MEN-101" productName="Men's T-Shirt" internalName="Men's T-Shirt" description="Men's T-Shirt" longDescription="A sleek T-Shirt in a variety of colors and sizes." isVirtual="N" isVariant="N" weight="1"/>
+    <Product productId="CL-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="CL-MEN-101" productName="Men's T-Shirt" internalName="Men's T-Shirt" description="Men's T-Shirt" longDescription="A sleek T-Shirt in a variety of colors and sizes." isVirtual="Y" isVariant="N" weight="1" virtualVariantMethodEnum="VV_FEATURETREE" />
 
     
     <!-- Product Alternative URL -->

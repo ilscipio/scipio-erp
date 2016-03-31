@@ -259,7 +259,7 @@
                             </#if>
                         </#if>
                     <#else>
-                        <#-- Cato: TODO? Investigate this case -->
+                        <#-- Cato: This is a sanity check, leave here for debugging, will do no harm -->
                         <#if selFeatureTypes?has_content>
                           <p>
                             <strong>WARN: </strong> Product has selectable features 

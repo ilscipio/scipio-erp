@@ -25,6 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
@@ -37,6 +38,7 @@ under the License.
         <section>
             <actions>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>

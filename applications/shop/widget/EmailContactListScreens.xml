@@ -53,8 +53,9 @@ under the License.
     <screen name="ContactUsEmailNotification">
         <section>
             <actions>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/templates/email/ContactUsEmail.ftl"/></html></platform-specific>

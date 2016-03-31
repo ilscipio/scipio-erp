@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Cato: UI Labels new to Shop application
+ALL NEW SHOP LABELS SHOULD GO HERE 
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="ShopShop">
+        <value xml:lang="en">Shop</value>
+        <value xml:lang="de">Shop</value>
+    </property>
+</resource>

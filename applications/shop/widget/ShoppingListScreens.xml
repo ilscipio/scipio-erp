@@ -47,9 +47,10 @@ under the License.
                 <if-empty field="parameters.mainSubmitted"/>
             </condition>
             <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shoppinglist/EditShoppingList.groovy"/>
             </actions>
             <widgets>

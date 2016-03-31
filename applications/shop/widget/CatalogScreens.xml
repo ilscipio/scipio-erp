@@ -129,9 +129,10 @@ under the License.
     <screen name="productsummary">
         <section>
             <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/solr/ProductSummary.groovy"/>
             </actions>
             <widgets>
@@ -342,6 +343,7 @@ under the License.
     <screen name="tellafriend">
         <section>
             <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
@@ -420,6 +422,7 @@ under the License.
     <screen name="LayeredNavBar">
         <section>
             <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>

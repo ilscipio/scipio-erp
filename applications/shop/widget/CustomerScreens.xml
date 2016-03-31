@@ -253,7 +253,9 @@ under the License.
     <screen name="messagecreate">
         <section>
             <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                
                 <set field="titleProperty" value="PageTitleNewMessage"/>
                 <set field="pageHeader" value="${uiLabelMap.PageTitleNewMessage}"/>
                 <set field="showMessageLinks" value="true"/>

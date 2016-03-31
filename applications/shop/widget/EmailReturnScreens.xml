@@ -26,6 +26,7 @@ under the License.
             <actions>
                 <!-- <set field="title" value="Order Confirmation Notice"/> -->
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>                
                 <!-- <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/> -->
             </actions>
@@ -38,6 +39,7 @@ under the License.
         <section>
             <actions>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -49,6 +51,7 @@ under the License.
         <section>
             <actions>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>

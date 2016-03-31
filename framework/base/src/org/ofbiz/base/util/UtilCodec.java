@@ -39,6 +39,11 @@ public class UtilCodec {
     private static final HtmlEncoder htmlEncoder = new HtmlEncoder();
     private static final XmlEncoder xmlEncoder = new XmlEncoder();
     private static final StringEncoder stringEncoder = new StringEncoder();
+    /**
+     * Cato: Raw/none encoder that returns the original string as-is. Useful as workaround.
+     */
+    private static final RawEncoder rawEncoder = new RawEncoder();
+    
     private static final UrlCodec urlCodec = new UrlCodec();
     private static final List<Codec> codecs;
     static {
@@ -114,10 +119,23 @@ public class UtilCodec {
         }
     }
 
+    /**
+     * Cato: Raw/none encoder that returns the original string as-is. Useful as workaround.
+     */
+    public static class RawEncoder implements SimpleEncoder {
+        public String encode(String original) {
+            return original;
+        }
+    }
+    
+    
     // ================== Begin General Functions ==================
 
     public static SimpleEncoder getEncoder(String type) {
-        if ("url".equals(type)) {
+        // Cato: Raw/none encoder that returns the original string as-is. Useful as workaround.
+        if ("raw".equals(type)) {
+            return rawEncoder;
+        } else if ("url".equals(type)) {
             return urlCodec;
         } else if ("xml".equals(type)) {
             return xmlEncoder;

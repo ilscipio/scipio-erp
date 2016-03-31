@@ -63,12 +63,12 @@ List fillTree(rootCat ,CatLvl, parentCategoryId) {
                 context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "html");
                 categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html");
                 
-                if(categoryContentWrapper.get("CATEGORY_NAME", "html"))
+                if(categoryContentWrapper.get("CATEGORY_NAME", "html").toString())
                     rootMap["categoryName"] = categoryContentWrapper.get("CATEGORY_NAME", "html");
                 else
                     rootMap["categoryName"] = root.categoryName;
                 
-                if(categoryContentWrapper.get("DESCRIPTION", "html"))
+                if(categoryContentWrapper.get("DESCRIPTION", "html").toString())
                     rootMap["categoryDescription"] = categoryContentWrapper.get("DESCRIPTION", "html");
                 else
                     rootMap["categoryDescription"] = root.description;

@@ -2,20 +2,22 @@
 <#--
 * 
 * Cato main include script.
+*
 * Ensures include order, #compress, keeps other templates clean and (TODO) per-context include loading.
 * Automatically included at all times.
 *
-* DEV NOTE: should try to avoid #compress in general because sometimes behaves oddly in Ofbiz.
-*     the one in this file should (hopefully) be ok because this include produces no markup.
-* DEV NOTE: this essentially takes the place of a renderer prep hook.
-*     maybe should be done from java/renderer prep for performance reasons
-*     (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
-*     script at least always runs (in reality there could be a higher level hook than FreeMarkerWorker
-*     but doesn't seem to exist in ofbiz).
-* DEV NOTE: variables like "request" are unavailable here in general in OOTB ofbiz,
-*     but minor cato renderer patches ("initial context mod", survey renderer) try to make some available 
-*     so they can be used. however, only use the major one likes "delegator" and "request"; 
-*     rest of context may not be current. note "request" not available in emails.
+* DEV NOTES: 
+* * Should try to avoid #compress in ALL OTHER macros and templates in general because sometimes behaves oddly in Ofbiz.
+*   The one in this file should (hopefully) be OK because this include produces no markup.
+* * This essentially takes the place of a renderer prep hook.
+*   Maybe should be done from java/renderer prep for performance reasons
+*   (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
+*   script at least always runs (in reality there could be a higher level hook than FreeMarkerWorker
+*   but doesn't seem to exist in ofbiz).
+* * Variables like "request" are unavailable here in general in OOTB ofbiz,
+*   but minor cato renderer patches ("initial context mod", survey renderer) try to make some available 
+*   so they can be used. however, only use the major one likes "delegator" and "request"; 
+*   rest of context may not be current. note "request" not available in emails.
 *
 -->
 
@@ -96,10 +98,10 @@
 
 <#-- Do the platform-dependent lib always-includes. -->
 
-<#-- Main theme macros include (TODO? is there any way to cache this further? (like global vars)) -->
+<#-- Main theme macros include (TODO?: is there any way to cache this further? (like global vars)) -->
 <@catoTemplateIncludeDirective />
 
-<#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.
+<#-- FIXME?L For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.
      Easier with a loop for now but this assumes all are meant to be public (not true)...
      If not done they are not accessible from #import-ed libraries and other places.
      This is also done so that the behavior is the same as the java-based ofbiz transforms such as @ofbizUrl,

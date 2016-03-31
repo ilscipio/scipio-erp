@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if wikiContent?has_content>
-    ${StringUtil.wrapString(wikiContent)}
+    ${rawString(wikiContent)}
 <#else>
     <@commonMsg type="error">${uiLabelMap.CommonHelpNotFound}</@commonMsg>
 </#if>

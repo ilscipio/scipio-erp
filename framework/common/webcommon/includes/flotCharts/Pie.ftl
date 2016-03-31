@@ -40,7 +40,7 @@ jQuery(document).ready( function(){
     ];*/
     /* End Example */
 
-    var dataAsText = '${StringUtil.wrapString(dataText)}';
+    var dataAsText = '${rawString(dataText)}';
     var chartData = [];
     chartData = dataAsText.split(',');
     var allData = [];

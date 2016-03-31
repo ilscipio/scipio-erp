@@ -104,7 +104,7 @@ under the License.
                 <@field type="input" size="20" name="paymentMethodId" value=((returnHeader.paymentMethodId)!)/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
           <@field type="select" label=uiLabelMap.OrderReturnNeedsAutoReceive name="needsInventoryReceive">

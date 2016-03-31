@@ -26,12 +26,12 @@ under the License.
 
         ${getLabel('CommonFollowingErrorsOccurred')}
         <#if errorMessage?has_content>
-                        ${StringUtil.wrapString(errorMessage)}
+                        ${rawString(errorMessage)}
         </#if>
         <#if errorMessageList?has_content>
                         <ol>
             <#list errorMessageList as errorMsg>
-                          <li>${StringUtil.wrapString(errorMsg)}</li>
+                          <li>${rawString(errorMsg)}</li>
             </#list>
                         </ol>
         </#if>

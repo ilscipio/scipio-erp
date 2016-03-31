@@ -27,7 +27,7 @@ under the License.
             Subject: ${(communicationEvent.subject)!}
         </pre>
         <hr />
-        ${StringUtil.wrapString(communicationEvent.content)!}
+        ${rawString(communicationEvent.content)!}
 
     </body>
 </html>

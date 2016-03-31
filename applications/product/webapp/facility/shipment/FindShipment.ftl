@@ -105,7 +105,7 @@ function lookupShipments() {
 <#if shipmentList??>
   <@section id="findOrders_2" title=uiLabelMap.ProductShipments>
     <#if shipmentList?has_content>  
-      <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
+      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
       <@paginate mode="content" url=makeOfbizUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
    
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->

@@ -59,7 +59,7 @@ under the License.
                 <@field type="input" size="20" name="paymentMethodId" />
               </#if>
               <#if (party.partyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
         </#if>

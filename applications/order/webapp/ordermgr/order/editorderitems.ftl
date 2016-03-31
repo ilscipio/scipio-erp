@@ -251,7 +251,7 @@ under the License.
                                             <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                         </#if>
-                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
+                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
                                         <#-- Cato: Now points to shop -->
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=uiLabelMap.OrderEcommerce target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>

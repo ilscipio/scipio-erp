@@ -289,7 +289,7 @@ under the License.
                             <@td width="45%">
                                 <b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <@field type="input" size="12" name="productId_o_${rowCount}"/>
-                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                             </@td>
                           </#if>
                           <@td align="right">${uiLabelMap.ProductLocation}:</@td>

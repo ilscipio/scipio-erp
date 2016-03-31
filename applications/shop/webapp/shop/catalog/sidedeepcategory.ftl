@@ -33,7 +33,7 @@ under the License.
     <#assign productCategory = catInfo.productCategory!"">
     <#assign contentCategoryName = catInfo.categoryName!"">
     <#assign contentCategoryDesc = catInfo.description!"">
-    <#assign isOnCurrentCatPath = urlContainsPathPart(StringUtil.wrapString(currentCategoryPath!""), productCategoryId)>
+    <#assign isOnCurrentCatPath = urlContainsPathPart(rawString(currentCategoryPath!""), productCategoryId)>
     <#assign active = false>
     <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || isOnCurrentCatPath>
       <#assign active = true>
@@ -92,6 +92,6 @@ under the License.
     </@menu>
 </#if>
 
-<#-- currentCategoryPath: ${StringUtil.wrapString(currentCategoryPath!"(none)")} -->
+<#-- currentCategoryPath: ${rawString(currentCategoryPath!"(none)")} -->
 <#-- baseCategoryId: ${baseCategoryId!"(none)"} -->
 

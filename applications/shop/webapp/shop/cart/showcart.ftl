@@ -449,7 +449,7 @@ jQuery(document).ready(function() {
     <ul>
       <#list productPromos as productPromo>
         <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> 
-           ${StringUtil.wrapString(productPromo.promoText!)}</li>
+           ${rawString(productPromo.promoText!)}</li>
       </#list>
     </ul>
     <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a></div>

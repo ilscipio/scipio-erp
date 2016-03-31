@@ -26,11 +26,11 @@ under the License.
         <h2>${title}</h2>
         <p>Hello ${person.firstName!} ${person.lastName!},</p>
         <p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has a note added to it:<br />
-        ${StringUtil.wrapString(noteData.noteInfo!)}
+        ${rawString(noteData.noteInfo!)}
         <br /><br />
         Please login to the url below and add another note as a reply if required.<br /><br />
         The status and used hours can always be checked <br />
-        <a href="${StringUtil.wrapString(baseSecureUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">here.....</a>
+        <a href="${rawString(baseSecureUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">here.....</a>
         <br /><br />
         Regards.<br /><br />
         Thank you for your business.

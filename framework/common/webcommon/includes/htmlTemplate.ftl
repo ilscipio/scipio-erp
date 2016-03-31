@@ -24,12 +24,12 @@ under the License.
         but in general in stock code this file was used in regular screens, so not fatal. 
         This file should be avoided in favor of cato macros.
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"/>
-<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")> 
-<#include StringUtil.wrapString("component://widget/templates/htmlMenuMacroLibrary.ftl")>
+<#include "component://widget/templates/htmlScreenMacroLibrary.ftl"> 
+<#include "component://widget/templates/htmlMenuMacroLibrary.ftl">
 ... and use ones with caching of the directives so only interpreted once per request
-<@('<#include "' + (StringUtil.wrapString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (StringUtil.wrapString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (StringUtil.wrapString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
+<@('<#include "' + (rawString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (rawString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (rawString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
 
 <#assign formMacroLibIncludeDirective = getRequestVar("formMacroLibIncludeDirective")!"">
 
@@ -38,9 +38,9 @@ under the License.
     <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
 <#else>
     <#-- note: getMacroLibraryPath only available since cato renderer mod -->
-    <#assign formMacroLibraryPath = StringUtil.wrapString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
-    <#assign screenMacroLibraryPath = StringUtil.wrapString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
-    <#assign menuMacroLibraryPath = StringUtil.wrapString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
+    <#assign formMacroLibraryPath = rawString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
+    <#assign screenMacroLibraryPath = rawString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
+    <#assign menuMacroLibraryPath = rawString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
 
     <#assign formMacroLibIncludeDirective = ('<#include "' + formMacroLibraryPath + '">')?interpret>
     <#assign screenMacroLibIncludeDirective = ('<#include "' + screenMacroLibraryPath + '">')?interpret>

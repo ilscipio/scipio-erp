@@ -331,7 +331,7 @@
             <@td colspan="2">
               <textarea id="cmsdata" name="textData" cols="40" rows="6" style="display: none;">
                 <#if (dataText?has_content)>
-                    ${StringUtil.wrapString(dataText.textData!)}
+                    ${rawString(dataText.textData!)}
                 </#if>
               </textarea>
             </@td>
@@ -375,7 +375,7 @@
                 <div id="editorcontainer" class="nocolumns">
                     <div id="cmseditor" style="margin: 0; width: 100%; border: 1px solid black;">
                     <#if (dataText?has_content)>
-                      ${StringUtil.wrapString(dataText.textData!)} 
+                      ${rawString(dataText.textData!)} 
                     </#if>
                     </div>
                 </div>

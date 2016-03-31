@@ -18,6 +18,6 @@ under the License.
 -->
 
 <@section title=uiLabelMap.OrderPromotionDetails>
-    <div>${StringUtil.wrapString(productPromo.promoText!)}</div>
+    <div>${rawString(productPromo.promoText!)}</div>
     <div>${uiLabelMap.EcommerceGeneratedDescription}  ${promoAutoDescription!}</div>
 </@section>

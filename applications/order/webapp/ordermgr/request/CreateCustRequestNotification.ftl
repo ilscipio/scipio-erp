@@ -20,7 +20,7 @@ under the License.
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>${title}</title>
-        <link rel="stylesheet" href="${StringUtil.wrapString(baseUrl!)}/images/maincss.css" type="text/css"/>
+        <link rel="stylesheet" href="${rawString(baseUrl!)}/images/maincss.css" type="text/css"/>
     </head>
     <body>
         <h1>${title}</h1>
@@ -30,7 +30,7 @@ under the License.
         We will solve/implement the request as soon as possible
         <br /><br />
         The status and used hours can always be checked <br />
-        <a href="${StringUtil.wrapString(baseUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">here....</a>
+        <a href="${rawString(baseUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">here....</a>
         <br /><br />
         Regards.
         <br /><br />

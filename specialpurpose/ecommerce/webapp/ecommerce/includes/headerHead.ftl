@@ -35,37 +35,37 @@ under the License.
     <#assign shortcutIcon = layoutSettings.shortcutIcon/>
   </#if>
   <#if shortcutIcon?has_content>
-    <link rel="shortcut icon" href="<@ofbizContentUrl>${StringUtil.wrapString(shortcutIcon)}</@ofbizContentUrl>" />
+    <link rel="shortcut icon" href="<@ofbizContentUrl>${rawString(shortcutIcon)}</@ofbizContentUrl>" />
   </#if>
   <#if layoutSettings.styleSheets?has_content>
     <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
     <#list layoutSettings.styleSheets as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.VT_STYLESHEET?has_content>
     <#list layoutSettings.VT_STYLESHEET as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
     <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
     <#list layoutSettings.rtlStyleSheets as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
     <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#-- Append CSS for catalog -->
   <#if catalogStyleSheet??>
-    <link rel="stylesheet" href="${StringUtil.wrapString(catalogStyleSheet)}" type="text/css"/>
+    <link rel="stylesheet" href="${rawString(catalogStyleSheet)}" type="text/css"/>
   </#if>
   <#-- Append CSS for tracking codes -->
   <#if sessionAttributes.overrideCss??>
-    <link rel="stylesheet" href="${StringUtil.wrapString(sessionAttributes.overrideCss)}" type="text/css"/>
+    <link rel="stylesheet" href="${rawString(sessionAttributes.overrideCss)}" type="text/css"/>
   </#if>
   <#if layoutSettings.javaScripts?has_content>
     <#--layoutSettings.javaScripts is a list of java scripts. -->
@@ -102,7 +102,7 @@ under the License.
     <@script>
     <#list webAnalyticsConfigs as webAnalyticsConfig>
       <#if  webAnalyticsConfig.webAnalyticsTypeId != "BACKEND_ANALYTICS">
-        ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}
+        ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
       </#if>
     </#list>
     </@script>

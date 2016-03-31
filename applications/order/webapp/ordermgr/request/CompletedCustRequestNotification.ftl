@@ -20,7 +20,7 @@ under the License.
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>${title}</title>
-        <link rel="stylesheet" href="${StringUtil.wrapString(baseUrl!)}/images/maincss.css" type="text/css"/>
+        <link rel="stylesheet" href="${rawString(baseUrl!)}/images/maincss.css" type="text/css"/>
     </head>
     <body>
         <h1>${title}</h1>
@@ -28,7 +28,7 @@ under the License.
         <p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has been completed.
         <br /><br />
         The status and used hours can always be checked at the url: <br />
-        <a href="${StringUtil.wrapString(baseUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">${baseUrl!}/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</a>
+        <a href="${rawString(baseUrl!)}/myportal/control/showPortletDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">${baseUrl!}/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</a>
         <br /><br />
         Regards.<br /><br />
         Thank you for your business.

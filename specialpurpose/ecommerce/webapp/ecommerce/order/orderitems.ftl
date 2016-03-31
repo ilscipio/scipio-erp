@@ -248,8 +248,8 @@ under the License.
       <#list itemAdjustments as orderItemAdjustment>
         <@tr>
           <@td>
-            ${uiLabelMap.EcommerceAdjustment}: ${StringUtil.wrapString(localOrderReadHelper.getAdjustmentType(orderItemAdjustment))}
-            <#if orderItemAdjustment.description?has_content>: ${StringUtil.wrapString(orderItemAdjustment.description)}</#if>
+            ${uiLabelMap.EcommerceAdjustment}: ${rawString(localOrderReadHelper.getAdjustmentType(orderItemAdjustment))}
+            <#if orderItemAdjustment.description?has_content>: ${rawString(orderItemAdjustment.description)}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>

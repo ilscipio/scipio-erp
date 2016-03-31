@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#--<#include StringUtil.wrapString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
+<#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
 <#escape x as x?html>
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
@@ -45,13 +45,13 @@ under the License.
             <@alert type="alert">
       <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
       <#if errorMessage?has_content>
-                        ${StringUtil.wrapString(errorMessage)}
+                        ${rawString(errorMessage)}
       </#if>
       <#noescape>
         <#if errorMessageList?has_content>
                         <ol>
             <#list errorMessageList as errorMsg>
-                          <li>${StringUtil.wrapString(errorMsg)}</li>
+                          <li>${rawString(errorMsg)}</li>
             </#list>
                         </ol>
         </#if>
@@ -66,12 +66,12 @@ under the License.
         <@alert type="info">
       <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
       <#if eventMessage?has_content>
-                        ${StringUtil.wrapString(eventMessage)}
+                        ${rawString(eventMessage)}
       </#if>
       <#if eventMessageList?has_content>
                         <ol>
         <#list eventMessageList as eventMsg>
-                          <li>${StringUtil.wrapString(eventMsg)}</li>
+                          <li>${rawString(eventMsg)}</li>
         </#list>
                         </ol>
       </#if>
@@ -84,7 +84,7 @@ under the License.
     <div id="main-info-box">
         <@alert type="info">      
           <#if infoMessage?has_content>
-            <#noescape>${StringUtil.wrapString(infoMessage)}</#noescape>
+            <#noescape>${rawString(infoMessage)}</#noescape>
           </#if>
         </@alert>
     </div>

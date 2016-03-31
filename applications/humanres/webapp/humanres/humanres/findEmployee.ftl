@@ -98,7 +98,7 @@ under the License.
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>
     <#if partyList?has_content>
-      <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>
+      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>
       <@paginate mode="content" url=makeOfbizUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
         <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>

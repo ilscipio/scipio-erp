@@ -72,13 +72,13 @@ under the License.
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
+          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&amp;returnId=${returnHeader.returnId!}&amp;shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${StringUtil.wrapString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
+             <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ViewShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${uiLabelMap.ProductShipmentId} ${returnShipmentId.shipmentId}" class="+${styles.action_nav!} ${styles.action_view!}" />
            </#list>
          <#else>
            <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&amp;partyIdTo=${toPartyId}&amp;statusId=SHIPMENT_INPUT&amp;shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />
@@ -247,11 +247,11 @@ under the License.
                     <#assign itemResp = item.getRelatedOne("ReturnItemResponse", false)!>
                     <#if itemResp?has_content>
                       <#if itemResp.paymentId?has_content>
-                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
+                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
                       <#elseif itemResp.replacementOrderId?has_content>
                         <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${itemResp.replacementOrderId}</a></div>
                       <#elseif itemResp.billingAccountId?has_content>
-                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
+                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
                       </#if>
                     <#else>
                       <div>${uiLabelMap.CommonNone}</div>

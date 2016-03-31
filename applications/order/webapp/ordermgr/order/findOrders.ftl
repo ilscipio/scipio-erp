@@ -302,7 +302,7 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
     <@paginate mode="content" url=makeOfbizUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    

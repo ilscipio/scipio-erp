@@ -38,7 +38,7 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
@@ -89,7 +89,7 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>

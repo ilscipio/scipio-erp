@@ -51,17 +51,17 @@ under the License.
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
                                         <#elseif orderItemType??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.itemDescription!}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.itemDescription!}</a>
                                         </#if>
                                         
                                         <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
@@ -278,7 +278,7 @@ under the License.
                                                             <@td style="padding-left: 15px; text-align: left;">${unplannedQuantity}</@td>
                                                         </@tr>
                                                     </@table>
-                                                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" 
+                                                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" 
                                                         class="${styles.link_run_sys!} ${styles.action_view!}" target="_blank">${uiLabelMap.ProductInventory}</a>
                                             </@modal>
                                         </#if>
@@ -313,7 +313,7 @@ under the License.
                                     <@td colspan="6">
                                         <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
                                             ${uiLabelMap.ManufacturingProductionRun}
-                                            <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
+                                            <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
                                             ${uiLabelMap.OrderCurrentStatus}
                                             ${(delegator.findOne("StatusItem", {"statusId":workEffort.getString("currentStatusId")}, true).get("description",locale))!}
                                         <#else>
@@ -394,12 +394,12 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}
-                                        ${StringUtil.wrapString(orderItemAdjustment.get("description",locale)!)}
+                                        ${rawString(orderItemAdjustment.get("description",locale)!)}
                                         <#if orderItemAdjustment.comments?has_content>
                                             (${orderItemAdjustment.comments!""})
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
+                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
                                         </#if>
                                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                             <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -459,7 +459,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonSurveys}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
+                                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
                                     </@td>
                                     <@td colspan="5">&nbsp;</@td>
                                 </@tr>
@@ -522,7 +522,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
+                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
                                         ${uiLabelMap.OrderShipGroup}&nbsp;${orderItemShipGrpInvRes.shipGroupSeqId}
                                     </@td>
                                     <@td align="center">
@@ -547,7 +547,7 @@ under the License.
                             <#list orderShipments as orderShipment>
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
-                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
+                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
                                     </@td>
                                     <@td align="center">
                                         ${orderShipment.quantity?string.number}&nbsp;
@@ -564,7 +564,7 @@ under the License.
                                 <@td colspan="2">
                                     <#if itemIssuance.shipmentId?has_content>
                                         ${uiLabelMap.OrderIssuedToShipmentItem}&nbsp;
-                                        <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
+                                        <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
                                     <#else>
                                         ${uiLabelMap.OrderIssuedWithoutShipment}
                                     </#if>
@@ -584,7 +584,7 @@ under the License.
                                         <#if itemIssuance.inventoryItemId?has_content>
                                             <#assign inventoryItem = itemIssuance.getRelatedOne("InventoryItem", false)/>
                                             ${uiLabelMap.CommonInventory}
-                                            <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
+                                            <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
                                             ${uiLabelMap.OrderShipGroup}&nbsp;${itemIssuance.shipGroupSeqId!}
                                             <#if (inventoryItem.serialNumber?has_content)>
                                                 <br />
@@ -607,11 +607,11 @@ under the License.
                                     <@td colspan="2">
                                         <#if shipmentReceipt.shipmentId?has_content>
                                             ${uiLabelMap.OrderShipmentReceived}&nbsp;
-                                            <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipmentReceipt.shipmentId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
+                                            <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewShipment?shipmentId=${shipmentReceipt.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
                                         </#if>
                                         &nbsp;<#if shipmentReceipt.datetimeReceived?has_content><@formattedDateTime date=shipmentReceipt.datetimeReceived /></#if>&nbsp;
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
+                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
                                     </@td>
                                     <@td align="center">
                                         ${shipmentReceipt.quantityAccepted?string.number}&nbsp;/&nbsp;${shipmentReceipt.quantityRejected?default(0)?string.number}

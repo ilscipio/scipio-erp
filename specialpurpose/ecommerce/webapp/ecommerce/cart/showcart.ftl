@@ -491,7 +491,7 @@ function setAlternateGwp(field) {
         <#-- show promotions text -->
         <ul>
         <#list productPromos as productPromo>
-            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">[${uiLabelMap.CommonDetails}]</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
+            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">[${uiLabelMap.CommonDetails}]</a>${rawString(productPromo.promoText!)}</li>
         </#list>
         </ul>
         <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button">${uiLabelMap.OrderViewAllPromotions}</a></div>

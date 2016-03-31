@@ -123,7 +123,7 @@ under the License.
               </@td>
               <@td>
                   <#if task.customerPartyId??>
-                    <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                    <a href="${customerDetailLink}${task.customerPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                   <#else>
                     ${uiLabelMap.CommonNA}
                   </#if>
@@ -143,7 +143,7 @@ under the License.
               </@td>
               <@td>${task.priority!"0"}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${StringUtil.wrapString(externalKeyParam)}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
+                <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                   ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                 </a>
               </@td>
@@ -180,7 +180,7 @@ under the License.
                 </@td>
                 <@td>
                   <#if task.customerPartyId??>
-                    <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                    <a href="${customerDetailLink}${task.customerPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                   </#if>
                 </@td>
                 <@td>
@@ -200,7 +200,7 @@ under the License.
                   <#if task.wepaPartyId == "_NA_">
                     ${uiLabelMap.CommonNA}
                   <#else>
-                    <a href="${customerDetailLink}${task.wepaPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_id!}">${task.wepaPartyId}</a>
+                    <a href="${customerDetailLink}${task.wepaPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_id!}">${task.wepaPartyId}</a>
                   </#if>
                 </@td>
                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>

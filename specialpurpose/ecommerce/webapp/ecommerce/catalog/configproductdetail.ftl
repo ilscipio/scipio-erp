@@ -448,7 +448,7 @@ function getConfigDetails(event) {
               <div>${question.question}</div>
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
-                <div>${StringUtil.wrapString(question.description!)}</div>
+                <div>${rawString(question.description!)}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
                   <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_sys!} ${styles.action_view!}">Instructions</a>

@@ -424,12 +424,12 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                                   arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     contentId               = Menu item content ID
     contentStyle            = Legacy menu item content style
-    contentName             = Content name attrib (name="" on <a> link)
-    contentAttribs          = ((map)) Extra menu item content attributes (for <a>, <span> or <input> element)
+    contentName             = Content name attrib ({{{name=""}}} on {{{<a>}}} link)
+    contentAttribs          = ((map)) Extra menu item content attributes (for {{{<a>}}}, {{{<span>}}} or {{{<input>}}} element)
     text                    = Text to use as content
                               By default, you '''must''' use this to specific link text, not nested content;
                               nested content will by default be put outside the link.
-    href                    = Content link, for "link" type
+    href                    = Content link, for {{{link}}} type
                               Also supports ofbiz request URLs using the notation: {{{ofbizUrl://}}} (see interpretRequestUri function)
     onClick                 = ((js)) onClick (for content elem)
     title                   = Logical title attribute of content
@@ -455,7 +455,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 <#assign menuitem_defaultArgs = {
   "type":"generic", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
-  "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
+  "onClick":"", "disabled":false, "selected":false, "active":false, "target":"", "title":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":"", "nestedFirst":false,
   "htmlwrap":true, "inlineItem":false, "contentWrapper":false, "isNestedMenu":"", "passArgs":{}
 }>

@@ -13966,6 +13966,15 @@
     <property key="ProductCategoryRollups">
         <value xml:lang="en">Category Rollups</value>
     </property>
+    <property key="ProductDuplicateCategory">
+        <value xml:lang="en">Duplicate Category</value>
+    </property>
+    <property key="ProductCategoryParentCategoryList">
+        <value xml:lang="en">Parent Category List</value>
+    </property>    
+    <property key="ProductCategoryChildCategoryList">
+        <value xml:lang="en">Child Category List</value>
+    </property>
     <property key="ProductCategoryDescription">
         <value xml:lang="en">Category Description</value>
         <value xml:lang="fr">Description de la catégorie</value>

@@ -38,27 +38,24 @@ function insertImageName(type,nameValue) {
 </#if>
 
 <#if !productCategory?has_content>
-    <#if productCategoryId?has_content>
-        <#assign sectionTitle>${uiLabelMap.ProductCouldNotFindProductCategoryWithId} "${productCategoryId}".</#assign>
+    <#if productCategoryId?has_content>        
         <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
     <#else>
-        <#assign sectionTitle>${uiLabelMap.PageTitleCreateProductCategory}</#assign>
         <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
     </#if>
 <#else>
-    <#assign sectionTitle>${uiLabelMap.PageTitleEditProductCategories}</#assign>
     <#assign formAction><@ofbizUrl>updateProductCategory</@ofbizUrl></#assign>
 </#if>
 
-<@section title=sectionTitle>
+<@section>
 
     <form action="${formAction}" method="post" name="productCategoryForm">
       <#if productCategory?has_content>
         <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
       </#if>
       <@fields type="default">
-        <@row>
-            <@cell columns=6>
+         <@row>
+            <@cell columns=12>
               <#if !productCategory?has_content>
                 <#if productCategoryId?has_content>
                   <@field type="input" label=uiLabelMap.CommonId name="productCategoryId" size="20" maxlength="40" value=productCategoryId/>
@@ -71,7 +68,9 @@ function insertImageName(type,nameValue) {
                 </@field>
               </#if>
             </@cell>
-            <@cell columns=6>
+        </@row>
+        <@row>       
+            <@cell columns=12>
                 <@field type="select" label=uiLabelMap.CommonType name="productCategoryTypeId" size="1">
                     <#assign selectedKey = "">
                     <#list productCategoryTypes as productCategoryTypeData>
@@ -86,10 +85,12 @@ function insertImageName(type,nameValue) {
             </@cell>
         </@row>
         <@row>
-            <@cell columns=6>
+            <@cell columns=12>
               <@field type="input" label=uiLabelMap.CommonName value=((productCategory.categoryName)!) name="categoryName" size="60" maxlength="60"/>
             </@cell>
-            <@cell columns=6>
+        </@row>
+        <@row>
+            <@cell columns=12>
               <@field type="lookup" label=uiLabelMap.CommonParent value=(productCategory.primaryParentCategoryId)?default('') formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
             </@cell>
         </@row>
@@ -176,10 +177,13 @@ function insertImageName(type,nameValue) {
 
         <@row>
             <@cell>
-              <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                <#if productCategory?has_content>
+                    <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
+                <#else>
+                    <@field type="submit" name="Create" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                </#if>
             </@cell>
         </@row>
       </@fields>
     </form>
 </@section>
-

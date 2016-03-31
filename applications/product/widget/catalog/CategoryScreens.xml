@@ -51,7 +51,7 @@ under the License.
     <screen name="EditCategory">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductCategories"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeMainMenuItem" value="categories"/>
                 <set field="activeSubMenuItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
@@ -61,6 +61,8 @@ under the License.
                     <order-by field-name="description"/>
                 </entity-condition>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategory.groovy"/>
+                
+                <set field="title" default-value="${uiLabelMap.ProductCategory} ${productCategoryId}"/>
             </actions>
             <widgets>
                  <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
@@ -73,9 +75,19 @@ under the License.
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
                         </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/DuplicateCategory.ftl"/></html>
-                        </platform-specific>
+                        <section>
+	                       <condition>
+	                            <and>
+                                    <not><if-empty field="parameters.duplicateCategory"/></not>
+                                    <if-compare value="Y" operator="equals" field="parameters.duplicateCategory"/>
+                                </and>
+	                       </condition>
+	                        <widgets>
+		                        <platform-specific>
+		                            <html><html-template location="component://product/webapp/catalog/category/DuplicateCategory.ftl"/></html>
+		                        </platform-specific>
+	                        </widgets>
+                           </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -153,7 +165,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
-                <set field="labelTitleProperty" value="ProductCategoryContent"/>
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -190,6 +201,7 @@ under the License.
         </section>
     </screen>
     
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategoryContentAssoc -->
     <screen name="CatoCategoryContentList"> 
         <section>
             <widgets>
@@ -234,43 +246,111 @@ under the License.
     <screen name="EditCategoryRollup">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditCategoryRollup"/>
-                <set field="activeSubMenuItem" value="EditCategoryRollup"/>
-                <set field="labelTitleProperty" value="ProductRollup"/>
-                <set field="showProductCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-condition entity-name="ProductCategoryRollup" list="currentProductCategoryRollups">
-                    <condition-expr field-name="productCategoryId" from-field="showProductCategoryId"/>
-                    <order-by field-name="sequenceNum"/>
-                </entity-condition>
-                <entity-condition entity-name="ProductCategoryRollup" list="parentProductCategoryRollups">
-                    <condition-expr field-name="parentProductCategoryId" from-field="showProductCategoryId"/>
-                    <order-by field-name="sequenceNum"/>
-                </entity-condition>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="activeSubMenuItem" value="EditCategoryRollup"/>                
                 
+                <set field="title" default-value="${uiLabelMap.ProductCategoryRollup} ${parameters.productCategoryId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <screenlet title="${uiLabelMap.ProductAddCategoryParent}">
-                                    <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryParent"/>
+                                <screenlet title="${uiLabelMap.ProductAddCategoryParent}">                                    
+                                    <section>
+                                        <actions>
+                                            <set field="productCategoryAssociationMode" value="parent" />
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="CatoAddCategoryAssociation"/>
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.ProductAddCategoryChild}">
-                                    <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryChild"/>
+                                    <section>
+                                        <actions>
+                                            <set field="productCategoryAssociationMode" value="child" />
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="CatoAddCategoryAssociation"/>
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </container>
                         </container>
-                        <screenlet title="${uiLabelMap.ProductCategoryRollupParentCategories}">
-                            <include-form location="component://product/widget/catalog/CategoryForms.xml" name="UpdateCategoryParent"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.ProductCategoryRollupChildCategories}">
-                            <include-form location="component://product/widget/catalog/CategoryForms.xml" name="UpdateCategoryChild"/>
-                        </screenlet>
+                        
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+		                        <screenlet title="${uiLabelMap.ProductCategoryParentCategoryList}">
+                                     <section>
+                                        <actions>
+                                            <set field="productCategoryAssociationMode" value="parent" />
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="CatoCategoryAssociationList"/>
+                                        </widgets>
+                                    </section>
+		                        </screenlet>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+		                        <screenlet title="${uiLabelMap.ProductCategoryChildCategoryList}">
+                                    <section>
+                                        <actions>
+                                            <set field="productCategoryAssociationMode" value="child" />
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="CatoCategoryAssociationList"/>
+                                        </widgets>
+                                    </section>
+		                        </screenlet>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#AddCategory* -->
+    <screen name="CatoAddCategoryAssociation">
+        <section>
+            <widgets>
+                <screenlet>
+                    <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryAssociation.ftl"/></html></platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/category/CategoryForms.xml#UpdateCategory* -->
+    <screen name="CatoCategoryAssociationList">
+        <section>
+            <widgets>
+	            <section>
+	                <condition>
+	                    <if-compare operator="equals" value="parent" field="productCategoryAssociationMode"/>
+	                </condition>
+	                <actions>
+	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
+			               <condition-expr field-name="parentProductCategoryId" from-field="parameters.productCategoryId"/>
+			               <order-by field-name="sequenceNum"/>
+			           </entity-condition>
+	                </actions>	            
+	            </section>
+	            <section>
+	                <condition>
+	                    <if-compare operator="equals" value="child" field="productCategoryAssociationMode"/>                            
+	                </condition>
+	                <actions>
+	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
+                            <condition-expr field-name="productCategoryId" from-field="parameters.productCategoryId"/>
+                            <order-by field-name="sequenceNum"/>
+                        </entity-condition>
+	                </actions>	              
+	            </section>
+	            <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryAssociationList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

@@ -1,7 +1,8 @@
 <#-- TODO: License -->
 
+<@modal id="duplicateProductCategory">
 <#if productCategoryId?has_content>
-    <@section title=uiLabelMap.ProductDuplicateProductCategory>
+    <@section title=uiLabelMap.ProductDuplicateCategory>
         <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post">
             <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
             <@field type="input" label=uiLabelMap.ProductDuplicateProductCategorySelected size="20" maxlength="20" name="productCategoryId"/>
@@ -17,7 +18,13 @@
                 <@field type="checkbox" name="duplicateAttributes" value="Y" checked=true  label=uiLabelMap.ProductAttributes/>
             </@field> 
       
-            <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_copy!}" text=uiLabelMap.CommonGo/>  
+            <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_copy!}" text=uiLabelMap.CommonSubmit/>  
         </form>
     </@section>
 </#if>
+</@modal>
+<@script>
+    $(document).ready(function() {
+        $('#duplicateProductCategory_modal').foundation('reveal','open');
+    });
+</@script>

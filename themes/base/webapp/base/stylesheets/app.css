@@ -10381,7 +10381,7 @@ div.scrollable-table-container > table {
 
 /* line 524, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
-  display: none;
+  display: block;
 }
 
 /* line 529, ../scss/_base.scss */

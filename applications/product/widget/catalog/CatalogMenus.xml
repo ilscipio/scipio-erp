@@ -175,6 +175,15 @@ under the License.
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
+        <menu-item name="DuplicateCategory" title="${uiLabelMap.ProductDuplicateCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="productCategory"/></not>
+            </condition>
+            <link target="EditCategory">
+                <parameter param-name="duplicateCategory" value="Y" />
+                <parameter param-name="productCategoryId"/>
+            </link>
+        </menu-item>
         <menu-item name="AdvancedSearch" title="${uiLabelMap.ProductSearchInCategory}" widget-style="+search">
             <condition>
                 <not><if-empty field="productCategory"/></not>

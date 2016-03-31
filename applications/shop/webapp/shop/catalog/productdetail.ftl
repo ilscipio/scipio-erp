@@ -142,7 +142,7 @@
         </@cell>
         <@cell columns=4>
             <@panel>
-            <div id="product-info">               
+            <div id="product-info"> 
                 <#if productContentWrapper.get("DESCRIPTION","html")?has_content><p>${productContentWrapper.get("DESCRIPTION","html")!}</p></#if>
                 <#-- for prices:
                     - if price < competitivePrice, show competitive or "Compare At" price
@@ -151,15 +151,15 @@
                     - if isSale show price with salePrice style and print "On Sale!"
                 -->
                 <#-- CATO: These are alternative prices that are not really commonly used 
-                <#if price.competitivePrice?exists && price.price?exists && price.price &lt; price.competitivePrice>
+                <#if price.competitivePrice?? && price.price?? && (price.price < price.competitivePrice)>
                     ${uiLabelMap.ProductCompareAtPrice}: <span class="product-price"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed /></span>
                 </#if>
                 
                 Asset Usage price calculation
                 <#if (product.productTypeId!) == "ASSET_USAGE">
-                    <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br />${uiLabelMap.ProductReserv2ndPPPerc}<#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}</#if> <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed /></#if>
-                    <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br />${uiLabelMap.ProductReservNthPPPerc} <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>${uiLabelMap.ProductReservSecond} <#else> ${uiLabelMap.ProductReservThird} </#if> ${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}, ${uiLabelMap.ProductEach}: <span class="product-price"><@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed /></span></#if>
-                    <#if (!product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?exists || product.reservNthPPPerc == 0)><br />${uiLabelMap.ProductMaximum} ${product.reservMaxPersons!} ${uiLabelMap.ProductPersons}.</#if>
+                    <#if product.reserv2ndPPPerc?? && product.reserv2ndPPPerc != 0><br />${uiLabelMap.ProductReserv2ndPPPerc}<#if !product.reservNthPPPerc?? || product.reservNthPPPerc == 0>${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}</#if> <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed /></#if>
+                    <#if product.reservNthPPPerc?? &&product.reservNthPPPerc != 0><br />${uiLabelMap.ProductReservNthPPPerc} <#if !product.reserv2ndPPPerc?? || product.reserv2ndPPPerc == 0>${uiLabelMap.ProductReservSecond} <#else> ${uiLabelMap.ProductReservThird} </#if> ${uiLabelMap.CommonUntil} ${product.reservMaxPersons!}, ${uiLabelMap.ProductEach}: <span class="product-price"><@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed /></span></#if>
+                    <#if (!product.reserv2ndPPPerc?? || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?? || product.reservNthPPPerc == 0)><br />${uiLabelMap.ProductMaximum} ${product.reservMaxPersons!} ${uiLabelMap.ProductPersons}.</#if>
                 </#if>
                 
                 <#if price.specialPromoPrice?has_content>
@@ -181,7 +181,7 @@
                 </#if>
 
                 <#-- CATO: Uncomment to mark a product that is on sale
-                <#if price.isSale?exists && price.isSale>
+                <#if price.isSale?? && price.isSale>
                     <p>${uiLabelMap.OrderOnSale}!</p>
                 </#if>-->
                 
@@ -196,7 +196,7 @@
                 </p>
                 
                 <#-- CATO: Uncomment to display how much a user is saving by buying this product
-                <#if price.listPrice?exists && price.price?exists && price.price &lt; price.listPrice>
+                <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
                     <span id="product-saved"><sup>
                         <#assign priceSaved = oldPrice - currentPrice />
                         <#assign percentSaved = (priceSaved / oldPrice) * 100 />
@@ -207,8 +207,8 @@
                 -->
 
                 <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
-                <#if (showPriceDetails?exists && showPriceDetails?default("N") == "Y")>
-                    <#if price.orderItemPriceInfos?exists>
+                <#if (showPriceDetails?? && showPriceDetails?default("N") == "Y")>
+                    <#if price.orderItemPriceInfos??>
                         <#list price.orderItemPriceInfos as orderItemPriceInfo>
                             <p>${orderItemPriceInfo.description!}</p>
                         </#list>
@@ -229,7 +229,7 @@
                                 <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=featureList.description!"">
                                     <option value="">${uiLabelMap.EcommerceSelectOption}</option>
                                     <#list featureList.features as feature>
-                                        <option value="${feature.productFeatureId}">${feature.description} <#if feature.price?exists>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId />)</#if></option>
+                                        <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId />)</#if></option>
                                     </#list>
                                 </@field>
                             </#list>
@@ -238,8 +238,8 @@
                         
                         <#-- CATO: It is possible to have a limited amount of variant combination. 
                                    Therefore the available options are only displayed for the first variant and updated for the next based on the selected type. -->
-                        <#if !product.virtualVariantMethodEnum?exists || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
-                            <#if variantTree?exists && (variantTree.size() &gt; 0)>
+                        <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
+                            <#if variantTree?? && (variantTree.size() > 0)>
                                 <#list featureSet as currentType>
                                     <#if currentType_index == 0>
                                         <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
@@ -259,17 +259,26 @@
                             </#if>
                         </#if>
                     <#else>
+                        <#-- Cato: TODO? Investigate this case -->
+                        <#if selFeatureTypes?has_content>
+                          <p>
+                            <strong>WARN: </strong> Product has selectable features 
+                              [<#list mapKeys(selFeatureTypes) as typeId>${selFeatureTypes[typeId]!typeId!}<#if typeId_has_next>, </#if></#list>]
+                              but is not virtual - not currently handled
+                          </p>
+                        </#if>
+                    
                         <input type="hidden" name="add_product_id" value="${product.productId}" />
-                        <#if (availableInventory?exists) && (availableInventory <= 0)>
+                        <#if (availableInventory??) && (availableInventory <= 0)>
                             <#assign inStock = false />
                         </#if>
                     </#if>
     
                     <#-- check to see if introductionDate hasnt passed yet -->
-                    <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
+                    <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
                         <@alert type="info">${uiLabelMap.ProductProductNotYetMadeAvailable}.</@alert>
                         <#-- check to see if salesDiscontinuationDate has passed -->
-                    <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
+                    <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
                         <@alert type="info">${uiLabelMap.ProductProductNoLongerAvailable}.</@alert>
                         <#-- check to see if the product requires inventory check and has inventory -->                        
                     <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
@@ -292,12 +301,12 @@
                                      <input name="quantity" id="quantity" value="1" type="hidden"/>
                                  </#if>
                              <#else>
-                                 <#if productStore?exists>
-                                     <#if productStore.requireInventory?exists && productStore.requireInventory == "N">
+                                 <#if productStore??>
+                                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
                                          <input name="quantity" id="quantity" value="1" type="hidden"/>
                                      <#else>
                                          <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                         <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage?exists>&mdash; ${product.inventoryMessage}</#if></span>
+                                         <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
                                      </#if>
                                  </#if>
                              </#if>
@@ -308,16 +317,16 @@
 
             </form>
             <#-- CATO: Review 
-                <#if variantPriceList?exists>
+                <#if variantPriceList??>
                         <#list variantPriceList as vpricing>
                             <#assign variantName = vpricing.get("variantName")!>
                             <#assign secondVariantName = vpricing.get("secondVariantName")!>
                             <#assign minimumQuantity = vpricing.get("minimumQuantity")>
-                            <#if minimumQuantity &gt; 0>
+                            <#if (minimumQuantity > 0)>
                                 <div>minimum order quantity for ${secondVariantName!} ${variantName!} is ${minimumQuantity!}</div>
                             </#if>
                         </#list>
-                    <#elseif minimumQuantity?exists && minimumQuantity?has_content && minimumQuantity &gt; 0>
+                    <#elseif minimumQuantity?? && minimumQuantity?has_content && (minimumQuantity > 0)>
                         <div>minimum order quantity for ${productContentWrapper.get("PRODUCT_NAME","html")!} is ${minimumQuantity!}</div>
                     </#if>
             -->
@@ -326,7 +335,7 @@
         <#-- CATO: Shopping list functionality - disabled for now
         <div id="product-shopping-list">
             <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-                <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+                <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
                     <fieldset>
                         <input type="hidden" name="productId" value="${product.productId}" />
                         <input type="hidden" name="product_id" value="${product.productId}" />
@@ -376,6 +385,9 @@
 
 <@section>
     <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")?trim/>
+    <#if !prodLongDescr?has_content>
+      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")?trim/>
+    </#if>
     <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")?trim/>
 
     <ul class="tabs" data-tab>
@@ -400,51 +412,51 @@
             
         <div class="content" id="panel21">
             <#-- Included quantities/pieces -->
-            <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
+            <#if product.piecesIncluded?? && product.piecesIncluded?long != 0>
                 <p id="product-specs-pieces-included">
                     ${uiLabelMap.OrderPieces}: ${product.piecesIncluded}
                 </p>
             </#if>
-            <#if (product.quantityIncluded?exists && product.quantityIncluded != 0) || product.quantityUomId?has_content>
+            <#if (product.quantityIncluded?? && product.quantityIncluded != 0) || product.quantityUomId?has_content>
                 <#assign quantityUom = product.getRelatedOneCache("QuantityUom")! />
                 <p id="product-specs-quantity-included">
                     ${uiLabelMap.CommonQuantity}: ${product.quantityIncluded!} ${((quantityUom.abbreviation)?default(product.quantityUomId))!}
                 </p>
             </#if>
-            <#if (product.weight?exists && product.weight != 0) || product.weightUomId?has_content>
+            <#if (product.weight?? && product.weight != 0) || product.weightUomId?has_content>
                 <#assign weightUom = product.getRelatedOneCache("WeightUom")! />
                 <p id="product-specs-weight">
                     ${uiLabelMap.CommonWeight}: ${product.weight!} ${((weightUom.abbreviation)?default(product.weightUomId))!}
                 </p>
             </#if>
-            <#if (product.productHeight?exists && product.productHeight != 0) || product.heightUomId?has_content>
+            <#if (product.productHeight?? && product.productHeight != 0) || product.heightUomId?has_content>
                 <#assign heightUom = product.getRelatedOneCache("HeightUom")! />
                 <p id="product-specs-height">
                     ${uiLabelMap.CommonHeight}: ${product.productHeight!} ${((heightUom.abbreviation)?default(product.heightUomId))!}
                 </p>
             </#if>
-            <#if (product.productWidth?exists && product.productWidth != 0) || product.widthUomId?has_content>
+            <#if (product.productWidth?? && product.productWidth != 0) || product.widthUomId?has_content>
                 <#assign widthUom = product.getRelatedOneCache("WidthUom")! />
                 <p id="product-specs-width">
                     ${uiLabelMap.CommonWidth}: ${product.productWidth!} ${((widthUom.abbreviation)?default(product.widthUomId))!}
                 </p>
             </#if>
-            <#if (product.productDepth?exists && product.productDepth != 0) || product.depthUomId?has_content>
+            <#if (product.productDepth?? && product.productDepth != 0) || product.depthUomId?has_content>
                 <#assign depthUom = product.getRelatedOneCache("DepthUom")! />
                 <p id="product-specs-depth">
                     ${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}
                 </p>
             </#if>
 
-            <#if daysToShip?exists>
+            <#if daysToShip??>
                 <p id="product-specs-days-to-ship">${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}!</p>
             </#if>
 
-            <#if disFeatureList?exists && 0 &lt; disFeatureList.size()>                
+            <#if disFeatureList?? && (0 < disFeatureList.size())>                
                 <#list disFeatureList as currentFeature>
                     <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
                     <p>
-                        <#if disFeatureType.description?exists>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
+                        <#if disFeatureType.description??>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
                     </p>
                 </#list>
             </#if>
@@ -454,18 +466,18 @@
 <@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
-            <#if variantTree?exists && 0 &lt; variantTree.size()>
+            <#if variantTree?? && (0 < variantTree.size())>
                 <script type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
             </#if>
     
-            <#if variantSample?exists && 0 &lt; variantSample.size()>
+            <#if variantSample?? && (0 < variantSample.size())>
                 <#assign imageKeys = variantSample.keySet() />
                 <#assign imageMap = variantSample />            
                 <#assign maxIndex = 7 />
                 <#assign indexer = 0 />
                 <#list imageKeys as key>
                     <#assign swatchProduct = imageMap.get(key) />
-                    <#if swatchProduct?has_content && indexer &lt; maxIndex>
+                    <#if swatchProduct?has_content && (indexer < maxIndex)>
                         <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"html")! />
                         <#if !imageUrl?string?has_content>
                             <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL","html")! />
@@ -519,7 +531,7 @@
 
 <#-- CATO: uncomment to use unavailableVariants
 <#macro showUnavailableVarients>
-  <#if unavailableVariants?exists>
+  <#if unavailableVariants??>
     <ul>
       <#list unavailableVariants as prod>
         <#assign features = prod.getRelated("ProductFeatureAppl")/>

@@ -19,9 +19,7 @@ under the License.
 <@table>
   <@tr>
     <@td colspan="2">
-      <h1>
-       ${uiLabelMap.ProductProductsLastViewed}
-      </h1>
+      <@heading>${uiLabelMap.ProductProductsLastViewed}</@heading>
     </@td>
   </@tr>
 </@table>

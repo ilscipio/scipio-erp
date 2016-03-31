@@ -88,78 +88,44 @@ function gwAll(e) {
     }
     cform.submit();
 }
-</@script>
 
-<@script>
 function setAlternateGwp(field) {
   window.location=field.value;
 };
-</@script>
-<#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
-<div>
-    <@heading>
-        <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
-          <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0) />
-        <#else>
-          <#assign continueLink = "/main" />
-        </#if>
-        <a href="<@ofbizUrl>${continueLink}</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a>
-        <#if (shoppingCartSize > 0)><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.OrderCheckout}</span></#if>
-        ${uiLabelMap.CommonQuickAdd}
-    </@heading>
-    <div>
-        <div>
-            <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
-                <fieldset>
-                ${uiLabelMap.EcommerceProductNumber}<input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id!}" />
-                <#-- check if rental data present  insert extra fields in Quick Add-->
-                <#if (product?? && product.getString("productTypeId") == "ASSET_USAGE") || (product?? && product.getString("productTypeId") == "ASSET_USAGE_OUT_IN")>
-                    ${uiLabelMap.EcommerceStartDate}: <input type="text" class="inputBox" size="10" name="reservStart" value="${requestParameters.reservStart!""}" />
-                    ${uiLabelMap.EcommerceLength}: <input type="text" class="inputBox" size="2" name="reservLength" value="${requestParameters.reservLength!""}" />
-                    </div>
-                    <div>
-                    &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" />
-                </#if>
-                ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
-                <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
-                <#-- <a href="javascript:document.quickaddform.submit()" class="button"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
-                </fieldset>
-            </form>
-        </div>
-    </div>
-</div>
 
-<@script>
+jQuery(document).ready(function() {
   document.quickaddform.add_product_id.focus();
+});
 </@script>
 
-<div>
-    <div>
-        <div>
-            <div>
-              <#--<a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav_cancel!}">[${uiLabelMap.EcommerceContinueShopping}]</a>-->
-              <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit();" class="submenutext">${uiLabelMap.EcommerceRecalculateCart}</a>
-                <a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceEmptyCart}</a>
-                <a href="javascript:removeSelected();" class="submenutext">${uiLabelMap.EcommerceRemoveSelected}</a>
-              <#else>
-                <span class="submenutextdisabled">${uiLabelMap.EcommerceRecalculateCart}</span>
-                <span class="submenutextdisabled">${uiLabelMap.EcommerceEmptyCart}</span>
-                <span class="submenutextdisabled">${uiLabelMap.EcommerceRemoveSelected}</span>
-              </#if>
-              <#if (shoppingCartSize > 0)><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.OrderCheckout}</span></#if>
-            </div>
-        </div>
-        <br />
-        <@heading>${uiLabelMap.OrderShoppingCart}</@heading>
-    </div>
-    <div>
+<#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
+
+
+<#assign cartHasItems = (shoppingCartSize > 0)>
+<#assign cartEmpty = (!cartHasItems)>
+
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
+          <#assign continueLink = "product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
+        <#else>
+          <#assign continueLink = "main">
+        </#if>
+        <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+        <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
+        <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
+        <@menuitem type="link" href="javascript:removeSelected();" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
+        <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty />
+    </@menu>
+</#macro>
+
+<@section menuContent=menuContent>
 
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
       <fieldset>
       <input type="hidden" name="removeSelected" value="false" />
-      <@table>
+      <@table type="data-complex">
         <@thead>
             <@tr>
               <@th></@th>
@@ -215,12 +181,10 @@ function setAlternateGwp(field) {
             <@td>
                 <#if cartLine.getShoppingListId()??>
                   <#assign itemsFromList = true />
-                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>&nbsp;&nbsp;
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>
                 <#elseif cartLine.getIsPromo()>
                   <#assign promoItems = true />
-                  <a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="button">P</a>&nbsp;&nbsp;
-                <#else>
-                  &nbsp;
+                  <a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.link_nav!}">P</a>&nbsp;
                 </#if>
             </@td>
             <@td>
@@ -232,17 +196,18 @@ function setAlternateGwp(field) {
                     <#else>
                       <#assign parentProductId = cartLine.getProductId() />
                     </#if>
-                    <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
+                    <#assign smallImageUrl = rawString(Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")!) />
                     <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg" /></#if>
                     <#if smallImageUrl?string?has_content>
                       <a href="<@ofbizCatalogAltUrl productId=parentProductId/>">
                         <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" class="imageborder" />
                       </a>
+                      <br/>
                     </#if>
                     <#-- end code to display a small image of the product -->
                     <#-- ${cartLineIndex} - -->
                     <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getProductId()} -
-                    ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
+                    ${rawString(cartLine.getName()!)}</a> : ${rawString(cartLine.getDescription()!)}
                     <#-- For configurable products, the selected options are shown -->
                     <#if cartLine.getConfigWrapper()??>
                       <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
@@ -364,7 +329,7 @@ function setAlternateGwp(field) {
         </#list>
     </@tbody>
     </@table>
-    <@table>
+    <@table type="data-complex">
         <#if shoppingCart.getAdjustments()?has_content>
             <@tr>
               <@th>${uiLabelMap.CommonSubTotal}:</@th>
@@ -411,7 +376,7 @@ function setAlternateGwp(field) {
         </#if>
         <@tr>
           <@td>
-              <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
+            <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
               <select name="shoppingListId" class="selectBox">
                 <#if shoppingLists?has_content>
                   <#list shoppingLists as shoppingList>
@@ -421,25 +386,24 @@ function setAlternateGwp(field) {
                 <option value="">---</option>
                 <option value="">${uiLabelMap.OrderNewShoppingList}</option>
               </select>
-              &nbsp;&nbsp;
-              <a href="javascript:addToList();" class="button">${uiLabelMap.EcommerceAddSelectedtoList}</a>&nbsp;&nbsp;
-              <#else>
-               ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button">${uiLabelMap.CommonBeLogged}</a>
-                ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
-              </#if>
+              &nbsp;
+              <a href="javascript:addToList();" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.EcommerceAddSelectedtoList}</a>
+            <#else>
+               ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
+                ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.
+            </#if>
           </@td>
         </@tr>
         <@tr>
           <@td>
-              <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-              &nbsp;&nbsp;
-              <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="button">${uiLabelMap.OrderCreateCustRequestFromCart}</a>&nbsp;&nbsp;
-              &nbsp;&nbsp;
-              <a href="<@ofbizUrl>createQuoteFromCart</@ofbizUrl>" class="button">${uiLabelMap.OrderCreateQuoteFromCart}</a>&nbsp;&nbsp;
-              <#else>
-               ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="button">${uiLabelMap.CommonBeLogged}</a>
-                ${uiLabelMap.EcommerceToOrderCreateCustRequestFromCart}.&nbsp;
-              </#if>
+            <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
+              <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderCreateCustRequestFromCart}</a>
+              &nbsp;
+              <a href="<@ofbizUrl>createQuoteFromCart</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderCreateQuoteFromCart}</a>
+            <#else>
+               ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
+                ${uiLabelMap.EcommerceToOrderCreateCustRequestFromCart}.
+            </#if>
           </@td>
         </@tr>
         <@tr>
@@ -451,74 +415,83 @@ function setAlternateGwp(field) {
       </fieldset>
     </form>
   <#else>
-    <@heading>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</@heading>
+    <@commonMsg type="result-norecord">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</@commonMsg>
   </#if>
-<#-- Copy link bar to bottom to include a link bar at the bottom too -->
-    </div>
-</div>
+</@section>
 
-<div>
-    <div>
-        <@heading>${uiLabelMap.ProductPromoCodes}</@heading>
-    </div>
-    <div>
-        <div>
-            <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
-                <fieldset>
-                <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="" />
-                <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
-                <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
-                <#if productPromoCodeIds?has_content>
-                    ${uiLabelMap.ProductPromoCodesEntered}
-                    <ul>
-                    <#list productPromoCodeIds as productPromoCodeId>
-                        <li>${productPromoCodeId}</li>
-                    </#list>
-                    </ul>
-                </#if>
-                </fieldset>
-            </form>
-        </div>
-    </div>
-</div>
+<#if ((shoppingCartSize!0) > 0)>
+  <@section>
+    ${screens.render("component://shop/widget/CartScreens.xml#promoUseDetailsInline")}
+  </@section>
+</#if>
+
+<@section title=uiLabelMap.ProductPromoCodes>
+    <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
+      <fieldset>
+        <input type="text" size="15" name="productPromoCodeId" value="" />
+        <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
+        <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
+        <#if productPromoCodeIds?has_content>
+            ${uiLabelMap.ProductPromoCodesEntered}
+            <ul>
+              <#list productPromoCodeIds as productPromoCodeId>
+                <li>${productPromoCodeId}</li>
+              </#list>
+            </ul>
+        </#if>
+      </fieldset>
+    </form>
+</@section>
 
 <#if showPromoText?? && showPromoText>
-<div>
-    <div>
-        <@heading>${uiLabelMap.OrderSpecialOffers}</@heading>
-    </div>
-    <div>
-        <#-- show promotions text -->
-        <ul>
-        <#list productPromos as productPromo>
-            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">[${uiLabelMap.CommonDetails}]</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
-        </#list>
-        </ul>
-        <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button">${uiLabelMap.OrderViewAllPromotions}</a></div>
-    </div>
-</div>
+  <@section title=uiLabelMap.OrderSpecialOffers>
+    <#-- show promotions text -->
+    <ul>
+      <#list productPromos as productPromo>
+        <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> 
+           ${StringUtil.wrapString(productPromo.promoText!)}</li>
+      </#list>
+    </ul>
+    <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a></div>
+  </@section>
 </#if>
 
 <#if associatedProducts?has_content>
-<div>
-    <div>
-        <@heading>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</@heading>
-    </div>
-    <div>
-        <#-- random complementary products -->
-        <#list associatedProducts as assocProduct>
-            <div>
-                ${setRequestAttribute("optProduct", assocProduct)}
-                ${setRequestAttribute("listIndex", assocProduct_index)}
-                ${screens.render("component://shop/widget/CatalogScreens.xml#productsummary")}
+  <@section title="${uiLabelMap.EcommerceYouMightAlsoIntrested}:">
+    <#-- random complementary products -->
+    <#list associatedProducts as assocProduct>
+        <div>
+            ${setRequestAttribute("optProduct", assocProduct)}
+            ${setRequestAttribute("listIndex", assocProduct_index)}
+            ${screens.render("component://shop/widget/CatalogScreens.xml#productsummary")}
+        </div>
+    </#list>
+  </@section>
+</#if>
+
+<@section title=uiLabelMap.CommonQuickAdd>
+    <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
+        <fieldset>
+        ${uiLabelMap.EcommerceProductNumber}<input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id!}" />
+        <#-- check if rental data present  insert extra fields in Quick Add-->
+        <#if (product?? && product.getString("productTypeId") == "ASSET_USAGE") || (product?? && product.getString("productTypeId") == "ASSET_USAGE_OUT_IN")>
+            ${uiLabelMap.EcommerceStartDate}: <input type="text" class="inputBox" size="10" name="reservStart" value="${requestParameters.reservStart!""}" />
+            ${uiLabelMap.EcommerceLength}: <input type="text" class="inputBox" size="2" name="reservLength" value="${requestParameters.reservLength!""}" />
             </div>
-        </#list>
-    </div>
-</div>
-</#if>
+            <div>
+            &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" />
+        </#if>
+        ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
+        <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
+        <#-- <a href="javascript:document.quickaddform.submit()" class="button"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
+        </fieldset>
+    </form>
+</@section>
 
-<#if (shoppingCartSize?default(0) > 0)>
-  ${screens.render("component://shop/widget/CartScreens.xml#promoUseDetailsInline")}
-</#if>
-
-<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()!} locale=${shoppingCart.getLocale()!} currencyUom=${shoppingCart.getCurrency()!} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))!} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))!} -->
+<!-- Internal cart info: 
+productStoreId=${shoppingCart.getProductStoreId()!} 
+locale=${shoppingCart.getLocale()!} 
+currencyUom=${shoppingCart.getCurrency()!} 
+userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))!} 
+autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))!} 
+-->

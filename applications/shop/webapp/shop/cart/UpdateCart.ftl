@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
-  <h3>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</h3>
+  <@heading>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="button">${uiLabelMap.EcommerceClickHereToEdit}</a>
     <@table id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">

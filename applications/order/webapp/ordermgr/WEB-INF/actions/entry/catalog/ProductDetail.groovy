@@ -41,6 +41,8 @@ import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 
+final module = "ProductDetailGroovy"
+
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     def ct = 0;
     def buf = new StringBuffer();
@@ -242,6 +244,31 @@ if (product) {
     sizeProductFeatureAndAppls = from("ProductFeatureAndAppl").where("productId", productId, "productFeatureTypeId", "SIZE").orderBy("sequenceNum", "defaultSequenceNum").queryList();
     context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
     
+    // Cato: always get selectable features, in case need (affects nothing else)
+    if (true) {
+        selFeatureMap = runService('getProductFeatureSet', [productId : productId, productFeatureApplTypeId : "SELECTABLE_FEATURE"]);
+        selFeatureSet = selFeatureMap.featureSet;
+        selFeatureTypes = [:];
+        selFeatureOrder = [];
+        selFeatureOrderFirst = null;
+        if (selFeatureSet) {
+            selFeatureOrder = new LinkedList(selFeatureSet);
+            selFeatureOrder.each { featureKey ->
+                featureValue = from("ProductFeatureType").where("productFeatureTypeId", featureKey).cache(true).queryOne();
+                fValue = featureValue.get("description") ?: featureValue.productFeatureTypeId;
+                selFeatureTypes[featureKey] = fValue;
+            }
+        }
+        context.selFeatureTypes = selFeatureTypes;
+        context.selFeatureOrder = selFeatureOrder;
+        if (selFeatureOrder) {
+            selFeatureOrderFirst = selFeatureOrder[0];
+        }
+        context.selFeatureOrderFirst = selFeatureOrderFirst;
+        //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureTypes, module);
+        //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureOrder, module);
+    }
+
     // get product variant for Box/Case/Each
     productVariants = [];
     boolean isAlternativePacking = ProductWorker.isAlternativePacking(delegator, product.productId, null);

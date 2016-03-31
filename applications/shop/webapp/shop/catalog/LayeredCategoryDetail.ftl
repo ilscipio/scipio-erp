@@ -47,10 +47,10 @@ under the License.
     <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!/>
     <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!/>
     <#if categoryName?has_content>
-        <h1>${categoryName}</h1>
+        <@heading>${categoryName}</@heading>
     </#if>
     <#if categoryDescription?has_content>
-        <h1>${categoryDescription}</h1>
+        <p>${categoryDescription}</p>
     </#if>
     <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>

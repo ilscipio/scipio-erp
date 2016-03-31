@@ -66,10 +66,10 @@
             <#if totalPrice??>
                 <@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/>
             <#else>
-                <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
-                        <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
-                    <#else>
-                        <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
+                <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
+                    <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
+                <#else>
+                    <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
                 </#if>
                 <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
                     <#assign priceSaved = price.listPrice?double - price.price?double>

@@ -52,7 +52,7 @@ under the License.
            <label for="paymentMethodTypeId_EXT_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
          </div>
        </#if>
-       <div class="buttons">
+       <div>
          <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
        </div>
      </fieldset>

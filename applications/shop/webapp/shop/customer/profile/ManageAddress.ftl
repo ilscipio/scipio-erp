@@ -18,14 +18,11 @@ under the License.
 -->
 
 <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
-<div class="screenlet clearfix">
+<@section title=uiLabelMap.EcommerceAddressBook>
   <form id="refreshRequestForm" method="post" action="<@ofbizUrl>manageAddress</@ofbizUrl>">
   </form>
-
-  <h3>${uiLabelMap.EcommerceAddressBook}</h3>
-  <div class="screenlet-body">
     <#-- Add address -->
-    <a class="button" id="addAddress" href="javascript:void(0)">${uiLabelMap.EcommerceAddNewAddress}</a>
+    <a class="${styles.link_run_sys!} ${styles.action_add!}" id="addAddress" href="javascript:void(0)">${uiLabelMap.EcommerceAddNewAddress}</a>
     <div id="displayCreateAddressForm" style="display: none;">
       <div id="serverError" class="errorMessage"></div>
       <form id="createPostalAddressForm" method="post" action="">
@@ -108,11 +105,9 @@ under the License.
   </div>
 
   <#-- Default Addresses -->
-  <div class="left center">
-    <h3>${uiLabelMap.EcommerceDefaultAddresses}</h3>
-    <div class="screenlet-body">
+  <@section title=uiLabelMap.EcommerceDefaultAddresses>
       <#--===================================== Billing Address and Telecom number ===========================================-->
-      <h3>${uiLabelMap.EcommercePrimaryBillingAddress}</h3>
+      <@section title=uiLabelMap.EcommercePrimaryBillingAddress>
       <ul>
       <#if billToContactMechId??>
         <li>${billToAddress1!}</li>
@@ -133,7 +128,7 @@ under the License.
           <#if billToExtension??>-${billToExtension!}</#if>
         </li>
         </#if>
-        <li><a id="updateBillToPostalAddress" href="javascript:void(0)" class="button popup_link">${uiLabelMap.CommonEdit}</a></li>
+        <li><a id="updateBillToPostalAddress" href="javascript:void(0)" class="${styles.link_nav!} ${styles.action_update!} popup_link">${uiLabelMap.CommonEdit}</a></li>
       <#else>
         <li>${uiLabelMap.PartyPostalInformationNotFound}</li>
       </#if>
@@ -159,9 +154,9 @@ under the License.
         });
         jQuery("#updateBillToPostalAddress").click(function(){jQuery("#displayEditBillToPostalAddress").dialog("open")});
         </@script>
-
+      </@section>
     <#--===================================== Shipping Address and Telecom number ===========================================-->
-      <h3>${uiLabelMap.EcommercePrimaryShippingAddress}</h3>
+    <@section title=uiLabelMap.EcommercePrimaryShippingAddress>
       <ul>
       <#if shipToContactMechId??>
         <li>${shipToAddress1!}</li>
@@ -182,7 +177,7 @@ under the License.
           <#if shipToExtension??>-${shipToExtension!}</#if>
         </li>
         </#if>
-        <li><a id="updateShipToPostalAddress" href="javascript:void(0)" class="button popup_link">${uiLabelMap.CommonEdit}</a></li>
+        <li><a id="updateShipToPostalAddress" href="javascript:void(0)" class="${styles.link_nav!} ${styles.action_update!} popup_link">${uiLabelMap.CommonEdit}</a></li>
       <#else>
         <li>${uiLabelMap.PartyPostalInformationNotFound}</li>
       </#if>
@@ -207,14 +202,12 @@ under the License.
           });
           jQuery("#updateShipToPostalAddress").click(function(){jQuery("#displayEditShipToPostalAddress").dialog("open")});
           </@script>
-    </div>
-  </div>
+    </@section>
+
+  </@section>
 
   <#-- Additional Addresses -->
-  <div class="center right">
-    <h3>${uiLabelMap.EcommerceAdditionalAddresses}</h3>
-
-    <div class="screenlet-body">
+  <@section title=uiLabelMap.EcommerceAdditionalAddresses>
       <#assign postalAddressFlag = "N" />
       <#list partyContactMechValueMaps as partyContactMechValueMap>
         <#assign contactMech = partyContactMechValueMap.contactMech! />
@@ -251,7 +244,7 @@ under the License.
                 </div>
               <div>
                 <span>
-                  <a id="update_${contactMech.contactMechId}" href="javascript:void(0)" class="button popup_link" onclick="showState('${contactMech.contactMechId}')">${uiLabelMap.CommonEdit}</a></span>
+                  <a id="update_${contactMech.contactMechId}" href="javascript:void(0)" class="${styles.link_nav!} ${styles.action_update!} popup_link" onclick="showState('${contactMech.contactMechId}')">${uiLabelMap.CommonEdit}</a></span>
                   <form id="deletePostalAddress_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deletePostalAddress</@ofbizUrl>">
                     <fieldset>
                       <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}" />
@@ -284,6 +277,5 @@ under the License.
       <#if postalAddressFlag == "N">
         <@commonMsg type="result-norecord">${uiLabelMap.PartyPostalInformationNotFound}.</@commonMsg>
       </#if>
-    </div>
-  </div>
-</div>
+  </@section>
+</@section>

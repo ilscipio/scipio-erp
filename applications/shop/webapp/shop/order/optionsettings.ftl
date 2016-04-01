@@ -79,7 +79,7 @@ under the License.
           </div>
         </fieldset>
     </#if>
-    <div class="buttons">
+    <div>
       <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
     </div>
   </form>

@@ -48,11 +48,8 @@ under the License.
     s.parentNode.insertBefore(e, s);
 })();
 </@script>
-<@heading level=1>${uiLabelMap.CommonLogin}</@heading>
-<div class="screenlet">
-  <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
-  <div class="screenlet-body">
-  <@table width="100%" class="+Signlogin"> <#-- orig: class="Signlogin" -->
+  <@section title=uiLabelMap.CommonRegistered>
+    <@table width="100%" class="+Signlogin"> <#-- orig: class="Signlogin" -->
       <@tr>
           <@td>
           <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
@@ -80,14 +77,10 @@ under the License.
           </@td>
           <@td><div id="janrainEngageEmbed"></div></@td>
       </@tr>
-  </@table>
-  </div>
-</div>
+    </@table>
+  </@section>
 <#else>
-<@heading level=1>${uiLabelMap.CommonLogin}</@heading>
-<div class="screenlet">
-  <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
-  <div class="screenlet-body">
+  <@section title=uiLabelMap.CommonRegistered>
     <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
       <fieldset>
         <div>
@@ -110,37 +103,31 @@ under the License.
         </div>
       </fieldset>
     </form>
-  </div>
-</div>
+  </@section>
 </#if>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonForgotYourPassword}</h3></div>
-  <div class="screenlet-body">
+<@section title=uiLabelMap.CommonForgotYourPassword>
   <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">
     <div>
       <label for="forgotpassword_userName">${uiLabelMap.CommonUsername}</label>
       <input type="text" id="forgotpassword_userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
     </div>
-    <div class="buttons">
+    <div>
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_view!}" name="GET_PASSWORD_HINT" value="${uiLabelMap.CommonGetPasswordHint}"/>
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_send!}" name="EMAIL_PASSWORD" value="${uiLabelMap.CommonEmailPassword}"/>
     </div>
   </form>
-  </div>
-</div>
+</@section>
 <#--    
-<div class="screenlet">
-  <h3>${uiLabelMap.CommonNewUser}</h3>
+<@section title=uiLabelMap.CommonNewUser>
   <form method="post" action="<@ofbizUrl>newcustomer</@ofbizUrl>">
     <div>
       <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</p>
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" id="newcustomer_submit" value="${uiLabelMap.CommonMayCreate}"/>
     <div>
   </form>
-</div>
+</@section>
 -->
-<div class="endcolumns">&nbsp;</div>
 
 <@script>
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>

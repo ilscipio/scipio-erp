@@ -17,9 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceMyAccount}</h3>
-  <div class="screenlet-body">
+<@section title=uiLabelMap.EcommerceMyAccount>
     <form id="newUserForm" method="post" action="<@ofbizUrl>createCustomerProfile</@ofbizUrl>">
       <fieldset class="left center">
         <legend>${uiLabelMap.PartyContactInformation}</legend>
@@ -168,7 +166,6 @@ under the License.
               - <input type="text" name="billToExtension" id="billToExtension" value="${extension?default("${parameters.billToExtension!}")}" size="3" maxlength="3"/>
             </div>
       </fieldset>
-      <div><a id="submitNewUserForm" href="javascript:void(0);" class="button">${uiLabelMap.CommonSubmit}</a></div>
+      <div><a id="submitNewUserForm" href="javascript:void(0);" class="${styles.link_run_sys!} ${styles.action_register!}">${uiLabelMap.CommonSubmit}</a></div>
     </form>
-  </div>
-</div>
+</@section>

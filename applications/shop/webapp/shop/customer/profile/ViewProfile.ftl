@@ -17,12 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceMyAccount}</h3>
-  <div class="screenlet-body clearfix">
-    <div>
-      <a class="button" href="<@ofbizUrl>editProfile</@ofbizUrl>">${uiLabelMap.EcommerceEditProfile}</a>
-      <h3>${uiLabelMap.PartyContactInformation}</h3>
+<@section title=uiLabelMap.EcommerceMyAccount>
+    <@section title=uiLabelMap.PartyContactInformation>
+      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>editProfile</@ofbizUrl>">${uiLabelMap.EcommerceEditProfile}</a>
       <label>${firstName!} ${lastName!}</label>
       <input type="hidden" id="updatedEmailContactMechId" name="emailContactMechId" value="${emailContactMechId!}" />
       <input type="hidden" id="updatedEmailAddress" name="updatedEmailAddress" value="${emailAddress!}" />
@@ -31,13 +28,11 @@ under the License.
         <a href="mailto:${emailAddress!}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
       </#if>
       <div id="serverError_${emailContactMechId!}" class="errorMessage"></div>
-    </div>
+    </@section>
     <#-- Manage Addresses -->
-    <div>
-      <a class="button" href="<@ofbizUrl>manageAddress</@ofbizUrl>">${uiLabelMap.EcommerceManageAddresses}</a>
-      <h3>${uiLabelMap.EcommerceAddressBook}</h3>
-      <div class="left center">
-        <h3>${uiLabelMap.EcommercePrimaryShippingAddress}</h3>
+    <@section title=uiLabelMap.EcommerceAddressBook>
+      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>manageAddress</@ofbizUrl>">${uiLabelMap.EcommerceManageAddresses}</a>
+      <@section title=uiLabelMap.EcommercePrimaryShippingAddress>
           <ul>
           <#if shipToContactMechId??>
             <li>${shipToAddress1!}</li>
@@ -66,9 +61,8 @@ under the License.
             <li>${uiLabelMap.PartyPostalInformationNotFound}</li>
           </#if>
           </ul>
-      </div>
-      <div class="right center">
-        <h3>${uiLabelMap.EcommercePrimaryBillingAddress}</h3>
+      </@section>
+      <@section title=uiLabelMap.EcommercePrimaryBillingAddress>
           <ul>
           <#if billToContactMechId??>
             <li>${billToAddress1!}</li>
@@ -97,7 +91,6 @@ under the License.
             <li>${uiLabelMap.PartyPostalInformationNotFound}</li>
           </#if>
           </ul>
-      </div>
-    </div>
-  </div>
-</div>
+      </@section>
+    </@section>
+</@section>

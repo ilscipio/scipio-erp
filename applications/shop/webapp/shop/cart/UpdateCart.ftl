@@ -20,7 +20,7 @@ under the License.
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
   <@heading>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
   <div id="cartSummaryPanel" style="display: none;">
-    <a href="javascript:void(0);" id="openCartPanel" class="button">${uiLabelMap.EcommerceClickHereToEdit}</a>
+    <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
     <@table id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
@@ -176,8 +176,8 @@ under the License.
         </div>
       </fieldset>
       <fieldset>
-        <a href="javascript:void(0);" class="button" id="updateShoppingCart">${uiLabelMap.EcommerceContinueToStep} 2</a>
-        <a style="display: none" class="button" href="javascript:void(0);" id="processingShipping">${uiLabelMap.EcommercePleaseWait}....</a>
+        <a href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart">${uiLabelMap.EcommerceContinueToStep} 2</a>
+        <a style="display: none" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping">${uiLabelMap.EcommercePleaseWait}....</a>
       </fieldset>
     </form>
   </div>

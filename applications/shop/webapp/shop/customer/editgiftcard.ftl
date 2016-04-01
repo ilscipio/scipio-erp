@@ -29,8 +29,8 @@ under the License.
       <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
-    &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-    &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>  
+    &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+    &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
     <p/> 
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
     <@tr>
@@ -104,6 +104,6 @@ under the License.
     </@tr>
   </@table>
   </form>  
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>  
+  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
 </#if>

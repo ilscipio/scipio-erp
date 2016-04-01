@@ -103,7 +103,7 @@
             ${productPrice!""}
         </@pli>
         <@pli type="button">
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.button_default!}">${uiLabelMap.CommonDetail}</a>           
+            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>
     </@pul>   
 

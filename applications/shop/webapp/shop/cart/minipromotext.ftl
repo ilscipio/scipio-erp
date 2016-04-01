@@ -30,7 +30,7 @@ under the License.
         </li>
       </#list>
       <li>
-        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button">${uiLabelMap.OrderViewAllPromotions}</a>
+        <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
       </li>
     </ul>
   </@section>

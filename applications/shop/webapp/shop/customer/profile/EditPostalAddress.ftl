@@ -77,8 +77,8 @@ under the License.
       </div>
         <#--
       <div>
-        <a name="submitEditPostalAddress_${contactMech.contactMechId}" id="submitEditPostalAddress_${contactMech.contactMechId}" class="button" onclick="updatePartyPostalAddress('submitEditPostalAddress_${contactMech.contactMechId}')">${uiLabelMap.CommonSubmit}</a>
-        <a href="javascript:void(0);" class="popup_closebox button">${uiLabelMap.CommonClose}</a>
+        <a name="submitEditPostalAddress_${contactMech.contactMechId}" id="submitEditPostalAddress_${contactMech.contactMechId}" class="${styles.link_run_sys!} ${styles.action_update!}" onclick="updatePartyPostalAddress('submitEditPostalAddress_${contactMech.contactMechId}')">${uiLabelMap.CommonSubmit}</a>
+        <a href="javascript:void(0);" class="popup_closebox ${styles.link_nav_cancel!}">${uiLabelMap.CommonClose}</a>
       </div>
         -->
   </fieldset>

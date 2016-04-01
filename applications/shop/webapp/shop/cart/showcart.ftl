@@ -93,9 +93,11 @@ function setAlternateGwp(field) {
   window.location=field.value;
 };
 
+<#-- Cato: distracting
 jQuery(document).ready(function() {
   document.quickaddform.add_product_id.focus();
 });
+-->
 </@script>
 
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
@@ -348,7 +350,7 @@ jQuery(document).ready(function() {
               <@tr>
                 <@th>
                     ${uiLabelMap.EcommerceAdjustment} - ${adjustmentType.get("description",locale)!}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="button">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonDetails}</a></#if>:
                 </@th>
                 <@td><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
@@ -483,7 +485,7 @@ jQuery(document).ready(function() {
         </#if>
         ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
         <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
-        <#-- <a href="javascript:document.quickaddform.submit()" class="button"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
+        <#-- <a href="javascript:document.quickaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
         </fieldset>
     </form>
 </@section>

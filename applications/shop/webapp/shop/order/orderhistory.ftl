@@ -52,7 +52,7 @@ under the License.
               <#else>
                 <@td></@td>
               </#if>
-              <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></@td>
+              <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
             </@tr>
           </#list>
         <#else>
@@ -82,7 +82,7 @@ under the License.
               <@td>${porderHeader.orderId}</@td>
               <@td><@ofbizCurrency amount=porderHeader.grandTotal isoCode=porderHeader.currencyUom /></@td>
               <@td>${pstatus.get("description",locale)}</@td>
-              <@td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a></@td>
+              <@td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
             </@tr>
           </#list>
         <#else>
@@ -112,7 +112,7 @@ under the License.
               <@td>${downloadOrderRoleAndProductContentInfo.contentName!}</@td>
               <@td>${downloadOrderRoleAndProductContentInfo.description!}</@td>
               <@td>
-                <a href="<@ofbizUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="button">Download</a>
+                <a href="<@ofbizUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">Download</a>
               </@td>
             </@tr>
           </#list>

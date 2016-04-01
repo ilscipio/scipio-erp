@@ -64,7 +64,7 @@ under the License.
         </select>
         <span id="advice-required-stateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
       </div>
-      <div class="buttons">
+      <div>
         <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
       </div>
     </fieldset>

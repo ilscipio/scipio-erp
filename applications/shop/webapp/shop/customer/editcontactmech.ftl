@@ -18,7 +18,7 @@ under the License.
 -->
 <#if canNotView>
   <h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3>
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonBack}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
 <#else>
   <#if !contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
@@ -34,7 +34,7 @@ under the License.
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="button">${uiLabelMap.CommonCreate}</a>
+            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
           </@td>
         </@tr>
       </@table>
@@ -47,12 +47,12 @@ under the License.
   <#if contactMechTypeId??>
     <#if !contactMech??>
       <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
-      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
     <#else>
       <@heading>${uiLabelMap.PartyEditContactInfo}</@heading>      
-      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-      <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
     </#if>
     
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -92,7 +92,7 @@ under the License.
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
                           <input type="hidden" name="useValues" value="true"/>
-                          <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="button">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
+                          <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
                         </div>
                       </form> 
                   </@td>
@@ -114,7 +114,7 @@ under the License.
                       </div>
                   </form>
                 </@td>
-                <@td><a href="javascript:document.newpurposeform.submit()" class="button">${uiLabelMap.PartyAddPurpose}</a></@td>
+                <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a></@td>
               </@tr>
               </#if>
             </@table>
@@ -245,9 +245,9 @@ under the License.
     </form>
   </@table>
 
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-  <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
   <#else>    
-    <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
+    <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
   </#if>
 </#if>

@@ -83,8 +83,8 @@ under the License.
     </div>
     <#--
     <div>
-      <a name="submitEditShipToPostalAddress" id="submitEditShipToPostalAddress" class="button" onclick="updatePartyShipToPostalAddress('submitEditShipToPostalAddress')">${uiLabelMap.CommonSubmit}</a>
-      <a class="popup_closebox button">${uiLabelMap.CommonClose}</a>
+      <a name="submitEditShipToPostalAddress" id="submitEditShipToPostalAddress" class="${styles.link_run_sys!} ${styles.action_update!}" onclick="updatePartyShipToPostalAddress('submitEditShipToPostalAddress')">${uiLabelMap.CommonSubmit}</a>
+      <a class="popup_closebox ${styles.link_nav_cancel!}">${uiLabelMap.CommonClose}</a>
     </div>
     -->
   </fieldset>

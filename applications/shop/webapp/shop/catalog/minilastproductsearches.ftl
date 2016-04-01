@@ -36,8 +36,8 @@ under the License.
           ${uiLabelMap.EcommerceSearchNumber} ${searchOptions_index + 1}
             <ul>
               <li>
-                <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="button">${uiLabelMap.CommonSearch}</a>
-                <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="button">${uiLabelMap.CommonRefine}</a>
+                <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
+                <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
               </li>
               <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>
               <#list constraintStrings as constraintString>

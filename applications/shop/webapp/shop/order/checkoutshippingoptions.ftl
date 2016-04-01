@@ -56,16 +56,12 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<form method="post" name="checkoutInfoForm">
-  <fieldset>
-    <input type="hidden" name="checkoutpage" value="shippingoptions"/>
+<@section title="2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?">
+    <form method="post" name="checkoutInfoForm">
+        <fieldset>
+            <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
-    <div class="screenlet" style="height: 100%;">
-        <div class="screenlet-title-bar">
-            <div class="h3">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
-        </div>
-        <div class="screenlet-body" style="height: 100%;">
-            <@table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+            <@table type="fields">
               <#list carrierShipmentMethodList as carrierShipmentMethod>
                 <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                 <@tr>
@@ -177,10 +173,9 @@ function submitForm(form, mode, value) {
                 </@td>
               </@tr>
             </@table>
-        </div>
-    </div>
-  </fieldset>
-</form>
+        </fieldset>
+    </form>
+</@section>
 
 <@table width="100%">
   <@tr valign="top">

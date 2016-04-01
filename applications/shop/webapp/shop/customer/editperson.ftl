@@ -24,8 +24,8 @@ under the License.
     &nbsp;<form id="editpersonform2" method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
 </#if>
 <div>
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editpersonform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  &nbsp;<a href="javascript:document.editpersonform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
   <p/>    
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   <@table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -174,5 +174,5 @@ under the License.
 </@table>
 </div>
 </form>
-&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-&nbsp;<a id="editpersonform3" href="javascript:document.editpersonform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+&nbsp;<a id="editpersonform3" href="javascript:document.editpersonform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>

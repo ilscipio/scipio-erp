@@ -41,7 +41,7 @@ under the License.
         <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_show!}">${uiLabelMap.PartyShowOld}</a>
       </#if>
       <#if ((productStore.enableDigProdUpload)!) == "Y">
-        <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button">${uiLabelMap.EcommerceDigitalProductUpload}</a>
+        <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_import!}">${uiLabelMap.EcommerceDigitalProductUpload}</a>
       </#if>
     </@td>
   </@tr>
@@ -202,13 +202,13 @@ under the License.
             <@td align="center" valign="top">(${partyContactMech.allowSolicitation!})</@td>
             <@td>&nbsp;</@td>
             <@td align="right" valign="top">
-              <a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="button">${uiLabelMap.CommonUpdate}</a>
+              <a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </@td>
             <@td align="right" valign="top">
               <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
                 <div>
                 <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
-                <a href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="button">${uiLabelMap.CommonExpire}</a>
+                <a href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
               </div>
               </form>
             </@td>
@@ -256,8 +256,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td align="right" valign="top">
-                  <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
-                            ${uiLabelMap.CommonUpdate}</a>
+                  <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                 </@td>
                 <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
                   <#if giftCard?has_content && giftCard.cardNumber?has_content>
@@ -284,8 +283,7 @@ under the License.
                   </@td>
                   <@td>&nbsp;</@td>
                   <@td align="right" valign="top">
-                    <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
-                            ${uiLabelMap.CommonUpdate}</a>
+                    <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </@td>
                   <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
                   <@td valign="top">
@@ -296,13 +294,11 @@ under the License.
                   </@td>
                   <@td>&nbsp;</@td>
                   <@td align="right" valign="top">
-                    <a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
-                            ${uiLabelMap.CommonUpdate}</a>
+                    <a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </@td>
                 </#if>
                 <@td align="right" valign="top">
-                 <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
-                        ${uiLabelMap.CommonExpire}</a>
+                 <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
                 </@td>
                 <@td align="right" valign="top">
                   <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
@@ -401,7 +397,7 @@ under the License.
         <#assign mimeType = content.getRelatedOne("MimeType", true)! />
         <#assign status = content.getRelatedOne("StatusItem", true) />
           <@tr>
-            <@td><a href="<@ofbizUrl>img/${content.contentName!}?imgId=${content.dataResourceId!}</@ofbizUrl>" class="button">${content.contentId}</a></@td>
+            <@td><a href="<@ofbizUrl>img/${content.contentName!}?imgId=${content.dataResourceId!}</@ofbizUrl>" class="${link_nav_info_id!}">${content.contentId}</a></@td>
             <@td>${content.contentName!}</@td>
             <@td>${(contentType.get("description",locale))!}</@td>
             <@td>${(mimeType.description)!}</@td>
@@ -413,8 +409,8 @@ under the License.
                 <input name="contentId" type="hidden" value="${contentRole.contentId}"/>
                 <input name="roleTypeId" type="hidden" value="${contentRole.roleTypeId}"/>
               </form>
-              <a href="<@ofbizUrl>img/${content.contentName!}?imgId=${content.dataResourceId!}</@ofbizUrl>" class="button">${uiLabelMap.CommonView}</a>
-              <a href="javascript:document.removeContent_${contentRole.contentId}.submit();" class="button">${uiLabelMap.CommonRemove}</a>
+              <a href="<@ofbizUrl>img/${content.contentName!}?imgId=${content.dataResourceId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+              <a href="javascript:document.removeContent_${contentRole.contentId}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
             </@td>
           </@tr>
         </#list>
@@ -571,7 +567,7 @@ under the License.
             <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
               <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey />
             </#if>
-            <@td align="right"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="button">${surveyLabel}</a></@td>
+            <@td align="right"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="${styles.link_nav!}">${surveyLabel}</a></@td>
           <#else>
           &nbsp;
           </#if>

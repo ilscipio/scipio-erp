@@ -685,6 +685,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: boolean false has no effect here
     id                      = Section ID
+                              NOTE: By convention this will always be on the outermost container.
     title                   = Section title
     titleClass              = ((css-class)) Section title class 
                               Supports complex expressions (rarely needed; usually headingLevel enough).
@@ -1087,9 +1088,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if collapsed>
       <#local outerClass = addClassArg(outerClass, "toggleField")>
     </#if>
-    <div<@compiledClassAttribStr class=outerClass />>
+    <#-- NOTE: The ID should always be on the outermost container for @section -->
+    <div<@compiledClassAttribStr class=outerClass /><#if id?has_content> id="${id}"</#if>>
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
-      <@row open=true close=false id=id />
+      <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>
         <#local class = addClassArg(class, contentFlagClasses)>
         <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>

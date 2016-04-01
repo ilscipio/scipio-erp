@@ -1091,7 +1091,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
     <div<@compiledClassAttribStr class=outerClass /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+      <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
+      -->
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>
         <#local class = addClassArg(class, contentFlagClasses)>

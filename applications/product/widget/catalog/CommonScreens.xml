@@ -211,9 +211,6 @@ under the License.
                                     </widgets>
                                     <fail-widgets>
                                         <section>
-                                            <!-- <condition>
-                                                <if-compare operator="not-equals" value="EditCategory" field="activeSubMenuItem"/>
-                                            </condition> -->
                                             <widgets>
                                                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                             </widgets>

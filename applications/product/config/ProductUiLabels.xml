@@ -12203,7 +12203,9 @@
         <value xml:lang="de">Neues Aktionsprodukt hinzufügen</value>
         <value xml:lang="en">Add promotion product</value>
     </property>
-    
+    <property key="ProductCategoryAssociations">        
+        <value xml:lang="en">Category Associations</value>
+    </property>
     
     <property key="ProductAddResultsTo">
         <value xml:lang="de">Resultate hinzufügen zu</value>

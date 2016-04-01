@@ -65,7 +65,6 @@ under the License.
                 <set field="title" default-value="${uiLabelMap.ProductCategory} ${productCategoryId}"/>
             </actions>
             <widgets>
-                 <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     
                     <decorator-section name="body">
@@ -248,8 +247,8 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="EditCategoryRollup"/>                
-                
-                <set field="title" default-value="${uiLabelMap.ProductCategoryRollup} ${parameters.productCategoryId}"/>
+                <set field="originalProductCategoryId" value="${parameters.originalProductCategoryId}" default-value="${parameters.productCategoryId}" global="true" />
+                <set field="title" default-value="${uiLabelMap.ProductCategoryAssociations} ${originalProductCategoryId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -330,22 +329,22 @@ under the License.
             <widgets>
 	            <section>
 	                <condition>
-	                    <if-compare operator="equals" value="parent" field="productCategoryAssociationMode"/>
+	                    <if-compare operator="equals" value="child" field="productCategoryAssociationMode"/>
 	                </condition>
 	                <actions>
 	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
-			               <condition-expr field-name="parentProductCategoryId" from-field="parameters.productCategoryId"/>
+			               <condition-expr field-name="productCategoryId" from-field="originalProductCategoryId"/>
 			               <order-by field-name="sequenceNum"/>
 			           </entity-condition>
 	                </actions>	            
 	            </section>
 	            <section>
 	                <condition>
-	                    <if-compare operator="equals" value="child" field="productCategoryAssociationMode"/>                            
+	                    <if-compare operator="equals" value="parent" field="productCategoryAssociationMode"/>                            
 	                </condition>
 	                <actions>
 	                    <entity-condition entity-name="ProductCategoryRollup" list="productCategoryRollupList">
-                            <condition-expr field-name="productCategoryId" from-field="parameters.productCategoryId"/>
+                            <condition-expr field-name="parentProductCategoryId" from-field="originalProductCategoryId"/>
                             <order-by field-name="sequenceNum"/>
                         </entity-condition>
 	                </actions>	              

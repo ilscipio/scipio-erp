@@ -333,7 +333,12 @@ under the License.
         <find-by-primary-key entity-name="ProductCategoryRollup" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
-        <field-to-result field="parameters.productCategoryId" result-name="productCategoryId"/>
+        <if-not-empty field="parameters.originalProductCategoryId">
+            <field-to-result field="parameters.originalProductCategoryId" result-name="productCategoryId"/>
+        <else>
+            <field-to-result field="parameters.productCategoryId" result-name="productCategoryId"/>
+        </else>
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromCategory" short-description="Remove ProductCategory From Category">
         <set value="removeProductCategoryFromCategory" field="callingMethodName"/>

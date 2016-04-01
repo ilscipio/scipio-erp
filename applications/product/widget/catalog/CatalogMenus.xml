@@ -121,7 +121,7 @@ under the License.
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="EditCategoryRollup" title="${uiLabelMap.ProductCategoryRollups}">
+        <menu-item name="EditCategoryRollup" title="${uiLabelMap.ProductCategoryAssociations}">
             <link target="EditCategoryRollup">
                 <parameter param-name="productCategoryId"/>
             </link>

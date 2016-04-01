@@ -684,8 +684,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: boolean false has no effect here
-    id                      = Section ID
+    id                      = Section ID, on outermost container
                               NOTE: By convention this will always be on the outermost container.
+    style                   = Legacy HTML style attribute, on outermost container
     title                   = Section title
     titleClass              = ((css-class)) Section title class 
                               Supports complex expressions (rarely needed; usually headingLevel enough).
@@ -725,7 +726,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               (workaround for lack of CSS :blank and possibly other browser limitations)
 -->
 <#assign section_defaultArgs = {
-  "type":"", "id":"", "title":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
+  "type":"", "id":"", "title":"", "style":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
   "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayout":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleClass":"", 
   "open":true, "close":true, "passArgs":{}
@@ -751,7 +752,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local contentId = "">
     <#local menuId = "">    
   </#if>
-  <@section_core id=id collapsibleAreaId=contentId title=title class=class padded=padded menuContent=menuContent 
+  <@section_core id=id collapsibleAreaId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
@@ -767,7 +768,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     fromScreenDef     = hint of whether called from Ofbiz screen renderer/xml (true) or FTL macros (false)
     hasContent        = hint to say there will be content; workaround for not being able to assume that all browsers have the CSS support to check if content present -->
 <#assign section_core_defaultArgs = {
-  "id":"", "title":"", "class":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
+  "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
   "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleStyle":"", 
@@ -998,7 +999,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         so they don't have to remember a stack themselves -->
     <#local dummy = pushRequestStack("catoSectionMarkupStack", {
       "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
-      "id":id, "title":title, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup,
+      "id":id, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup,
       
       "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
       "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
@@ -1016,7 +1017,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
   <@section_markup_container open=open close=close
     sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
-    contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
+    contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
     fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
@@ -1078,7 +1079,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 
 <#-- @section container markup - theme override -->
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
-    innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
+    innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
   <#if open>
@@ -1089,7 +1090,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       <#local outerClass = addClassArg(outerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <div<@compiledClassAttribStr class=outerClass /><#if id?has_content> id="${id}"</#if>>
+    <div<@compiledClassAttribStr class=outerClass /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
       <@row open=true close=false />
         <#local class = addClassArg(class, "section-screenlet-container")>

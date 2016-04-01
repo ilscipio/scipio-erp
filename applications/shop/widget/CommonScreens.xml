@@ -289,7 +289,7 @@ under the License.
                 <set field="activeMainMenuItem" value="main"/>
                 <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
                 <set field="titleProperty" value=""/>
@@ -430,9 +430,9 @@ under the License.
                 <set field="parameters.VIEW_INDEX" from-field="VIEW_INDEX" default-value="1" global="true"/><!-- page of result-set -->
                 <set field="parameters.VIEW_CLUSTER" from-field="VIEW_CLUSTER" default-value="4" global="true"/><!-- items per row -->
                 <set field="parameters.VIEW_SCROLL_CLUSTER" from-field="VIEW_SCROLL_CLUSTER" default-value="4" global="true"/><!-- items to slide -->
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/CategoryDetail.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
             </actions>
              <widgets>
                 <section>
@@ -455,9 +455,9 @@ under the License.
                 <set field="parameters.VIEW_INDEX" from-field="VIEW_INDEX" default-value="1" global="true"/><!-- page of result-set -->
                 <set field="parameters.VIEW_CLUSTER" from-field="VIEW_CLUSTER" default-value="4" global="true"/><!-- items per row -->
                 <set field="parameters.VIEW_SCROLL_CLUSTER" from-field="VIEW_SCROLL_CLUSTER" default-value="4" global="true"/><!-- items to slide -->
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#miniproductsummary"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/CategoryDetail.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
             </actions>
              <widgets>
                 <section>

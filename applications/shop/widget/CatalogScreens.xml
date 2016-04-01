@@ -49,7 +49,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/SideDeepCategory.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/sidedeepcategory.ftl"/></html></platform-specific>
@@ -81,7 +81,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/SideDeepCategory.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/minilastviewedcategories.ftl"/></html></platform-specific>
@@ -133,7 +133,7 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/ProductSummary.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductSummary.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productsummary.ftl"/></html></platform-specific>
@@ -145,7 +145,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/SideDeepCategory.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
                 <set field="useBreadcrumbsTitleFallback" type="Boolean" value="false" />
             </actions>
             <widgets>
@@ -161,7 +161,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <!-- Open this commented section for the demo of Layered Navigation, navigate through Gizmo and Widgets categories to see it in action.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/catalog/LayeredNavigation.groovy"/>
                 <set field="detailScreen" value="LayeredCategoryDetail"/>
@@ -204,7 +204,7 @@ under the License.
             <actions>
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
                 <set field="productCategoryLinkScreen" value="component://shop/widget/CatalogScreens.xml#ProductCategoryLink"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/CategoryDetail.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CategoryDetail.groovy"/>
 
                 <entity-and entity-name="ProductCategoryLink" list="productCategoryLinks" use-cache="true" filter-by-date="true">
                     <field-map field-name="productCategoryId" from-field="productCategoryId"/>
@@ -376,7 +376,7 @@ under the License.
     <screen name="quickaddsummary">
         <section>
             <actions>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/ProductSummary.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductSummary.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/quickaddsummary.ftl"/></html></platform-specific>
@@ -483,7 +483,7 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/solr/Category.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <set field="fromSetSessionLocale" value="${groovy: return request.getAttribute('fromSetSessionLocale');}"/>
             </actions>
             <widgets>

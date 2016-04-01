@@ -38,9 +38,9 @@ try{
 	currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 	
 	// get the product category & members
-	if (context.VIEW_SIZE)
+	if (context.viewSize)
 	    parameters.VIEW_SIZE = context.viewSize;
-	if (context.VIEW_INDEX)
+	if (context.viewIndex)
 	    parameters.VIEW_INDEX = context.viewIndex;
 	result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:parameters.VIEW_SIZE, viewIndex:parameters.VIEW_INDEX]);
 	

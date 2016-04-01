@@ -48,11 +48,10 @@ for (catalog in storeCatalogs)
     catalogFilter += " catalog:" + catalog.prodCatalogId;
 parameters.SEARCH_FILTER += catalogFilter;
 
-if (context.VIEW_SIZE)
+if (context.viewSize)
     parameters.VIEW_SIZE = context.viewSize;
-if (context.VIEW_INDEX)
+if (context.viewIndex)
     parameters.VIEW_INDEX = context.viewIndex;
-
 result = dispatcher.runSync("solrKeywordSearch",[query:parameters.SEARCH_STRING,queryFilter:parameters.SEARCH_FILTER,viewSize:parameters.VIEW_SIZE, viewIndex:parameters.VIEW_INDEX]);
 /*Debug.logInfo("query:"+parameters.SEARCH_STRING
             +" queryFilter:"+parameters.SEARCH_FILTER

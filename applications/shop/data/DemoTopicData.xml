@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<entity-engine-transform-xml template="component://shop/templates/data/topic.ftl">
+<entity-engine-transform-xml template="component://shop/data/templates/topic.ftl">
     <topics>
         <topic id="9401" name="ELTRN.MAINTENANCE">
             <topic_heading>Maintenance</topic_heading>

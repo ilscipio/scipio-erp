@@ -117,6 +117,6 @@ under the License.
 
     <ProductStoreFacility productStoreId="CatoShop" facilityId="WebStoreWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="CatoShop" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductStoreKeywordOvrd productStoreId="CatoShop" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
+    <ProductStoreKeywordOvrd productStoreId="CatoShop" keyword="electronic" fromDate="2001-05-13 12:00:00.0" target="ELTRN-100" targetTypeEnumId="KOTT_PRODCAT"/>
 
 </entity-engine-xml>

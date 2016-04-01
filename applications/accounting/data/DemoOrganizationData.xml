@@ -203,17 +203,18 @@ under the License.
 
     <!-- Business unit divisions -->
 
-    <Party partyId="gizmo_div" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="gizmo_div" groupName="Gizmo Business Unit"/>
-    <PartyRole partyId="gizmo_div" roleTypeId="INTERNAL_ORGANIZATIO"/>
-    <PartyRole partyId="gizmo_div" roleTypeId="DIVISION"/>
-    <PartyRelationship partyIdFrom="bu_div" partyIdTo="gizmo_div" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DIVISION" fromDate="2001-05-13 00:00:00.000"/>
+    <!-- Cato: New business divisions -->
+    <Party partyId="eltrn_div" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="eltrn_div" groupName="Electronics Business Unit"/>
+    <PartyRole partyId="eltrn_div" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <PartyRole partyId="eltrn_div" roleTypeId="DIVISION"/>
+    <PartyRelationship partyIdFrom="bu_div" partyIdTo="eltrn_div" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DIVISION" fromDate="2001-05-13 00:00:00.000"/>
 
-    <Party partyId="widget_div" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="widget_div" groupName="Widget Business Unit"/>
-    <PartyRole partyId="widget_div" roleTypeId="INTERNAL_ORGANIZATIO"/>
-    <PartyRole partyId="widget_div" roleTypeId="DIVISION"/>
-    <PartyRelationship partyIdFrom="bu_div" partyIdTo="widget_div" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DIVISION" fromDate="2001-05-13 00:00:00.000"/>
+    <Party partyId="auto_div" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="auto_div" groupName="Automotive Business Unit"/>
+    <PartyRole partyId="auto_div" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <PartyRole partyId="auto_div" roleTypeId="DIVISION"/>
+    <PartyRelationship partyIdFrom="bu_div" partyIdTo="auto_div" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DIVISION" fromDate="2001-05-13 00:00:00.000"/>
 
     <!-- Market development divisions -->
 
@@ -259,29 +260,29 @@ under the License.
     <PartyGroup partyId="RECEIVING" groupName="Receiving Department"/>
     <PartyRole partyId="RECEIVING" roleTypeId="INTERNAL_ORGANIZATIO"/>
     <PartyRole partyId="RECEIVING" roleTypeId="DEPARTMENT"/>
-    <PartyRelationship partyIdFrom="gizmo_div" partyIdTo="RECEIVING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyRelationship partyIdFrom="widget_div" partyIdTo="RECEIVING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="eltrn_div" partyIdTo="RECEIVING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="auto_div" partyIdTo="RECEIVING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
 
     <Party partyId="PRODUCTION" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <PartyGroup partyId="PRODUCTION" groupName="Production Department"/>
     <PartyRole partyId="PRODUCTION" roleTypeId="INTERNAL_ORGANIZATIO"/>
     <PartyRole partyId="PRODUCTION" roleTypeId="DEPARTMENT"/>
-    <PartyRelationship partyIdFrom="gizmo_div" partyIdTo="PRODUCTION" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyRelationship partyIdFrom="widget_div" partyIdTo="PRODUCTION" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="eltrn_div" partyIdTo="PRODUCTION" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="auto_div" partyIdTo="PRODUCTION" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
 
     <Party partyId="SHIPPING" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <PartyGroup partyId="SHIPPING" groupName="Shipping Department"/>
     <PartyRole partyId="SHIPPING" roleTypeId="INTERNAL_ORGANIZATIO"/>
     <PartyRole partyId="SHIPPING" roleTypeId="DEPARTMENT"/>
-    <PartyRelationship partyIdFrom="gizmo_div" partyIdTo="SHIPPING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyRelationship partyIdFrom="widget_div" partyIdTo="SHIPPING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="eltrn_div" partyIdTo="SHIPPING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="auto_div" partyIdTo="SHIPPING" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
 
     <Party partyId="MAINTENANCE" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin"/>
     <PartyGroup partyId="MAINTENANCE" groupName="Maintenance Department"/>
     <PartyRole partyId="MAINTENANCE" roleTypeId="INTERNAL_ORGANIZATIO"/>
     <PartyRole partyId="MAINTENANCE" roleTypeId="DEPARTMENT"/>
-    <PartyRelationship partyIdFrom="gizmo_div" partyIdTo="MAINTENANCE" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyRelationship partyIdFrom="widget_div" partyIdTo="MAINTENANCE" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="eltrn_div" partyIdTo="MAINTENANCE" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
+    <PartyRelationship partyIdFrom="auto_div" partyIdTo="MAINTENANCE" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdFrom="DIVISION" roleTypeIdTo="DEPARTMENT" fromDate="2001-05-13 00:00:00.000"/>
 
     <!-- Corporate Functions departments -->
 

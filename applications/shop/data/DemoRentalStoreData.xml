@@ -64,7 +64,7 @@ headerLogo="/images/opentravelsystem_logo.jpg"
 
     <ProductStoreFacility productStoreId="RentalStore" facilityId="WebStoreWarehouse" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="RentalStore" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductStoreKeywordOvrd productStoreId="RentalStore" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
+    <ProductStoreKeywordOvrd productStoreId="RentalStore" keyword="rental" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
 
     <WebSite webSiteId="OpenTravelSystem" siteName="The Open source Travel System" productStoreId="RentalStore"/>
 

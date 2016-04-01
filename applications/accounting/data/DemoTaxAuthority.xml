@@ -60,10 +60,10 @@
     <PartyRole partyId="ON_TAXMAN" roleTypeId="TAX_AUTHORITY"/>
     
     <!-- _NA_ TaxAuthority defs -->
-    <ProductCategory productCategoryId="20111"/>
+    <ProductCategory productCategoryId="PC-PR-101"/>
     <TaxAuthority taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" includeTaxInPrice="N"/>
     <TaxAuthorityGlAccount taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" organizationPartyId="Company" glAccountId="224000"/>
-    <TaxAuthorityCategory taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" productCategoryId="20111"/> <!-- Micro Widgets, a category to be used to test categorized rates -->
+    <TaxAuthorityCategory taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" productCategoryId="PC-PR-101"/> <!-- Computer Peripherals, a category to be used to test categorized rates -->
     <!-- taxAuthorityRateSeqId left blank to be auto-sequenced during the EE XML import -->
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX"
         productCategoryId="" titleTransferEnumId="" minItemPrice="25.00" minPurchase="0.00" taxShipping="N" taxPercentage="1" taxPromotions="N"

@@ -76,7 +76,7 @@ under the License.
     <InventoryItem inventoryItemId="9001"/>
     <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" sequenceNumber="1" carrierServiceCode="01"/>
     <OrderHeader orderId="DEMO_B2C_AU01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C AU1" salesChannelEnumId="B2C_AU_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="17.0"/>
-    <OrderItem orderId="DEMO_B2C_AU01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_AU01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_AU01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -97,7 +97,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C CA SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_CA01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C CA1" salesChannelEnumId="B2C_CA_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="14.0"/>
-    <OrderItem orderId="DEMO_B2C_CA01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_CA01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_CA01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -118,7 +118,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IE SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_IE01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IE1" salesChannelEnumId="B2C_IE_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="18.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_IE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IE01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -139,7 +139,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C SG SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_SG01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C SG1" salesChannelEnumId="B2C_SG_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="16.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_SG01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_SG01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_SG01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -160,7 +160,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C UK SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_UK01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C UK1" salesChannelEnumId="B2C_UK_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2C_UK01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_UK01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_UK01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -181,7 +181,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C US SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_US01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C US1" salesChannelEnumId="B2C_US_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="66.0"/>
-    <OrderItem orderId="DEMO_B2C_US01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_US01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_US01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -202,7 +202,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C DE SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_DE01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C DE1" salesChannelEnumId="B2C_DE_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2C_DE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_DE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_DE01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -223,7 +223,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C ES SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_ES01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C ES1" salesChannelEnumId="B2C_ES_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="70.0" grandTotal="71.0"/>
-    <OrderItem orderId="DEMO_B2C_ES01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_ES01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_ES01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -244,7 +244,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C FR SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_FR01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C FR1" salesChannelEnumId="B2C_FR_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2C_FR01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_FR01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_FR01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -265,7 +265,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IT SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2C_IT01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IT1" salesChannelEnumId="B2C_IT_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="96.0" grandTotal="98.0"/>
-    <OrderItem orderId="DEMO_B2C_IT01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IT01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IT01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -286,7 +286,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C AU SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_AU02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C AU2" salesChannelEnumId="B2C_AU_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="16.0" grandTotal="21.0"/>
-    <OrderItem orderId="DEMO_B2C_AU02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_AU02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_AU02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -307,7 +307,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C CA SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_CA02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C CA2" salesChannelEnumId="B2C_CA_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="14.0" grandTotal="16.0"/>
-    <OrderItem orderId="DEMO_B2C_CA02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_CA02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_CA02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -328,7 +328,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IE SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_IE02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IE2" salesChannelEnumId="B2C_IE_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="36.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2C_IE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IE02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -349,7 +349,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C SG SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_SG02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C SG2" salesChannelEnumId="B2C_SG_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="45.0" grandTotal="49.0"/>
-    <OrderItem orderId="DEMO_B2C_SG02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_SG02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_SG02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -370,7 +370,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C UK SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_UK02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C UK2" salesChannelEnumId="B2C_UK_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2C_UK02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_UK02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_UK02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -391,7 +391,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C US SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_US02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C US2" salesChannelEnumId="B2C_US_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="30.0" grandTotal="33.0"/>
-    <OrderItem orderId="DEMO_B2C_US02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_US02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_US02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -412,7 +412,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C DE SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_DE02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C DE2" salesChannelEnumId="B2C_DE_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="70.0" grandTotal="73.0"/>
-    <OrderItem orderId="DEMO_B2C_DE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_DE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_DE02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -433,7 +433,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C ES SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_ES02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C ES2" salesChannelEnumId="B2C_ES_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="70.0" grandTotal="72.0"/>
-    <OrderItem orderId="DEMO_B2C_ES02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_ES02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_ES02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -454,7 +454,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C FR SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_FR02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C FR2" salesChannelEnumId="B2C_FR_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="50.0" grandTotal="55.0"/>
-    <OrderItem orderId="DEMO_B2C_FR02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="50.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_FR02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="50.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_FR02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -475,7 +475,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IT SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2C_IT02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IT2" salesChannelEnumId="B2C_IT_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2C_IT02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IT02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IT02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -496,7 +496,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C AU SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_AU03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C AU3" salesChannelEnumId="B2C_AU_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="61.0"/>
-    <OrderItem orderId="DEMO_B2C_AU03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_AU03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_AU03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -517,7 +517,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C CA SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_CA03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C CA3" salesChannelEnumId="B2C_CA_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="28.0" grandTotal="30.0"/>
-    <OrderItem orderId="DEMO_B2C_CA03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_CA03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_CA03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -538,7 +538,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IE SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_IE03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IE3" salesChannelEnumId="B2C_IE_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="17.0" grandTotal="18.0"/>
-    <OrderItem orderId="DEMO_B2C_IE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IE03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -559,7 +559,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C SG SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_SG03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C SG3" salesChannelEnumId="B2C_SG_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="34.0" grandTotal="37.0"/>
-    <OrderItem orderId="DEMO_B2C_SG03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_SG03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_SG03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -580,7 +580,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C UK SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_UK03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C UK3" salesChannelEnumId="B2C_UK_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="18.0" grandTotal="23.0"/>
-    <OrderItem orderId="DEMO_B2C_UK03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_UK03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_UK03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -601,7 +601,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C US SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_US03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C US3" salesChannelEnumId="B2C_US_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="90.0" grandTotal="99.0"/>
-    <OrderItem orderId="DEMO_B2C_US03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="6.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_US03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="6.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_US03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -622,7 +622,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C DE SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_DE03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C DE3" salesChannelEnumId="B2C_DE_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2C_DE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_DE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_DE03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -643,7 +643,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C ES SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_ES03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C ES3" salesChannelEnumId="B2C_ES_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="140.0" grandTotal="141.0"/>
-    <OrderItem orderId="DEMO_B2C_ES03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_ES03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_ES03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -664,7 +664,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C FR SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_FR03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C FR3" salesChannelEnumId="B2C_FR_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="51.0" grandTotal="56.0"/>
-    <OrderItem orderId="DEMO_B2C_FR03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="51.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_FR03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="51.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_FR03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -685,7 +685,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IT SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2C_IT03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IT3" salesChannelEnumId="B2C_IT_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="98.0" grandTotal="100.0"/>
-    <OrderItem orderId="DEMO_B2C_IT03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="49.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IT03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="49.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IT03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -706,7 +706,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B AU SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_AU01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B AU1" salesChannelEnumId="B2B_AU_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="12.0" grandTotal="17.0"/>
-    <OrderItem orderId="DEMO_B2B_AU01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_AU01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_AU01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -727,7 +727,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B CA SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_CA01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B CA1" salesChannelEnumId="B2B_CA_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="12.0" grandTotal="14.0"/>
-    <OrderItem orderId="DEMO_B2B_CA01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_CA01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_CA01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -748,7 +748,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IE SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_IE01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IE1" salesChannelEnumId="B2B_IE_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="18.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2B_IE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IE01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -769,7 +769,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B SG SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_SG01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B SG1" salesChannelEnumId="B2B_SG_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="16.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2B_SG01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_SG01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_SG01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -790,7 +790,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B UK SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_UK01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B UK1" salesChannelEnumId="B2B_UK_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2B_UK01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_UK01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_UK01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -811,7 +811,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B US SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_US01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B US1" salesChannelEnumId="B2B_US_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="60.0" grandTotal="66.0"/>
-    <OrderItem orderId="DEMO_B2B_US01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_US01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_US01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -832,7 +832,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B DE SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_DE01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B DE1" salesChannelEnumId="B2B_DE_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2B_DE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_DE01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_DE01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -853,7 +853,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B ES SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_ES01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B ES1" salesChannelEnumId="B2B_ES_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="70.0" grandTotal="71.0"/>
-    <OrderItem orderId="DEMO_B2B_ES01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_ES01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_ES01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -874,7 +874,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B FR SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_FR01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B FR1" salesChannelEnumId="B2B_FR_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2B_FR01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_FR01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_FR01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -895,7 +895,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IT SALES CHANNEL 1 -->
     <OrderHeader orderId="DEMO_B2B_IT01" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IT1" salesChannelEnumId="B2B_IT_SALES_CHANNEL" orderDate="2009-12-01 9:00:00.000" entryDate="2009-12-01 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="96.0" grandTotal="98.0"/>
-    <OrderItem orderId="DEMO_B2B_IT01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IT01" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IT01" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT01" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT01" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -916,7 +916,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B AU SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_AU02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B AU2" salesChannelEnumId="B2B_AU_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="16.0" grandTotal="21.0"/>
-    <OrderItem orderId="DEMO_B2B_AU02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_AU02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_AU02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -937,7 +937,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B CA SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_CA02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B CA2" salesChannelEnumId="B2B_CA_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="14.0" grandTotal="16.0"/>
-    <OrderItem orderId="DEMO_B2B_CA02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_CA02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_CA02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -958,7 +958,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IE SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_IE02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IE2" salesChannelEnumId="B2B_IE_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="36.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2B_IE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IE02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -979,7 +979,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B SG SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_SG02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B SG2" salesChannelEnumId="B2B_SG_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="45.0" grandTotal="49.0"/>
-    <OrderItem orderId="DEMO_B2B_SG02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_SG02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_SG02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1000,7 +1000,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B UK SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_UK02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B UK2" salesChannelEnumId="B2B_UK_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2B_UK02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_UK02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_UK02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1021,7 +1021,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B US SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_US02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B US2" salesChannelEnumId="B2B_US_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="30.0" grandTotal="33.0"/>
-    <OrderItem orderId="DEMO_B2B_US02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_US02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_US02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1042,7 +1042,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B DE SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_DE02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B DE2" salesChannelEnumId="B2B_DE_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="70.0" grandTotal="73.0"/>
-    <OrderItem orderId="DEMO_B2B_DE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_DE02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_DE02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1063,7 +1063,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B ES SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_ES02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B ES2" salesChannelEnumId="B2B_ES_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="70.0" grandTotal="72.0"/>
-    <OrderItem orderId="DEMO_B2B_ES02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_ES02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_ES02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1084,7 +1084,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B FR SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_FR02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B FR2" salesChannelEnumId="B2B_FR_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="50.0" grandTotal="55.0"/>
-    <OrderItem orderId="DEMO_B2B_FR02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="50.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_FR02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="50.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_FR02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1105,7 +1105,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IT SALES CHANNEL 2 -->
     <OrderHeader orderId="DEMO_B2B_IT02" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IT2" salesChannelEnumId="B2B_IT_SALES_CHANNEL" orderDate="2009-12-03 9:00:00.000" entryDate="2009-12-03 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2B_IT02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IT02" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IT02" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT02" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT02" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1126,7 +1126,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B AU SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_AU03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B AU3" salesChannelEnumId="B2B_AU_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="60.0" grandTotal="61.0"/>
-    <OrderItem orderId="DEMO_B2B_AU03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_AU03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_AU03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_AU03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1147,7 +1147,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B CA SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_CA03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B CA3" salesChannelEnumId="B2B_CA_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="28.0" grandTotal="30.0"/>
-    <OrderItem orderId="DEMO_B2B_CA03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_CA03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="14.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_CA03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_CA03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1168,7 +1168,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IE SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_IE03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IE3" salesChannelEnumId="B2B_IE_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="17.0" grandTotal="18.0"/>
-    <OrderItem orderId="DEMO_B2B_IE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IE03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IE03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1189,7 +1189,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B SG SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_SG03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B SG3" salesChannelEnumId="B2B_SG_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="34.0" grandTotal="37.0"/>
-    <OrderItem orderId="DEMO_B2B_SG03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_SG03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="17.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_SG03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_SG03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1210,7 +1210,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B UK SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_UK03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B UK3" salesChannelEnumId="B2B_UK_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="18.0" grandTotal="23.0"/>
-    <OrderItem orderId="DEMO_B2B_UK03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_UK03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_UK03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_UK03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1231,7 +1231,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B US SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_US03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B US3" salesChannelEnumId="B2B_US_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="90.0" grandTotal="99.0"/>
-    <OrderItem orderId="DEMO_B2B_US03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="6.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_US03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="6.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_US03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_US03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1252,7 +1252,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B DE SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_DE03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B DE3" salesChannelEnumId="B2B_DE_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2B_DE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_DE03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_DE03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_DE03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1273,7 +1273,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B ES SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_ES03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B ES3" salesChannelEnumId="B2B_ES_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="140.0" grandTotal="141.0"/>
-    <OrderItem orderId="DEMO_B2B_ES03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_ES03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_ES03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_ES03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1294,7 +1294,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B FR SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_FR03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B FR3" salesChannelEnumId="B2B_FR_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="51.0" grandTotal="56.0"/>
-    <OrderItem orderId="DEMO_B2B_FR03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="51.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_FR03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="51.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_FR03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_FR03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1315,7 +1315,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2B IT SALES CHANNEL 3 -->
     <OrderHeader orderId="DEMO_B2B_IT03" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2B IT3" salesChannelEnumId="B2B_IT_SALES_CHANNEL" orderDate="2009-11-23 9:00:00.000" entryDate="2009-11-23 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2BStore" remainingSubTotal="98.0" grandTotal="100.0"/>
-    <OrderItem orderId="DEMO_B2B_IT03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="49.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2B_IT03" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="49.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2B_IT03" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT03" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2B_IT03" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1336,7 +1336,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C AU SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_AU04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C AU4" salesChannelEnumId="B2C_AU_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="17.0"/>
-    <OrderItem orderId="DEMO_B2C_AU04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_AU04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_AU04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1357,7 +1357,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C CA SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_CA04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C CA4" salesChannelEnumId="B2C_CA_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="14.0"/>
-    <OrderItem orderId="DEMO_B2C_CA04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_CA04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_CA04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1378,7 +1378,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IE SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_IE04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IE4" salesChannelEnumId="B2C_IE_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="18.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_IE04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IE04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IE04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1399,7 +1399,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C SG SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_SG04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C SG4" salesChannelEnumId="B2C_SG_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="16.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_SG04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_SG04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_SG04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1420,7 +1420,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C UK SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_UK04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C UK4" salesChannelEnumId="B2C_UK_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2C_UK04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_UK04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_UK04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1441,7 +1441,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C US SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_US04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C US4" salesChannelEnumId="B2C_US_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="66.0"/>
-    <OrderItem orderId="DEMO_B2C_US04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_US04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_US04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1462,7 +1462,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C DE SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_DE04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C DE4" salesChannelEnumId="B2C_DE_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2C_DE04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_DE04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_DE04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1483,7 +1483,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C ES SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_ES04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C ES4" salesChannelEnumId="B2C_ES_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="70.0" grandTotal="71.0"/>
-    <OrderItem orderId="DEMO_B2C_ES04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_ES04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_ES04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1504,7 +1504,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C FR SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_FR04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C FR4" salesChannelEnumId="B2C_FR_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2C_FR04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_FR04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_FR04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1525,7 +1525,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IT SALES CHANNEL 4 -->
     <OrderHeader orderId="DEMO_B2C_IT04" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IT4" salesChannelEnumId="B2C_IT_SALES_CHANNEL" orderDate="2009-11-09 9:00:00.000" entryDate="2009-11-09 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="96.0" grandTotal="98.0"/>
-    <OrderItem orderId="DEMO_B2C_IT04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IT04" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IT04" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT04" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT04" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1546,7 +1546,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C AU SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_AU05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C AU5" salesChannelEnumId="B2C_AU_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="17.0"/>
-    <OrderItem orderId="DEMO_B2C_AU05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_AU05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_AU05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_AU05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1567,7 +1567,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C CA SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_CA05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C CA5" salesChannelEnumId="B2C_CA_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="12.0" grandTotal="14.0"/>
-    <OrderItem orderId="DEMO_B2C_CA05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="Nan Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_CA05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1001" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="12.0" unitListPrice="25.99" isModifiedPrice="Y" itemDescription="iPhone 6" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_CA05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_CA05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1588,7 +1588,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IE SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_IE05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IE5" salesChannelEnumId="B2C_IE_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="18.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_IE05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IE05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="18.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IE05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IE05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1609,7 +1609,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C SG SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_SG05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C SG5" salesChannelEnumId="B2C_SG_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="16.0" grandTotal="20.0"/>
-    <OrderItem orderId="DEMO_B2C_SG05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_SG05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="16.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_SG05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_SG05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1630,7 +1630,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C UK SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_UK05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C UK5" salesChannelEnumId="B2C_UK_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="67.0"/>
-    <OrderItem orderId="DEMO_B2C_UK05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_UK05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="3.0" selectedAmount="0.0" unitPrice="20.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_UK05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_UK05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1651,7 +1651,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C US SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_US05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C US5" salesChannelEnumId="B2C_US_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="60.0" grandTotal="66.0"/>
-    <OrderItem orderId="DEMO_B2C_US05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="Tiny Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_US05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="PH-1000" isPromo="N" quantity="4.0" selectedAmount="0.0" unitPrice="15.0" unitListPrice="15.0" isModifiedPrice="Y" itemDescription="iPhone 5" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_US05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_US05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1672,7 +1672,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C DE SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_DE05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C DE5" salesChannelEnumId="B2C_DE_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="35.0" grandTotal="38.0"/>
-    <OrderItem orderId="DEMO_B2C_DE05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_DE05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_DE05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_DE05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1693,7 +1693,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C ES SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_ES05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C ES5" salesChannelEnumId="B2C_ES_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="70.0" grandTotal="71.0"/>
-    <OrderItem orderId="DEMO_B2C_ES05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="Micro Chrome Widget" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_ES05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CDR-1111" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="35.0" unitListPrice="35.0" isModifiedPrice="Y" itemDescription="CD-R Writable Discs" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_ES05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_ES05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1714,7 +1714,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C FR SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_FR05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C FR5" salesChannelEnumId="B2C_FR_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="48.0" grandTotal="50.0"/>
-    <OrderItem orderId="DEMO_B2C_FR05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_FR05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="1.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_FR05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_FR05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
@@ -1735,7 +1735,7 @@ under the License.
     
     <!-- DEMO DATA FOR B2C IT SALES CHANNEL 5 -->
     <OrderHeader orderId="DEMO_B2C_IT05" orderTypeId="SALES_ORDER" orderName="Demo Sales Order B2C IT5" salesChannelEnumId="B2C_IT_SALES_CHANNEL" orderDate="2009-11-19 9:00:00.000" entryDate="2009-11-19 9:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="B2CStore" remainingSubTotal="96.0" grandTotal="98.0"/>
-    <OrderItem orderId="DEMO_B2C_IT05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="Square Gizmo" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderItem orderId="DEMO_B2C_IT05" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="CD-2002" isPromo="N" quantity="2.0" selectedAmount="0.0" unitPrice="48.0" unitListPrice="48.0" isModifiedPrice="Y" itemDescription="U2 - Greatest Hits (CD)" correspondingPoId="" statusId="ITEM_APPROVED"/>
     <OrderRole orderId="DEMO_B2C_IT05" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT05" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
     <OrderRole orderId="DEMO_B2C_IT05" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>

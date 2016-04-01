@@ -352,6 +352,12 @@ under the License.
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRollup" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <if-not-empty field="parameters.originalProductCategoryId">
+            <field-to-result field="parameters.originalProductCategoryId" result-name="productCategoryId"/>
+        <else>
+            <field-to-result field="parameters.productCategoryId" result-name="productCategoryId"/>
+        </else>
+        </if-not-empty>
     </simple-method>
 
     <!-- ================================================================ -->

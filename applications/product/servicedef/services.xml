@@ -859,9 +859,10 @@ under the License.
     <service name="removeProductCategoryFromCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="removeProductCategoryFromCategory" auth="true">
         <description>Remove ProductCategory From Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
         <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="originalProductCategoryId" type="String" mode="IN" optional="true"/>
     </service>
 
     <!-- Product Category Attribute SErvices -->

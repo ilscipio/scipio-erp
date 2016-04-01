@@ -1,7 +1,7 @@
 <@section>
     <#if productCategoryRollupList?has_content>  
          <#list productCategoryRollupList as productCategoryRollup>
-            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">
+            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">                  
                   <input name="productCategoryId" type="hidden" value="${productCategoryRollup.productCategoryId}"/>
                   <input name="originalProductCategoryId" type="hidden" value="${originalProductCategoryId}"/>
                   <input name="parentProductCategoryId" type="hidden" value="${productCategoryRollup.parentProductCategoryId}"/>

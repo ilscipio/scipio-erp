@@ -475,7 +475,16 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
+    <!-- Cato: New, transferred from Content app -->
+    <screen name="CommonContentDecorator">
+        <section>
+            <widgets>
+                <include-screen name="CommonContentDecorator" location="component://content/widget/CommonScreens.xml" />
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="leftbar">
         <section>
             <widgets>

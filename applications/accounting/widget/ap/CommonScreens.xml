@@ -191,7 +191,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-columm">
                         <include-menu name="PaymentGroupSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     </decorator-section>

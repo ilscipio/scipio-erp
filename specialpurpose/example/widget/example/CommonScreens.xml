@@ -82,7 +82,7 @@ under the License.
                 <entity-one entity-name="Example" value-field="example"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.example}" override-by-auto-include="true">
                         <section>
                             <condition>

@@ -70,7 +70,7 @@ under the License.
                 <set field="activeMainMenuItem" value="CMS"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -105,7 +105,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Content"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -160,7 +160,7 @@ under the License.
                 <set field="activeMainMenuItem" value="Content"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -199,7 +199,7 @@ under the License.
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -245,7 +245,7 @@ under the License.
                 <set field="activeMainMenuItem" value="CompDoc"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu location="component://content/widget/content/ContentMenus.xml" name="ContentAppSideBar"/>
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
@@ -265,7 +265,7 @@ under the License.
                 <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -300,7 +300,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -335,7 +335,7 @@ under the License.
                 <set field="activeMainMenuItem" value="websites"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.webSiteId}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -379,7 +379,7 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>

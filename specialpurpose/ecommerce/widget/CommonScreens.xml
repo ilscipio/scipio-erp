@@ -227,7 +227,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="blogs">
                             <include-screen name="CommonBlogTitle" location="component://ecommerce/widget/blog/BlogScreens.xml"/>

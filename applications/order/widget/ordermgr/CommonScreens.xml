@@ -205,7 +205,7 @@ under the License.
     <screen name="CommonPartyDecorator">
         <section>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

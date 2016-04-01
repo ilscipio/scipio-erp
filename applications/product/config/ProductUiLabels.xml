@@ -31689,4 +31689,11 @@
         <value xml:lang="en">Do not resize</value>
         <value xml:lang="fr">Ne pas redimensionner</value>
     </property>
+    <property key="ProductPaymentMethods">
+        <value xml:lang="de">Produkt Zahlungsmethodes</value>
+        <value xml:lang="en">Payment Methods</value>
+        <value xml:lang="es">Métodos de pago</value>
+        <value xml:lang="fr">Méthodes de paiement</value>
+        <value xml:lang="it">Metodos di Pagamento</value>
+    </property>    
 </resource>

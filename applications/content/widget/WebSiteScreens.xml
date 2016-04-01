@@ -27,7 +27,7 @@ under the License.
                 <set field="labelTitleProperty" value="PageTitleFindWebSite"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

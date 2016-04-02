@@ -30,6 +30,8 @@ import org.ofbiz.product.category.CategoryWorker;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+
 module = "KeywordSearch.groovy";
 
 

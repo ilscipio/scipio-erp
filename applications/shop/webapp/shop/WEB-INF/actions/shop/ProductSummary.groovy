@@ -32,6 +32,7 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.*;
 
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");

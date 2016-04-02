@@ -26,6 +26,8 @@ import javolution.util.FastList;
 import com.ilscipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+
 module = "Breadcrumbs.groovy";
 
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);

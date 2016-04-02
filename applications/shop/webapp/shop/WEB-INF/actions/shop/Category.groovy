@@ -13,6 +13,8 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.category.CategoryContentWrapper;
 
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+
 detailScreen = "categorydetail";
 catalogName = CatalogWorker.getCatalogName(request);
 

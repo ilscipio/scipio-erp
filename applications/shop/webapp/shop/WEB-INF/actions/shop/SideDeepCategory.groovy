@@ -28,6 +28,8 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+
 final module = "SideDeepCategoryGroovy";
 
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);

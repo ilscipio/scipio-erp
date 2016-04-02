@@ -30,6 +30,9 @@ import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import javolution.util.FastMap;
 import javolution.util.FastList;
+
+// Cato: NOTE: This script is responsible for checking whether solr is applicable.
+
 try{
 	if(!context.productCategoryId){
 		productCategoryId = request.getAttribute("productCategoryId");

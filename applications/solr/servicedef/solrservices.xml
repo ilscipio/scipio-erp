@@ -23,14 +23,6 @@ under the License.
 
     <description>Content Component Services</description>
     <vendor>Ilscipio GmbH</vendor>
-    
-    <!-- Test Case -->
-    <service name="SolrProductSearch" engine="java"
-        transaction-timeout="72000"
-        location="com.ilscipio.solr.SolrProductSearch"
-        invoke="SolrProductSearch" debug="true" validate="true">
-        <description>First Test with Solr</description>
-    </service>
 
     <!-- Rebuild the Solr Tree -->
     <service name="rebuildSolrIndex" engine="java"

@@ -154,7 +154,7 @@ TODO/FIXME:
     <#list items as item>
       <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
           containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
-          menuInfo=menuInfo />
+          itemIndex=item_index menuInfo=menuInfo/>
     </#list>
   <#else>
     <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
@@ -164,7 +164,7 @@ TODO/FIXME:
         <@renderMenuItemFull style=item.style toolTip=item.toolTip linkArgs=item.linkArgs!{} linkStr=item.linkStr!"" 
             containsNestedMenus=item.containsNestedMenus menuCtxRole=item.menuCtxRole items=item.items![] 
             subMenuStyle=item.subMenuStyle subMenuTitle=item.subMenuTitle 
-            disabled=item.disabled selected=item.selected menuInfo=menuInfo />
+            disabled=item.disabled selected=item.selected itemIndex=item_index menuInfo=menuInfo/>
       </#list>
     </@menu_markup>
   </#if>
@@ -186,7 +186,7 @@ TODO/FIXME:
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
-<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" menuInfo={} disabled=false selected=false>
+<#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[] subMenuStyle="" subMenuTitle="" itemIndex=0 menuInfo={} disabled=false selected=false>
   <#local class = style>
   <#local id = "">
   <#local type = ""> <#-- TODO: set this to something appropriate based on whether link, submit, etc. (but markup doesn't currently use)... -->
@@ -202,12 +202,12 @@ TODO/FIXME:
   <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
       disabled=disabled active=selected
-      isNestedMenu=menuInfo.isNestedMenu parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType><#rt>
+      isNestedMenu=menuInfo.isNestedMenu parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
           style=linkArgs.style name=linkArgs.name height=linkArgs.height width=linkArgs.width text=linkArgs.text imgArgs=linkArgs.imgArgs!{} imgStr=linkArgs.imgStr!""
-          menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected menuInfo=menuInfo /><#t>
+          menuCtxRole=linkArgs.menuCtxRole disabled=linkArgs.disabled selected=linkArgs.selected itemIndex=itemIndex menuInfo=menuInfo/><#t>
     <#elseif linkStr?has_content>
       ${linkStr}
     </#if><#t>
@@ -387,7 +387,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#macro>
 
 <#-- Cato: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false menuInfo={}>
+<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false itemIndex=0 menuInfo={}>
   <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#-- Cato: hack: for screenlet nav menus, always impose buttons if no style specified, 
@@ -433,10 +433,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       <#local class = addClassArg(class, (styles["menu_" + menuInfo.styleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
     </#if>
     <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" 
-        attribs={} excludeAttribs=[] disabled=disabled active=selected>${innerContent}</@menuitem_link_markup><#t>
+        attribs={} excludeAttribs=[] disabled=disabled active=selected itemIndex=itemIndex>${innerContent}</@menuitem_link_markup><#t>
   <#else>
     <@menuitem_generic_markup class=class id=id style="" onClick="" title="" 
-        attribs={} excludeAttribs=[] disabled=disabled active=selected>${innerContent}</@menuitem_generic_markup><#t>
+        attribs={} excludeAttribs=[] disabled=disabled active=selected itemIndex=itemIndex>${innerContent}</@menuitem_generic_markup><#t>
   </#if>
 </#macro>
 

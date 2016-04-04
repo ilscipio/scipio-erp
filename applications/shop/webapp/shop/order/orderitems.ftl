@@ -28,7 +28,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
+      <#if ((maySelectItems!"N") == "Y") && ((roleTypeId!) == "PLACING_CUSTOMER")>
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
           <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />
@@ -36,11 +36,11 @@ under the License.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
-  <@table>
+  <@table type="data-complex">
     <@thead>
     <@tr>
       <@th>${uiLabelMap.OrderProduct}</@th>
-      <#if maySelectItems?default("N") == "Y">
+      <#if (maySelectItems!"N") == "Y">
         <@th>${uiLabelMap.OrderQtyOrdered}</@th>
         <@th>${uiLabelMap.OrderQtyPicked}</@th>
         <@th>${uiLabelMap.OrderQtyShipped}</@th>
@@ -54,7 +54,7 @@ under the License.
       <@th>${uiLabelMap.EcommerceUnitPrice}</@th>
       <@th>${uiLabelMap.OrderAdjustments}</@th>
       <@th>${uiLabelMap.CommonSubtotal}</@th>
-      <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
+      <#if ((maySelectItems!"N") == "Y") && ((roleTypeId!) == "PLACING_CUSTOMER")>
         <@th colspan="3"></@th>
       </#if>
     </@tr>
@@ -300,7 +300,7 @@ under the License.
       </#if>
     </#list>
     <#if orderItems?size == 0 || !orderItems?has_content>
-      <@tr><@td colspan="${numColumns}">${uiLabelMap.OrderSalesOrderLookupFailed}</@td></@tr>
+      <@tr><@td colspan="${numColumns}"><@commonMsg type="error">${uiLabelMap.OrderSalesOrderLookupFailed}</@commonMsg></@td></@tr>
     </#if>
     <@tr><@td colspan="${numColumns}"></@td></@tr>
     </@tbody>

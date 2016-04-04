@@ -17,35 +17,44 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title=uiLabelMap.PageTitleDigitalProductList>
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
-        <@table width="100%" cellpadding="1" cellspacing="0" border="0">
-          <@tr>
-            <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
-            </@td>
-            <@td width="45%"><b>${uiLabelMap.CommonDescription}</b>
-            </@td>
-            <@td width="20%">&nbsp;</@td>
-          </@tr>
-          <#list supplierProductList as supplierProduct>
-            <#assign product = supplierProduct.getRelatedOne("Product", true)/>
-            <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
-            <@tr>
-              <@td>${(product.productName)!}
-              </@td>
-              <@td>${(product.description)!}
-              </@td>
-              <@td align="right">
-                <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Edit</a>
-              </@td>
-            </@tr>
-          </#list>
-          <#if !supplierProductList?has_content>
-            <@tr><@td colspan="3"><@commonMsg type="result-norecord">${uiLabelMap.EcommerceNoDigitalProductsFound}</@commonMsg></@td></@tr>
-          </#if>
-        </@table>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+      <@menuitem type="link" href=makeOfbizUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.PageTitleDigitalProductList menuContent=menuContent>
+    <@table type="data-complex"> <#-- orig: width="100%" cellpadding="1" cellspacing="0" border="0" -->
+      <@tr>
+        <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
+        </@td>
+        <@td width="45%"><b>${uiLabelMap.CommonDescription}</b>
+        </@td>
+        <@td width="20%">&nbsp;</@td>
+      </@tr>
+      <#list supplierProductList as supplierProduct>
+        <#assign product = supplierProduct.getRelatedOne("Product", true)/>
+        <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
+        <@tr>
+          <@td>${(product.productName)!}
+          </@td>
+          <@td>${(product.description)!}
+          </@td>
+          <@td align="right">
+            <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Edit</a>
+          </@td>
+        </@tr>
+      </#list>
+      <#if !supplierProductList?has_content>
+        <@tr><@td colspan="3"><@commonMsg type="result-norecord">${uiLabelMap.EcommerceNoDigitalProductsFound}</@commonMsg></@td></@tr>
+      </#if>
+    </@table>
 </@section>
 
-<@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission>
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+      <@menuitem type="link" href=makeOfbizUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission menuContent=menuContent>
+    <#-- Cato: what goes here? -->
 </@section>

@@ -136,7 +136,7 @@ function getConfigDetails(event) {
 
 <div id="productdetail">
 
-<@table>
+<@table type="generic">
 
   <#-- Category next/previous -->
   <#if category??>
@@ -361,7 +361,7 @@ function getConfigDetails(event) {
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <@table cellspacing="0" cellpadding="0">
+        <@table type="generic" cellspacing="0" cellpadding="0"> <#-- orig: cellspacing="0" cellpadding="0" -->
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
@@ -412,10 +412,10 @@ function getConfigDetails(event) {
         <input type="hidden" name="quantity" value="1" />
 
         <input type="hidden" name="product_id" value="${product.productId}" />
-        <@table>
+        <@table type="generic">
           <@tr>
             <@td>
-                    <a href="javascript:verifyConfig();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
+                <a href="javascript:verifyConfig();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
             </@td>
           </@tr>
 
@@ -585,7 +585,7 @@ function getConfigDetails(event) {
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
       <@tr>
         <@td colspan="2">
-          <@table border="0" cellpadding="0" cellspacing="0">
+          <@table type="generic"> <#-- orig: border="0" cellpadding="0" cellspacing="0" -->
             <@tr>
               <@td>${uiLabelMap.CommonBy}: <#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
               </@td>
@@ -665,7 +665,7 @@ function getConfigDetails(event) {
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<@table>
+<@table type="generic">
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->

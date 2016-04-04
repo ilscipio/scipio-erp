@@ -21,10 +21,8 @@ under the License.
     <input type="hidden" name="add_all" value="false" />
     <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
     ${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
-    <br />
     ${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}
   </form>
-
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>
 </#if>

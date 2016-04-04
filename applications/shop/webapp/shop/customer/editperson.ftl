@@ -28,7 +28,7 @@ under the License.
   &nbsp;<a href="javascript:document.editpersonform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
   <p/>    
   <input type="hidden" name="partyId" value="${person.partyId!}" />
-  <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+  <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
   <@tr>
     <@td align="right">${uiLabelMap.CommonTitle}</@td>
     <@td>

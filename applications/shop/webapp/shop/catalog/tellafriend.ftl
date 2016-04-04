@@ -30,7 +30,7 @@ under the License.
         </#if>
         <input type="hidden" name="webSiteId" value="${context.webSiteId!}"/>
       <#if !cancel??>
-        <@table>
+        <@table type="fields">
           <@tr>
             <@td>${uiLabelMap.CommonYouremail}:</@td>
             <@td><input type="text" name="sendFrom" size="30" /></@td>
@@ -55,7 +55,7 @@ under the License.
         </@table>
       <#else>
         <@script>
-        window.close();
+          window.close();
         </@script>
         <div>${uiLabelMap.EcommerceTellAFriendSorry}</div>
       </#if>

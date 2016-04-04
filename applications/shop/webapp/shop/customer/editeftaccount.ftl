@@ -32,7 +32,7 @@ under the License.
     &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
     &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
     <p/>
-    <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+    <@table type="field"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingNameOnAccount}</@td>
       <@td width="74%">
@@ -88,7 +88,7 @@ under the License.
         <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
-        <@table width="100%" border="0" cellpadding="1">
+        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
         <#if curPostalAddress??>
           <@tr>
             <@td align="right" valign="top" width="1%">

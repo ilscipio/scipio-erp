@@ -122,7 +122,7 @@ function getPaymentInformation() {
         <input type="hidden" name="contactMechId" value="${session.getAttribute("billingContactMechId")!}"/>
       </#if>
 
-      <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+      <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
           <@tr><@td colspan="3"><div class="errorMessage" id="noPaymentMethodSelectedError"></div></@td></@tr>
           <@tr>
              <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderSelectPaymentMethod}</div></@td>

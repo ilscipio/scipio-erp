@@ -21,11 +21,10 @@ function submitForm(form) {
    form.submit();
 }
 </@script>
-<div>
-    <a href="<@ofbizUrl>quickAnonSetCustomer</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Personal Info</a>
-    <#if (enableShipmentMethod)??>
-        <a href="<@ofbizUrl>quickAnonOrderReview</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Review Order</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Review Order</span>
-    </#if>
-</div>
+
+<@menu type="button">
+    <#-- Cato: TODO: localize -->
+    <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
+    <@menuitem type="link" href=makeOfbizUrl("quickAnonSetCustomer") class="+${styles.action_run_session!} ${styles.action_update!}" onClick=submitFormOnClick text="Personal Info" />
+    <@menuitem type="link" href=makeOfbizUrl("quickAnonOrderReview") class="+${styles.action_run_session!} ${styles.action_update!}" onClick=submitFormOnClick text="Review Order" disabled=(!enableShipmentMethod??) />
+</@menu>

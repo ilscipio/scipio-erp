@@ -17,7 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign cart = sessionAttributes.shoppingCart!>
-  <h3>${uiLabelMap.OrderShippingInformation}</h3>
+
+<@section title=uiLabelMap.OrderShippingInformation>
   <div id="shippingFormServerError" class="errorMessage"></div>
   <form id="editShippingContact" method="post" action="<@ofbizUrl>processShipSettings</@ofbizUrl>" name="${parameters.formNameValue}">
     <fieldset><legend>${uiLabelMap.OrderShippingInformation}</legend>
@@ -69,3 +70,4 @@ under the License.
       </div>
     </fieldset>
   </form>
+</@section>

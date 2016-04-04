@@ -18,39 +18,39 @@ under the License.
 -->
 
 <@section title=uiLabelMap.ProductSubscriptions id="subscription-summary">
-        <@table width="100%" cellspacing="0" cellpadding="2">
-            <@thead>
-                <@tr class="header-row">
-                    <@th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonId}</@th>
-                    <@th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonType}</@th>
-                    <@th>${uiLabelMap.CommonDescription}</@th>
-                    <@th>${uiLabelMap.ProductProductName}</@th>
-                    <@th>${uiLabelMap.CommonFromDate}</@th>
-                    <@th>${uiLabelMap.CommonThruDate}</@th>
+    <@table type="data-list"> <#-- orig: width="100%" cellspacing="0" cellpadding="2" -->
+        <@thead>
+            <@tr class="header-row">
+                <@th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonId}</@th>
+                <@th>${uiLabelMap.ProductSubscription} ${uiLabelMap.CommonType}</@th>
+                <@th>${uiLabelMap.CommonDescription}</@th>
+                <@th>${uiLabelMap.ProductProductName}</@th>
+                <@th>${uiLabelMap.CommonFromDate}</@th>
+                <@th>${uiLabelMap.CommonThruDate}</@th>
+            </@tr>
+            <#--<@tr type="util"><@td colspan="6"><hr /></@td></@tr>-->
+        </@thead>
+        <@tbody>
+            <#list subscriptionList as subscription>
+                <@tr>
+                    <@td>${subscription.subscriptionId}</@td>
+                    <@td>
+                        <#assign subscriptionType = subscription.getRelatedOne('SubscriptionType', false)!>
+                        ${(subscriptionType.description)?default(subscription.subscriptionTypeId!(uiLabelMap.CommonNA))}
+                    </@td>
+                    <@td>${subscription.description!}</@td>
+                    <@td>
+                        <#assign product = subscription.getRelatedOne('Product', false)!>
+                        <#if product?has_content>
+                            <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "html")!>
+                            <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productName!product.productId}</a>
+                        </#if>
+                    </@td>
+                    <@td>${subscription.fromDate!}</@td>
+                    <@td>${subscription.thruDate!}</@td>
                 </@tr>
-                <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
-            </@thead>
-            <@tbody>
-                <#list subscriptionList as subscription>
-                    <@tr>
-                        <@td>${subscription.subscriptionId}</@td>
-                        <@td>
-                            <#assign subscriptionType = subscription.getRelatedOne('SubscriptionType', false)!>
-                            ${(subscriptionType.description)?default(subscription.subscriptionTypeId!(uiLabelMap.CommonNA))}
-                        </@td>
-                        <@td>${subscription.description!}</@td>
-                        <@td>
-                            <#assign product = subscription.getRelatedOne('Product', false)!>
-                            <#if product?has_content>
-                                <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "html")!>
-                                <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productName!product.productId}</a>
-                            </#if>
-                        </@td>
-                        <@td>${subscription.fromDate!}</@td>
-                        <@td>${subscription.thruDate!}</@td>
-                    </@tr>
-                </#list>
-            </@tbody>
-        </@table>
+            </#list>
+        </@tbody>
+    </@table>
 </@section>
 

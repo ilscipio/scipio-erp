@@ -116,7 +116,7 @@ function setAlternateGwp(field) {
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, itemProduct, cartLine.getQuantity(), false, false) />
                     <#if isStoreInventoryNotRequiredAndNotAvailable && itemProduct.inventoryMessage?has_content>
-                        <@tr><@td colspan="6"><@alert type="warning">${itemProduct.inventoryMessage}</@alert></@td></@tr>
+                        <@tr><@td colspan="6"><@commonMsg type="warning">${itemProduct.inventoryMessage}</@commonMsg></@td></@tr>
                     </#if>
                     <@tr class="${rowColor!}" valign="top">
                         <@td> 
@@ -227,7 +227,7 @@ function setAlternateGwp(field) {
                                 </#if>
                             <#else><#-- Is Promo or Shoppinglist -->
                                <#if fixedAssetExist == true>
-                                    <@table>
+                                    <@table type="fields">
                                     <#if cartLine.getReservStart()??>
                                         <@tr>
                                             <@td></@td>

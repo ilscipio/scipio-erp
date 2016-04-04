@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-  <h3>${uiLabelMap.AccountingPaymentInformation}</h3>
+<@section title=uiLabelMap.AccountingPaymentInformation>
   <#-- initial screen show a list of options -->
   <form id="editPaymentOptions" method="post" action="<@ofbizUrl>setPaymentInformation</@ofbizUrl>" name="${parameters.formNameValue}">
      <fieldset>
@@ -57,3 +56,4 @@ under the License.
        </div>
      </fieldset>
   </form>
+</@section>

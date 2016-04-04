@@ -222,7 +222,7 @@ under the License.
         <form name="reorderinfo" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
         <@fields type="default-manual-widgetonly">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
-            <@table width="100%" cellspacing="0" cellpadding="1" border="0">
+            <@table type="fields"> <#-- orig:  width="100%" cellspacing="0" cellpadding="1" border="0" -->
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceRecurrence}</div></@td>
                 <@td>
@@ -345,7 +345,7 @@ under the License.
                       <#assign lastOrderedString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(lastSlOrderDate)!>
                     </#if>
                     <div>
-                      <@table cellspacing="2" cellpadding="2" border="0">
+                      <@table type="fields"> <#-- orig: cellspacing="2" cellpadding="2" border="0" -->
                         <@tr>
                           <@td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></@td>
                           <@td><div class="tableheadtext">:</div></@td>
@@ -418,10 +418,10 @@ under the License.
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <@paginationControls/>
-        <@table width="100%" cellspacing="0" cellpadding="1" border="0">
+        <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
           <@tr>
             <@td><b>${uiLabelMap.OrderProduct}</b></@td>
-            <@td><@table><@tr><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.EcommerceStartdate} -</b></@td><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></@td></@tr><@tr><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></@td><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></@td></@tr></@table></@td>
+            <@td><@table type="generic"><@tr><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.EcommerceStartdate} -</b></@td><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfDays} -</b></@td></@tr><@tr><@td nowrap="nowrap"><b>- ${uiLabelMap.EcommerceNbrOfPersons} -</b></@td><@td nowrap="nowrap" align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></@td></@tr></@table></@td>
             <#-- <@td nowrap="nowrap" align="center"><b>Purchased</b></@td> -->
             <@td align="right"><b>${uiLabelMap.EcommercePrice}</b></@td>
             <@td align="right"><b>${uiLabelMap.OrderTotal}</b></@td>
@@ -447,9 +447,8 @@ under the License.
                     <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                     <input type="hidden" name="reservStart"/>
                     <div>
-                       <@table border="0" width="100%">
+                       <@table type="fields"> <#-- orig: border="0" width="100%" -->
                        <#if product.productTypeId == "ASSET_USAGE" || product.productTypeId == "ASSET_USAGE_OUT_IN">
-                          
                             <@tr>
                                 <@td width="1%">&nbsp;</@td>
                                 <@td><@field type="datetime" name="reservStartStr" class="+inputBox" value=(shoppingListItem.reservStart!) size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>

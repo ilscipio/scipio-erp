@@ -21,31 +21,13 @@ function submitForm(form) {
    form.submit();
 }
 </@script>
-<div>
-    <a href="<@ofbizUrl>setCustomer</@ofbizUrl>"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Personal Info</a>
-    <#if (enableShippingAddress)??>
-        <a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Address</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Shipping Address</span>
-    </#if>
-    <#if (enableShipmentMethod)??>
-        <a href="<@ofbizUrl>setShipOptions</@ofbizUrl>"class="${styles.link_run_session!} ${styles.action_update!}"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Options</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Shipping Options</span>
-    </#if>
-    <#if (enablePaymentOptions)??>
-        <a href="<@ofbizUrl>setPaymentOption</@ofbizUrl>"class="${styles.link_run_session!} ${styles.action_update!}"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Options</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Payment Options</span>
-    </#if>
-    <#if (enablePaymentInformation)??>
-        <a href="<@ofbizUrl>setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Information</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Payment Information</span>
-    </#if>
-    <#if (enableReviewOrder)??>
-        <a href="<@ofbizUrl>reviewOrder</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}"<#if callSubmitForm??> onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Review Order</a>
-    <#else>
-        <span class="${styles.link_run_session!} ${styles.action_update!} ${styles.disabled!}">Review Order</span>
-    </#if>
-</div>
+<@menu type="button">
+    <#-- Cato: TODO: localize -->
+    <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
+    <@menuitem type="link" href=makeOfbizUrl("setCustomer") onClick=submitFormOnClick text="Personal Info" />
+    <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enableShippingAddress??)) text="Shipping Address" />
+    <@menuitem type="link" href=makeOfbizUrl("setShipOptions")class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enableShipmentMethod??)) text="Shipping Options" />
+    <@menuitem type="link" href=makeOfbizUrl("setPaymentOption")class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enablePaymentOptions??)) text="Payment Options" />
+    <@menuitem type="link" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}") class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enablePaymentInformation??)) text="Payment Information" />
+    <@menuitem type="link" href=makeOfbizUrl("reviewOrder") class="+${styles.action_nav!}" onClick=submitFormOnClick disabled=(!(enableReviewOrder??)) text="Review Order" />
+</@menu>

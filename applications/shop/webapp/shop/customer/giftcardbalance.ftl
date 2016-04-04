@@ -23,7 +23,7 @@ under the License.
 <br />
 
 <br />
-<@table align="center">
+<@table type="fields"> <#-- orig: align="center" -->
   <#if requestAttributes.processResult??>
     <@tr>
       <@td colspan="2">

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if canNotView>
-  <h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3>
+  <@commonMsg type="error-perm">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
   <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
 <#else>
   <#if !contactMech??>
@@ -26,7 +26,7 @@ under the License.
     <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
     <form method="post" action="<@ofbizUrl>editcontactmechnosave</@ofbizUrl>" name="createcontactmechform">
       <div>
-      <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+      <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
         <@tr>
           <@td>${uiLabelMap.PartySelectContactType}:</@td>
           <@td>
@@ -55,7 +55,7 @@ under the License.
       <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
     </#if>
     
-    <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+    <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
   
     <#if !contactMech??>
         <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
@@ -72,7 +72,7 @@ under the License.
           <@td align="right" valign="top">${uiLabelMap.PartyContactPurposes}</@td>
           <@td>&nbsp;</@td>
           <@td>
-            <@table border="0" cellspacing="1">
+            <@table type="fields"> <#-- orig: border="0" cellspacing="1" -->
               <#list partyContactMechPurposes! as partyContactMechPurpose>
                 <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
                 <@tr>

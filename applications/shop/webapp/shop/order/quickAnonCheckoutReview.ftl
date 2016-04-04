@@ -43,29 +43,22 @@ under the License.
     }
 </@script>
 
-<h1>${uiLabelMap.OrderFinalCheckoutReview}</h1>
-<#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
+<#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 
-<#if cart?? && 0 < cart.size()>
+<#if cart?? && (0 < cart.size())>
   ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonOrderHeader")}
   <br />
   <div id="orderItemsSection">${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}</div>
-<form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
-  <@table border="0" cellpadding="1" width="100%">
-   <@tr>
-      <@td colspan="4">
-        &nbsp;
-      </@td>
-      <@td align="right">
-          <#if (requestParameters.checkoutpage)?has_content>
-            <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
-          </#if>
-          <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_update!}" />
-        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
-      </@td>
-    </@tr>
-  </@table>
-</form>
+  <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+    <@row>
+      <@cell class="+${styles.text_right!}">
+        <#if (requestParameters.checkoutpage)?has_content>
+          <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
+        </#if>
+        <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_complete!}" />
+      </@cell>
+    </@row>
+  </form>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderErrorShoppingCartEmpty}.</@commonMsg>
 </#if>

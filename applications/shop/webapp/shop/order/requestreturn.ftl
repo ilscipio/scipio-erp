@@ -36,7 +36,7 @@ under the License.
       <#if (orderHeader.currencyUom)?has_content>
       <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
       </#if>
-      <@table border="0" width="100%" cellpadding="2" cellspacing="0">
+      <@table type="fields"> <#-- orig: border="0" width="100%" cellpadding="2" cellspacing="0" -->
         <@tr>
           <@td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></h3></@td>
           <@td align="right">
@@ -113,7 +113,7 @@ under the License.
           <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
           <@tr>
             <@td colspan="6">
-              <@table cellspacing="1" cellpadding="2" width="100%">
+              <@table type="fields"> <#-- orig: cellspacing="1" cellpadding="2" width="100%" -->
                 <#list shippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <@tr>

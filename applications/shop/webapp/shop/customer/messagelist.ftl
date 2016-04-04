@@ -69,24 +69,24 @@ under the License.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.CommonMessages menuContent=menuContent menuLayout="inline-title">
-        <@table width="100%" border="0" cellpadding="1">
-          <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
-            <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>
-          <#else>
-            <@tr>
-              <@td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></@td>
-              <@td><div class="tableheadtext">${uiLabelMap.CommonTo}</div></@td>
-              <@td><div class="tableheadtext">${uiLabelMap.EcommerceSubject}</div></@td>
-              <@td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></@td>
-              <@td>&nbsp;</@td>
-            </@tr>
-            <@tr type="util"><@td colspan="5"><hr /></@td></@tr>
-            <#list receivedCommunicationEvents! as receivedCommunicationEvent>
-              <@showMessage communicationEvent=receivedCommunicationEvent isSentMessage=false index=receivedCommunicationEvent_index/>
-            </#list>
-            <#list sentCommunicationEvents! as sentCommunicationEvent>
-              <@showMessage communicationEvent=sentCommunicationEvent isSentMessage=true index=sentCommunicationEvent_index/>
-            </#list>
-          </#if>
-        </@table>
+    <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+      <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
+        <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>
+      <#else>
+        <@tr>
+          <@td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></@td>
+          <@td><div class="tableheadtext">${uiLabelMap.CommonTo}</div></@td>
+          <@td><div class="tableheadtext">${uiLabelMap.EcommerceSubject}</div></@td>
+          <@td><div class="tableheadtext">${uiLabelMap.EcommerceSentDate}</div></@td>
+          <@td>&nbsp;</@td>
+        </@tr>
+        <@tr type="util"><@td colspan="5"><hr /></@td></@tr>
+        <#list receivedCommunicationEvents! as receivedCommunicationEvent>
+          <@showMessage communicationEvent=receivedCommunicationEvent isSentMessage=false index=receivedCommunicationEvent_index/>
+        </#list>
+        <#list sentCommunicationEvents! as sentCommunicationEvent>
+          <@showMessage communicationEvent=sentCommunicationEvent isSentMessage=true index=sentCommunicationEvent_index/>
+        </#list>
+      </#if>
+    </@table>
 </@section>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table border="0" cellpadding="1">
+<@table type="fields"> <#-- orig: border="0" cellpadding="1" -->
   <@tr>
       <@td align="right" width="25%"><div class="tableheadtext">Account Number:</div></@td>
       <@td>${ownedFinAccount.finAccountId}</@td>
@@ -42,7 +42,8 @@ under the License.
   </#if>
 </@table>
 
-<@table border="0" cellpadding="1" border="2">
+<@table type="data-list"> <#-- orig: border="0" cellpadding="1" border="2" -->
+<@thead>
   <@tr>
     <@th>Transaction ${uiLabelMap.CommonDate}</@th>
     <@th>ID</@th>
@@ -51,6 +52,8 @@ under the License.
     <@th>Type</@th>
     <@th>Amount</@th>
   </@tr>
+</@thead>
+<@tbody>
   <#list ownedFinAccountTransList as ownedFinAccountTrans>
     <#assign finAccountTransType = ownedFinAccountTrans.getRelatedOne("FinAccountTransType", false)/>
     <#assign displayAmount = ownedFinAccountTrans.amount/>
@@ -66,22 +69,28 @@ under the License.
     <@td><@ofbizCurrency amount=displayAmount isoCode=ownedFinAccount.currencyUomId/></@td>
   </@tr>
   </#list>
+</@tbody>
+<@tfoot>
   <@tr>
     <@th>Actual Balance</@th>
     <@td>&nbsp;</@td>
     <@td>&nbsp;</@td>
     <@th><@ofbizCurrency amount=ownedFinAccount.actualBalance isoCode=ownedFinAccount.currencyUomId/></@th>
   </@tr>
+</@tfoot>
 </@table>
 
 <#if ownedFinAccountAuthList?has_content>
-<@table border="0" cellpadding="1">
+<@table type="data-list"> <#-- orig: border="0" cellpadding="1" -->
+<@thead>
   <@tr>
     <@th>Authorization ${uiLabelMap.CommonDate}</@th>
     <@th>ID</@th>
     <@th>Expires</@th>
     <@th>Amount</@th>
   </@tr>
+</@thead>
+<@tbody>
   <@tr>
     <@td>Actual Balance</@td>
     <@td>&nbsp;</@td>
@@ -96,11 +105,14 @@ under the License.
     <@td><@ofbizCurrency amount=-ownedFinAccountAuth.amount isoCode=ownedFinAccount.currencyUomId/></@td>
   </@tr>
   </#list>
+</@tbody>
+<@tfoot>
   <@tr>
     <@th>Available Balance</@th>
     <@td>&nbsp;</@td>
     <@td>&nbsp;</@td>
     <@th><@ofbizCurrency amount=ownedFinAccount.availableBalance isoCode=ownedFinAccount.currencyUomId/></@th>
   </@tr>
+</@tfoot>
 </@table>
 </#if>

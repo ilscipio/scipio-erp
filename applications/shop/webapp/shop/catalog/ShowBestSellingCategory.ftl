@@ -18,9 +18,9 @@ under the License.
 -->
 
 <#if productCategoryList?has_content>
-    <h1>Popular Categories</h1>
+    <@heading level=1>Popular Categories</@heading>
     <div class="productsummary-container matrix">
-       <@table>
+       <@table type="generic">
            <@tbody>
 
             <#list productCategoryList as childCategoryList>

@@ -69,16 +69,12 @@ under the License.
 
 <#if productIds?has_content>
     <@paginationControls/>
-      <#assign numCol = numCol?default(1)>
-      <#assign numCol = numCol?number>
-      <#assign tabCol = 1>
-      <div
-      <#if categoryImageUrl?string?has_content>
-        style="position: relative; margin-top: ${height}px;"
-      </#if>
-      class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
+    <#assign numCol = numCol?default(1)>
+    <#assign numCol = numCol?number>
+    <#assign tabCol = 1>
+    <div<#if categoryImageUrl?string?has_content> style="position: relative; margin-top: ${height}px;"</#if> class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
 
-      <@table open=(numCol?int > 1) close=(numCol?int > 1)>
+      <@table type="generic" open=(numCol?int > 1) close=(numCol?int > 1)>
 
         <#list productIds as productId>
           <#if (numCol?int == 1)>
@@ -97,9 +93,9 @@ under the License.
            </#if>
         </#list>
       </@table>
-      </div>
+    </div>
     <@paginationControls/>
 <#else>
     <hr />
-    <div>${uiLabelMap.ProductNoProductsInThisCategory}</div>
+    <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsInThisCategory}</@commonMsg>
 </#if>

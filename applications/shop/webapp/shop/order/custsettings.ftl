@@ -56,8 +56,9 @@ under the License.
     </div>
   </fieldset>
 
-  <@table summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
-  <caption>${uiLabelMap.PartyPhoneNumbers}</caption>
+  <@table type="fields-vert" summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
+    <caption>${uiLabelMap.PartyPhoneNumbers}</caption>
+    <@thead>
     <@tr>
       <@th></@th>
       <@th scope="col">${uiLabelMap.CommonCountry}</@th>
@@ -66,6 +67,7 @@ under the License.
       <@th scope="col">${uiLabelMap.PartyExtension}</@th>
       <@th scope="col">${uiLabelMap.PartyAllowSolicitation}</@th>
     </@tr>
+    </@thead>
     <@tr>
     <@th scope="row">${uiLabelMap.PartyHomePhone}</@th>
     <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>

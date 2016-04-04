@@ -32,7 +32,8 @@ under the License.
         </@menu>
     </#macro>
     
-    <@section title=uiLabelMap.AccountingCurrentBankReconciliation menuContent=menuContent />
+    <@section title=uiLabelMap.AccountingCurrentBankReconciliation menuContent=menuContent>
+    </@section>
     
     <@section title=uiLabelMap.AccountingPreviousBankReconciliation>
         <#if previousGlReconciliation?has_content>

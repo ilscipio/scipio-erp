@@ -32,7 +32,7 @@ under the License.
     &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
     &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
     <p/> 
-    <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+    <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingCardNumber}</@td>
       <@td width="74%">

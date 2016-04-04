@@ -34,7 +34,7 @@ under the License.
       &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
       <p/>
-      <@table width="90%" border="0" cellpadding="2" cellspacing="0">
+      <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
          ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
          <@tr>
            <@td align="right" valign="top">${uiLabelMap.PartyBillingAddress}</@td>
@@ -44,7 +44,7 @@ under the License.
         <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
-             <@table width="100%" border="0" cellpadding="1">
+             <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
              <#assign hasCurrent = false />
              <#if curPostalAddress?has_content>
                <#assign hasCurrent = true />

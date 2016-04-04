@@ -240,7 +240,7 @@ will generally always be reserved for the logo at the top of the page.
 
   <fieldset>
     <legend>${uiLabelMap.PartyPhoneNumbers}</legend>
-    <@table summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
+    <@table type="fields-vert" summary="Tabular form for entering multiple telecom numbers for different purposes. Each row allows user to enter telecom number for a purpose">
       <@thead>
         <@tr>
           <@th></@th>

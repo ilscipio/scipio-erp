@@ -22,7 +22,7 @@ under the License.
 <h1>${survey.description!}</h1>
 <br />
 
-<@table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="2" cellspacing="0" -->
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- special formatting for select boxes -->

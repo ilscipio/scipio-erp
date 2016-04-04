@@ -16,17 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@table>
-  <@tr>
-    <@td colspan="2">
-      <@heading>${uiLabelMap.ProductProductsLastViewed}</@heading>
-    </@td>
-  </@tr>
-</@table>
+
+<@heading>${uiLabelMap.ProductProductsLastViewed}</@heading>
 
 <#if sessionAttributes.lastViewedProducts?? && sessionAttributes.lastViewedProducts?has_content>
-
-  <@table>
+  <@table type="generic">
     <#list sessionAttributes.lastViewedProducts as productId>
       <@tr>
         <@td>
@@ -37,13 +31,6 @@ under the License.
       </@tr>
     </#list>
   </@table>
-
 <#else>
-<@table>
-  <@tr>
-    <@td>
-      <div class="tabletext">${uiLabelMap.ProductNotViewedAnyProducts}.</div>
-    </@td>
-  </@tr>
-</@table>
+  <@commonMsg type="result-norecord">${uiLabelMap.ProductNotViewedAnyProducts}.</@commonMsg>
 </#if>

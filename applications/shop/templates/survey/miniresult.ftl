@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="2" cellspacing="0" -->
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- get an answer from the answerMap -->

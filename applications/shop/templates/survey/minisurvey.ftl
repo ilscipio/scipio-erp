@@ -36,7 +36,7 @@ under the License.
 <#-- survey ID -->
 <input type="hidden" name="surveyId" value="${survey.surveyId}"/>
 
-<@table width="100%" border="0" cellpadding="2" cellspacing="0">
+<@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="2" cellspacing="0" -->
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>

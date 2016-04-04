@@ -32,19 +32,13 @@ under the License.
     }
 </@script>
 
-<@heading level=1>${uiLabelMap.OrderFinalCheckoutReview}</@heading>
-<#if !isDemoStore?? && isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
+<#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 
-<#if cart?? && 0 < cart.size()>
+<#if cart?? && (0 < cart.size())>
   ${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
-  <br />
   ${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}
-  <@table border="0" cellpadding="1" width="100%">
-   <@tr>
-      <@td colspan="4">
-        &nbsp;
-      </@td>
-      <@td align="right">
+  <@row>
+    <@cell class="+${styles.text_right!}">
         <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
           <#if (requestParameters.checkoutpage)?has_content>
             <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
@@ -52,12 +46,10 @@ under the License.
           <#if (requestAttributes.issuerId)?has_content>
             <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
           </#if>
-          <input type="button" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();" class="mediumSubmit" />
+          <input type="button" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();" class="${styles.link_run_sys!} ${styles.action_complete!}" />
         </form>
-        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
-      </@td>
-    </@tr>
-  </@table>
+    </@cell>
+  </@row>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderErrorShoppingCartEmpty}.</@commonMsg>
 </#if>

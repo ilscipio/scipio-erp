@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>
-<#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
+<#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 <#if orderHeader?has_content>
   ${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
   ${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}

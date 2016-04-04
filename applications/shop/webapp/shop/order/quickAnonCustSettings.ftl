@@ -41,16 +41,15 @@ under the License.
 
 <@section title=uiLabelMap.PartyBasicInformation>
   <form name="${parameters.formNameValue}" id="quickAnonProcessCustomer" method="post" action="<@ofbizUrl>quickAnonProcessCustomerSettings</@ofbizUrl>">
-  <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
-  <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
-  <input type="hidden" name="billingContactMechId" value="${parameters.billingContactMechId!}"/>
-  <input type="hidden" name="shippingContactMechPurposeTypeId" value="${parameters.shippingContactMechPurposeTypeId!}"/>
-  <input type="hidden" name="billingContactMechPurposeTypeId" value="${parameters.billingContactMechPurposeTypeId!}"/>
+    <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
+    <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
+    <input type="hidden" name="billingContactMechId" value="${parameters.billingContactMechId!}"/>
+    <input type="hidden" name="shippingContactMechPurposeTypeId" value="${parameters.shippingContactMechPurposeTypeId!}"/>
+    <input type="hidden" name="billingContactMechPurposeTypeId" value="${parameters.billingContactMechPurposeTypeId!}"/>
 
-  <@table width="100%" border="0" cellpadding="1" cellspacing="0">
-     <@tr>
-        <@td width="50%">
-           <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+    <@row>
+      <@cell columns=6 last=true>
+          <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
               <@tr>
                  <@td width="26%" align="right" valign="top"></@td>
                  <@td width="2%">&nbsp;</@td>
@@ -123,15 +122,15 @@ under the License.
                   <input type="text" class="inputBox required validate-email" name="emailAddress" value="${parameters.emailAddress!}" size="40" maxlength="255"/> *
                 </@td>
               </@tr>
-            </@table>
-         </@td>
-     </@tr>
-     <@tr type="util">
-        <@td colspan="3" align="center"><hr /></@td>
-     </@tr>
-     <@tr>
-        <@td width="50%">
-           <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+          </@table>
+      </@cell>
+    </@row>
+
+    <hr />
+    
+    <@row>
+      <@cell columns=6>
+          <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
               <@tr>
                  <@td width="26%" align="right" valign="top"></@td>
                  <@td width="2%">&nbsp;</@td>
@@ -220,10 +219,9 @@ under the License.
                  *</@td>
               </@tr>
             </@table>
-         </@td>
-
-        <@td width="50%">
-           <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+      </@cell>
+      <@cell columns=6>
+           <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
               <@tr>
                 <@td align="center" valign="top" colspan="3">
                     <input type="checkbox" class="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y"/>
@@ -313,14 +311,10 @@ under the License.
                  *</@td>
               </@tr>
             </@table>
-         </@td>
-      </@tr>
-      <@tr>
-         <@td colspan="3" align="center">&nbsp;</@td>
-      </@tr>
-      <@tr>
-         <@td colspan="3" align="center"><input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/></@td>
-      </@tr>
-  </@table>
+      </@cell>
+    </@row>
+
+    <input type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" value="${uiLabelMap.CommonContinue}"/>
+
   </form>
 </@section>

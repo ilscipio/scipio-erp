@@ -43,29 +43,29 @@ under the License.
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayout="inline-title">
-        <@table width="100%" border="0" cellpadding="1">
-          <@tr><@td>&nbsp;</@td></@tr>
-          <@tr>
-              <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
-              <@td>${fromName!}</@td>
-          </@tr>
-          <@tr>
-              <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
-              <@td>${toName!}</@td>
-          </@tr>
-          <@tr>
-              <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonDate}:</div></@td>
-              <@td>${communicationEvent.entryDate}</@td>
-          </@tr>
-          <@tr>
-              <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
-              <@td>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
-          </@tr>
-          <@tr><@td>&nbsp;</@td></@tr>
-          <@tr>
-            <@td>&nbsp;</@td>
-            <@td>${rawString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}
-            </@td>
-          </@tr>
-        </@table>
+    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+      <@tr><@td>&nbsp;</@td></@tr>
+      <@tr>
+          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
+          <@td>${fromName!}</@td>
+      </@tr>
+      <@tr>
+          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
+          <@td>${toName!}</@td>
+      </@tr>
+      <@tr>
+          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonDate}:</div></@td>
+          <@td>${communicationEvent.entryDate}</@td>
+      </@tr>
+      <@tr>
+          <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
+          <@td>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
+      </@tr>
+      <@tr><@td>&nbsp;</@td></@tr>
+      <@tr>
+        <@td>&nbsp;</@td>
+        <@td>${rawString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}
+        </@td>
+      </@tr>
+    </@table>
 </@section>

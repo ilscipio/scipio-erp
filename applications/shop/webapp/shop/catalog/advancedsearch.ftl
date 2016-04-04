@@ -23,7 +23,7 @@ under the License.
   <#-- Cato: don't hardcode these
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>-->
-  <@table>
+  <@table type="fields">
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>

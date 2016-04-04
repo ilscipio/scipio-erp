@@ -17,4 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#if shipAddr??><a href="<@ofbizUrl>setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.EcommerceChangeShippingAddress}</a><#if shipOptions??><a href="<@ofbizUrl>setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">${uiLabelMap.EcommerceChangeShippingOptions}</a><#if billing??><a href="<@ofbizUrl>setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.EcommerceChangePaymentInfo}</a></#if></#if></#if>
+<#-- Cato: NOTE: this omits the top @menu; the including template must provide its own -->
+<#if shipAddr??>
+  <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />
+  <#if shipOptions??>
+    <@menuitem type="link" href=makeOfbizUrl("setShipOptions") class="+${styles.action_nav!} ${trailClass.shipOptions}" text=uiLabelMap.EcommerceChangeShippingOptions />
+    <#if billing??>
+      <@menuitem type="link" href=makeOfbizUrl("setBilling?resetType=Y") class="+${styles.action_nav!} ${trailClass.paymentType}" text=uiLabelMap.EcommerceChangePaymentInfo />
+    </#if>
+  </#if>
+</#if>

@@ -177,13 +177,16 @@ function submitForm(form, mode, value) {
     </form>
 </@section>
 
-<@table width="100%">
-  <@tr valign="top">
-    <@td>
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.link_nav_cancel!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-    </@td>
-    <@td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonNext}</a>
-    </@td>
-  </@tr>
-</@table>
+<@row>
+  <@cell column=6>
+    <@menu type="button">
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
+    </@menu>
+  </@cell>
+  <@cell column=6 class="+${styles.text_right!}">
+    <@menu type="button">
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonNext />
+    </@menu>
+  </@cell>
+</@row>
+

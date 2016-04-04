@@ -49,9 +49,9 @@ under the License.
 })();
 </@script>
   <@section title=uiLabelMap.CommonRegistered>
-    <@table width="100%" class="+Signlogin"> <#-- orig: class="Signlogin" -->
-      <@tr>
-          <@td>
+    <#--<@table class="+Signlogin">--> <#-- orig: width="100%" class="Signlogin" -->
+    <@row class="+Signlogin">
+      <@cell columns=6>
           <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
             <fieldset>
               <div>
@@ -74,10 +74,11 @@ under the License.
               </div>
             </fieldset>
           </form>
-          </@td>
-          <@td><div id="janrainEngageEmbed"></div></@td>
-      </@tr>
-    </@table>
+      </@cell>
+      <@cell columns=6>
+         <div id="janrainEngageEmbed"></div>
+      </@cell>
+    </@row>
   </@section>
 <#else>
   <@section title=uiLabelMap.CommonRegistered>

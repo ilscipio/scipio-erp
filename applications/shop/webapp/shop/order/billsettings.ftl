@@ -19,7 +19,7 @@ under the License.
 
 <@script>
 function shipBillAddr() {
-    <#if requestParameters.singleUsePayment?default("N") == "Y">
+    <#if (requestParameters.singleUsePayment!"N") == "Y">
       <#assign singleUse = "&amp;singleUsePayment=Y">
     <#else>
       <#assign singleUse = "">
@@ -32,19 +32,16 @@ function shipBillAddr() {
 }
 </@script>
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="boxlink">
-            <#if requestParameters.singleUsePayment?default("N") != "Y">
-              <div>
-                ${screens.render(anonymoustrailScreen)}
-              </div>
-            </#if>
-        </div>
-        <div class="h3">${uiLabelMap.AccountingPaymentInformation}</div>
-    </div>
-    <div class="screenlet-body">
-        <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || finalizeMode?default("") == "payment">
+<#assign menuContent>
+    <#if requestParameters.singleUsePayment?default("N") != "Y">
+      <div>
+        ${screens.render(anonymoustrailScreen)}
+      </div>
+    </#if>
+</#assign>
+<@section title=uiLabelMap.AccountingPaymentInformation menuContent=menuContent menuItemsInlined=false>
+
+        <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || (finalizeMode!"") == "payment">
           <#-- after initial screen; show detailed screens for selected type -->
           <#if paymentMethodType == "CC">
             <#if creditCard?has_content && postalAddress?has_content>
@@ -86,7 +83,7 @@ function shipBillAddr() {
             <input type="hidden" name="contactMechId" value="${postalFields.contactMechId}" />
           </#if>
 
-          <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+          <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
             <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
               <@tr>
                 <@td width="26%" align="right" valign="top">
@@ -274,5 +271,4 @@ function shipBillAddr() {
             </@table>
           </form>
         </#if>
-    </div>
-</div>
+</@section>

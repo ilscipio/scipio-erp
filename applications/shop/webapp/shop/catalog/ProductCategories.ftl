@@ -196,7 +196,7 @@ var rawdata = [
 
 </@script>
 
-<@section title=uiLabelMap.ProductCategories id="quickadd" class="+screenlet">
+<@section title=uiLabelMap.ProductCategories id="quickadd">
     <div id="tree">
     </div>
 </@section>

@@ -18,18 +18,17 @@ under the License.
 -->
 
 <@section>
-    
-    <#if productCategory??  && solrProducts?has_content>
-                <@paginate mode="content" layout="both"  viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-                    <@grid columns=4>
-                        <#list solrProducts as solrProduct>
-                                <li>${setRequestAttribute("productId", solrProduct.productId)}
-                                ${screens.render(productsummaryScreen)}
-                                </li>
-                        </#list>
-                    </@grid>
-                </@paginate>
+    <#if productCategory?? && solrProducts?has_content>
+        <@paginate mode="content" layout="both" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
+            <@grid columns=4>
+                <#list solrProducts as solrProduct>
+                    <li>${setRequestAttribute("productId", solrProduct.productId)}
+                    ${screens.render(productsummaryScreen)}
+                    </li>
+                </#list>
+            </@grid>
+        </@paginate>
     <#else>
-        <@alert type="info">${uiLabelMap.ProductNoProductsInThisCategory}</@alert>
+        <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsInThisCategory}</@commonMsg>
     </#if>
  </@section>   

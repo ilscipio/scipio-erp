@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title="${survey.surveyName}" class="+screenlet">
-        <#-- Render the survey -->
-        <#if surveyWrapper?has_content>
-            <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
-              ${surveyWrapper.render(context)}
-            </form>
-        <#else>
-            <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
-        </#if>
+<@section title="${survey.surveyName}">
+    <#-- Render the survey -->
+    <#if surveyWrapper?has_content>
+        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
+          ${surveyWrapper.render(context)}
+        </form>
+    <#else>
+        <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
+    </#if>
 </@section>

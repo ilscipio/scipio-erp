@@ -19,7 +19,7 @@ under the License.
 
 <#assign productPrice = productPriceList[0]!/>
 
-<@section title=uiLabelMap.PageTitleDigitalProductEdit class="+screenlet">
+<@section title=uiLabelMap.PageTitleDigitalProductEdit>
 <#if !supplierProduct?has_content && parameters.productId?has_content>
   <div><h3>${uiLabelMap.EcommerceMessage1} [${parameters.productId}] ${uiLabelMap.EcommerceMessage2}</h3></div>
 <#else>
@@ -61,7 +61,7 @@ under the License.
 </@section>
 
 <#if supplierProduct?has_content>
-<@section title=uiLabelMap.OrderDigitalProductFiles class="+screenlet">
+<@section title=uiLabelMap.OrderDigitalProductFiles>
         <#list productContentAndInfoList as productContentAndInfo>
             <div>
               ${productContentAndInfo.contentName} (${uiLabelMap.CommonSince}: ${productContentAndInfo.fromDate})

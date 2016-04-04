@@ -19,7 +19,7 @@ under the License.
 
 <#if party??>
 <#-- Main Heading -->
-<@table width="100%" cellpadding="0" cellspacing="0" border="0">
+<@table type="summary"> <#-- orig: width="100%" cellpadding="0" cellspacing="0" border="0" -->
   <@tr>
     <@td>
       <@heading>${uiLabelMap.PartyTheProfileOf}
@@ -47,16 +47,15 @@ under the License.
   </@tr>
 </@table>
 
-<div class="screenlet">
-  <div class="boxlink">
-    <a href="<@ofbizUrl>editperson</@ofbizUrl>" class="submenutextright">
-    <#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></a>
-  </div>
-  <h3>${uiLabelMap.PartyPersonalInformation}</h3>
-  <div class="screenlet-body">
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <#assign itemText><#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></#assign>
+        <@menuitem type="link" href=makeOfbizUrl("editperson") text=itemText />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
     <#if person??>
-    <div>
-      <@table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <@table type="summary"> <#-- orig: width="100%" border="0" cellpadding="0" cellspacing="0" -->
         <@tr>
           <@td align="right">${uiLabelMap.PartyName}</@td>
           <@td>
@@ -80,32 +79,27 @@ under the License.
       <#if person.totalYearsWorkExperience??><@tr><@td align="right">${uiLabelMap.PartyYearsWork}</@td><@td>${person.totalYearsWorkExperience}</@td></@tr></#if>
       <#if person.comments?has_content><@tr><@td align="right">${uiLabelMap.CommonComments}</@td><@td>${person.comments}</@td></@tr></#if>
       </@table>
-    </div>
     <#else>
       <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
     </#if>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
 <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceLoyaltyPoints}</h3>
-  <div class="screenlet-body">
-    <label>${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</label>
-  </div>
-</div>
+  <@section title=uiLabelMap.EcommerceLoyaltyPoints>
+    <p>${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</p>
+  </@section>
 </#if>
 
 <#-- ============================================================= -->
-<div class="screenlet">
-  <div class="boxlink">
-    <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
-  </div>
-  <h3>${uiLabelMap.PartyContactInformation}</h3>
-  <div class="screenlet-body">
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>
   <#if partyContactMechValueMaps?has_content>
-    <@table width="100%" border="0" cellpadding="0">
+    <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="0" -->
       <@tr valign="bottom">
         <@th>${uiLabelMap.PartyContactType}</@th>
         <@th></@th>
@@ -218,116 +212,107 @@ under the License.
   <#else>
     <label>${uiLabelMap.PartyNoContactInformation}.</label><br />
   </#if>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
-
-<div class="screenlet">
-  <div class="boxlink">
-    <a href="<@ofbizUrl>editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a><a href="<@ofbizUrl>editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
-  </div>
-  <h3>${uiLabelMap.AccountingPaymentMethodInformation}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1">
-      <@tr>
-        <@td>
-          <#if paymentMethodValueMaps?has_content>
-          <@table width="100%" cellpadding="2" cellspacing="0" border="0">
-            <#list paymentMethodValueMaps as paymentMethodValueMap>
-              <#assign paymentMethod = paymentMethodValueMap.paymentMethod! />
-              <#assign creditCard = paymentMethodValueMap.creditCard! />
-              <#assign giftCard = paymentMethodValueMap.giftCard! />
-              <#assign eftAccount = paymentMethodValueMap.eftAccount! />
-              <@tr>
-                <#if (paymentMethod.paymentMethodTypeId!) == "CREDIT_CARD">
-                <@td valign="top">
-                    ${uiLabelMap.AccountingCreditCard}:
-                    <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}&nbsp;</#if>
-                    <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
-                    ${creditCard.firstNameOnCard}&nbsp;
-                    <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp;</#if>
-                    ${creditCard.lastNameOnCard}
-                    <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
-                    &nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                    <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                    <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                    <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                </@td>
-                <@td>&nbsp;</@td>
-                <@td align="right" valign="top">
-                  <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                </@td>
-                <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
-                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                    <#assign giftCardNumber = "" />
-                    <#assign pcardNumber = giftCard.cardNumber />
-                    <#if pcardNumber?has_content>
-                      <#assign psize = pcardNumber?length - 4 />
-                      <#if (0 < psize)>
-                        <#list 0 .. psize-1 as foo>
-                          <#assign giftCardNumber = giftCardNumber + "*" />
-                        </#list>
-                         <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-                      <#else>
-                         <#assign giftCardNumber = pcardNumber />
-                      </#if>
-                    </#if>
-                  </#if>
-
-                  <@td valign="top">
-                      ${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}
-                      <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                      <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                      <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                  </@td>
-                  <@td>&nbsp;</@td>
-                  <@td align="right" valign="top">
-                    <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  </@td>
-                  <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
-                  <@td valign="top">
-                      ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
-                      <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                      <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
-                      <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
-                  </@td>
-                  <@td>&nbsp;</@td>
-                  <@td align="right" valign="top">
-                    <a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  </@td>
-                </#if>
-                <@td align="right" valign="top">
-                 <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
-                </@td>
-                <@td align="right" valign="top">
-                  <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                    <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
+        <@menuitem type="link" href=makeOfbizUrl("editgiftcard") text=uiLabelMap.PartyCreateNewGiftCard />
+        <@menuitem type="link" href=makeOfbizUrl("editeftaccount") text=uiLabelMap.PartyCreateNewEftAccount />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.AccountingPaymentMethodInformation menuContent=menuContent>
+  <#if paymentMethodValueMaps?has_content>
+      <@table type="fields"> <#-- orig: width="100%" cellpadding="2" cellspacing="0" border="0" -->
+        <#list paymentMethodValueMaps as paymentMethodValueMap>
+          <#assign paymentMethod = paymentMethodValueMap.paymentMethod! />
+          <#assign creditCard = paymentMethodValueMap.creditCard! />
+          <#assign giftCard = paymentMethodValueMap.giftCard! />
+          <#assign eftAccount = paymentMethodValueMap.eftAccount! />
+          <@tr>
+            <#if (paymentMethod.paymentMethodTypeId!) == "CREDIT_CARD">
+            <@td valign="top">
+                ${uiLabelMap.AccountingCreditCard}:
+                <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}&nbsp;</#if>
+                <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
+                ${creditCard.firstNameOnCard}&nbsp;
+                <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp;</#if>
+                ${creditCard.lastNameOnCard}
+                <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
+                &nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
+                <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
+            </@td>
+            <@td>&nbsp;</@td>
+            <@td align="right" valign="top">
+              <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+            </@td>
+            <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
+              <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                <#assign giftCardNumber = "" />
+                <#assign pcardNumber = giftCard.cardNumber />
+                <#if pcardNumber?has_content>
+                  <#assign psize = pcardNumber?length - 4 />
+                  <#if (0 < psize)>
+                    <#list 0 .. psize-1 as foo>
+                      <#assign giftCardNumber = giftCardNumber + "*" />
+                    </#list>
+                     <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
                   <#else>
-                    <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
-                      <input type="hidden" name="productStoreId" value="${productStoreId}" />
-                      <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
-                      <input type="hidden" name="partyId" value="${party.partyId}" />
-                      <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
-                    </form>
+                     <#assign giftCardNumber = pcardNumber />
                   </#if>
-                </@td>
-              </@tr>
-            </#list>
-          </@table>
-          <#else>
-            ${uiLabelMap.AccountingNoPaymentMethodInformation}.
-          </#if>
-        </@td>
-      </@tr>
-    </@table>
-  </div>
-</div>
+                </#if>
+              </#if>
+
+              <@td valign="top">
+                  ${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}
+                  <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                  <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
+                  <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
+              </@td>
+              <@td>&nbsp;</@td>
+              <@td align="right" valign="top">
+                <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+              </@td>
+              <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
+              <@td valign="top">
+                  ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
+                  <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                  <#if paymentMethod.fromDate?has_content>(${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})</#if>
+                  <#if paymentMethod.thruDate??>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</#if>
+              </@td>
+              <@td>&nbsp;</@td>
+              <@td align="right" valign="top">
+                <a href="<@ofbizUrl>editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+              </@td>
+            </#if>
+            <@td align="right" valign="top">
+             <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
+            </@td>
+            <@td align="right" valign="top">
+              <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
+                <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+              <#else>
+                <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                  <input type="hidden" name="productStoreId" value="${productStoreId}" />
+                  <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
+                  <input type="hidden" name="partyId" value="${party.partyId}" />
+                  <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                </form>
+              </#if>
+            </@td>
+          </@tr>
+        </#list>
+      </@table>
+  <#else>
+    <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoPaymentMethodInformation}</@commonMsg>
+  </#if>
+</@section>
 
 <#-- ============================================================= -->
-<div class="screenlet">
-  <h3>${uiLabelMap.PartyTaxIdentification}</h3>
-  <div class="screenlet-body">
+<@section title=uiLabelMap.PartyTaxIdentification>
     <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
       <div>
       <input type="hidden" name="partyId" value="${party.partyId}"/>
@@ -335,37 +320,36 @@ under the License.
       <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </div>
     </form>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
-<div class="screenlet">
-  <div class="boxlink">
-    <a href="<@ofbizUrl>changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
-  </div>
-  <h3>${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1">
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
+    </@menu>
+</#macro>
+<@section title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" menuContent=menuContent>
+    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.CommonUsername}</@td>
         <@td>&nbsp;</@td>
         <@td valign="top">${userLogin.userLoginId}</@td>
       </@tr>
     </@table>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
-<form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
-<div>
-  <input type="hidden" name="productStoreId" value="${productStoreId}" />
-  <div class="screenlet">
-    <div class="boxlink">
-      <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content><a href="javascript:document.setdefaultshipmeth.submit();" class="submenutextright">${uiLabelMap.EcommerceSetDefault}</a></#if>
-    </div>
-    <h3>${uiLabelMap.EcommerceDefaultShipmentMethod}</h3>
-    <div class="screenlet-body">
-      <@table width="100%" border="0" cellpadding="1">
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+      <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
+        <@menuitem type="link" href="javascript:document.setdefaultshipmeth.submit();" text=uiLabelMap.EcommerceSetDefault />
+      </#if>
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.EcommerceDefaultShipmentMethod menuContent=menuContent>
+  <form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
+    <input type="hidden" name="productStoreId" value="${productStoreId}" />
+      <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
         <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
           <#list carrierShipMethods as shipMeth>
             <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId />
@@ -380,16 +364,12 @@ under the License.
         <@tr><@td>${uiLabelMap.EcommerceDefaultShipmentMethodMsg}</@td></@tr>
         </#if>
       </@table>
-    </div>
-  </div>
-</div>
-</form>
+  </form>
+</@section>
 
 <#-- ============================================================= -->
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceFileManager}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1">
+<@section title=uiLabelMap.EcommerceFileManager>
+    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
       <#if partyContent?has_content>
         <#list partyContent as contentRole>
         <#assign content = contentRole.getRelatedOne("Content", false) />
@@ -419,7 +399,7 @@ under the License.
       </#if>
     </@table>
     <div>&nbsp;</div>
-    <label>${uiLabelMap.EcommerceUploadNewFile}</label>
+    <@heading>${uiLabelMap.EcommerceUploadNewFile}</@heading>
     <div>
       <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
       <div>
@@ -445,14 +425,11 @@ under the License.
         </div>
       </form>
     </div>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
-<div class="screenlet">
-  <h3>${uiLabelMap.PartyContactLists}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1" cellspacing="0">
+<@section title=uiLabelMap.PartyContactLists>
+    <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
       <@tr>
         <@th>${uiLabelMap.EcommerceListName}</@th>
         <#-- <@th>${uiLabelMap.OrderListType}</@th> -->
@@ -543,15 +520,12 @@ under the License.
       </form>
     </div>
     <label>${uiLabelMap.EcommerceListNote}</label>
-  </div>
-</div>
+</@section>
 
 <#-- ============================================================= -->
 <#if surveys?has_content>
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceSurveys}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1">
+  <@section title=uiLabelMap.EcommerceSurveys>
+    <@table type="data-complex" width="100%" border="0" cellpadding="1">
       <#list surveys as surveyAppl>
         <#assign survey = surveyAppl.getRelatedOne("Survey", false) />
         <@tr>
@@ -562,7 +536,7 @@ under the License.
             <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
             <#if (responses < 1)>${uiLabelMap.EcommerceNotCompleted}<#else>${uiLabelMap.EcommerceCompleted}</#if>
           </@td>
-          <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
+          <#if (responses == 0 || (survey.allowMultiple!"N") == "Y")>
             <#assign surveyLabel = uiLabelMap.EcommerceTakeSurvey />
             <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
               <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey />
@@ -574,8 +548,7 @@ under the License.
         </@tr>
       </#list>
     </@table>
-  </div>
-</div>
+  </@section>
 </#if>
 
 <#-- ============================================================= -->
@@ -594,5 +567,5 @@ ${screens.render('component://shop/widget/CustomerScreens.xml#SubscriptionSummar
 ${screens.render('component://shop/widget/CustomerScreens.xml#showProductReviews')}
 
 <#else>
-    <h3>${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</h3>
+    <@commonMsg type="error">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</@commonMsg>
 </#if>

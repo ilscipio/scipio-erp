@@ -19,10 +19,7 @@ under the License.
 
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 <#if shipment?has_content>
-  <div class="screenlet">
-    <div class="screenlet-title-bar">
-      <div class="h3">${title!}<br /><br /></div>
-    </div>
+  <@section title=(title!)>
     <@table border="0" cellpadding="0" cellspacing="0">
       <@tbody>
         <@tr>
@@ -31,33 +28,31 @@ under the License.
         <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
           <@tr>
             <@td>
-              Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+              Code: ${orderShipmentInfoSummary.trackingCode!"[Not Yet Known]"}
               <#if orderShipmentInfoSummary.carrierPartyId?has_content>(${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})</#if>
             </@td>
           </@tr>
         </#list>
       </@tbody>
     </@table>
-    <br />
-    <div class="screenlet-title-bar">
-      <div class="h3"><b>${uiLabelMap.EcommerceShipmentItems}</b></div>
-    </div>
-    <div class="screenlet-body">
+
+    <@section title="<b>${uiLabelMap.EcommerceShipmentItems}</b>">
       <@table width="100%" border="0" cellpadding="0">
         <@tr valign="bottom">
           <@td width="35%"><span class="tableheadtext"><b>${uiLabelMap.OrderProduct}</b></span></@td>
           <@td width="10%" align="right"><span class="tableheadtext"><b>${uiLabelMap.OrderQuantity}</b></span></@td>
         </@tr>
-      <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
-      <#list shipmentItems as shipmentItem>
-        <#assign productId = shipmentItem.productId>
-        <#assign product = shipmentItem.getRelatedOne("Product", false)>
-        <@tr>
-          <@td colspan="1" valign="top"> ${productId!} - ${product.internalName!}</@td>
-          <@td align="right" valign="top"> ${shipmentItem.quantity!}</@td>
-        </@tr>
-      </#list>
-      <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
-    </@table>
-  </div>
+        <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
+        <#list shipmentItems as shipmentItem>
+          <#assign productId = shipmentItem.productId>
+          <#assign product = shipmentItem.getRelatedOne("Product", false)>
+          <@tr>
+            <@td colspan="1" valign="top">${productId!} - ${product.internalName!}</@td>
+            <@td align="right" valign="top">${shipmentItem.quantity!}</@td>
+          </@tr>
+        </#list>
+        <@tr type="util"><@td colspan="10"><hr /></@td></@tr>
+      </@table>
+    </@section>
+  </@section>
 </#if>

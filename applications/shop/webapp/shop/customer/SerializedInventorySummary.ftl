@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title=uiLabelMap.ProductSerializedInventorySummary id="serialized-inventory-summary" class="+screenlet">
+<@section title=uiLabelMap.ProductSerializedInventorySummary id="serialized-inventory-summary">
         <@table width="100%" cellspacing="0" cellpadding="2">
             <@thead>
                 <@tr class="header-row">

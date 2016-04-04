@@ -34,7 +34,7 @@ function shipBillAddr() {
 }
 </@script>
 
-<@section title=uiLabelMap.AccountingPaymentInformation class="+screenlet">
+<@section title=uiLabelMap.AccountingPaymentInformation>
           <#-- after initial screen; show detailed screens for selected type -->
           <#if (paymentMethodTypeId!) == "CREDIT_CARD">
             <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>

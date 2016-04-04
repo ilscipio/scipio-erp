@@ -16,12 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <@heading>${uiLabelMap.PartyChangePassword}</@heading>  
-  &nbsp;<a id="CommonGoBack1" href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
-  <p/>   
-  <div class="screenlet-body">
+
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" id="CommonGoBack1" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonGoBack />
+        <@menuitem type="link" id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.PartyChangePassword menuContent=menuContent>
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
       <fieldset>
         <div>
@@ -43,7 +45,4 @@ under the License.
         <label>${uiLabelMap.CommonFieldsMarkedAreRequired}</label>
       </fieldset>
     </form>
-    <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">[${uiLabelMap.CommonGoBack}]</a>
-    <a href="javascript:document.getElementById('changepasswordform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.CommonSave}]</a>
-  </div>
-</div>
+</@section>

@@ -17,10 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <h3>${uiLabelMap.EcommerceQuoteHistory}</h3>
-    <div class="screenlet-body">
-        <@table>
+<@section title=uiLabelMap.EcommerceQuoteHistory>
+    <#if quoteList?has_content>
+        <@table type="data-list">
             <@tr>
                 <@td width="10%"><span style="white-space: nowrap;">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</span>
                 </@td>
@@ -70,9 +69,8 @@ under the License.
                     <@td width="10">&nbsp;</@td>
                 </@tr>
             </#list>
-            <#if !quoteList?has_content>
-                <@tr><@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoQuoteFound}</@commonMsg></@td></@tr>
-            </#if>
         </@table>
-    </div>
-</div>
+    <#else>
+        <@commonMsg type="result-norecord">${uiLabelMap.OrderNoQuoteFound}</@commonMsg>
+    </#if>
+</@section>

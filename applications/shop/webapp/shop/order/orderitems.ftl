@@ -20,15 +20,22 @@ under the License.
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
-<div class="screenlet">
-  <h3>
-      <#assign numColumns = 8>
+
+<#assign numColumns = 8>
+<#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
+  <#assign numColumns = 11>
+</#if>
+
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
       <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
-          <#assign numColumns = 11>
-          <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.OrderAddAllToCart}</a><a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="submenutext">${uiLabelMap.OrderAddCheckedToCart}</a><a href="<@ofbizUrl fullPath="true">createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
+          <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
+          <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
+          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />
       </#if>
-      ${uiLabelMap.OrderOrderItems}
-  </h3>
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
   <@table>
     <@thead>
     <@tr>
@@ -298,4 +305,4 @@ under the License.
     <@tr><@td colspan="${numColumns}"></@td></@tr>
     </@tbody>
   </@table>
-</div>
+</@section>

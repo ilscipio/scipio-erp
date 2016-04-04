@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section title=uiLabelMap.PageTitleDigitalProductList class="+screenlet">
+<@section title=uiLabelMap.PageTitleDigitalProductList>
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <@table width="100%" cellpadding="1" cellspacing="0" border="0">
           <@tr>
@@ -46,6 +46,6 @@ under the License.
         </@table>
 </@section>
 
-<@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission class="+screenlet">
+<@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission>
        <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
 </@section>

@@ -42,7 +42,7 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
     </@menu>
 </#macro>
-<@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayout="inline-title" class="+screenlet">
+<@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayout="inline-title">
         <@table width="100%" border="0" cellpadding="1">
           <@tr><@td>&nbsp;</@td></@tr>
           <@tr>

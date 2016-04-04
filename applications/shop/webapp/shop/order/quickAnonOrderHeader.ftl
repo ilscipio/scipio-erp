@@ -21,82 +21,78 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
-<@table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <@tr>
-    <#-- left side -->
-    <@td width="50%" valign="top">
-
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <div class="boxlink">
-                <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED">
-                    <a href="<@ofbizUrl>makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
-                </#if>
-            </div>
-            <div class="h3">${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
-        </div>
-        <div class="screenlet-body">
-            <@table width="100%" border="0" cellpadding="1">
-                <#-- placing customer information -->
-                <#if localOrderReadHelper?? && orderHeader?has_content>
-                  <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
-                  <#if displayParty?has_content>
-                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                  </#if>
-                  <@tr>
-                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.PartyName}</b>
-                    </@td>
-                    <@td valign="top" width="80%">
-                        ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
-                    </@td>
-                  </@tr>
-                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
-                </#if>
-                <#-- order status information -->
-                <@tr>
-                  <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonStatus}</b>
-                  </@td>
-                  <@td valign="top" width="80%">
-                    <#if orderHeader?has_content>
-                      <div>${localOrderReadHelper.getStatusString(locale)}</div>
-                    <#else>
-                      <div><b>${uiLabelMap.OrderNotYetOrdered}</b></div>
-                    </#if>
-                  </@td>
-                </@tr>
-                <#-- ordered date -->
+<@row>
+  <@cell columns=6>
+    <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>
+        <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED">
+          <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") class="+${styles.action_nav!}" text=uiLabelMap.OrderRequestReturn />
+        </#if>
+      </@menu>
+    </#macro>
+    <#assign sectionTitle>${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</#assign>
+    <@section title=sectionTitle menuContent=menuContent>
+        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+            <#-- placing customer information -->
+            <#if localOrderReadHelper?? && orderHeader?has_content>
+              <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
+              <#if displayParty?has_content>
+                  <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+              </#if>
+              <@tr>
+                <@td align="right" valign="top" width="15%"><b>${uiLabelMap.PartyName}</b>
+                </@td>
+                <@td valign="top" width="80%">
+                    ${(displayPartyNameResult.fullName)!"[Name Not Found]"}
+                </@td>
+              </@tr>
+              <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
+            </#if>
+            <#-- order status information -->
+            <@tr>
+              <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonStatus}</b>
+              </@td>
+              <@td valign="top" width="80%">
                 <#if orderHeader?has_content>
-                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
-                  <@tr>
-                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonDate}</b>
-                    </@td>
-                    <@td valign="top" width="80%">${orderHeader.orderDate.toString()}
-                    </@td>
-                  </@tr>
+                  <div>${localOrderReadHelper.getStatusString(locale)}</div>
+                <#else>
+                  <div><b>${uiLabelMap.OrderNotYetOrdered}</b></div>
                 </#if>
-                <#if distributorId??>
-                  <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
-                  <@tr>
-                    <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDistributor}</b>
-                    </@td>
-                    <@td valign="top" width="80%">${distributorId}
-                    </@td>
-                  </@tr>
-                </#if>
-            </@table>
-        </div>
-    </div>
-        ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonPaymentInformation")}
-    </@td>
+              </@td>
+            </@tr>
+            <#-- ordered date -->
+            <#if orderHeader?has_content>
+              <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
+              <@tr>
+                <@td align="right" valign="top" width="15%"><b>${uiLabelMap.CommonDate}</b>
+                </@td>
+                <@td valign="top" width="80%">${orderHeader.orderDate.toString()}
+                </@td>
+              </@tr>
+            </#if>
+            <#if distributorId??>
+              <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
+              <@tr>
+                <@td align="right" valign="top" width="15%"><b>${uiLabelMap.OrderDistributor}</b>
+                </@td>
+                <@td valign="top" width="80%">${distributorId}
+                </@td>
+              </@tr>
+            </#if>
+        </@table>
+    </@section>
 
-    <@td width="1">&nbsp;&nbsp;</@td>
-    <#-- right side -->
+    ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonPaymentInformation")}
 
-    <@td width="50%" valign="top">
+  </@cell>
+
+    
+  <@cell columns=6>
+    
       <#if orderItemShipGroups?has_content>
+        <@section title=uiLabelMap.OrderShippingInformation>
 
-    <@section title=uiLabelMap.OrderShippingInformation class="+screenlet">
-        <#-- shipping address -->
+            <#-- shipping address -->
             <#assign groupIdx = 0>
             <#list orderItemShipGroups as shipGroup>
                 <#if orderHeader?has_content>
@@ -107,7 +103,7 @@ under the License.
                   <#assign groupNumber = groupIdx + 1>
                 </#if>
 
-              <@table width="100%" border="0" cellpadding="1">
+              <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
                 <#if shippingAddress?has_content>
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]
@@ -131,9 +127,9 @@ under the License.
 
                 <#assign groupIdx = groupIdx + 1>
             </#list><#-- end list of orderItemShipGroups -->
-    </@section>
 
+        </@section>
       </#if>
-    </@td>
-  </@tr>
-</@table>
+
+  </@cell>
+</@row>

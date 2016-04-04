@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if reorderProducts?has_content>
-<@section title="${uiLabelMap.ProductQuickReorder}..." id="minireorderprods" class="+screenlet">
+<@section title="${uiLabelMap.ProductQuickReorder}..." id="minireorderprods">
         <#list reorderProducts as miniProduct>
           <div>
               ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}

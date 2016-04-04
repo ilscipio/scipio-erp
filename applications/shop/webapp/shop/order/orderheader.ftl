@@ -27,11 +27,15 @@ under the License.
 <div id="orderHeader">
 <#-- left side -->
 <div class="columnLeft">
-<div class="screenlet">
-  <h3>
-    <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
-      <a href="<@ofbizUrl fullPath="true">makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
-    </#if>
+
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+      <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
+        <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
+      </#if>
+    </@menu>
+</#macro>
+<#assign sectionTitle>
     ${uiLabelMap.OrderOrder}
     <#if orderHeader?has_content>
       ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>
@@ -40,7 +44,8 @@ under the License.
     <#if (orderHeader.orderId)??>
       ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.link_run_sys!} ${styles.action_export!}">PDF</a> ]
     </#if>
-  </h3>
+</#assign>
+<@section title=sectionTitle menuContent=menuContent>
   <#-- placing customer information -->
   <ul>
     <#if localOrderReadHelper?? && orderHeader?has_content>
@@ -76,12 +81,14 @@ under the License.
       </li>
     </#if>
   </ul>
-</div>
+</@section>
 
-<div class="screenlet">
-  <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-    <#-- order payment info -->
-    <h3>${uiLabelMap.AccountingPaymentInformation}</h3>
+
+<@row>
+  <@cell columns=6>
+
+<#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
+  <@section title=uiLabelMap.AccountingPaymentInformation>
     <#-- offline payment address infomation :: change this to use Company's address -->
     <ul>
       <#if !paymentMethod?has_content && paymentMethodType?has_content>
@@ -227,13 +234,14 @@ under the License.
         </li>
       </#if>
     </ul>
-  </#if>
-</div>
-</div>
-<#-- right side -->
-<div class="screenlet columnRight">
+  </@section>
+</#if>
+  </@cell>
+  
+  <@cell columns=6>
+
+<@section title=uiLabelMap.OrderShippingInformation>
   <#if orderItemShipGroups?has_content>
-    <h3>${uiLabelMap.OrderShippingInformation}</h3>
     <#-- shipping address -->
     <#assign groupIdx = 0>
     <#list orderItemShipGroups as shipGroup>
@@ -359,7 +367,7 @@ under the License.
       <#assign groupIdx = groupIdx + 1>
     </#list><#-- end list of orderItemShipGroups -->
   </#if>
-</div>
+</@section>
 
-<div class="clearBoth"></div>
-</div>
+  </@cell>
+</@row>

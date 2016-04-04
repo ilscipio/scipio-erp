@@ -68,7 +68,7 @@ under the License.
         </#if>
     </@menu>
 </#macro>
-<@section title=uiLabelMap.CommonMessages menuContent=menuContent menuLayout="inline-title" class="+screenlet">
+<@section title=uiLabelMap.CommonMessages menuContent=menuContent menuLayout="inline-title">
         <@table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
             <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>

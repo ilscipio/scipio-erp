@@ -20,15 +20,20 @@ under the License.
 <#assign maxToShow = 4/>
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)!/>
 <#if searchOptionsHistoryList?has_content>
-    <#if (searchOptionsHistoryList?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(searchOptionsHistoryList?size-1)/></#if>
-    <div id="minilastproductsearches" class="screenlet">
-      <div class="boxlink">
-        <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!} small">[${uiLabelMap.CommonClear}]</a>
-        <#if (searchOptionsHistoryList?size > maxToShow)>
-          <a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!} small">[${uiLabelMap.CommonMore}]</a>
-        </#if>
-      </div>
-      <h3>${uiLabelMap.OrderLastSearches}...</h3>
+    <#if (searchOptionsHistoryList?size > maxToShow)>
+      <#assign limit = maxToShow/>
+    <#else>
+      <#assign limit = (searchOptionsHistoryList?size-1)/>
+    </#if>
+    <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>
+          <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") class="+${styles.action_run_session!} ${styles.action_clear!}" text="${uiLabelMap.CommonClear}" />
+          <#if (searchOptionsHistoryList?size > maxToShow)>
+            <@menuitem type="link" href=makeOfbizUrl("advancedsearch") class="+${styles.action_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonMore}" />
+          </#if>
+        </@menu>
+    </#macro>
+    <@section id="minilastproductsearches" title="${uiLabelMap.OrderLastSearches}..." menuContent=menuContent>
       <ul>
         <#list searchOptionsHistoryList[0..limit] as searchOptions>
           <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
@@ -47,5 +52,5 @@ under the License.
           </li>
         </#list>
       </ul>
-    </div>
+    </@section>
 </#if>

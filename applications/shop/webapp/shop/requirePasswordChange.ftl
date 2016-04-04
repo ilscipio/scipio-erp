@@ -27,11 +27,7 @@ under the License.
 <@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 <br />
 
-<div style="float: center; width: 49%; margin-right: 5px; text-align: center;" class="screenlet">
-    <div class="screenlet-title-bar">
-        <div class="h3">${uiLabelMap.CommonPasswordChange}</div>
-    </div>
-    <div class="screenlet-body" style="text-align: center;">
+<@section title=uiLabelMap.CommonPasswordChange style="float: center; width: 49%; margin-right: 5px; text-align: center;">
       <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">
           <input type="hidden" name="requirePasswordChange" value="Y"/>
           <input type="hidden" name="USERNAME" value="${username}"/>
@@ -59,8 +55,7 @@ under the License.
               <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
           </div>
       </form>
-    </div>
-</div>
+</@section>
 
 <@script>
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>

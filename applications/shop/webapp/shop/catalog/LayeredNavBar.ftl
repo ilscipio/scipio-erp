@@ -18,12 +18,7 @@ under the License.
 -->
 
 <#if currentSearchCategory??>
-  <div id="layeredNav" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.EcommerceLayeredNavigation}</li>
-      </ul>
-    </div>
+  <@section id="layeredNav" title=uiLabelMap.EcommerceLayeredNavigation>
     <#escape x as x?xml>
       <#if productCategory.productCategoryId != currentSearchCategory.productCategoryId>
         <#assign currentSearchCategoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")?string />
@@ -71,5 +66,5 @@ under the License.
         </ul>
       </div>
     </#if>
-  </div>
+  </@section>
 </#if>

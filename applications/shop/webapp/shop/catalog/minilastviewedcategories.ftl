@@ -26,7 +26,7 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
     </@menu>      
   </#macro>
-  <@section title=uiLabelMap.EcommerceLastCategories menuContent=menuContent id="minilastviewedcategories" class="+screenlet">
+  <@section title=uiLabelMap.EcommerceLastCategories menuContent=menuContent id="minilastviewedcategories">
       <ul class="browsecategorylist">
         <#list lastViewedCategories[0..limit] as categoryId>
           <#assign category = delegator.findOne("ProductCategory", {"productCategoryId":categoryId}, true)!>

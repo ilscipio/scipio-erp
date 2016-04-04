@@ -25,15 +25,14 @@ under the License.
 </#if>
 
 <#if (shoppingCartSize > 0)>
-<div class="screenlet">
-  <h3>${uiLabelMap.CommonCheckoutAnonymous}</h3>
-  <p>${uiLabelMap.CommonCheckoutAnonymousMsg}:</p>
-  <ul>
-    <li><a href="<@ofbizUrl>setCustomer</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
-    <li><a href="<@ofbizUrl>quickAnonCheckout</@ofbizUrl>">${uiLabelMap.OrderCheckoutQuick}</a></li>
-    <li><a href="<@ofbizUrl>anonOnePageCheckout</@ofbizUrl>">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
-    <li><a href="<@ofbizUrl>googleCheckout</@ofbizUrl>">${uiLabelMap.EcommerceCartToGoogleCheckout}</a></li>
-  </ul>
-</div>
+  <@section title=uiLabelMap.CommonCheckoutAnonymous>
+      <p>${uiLabelMap.CommonCheckoutAnonymousMsg}:</p>
+      <@menu type="button">
+        <@menuitem type="link" href=makeOfbizUrl("setCustomer") text=uiLabelMap.OrderCheckout />
+        <@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") text=uiLabelMap.OrderCheckoutQuick />
+        <@menuitem type="link" href=makeOfbizUrl("anonOnePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout />
+        <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout />
+      </@menu>
+  </@section>
 </#if>
 

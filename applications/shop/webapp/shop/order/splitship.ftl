@@ -43,7 +43,7 @@ function submitForm(form, mode, value) {
 }
 </@script>
 
-<@section title=uiLabelMap.OrderItemGroups class="+screenlet">
+<@section title=uiLabelMap.OrderItemGroups>
         <@table width="100%" cellspacing="0" cellpadding="1" border="0">
           <#assign shipGroups = cart.getShipGroups()>
           <#if (shipGroups.size() > 0)>
@@ -144,7 +144,7 @@ function submitForm(form, mode, value) {
         </@table>
 </@section>
 
-<@section title=uiLabelMap.EcommerceAssignItems class="+screenlet">
+<@section title=uiLabelMap.EcommerceAssignItems>
         <@table width="100%" cellspacing="0" cellpadding="1" border="0">
           <@tr>
             <@td><b>${uiLabelMap.OrderProduct}</b></@td>

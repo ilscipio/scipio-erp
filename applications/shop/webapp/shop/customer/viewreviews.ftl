@@ -18,10 +18,8 @@ under the License.
 -->
 
 <#if reviews?has_content>
-<div class="screenlet">
-  <h3>${uiLabelMap.ProductReviews}</h3>
-  <div class="screenlet-body">
-    <@table width="100%" border="0" cellpadding="1">
+  <@section title=uiLabelMap.ProductReviews>
+    <@table type="data-list"> <#-- orig: width="100%" border="0" cellpadding="1" -->
       <@tr>
         <@th>${uiLabelMap.EcommerceSentDate}</@th>
         <@th>${uiLabelMap.ProductProductId}</@th>
@@ -33,7 +31,7 @@ under the License.
       <#list reviews as review>
         <@tr>
           <@td>${review.postedDateTime!}</@td>
-          <@td><a href="<@ofbizCatalogAltUrl productId=review.productId/>">${review.productId}</a></@td>
+          <@td><a href="<@ofbizCatalogAltUrl productId=review.productId/>" style="${styles.link_nav_info_id!}>${review.productId}</a></@td>
           <@td>${review.productReview!}</@td>
           <@td>${review.productRating}</@td>
           <@td>${review.postedAnonymous!}</@td>
@@ -41,6 +39,5 @@ under the License.
         </@tr>
       </#list>
     </@table>
-  </div>
-</div>
+  </@section>
 </#if>

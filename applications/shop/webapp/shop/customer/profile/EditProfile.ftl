@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <h3>${uiLabelMap.EcommerceMyAccount}</h3>
+<@section title=uiLabelMap.EcommerceMyAccount>
   <form id="editUserForm" method="post" action="<@ofbizUrl>updateCustomerProfile</@ofbizUrl>">
     <fieldset class="left center">
       <input type="hidden" name="emailContactMechPurposeTypeId" value="PRIMARY_EMAIL" />
       <input type="hidden" name="emailContactMechId" value="${emailContactMechId!}" />
-        <h3>${uiLabelMap.PartyContactInformation}</h3>
+        <@heading>${uiLabelMap.PartyContactInformation}</@heading>
         <div>
           <label for="firstName">${uiLabelMap.PartyFirstName}*<span id="advice-required-firstName" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
           <input type="text" name="firstName" id="firstName" class="required" value="${firstName!}" maxlength="30" />
@@ -42,7 +41,7 @@ under the License.
     </fieldset>
 
     <fieldset class="center right">
-        <h3>${uiLabelMap.EcommerceAccountInformation}</h3>
+        <@heading>${uiLabelMap.EcommerceAccountInformation}</@heading>
         <div>
           <label for="userLoginId">${uiLabelMap.CommonUsername}*</label>
           <input type="text" name="userLoginId" id="userLoginId" value="${userLogin.userLoginId!}" maxlength="255" <#if userLogin.userLoginId??>disabled="disabled"</#if> />
@@ -65,4 +64,4 @@ under the License.
       <a id="cancelEditUserForm" href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
     </div>
   </form>
-</div>
+</@section>

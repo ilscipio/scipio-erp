@@ -61,13 +61,14 @@ function onClickShippingMethod(e) {
 
 </@script>
 
-<form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
-<div id="optInfoSection">
-<@table  width="100%">
-    <@tr>
-    <@td><div class="screenlet">
-        <@table hight="100%">
-              <@tr><@td><div class="errorMessage" id="noShippingMethodSelectedError"></div></@td></@tr>
+<@section id="optInfoSection">
+  <form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
+
+  <@row>
+    <@cell columns=6>
+      <@section>
+        <@table type="fields">
+            <@tr><@td><div class="errorMessage" id="noShippingMethodSelectedError"></div></@td></@tr>
             <@tr>
                 <@td>
                     <@heading>${uiLabelMap.OrderMethod}</@heading>
@@ -76,13 +77,13 @@ function onClickShippingMethod(e) {
             <#list carrierShipmentMethodList as carrierShipmentMethod>
             <@tr>
                 <@td>
-                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-                         <input type="radio" onclick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == chosenShippingMethod?default("N@A")>checked="checked"</#if>/>
-                         <#if shoppingCart.getShippingContactMechId()??>
-                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                         </#if>
-                         <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                         <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
+                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+                     <input type="radio" onclick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == chosenShippingMethod?default("N@A")>checked="checked"</#if>/>
+                     <#if shoppingCart.getShippingContactMechId()??>
+                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+                     </#if>
+                     <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
+                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                 </@td>
             </@tr>
             </#list>
@@ -93,10 +94,10 @@ function onClickShippingMethod(e) {
             </@tr>
             </#if>
         </@table>
-        </div>
-    </@td>
-    <@td><div>
-        <@table hight="100%">
+        </@section>
+    </@cell>
+    <@cell columns=6>
+        <@table type="fields">
             <@tr>
               <@td colspan="2">
                 <@heading>${uiLabelMap.OrderSpecialInstructions}</@heading>
@@ -135,25 +136,21 @@ function onClickShippingMethod(e) {
               </@td>
             </@tr>
             </#if>
-        </@table></div>
-    </@td>
-    </@tr>
-    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-    <@tr><@td colspan="2"><@heading>${uiLabelMap.OrderShipAllAtOnce}?</@heading></@td></@tr>
-    <@tr>
-        <@td valign="top" colspan="2">
-                <input type="radio" <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name="may_split" value="false"/>
-                <span>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</span>
-        </@td>
-    </@tr>
-    <@tr>
-        <@td valign="top"  colspan="2">
-                <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type="radio" name="may_split" value="true"/>
-                <span>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</span>
-        </@td>
-    </@tr>
-    <@tr>
-    </@tr>
-</@table>
-</div>
-</form>
+        </@table>
+    </@cell>
+  </@row>
+
+  <hr />
+
+    <@section title="${uiLabelMap.OrderShipAllAtOnce}?">
+      <div>
+        <input type="radio"<#if (shoppingCart.getMaySplit()!"N") == "N"> checked="checked"</#if> name="may_split" value="false"/>
+        <span>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</span>
+      </div>
+      <div>
+        <input<#if (shoppingCart.getMaySplit()!"N") == "Y"> checked="checked"</#if> type="radio" name="may_split" value="true"/>
+        <span>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</span>
+      </div>
+    </@section>
+  </form>
+</@section> 

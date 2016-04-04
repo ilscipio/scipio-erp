@@ -137,8 +137,9 @@ under the License.
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute name="results" type="List" mode="OUT" optional="true"/>
+        <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="viewIndex" type="Long" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
         <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
     </service>
     
@@ -159,8 +160,9 @@ under the License.
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
         <attribute name="facetFields" type="Map" mode="OUT" optional="true"/>
+        <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="viewIndex" type="Long" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
         <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
         <attribute name="queryTime" type="Long" mode="OUT" optional="true"/>
         <attribute name="suggestions" type="List" mode="OUT" optional="true"/>
@@ -172,6 +174,7 @@ under the License.
         invoke="runSolrQuery" debug="true" validate="true">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="query" type="String"/>
+        <attribute mode="IN" optional="true" name="start" type="Integer"/><!-- 2016-04-01: may specify either an absolute "start" value or a zero-based viewIndex -->
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
         <attribute mode="IN" optional="true" name="queryFilter" type="String"/>
@@ -197,7 +200,7 @@ under the License.
         <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
         <attribute mode="IN" optional="true" name="displayProducts" type="Boolean"/>
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
-        <attribute mode="IN" optional="true" name="viewIndex" type="Long"/>
+        <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>

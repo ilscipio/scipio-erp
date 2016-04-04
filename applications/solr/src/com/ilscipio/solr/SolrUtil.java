@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
@@ -229,7 +230,11 @@ public abstract class SolrUtil {
                 } else
                     solrQuery.setRows(50000);
                 if (viewIndex > -1) {
-                    solrQuery.setStart(viewIndex);
+                    // 2016-04-01: This must be calculated
+                    //solrQuery.setStart(viewIndex);
+                    if (viewSize > 0) {
+                        solrQuery.setStart(viewSize * viewIndex);
+                    }
                 }
             } else {
                 solrQuery.setFields("cat");
@@ -291,6 +296,18 @@ public abstract class SolrUtil {
             Debug.logError(e, module);
             return false;
         }
+    }
+    
+    /**
+     * Returns the closest whole viewIndex.
+     */
+    public static Integer calcResultViewIndex(SolrDocumentList results, Integer viewSize) {
+        Integer viewIndex = null;
+        if (results != null && viewSize != null && viewSize > 0) {
+            long start = results.getStart();
+            viewIndex = (int) (start / (long) viewSize); 
+        }
+        return viewIndex;
     }
     
 }

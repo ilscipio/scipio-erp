@@ -321,12 +321,30 @@ public abstract class SolrProductSearch {
             // Set additional Parameter
             // SolrQuery.ORDER order = SolrQuery.ORDER.desc;
 
-            if (context.get("viewIndex") != null && (Integer) context.get("viewIndex") > 0) {
-                solrQuery.setStart((Integer) context.get("viewIndex"));
+            // 2016-04-01: start must be calculated
+            //if (context.get("viewIndex") != null && (Integer) context.get("viewIndex") > 0) {
+            //    solrQuery.setStart((Integer) context.get("viewIndex"));
+            //}
+            //if (context.get("viewSize") != null && (Integer) context.get("viewSize") > 0) {
+            //    solrQuery.setRows((Integer) context.get("viewSize"));
+            //}
+            Integer start = (Integer) context.get("start");
+            Integer viewIndex = (Integer) context.get("viewIndex");
+            Integer viewSize = (Integer) context.get("viewSize");
+            if (viewSize != null && viewSize > 0) {
+                solrQuery.setRows(viewSize);
             }
-            if (context.get("viewSize") != null && (Integer) context.get("viewSize") > 0) {
-                solrQuery.setRows((Integer) context.get("viewSize"));
+            if (start != null) {
+                if (start > 0) {
+                    solrQuery.setStart(start);
+                }
             }
+            else if (viewIndex != null) {
+                if (viewIndex > 0 && viewSize != null && viewSize > 0) {
+                    solrQuery.setStart(viewIndex * viewSize);
+                }
+            }
+            
 
             // if ((List) context.get("queryFilter") != null &&
             // ((ArrayList<SolrDocument>) context.get("queryFilter")).size() >
@@ -384,12 +402,19 @@ public abstract class SolrProductSearch {
                 dispatchMap.put("query", "cat:*" + productCategoryId + "*");
             } else
                 return ServiceUtil.returnError("Missing product category id");
-            if (context.get("viewSize") != null)
-                dispatchMap.put("viewSize", Integer.parseInt(((String) context.get("viewSize"))));
-            if (context.get("viewIndex") != null)
-                dispatchMap.put("viewIndex", Integer.parseInt((String) context.get("viewIndex")));
-            if (context.get("queryFilter") != null)
+            Integer viewSize = null;
+            if (context.get("viewSize") != null) {
+                viewSize = Integer.parseInt((String) context.get("viewSize"));
+                dispatchMap.put("viewSize", viewSize);
+            }
+            Integer viewIndex = null;
+            if (context.get("viewIndex") != null) {
+                viewIndex = Integer.parseInt((String) context.get("viewIndex"));
+                dispatchMap.put("viewIndex", viewIndex);
+            }
+            if (context.get("queryFilter") != null) {
                 dispatchMap.put("queryFilter", context.get("queryFilter"));
+            }
             dispatchMap.put("facet", false);
             dispatchMap.put("spellcheck", true);
             dispatchMap.put("highlight", true);
@@ -398,8 +423,11 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnSuccess();
             result.put("results", queryResult.getResults());
             result.put("listSize", queryResult.getResults().getNumFound());
-            result.put("viewIndex", queryResult.getResults().getStart());
-            result.put("viewSize", queryResult.getResults().size());
+            // 2016-04-01: Need to translate this
+            //result.put("viewIndex", queryResult.getResults().getStart());
+            result.put("start", queryResult.getResults().getStart());
+            result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
+            result.put("viewSize", viewSize);
         } catch (Exception e) {
             Debug.logError(e, e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
@@ -422,10 +450,16 @@ public abstract class SolrProductSearch {
                 context.put("query", "*:*");
 
             Map<String, Object> dispatchMap = FastMap.newInstance();
-            if (context.get("viewSize") != null)
-                dispatchMap.put("viewSize", Integer.parseInt(((String) context.get("viewSize"))));
-            if (context.get("viewIndex") != null)
-                dispatchMap.put("viewIndex", Integer.parseInt((String) context.get("viewIndex")));
+            Integer viewSize = null;
+            if (context.get("viewSize") != null) {
+                viewSize = Integer.parseInt((String) context.get("viewSize"));
+                dispatchMap.put("viewSize", viewSize);
+            }
+            Integer viewIndex = null;
+            if (context.get("viewIndex") != null) {
+                viewIndex = Integer.parseInt((String) context.get("viewIndex"));
+                dispatchMap.put("viewIndex", viewIndex);
+            }
             if (context.get("query") != null)
                 dispatchMap.put("query", context.get("query"));
             if (context.get("queryFilter") != null)
@@ -476,8 +510,11 @@ public abstract class SolrProductSearch {
             result.put("facetQueries", facetQueries);
             result.put("queryTime", queryResult.getElapsedTime());
             result.put("listSize", queryResult.getResults().getNumFound());
-            result.put("viewIndex", queryResult.getResults().getStart());
-            result.put("viewSize", queryResult.getResults().size());
+            // 2016-04-01: Need to translate this
+            //result.put("viewIndex", queryResult.getResults().getStart());
+            result.put("start", queryResult.getResults().getStart());
+            result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
+            result.put("viewSize", viewSize);
             result.put("suggestions", suggestions);
 
         } catch (Exception e) {

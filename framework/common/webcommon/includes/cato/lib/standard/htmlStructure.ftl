@@ -721,6 +721,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               This is a low-level control; avoid where possible.
     requireMenu             = ((boolean), default: false) If true, add menu elem even if empty
     forceEmptyMenu          = ((boolean), default: false) If true, always add menu and must be empty
+    menuItemsInlined        = ((boolean), default: -auto-) Override flag to say if menuContent string contains menu items only or also the menu wrapper
+                              If this is omitted (or empty string), it tries to determine automatically from the string.
+                              NOTE: This only applies if menuContent is a string.
     hasContent              = ((boolean), default: true) Optional content hint
                               When false, will add classes to indicate content is empty or treat as logically empty 
                               (workaround for lack of CSS :blank and possibly other browser limitations)
@@ -728,7 +731,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "style":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
   "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayout":"", "menuRole":"", 
-  "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleClass":"", 
+  "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleClass":"", 
   "open":true, "close":true, "passArgs":{}
 }>
 <#macro section args={} inlineArgs...>
@@ -754,7 +757,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   </#if>
   <@section_core id=id collapsibleAreaId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-    forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
+    forceEmptyMenu=forceEmptyMenu menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
     open=open close=close passArgs=passArgs><#nested /></@section_core>
 </#macro>
@@ -771,7 +774,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
-  "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleStyle":"", 
+  "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
   "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
   "defaultHeadingLevel":"", "open":true, "close":true, "passArgs":{}
 }>
@@ -952,8 +955,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
           <#elseif isObjectType("string", menuContent)>
             <#-- legacy menuString; these have limitations but must support because used by screen widgets (e.g. renderScreenletPaginateMenu) 
                  and our code -->
-            <#local menuItemsInlined = isMenuMarkupItemsInline(menuContent)>
-    
+            <#if !menuItemsInlined?is_boolean>
+              <#local menuItemsInlined = isMenuMarkupItemsInline(menuContent)>
+            </#if>
+
             <#local menuItemsMarkup>
               <#if !forceEmptyMenu>
                 ${menuContent}

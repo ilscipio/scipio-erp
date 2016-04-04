@@ -273,9 +273,12 @@
     "table_summary" : "basic-table table-type-summary",
     "table_summary_type" : "table-type-summary",
     "table_summary_cellspacing" : 0,
-    "table_fields" : "basic-table table-type-fields",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
+    "table_fields" : "basic-table table-type-fields",               <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
     "table_fields_type" : "table-type-fields", 
     "table_fields_cellspacing" : 0,
+    "table_fields_vert" : "basic-table table-type-fields-vert",     <#-- like fields but arranged like data with labels in a header row -->
+    "table_fields_vert_type" : "table-type-fields-vert", 
+    "table_fields_vert_cellspacing" : 0,
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
          in other words, it is the default style for table types that this theme does not recognize, or "all others". 
          it is also used for individual fallback values. -->    

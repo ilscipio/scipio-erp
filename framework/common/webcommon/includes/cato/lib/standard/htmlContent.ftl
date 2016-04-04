@@ -316,6 +316,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                                 legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
                                 ultimately belong as @field and @row/@cell.
                                 TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
+                              * {{{fields-vert}}}: like {{{fields}}} but arranged like a regular table with labels in a header row.
                               NOTE: These types are mainly targeted for backend applications.
     class                   = ((css-class), default: -from global styles-) CSS classes
                               Supports prefixes (see #compileClassArg for more info):

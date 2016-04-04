@@ -18,24 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@script>
-function insertImageName(type,nameValue) {
-  eval('document.productCategoryForm.' + type + 'ImageUrl.value=nameValue;');
-};
-</@script>
-
-<#if fileType?has_content>
-    <@section title=uiLabelMap.ProductResultOfImageUpload>
-        <#if !(clientFileName?has_content)>
-            <div>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
-        <#else>
-            <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
-            <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
-            <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_nav_info_uri!}">${imageUrl!}</a></b></div>
-        </#if>
-    </@section>
-</#if>
+${Static["org.ofbiz.base.util.Debug"].log("context productCategory ftl ==============> " +  productCategory)}
 
 <#if !productCategory?has_content>
     <#if productCategoryId?has_content>        
@@ -122,15 +105,7 @@ function insertImageName(type,nameValue) {
                 </#if>
             </#assign>
               <@field type="generic" label=uiLabelMap.ProductCategoryImageUrl labelDetail=labelDetail>
-                <@field type="input" name="categoryImageUrl" value=((productCategory.categoryImageUrl)!) size="60" maxlength="255"/>
-                <#if productCategory?has_content>
-                    <div>
-                    ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                    <a href="javascript:insertImageName('category','${imageNameCategory}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
-                    <a href="javascript:insertImageName('category','${imageNameCategory}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
-                    <a href="javascript:insertImageName('category','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
-                    </div>
-                </#if>
+                <@field type="input" name="categoryImageUrl" value=((productCategory.categoryImageUrl)!) size="60" maxlength="255"/>               
               </@field>
             </@cell>
         </@row>
@@ -142,15 +117,7 @@ function insertImageName(type,nameValue) {
                 </#if>
               </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>
-                <#if productCategory?has_content>
-                    <div>
-                        ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                        <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('linkOne','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
-                    </div>
-                </#if>
+                <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>                
               </@field>
             </@cell>
         </@row>
@@ -162,15 +129,7 @@ function insertImageName(type,nameValue) {
                 </#if>
               </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkTwoImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkTwoImageUrl" value=((productCategory.linkTwoImageUrl)!) size="60" maxlength="255"/>
-                <#if productCategory?has_content>
-                    <div>
-                        ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                        <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('linkTwo','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
-                    </div>
-                </#if>
+                <@field type="input" name="linkTwoImageUrl" value=((productCategory.linkTwoImageUrl)!) size="60" maxlength="255"/>                
               </@field>
             </@cell>
         </@row>

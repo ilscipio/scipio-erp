@@ -744,7 +744,6 @@ under the License.
         <permission-service service-name="checkCategoryPermissionWithViewPurchaseAllow" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
     <service name="createProductInCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductInCategory" auth="true">
         <description></description>
@@ -756,6 +755,12 @@ under the License.
         <attribute name="defaultPrice" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="averageCost" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="uploadProductCategoryImage" engine="groovy"
+                location="component://product/script/com/ilscipio/category/ProductCategoryContentServices.groovy" default-entity-name="ProductCategory" invoke="uploadProductCategoryImage" auth="true">
+        <implements service="uploadFileInterface"/>                
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <attribute name="upload_file_type" mode="IN" type="String" optional="false" />
     </service>
 
     <service name="addPartyToCategory" engine="simple"

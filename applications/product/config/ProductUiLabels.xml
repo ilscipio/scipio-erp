@@ -12206,6 +12206,12 @@
     <property key="ProductCategoryAssociations">        
         <value xml:lang="en">Category Associations</value>
     </property>
+    <property key="ProductCategoryImage">        
+        <value xml:lang="en">Category Image</value>
+    </property>
+    <property key="ProductCategoryImageType">        
+        <value xml:lang="en">Category Image Type</value>
+    </property>
     
     <property key="ProductAddResultsTo">
         <value xml:lang="de">Resultate hinzufügen zu</value>

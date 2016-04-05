@@ -23,15 +23,33 @@
                 
                 "submitHook" : "validate"
             }>
-            
+            <div style="display:none;" id="deprecatedWarning">
+                <@row>
+                    <@cell columns=2>
+                    </@cell>
+                    <@cell columns=10>
+                        <@alert type="warning">The selected type is depracted. Please use at your own risk.</@alert>
+                    </@cell>
+                </@row>
+            </div>
             <@field type="file" name="uploadedFile" label="${uiLabelMap.ProductCategoryImage}" required=true class="+error" />
             <input type="hidden" name="upload_file_type" value="category"/>
             <#-- CATO: category link images are deprecated -->
-            <#--<@field type="generic" label=uiLabelMap.ProductCategoryImageType>
-                <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductCategoryImageUrl value="category" checked=true />
-                <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductLinkOneImageUrl value="linkOne" />
-                <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductLinkTwoImageUrl value="linkTwo" />
-            </@field>-->
+            <@field type="select" label=uiLabelMap.ProductCategoryImageType name="upload_file_type" onChange="deprecatedValidation(this);">
+                <option value="category" selected=selected>${uiLabelMap.ProductCategoryImageUrl}</option>
+                <option value="linkOne" >${uiLabelMap.ProductLinkOneImageUrl}</option>
+                <option value="linkTwo" >${uiLabelMap.ProductLinkTwoImageUrl}</option>
+            </@field>
+            <@script>
+                function deprecatedValidation(sel){
+                    var val = $(sel).val();
+                    if(val=="linkOne" || val=="linkTwo"){
+                       $('#deprecatedWarning').show(); 
+                    }else{
+                        $('#deprecatedWarning').hide(); 
+                    }
+                }
+            </@script>
             <@field type="submitarea" progressOptions=progressOptions>                
                 <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
             </@field>

@@ -35,6 +35,7 @@ under the License.
         <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
       </#if>
       <@fields type="default">
+        <#--
          <@row>
             <@cell columns=12>
               <#if !productCategory?has_content>
@@ -49,7 +50,7 @@ under the License.
                 </@field>
               </#if>
             </@cell>
-        </@row>
+        </@row>-->
         <@row>       
             <@cell columns=12>
                 <@field type="select" label=uiLabelMap.CommonType name="productCategoryTypeId" size="1">
@@ -75,9 +76,6 @@ under the License.
               <@field type="lookup" label=uiLabelMap.CommonParent value=(productCategory.primaryParentCategoryId)?default('') formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
             </@cell>
         </@row>
-
-        <hr/>
-        
         <@row>
             <@cell columns=12>
               <#assign fieldValue = "">
@@ -98,40 +96,64 @@ under the License.
     <div id="ImageFields">
         <@row>
             <@cell columns=12>
-            <#assign labelDetail>
-                <#if (productCategory.categoryImageUrl)??>
-                    <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                </#if>
-            </#assign>
-              <@field type="generic" label=uiLabelMap.ProductCategoryImageUrl labelDetail=labelDetail>
+              <@field type="generic" label=uiLabelMap.ProductCategoryImageUrl>
                 <@field type="input" name="categoryImageUrl" value=((productCategory.categoryImageUrl)!) size="60" maxlength="255"/>               
               </@field>
             </@cell>
         </@row>
-        <@row>
-            <@cell columns=12>
-              <#assign labelDetail>
-                <#if (productCategory.linkOneImageUrl)??>
-                    <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                </#if>
-              </#assign>
-              <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>
-              </@field>
-            </@cell>
-        </@row>
-        <@row>
-            <@cell columns=12>
-              <#assign labelDetail>
-                <#if (productCategory.linkTwoImageUrl)??>
-                    <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall" /></a>
-                </#if>
-              </#assign>
-              <@field type="generic" label=uiLabelMap.ProductLinkTwoImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkTwoImageUrl" value=((productCategory.linkTwoImageUrl)!) size="60" maxlength="255"/>                
-              </@field>
-            </@cell>
-        </@row>
+        <#if (productCategory.categoryImageUrl)??>
+            <@row>
+                <@cell columns=2>
+                </@cell>
+                <@cell columns=10>
+                        <#assign imgUrl><@ofbizContentUrl>${(productCategory.categoryImageUrl)!}</@ofbizContentUrl></#assign>
+                        <@img src=imgUrl!"" target="_blank" width="400px"/>
+                </@cell>
+            </@row>
+        </#if>
+
+        <#-- CATO: deprecated -->
+        <#if (productCategory.linkOneImageUrl)??>
+            <@row>
+                <@cell columns=12>
+                  <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl>
+                    <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>
+                  </@field>
+                </@cell>
+            </@row>
+
+            <#if (productCategory.linkOneImageUrl)??>
+                <@row>
+                    <@cell columns=2>
+                    </@cell>
+                    <@cell columns=10>
+                            <#assign imgUrl><@ofbizContentUrl>${(productCategory.linkOneImageUrl)!}</@ofbizContentUrl></#assign>
+                            <@img src=imgUrl!"" target="_blank" width="400px"/>
+                    </@cell>
+                </@row>
+            </#if>
+        </#if>
+        <#-- CATO: deprecated -->
+        <#if (productCategory.linkTwoImageUrl)??>
+            <@row>
+                <@cell columns=12>
+                  <@field type="generic" label=uiLabelMap.ProductLinkTwoImageUrl>
+                    <@field type="input" name="linkTwoImageUrl" value=((productCategory.linkTwoImageUrl)!) size="60" maxlength="255"/>                
+                  </@field>
+                </@cell>
+            </@row>
+
+            <#if (productCategory.linkTwoImageUrl)??>
+                <@row>
+                    <@cell columns=2>
+                    </@cell>
+                    <@cell columns=10>
+                            <#assign imgUrl><@ofbizContentUrl>${(productCategory.linkTwoImageUrl)!}</@ofbizContentUrl></#assign>
+                            <@img src=imgUrl!"" target="_blank" width="400px"/>
+                    </@cell>
+                </@row>
+            </#if>
+        </#if>
     </div>
         <@row>
             <@cell>

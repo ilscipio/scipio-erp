@@ -25,11 +25,13 @@
             }>
             
             <@field type="file" name="uploadedFile" label="${uiLabelMap.ProductCategoryImage}" required=true class="+error" />
-            <@field type="generic" label=uiLabelMap.ProductCategoryImageType>
+            <input type="hidden" name="upload_file_type" value="category"/>
+            <#-- CATO: category link images are deprecated -->
+            <#--<@field type="generic" label=uiLabelMap.ProductCategoryImageType>
                 <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductCategoryImageUrl value="category" checked=true />
                 <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductLinkOneImageUrl value="linkOne" />
                 <@field type="radio" name="upload_file_type" label=uiLabelMap.ProductLinkTwoImageUrl value="linkTwo" />
-            </@field>
+            </@field>-->
             <@field type="submitarea" progressOptions=progressOptions>                
                 <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
             </@field>

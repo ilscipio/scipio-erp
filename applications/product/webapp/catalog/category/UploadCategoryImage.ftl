@@ -23,6 +23,7 @@
                 
                 "submitHook" : "validate"
             }>
+            <#-- CATO: the Link Images for categories are not supported any longer and are going to be dropped soon. For now we display a warning to the user. -->
             <div style="display:none;" id="deprecatedWarning">
                 <@row>
                     <@cell columns=2>

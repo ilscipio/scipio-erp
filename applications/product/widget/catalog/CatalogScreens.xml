@@ -172,7 +172,7 @@ under the License.
                             <!-- <include-form name="AddProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
                             <include-screen name="CatoAddProdCatalogToParty"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.ProductCatalogPartyList}">
+                        <screenlet>
                            <!--  <include-form name="UpdateProdCatalogToParty" location="component://product/widget/catalog/CatalogForms.xml"/> -->
                             <include-screen name="CatoProdCatalogPartyList"/>
                         </screenlet>
@@ -190,6 +190,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
+                
                 <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/AddProdCatalogToParty.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -205,12 +206,20 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogPartyList.ftl"/></html></platform-specific>
+                <section>
+                    <condition><not><if-empty field="prodCatalogRoleList"/></not></condition>
+                    <widgets>
+                        <screenlet  title="${uiLabelMap.ProductCatalogPartyList}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ProdCatalogPartyList.ftl"/></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>
 
-    <screen name="EditProdCatalogStores">
+    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+    <!-- <screen name="EditProdCatalogStores">
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
@@ -231,7 +240,7 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     
      <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CatalogForms.xml#CreateProductStoreCatalog -->
     <screen name="CatoAddProdCatalogToStore">

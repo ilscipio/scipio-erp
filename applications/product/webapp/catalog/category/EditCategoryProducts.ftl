@@ -29,8 +29,9 @@ under the License.
   </@menu>
 </#macro-->
 
+<#if (listSize > 0)>
 <@section title=uiLabelMap.ProductCategoryProductList menuContent=menuContent>
-      <#if (listSize > 0)>
+      
         <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
             <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
               <@fields type="default-manual">
@@ -113,7 +114,5 @@ under the License.
                 <#assign rowCount = rowCount + 1>
             </#list>   
         </@paginate>
-      <#else>
-        <@commonMsg type="result-norecord"/>     
-      </#if>
-</@section>
+    </@section>
+</#if>

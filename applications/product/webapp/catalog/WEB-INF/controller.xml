@@ -1433,7 +1433,8 @@ under the License.
     </request-map>
 
     <!-- ================ ProdCatalog Stores Requests ================= -->
-    <request-map uri="EditProdCatalogStores">
+    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+<!--     <request-map uri="EditProdCatalogStores">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProdCatalogStores"/>
     </request-map>
@@ -1454,7 +1455,7 @@ under the License.
         <event type="service" path="" invoke="deleteProductStoreCatalog"/>
         <response name="success" type="view" value="EditProdCatalogStores"/>
         <response name="error" type="view" value="EditProdCatalogStores"/>
-    </request-map>
+    </request-map> -->
 
     <request-map uri="ListParentProductStoreGroup"><security https="true" auth="true"/><response name="success" type="view" value="ListParentProductStoreGroup"/></request-map>
     <request-map uri="EditProductStoreGroup"><security https="true" auth="true"/><response name="success" type="view" value="EditProductStoreGroup"/></request-map>
@@ -3107,7 +3108,8 @@ under the License.
     <view-map name="FindCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#FindCatalog"/>
     <view-map name="EditProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalog"/>
     <view-map name="EditProdCatalogCategories" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogCategories"/>
-    <view-map name="EditProdCatalogStores" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogStores"/>
+    <!-- CATO: To be removed because it is "duplicated" in EditProductStoreCatalogs -->
+   <!--  <view-map name="EditProdCatalogStores" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogStores"/> -->
     <view-map name="EditProdCatalogParties" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogParties"/>
     <view-map name="EditProdCatalogSection" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogSection"/>
 

@@ -39,7 +39,7 @@
                                   <input name="prodCatalogCategoryTypeId_o_${prodCatalogCategory_index}" type="hidden" value="${prodCatalogCategory.prodCatalogCategoryTypeId}"/>
                                   <input name="fromDate_o_${prodCatalogCategory_index}" type="hidden" value="${prodCatalogCategory.fromDate}"/>
                                   <input id="_rowSubmit_o_${prodCatalogCategory_index}" name="_rowSubmit_o_${prodCatalogCategory_index}" type="hidden" value="N"/>
-                                  <a href="EditCategory?productCategoryId=${category.productCategoryId}">${category.categoryName!} - ${category.productCategoryId}</a>
+                                  <a href="EditCategory?productCategoryId=${category.productCategoryId}"><#if category.categoryName?has_content>${category.categoryName} - </#if>${category.productCategoryId}</a>
                             </@td>
                             <@td>${prodCatalogCategoryType.description}</@td>
                             <@td>${prodCatalogCategory.fromDate?string('yyyy-MM-dd')}</@td>

@@ -282,28 +282,24 @@ under the License.
                         
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-		                        <screenlet title="${uiLabelMap.ProductCategoryParentCategoryList}">
-                                     <section>
-                                        <actions>
-                                            <set field="productCategoryAssociationMode" value="parent" />
-                                        </actions>
-                                        <widgets>
-                                            <include-screen name="CatoCategoryAssociationList"/>
-                                        </widgets>
-                                    </section>
-		                        </screenlet>
+                                 <section>
+                                    <actions>
+                                        <set field="productCategoryAssociationMode" value="parent" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="CatoCategoryAssociationList"/>
+                                    </widgets>
+                                </section>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-		                        <screenlet title="${uiLabelMap.ProductCategoryChildCategoryList}">
-                                    <section>
-                                        <actions>
-                                            <set field="productCategoryAssociationMode" value="child" />
-                                        </actions>
-                                        <widgets>
-                                            <include-screen name="CatoCategoryAssociationList"/>
-                                        </widgets>
-                                    </section>
-		                        </screenlet>
+                                <section>
+                                    <actions>
+                                        <set field="productCategoryAssociationMode" value="child" />
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="CatoCategoryAssociationList"/>
+                                    </widgets>
+                                </section>
                             </container>
                         </container>
                     </decorator-section>
@@ -336,6 +332,7 @@ under the License.
 			               <condition-expr field-name="productCategoryId" from-field="originalProductCategoryId"/>
 			               <order-by field-name="sequenceNum"/>
 			           </entity-condition>
+			           <set field="sectionTitle" value="${uiLabelMap.ProductCategoryChildCategoryList}"/>
 	                </actions>	            
 	            </section>
 	            <section>
@@ -347,9 +344,18 @@ under the License.
                             <condition-expr field-name="parentProductCategoryId" from-field="originalProductCategoryId"/>
                             <order-by field-name="sequenceNum"/>
                         </entity-condition>
+                        <set field="sectionTitle" value="${uiLabelMap.ProductCategoryParentCategoryList}"/>
 	                </actions>	              
 	            </section>
-	            <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryAssociationList.ftl"/></html></platform-specific>
+	            <section>
+	               <condition><not><if-empty field="productCategoryRollupList"/></not></condition>
+	               <widgets>
+	                   <screenlet title="${sectionTitle}">
+	                       <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryAssociationList.ftl"/></html></platform-specific>
+	                   </screenlet>
+	               </widgets>
+	            </section>
+	            
             </widgets>
         </section>
     </screen>

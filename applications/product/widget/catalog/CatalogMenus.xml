@@ -36,16 +36,12 @@ under the License.
     </menu>
 
     <menu name="CatalogTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ProductCatalog" title="${uiLabelMap.PageTitleEditProductCatalog}">
+        <menu-item name="ProductCatalog" title="${uiLabelMap.ProductCatalog}">
             <link target="EditProdCatalog">
                 <parameter param-name="prodCatalogId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductStores" title="${uiLabelMap.ProductCatalogStores}">
-            <link target="EditProdCatalogStores">
-                <parameter param-name="prodCatalogId"/>
-            </link>
-        </menu-item>
+        <!-- CATO: ProductStores has been removed -->       
         <menu-item name="PartyParties" title="${uiLabelMap.ProductCatalogParties}">
             <link target="EditProdCatalogParties">
                 <parameter param-name="prodCatalogId"/>
@@ -67,14 +63,7 @@ under the License.
         <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditProdCatalog"/>
         </menu-item>
-        <menu-item name="CreateSeo" title="${uiLabelMap.ProductCatalogSeoCreate}">
-            <condition>
-                <not><if-empty field="prodCatalog"/></not>
-            </condition>
-            <link target="CreateSeoProdCatalog">
-                <parameter param-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
-            </link>
-        </menu-item>
+        <!-- CATO: CreateSeo has been removed -->        
     </menu>
 
     <menu name="FeaturesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

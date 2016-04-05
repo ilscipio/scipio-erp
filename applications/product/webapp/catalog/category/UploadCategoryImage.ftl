@@ -28,7 +28,7 @@
                     <@cell columns=2>
                     </@cell>
                     <@cell columns=10>
-                        <@alert type="warning">The selected type is depracted. Please use at your own risk.</@alert>
+                        <@alert type="warning">The selected type is deprecated. Please use at your own risk.</@alert>
                     </@cell>
                 </@row>
             </div>

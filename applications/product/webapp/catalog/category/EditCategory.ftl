@@ -95,6 +95,7 @@ under the License.
             </@cell>
         </@row>
 
+    <div id="ImageFields">
         <@row>
             <@cell columns=12>
             <#assign labelDetail>
@@ -131,7 +132,7 @@ under the License.
               </@field>
             </@cell>
         </@row>
-
+    </div>
         <@row>
             <@cell>
                 <#if productCategory?has_content>

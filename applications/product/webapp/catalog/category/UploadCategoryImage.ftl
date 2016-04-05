@@ -18,8 +18,8 @@
                 "errorResultAddWrapper" : false,
     
                 "resultContentReplace" : true,
-                "contentContainerSel" : "#EditProductCategory",
-                "resultContentContainerSel" : "#EditProductCategory",
+                "contentContainerSel" : "#ImageFields",
+                "resultContentContainerSel" : "#ImageFields",
                 
                 "submitHook" : "validate"
             }>

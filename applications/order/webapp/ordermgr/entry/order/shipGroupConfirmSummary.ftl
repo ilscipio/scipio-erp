@@ -80,14 +80,14 @@ standard order confirmation page and to be re-usable by other screens.
         <#-- supplier id (for drop shipments) (also spans rows = number of items) -->
 
         <@td rowspan="${numberOfItems}" valign="top">
-          <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":cartShipInfo.getSupplierPartyId()}, false)! />
+          <#assign supplier = delegator.findOne("PartyGroup", {"partyId":(cartShipInfo.getSupplierPartyId()!"")}, false)! />
           <#if supplier?has_content>${supplier.groupName!supplier.partyId}</#if>
         </@td>
 
         <#-- carrier column (also spans rows = number of items) -->
 
         <@td rowspan="${numberOfItems}" valign="top">
-          <#assign carrier =  delegator.findOne("PartyGroup", {"partyId":cartShipInfo.getCarrierPartyId()}, false)! />
+          <#assign carrier =  delegator.findOne("PartyGroup", {"partyId":(cartShipInfo.getCarrierPartyId()!"")}, false)! />
           <#assign method =  delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":cartShipInfo.getShipmentMethodTypeId()}, false)! />
           <#if carrier?has_content>${carrier.groupName!carrier.partyId}</#if>
           <#if method?has_content>${method.description!method.shipmentMethodTypeId}</#if>

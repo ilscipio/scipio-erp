@@ -60,6 +60,8 @@
     "switch" : "switch",
     "dropdown" : "dropdown",
     "fullwidth" : "fullWidth",
+    "large_container_factor" : 6,       <#-- This is a special value part of a heuristic to help detect when a parent container is logically "large" or "small". It is a float value. By default, currently we assume 6. -->
+    
     
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
@@ -835,14 +837,22 @@
     "fields_default_labelareaconsumeexceptions" : "",
     "fields_default_collapse" : false,
     "fields_default_collapsepostfix" : true,
-    "fields_default_collapsedinlinelabel" : "datetime", <#-- can be true, false, or list of type names -->
+    "fields_default_collapsedinlinelabel" : "datetime", <#-- Can be true, false, or list of type names -->
     "fields_default_checkboxtype" : "",
     "fields_default_radiotype" : "",
     "fields_default_fieldargs" : {                      <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. -->
         "requiredClass" : "required",
         "requiredTooltip" : "#LABEL:CommonRequired"
-    },                    
-
+    },   
+    "fields_default_totalcolumns" : 12,                 <#-- Logical field total column span. Doesn't have to be 12. NOTE: This could also be passed via fieldargs.totalColumns, but this also covers cases where @fields does not apply (calls to getDefaultFieldGridStyles_defaultArgs). These also give more control. -->          
+    "fields_default_widgetpostfixcolumnsdiff" : 2,      <#-- The main field widget area size: widgetpostfixcolumns = (totalcolumns - widgetpostfixcolumnsdiff)  -->          
+    "fields_default_widgetpostfixcolumns" : "",         <#-- If set to number (non-empty-string), this overrides the (totalcolumns - widgetpostfixcolumnsdiff) calculation -->
+    "fields_default_postfixsize" : 1,
+    "fields_default_labelsmallcoldiff" : 1,
+    
+    <#-- form widgets (SPECIAL settings; these do not fully support all settings of the other types) -->
+    "fields_formwidget_totalcolumns" : 11,              <#-- FIXME?: Form widget field spans were made smaller (11) as a workaround for visual ugliness in forms with positions -->
+    
     <#-- alternate to default with different top-level checkbox styles -->
     "fields_default_alt1_labelareaconsumeexceptions" : "checkbox-single radio-single",
     "fields_default_alt1_checkboxtype" : "simple",

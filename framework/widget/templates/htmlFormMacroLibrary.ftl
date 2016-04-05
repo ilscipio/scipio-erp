@@ -481,14 +481,27 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#-- TODO: review this: for the time being, we will only set the grid_large values if the
           estimated absolute column width for "large" is larger than 6. 
           otherwise, this form is probably in a small space so the grid_small settings are more appropriate. -->
-  <#local isLargeParent = (absColSizes.large > 6)>  
+  <#local largeContainerFactor = styles["large_container_factor"]!6>
+  <#local isLargeParent = (absColSizes.large > largeContainerFactor)>  
     
-  <#-- DEV NOTE: field spans were intentionally made to total to 11 instead of 12 as temporary workaround for small-vs-large-sizing-within-columns adaptation problems -->
+  <#local totalColumns = styles["fields_formwidget_totalcolumns"]!styles["fields_default_totalcolumns"]!12>
+  <#local widgetPostfixColumnsDiff = styles["fields_formwidget_widgetpostfixcolumnsdiff"]!styles["fields_default_widgetpostfixcolumnsdiff"]!2>
+  <#local widgetPostfixColumns = styles["fields_formwidget_widgetpostfixcolumns"]!styles["fields_default_widgetpostfixcolumns"]!"">
+  <#if widgetPostfixColumns?is_boolean>
+    <#local widgetPostfixColumns = "">
+  </#if>
+  <#local labelSmallColDiff = styles["fields_formwidget_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
+  <#if !widgetPostfixColumns?has_content>
+    <#local widgetPostfixColumns = totalColumns - widgetPostfixColumnsDiff>
+  </#if>
+
+  <#local titleAreaColumns = totalColumns - widgetPostfixColumns>
+  
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
       <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
-      <#local titleAreaClassDefault>${styles.grid_small!}3<#if isLargeParent> ${styles.grid_large!}2</#if></#local>
+      <#local titleAreaClassDefault>${styles.grid_small!}${titleAreaColumns + labelSmallColDiff}<#if isLargeParent> ${styles.grid_large!}${titleAreaColumns}</#if></#local>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
@@ -503,11 +516,13 @@ WARN: no code run here or indirectly from here should assume full current contex
       </div>
   </#if>
   <#local innerClass = style>
+  <#-- NOTE: IMPORTANT: requires grid_end always -->
   <#local innerClass = addClassArg(innerClass, "${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClassDefault>${styles.grid_small!}8<#if isLargeParent> ${styles.grid_large!}9</#if></#local>
+      <#local innerClassDefault>${styles.grid_small!}${widgetPostfixColumns - labelSmallColDiff}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixColumns}</#if></#local>
   <#else>
+      <#-- Cato: NOTE: This must be 12 hardcoded, NOT totalColumns -->
       <#local innerClassDefault>${styles.grid_small!}12<#if isLargeParent> ${styles.grid_large!}12</#if></#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->

@@ -924,13 +924,27 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return null;
     }
 
+    /**
+     * Cato: Remove an item from the cart object. 
+     * <p>
+     * Cato: Modified to support triggerExternalOps bool.
+     */
+    public void removeCartItem(ShoppingCartItem item, boolean triggerExternalOps, LocalDispatcher dispatcher) throws CartItemModifyException {
+        if (item == null) return;
+        this.removeCartItem(this.getItemIndex(item), triggerExternalOps, dispatcher);
+    }
+    
     public void removeCartItem(ShoppingCartItem item, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (item == null) return;
         this.removeCartItem(this.getItemIndex(item), dispatcher);
     }
 
-    /** Remove an item from the cart object. */
-    public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
+    /** 
+     * Cato: Remove an item from the cart object. 
+     * <p>
+     * Cato: Modified to support triggerExternalOps bool.
+     */
+    public void removeCartItem(int index, boolean triggerExternalOps, LocalDispatcher dispatcher) throws CartItemModifyException {
         if (isReadOnlyCart()) {
            throw new CartItemModifyException("Cart items cannot be changed");
         }
@@ -939,9 +953,18 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         ShoppingCartItem item = cartLines.remove(index);
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks
-        item.setQuantity(BigDecimal.ZERO, dispatcher, this, true, true, false, true);
+        item.setQuantity(BigDecimal.ZERO, dispatcher, this, triggerExternalOps, true, false, true);
     }
-
+    
+    /**
+     * Remove an item from the cart object.
+     * <p>
+     * Cato: Implies triggerExternalOps true.
+     */
+    public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
+        removeCartItem(index, true, dispatcher);
+    }
+    
     /** Moves a line item to a different index. */
     public void moveCartItem(int fromIndex, int toIndex) {
         if (toIndex < fromIndex) {

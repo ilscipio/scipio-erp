@@ -1588,7 +1588,8 @@ public class ProductPromoWorker {
                     }
                 } catch (CartItemModifyException e) {
                     int gwpItemIndex = cart.getItemIndex(gwpItem);
-                    cart.removeCartItem(gwpItemIndex, dispatcher);
+                    // Cato: patched to pass triggerExternalOps false
+                    cart.removeCartItem(gwpItemIndex, false, dispatcher);
                     throw e;
                 }
 

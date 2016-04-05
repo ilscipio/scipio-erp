@@ -58,7 +58,6 @@ viewIndex = 0;
 //viewSize = 10;
 defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("order.properties", "order.promotion.paginate.defaultViewSize", 10);
 viewSize = defaultViewSize;
-viewSize = ;
 highIndex = 0;
 lowIndex = 0;
 listSize = productIds.size();

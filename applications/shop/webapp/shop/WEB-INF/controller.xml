@@ -20,26 +20,12 @@ under the License.
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- Cato: Factored out framework-level core definitions into common-store-controller, analogous to common-controller for backend -->
+    <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
     <description>CATO Shop Controller Configuration File</description>
-    <errorpage>/control/error</errorpage>
-
-    <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
-    <handler name="groovy" type="request" class="org.ofbiz.webapp.event.GroovyEventHandler"/>
-    <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
-    <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
-    <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
-    <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
-    <handler name="rome" type="request" class="org.ofbiz.webapp.event.RomeEventHandler"/>
-
-    <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
-    <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
-    <handler name="screen" type="view" class="org.ofbiz.widget.renderer.macro.MacroScreenViewHandler"/>
-    <handler name="simplecontent" type="view" class="org.ofbiz.content.view.SimpleContentViewHandler"/>
-    <handler name="screenfop" type="view" class="org.ofbiz.widget.renderer.fo.ScreenFopViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
-        <event name="autoLoginCheck" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginCheck"/>
         <event name="checkTrackingCodeCookies" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeCookies"/>
         <event name="setDefaultStoreSettings" type="java" path="org.ofbiz.product.product.ProductEvents" invoke="setDefaultStoreSettings"/>
         <event name="createGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createGuestShoppingListCookies"/>
@@ -49,7 +35,6 @@ under the License.
     <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
         <!-- This event allows affilate/distributor entry on any page -->
-        <event name="checkExternalLoginKey" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkExternalLoginKey"/>
         <event name="setAssociationId" type="java" path="com.ilscipio.cato.shop.misc.ThirdPartyEvents" invoke="setAssociationId"/>
         <event name="checkTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeUrlParam"/>
         <event name="checkPartnerTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkPartnerTrackingCodeUrlParam"/>
@@ -72,35 +57,6 @@ under the License.
         <event name="saveCartToAutoSaveList" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="saveCartToAutoSaveList"/>
         <event name="clearGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="clearGuestShoppingListCookies"/>
     </after-login>
-
-    <!-- Security Request Mappings -->
-    <request-map uri="checkLogin" edit="false">
-        <description>Verify a user is logged in.</description>
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="storeCheckLogin"/>
-        <response name="success" type="view-last"/>
-        <response name="error" type="view" value="login"/>
-    </request-map>
-    <request-map uri="login">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="storeLogin"/>
-        <response name="success" type="view" value="main"/>
-        <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
-        <response name="error" type="view" value="login"/>
-    </request-map>
-    <request-map uri="logout">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="request-redirect" value="main"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
-    <request-map uri="autoLogout">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginRemove"/>
-        <response name="success" type="request-redirect" value="main"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
-    <!-- End of Security Mappings -->
 
     <!-- General Request Mappings -->
     <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main" save-current-view="true"/></request-map>
@@ -134,14 +90,6 @@ under the License.
         <event type="java" path="com.ilscipio.cato.shop.misc.ThirdPartyEvents" invoke="setAssociationId"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
-    </request-map>
-
-    <!-- Common json reponse events, chain these after events to send json reponses -->
-    <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
-    <request-map uri="json">
-        <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
-        <response name="success" type="none"/>
     </request-map>
 
     <!-- ShoppingList Requests -->
@@ -1146,24 +1094,9 @@ under the License.
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="changepassword">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="changepassword"/>
-    </request-map>
 
-    <request-map uri="updatePassword">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://securityext/script/org/ofbiz/securityext/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
-        <response name="success" type="view" value="changepassword"/>
-        <response name="error" type="view" value="changepassword"/>
-    </request-map>
 
-    <request-map uri="forgotpassword">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="forgotPassword"/>
-        <response name="success" type="view" value="login"/>
-        <response name="error" type="view" value="login"/>
-    </request-map>
+
 
     <request-map uri="tellafriend"><security https="false" auth="false"/><response name="success" type="view" value="tellafriend"/></request-map>
     <request-map uri="emailFriend">

@@ -138,6 +138,7 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="uploadProductCategoryImage"/>
         <response name="success" type="view" value="EditCategory"/>
+        <response name="error" type="view" value="EditCategory"/>
     </request-map>
     <request-map uri="EditCategoryAjax">
         <security https="true" auth="true"/>

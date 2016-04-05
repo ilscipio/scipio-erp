@@ -18,7 +18,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-${Static["org.ofbiz.base.util.Debug"].log("context productCategory ftl ==============> " +  productCategory)}
 
 <#if !productCategory?has_content>
     <#if productCategoryId?has_content>        
@@ -30,8 +29,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("context productCategory ftl =========
     <#assign formAction><@ofbizUrl>updateProductCategory</@ofbizUrl></#assign>
 </#if>
 
-<@section>
-
+<@section id="EditProductCategory">
     <form action="${formAction}" method="post" name="productCategoryForm">
       <#if productCategory?has_content>
         <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
@@ -117,7 +115,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("context productCategory ftl =========
                 </#if>
               </#assign>
               <@field type="generic" label=uiLabelMap.ProductLinkOneImageUrl labelDetail=labelDetail>
-                <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>                
+                <@field type="input" name="linkOneImageUrl" value=((productCategory.linkOneImageUrl)!) size="60" maxlength="255"/>
               </@field>
             </@cell>
         </@row>

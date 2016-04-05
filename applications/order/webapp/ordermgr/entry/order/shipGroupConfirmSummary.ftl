@@ -88,7 +88,7 @@ standard order confirmation page and to be re-usable by other screens.
 
         <@td rowspan="${numberOfItems}" valign="top">
           <#assign carrier =  delegator.findOne("PartyGroup", {"partyId":(cartShipInfo.getCarrierPartyId()!"")}, false)! />
-          <#assign method =  delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":cartShipInfo.getShipmentMethodTypeId()}, false)! />
+          <#assign method =  delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":(cartShipInfo.getShipmentMethodTypeId()!"")}, false)! />
           <#if carrier?has_content>${carrier.groupName!carrier.partyId}</#if>
           <#if method?has_content>${method.description!method.shipmentMethodTypeId}</#if>
         </@td>

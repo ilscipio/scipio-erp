@@ -840,7 +840,7 @@
     "fields_default_collapsedinlinelabel" : "datetime", <#-- Can be true, false, or list of type names -->
     "fields_default_checkboxtype" : "",
     "fields_default_radiotype" : "",
-    "fields_default_fieldargs" : {                      <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. -->
+    "fields_default_fieldargs" : {                      <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. NOTE: This is more forced than the settings implemented individually, but can often work well enough. -->
         "requiredClass" : "required",
         "requiredTooltip" : "#LABEL:CommonRequired"
     },   
@@ -849,6 +849,7 @@
     "fields_default_widgetpostfixcolumns" : "",         <#-- If set to number (non-empty-string), this overrides the (totalcolumns - widgetpostfixcolumnsdiff) calculation -->
     "fields_default_postfixsize" : 1,
     "fields_default_labelsmallcoldiff" : 1,
+    "fields_default_widgetpostfixcombined" : true,      <#-- NOTE: This is GENERAL default, or fallback default, because the actual flag may be more complex to determine. -->
     
     <#-- form widgets (SPECIAL settings; these do not fully support all settings of the other types) -->
     "fields_formwidget_totalcolumns" : 11,              <#-- FIXME?: Form widget field spans were made smaller (11) as a workaround for visual ugliness in forms with positions -->

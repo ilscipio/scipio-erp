@@ -1680,13 +1680,19 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local labelInRow = (labelType != "vertical")>
   
   <#if !widgetPostfixCombined?has_content>
-    <#-- we may have collapse==false but collapsePostfix==true, in which case
-        we may want to collapse the postfix without collapsing the entire thing 
-        handle this by making a combined sub-row if needed -->
-    <#local widgetPostfixCombined = ((postfix && collapsePostfix) && !collapse)>
+    <#-- We may have collapse==false but collapsePostfix==true, in which case
+        we may want to collapse the postfix without collapsing the entire thing. 
+        Handle this by making a combined sub-row if needed.
+        2016-04-05: This container is also important for max field row width CSS workaround!
+            Therefore, we will also omit the collapsePostfix requirement. -->
+    <#if postfix && !collapse> <#-- previously: ((postfix && collapsePostfix) && !collapse) -->
+      <#local widgetPostfixCombined = styles["fields_" + fieldsType + "_widgetpostfixcombined"]!styles["fields_default_widgetpostfixcombined"]!true>
+    <#else>
+      <#local widgetPostfixCombined = false>
+    </#if>
   </#if>
 
-  <#-- this is separated because some templates need access to the grid sizes to align things, and they
+  <#-- This is separated because some templates need access to the grid sizes to align things, and they
       can't be calculated statically in the styles hash -->
   <#local defaultGridStyles = getDefaultFieldGridStyles({"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":labelArea, 
@@ -1783,6 +1789,28 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   </#if>
 </#macro>
 
+<#-- 
+*************
+* getDefaultFieldGridStyles
+************
+Returns the classes that @field would put on the label, widget and postfix area containers, given the requirements.
+
+The parameter defaults for totalColumns, 
+
+NOTE: This is used both internally by @field and in some cases is also needed in templates.
+                    
+  * Parameters *
+    fieldsType              = ((string), default: default) The @fields type
+                              Used for calculating the defaults of some of the other parameters.
+    widgetPostfixCombined   = ((boolean), default: false) Whether the calculation should consider widget and postfix having an extra container around them together
+                              NOTE: The hardcoded default for this is {{{false}}} and must always be {{{false}}}.
+                                  The hardcoding is part of this function's interface. This is because structure depends highly
+                                  on what the caller decides is appropriate and there is not enough information to decide it here.
+                              NOTE: Even though the default for this is false, in many cases generally we end up using true.
+    totalColumns            = ((int), default: -from global styles-) The logical total columns for a field row
+                              NOTE: This does not have to be 12.
+    widgetPostfixColumns    = ((int), default: -from global styles-) The columns size of widget and postfix combined (regardless of {{{widgetPostfixCombined}}}).         
+-->
 <#-- calculates the default @field grid styles - used unless overridden by @field's caller -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
   "totalColumns":"", "widgetPostfixColumns":"", "labelArea":true, "labelInRow":true,

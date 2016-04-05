@@ -874,7 +874,7 @@
       <@field type="input" name="input8" label="Input" value="val1" widgetPostfixColumns=8 totalColumns=11 postfix=true />
 
       <#-- NOTE: widgetPostfixCombined is an override and usually should not be specified; here for testing -->
-      <p>NOTE: The next fields are for testing only, and may not look right (widget and postfix don't have their own container)</p>
+      <p>NOTE: The next fields are for testing only, and may not look right (widget and postfix don't have a combined container)</p>
       <@field type="input" name="input9" label="Input" value="val1" postfix=true widgetPostfixCombined=false />
       <@field type="input" name="input10" label="Input" value="val1" totalColumns=11 postfix=true widgetPostfixCombined=false />
       <@field type="input" name="input11" label="Input" value="val1" widgetPostfixColumns=8 postfix=true widgetPostfixCombined=false />

@@ -1,4 +1,4 @@
-<#--
+he <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -21,8 +21,8 @@ under the License.
         <#assign smallImageUrl = solrProduct.mediumImage>
     <#elseif solrProduct?has_content && solrProduct.smallImage??>
         <#assign smallImageUrl = solrProduct.smallImage>        
-    <#elseif miniProductContentWrapper?? && miniProductContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
-        <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","html")!>        
+    <#elseif miniProductContentWrapper?? && miniProductContentWrapper.get("SMALL_IMAGE_URL","url")!?string?has_content>
+        <#assign smallImageUrl = miniProductContentWrapper.get("SMALL_IMAGE_URL","url")!?string>        
     </#if>
 
     <#if smallImageUrl?has_content><#assign imgSrc><@ofbizContentUrl>${smallImageUrl}</@ofbizContentUrl></#assign>
@@ -40,11 +40,12 @@ under the License.
                ${productImage!""}
             </@pli>
         <@pli type="description">
-            ${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}
+            <#-- Cato: TODO: Localize -->
+            ${miniProductContentWrapper.get("PRODUCT_NAME", "html")!"No Name Available"}
          </@pli>
 
          <@pli>
-           <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
+           <#if ((priceResult.price!0) > 0) && ((miniProduct.requireAmount!"N") == "N")>
             <#if totalPrice??>
                 <@ofbizCurrency amount=totalPrice isoCode=priceResult.currencyUsed/>
             <#else>

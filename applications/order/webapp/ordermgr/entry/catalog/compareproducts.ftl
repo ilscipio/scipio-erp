@@ -26,8 +26,8 @@ under the License.
     <#assign productContentWrapper = productData.productContentWrapper/>
     <#assign price = productData.priceMap/>
     <#assign productUrl><@ofbizCatalogAltUrl productId=product.productId/></#assign>
-    <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")/>
-    <#if (smallImageUrl!?length) == 0>
+    <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!?string/>
+    <#if !smallImageUrl?has_content>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
         <@td style="width:${tdWidth?c}%;">
@@ -101,7 +101,7 @@ under the License.
 <#list compareList as product>
     <#assign productData = productDataMap[product.productId]/>
     <#assign productContentWrapper = productData.productContentWrapper/>
-        <@td>${productContentWrapper.get("DESCRIPTION", "html")?default("&nbsp;")}</@td>
+        <@td>${productContentWrapper.get("DESCRIPTION", "html")!"&nbsp;"}</@td>
 </#list>
     </@tr>
     <#-- Long Description -->
@@ -110,7 +110,7 @@ under the License.
 <#list compareList as product>
     <#assign productData = productDataMap[product.productId]/>
     <#assign productContentWrapper = productData.productContentWrapper/>
-        <@td>${productContentWrapper.get("LONG_DESCRIPTION", "html")?default("&nbsp;")}</@td>
+        <@td>${productContentWrapper.get("LONG_DESCRIPTION", "html")!"&nbsp;"}</@td>
 </#list>
     </@tr>
 <#list productFeatureTypeIds as productFeatureTypeId>

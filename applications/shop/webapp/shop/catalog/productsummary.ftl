@@ -13,8 +13,8 @@
         <#assign smallImageUrl = solrProduct.mediumImage?trim>
     <#elseif solrProduct?has_content && solrProduct.smallImage??>
         <#assign smallImageUrl = solrProduct.smallImage?trim>        
-    <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","html")?has_content>
-        <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","html")?trim>        
+    <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","url")!?string?has_content>
+        <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")?string?trim>        
     </#if>
     
 
@@ -32,8 +32,10 @@
     <#assign productTitle>
         <#if solrProduct?? && title??>
             <#assign productName = title>
-        <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME","html")?has_content>
-            <#assign productName = productContentWrapper.get("PRODUCT_NAME","html")>
+        <#elseif productContentWrapper?? && productContentWrapper.get("PRODUCT_NAME","html")!?string?has_content>
+            <#assign productName = productContentWrapper.get("PRODUCT_NAME","html")?string>
+        <#elseif !productName??>
+            <#assign productName = "">
         </#if>
         ${productName}
     </#assign>

@@ -98,17 +98,17 @@
     <@row>
         <@cell columns=8>
             <#--
-            <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","html")! />
-            <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","html")! />
-            <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","html")! />
-            <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","html")! />-->
+            <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")!?string?trim />
+            <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")!?string?trim />
+            <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")?string?trim />
+            <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")!?string?trim />-->
 
-            <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","html")?trim!"" />
-            <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","html")?trim!"" />
-            <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","html")?trim!"" />
-            <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","html")?trim!"" />
-            <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","html")?trim!"" /> 
-            <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","html")?trim!"" />
+            <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")!?string?trim />
+            <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")!?string?trim />
+            <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")?string?trim />
+            <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")!?string?trim />
+            <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")!?string?trim /> 
+            <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")!?string?trim />
             
             <#if firstLargeImage?has_content>
                 <#assign productLargeImageUrl = firstLargeImage />
@@ -143,7 +143,7 @@
         <@cell columns=4>
             <@panel>
             <div id="product-info"> 
-                <#if productContentWrapper.get("DESCRIPTION","html")?has_content><p>${productContentWrapper.get("DESCRIPTION","html")!}</p></#if>
+                <#if productContentWrapper.get("DESCRIPTION","html")!?string?has_content><p>${productContentWrapper.get("DESCRIPTION","html")!}</p></#if>
                 <#-- for prices:
                     - if price < competitivePrice, show competitive or "Compare At" price
                     - if price < listPrice, show list price
@@ -385,11 +385,11 @@
 
 
 <@section>
-    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")?trim/>
+    <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
     <#if !prodLongDescr?has_content>
-      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")?trim/>
+      <#assign prodLongDescr=productContentWrapper.get("DESCRIPTION","html")!?string?trim/>
     </#if>
-    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")?trim/>
+    <#assign prodWarnings=productContentWrapper.get("WARNINGS","html")!?string?trim/>
 
     <ul class="tabs" data-tab>
       <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonDescription}</a></li>
@@ -481,7 +481,7 @@
                     <#if swatchProduct?has_content && (indexer < maxIndex)>
                         <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"html")! />
                         <#if !imageUrl?string?has_content>
-                            <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL","html")! />
+                            <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")! />
                         </#if>
 
                         <div class="product-virtual-swatch-item">

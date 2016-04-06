@@ -37,9 +37,10 @@
                 </#if>
                 <li<@compiledClassAttribStr class=elemClass/>>
                    <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>><#rt>
-                     <#local crumbText = (catContentWrapper.get("CATEGORY_NAME","html"))!"">
+                     <#-- WARN: ?string required for ?has_content to work with result from content wrapper! -->
+                     <#local crumbText = (catContentWrapper.get("CATEGORY_NAME","html"))!?string>
                      <#if !crumbText?has_content>
-                       <#local crumbText = (catContentWrapper.get("DESCRIPTION","html"))!"">
+                       <#local crumbText = (catContentWrapper.get("DESCRIPTION","html"))!?string>
                        <#if !crumbText?has_content>
                          <#-- use the ID --><#t>
                          <#local crumbText = crumb>
@@ -53,9 +54,10 @@
     
         <#-- We always assume that the product Detail page is the last in trail -->
         <#if productContentWrapper?has_content>
-            <#local productText = (productContentWrapper.get("PRODUCT_NAME","html"))!>
+            <#-- WARN: ?string required for ?has_content to work with result from content wrapper! -->
+            <#local productText = (productContentWrapper.get("PRODUCT_NAME","html"))!?string>
             <#if !productText?has_content>
-              <#local productText = (productContentWrapper.get("PRODUCT_ID","html"))!>
+              <#local productText = (productContentWrapper.get("PRODUCT_ID","html"))!?string>
             </#if>
             <#if productText?has_content>
               <#local elemClass = styles.nav_breadcrumb!>

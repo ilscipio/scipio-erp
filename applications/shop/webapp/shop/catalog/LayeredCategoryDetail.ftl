@@ -44,15 +44,15 @@ under the License.
 
 
 <#if productCategory??>
-    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!/>
-    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!/>
+    <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!?string/>
+    <#assign categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")!?string/>
     <#if categoryName?has_content>
         <@heading>${categoryName}</@heading>
     </#if>
     <#if categoryDescription?has_content>
         <p>${categoryDescription}</p>
     </#if>
-    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!/>
+    <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!?string/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
     <#if categoryImageUrl?string?has_content || longDescription?has_content>
       <div>

@@ -1206,6 +1206,14 @@ public class RequestHandler {
      * request, if the request is defined as secure, a secure URL will be created. This method will now
      * <em>never</em> allow an insecure URL to built for a controller request marked secure.
      * In stock Ofbiz, this behavior was different: fullPath could generate insecure URLs to secure requests.
+     * In addition, fullPath will by default no longer downgrade HTTPS connections. To allow downgrades,
+     * you must explicitly specify request it by passing secure false.
+     * <p>
+     * <strong>secure behavior change</strong>: In Cato, if current browsing is secure, we NEVER downgrade to HTTPS
+     * unless explicitly requested by passing false as <secure>. Currently (2016-04-06), for security reasons, this downgrading request
+     * request ONLY applies to the case where the target link is marked as non-secure.
+     * In addition, secure flag no longer forces a fullPath link. Specify fullPath true in addition to secure to force a fullPath link.
+     * Links may still generate full-path secure links when needed even if not requested, however.
      * <p>
      * <strong>encode behavior</strong>: The <code>encode</code> flag controls whether the link should
      * be passed through <code>HttpServletResponse.encodeURL</code> method. For our purposes, this is <strong>NOT</strong>
@@ -1241,8 +1249,8 @@ public class RequestHandler {
      * @param interWebapp if true, treat the link as inter-webapp (default: false) (Cato: new parameter)
      * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Cato: new parameter)
      * @param controller if true, assume is a controller link and refer to controller for building link (default: true) (Cato: new parameter)
-     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false) (Cato: changed to Boolean instead of boolean)
-     * @param secure if true, always produce full secure URL (HTTPS) (default: false) (Cato: changed to Boolean instead of boolean)
+     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false) (Cato: changed to Boolean instead of boolean, and changed behavior)
+     * @param secure if true, resulting links is guaranteed to be secure (default: false) (Cato: changed to Boolean instead of boolean, and changed behavior)
      * @param encode if true, pass through response.encodeURL (default: true) (Cato: changed to Boolean instead of boolean)
      * @return the resulting URL
      */
@@ -1255,14 +1263,15 @@ public class RequestHandler {
         if (controller == null) {
             controller = Boolean.TRUE;
         }
+        // Cato: Code must be aware of whether these were explicitly requested or not
         // Cato: NOTE: change to Boolean not fully exploited yet
-        if (fullPath == null) {
-            fullPath = Boolean.FALSE;
-        }
-        if (secure == null) {
-            // Cato: NOTE: this does not mean the link is "insecure"!
-            secure = Boolean.FALSE;
-        }
+        //if (fullPath == null) {
+        //    fullPath = Boolean.FALSE;
+        //}
+        //if (secure == null) {
+        //    // Cato: NOTE: this does not mean the link is "insecure"!
+        //    secure = Boolean.FALSE;
+        //}
         if (encode == null) {
             encode = Boolean.TRUE;
         }
@@ -1354,18 +1363,28 @@ public class RequestHandler {
         
         boolean didFullSecure = false;
         boolean didFullStandard = false;
-        // Cato: We need to enter even if no controller
+        // Cato: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
-        if (webSiteProps.getEnableHttps() || fullPath || secure) {    
+        if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            // Cato: This condition has been CHANGED: if fullPath and target URI is secure, make secure URL instead of insecure.
+            // Cato: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
             // We will NEVER build insecure URLs to requests marked secure.
             // This way, there is less control, but fullPath becomes easier and safer to use.
+            // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
+            // 2016-04-06: secure flag no longer forces a fullPath link, but we can only omit the full path in cases where we are already secure
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
-            if (secure || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || fullPath))) {
-                didFullSecure = true;
+            //    didFullSecure = true;
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
-            } else if (fullPath || (webSiteProps.getEnableHttps() && requestMap != null && !requestMap.securityHttps && request.isSecure())) {
+            //    didFullStandard = true;
+            //}
+            if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
+                || (webSiteProps.getEnableHttps() && requestMap != null && requestMap.securityHttps && (!request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+                || (webSiteProps.getEnableHttps() && secure == null && Boolean.TRUE.equals(fullPath)) // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+                ) {
+                didFullSecure = true;
+            } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
+                    || (webSiteProps.getEnableHttps() && requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed
+                    ) {
                 didFullStandard = true;
             }
         }

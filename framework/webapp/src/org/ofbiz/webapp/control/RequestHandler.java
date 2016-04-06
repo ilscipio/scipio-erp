@@ -1365,7 +1365,9 @@ public class RequestHandler {
         boolean didFullStandard = false;
         // Cato: We need to enter even if no controller (and other cases)
         //if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
-        if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
+        // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
+        //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {    
+        {
             if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
             // Cato: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
             // We will NEVER build insecure URLs to requests marked secure.
@@ -1383,7 +1385,7 @@ public class RequestHandler {
                 ) {
                 didFullSecure = true;
             } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                    || (webSiteProps.getEnableHttps() && requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed
+                    || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed. Also, removed this check: webSiteProps.getEnableHttps()
                     ) {
                 didFullStandard = true;
             }

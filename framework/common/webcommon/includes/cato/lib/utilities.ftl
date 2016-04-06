@@ -55,12 +55,15 @@ request is defined as secure, a secure URL will be created. This method will now
 insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was 
 different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will 
 by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify 
-request it by passing secure false.
+request it by passing secure false, and this may still produce a secure link if the target
+is marked secure. Currently, this applies to all links including inter-webapp links.
 
 '''secure behavior change:''' In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless 
-explicitly requested by passing false as . Currently (2016-04-06), for security reasons, this 
-downgrading request request ONLY applies to the case where the target link is marked as non-secure. 
-In addition, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
+explicitly requested by passing secure false, and secure false may still produce a secure link if
+needed. Currently (2016-04-06), for security reasons, this 
+downgrading request request only applies to the case where the target link is marked as non-secure, such
+that in general, setting secure false does not may the link will be insecure in all cases.
+In addition, in Cato, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
 secure to force a fullPath link. Links may still generate full-path secure links when needed even 
 if not requested, however.
 

@@ -9750,7 +9750,7 @@
     </property>
     <property key="OrderPurchaseHistory">
         <value xml:lang="de">Auftragshistorie für Aufträge die Ihnen zugesendet wurden</value>
-        <value xml:lang="en">Order history for orders send to you</value>
+        <value xml:lang="en">Order history for orders sent to you</value>
         <value xml:lang="fr">Historique des commandes qui vous ont été envoyées</value>
         <value xml:lang="it">Storia ordini inviati a te</value>
         <value xml:lang="ja">発送済の注文履歴</value>

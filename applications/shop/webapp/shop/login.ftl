@@ -97,7 +97,7 @@ under the License.
         
         
           <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
-          <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.CommonMayCreate}</a>
+          <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_register!}">${uiLabelMap.CommonMayCreate}</a>
         
       </fieldset>
     </form>

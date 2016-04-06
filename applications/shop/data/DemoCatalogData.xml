@@ -20,13 +20,6 @@ under the License.
 
 <entity-engine-xml>
 
-    <!-- 
-    Cato: TODO:
-      * At least 1 rental product part of this store (all rentals are still part of their own rental store), under TRVL-100
-      * What to do about rental store
-      * More
-    -->
-
     <!-- Cato: NOTES: 
       * Some of the IDs from old ecommerce stock data have been changed, but not all yet:
         Generally, the completely new elements get a new IDs (from a new series of numbers, where applicable) 

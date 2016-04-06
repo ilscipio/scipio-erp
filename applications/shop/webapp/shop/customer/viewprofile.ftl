@@ -19,34 +19,35 @@ under the License.
 
 <#if party??>
 <#-- Main Heading -->
-<@table type="summary"> <#-- orig: width="100%" cellpadding="0" cellspacing="0" border="0" -->
-  <@tr>
-    <@td>
-      <@heading>${uiLabelMap.PartyTheProfileOf}
-        <#if person??>
-          ${person.personalTitle!}
-          ${person.firstName!}
-          ${person.middleName!}
-          ${person.lastName!}
-          ${person.suffix!}
-        <#else>
-          "${uiLabelMap.PartyNewUser}"
-        </#if>
-      </@heading>
-    </@td>
-    <@td align="right">
-      <#if showOld>
-        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_hide!}">${uiLabelMap.PartyHideOld}</a>
-      <#else>
-        <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_show!}">${uiLabelMap.PartyShowOld}</a>
-      </#if>
-      <#if ((productStore.enableDigProdUpload)!) == "Y">
-        <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_import!}">${uiLabelMap.EcommerceDigitalProductUpload}</a>
-      </#if>
-    </@td>
-  </@tr>
-</@table>
 
+<p>${uiLabelMap.PartyTheProfileOf}
+    <#if person??>
+      ${person.personalTitle!}
+      ${person.firstName!}
+      ${person.middleName!}
+      ${person.lastName!}
+      ${person.suffix!}
+    <#else>
+      ${uiLabelMap.PartyNewUser}
+    </#if>
+</p>
+
+<@menu type="button">
+  <#if showOld>
+    <@menuitem type="link" href=makeOfbizUrl("viewprofile") class="+${styles.action_run_sys!} ${styles.action_hide!}" text=uiLabelMap.PartyHideOld />
+  <#else>
+    <@menuitem type="link" href=makeOfbizUrl("viewprofile?SHOW_OLD=true") class="+${styles.action_run_sys!} ${styles.action_show!}" text=uiLabelMap.PartyShowOld />
+  </#if>
+  <#if ((productStore.enableDigProdUpload)!) == "Y">
+    <@menuitem type="link" href=makeOfbizUrl("digitalproductlist") class="${styles.link_nav!} ${styles.action_import!}" text=uiLabelMap.EcommerceDigitalProductUpload />
+  </#if>
+</@menu>
+<#-- ============================================================= -->
+<#-- Cato: TODO: Language -->
+<@section title=uiLabelMap.EcommerceLanguage>
+  TODO
+</@section>
+<#-- ============================================================= -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#assign itemText><#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></#assign>
@@ -83,14 +84,21 @@ under the License.
       <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
     </#if>
 </@section>
-
 <#-- ============================================================= -->
-<#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
-  <@section title=uiLabelMap.EcommerceLoyaltyPoints>
-    <p>${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</p>
-  </@section>
-</#if>
-
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
+    </@menu>
+</#macro>
+<@section title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" menuContent=menuContent>
+    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+      <@tr>
+        <@td align="right" valign="top">${uiLabelMap.CommonUsername}</@td>
+        <@td>&nbsp;</@td>
+        <@td valign="top">${userLogin.userLoginId}</@td>
+      </@tr>
+    </@table>
+</@section>
 <#-- ============================================================= -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -210,7 +218,7 @@ under the License.
       </#list>
     </@table>
   <#else>
-    <label>${uiLabelMap.PartyNoContactInformation}.</label><br />
+    <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
   </#if>
 </@section>
 
@@ -312,6 +320,7 @@ under the License.
 </@section>
 
 <#-- ============================================================= -->
+<#-- Cato: TODO?
 <@section title=uiLabelMap.PartyTaxIdentification>
     <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
       <div>
@@ -321,23 +330,7 @@ under the License.
       </div>
     </form>
 </@section>
-
-<#-- ============================================================= -->
-<#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
-    </@menu>
-</#macro>
-<@section title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" menuContent=menuContent>
-    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
-      <@tr>
-        <@td align="right" valign="top">${uiLabelMap.CommonUsername}</@td>
-        <@td>&nbsp;</@td>
-        <@td valign="top">${userLogin.userLoginId}</@td>
-      </@tr>
-    </@table>
-</@section>
-
+-->
 <#-- ============================================================= -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -366,10 +359,16 @@ under the License.
       </@table>
   </form>
 </@section>
-
 <#-- ============================================================= -->
+<#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
+  <@section title=uiLabelMap.EcommerceLoyaltyPoints>
+    <p>${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</p>
+  </@section>
+</#if>
+<#-- ============================================================= -->
+<#-- Cato: TODO?
 <@section title=uiLabelMap.EcommerceFileManager>
-    <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+    <@table type="fields"> <#-orig: width="100%" border="0" cellpadding="1"->
       <#if partyContent?has_content>
         <#list partyContent as contentRole>
         <#assign content = contentRole.getRelatedOne("Content", false) />
@@ -426,13 +425,14 @@ under the License.
       </form>
     </div>
 </@section>
-
+-->
 <#-- ============================================================= -->
+<#-- Cato: TODO?
 <@section title=uiLabelMap.PartyContactLists>
-    <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
+    <@table type="data-complex"> <#-orig: width="100%" border="0" cellpadding="1" cellspacing="0"->
       <@tr>
         <@th>${uiLabelMap.EcommerceListName}</@th>
-        <#-- <@th>${uiLabelMap.OrderListType}</@th> -->
+        <#-<@th>${uiLabelMap.OrderListType}</@th>->
         <@th>${uiLabelMap.CommonFromDate}</@th>
         <@th>${uiLabelMap.CommonThruDate}</@th>
         <@th>${uiLabelMap.CommonStatus}</@th>
@@ -444,11 +444,11 @@ under the License.
       <#assign contactList = contactListParty.getRelatedOne("ContactList", false)! />
       <#assign statusItem = contactListParty.getRelatedOne("StatusItem", true)! />
       <#assign emailAddress = contactListParty.getRelatedOne("PreferredContactMech", true)! />
-      <#-- <#assign contactListType = contactList.getRelatedOne("ContactListType", true)/> -->
+      <#-<#assign contactListType = contactList.getRelatedOne("ContactListType", true)/>->
       <@tr><@td colspan="7"></@td></@tr>
       <@tr>
         <@td>${contactList.contactListName!}<#if contactList.description?has_content>&nbsp;-&nbsp;${contactList.description}</#if></@td>
-        <#-- <@td>${contactListType.get("description",locale)!}</@td> -->
+        <#-<@td>${contactListType.get("description",locale)!}</@td>->
         <@td>${contactListParty.fromDate!}</@td>
         <@td>${contactListParty.thruDate!}</@td>
         <@td>${(statusItem.get("description",locale))!}</@td>
@@ -504,13 +504,13 @@ under the License.
         <span class="tableheadtext">${uiLabelMap.EcommerceNewListSubscription}: </span>
         <select name="contactListId" class="selectBox">
           <#list publicContactLists as publicContactList>
-            <#-- <#assign publicContactListType = publicContactList.getRelatedOne("ContactListType", true)> -->
+            <#-<#assign publicContactListType = publicContactList.getRelatedOne("ContactListType", true)>->
             <#assign publicContactMechType = publicContactList.getRelatedOne("ContactMechType", true)! />
-            <option value="${publicContactList.contactListId}">${publicContactList.contactListName!} <#-- ${publicContactListType.get("description",locale)} --> <#if publicContactMechType?has_content>[${publicContactMechType.get("description",locale)}]</#if></option>
+            <option value="${publicContactList.contactListId}">${publicContactList.contactListName!} <#-${publicContactListType.get("description",locale)} -> <#if publicContactMechType?has_content>[${publicContactMechType.get("description",locale)}]</#if></option>
           </#list>
         </select>
         <select name="preferredContactMechId" class="selectBox">
-        <#-- <option></option> -->
+        <#-<option></option>->
           <#list partyAndContactMechList as partyAndContactMech>
             <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode!}-${partyAndContactMech.tnAreaCode!}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2!}, ${partyAndContactMech.paCity!}, ${partyAndContactMech.paStateProvinceGeoId!}, ${partyAndContactMech.paPostalCode!}, ${partyAndContactMech.paPostalCodeExt!} ${partyAndContactMech.paCountryGeoId!}</#if></option>
           </#list>
@@ -521,8 +521,9 @@ under the License.
     </div>
     <label>${uiLabelMap.EcommerceListNote}</label>
 </@section>
-
+-->
 <#-- ============================================================= -->
+<#-- Cato: TODO?
 <#if surveys?has_content>
   <@section title=uiLabelMap.EcommerceSurveys>
     <@table type="data-complex" width="100%" border="0" cellpadding="1">
@@ -550,22 +551,27 @@ under the License.
     </@table>
   </@section>
 </#if>
-
+-->
 <#-- ============================================================= -->
 <#-- only 5 messages will show; edit the ViewProfile.groovy to change this number -->
+<#-- Cato: TODO? 
 ${screens.render("component://shop/widget/CustomerScreens.xml#messagelist-include")}
-
+-->
+<#-- Cato: TODO? 
 ${screens.render("component://shop/widget/CustomerScreens.xml#FinAccountList-include")}
-
+-->
 <#-- Serialized Inventory Summary -->
+<#-- Cato: TODO? 
 ${screens.render('component://shop/widget/CustomerScreens.xml#SerializedInventorySummary')}
-
+-->
 <#-- Subscription Summary -->
+<#-- Cato: TODO? 
 ${screens.render('component://shop/widget/CustomerScreens.xml#SubscriptionSummary')}
-
+-->
 <#-- Reviews -->
+<#-- Cato: TODO? 
 ${screens.render('component://shop/widget/CustomerScreens.xml#showProductReviews')}
-
+-->
 <#else>
     <@commonMsg type="error">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</@commonMsg>
 </#if>

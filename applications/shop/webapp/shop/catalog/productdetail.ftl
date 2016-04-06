@@ -208,7 +208,7 @@
                 -->
 
                 <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
-                <#if (showPriceDetails?? && showPriceDetails?default("N") == "Y")>
+                <#if (showPriceDetails?? && (showPriceDetails!"N") == "Y")>
                     <#if price.orderItemPriceInfos??>
                         <#list price.orderItemPriceInfos as orderItemPriceInfo>
                             <p>${orderItemPriceInfo.description!}</p>
@@ -222,6 +222,11 @@
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
                     <#assign inStock = true />
+                    
+                    <#-- Cato: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
+                        See org.ofbiz.product.product.ProductWorker.getVariantFromFeatureTree(String, List<String>, Delegator).
+                        The check only happens server-side currently. -->
+                    
                     <#-- Variant Selection -->
                     <#if (product.isVirtual!?upper_case) == "Y">
                         <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>

@@ -203,6 +203,13 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section>
+                    <decorator-section name="pre-body" >
+                        <section>
+                            <widgets>
+                                <decorator-section-include name="pre-body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body" >
                         <section>
                             <condition>

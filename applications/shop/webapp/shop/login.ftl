@@ -49,34 +49,31 @@ under the License.
 })();
 </@script>
   <@section title=uiLabelMap.CommonRegistered>
-    <#--<@table class="+Signlogin">--> <#-- orig: width="100%" class="Signlogin" -->
     <@row class="+Signlogin">
       <@cell columns=6>
           <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
             <fieldset>
-              <div>
+              
                 <label for="userName">${uiLabelMap.CommonUsername}</label>
                 <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
-              </div>
+              
               <#if autoUserLogin?has_content>
                 <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
               </#if>
-              <div>
+              
                 <label for="password">${uiLabelMap.CommonPassword}:</label>
                 <input type="password" id="password" name="PASSWORD" value=""/>
-              </div>
-              <div>
+              
+              
                 <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
-              </div>
-              <div>
+              
+              
                 <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
                 <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.CommonMayCreate}</a>
-              </div>
+              
             </fieldset>
           </form>
-      </@cell>
-      <@cell columns=6>
-         <div id="janrainEngageEmbed"></div>
+         <div id="janrainEngageEmbed">
       </@cell>
     </@row>
   </@section>
@@ -84,24 +81,24 @@ under the License.
   <@section title=uiLabelMap.CommonRegistered>
     <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
       <fieldset>
-        <div>
+        
           <label for="userName">${uiLabelMap.CommonUsername}</label>
           <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
-        </div>
+        
         <#if autoUserLogin?has_content>
           <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
         </#if>
-        <div>
+        
           <label for="password">${uiLabelMap.CommonPassword}:</label>
           <input type="password" id="password" name="PASSWORD" value=""/>
-        </div>
-        <div>
+        
+        
           <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
-        </div>
-        <div>
+        
+        
           <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
           <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.CommonMayCreate}</a>
-        </div>
+        
       </fieldset>
     </form>
   </@section>
@@ -109,23 +106,23 @@ under the License.
 
 <@section title=uiLabelMap.CommonForgotYourPassword>
   <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">
-    <div>
+    
       <label for="forgotpassword_userName">${uiLabelMap.CommonUsername}</label>
       <input type="text" id="forgotpassword_userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
-    </div>
-    <div>
+    
+    
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_view!}" name="GET_PASSWORD_HINT" value="${uiLabelMap.CommonGetPasswordHint}"/>
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_send!}" name="EMAIL_PASSWORD" value="${uiLabelMap.CommonEmailPassword}"/>
-    </div>
+    
   </form>
 </@section>
 <#--    
 <@section title=uiLabelMap.CommonNewUser>
   <form method="post" action="<@ofbizUrl>newcustomer</@ofbizUrl>">
-    <div>
+    
       <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</p>
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" id="newcustomer_submit" value="${uiLabelMap.CommonMayCreate}"/>
-    <div>
+    
   </form>
 </@section>
 -->

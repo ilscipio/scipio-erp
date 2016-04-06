@@ -1077,8 +1077,11 @@
     <li><@ofbizUrl uri="main" webSiteId="CatoWebStore"/></li>
     <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true/></li>
     <#-- Explicitly allow downgrading to HTTP -->
     <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
+    <#-- Explicitly allow downgrading to HTTP -->
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true secure=false/></li>
     <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" /></li>
     <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
     <li>${makeOfbizInterWebappUrl("main", "CatoWebStore")}</li>
@@ -1092,6 +1095,8 @@
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
     <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true/></li>
+    <#-- Allow downgrade -->
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true secure=false/></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
     <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="CatoWebStore" controller=false /></li>
     <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" controller=true /></li>

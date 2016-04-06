@@ -132,7 +132,7 @@ Creates a panel box.
 <#macro panel_markup type="" title="" origArgs={} passArgs={} catchArgs...>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
-    <div class="${styles.panel_body!}"><p><#nested></p></div>
+    <div class="${styles.panel_body!}"><#nested></div>
   </div>
 </#macro>
 

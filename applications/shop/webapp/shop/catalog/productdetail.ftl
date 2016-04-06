@@ -172,8 +172,6 @@
                     <#assign oldPrice = price.defaultPrice/>
                 </#if>
 
-
-                
                 <#if price.price?has_content>
                     <#assign currentPrice = price.price/>
                 <#else>

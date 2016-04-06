@@ -333,7 +333,7 @@ under the License.
         <!-- Add Product Item to Shopping Cart -->
         <set field="nextDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.addDaysToTimestamp(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), +1)}" type="Timestamp"/>
         <set field="prodCatalogId" value="DemoCatalog" type="String"/>
-        <set field="productId" value="RentalShip" type="String"/>
+        <set field="productId" value="RT-1000" type="String"/>
         <set field="reservStart" from-field="nextDate" type="Timestamp"/>
         <set field="reservLength" value="3" type="BigDecimal"/>
         <set field="reservPersons" value="1" type="BigDecimal"/>
@@ -597,8 +597,8 @@ under the License.
         </call-class-method>
         <log level="info" message="===== >>> Event : routeOrderEntry, Response : ${result}"/>
         <!-- Set parameters -->
-        <set field="testParams.add_product_id" value="CFSV1001"/>
-        <set field="testParams.product_id" value="CFSV1001"/>
+        <set field="testParams.add_product_id" value="CSV-1001"/>
+        <set field="testParams.product_id" value="CSV-1001"/>
         <set field="testParams.FT0_0_0TYPE" value="SCAN_TYPE"/>
         <set field="testParams.product_id0_0_0" value="SCAN_TYPE"/>
         <set field="testParams.0" value="0"/>

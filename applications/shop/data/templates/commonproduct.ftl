@@ -2,8 +2,8 @@
 <#--
 Cato: Template for generic Cato Shop products.
 
-FIXME: Can't use globals, so limited
 TODO: Should group entities together so faster data load, but can't without globals
+NOTE: This template does not support globals as-is (#global)
 -->
 <entity-engine-xml>
 <#recurse doc>
@@ -43,13 +43,33 @@ TODO: Should group entities together so faster data load, but can't without glob
 
     <#local listPrice = (.node.@listPrice[0])!"">
     <#local defaultPrice = (.node.@defaultPrice[0])!"">
-    <#if !listPrice?has_content>
-      <#local listPrice = defaultPrice>
-    <#elseif !defaultPrice?has_content>
-      <#local defaultPrice = listPrice>
+    <#local minimumOrderPrice = (.node.@minimumOrderPrice[0])!"">
+
+    <#local inventoryItemId = (.node.@inventoryItemId[0])!"">
+    <#if !inventoryItemId?has_content>
+      <#local inventoryItemId = "INV-" + productId>
     </#if>
 
-    <Product productId="${productId}" productTypeId="${productTypeId}" primaryProductCategoryId="${productCategoryId}" productName="${productName?xml}" internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <#local inventoryQuantity = (.node.@inventoryQuantity[0])!"">
+    <#if !inventoryQuantity?has_content>
+      <#local inventoryQuantity = "500">
+    </#if>
+
+    <#local quantityIncluded = (.node.@quantityIncluded[0])!"">
+    <#local quantityUomId = (.node.@quantityUomId[0])!"">
+    <#local piecesIncluded = (.node.@piecesIncluded[0])!"">
+    <#local weight = (.node.@weight[0])!"">
+
+    <Product productId="${productId}" productTypeId="${productTypeId}" primaryProductCategoryId="${productCategoryId}" productName="${productName?xml}" 
+        internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}" 
+        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" 
+        createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" 
+        lastModifiedByUserLogin="admin"
+        <#if quantityIncluded?has_content> quantityIncluded="${quantityIncluded}"</#if>
+        <#if quantityUomId?has_content> quantityUomId="${quantityUomId}"</#if>
+        <#if piecesIncluded?has_content> piecesIncluded="${piecesIncluded}"</#if>
+        <#if weight?has_content> weight="${weight}"</#if>
+        />
 
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${productId}-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR${productId}-ALTEN" localeString="en_US"/>
@@ -64,8 +84,15 @@ TODO: Should group entities together so faster data load, but can't without glob
 
     <ProductContent productId="${productId}" contentId="${productId}-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
+  <#if defaultPrice?has_content>
     <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${defaultPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  </#if>
+  <#if listPrice?has_content>
     <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${listPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  </#if>
+  <#if minimumOrderPrice?has_content>
+    <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="MINIMUM_ORDER_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${minimumOrderPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+  </#if>
 
     <ProductCategoryMember productCategoryId="${productCategoryId}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
   <#if extraCategoryId1?has_content>
@@ -75,6 +102,12 @@ TODO: Should group entities together so faster data load, but can't without glob
     <ProductCategoryMember productCategoryId="${extraCategoryId2}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
   </#if>
 
+    <ProductFacility productId="${productId}" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
+    <ProductFacilityLocation productId="${productId}" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
+        inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
+    <InventoryItemDetail inventoryItemId="${inventoryItemId}" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="${inventoryQuantity}" quantityOnHandDiff="${inventoryQuantity}" accountingQuantityDiff="${inventoryQuantity}"/>
+    
 </#macro>
 
 <#macro @element>

@@ -216,7 +216,7 @@ under the License.
         <#-- Multi-Item PO Receiving -->
         <#elseif requestParameters.initialSelected?? && purchaseOrder?has_content>
           <@section>
-          <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl secure="${request.isSecure()?string}">getConvertedPrice"</@ofbizUrl> />
+          <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl>getConvertedPrice"</@ofbizUrl> />
           <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
           <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name="selectAllForm">
             <#-- general request fields -->

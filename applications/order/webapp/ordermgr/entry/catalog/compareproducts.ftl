@@ -68,7 +68,7 @@ under the License.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAdd${product_index}">
+                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -76,7 +76,7 @@ under the License.
                 <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
+                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
                     <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -172,7 +172,7 @@ under the License.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compare2FormAdd${product_index}">
+                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compare2FormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>

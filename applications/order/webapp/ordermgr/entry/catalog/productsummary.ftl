@@ -221,7 +221,7 @@ ${virtualJavaScript!}
           <#if averageRating?? && (averageRating?double > 0) && numRatings?? && (numRatings?long > 2)>
               <div>${uiLabelMap.OrderAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</div>
           </#if>
-          <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">addToCompare</@ofbizUrl>" name="addToCompare${requestAttributes.listIndex!}form">
+          <form method="post" action="<@ofbizUrl>addToCompare</@ofbizUrl>" name="addToCompare${requestAttributes.listIndex!}form">
               <input type="hidden" name="productId" value="${product.productId}"/>
               <input type="hidden" name="mainSubmitted" value="Y"/>
           </form>

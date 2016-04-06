@@ -2341,11 +2341,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public boolean getEncode() {
+        public Boolean getEncode() { // Cato: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public boolean getFullPath() {
+        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -2397,7 +2397,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public boolean getSecure() {
+        public Boolean getSecure() { // Cato: changed from boolean to Boolean
             return link.getSecure();
         }
 
@@ -3314,11 +3314,11 @@ public class ModelFormField {
             return link.getAutoServiceParameters();
         }
 
-        public boolean getEncode() {
+        public Boolean getEncode() { // Cato: changed from boolean to Boolean
             return link.getEncode();
         }
 
-        public boolean getFullPath() {
+        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
             return link.getFullPath();
         }
 
@@ -3370,7 +3370,7 @@ public class ModelFormField {
             return link.getPrefixExdr();
         }
 
-        public boolean getSecure() {
+        public Boolean getSecure() { // Cato: changed from boolean to Boolean
             return link.getSecure();
         }
 

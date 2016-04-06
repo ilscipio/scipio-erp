@@ -1881,15 +1881,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return link.getPrefix(context);
         }
 
-        public boolean getFullPath() {
+        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
             return link.getFullPath();
         }
 
-        public boolean getSecure() {
+        public Boolean getSecure() { // Cato: changed from boolean to Boolean
             return link.getSecure();
         }
 
-        public boolean getEncode() {
+        public Boolean getEncode() { // Cato: changed from boolean to Boolean
             return link.getEncode();
         }
 

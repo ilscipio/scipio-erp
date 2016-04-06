@@ -404,9 +404,9 @@ public abstract class TemplateFtlUtil {
             String newAction = "none";
             String[] parts = progressSuccessAction.split(";", 3);
             if (parts.length == 3) {
-                boolean fullPath = false;
-                boolean secure = false;
-                boolean encode = true;
+                Boolean fullPath = null;
+                Boolean secure = null;
+                Boolean encode = null;
                 String[] options = parts[1].split("\\s*,\\s*");
                 for(String pair : options) {
                     if (pair.length() > 0) {

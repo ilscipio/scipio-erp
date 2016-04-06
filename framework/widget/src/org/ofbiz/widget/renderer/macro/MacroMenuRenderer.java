@@ -114,9 +114,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
             String urlMode = image.getUrlMode();
             if ("ofbiz".equalsIgnoreCase(urlMode)) {
-                boolean fullPath = false;
-                boolean secure = false;
-                boolean encode = false;
+                Boolean fullPath = null; // Cato: changed from boolean to Boolean
+                Boolean secure = null; // Cato: changed from boolean to Boolean
+                Boolean encode = false; // Cato: changed from boolean to Boolean
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 src = rh.makeLink(request, response, src, fullPath, secure, encode);

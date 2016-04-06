@@ -649,9 +649,9 @@ public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStri
 
         writer.append(" src=\"");
         String urlMode = image.getUrlMode();
-        boolean fullPath = false;
-        boolean secure = false;
-        boolean encode = false;
+        Boolean fullPath = null; // Cato: changed from boolean to Boolean
+        Boolean secure = null; // Cato: changed from boolean to Boolean
+        Boolean encode = false; // Cato: changed from boolean to Boolean
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {

@@ -95,11 +95,11 @@ public abstract class RequestDescriptor {
         protected final HttpServletRequest request;
         protected final HttpServletResponse response;
         protected final String requestUri;
-        protected final boolean fullPath;
-        protected final boolean secure;
-        protected final boolean encode;
+        protected final Boolean fullPath;
+        protected final Boolean secure;
+        protected final Boolean encode;
 
-        public OfbizRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String requestUri, boolean fullPath, boolean secure, boolean encode) {
+        public OfbizRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String requestUri, Boolean fullPath, Boolean secure, Boolean encode) {
             super();
             this.request = request;
             this.response = response;
@@ -112,15 +112,15 @@ public abstract class RequestDescriptor {
         public static OfbizRequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
             // assumes begins with "ofbizUrl://" or "ofbizUri://" for now
             String path = uriRepr.substring("ofbizXxx://".length());
-            boolean fullPath = false;
-            boolean secure = false;
-            boolean encode = true;
+            Boolean fullPath = null;
+            Boolean secure = null;
+            Boolean encode = null;
             if (path.contains(";")) { // optimized for most cases (no args)
                 Map<String, String> optionVals = new HashMap<String, String>();
                 path = findStripUriStringDescriptorParameters(path, optionNames, optionVals);
-                fullPath = stringToBool(optionVals.get("fullPath"), false);
-                secure = stringToBool(optionVals.get("secure"), false);
-                encode = stringToBool(optionVals.get("encode"), true);
+                fullPath = stringToBool(optionVals.get("fullPath"), null);
+                secure = stringToBool(optionVals.get("secure"), null);
+                encode = stringToBool(optionVals.get("encode"), null);
             }
             return new OfbizRequestDescriptor(request, response, path, fullPath, secure, encode);
         }
@@ -146,19 +146,19 @@ public abstract class RequestDescriptor {
             return RequestHandler.makeUrl(request, response, requestUri, fullPath, secure, encode);
         }
 
-        public boolean isFullPath() {
+        public Boolean getFullPath() {
             return fullPath;
         }
 
-        public boolean isSecure() {
+        public Boolean getSecure() {
             return secure;
         }
 
-        public boolean isEncode() {
+        public Boolean getEncode() {
             return encode;
         }
         
-        private static boolean stringToBool(String arg, boolean defaultVal) {
+        private static Boolean stringToBool(String arg, Boolean defaultVal) {
             if ("true".equals(arg)) {
                 return true;
             }

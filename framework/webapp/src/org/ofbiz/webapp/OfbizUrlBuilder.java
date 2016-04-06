@@ -167,7 +167,7 @@ public final class OfbizUrlBuilder {
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
-     * Cato: Modified to support omitting controller lookup.
+     * Cato: Modified to support omitting controller lookup. Also supports Boolean instead of boolean.
      * 
      * @param buffer
      * @param url
@@ -178,7 +178,11 @@ public final class OfbizUrlBuilder {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildHostPart(Appendable buffer, String url, boolean useSSL, boolean controller) throws WebAppConfigurationException, IOException {
+    public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
+        // Cato: support Boolean
+        useSSL = Boolean.TRUE.equals(useSSL); // default false
+        controller = !Boolean.FALSE.equals(useSSL); // default true
+        
         boolean makeSecure = useSSL;
         String[] pathElements = url.split("/");
         String requestMapUri = pathElements[0];
@@ -224,7 +228,7 @@ public final class OfbizUrlBuilder {
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
-     * Cato: Version that assumes controller is to be used.
+     * Cato: Version that assumes controller is to be used. Also accepts Boolean instead of boolean.
      * 
      * @param buffer
      * @param url
@@ -234,7 +238,7 @@ public final class OfbizUrlBuilder {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildHostPart(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+    public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL) throws WebAppConfigurationException, IOException {
         return buildHostPart(buffer, url, useSSL, true);
     }
 

@@ -350,9 +350,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         String border = image.getBorder(context);
         String alt = ""; //TODO add alt to tree images image.getAlt(context);
  
-        boolean fullPath = false;
-        boolean secure = false;
-        boolean encode = false;
+        Boolean fullPath = null; // Cato: changed from boolean to Boolean
+        Boolean secure = null; // Cato: changed from boolean to Boolean
+        Boolean encode = false; // Cato: changed from boolean to Boolean
         String urlString = "";
         
         if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {

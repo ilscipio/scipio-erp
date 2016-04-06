@@ -314,15 +314,15 @@ public final class CommonWidgetModels {
         public static final String DEFAULT_URL_MODE = "intra-app";
         private final AutoEntityParameters autoEntityParameters;
         private final AutoServiceParameters autoServiceParameters;
-        private final boolean encode;
-        private final boolean fullPath;
+        private final Boolean encode; // Cato: changed from boolean to Boolean
+        private final Boolean fullPath; // Cato: changed from boolean to Boolean
         private final FlexibleStringExpander idExdr;
         private final Image image;
         private final String linkType; // anchor or hidden form
         private final FlexibleStringExpander nameExdr;
         private final List<Parameter> parameterList;
         private final FlexibleStringExpander prefixExdr;
-        private final boolean secure;
+        private final Boolean secure; // Cato: changed from boolean to Boolean
         private final Integer size;
         private final FlexibleStringExpander styleExdr;
         private final FlexibleStringExpander targetExdr;
@@ -342,9 +342,10 @@ public final class CommonWidgetModels {
             this.targetWindowExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("target-window"));
             this.prefixExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("prefix"));
             this.urlMode = linkElement.getAttribute("url-mode");
-            this.fullPath = "true".equals(linkElement.getAttribute("full-path"));
-            this.secure = "true".equals(linkElement.getAttribute("secure"));
-            this.encode = "true".equals(linkElement.getAttribute("encode"));
+            // Cato: changed from boolean to Boolean
+            this.fullPath = "true".equals(linkElement.getAttribute("full-path")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("full-path")) ? Boolean.FALSE : null);
+            this.secure = "true".equals(linkElement.getAttribute("secure")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("secure")) ? Boolean.FALSE : null);
+            this.encode = "true".equals(linkElement.getAttribute("encode")) ? Boolean.TRUE : ("false".equals(linkElement.getAttribute("encode")) ? Boolean.FALSE : null);
             Element imageElement = UtilXml.firstChildElement(linkElement, "image");
             if (imageElement != null) {
                 this.image = new Image(imageElement);
@@ -394,15 +395,15 @@ public final class CommonWidgetModels {
         public Link(GenericValue portalPage, List<Parameter> parameterList, String target, Locale locale) {
             this.autoEntityParameters = null;
             this.autoServiceParameters = null;
-            this.encode = false;
-            this.fullPath = false;
+            this.encode = null; // Cato: Null default
+            this.fullPath = null; // Cato: Null default
             this.idExdr = FlexibleStringExpander.getInstance("");
             this.image = null;
             this.linkType = "";
             this.nameExdr = FlexibleStringExpander.getInstance("");
             this.parameterList = Collections.unmodifiableList(parameterList);
             this.prefixExdr = FlexibleStringExpander.getInstance("");
-            this.secure = false;
+            this.secure = null;
             this.styleExdr = FlexibleStringExpander.getInstance("");
             this.targetExdr = FlexibleStringExpander.getInstance(target);
             this.targetWindowExdr = FlexibleStringExpander.getInstance("");
@@ -421,11 +422,11 @@ public final class CommonWidgetModels {
             return autoServiceParameters;
         }
 
-        public boolean getEncode() {
+        public Boolean getEncode() { // Cato: changed from boolean to Boolean
             return this.encode;
         }
 
-        public boolean getFullPath() {
+        public Boolean getFullPath() { // Cato: changed from boolean to Boolean
             return this.fullPath;
         }
 
@@ -487,7 +488,7 @@ public final class CommonWidgetModels {
             return prefixExdr;
         }
 
-        public boolean getSecure() {
+        public Boolean getSecure() { // Cato: changed from boolean to Boolean
             return this.secure;
         }
 

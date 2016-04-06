@@ -64,14 +64,22 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
         return null;
     }
 
-    public boolean checkArg(Map args, String key, boolean defaultValue) {
+    // Cato: Modified to support Boolean
+    public Boolean checkArg(Map args, String key, Boolean defaultValue) {
         if (!args.containsKey(key)) {
             return defaultValue;
         } else {
             Object o = args.get(key);
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                return "true".equalsIgnoreCase(s.getAsString());
+                if ("true".equalsIgnoreCase(s.getAsString())) {
+                    return true;
+                } else if ("false".equalsIgnoreCase(s.getAsString())) { // Cato: require explicit false
+                    return false;
+                }
+                else {
+                    return defaultValue;
+                }
             }
             return defaultValue;
         }
@@ -82,8 +90,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, final Map args)
             throws TemplateModelException, IOException {
         final StringBuilder buf = new StringBuilder();
-        final boolean fullPath = checkArg(args, "fullPath", false);
-        final boolean secure = checkArg(args, "secure", false);
+        final Boolean fullPath = checkArg(args, "fullPath", null); // Cato: changed from boolean to Boolean
+        final Boolean secure = checkArg(args, "secure", null); // Cato: changed from boolean to Boolean
 
         return new Writer(out) {
             
@@ -121,7 +129,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                             url = CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
                         }
                         // make the link
-                        if (fullPath){
+                        if (Boolean.TRUE.equals(fullPath)){ // Cato: safe check
                             OfbizUrlBuilder builder = OfbizUrlBuilder.from(request);
                             builder.buildHostPart(newURL, url, secure);
                         }

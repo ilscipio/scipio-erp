@@ -105,7 +105,7 @@
     </property>
     <property key="FacilityCompanyName">
         <value xml:lang="de">CATO - Einrichtungen Verwaltung</value>
-        <value xml:lang="en">CATO - Facility Manager</value>
+        <value xml:lang="en">CATO - Warehouse Manager</value>
         <value xml:lang="es">CATO - Administrador de Almacén</value>
         <value xml:lang="fr">CATO - Gestion de stock</value>
         <value xml:lang="it">CATO - Gestione stabilimenti</value>
@@ -141,7 +141,7 @@
     </property>
     <property key="FacilityFacility">
         <value xml:lang="de">Lager</value>
-        <value xml:lang="en">Facility</value>
+        <value xml:lang="en">Warehouse</value>
         <value xml:lang="es">Almacén</value>
         <value xml:lang="fr">Lieu de stockage</value>
         <value xml:lang="it">Stabilimento </value>
@@ -210,7 +210,7 @@
         <value xml:lang="zh_TW">暫停出貨</value>
     </property>
     <property key="FacilityInventoryItemsMissingCurrencyId">
-        <value xml:lang="en">Error: you cannot create inventory items with no currencyUomId; you can set a default currency in the PartyAcctgPreference for the party ${inventoryItem.ownerPartyId}, or in the general.properties file under the key currency.uom.id.default.</value>
+        <value xml:lang="en">Error: you cannot create inventory items with no currencyUomId; you can set a default currency in the PartyAcctgPreference for the user ${inventoryItem.ownerPartyId}, or in the general.properties file under the key currency.uom.id.default.</value>
         <value xml:lang="it">Errore: tu non puoi creare una riga di inventario senza indicare la valuta; puoi imposta la valuta di default attraverso le preferenze del soggetto proprietario ${inventoryItem.ownerPartyId}, o nel file general.properties alla chiave currency.uom.id.default.</value>
         <value xml:lang="ja">エラー: 通貨単位IDを指定しないと在庫アイテムの作成ができません。取引先 ${inventoryItem.ownerPartyId} の取引先会計設定、または、general.properties ファイルのキー currency.uom.id.default でデフォルトの通貨を設定することができます。</value>
         <value xml:lang="vi">Báo lỗi: Bạn không thể tạo hàng hóa trong kho chứa thiếu mã tiền tệ; bạn có thể đặt mã tiền tệ mặc địc trong phần ${inventoryItem.ownerPartyId}, hoặc trong tệp tin general.properties với từ khóa là currency.uom.id.default.</value>
@@ -218,7 +218,7 @@
         <value xml:lang="zh_TW">錯誤:沒有貨幣單位標識(currencyUomId),你不能新建庫存細項;你能在團體帳戶偏好(PartyAcctgPreference)中為團體 ${inventoryItem.ownerPartyId} 或在 general.properties 檔的鍵 currency.uom.id.default 下偏好預設幣種.</value>
     </property>
     <property key="FacilityInventoryItemsMissingFacilityId">
-        <value xml:lang="en">Error: you cannot create inventory items with no facility id.</value>
+        <value xml:lang="en">Error: you cannot create inventory items with no warehouse id.</value>
         <value xml:lang="it">Errore: tu non puoi creare una riga di inventario senza il codice stabilimento.</value>
         <value xml:lang="ja">エラー: 拠点IDを指定しないと在庫アイテムの作成ができません。</value>
         <value xml:lang="vi">Báo lỗi: Bạn không thể tạo hàng hóa trong kho chứa thiếu mã Chi nhánh / Cơ sở</value>
@@ -267,7 +267,7 @@
     </property>
     <property key="FacilityNoFacility">
         <value xml:lang="de">Kein Lager</value>
-        <value xml:lang="en">No Facility</value>
+        <value xml:lang="en">No Warehouse</value>
         <value xml:lang="es">Ningún almacén</value>
         <value xml:lang="fr">Aucun lieu de stockage</value>
         <value xml:lang="it">Nessun stabilimento</value>
@@ -290,7 +290,7 @@
         <value xml:lang="zh_TW">沒有要送貨的細項</value>
     </property>
     <property key="FacilityNoAssociatedWithProcuctStore">
-        <value xml:lang="en">Facility with id ${parameters.facilityId} is not associated to ProductStore with id ${parameters.productStoreId}, not reserving inventory.</value>
+        <value xml:lang="en">Warehouse with id ${parameters.facilityId} is not associated to ProductStore with id ${parameters.productStoreId}, not reserving inventory.</value>
         <value xml:lang="it">Stabilimento con id ${parameters.facilityId} non è associato al negozio con id ${parameters.productStoreId}, nessun inventario verrà riservato.</value>
         <value xml:lang="ja">拠点ID ${parameters.facilityId} は製品店舗ID ${parameters.productStoreId} に関連付けられていません。在庫予約できません。</value>
         <value xml:lang="vi">Chi nhánh / Cơ sở ${parameters.facilityId} được liên kết với kho hàng  ${parameters.productStoreId}, không phải là kho chứa hàng dự trữ</value>
@@ -354,7 +354,7 @@
         <value xml:lang="zh_TW">沒有產品商店(ProductStore)與訂單結合;無法使用快速送貨</value>
     </property>
     <property key="FacilityNoQuickShipForNotInventoryFacility">
-        <value xml:lang="en">No inventory facility associated with ProductStore ${productStore.productStoreId}; cannot use Quick Ship</value>
+        <value xml:lang="en">No inventory warehouse associated with ProductStore ${productStore.productStoreId}; cannot use Quick Ship</value>
         <value xml:lang="it">Nessun inventario magazzino associato con il negozio ${productStore.productStoreId}; non puoi usare spedizione veloce</value>
         <value xml:lang="ja">製品店舗 ${productStore.productStoreId} と関連付けられた在庫拠点がありません。クイック発送は使用できません</value>
         <value xml:lang="vi">Không Chi nhánh / Cơ sở nào liên kết với kho hàng ${productStore.productStoreId}; không thể sử dụng tính năng Vận chuyển nhanh</value>
@@ -394,7 +394,7 @@
         <value xml:lang="zh_TW">挑選到群組</value>
     </property>
     <property key="FacilitySelection">
-        <value xml:lang="en">Facility Selection</value>
+        <value xml:lang="en">Warehouse Selection</value>
         <value xml:lang="fr">Choix du lieu de stockage</value>
         <value xml:lang="it">Seleziona stabilimento</value>
         <value xml:lang="ja">拠点選択</value>
@@ -862,7 +862,7 @@
         <value xml:lang="zh_TW">無法找到這個請求的帳戶編號.</value>
     </property>
     <property key="FacilityShipmentFedexCompanyPartyDoesNotExists">
-        <value xml:lang="en">Party with partyId ${companyPartyId} does not exist</value>
+        <value xml:lang="en">User with partyId ${companyPartyId} does not exist</value>
         <value xml:lang="it">Il soggetto con Id ${companyPartyId} non esiste</value>
         <value xml:lang="ja">取引先ID ${companyPartyId} の取引先が存在しません</value>
         <value xml:lang="vi">Người dùng với định danh ${companyPartyId} không tồn tại</value>
@@ -870,7 +870,7 @@
         <value xml:lang="zh_TW">不存在團體標識為 ${companyPartyId} 的團體</value>
     </property>
     <property key="FacilityShipmentFedexCompanyPartyHasNoName">
-        <value xml:lang="en">Party with partyId ${companyPartyId} has no name</value>
+        <value xml:lang="en">User with partyId ${companyPartyId} has no name</value>
         <value xml:lang="it">Il soggetto con Id ${companyPartyId} non ha un nome</value>
         <value xml:lang="ja">取引先ID ${companyPartyId} の取引先は名称が設定されていません</value>
         <value xml:lang="vi">Người dùng với định danh ${companyPartyId} không có thông tin Tên</value>
@@ -878,7 +878,7 @@
         <value xml:lang="zh_TW">團體標識為 ${companyPartyId} 的團體沒有名稱</value>
     </property>
     <property key="FacilityShipmentFedexCompanyPartyHasNotPostalAddress">
-        <value xml:lang="en">Party with partyId ${companyPartyId} does not have a current, fully populated postal address</value>
+        <value xml:lang="en">User with partyId ${companyPartyId} does not have a current, fully populated postal address</value>
         <value xml:lang="it">Il soggetto con Id ${companyPartyId} non ha attualmente, un'indirizzo postale popolato</value>
         <value xml:lang="ja">取引先ID ${companyPartyId} の取引先は現住所がありません。</value>
         <value xml:lang="vi">Người dùng với định danh ${companyPartyId} chưa có thông tin Địa chỉ bưu chính nơi cư trú</value>
@@ -886,7 +886,7 @@
         <value xml:lang="zh_TW">團體標識為 ${companyPartyId} 的團體沒有一個當前的、完整填寫的通信地址</value>
     </property>
     <property key="FacilityShipmentFedexCompanyPartyHasNotPrimaryPhoneNumber">
-        <value xml:lang="en">Party with partyId ${companyPartyId} does not have a current, fully populated primary phone number</value>
+        <value xml:lang="en">User with partyId ${companyPartyId} does not have a current, fully populated primary phone number</value>
         <value xml:lang="it">Il soggetto con Id ${companyPartyId} non ha attualmente, un numero di telefono primario completamente popolato</value>
         <value xml:lang="ja">取引先ID ${companyPartyId} の取引先は現住所の電話番号がありません。</value>
         <value xml:lang="vi">Người dùng với định danh ${companyPartyId} chưa có thông tin Số điện thoại</value>
@@ -1116,7 +1116,7 @@
         <value xml:lang="zh_TW">對FedEx出貨必須有 Shipment.originFacilityId:出貨標識 ${shipmentId},出貨路徑分區標識(shipmentRouteSegmentId)${shipmentRouteSegmentId}</value>
     </property>
     <property key="FacilityShipmentFedexOwnerPartyRequired">
-        <value xml:lang="en">Facility.ownerPartyId is required for Fedex shipments: shipmentId ${shipmentId}, shipmentRouteSegmentId ${shipmentRouteSegmentId}, facilityId ${facilityId}</value>
+        <value xml:lang="en">Warehouse.ownerPartyId is required for Fedex shipments: shipmentId ${shipmentId}, shipmentRouteSegmentId ${shipmentRouteSegmentId}, facilityId ${facilityId}</value>
         <value xml:lang="it">Propertario stabilimento è richiestp per le spedizioni con Fedex: spedizione ${shipmentId}, percorso spedizione ${shipmentRouteSegmentId}, stabilimento ${facilityId}</value>
         <value xml:lang="ja">Fedex発送には拠点所有者取引先IDが必要です。発送ID ${shipmentId} 発送経路セグメントID ${shipmentRouteSegmentId}</value>
         <value xml:lang="vi">Cần phải có thông tin Chủ thể cho chuyển vận Fedex: chuyển vận ${shipmentId}, chặng chuyển vận ${shipmentRouteSegmentId}, Chi nhánh / Cơ sở ${facilityId}</value>
@@ -1475,7 +1475,7 @@
         <value xml:lang="zh_TW">出貨閘道配置類型</value>
     </property>
     <property key="FacilityShipmentIdCreated">
-        <value xml:lang="en">Created shipment with ID {0} for ship group ID {1} for facility ID {2}</value>
+        <value xml:lang="en">Created shipment with ID {0} for ship group ID {1} for warehouse ID {2}</value>
         <value xml:lang="it">Creata spedizione numero {0} per il gruppo spedizione {1} per lo stabilimento {2}</value>
         <value xml:lang="ja">ID {0} の発送が、発送グループID {1}、拠点ID {2} に対して作成されました</value>
         <value xml:lang="vi">Đã tạo chuyển vận với định danh {0} cho nhóm chuyển vận ID {1} cho Chi nhánh / Cơ sở {2}</value>
@@ -2255,7 +2255,7 @@
         <value xml:lang="zh_TW">沒有為出貨路徑分區找到快遞出貨方法,其中出貨標識 ${shipmentId}、出貨路徑分區標識 ${shipmentRouteSegmentId}、團體標識 ${carrierPartyId}、出貨方法類型標識 ${shipmentMethodTypeId};</value>
     </property>
     <property key="FacilityShipmentUpsRouteSegmentThirdPartyCountryNotFound">
-        <value xml:lang="en">Third-party country not found for ShipmentRouteSegment with shipmentId ${shipmentId} and shipmentRouteSegmentId ${shipmentRouteSegmentId}</value>
+        <value xml:lang="en">Third-user country not found for ShipmentRouteSegment with shipmentId ${shipmentId} and shipmentRouteSegmentId ${shipmentRouteSegmentId}</value>
         <value xml:lang="it">Paese soggetto terzo non trovato per la spedizione ${shipmentId} e percorso spedizione ${shipmentRouteSegmentId}</value>
         <value xml:lang="ja">発送ID ${shipmentId} 発送経路セグメントID ${shipmentRouteSegmentId} の発送経路セグメントに対するサードパーティ国が見つかりません。</value>
         <value xml:lang="vi">Quốc gia thứ ba không tìm thấy cho Chặng chuyển với Chuyển vận ${shipmentId} và Chặng chuyển vận ${shipmentRouteSegmentId}</value>
@@ -2263,7 +2263,7 @@
         <value xml:lang="zh_TW">沒有為出貨路徑分區找到協力廠商國家,其中出貨標識 ${shipmentId}、出貨路徑分區標識 ${shipmentRouteSegmentId}</value>
     </property>
     <property key="FacilityShipmentUpsRouteSegmentThirdPartyPostalCodeNotFound">
-        <value xml:lang="en">Third-party postal code not found for ShipmentRouteSegment with shipmentId ${shipmentId} and shipmentRouteSegmentId ${shipmentRouteSegmentId}</value>
+        <value xml:lang="en">Third-user postal code not found for ShipmentRouteSegment with shipmentId ${shipmentId} and shipmentRouteSegmentId ${shipmentRouteSegmentId}</value>
         <value xml:lang="it">CAP soggetto terzo non trovato per la spedizione ${shipmentId} e percorso spedizione ${shipmentRouteSegmentId}</value>
         <value xml:lang="ja">発送ID ${shipmentId} 発送経路セグメントID ${shipmentRouteSegmentId} の発送経路セグメントに対するサードパーティ郵便番号が見つかりません。</value>
         <value xml:lang="vi">Mã bưu chính bên thứ ba không tìm thấy cho Chặng chuyển với Chuyển vận ${shipmentId} và Chặng chuyển vận ${shipmentRouteSegmentId}</value>
@@ -3669,7 +3669,7 @@
     </property>
     <property key="FormFieldTitle_carrierPartyId">
         <value xml:lang="de">Transportunternehmen Akteur ID</value>
-        <value xml:lang="en">Carrier Party Id</value>
+        <value xml:lang="en">Carrier User Id</value>
         <value xml:lang="es">Código de participante del transportista</value>
         <value xml:lang="fr">Réf. de transporteur (acteur)</value>
         <value xml:lang="it">Corriere</value>
@@ -3841,7 +3841,7 @@
     </property>
     <property key="FormFieldTitle_companyPartyId">
         <value xml:lang="de">Unternehmen Akteur ID</value>
-        <value xml:lang="en">Comp. Party Id</value>
+        <value xml:lang="en">Comp. User Id</value>
         <value xml:lang="es">Código de participante de la empresa</value>
         <value xml:lang="fr">Réf. de l'entreprise</value>
         <value xml:lang="it">Az.</value>
@@ -4513,7 +4513,7 @@
     </property>
     <property key="FormFieldTitle_facilityGroupId">
         <value xml:lang="de">Einrichtungsgruppe ID</value>
-        <value xml:lang="en">Facility Group Id</value>
+        <value xml:lang="en">Warehouse Group Id</value>
         <value xml:lang="es">Código Grupo de almacén</value>
         <value xml:lang="fr">Réf. de groupe de lieux de stockage</value>
         <value xml:lang="it">Gruppo Stabilimento</value>
@@ -4525,7 +4525,7 @@
     </property>
     <property key="FormFieldTitle_facilityGroupName">
         <value xml:lang="de">Einrichtungsgruppe Namen</value>
-        <value xml:lang="en">Facility Group Name</value>
+        <value xml:lang="en">Warehouse Group Name</value>
         <value xml:lang="es">Nombre de grupo de almacén</value>
         <value xml:lang="fr">Nom de groupe de lieux de stockage</value>
         <value xml:lang="it">Nome Gruppo Stabilimento</value>
@@ -4537,7 +4537,7 @@
     </property>
     <property key="FormFieldTitle_facilityGroupTypeId">
         <value xml:lang="de">Einrichtungsgruppe Typ ID</value>
-        <value xml:lang="en">Facility Group Type Id</value>
+        <value xml:lang="en">Warehouse Group Type Id</value>
         <value xml:lang="es">Código Tipo grupo de almacén</value>
         <value xml:lang="fr">Réf. de type de groupe de lieux de stockage</value>
         <value xml:lang="it">Tipo Gruppo Stabilimento</value>
@@ -4549,7 +4549,7 @@
     </property>
     <property key="FormFieldTitle_facilityId">
         <value xml:lang="de">Einrichtung ID</value>
-        <value xml:lang="en">Facility Id</value>
+        <value xml:lang="en">Warehouse Id</value>
         <value xml:lang="es">Código de almacén</value>
         <value xml:lang="fr">Lieu de stockage [Réf.]</value>
         <value xml:lang="it">Codice stabilimento</value>
@@ -4564,7 +4564,7 @@
     </property>
     <property key="FormFieldTitle_facilityIdTo">
         <value xml:lang="de">Einrichtung ID zu</value>
-        <value xml:lang="en">Facility Id To</value>
+        <value xml:lang="en">Warehouse Id To</value>
         <value xml:lang="es">Código de almacén destino</value>
         <value xml:lang="fr">Réf. de lieu de stockage de destination</value>
         <value xml:lang="it">Stabilimento Destinazione</value>
@@ -4576,7 +4576,7 @@
     </property>
     <property key="FormFieldTitle_facilityName">
         <value xml:lang="de">Einrichtung Name</value>
-        <value xml:lang="en">Facility Name</value>
+        <value xml:lang="en">Warehouse Name</value>
         <value xml:lang="es">Nombre de almacén</value>
         <value xml:lang="fr">Nom de lieu de stockage</value>
         <value xml:lang="it">Nome Stabilimento</value>
@@ -4590,7 +4590,7 @@
     </property>
     <property key="FormFieldTitle_facilityTypeId">
         <value xml:lang="de">Einrichtungstyp ID</value>
-        <value xml:lang="en">Facility Type Id</value>
+        <value xml:lang="en">Warehouse Type Id</value>
         <value xml:lang="es">Código Tipo de almacén</value>
         <value xml:lang="fr">Réf. de type de stockage</value>
         <value xml:lang="it">Tipo Stabilimento</value>
@@ -4878,7 +4878,7 @@
     </property>
     <property key="FormFieldTitle_inventoryFacilityId">
         <value xml:lang="de">Lagereinrichtung ID</value>
-        <value xml:lang="en">Inventory Facility Id</value>
+        <value xml:lang="en">Inventory Warehouse Id</value>
         <value xml:lang="es">Código Almacén inventario</value>
         <value xml:lang="fr">Réf. d'inventaire de lieu de stockage</value>
         <value xml:lang="it">Codice Stabilimento Inventario</value>
@@ -5330,7 +5330,7 @@
     </property>
     <property key="FormFieldTitle_manufacturerPartyId">
         <value xml:lang="de">Hersteller Akteur ID</value>
-        <value xml:lang="en">Manufacturer Party Id</value>
+        <value xml:lang="en">Manufacturer User Id</value>
         <value xml:lang="es">Código de participante del fabricante</value>
         <value xml:lang="fr">Réf. de fabricant</value>
         <value xml:lang="it">Codice Soggetto Produttore</value>
@@ -5591,7 +5591,7 @@
     </property>
     <property key="FormFieldTitle_oneInventoryFacility">
         <value xml:lang="de">Eine Lagereinrichtung</value>
-        <value xml:lang="en">One Inventory Facility</value>
+        <value xml:lang="en">One Inventory Warehouse</value>
         <value xml:lang="es">Un solo almacén de inventario</value>
         <value xml:lang="fr">Un seul lieu de stockage</value>
         <value xml:lang="it">Una Stabilimento Inventario</value>
@@ -5689,7 +5689,7 @@
     </property>
     <property key="FormFieldTitle_originatedFromPartyId">
         <value xml:lang="de">Herkunft von Akteur ID</value>
-        <value xml:lang="en">Originated From Party Id</value>
+        <value xml:lang="en">Originated From User Id</value>
         <value xml:lang="es">Código Participante emisor</value>
         <value xml:lang="fr">Provenant de la réf. d'acteur</value>
         <value xml:lang="it">Originato Dal Soggetto</value>
@@ -5717,7 +5717,7 @@
     </property>
     <property key="FormFieldTitle_overrideOrgPartyId">
         <value xml:lang="de">Organisation Akteur ID übersteuern</value>
-        <value xml:lang="en">Override Org Party Id</value>
+        <value xml:lang="en">Override Org User Id</value>
         <value xml:lang="es">Reemplazar código de participante original</value>
         <value xml:lang="fr">Remplacer la réf. originelle d'acteur</value>
         <value xml:lang="it">Sostituisce Organizzazione</value>
@@ -5755,7 +5755,7 @@
     </property>
     <property key="FormFieldTitle_parentFacilityGroupId">
         <value xml:lang="de">Übergeordnete Einrichtungsgruppe ID</value>
-        <value xml:lang="en">Parent Facility Group Id</value>
+        <value xml:lang="en">Parent Warehouse Group Id</value>
         <value xml:lang="es">Código Grupo almacén precursor</value>
         <value xml:lang="fr">Réf. de groupe de lieux de stockage parent</value>
         <value xml:lang="it">Gruppo Stabilimento Padre</value>
@@ -5767,7 +5767,7 @@
     </property>
     <property key="FormFieldTitle_parentFacilityId">
         <value xml:lang="de">Übergeordnete Einrichtung ID</value>
-        <value xml:lang="en">Parent Facility Id</value>
+        <value xml:lang="en">Parent Warehouse Id</value>
         <value xml:lang="es">Código Almacén precursor</value>
         <value xml:lang="fr">Lieu de stockage parent [Réf.]</value>
         <value xml:lang="it">Stabilimento padre</value>
@@ -5778,7 +5778,7 @@
     </property>
     <property key="FormFieldTitle_partyNeedId">
         <value xml:lang="de">Akteur Bedarf ID</value>
-        <value xml:lang="en">Party Need Id</value>
+        <value xml:lang="en">User Need Id</value>
         <value xml:lang="es">Código Participante con necesidad</value>
         <value xml:lang="fr">Réf. de l'acteur nécessaire</value>
         <value xml:lang="it">Necessario Soggetto</value>
@@ -5791,7 +5791,7 @@
     </property>
     <property key="FormFieldTitle_payToPartyId">
         <value xml:lang="de">Zahlung an Akteur ID</value>
-        <value xml:lang="en">Pay To Party Id</value>
+        <value xml:lang="en">Pay To User Id</value>
         <value xml:lang="es">Pagar a Código Participante</value>
         <value xml:lang="fr">Réf. de paiement à un acteur</value>
         <value xml:lang="it">Pagare al Soggetto</value>
@@ -6845,7 +6845,7 @@
     </property>
     <property key="FormFieldTitle_requireEmailOrParty">
         <value xml:lang="de">Benötigt E-Mail Adresse oder Akteur</value>
-        <value xml:lang="en">Require Email Or Party</value>
+        <value xml:lang="en">Require Email Or User</value>
         <value xml:lang="es">Exigir correo electrónico o participante</value>
         <value xml:lang="fr">Courriel ou acteur requis</value>
         <value xml:lang="it">Richiesta Email O Soggetto</value>
@@ -7864,7 +7864,7 @@
     </property>
     <property key="FormFieldTitle_vatTaxAuthPartyId">
         <value xml:lang="de">Mehrwertsteuerbehörde Akteur ID</value>
-        <value xml:lang="en">Vat Tax Auth Party Id</value>
+        <value xml:lang="en">Vat Tax Auth User Id</value>
         <value xml:lang="es">Código de la autoridad tributaria de IVA</value>
         <value xml:lang="fr">Réf. de centre de collecte de TVA</value>
         <value xml:lang="it">Autorità Tasse IVA Soggetto</value>
@@ -7878,7 +7878,7 @@
     </property>
     <property key="FormFieldTitle_vendorPartyId">
         <value xml:lang="de">Anbieter Akteur ID</value>
-        <value xml:lang="en">Vendor Party Id</value>
+        <value xml:lang="en">Vendor User Id</value>
         <value xml:lang="es">Código de proveedor</value>
         <value xml:lang="fr">Réf. du vendeur</value>
         <value xml:lang="it">Soggetto Fornitore</value>
@@ -8368,7 +8368,7 @@
         <value xml:lang="zh_TW">歡迎使用圖片管理</value>
     </property>
     <property key="InventoryFacilityIdRequired">
-        <value xml:lang="en">"Inventory Facility Id Required"</value>
+        <value xml:lang="en">"Inventory Warehouse Id Required"</value>
     </property>
     <property key="MetaDescription">
         <value xml:lang="en">Meta Description</value>
@@ -8393,7 +8393,7 @@
     </property>
     <property key="PageTitleAddFacilityGroupRollup">
         <value xml:lang="de">Einrichtungsgruppe Rollup hinzufügen</value>
-        <value xml:lang="en">Add Facility Group Rollup</value>
+        <value xml:lang="en">Add Warehouse Group Rollup</value>
         <value xml:lang="es">Añadir despliegue de grupo de almacenes</value>
         <value xml:lang="fr">Ajouter un choix de groupes de lieux de stockage</value>
         <value xml:lang="it">Aggiungi Gruppo Stabilimento Arrivo</value>
@@ -9081,7 +9081,7 @@
     </property>
     <property key="PageTitleEditFacilityContactMech">
         <value xml:lang="de">Einrichtung Kontaktmechanismus für ${facility.facilityName} [${facility.facilityId}] bearbeiten</value>
-        <value xml:lang="en">Edit Facility Contact Mechanism for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Contact Mechanism for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar Mecanismos de Contacto de un Almacén</value>
         <value xml:lang="fr">Modification des coordonnées du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Contatto Stabilimento</value>
@@ -9094,7 +9094,7 @@
         <value xml:lang="zh_TW">編輯場所聯絡方式</value>
     </property>
     <property key="PageTitleEditFacilityContent">
-        <value xml:lang="en">Edit Facility Content for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Content for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="ja">${facility.facilityName} [${facility.facilityId}] に対する拠点コンテンツを編集</value>
         <value xml:lang="vi">Cập nhật nội dung Chi nhánh / Cơ sở ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="zh">编辑 ${facility.facilityName} [${facility.facilityId}] 的场所内容</value>
@@ -9102,7 +9102,7 @@
     </property>
     <property key="PageTitleEditFacilityGroup">
         <value xml:lang="de">Einrichtungsgruppe bearbeiten</value>
-        <value xml:lang="en">Edit Facility Group</value>
+        <value xml:lang="en">Edit Warehouse Group</value>
         <value xml:lang="es">Editar Grupo de Almacén</value>
         <value xml:lang="fr">Modification du groupe de lieux de stockage</value>
         <value xml:lang="it">Aggiorna Gruppo Stabilimento</value>
@@ -9116,7 +9116,7 @@
     </property>
     <property key="PageTitleEditFacilityGroupMembers">
         <value xml:lang="de">Einrichtungsgruppe Mitglieder bearbeiten</value>
-        <value xml:lang="en">Edit Facility Group Members</value>
+        <value xml:lang="en">Edit Warehouse Group Members</value>
         <value xml:lang="es">Editar Miembros de un Grupo de Almacén</value>
         <value xml:lang="fr">Modification des membres du groupe de lieux de stockage</value>
         <value xml:lang="it">Aggiorna Membri Gruppo Stabilimento</value>
@@ -9130,7 +9130,7 @@
     </property>
     <property key="PageTitleEditFacilityGroupRoles">
         <value xml:lang="de">Einrichtungsgruppe Rolle bearbeiten</value>
-        <value xml:lang="en">Edit Facility Group Roles</value>
+        <value xml:lang="en">Edit Warehouse Group Roles</value>
         <value xml:lang="es">Editar Roles de un Grupo de Almacén</value>
         <value xml:lang="fr">Modification des rôles du groupe de lieux de stockage</value>
         <value xml:lang="it">Aggiorna Ruoli Gruppo Stabilimento</value>
@@ -9144,7 +9144,7 @@
     </property>
     <property key="PageTitleEditFacilityGroupRollup">
         <value xml:lang="de">Einrichtungsgruppe Rollup bearbeiten</value>
-        <value xml:lang="en">Edit Facility Group Rollup</value>
+        <value xml:lang="en">Edit Warehouse Group Rollup</value>
         <value xml:lang="es">Editar jerarquía de un Grupo de Almacén</value>
         <value xml:lang="fr">Modification de la hiérarchie du groupe de lieux de stockage</value>
         <value xml:lang="it">Aggiorna Gruppo Stabilimento Arrivo</value>
@@ -9158,7 +9158,7 @@
     </property>
     <property key="PageTitleEditFacilityGroups">
         <value xml:lang="de">Einrichtungsgruppen für ${facility.facilityName} [${facility.facilityId}] bearbeiten</value>
-        <value xml:lang="en">Edit Facility Groups for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Groups for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar Grupos de Almacén</value>
         <value xml:lang="fr">Modification des groupes de lieux de stockage pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna i gruppi di stabilimenti</value>
@@ -9172,7 +9172,7 @@
     </property>
     <property key="PageTitleEditFacilityInventoryItems">
         <value xml:lang="de">Einrichtung Bestandspositionen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Edit Facility Inventory Items for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Inventory Items for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar Artículos del Inventario de un Almacén</value>
         <value xml:lang="fr">Modification des lignes de stocks pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Righe Inventario Stabilimento</value>
@@ -9185,7 +9185,7 @@
     </property>
     <property key="PageTitleEditFacilityLocation">
         <value xml:lang="de">Einrichtung Standort bearbeiten für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Edit Facility Location for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Location for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar sitios de un Almacén</value>
         <value xml:lang="fr">Modification des emplacements du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Posizione Stabilimento</value>
@@ -9199,7 +9199,7 @@
     </property>
     <property key="PageTitleEditFacilityParties">
         <value xml:lang="de">Einrichtung Akteure bearbeiten für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Edit Facility Parties for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Parties for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar Roles de un Almacén</value>
         <value xml:lang="fr">Modification des acteurs du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Ruoli Stabilimento</value>
@@ -9556,7 +9556,7 @@
     </property>
     <property key="PageTitleEditProductFacilityLocations">
         <value xml:lang="de">Produkt Einrichtungsstandorte bearbeiten</value>
-        <value xml:lang="en">Edit Product Facility Locations</value>
+        <value xml:lang="en">Edit Product Warehouse Locations</value>
         <value xml:lang="es">Editar sitios de Almacén de un Producto</value>
         <value xml:lang="fr">Modification des emplacements de stocks</value>
         <value xml:lang="it">Aggiorna Posizioni Stabilimento Prodotto</value>
@@ -10308,7 +10308,7 @@
         <value xml:lang="zh_TW">編輯網站分析類型</value>
     </property>
     <property key="PageTitleFacilityLocationGeoLocation">
-        <value xml:lang="en">Facility Location GeoLocation</value>
+        <value xml:lang="en">Warehouse Location GeoLocation</value>
         <value xml:lang="fr">Géolocalisation de l'emplacement de stokage</value>
         <value xml:lang="it">Posizione Stabilimento GeoLocation</value>
         <value xml:lang="ja">拠点位置情報</value>
@@ -10317,7 +10317,7 @@
         <value xml:lang="zh_TW">場所的地理位置</value>
     </property>
     <property key="PageTitleFacilityGeoLocation">
-        <value xml:lang="en">Facility Geo Location</value>
+        <value xml:lang="en">Warehouse Geo Location</value>
         <value xml:lang="ja">拠点位置情報</value>
         <value xml:lang="vi">Ví trí địa lý Chi nhánh / Cơ sở</value>
         <value xml:lang="zh">场所地理位置</value>
@@ -10355,7 +10355,7 @@
     </property>
     <property key="PageTitleFindFacility">
         <value xml:lang="de">Einrichtung suchen</value>
-        <value xml:lang="en">Find Facility</value>
+        <value xml:lang="en">Find Warehouse</value>
         <value xml:lang="es">Buscar Almacén</value>
         <value xml:lang="fr">Recherche du lieu de stockage</value>
         <value xml:lang="it">Ricerca Stabilimento</value>
@@ -10369,7 +10369,7 @@
     </property>
     <property key="PageTitleFindFacilityGroup">
         <value xml:lang="de">Einrichtungsgruppe suchen</value>
-        <value xml:lang="en">Find Facility Group</value>
+        <value xml:lang="en">Find Warehouse Group</value>
         <value xml:lang="es">Buscar Grupo de Almacén</value>
         <value xml:lang="fr">Rechercher le groupe de lieux de stockage</value>
         <value xml:lang="it">Ricerca Gruppo Stabilimento </value>
@@ -10383,7 +10383,7 @@
     </property>
     <property key="PageTitleFindFacilityInventoryItems">
         <value xml:lang="de">Lagereinrichtung Positionen suchen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Find Facility Inventory Items for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Find Warehouse Inventory Items for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Buscar ítems de almacén para ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Rechercher les lignes de stock du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Ricerca Righe Inventario</value>
@@ -10395,7 +10395,7 @@
     </property>
     <property key="PageTitleFindFacilityInventoryItemsByProduct">
         <value xml:lang="de">Lagereinrichtung Positionen suchen nach Produkt</value>
-        <value xml:lang="en">Find Facility Inventory Items by Product</value>
+        <value xml:lang="en">Find Warehouse Inventory Items by Product</value>
         <value xml:lang="es">Buscar ítems por producto</value>
         <value xml:lang="fr">Rechercher, par produit, les lignes de stock du lieu de stockage</value>
         <value xml:lang="it">Ricerca Righe Inventario per Prodotto</value>
@@ -10407,7 +10407,7 @@
     </property>
     <property key="PageTitleFindFacilityLocation">
         <value xml:lang="de">Einrichtun Standord suchen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Find Facility Locations for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Find Warehouse Locations for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Buscar Sitio de Almacén</value>
         <value xml:lang="fr">Rechercher l'emplacement d'un lieu de stockage pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Ricerca Posizione Stabilimento</value>
@@ -10421,7 +10421,7 @@
     </property>
     <property key="PageTitleFindFacilityPhysicalInventory">
         <value xml:lang="de">Einrichtung physikalischen Bestand suchen</value>
-        <value xml:lang="en">Find Facility Physical Inventory</value>
+        <value xml:lang="en">Find Warehouse Physical Inventory</value>
         <value xml:lang="es">Buscar inventario físico</value>
         <value xml:lang="fr">Rechercher un stock physique</value>
         <value xml:lang="it">Ricerca Stabilimento Inventario Fisico</value>
@@ -10434,7 +10434,7 @@
     </property>
     <property key="PageTitleFindFacilityTransfers">
         <value xml:lang="de">Einrichtung Transfers suchen</value>
-        <value xml:lang="en">Find Facility Transfers</value>
+        <value xml:lang="en">Find Warehouse Transfers</value>
         <value xml:lang="es">Buscar Transferencias de Almacenes</value>
         <value xml:lang="fr">Rechercher les transferts entre lieux de stockages</value>
         <value xml:lang="it">Ricerca Trasferimenti Stabilimento</value>
@@ -10603,7 +10603,7 @@
     </property>
     <property key="PageTitleInventoryItemGrandTotals">
         <value xml:lang="de">Bestandsposition Gesamttotale für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Inventory Item Grand Totals for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Inventory Item Grand Totals for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Totales sobre ítem para ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Total général des lignes de stock pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Totale Generale Righe Inventario</value>
@@ -10786,7 +10786,7 @@
     </property>
     <property key="PageTitleLookupFacility">
         <value xml:lang="de">Einrichtung nachschlagen</value>
-        <value xml:lang="en">Lookup Facility</value>
+        <value xml:lang="en">Lookup Warehouse</value>
         <value xml:lang="es">Buscar almacén</value>
         <value xml:lang="fr">Rechercher un ou des  lieux de stockage</value>
         <value xml:lang="it">Ricerca Stabilimento</value>
@@ -10903,7 +10903,7 @@
     </property>
     <property key="PageTitleNewFacilityContactMech">
         <value xml:lang="de">Neuer Einrichtungs-Kontaktmechanismus für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">New Facility Contact Mechanism for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">New Warehouse Contact Mechanism for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar Mecanismos de Contacto de un Almacén</value>
         <value xml:lang="fr">Modification des coordonnées du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Contatto Stabilimento</value>
@@ -10917,7 +10917,7 @@
     </property>
     <property key="PageTitleNewFacilityLocation">
         <value xml:lang="de">Neuer Einrichtungs-Standort für ${facility.facilityName}]</value>
-        <value xml:lang="en">New Facility Location for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">New Warehouse Location for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Editar sitios de un Almacén</value>
         <value xml:lang="fr">Modification des emplacements du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Posizione Stabilimento</value>
@@ -11088,7 +11088,7 @@
     </property>
     <property key="PageTitleTransferInventoryItem">
         <value xml:lang="de">Bestandspositionen transferieren von ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Transfer Inventory Item From ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Transfer Inventory Item From ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Transferir Artículo de Inventario desde ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Transfert de stock depuis ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Trasferimento Riga Inventario</value>
@@ -11138,7 +11138,7 @@
     </property>
     <property key="PageTitleViewFacilityContactMechanism">
         <value xml:lang="de">Einrichtungs-Kontaktmechanismus anzeigen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">View Facility Contact Mechanisms for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">View Warehouse Contact Mechanisms for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Ver Mecanismo de Contacto de un Almacén para ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Voir les coordonnées du lieu de stockage ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Mostra Contatto Stabilimento</value>
@@ -11152,7 +11152,7 @@
     </property>
     <property key="PageTitleViewFacilityInventoryItemsDetails">
         <value xml:lang="de">Bestandspositionen Details anzeigen</value>
-        <value xml:lang="en">View Facility Inventory Items Details</value>
+        <value xml:lang="en">View Warehouse Inventory Items Details</value>
         <value xml:lang="es">Ver detalles de ítem de inventario</value>
         <value xml:lang="fr">Voir le détail des lignes de stock</value>
         <value xml:lang="it">Visualizza i Movimenti di Magazzino</value>
@@ -11176,7 +11176,7 @@
         <value xml:lang="zh_TW">檢示產品合約</value>
     </property>
     <property key="PageTitleViewFacilityAgreements">
-        <value xml:lang="en">View Facility Agreements</value>
+        <value xml:lang="en">View Warehouse Agreements</value>
         <value xml:lang="zh">浏览场所合同</value>
         <value xml:lang="zh_TW">流覽場所合約</value>
     </property>
@@ -11400,7 +11400,7 @@
     </property>
     <property key="ProductActionTypeOrderAdjustmentTypeQuantityItemPartyLimit">
         <value xml:lang="de">Aktionstyp, Auftragsanpassung Typ, Menge, Position ID, Akteur ID Limite</value>
-        <value xml:lang="en">ActionType, Order Adjustment Type, Quantity, Item ID, Party ID Limit</value>
+        <value xml:lang="en">ActionType, Order Adjustment Type, Quantity, Item ID, User ID Limit</value>
         <value xml:lang="es">Tipo de Acción, Tipo de Ajuste de Órden, Cantidad, Código de Artículo, Código de participante Límite</value>
         <value xml:lang="fr">Type d'actions, type d'ajustements de commande, quantité, article, ref. d'acteur limite</value>
         <value xml:lang="it">Tipo Azione, Tipo Aggiustamento Ordine, Quantità, Numero Riga, Codice Soggetto e Limite</value>
@@ -11414,7 +11414,7 @@
     </property>
     <property key="ProductActionUpdateFields">
         <value xml:lang="de">Aktionstyp, Menge, Betrag, Position ID, Akteur ID</value>
-        <value xml:lang="en">ActionType, Quantity, Amount, Item ID, Party ID</value>
+        <value xml:lang="en">ActionType, Quantity, Amount, Item ID, User ID</value>
         <value xml:lang="es">Tipo de Acción, Cantidad, Monto, Código de Artículo, Código de Participante</value>
         <value xml:lang="fr">Type d'actions, quantité, amount, article, acteur</value>
         <value xml:lang="it">Tipo Azione, Quantità, Importo, Numero Riga, Codice Soggetto</value>
@@ -11727,7 +11727,7 @@
     </property>
     <property key="ProductAddFacility">
         <value xml:lang="de">Einrichtung hinzufügen</value>
-        <value xml:lang="en">Add Facility</value>
+        <value xml:lang="en">Add Warehouse</value>
         <value xml:lang="es">Añadir Almacén</value>
         <value xml:lang="fr">Ajout d'un lieu de stockage</value>
         <value xml:lang="it">Aggiungi Stabilimento</value>
@@ -11741,7 +11741,7 @@
     </property>
     <property key="ProductAddFacilityGroupMember">
         <value xml:lang="de">Einrichtungsgruppe Mitglied hinzufügen</value>
-        <value xml:lang="en">Add Facility Group Member</value>
+        <value xml:lang="en">Add Warehouse Group Member</value>
         <value xml:lang="es">Añadir Miembro de Grupo de Almacén</value>
         <value xml:lang="fr">Ajouter un membre au groupe de stock</value>
         <value xml:lang="it">Aggiungi Membro Gruppo Stabilimento</value>
@@ -11755,7 +11755,7 @@
     </property>
     <property key="ProductAddFacilityGroupPartyRole">
         <value xml:lang="de">Einrichtungsgruppe Akteurrolle hinzufügen</value>
-        <value xml:lang="en">Add Facility Group Party Role</value>
+        <value xml:lang="en">Add Warehouse Group User Role</value>
         <value xml:lang="es">Añadir Rol de Participante a Grupo de Almacén</value>
         <value xml:lang="fr">Associer un acteur-rôle à ce groupe de stock</value>
         <value xml:lang="it">Aggiungi Ruolo Soggetto Gruppo Stabilimento</value>
@@ -11769,7 +11769,7 @@
     </property>
     <property key="ProductAddFacilityPartyRole">
         <value xml:lang="de">Einrichtung Akteurrolle hinzufügen</value>
-        <value xml:lang="en">Add Facility Party Role</value>
+        <value xml:lang="en">Add Warehouse User Role</value>
         <value xml:lang="es">Añadir Rol de Participante a un Almacén</value>
         <value xml:lang="fr">Associer un acteur-rôle à ce stock</value>
         <value xml:lang="it">Aggiungi Ruolo Soggetto Stabilimento</value>
@@ -11782,14 +11782,14 @@
         <value xml:lang="zh_TW">增加場所團體角色</value>
     </property>
     <property key="ProductAddFacilityContent">
-        <value xml:lang="en">Add Facility Content</value>
+        <value xml:lang="en">Add Warehouse Content</value>
         <value xml:lang="ja">拠点コンテンツを追加</value>
         <value xml:lang="vi">Thêm thông tin Chi nhánh / Cơ sở</value>
         <value xml:lang="zh">添加场所内容</value>
         <value xml:lang="zh_TW">增加場所內容</value>
     </property>
     <property key="ProductEditFacilityGeoLocation">
-        <value xml:lang="en">Edit Facility Geo Location</value>
+        <value xml:lang="en">Edit Warehouse Geo Location</value>
         <value xml:lang="ja">拠点位置情報を追加</value>
         <value xml:lang="vi">Cập nhật địa điểm của Chi nhánh / Cơ sở</value>
         <value xml:lang="zh">编辑场所地理位置</value>
@@ -11952,7 +11952,7 @@
     </property>
     <property key="ProductAddPartyId">
         <value xml:lang="de">Akteur ID hinzufügen</value>
-        <value xml:lang="en">Add Party Id</value>
+        <value xml:lang="en">Add User Id</value>
         <value xml:lang="es">Añadir Código de Participante</value>
         <value xml:lang="fr">Ajouter une réf. d'acteur</value>
         <value xml:lang="it">Aggiungi codice soggetto</value>
@@ -12694,7 +12694,7 @@
     </property>
     <property key="ProductAnyFacility">
         <value xml:lang="de">Beliebige Einrichtung</value>
-        <value xml:lang="en">Any Facility</value>
+        <value xml:lang="en">Any Warehouse</value>
         <value xml:lang="es">Cualquier Almacén</value>
         <value xml:lang="fr">Tout lieu de stockage</value>
         <value xml:lang="it">Qualsiasi Stabilimento</value>
@@ -12889,7 +12889,7 @@
     </property>
     <property key="ProductAssociatePartyToCategory">
         <value xml:lang="de">Akteur zu Kategorie zuordnen (Akteur ID eingeben, Typ wählen und optional Von Datum eingeben)</value>
-        <value xml:lang="en">Associate Party to Category (enter Party ID, select Type, then enter optional From Date)</value>
+        <value xml:lang="en">Associate User to Category (enter User ID, select Type, then enter optional From Date)</value>
         <value xml:lang="es">Asociar Participante a Categoría (ingrese Código de Participante, seleccione Tipo, luego ingrese fecha de inicio opcional)</value>
         <value xml:lang="fr">Associer l'acteur à la catégorie (entrer une réf. acteur, sélectionner le type, en option : une date de départ)</value>
         <value xml:lang="it">Associa soggetto alla categoria</value>
@@ -12903,7 +12903,7 @@
     </property>
     <property key="ProductAssociatePartyToProduct">
         <value xml:lang="de">Akteur zu Produkt zuordnen</value>
-        <value xml:lang="en">Associate Party to Product</value>
+        <value xml:lang="en">Associate User to Product</value>
         <value xml:lang="fr">Associer l'acteur à l'article</value>
         <value xml:lang="it">Associare Soggetto al Prodotto</value>
         <value xml:lang="ja">製品に取引先を関連付け (取引先IDを入力、種類を選択、オプションで開始日を入力)</value>
@@ -13655,7 +13655,7 @@
         <value xml:lang="en">Catalog Parties</value>
     </property>
     <property key="ProductCatalogPartyList">
-        <value xml:lang="en">Catalog Party List</value>
+        <value xml:lang="en">Catalog User List</value>
     </property>
     <property key="ProductCatalogStores">
         <value xml:lang="en">Catalog Stores</value>
@@ -14942,7 +14942,7 @@
     </property>
     <property key="ProductCouldNotFindFacilityWithId">
         <value xml:lang="de">Einrichtung nicht gefunden mit der ID</value>
-        <value xml:lang="en">Could Not Find Facility with ID</value>
+        <value xml:lang="en">Could Not Find Warehouse with ID</value>
         <value xml:lang="es">No se pudo encontrar Almacén con el Código</value>
         <value xml:lang="fr">Impossible de trouver le lieu de stockage avec sa référence</value>
         <value xml:lang="it">Non Trovata Stabilimento con Codice</value>
@@ -15171,7 +15171,7 @@
     </property>
     <property key="ProductCreateNewFacility">
         <value xml:lang="de">Neue Einrichtung erstellen</value>
-        <value xml:lang="en">Create New Facility</value>
+        <value xml:lang="en">Create New Warehouse</value>
         <value xml:lang="es">Crear nuevo Almacén</value>
         <value xml:lang="fr">Création d'un nouveau lieu de stockage</value>
         <value xml:lang="it">Nuovo stabilimento</value>
@@ -15199,7 +15199,7 @@
     </property>
     <property key="ProductCreateNewInventoryItemFacility">
         <value xml:lang="de">Neue Bestandsposition erstellen für diese Einrichtung</value>
-        <value xml:lang="en">Create New Inventory Item for this Facility</value>
+        <value xml:lang="en">Create New Inventory Item for this Warehouse</value>
         <value xml:lang="es">Crear nuevo Inventario de Artículos para este Almacén</value>
         <value xml:lang="fr">Créer une ligne de stock pour ce lieu de stockage</value>
         <value xml:lang="it">Creare Nuova Riga Inventario per questo Stabilimento</value>
@@ -15833,7 +15833,7 @@
     </property>
     <property key="ProductDestFacility">
         <value xml:lang="de">Ziel Einrichtung</value>
-        <value xml:lang="en">Dest. Facility</value>
+        <value xml:lang="en">Dest. Warehouse</value>
         <value xml:lang="es">Almacén destino</value>
         <value xml:lang="fr">Lieu de stockage dest.</value>
         <value xml:lang="it">Dest. Stabilimento</value>
@@ -15861,7 +15861,7 @@
     </property>
     <property key="ProductDestinationFacility">
         <value xml:lang="de">Ziel Einrichtung</value>
-        <value xml:lang="en">Destination Facility</value>
+        <value xml:lang="en">Destination Warehouse</value>
         <value xml:lang="es">Almacén destino</value>
         <value xml:lang="fr">Lieu de stockage de destination</value>
         <value xml:lang="it">Stabilimento Destinazione</value>
@@ -15875,7 +15875,7 @@
     </property>
     <property key="ProductDestinationFacilityIs">
         <value xml:lang="de">Ziel Einrichtung ist</value>
-        <value xml:lang="en">Destination Facility is</value>
+        <value xml:lang="en">Destination Warehouse is</value>
         <value xml:lang="es">Almacén destino es</value>
         <value xml:lang="fr">Le lieu de stockage de destination est</value>
         <value xml:lang="it">Stabilimento Destinazione è</value>
@@ -16168,7 +16168,7 @@
     </property>
     <property key="ProductEditFacility">
         <value xml:lang="de">Einrichtung bearbeiten</value>
-        <value xml:lang="en">Edit Facility</value>
+        <value xml:lang="en">Edit Warehouse</value>
         <value xml:lang="es">Editar Almacén</value>
         <value xml:lang="fr">Modification du lieu de stockage</value>
         <value xml:lang="it">Aggiorna Stabilimento</value>
@@ -16371,7 +16371,7 @@
     </property>
     <property key="ProductErrorFacility">
         <value xml:lang="de">Fehler: Einrichtung</value>
-        <value xml:lang="en">Error: facility</value>
+        <value xml:lang="en">Error: warehouse</value>
         <value xml:lang="es">Error: Almacén</value>
         <value xml:lang="fr">Erreur: lieu de stockage</value>
         <value xml:lang="it">Errore: Stabilimento</value>
@@ -16385,7 +16385,7 @@
     </property>
     <property key="ProductErrorFacilityIdNotFound">
         <value xml:lang="de">FEHLER: Einricht mit der ID ${facilityId} nicht gefunden</value>
-        <value xml:lang="en">ERROR: Facility with ID ${facilityId} not found</value>
+        <value xml:lang="en">ERROR: Warehouse with ID ${facilityId} not found</value>
         <value xml:lang="es">ERROR: Almacén con Código ${facilityId} no encontrado</value>
         <value xml:lang="fr">ERREUR: lieu de stockage non trouvé avec la référence ${facilityId}</value>
         <value xml:lang="it">ERRORE: Stabilimento con Codice ${facilityId} non trovato</value>
@@ -16399,7 +16399,7 @@
     </property>
     <property key="ProductErrorNoFacilityAvailable">
         <value xml:lang="de">Fehler: Keine Einrichtung verfügbar</value>
-        <value xml:lang="en">Error: No Facility Available</value>
+        <value xml:lang="en">Error: No Warehouse Available</value>
         <value xml:lang="es">Error: No hay almacén disponible</value>
         <value xml:lang="fr">Erreur: aucun lieu de stockage disponible</value>
         <value xml:lang="it">Errore: Nessun Stabilimento Disponibile</value>
@@ -16923,7 +16923,7 @@
     </property>
     <property key="ProductFacility">
         <value xml:lang="de">Einrichtung</value>
-        <value xml:lang="en">Facility</value>
+        <value xml:lang="en">Warehouse</value>
         <value xml:lang="es">Almacén</value>
         <value xml:lang="fr">Lieu de stockage</value>
         <value xml:lang="it">Stabilimento</value>
@@ -16937,7 +16937,7 @@
     </property>
     <property key="ProductFacilityChildren">
         <value xml:lang="de">Untergeordnete Einrichtungen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Facility Children for ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Warehouse Children for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Sucesores de almacén para ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Lieu de stockage descendant pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Stabilimenti figli di ${facility.facilityName} [${facility.facilityId}]</value>
@@ -16948,7 +16948,7 @@
     </property>
     <property key="ProductFacilityContainer">
         <value xml:lang="de">Einrichtung / Container</value>
-        <value xml:lang="en">Facility / Container</value>
+        <value xml:lang="en">Warehouse / Container</value>
         <value xml:lang="es">Almacén / Contenedor</value>
         <value xml:lang="fr">Lieu de stockage / Contenant</value>
         <value xml:lang="it">Stabilimento / Contenitore</value>
@@ -16962,7 +16962,7 @@
     </property>
     <property key="ProductFacilityContainerId">
         <value xml:lang="de">Einrichtung oder Container ID</value>
-        <value xml:lang="en">Facility or Container ID</value>
+        <value xml:lang="en">Warehouse or Container ID</value>
         <value xml:lang="es">Almacén o Código del contenedor</value>
         <value xml:lang="fr">Réf. de lieu de stockage ou de contenant</value>
         <value xml:lang="it">Stabilimento o Codice Contenitore</value>
@@ -17027,7 +17027,7 @@
     </property>
     <property key="ProductFacilityGroup">
         <value xml:lang="de">Einrichtungsgruppe</value>
-        <value xml:lang="en">Facility Group</value>
+        <value xml:lang="en">Warehouse Group</value>
         <value xml:lang="es">Grupo de Almacén</value>
         <value xml:lang="fr">Groupe de lieux de stockage</value>
         <value xml:lang="it">Gruppo Stabilimento</value>
@@ -17042,7 +17042,7 @@
     </property>
     <property key="ProductFacilityGroupId">
         <value xml:lang="de">Einrichtungsgruppe ID</value>
-        <value xml:lang="en">Facility Group ID</value>
+        <value xml:lang="en">Warehouse Group ID</value>
         <value xml:lang="es">Código de grupo de Almacén</value>
         <value xml:lang="fr">Groupe de lieux de stockage [Réf.]</value>
         <value xml:lang="it">Codice Gruppo Stabilimento</value>
@@ -17056,7 +17056,7 @@
     </property>
     <property key="ProductFacilityGroupList">
         <value xml:lang="de">Liste der Einrichtungsgruppen</value>
-        <value xml:lang="en">Facility Group List</value>
+        <value xml:lang="en">Warehouse Group List</value>
         <value xml:lang="es">Lista de grupos de Almacén</value>
         <value xml:lang="fr">Liste des groupes de lieux de stockage</value>
         <value xml:lang="it">Lista Gruppo Stabilimento</value>
@@ -17070,7 +17070,7 @@
     </property>
     <property key="ProductFacilityGroupMemberMaintenance">
         <value xml:lang="de">Einrichtungsgruppe Mitglieder Instandhaltung</value>
-        <value xml:lang="en">Facility-Group Member Maintenance</value>
+        <value xml:lang="en">Warehouse-Group Member Maintenance</value>
         <value xml:lang="es">Mantenimiento de miembros de Grupos de Almacén</value>
         <value xml:lang="fr">Gestion des membres du groupe</value>
         <value xml:lang="it">Manutenzione Membri Gruppo-Stabilimento</value>
@@ -17084,7 +17084,7 @@
     </property>
     <property key="ProductFacilityGroupNameId">
         <value xml:lang="de">Einrichtungsgruppe Namen [ID]</value>
-        <value xml:lang="en">Facility Group Name [ID]</value>
+        <value xml:lang="en">Warehouse Group Name [ID]</value>
         <value xml:lang="es">Nombre del grupo de Almacén [CÓDIGO]</value>
         <value xml:lang="fr">Nom du groupe de lieux de stockage [réf.]</value>
         <value xml:lang="it">Nome Gruppo Stabilimento [Codice]</value>
@@ -17112,7 +17112,7 @@
     </property>
     <property key="ProductFacilityGroupType">
         <value xml:lang="de">Einrichtungsgruppe Typ</value>
-        <value xml:lang="en">Facility Group Type</value>
+        <value xml:lang="en">Warehouse Group Type</value>
         <value xml:lang="es">Tipo de grupo de Almacén</value>
         <value xml:lang="fr">Type du goupe de lieux de stockage</value>
         <value xml:lang="it">Tipo Gruppo Stabilimento</value>
@@ -17126,7 +17126,7 @@
     </property>
     <property key="ProductFacilityGroups">
         <value xml:lang="de">Einrichtungsgruppen</value>
-        <value xml:lang="en">Facility Groups</value>
+        <value xml:lang="en">Warehouse Groups</value>
         <value xml:lang="es">Grupos de Almacén</value>
         <value xml:lang="fr">Groupes de lieux de stockage</value>
         <value xml:lang="it">Gruppi di stabilimenti</value>
@@ -17140,7 +17140,7 @@
     </property>
     <property key="ProductFacilityId">
         <value xml:lang="de">Einrichtung ID</value>
-        <value xml:lang="en">Facility ID</value>
+        <value xml:lang="en">Warehouse ID</value>
         <value xml:lang="es">Código de Almacén</value>
         <value xml:lang="fr">Réf. de lieu de stockage</value>
         <value xml:lang="it">Codice Stabilimento</value>
@@ -17168,7 +17168,7 @@
     </property>
     <property key="ProductFacilityLocation">
         <value xml:lang="de">Einrichtung Standort</value>
-        <value xml:lang="en">Facility Location</value>
+        <value xml:lang="en">Warehouse Location</value>
         <value xml:lang="es">Sitio de Almacén</value>
         <value xml:lang="fr">Emplacement de stockage</value>
         <value xml:lang="it">Posizione Stabilimento</value>
@@ -17182,7 +17182,7 @@
     </property>
     <property key="ProductFacilityLocations">
         <value xml:lang="de">Einrichtung Standorte</value>
-        <value xml:lang="en">Facility Locations</value>
+        <value xml:lang="en">Warehouse Locations</value>
         <value xml:lang="es">Sitios de Almacén</value>
         <value xml:lang="fr">Emplacements de stockage</value>
         <value xml:lang="it">Posizioni Stabilimento</value>
@@ -17196,7 +17196,7 @@
     </property>
     <property key="ProductFacilityManager">
         <value xml:lang="de">Einrichtungsverwaltung Anwendung</value>
-        <value xml:lang="en">Facility Manager</value>
+        <value xml:lang="en">Warehouse Manager</value>
         <value xml:lang="es">Aplicación de Administración del Almacén</value>
         <value xml:lang="fr">Application de gestion de stock</value>
         <value xml:lang="it">Gestione stabilimenti</value>
@@ -17210,7 +17210,7 @@
     </property>
     <property key="ProductFacilityManagerApplication">
         <value xml:lang="de">Einrichtungsverwaltung Anwendung</value>
-        <value xml:lang="en">Facility Manager Application</value>
+        <value xml:lang="en">Warehouse Manager Application</value>
         <value xml:lang="es">Aplicación de Administración del Almacén</value>
         <value xml:lang="fr">Application de gestion de stock</value>
         <value xml:lang="it">Applicazione gestione stabilimenti</value>
@@ -17232,7 +17232,7 @@
     </property>
     <property key="ProductFacilityNameId">
         <value xml:lang="de">Einrichtung Namen [ID]</value>
-        <value xml:lang="en">Facility Name [ID]</value>
+        <value xml:lang="en">Warehouse Name [ID]</value>
         <value xml:lang="es">Nombre del Almacén [CÓDIGO]</value>
         <value xml:lang="fr">Nom du lieu de stockage [Réf.]</value>
         <value xml:lang="it">Nome Stabilimento [Codice]</value>
@@ -17272,7 +17272,7 @@
     </property>
     <property key="ProductFacilityRoleMemberMaintenance">
         <value xml:lang="de">Einrichtung Rolle Mitglied Instandhaltung</value>
-        <value xml:lang="en">Facility Role Member Maintenance</value>
+        <value xml:lang="en">Warehouse Role Member Maintenance</value>
         <value xml:lang="es">Mantenimiento de roles de los miembros del Almacén</value>
         <value xml:lang="fr">Gestion des acteurs-rôle de ce lieu de stockage</value>
         <value xml:lang="it">Manutenzione Membri Ruoli Stabilimento</value>
@@ -17286,7 +17286,7 @@
     </property>
     <property key="ProductFacilityType">
         <value xml:lang="de">Einrichtungstyp</value>
-        <value xml:lang="en">Facility Type</value>
+        <value xml:lang="en">Warehouse Type</value>
         <value xml:lang="es">Tipo de Almacén</value>
         <value xml:lang="fr">Type de lieu de stockage</value>
         <value xml:lang="it">Tipo Stabilimento</value>
@@ -17300,7 +17300,7 @@
     </property>
     <property key="ProductFacilityTypeId">
         <value xml:lang="de">Einrichtungstyp ID</value>
-        <value xml:lang="en">Facility Type ID</value>
+        <value xml:lang="en">Warehouse Type ID</value>
         <value xml:lang="es">Código de tipo de Almacén</value>
         <value xml:lang="fr">Type de lieu de stockage [Réf.]</value>
         <value xml:lang="it">Tipo Stabilimento</value>
@@ -17962,7 +17962,7 @@
     </property>
     <property key="ProductFromParty">
         <value xml:lang="de">Von Akteur</value>
-        <value xml:lang="en">From Party</value>
+        <value xml:lang="en">From User</value>
         <value xml:lang="es">Participante origen</value>
         <value xml:lang="fr">Depuis l'acteur</value>
         <value xml:lang="it">Dal Soggetto</value>
@@ -17976,7 +17976,7 @@
     </property>
     <property key="ProductFuturePartyRoleList">
         <value xml:lang="de">Zukünftiger Akteur / Liste Rollen</value>
-        <value xml:lang="en">Future Party / RoleList</value>
+        <value xml:lang="en">Future User / RoleList</value>
         <value xml:lang="es">Participante futuro / Lista de roles</value>
         <value xml:lang="fr">Futur acteur / liste de rôle</value>
         <value xml:lang="it">Futuro Soggetto / Lista Ruolo</value>
@@ -19004,7 +19004,7 @@
     </property>
     <property key="ProductInventoryFacility">
         <value xml:lang="de">Lagereinrichtung</value>
-        <value xml:lang="en">Inventory Facility</value>
+        <value xml:lang="en">Inventory Warehouse</value>
         <value xml:lang="es">Almacén de inventario</value>
         <value xml:lang="fr">Lieu de stockage</value>
         <value xml:lang="it">Inventario Stabilimento</value>
@@ -19335,7 +19335,7 @@
         <value xml:lang="zh_TW">不適用</value>
     </property>
     <property key="ProductInventoryNotAvailableForFacility">
-        <value xml:lang="en">Could not find inventory for facility ${facilityId}</value>
+        <value xml:lang="en">Could not find inventory for warehouse ${facilityId}</value>
         <value xml:lang="it">Non è possibile trovare lo stabilimento ${facilityId}</value>
         <value xml:lang="ja">拠点 ${facilityId} の在庫が見つかりません</value>
         <value xml:lang="vi">Không tìm thấy Cung ứng (kho) cho Chi nhánh / Cơ sở ${facilityId}</value>
@@ -20030,7 +20030,7 @@
         <value xml:lang="zh_TW">相關內容資訊清單</value>
     </property>
     <property key="ProductListFacilityLocation">
-        <value xml:lang="en">List Facility Location</value>
+        <value xml:lang="en">List Warehouse Location</value>
         <value xml:lang="it">Lista posizioni stabilimento</value>
         <value xml:lang="ja">拠点位置一覧</value>
         <value xml:lang="vi">Danh sách địa điểm Chi nhánh / Cơ sở</value>
@@ -20316,7 +20316,7 @@
     </property>
     <property key="ProductMaintenanceFacilityGroupPartyRole">
         <value xml:lang="de">Instandhaltung Einrichtungsgruppe Akteur Rolle</value>
-        <value xml:lang="en">Maintenance FacilityGroup Party Role</value>
+        <value xml:lang="en">Maintenance FacilityGroup User Role</value>
         <value xml:lang="es">Rol del grupo de mantenimiento de almacén</value>
         <value xml:lang="fr">Rôle équipement service d'entretien</value>
         <value xml:lang="it">Manutenzione ruolo soggetto gruppo stabilimento</value>
@@ -21131,7 +21131,7 @@
     </property>
     <property key="ProductNewFacility">
         <value xml:lang="de">Neue Einrichtung</value>
-        <value xml:lang="en">New Facility</value>
+        <value xml:lang="en">New Warehouse</value>
         <value xml:lang="es">Nuevo almacén</value>
         <value xml:lang="fr">Nouveau lieu de stockage</value>
         <value xml:lang="it">Nuovo stabilimento</value>
@@ -21145,7 +21145,7 @@
     </property>
     <property key="ProductNewFacilityLocation">
         <value xml:lang="de">Neuer Einrichtungsstandort</value>
-        <value xml:lang="en">New Facility Location</value>
+        <value xml:lang="en">New Warehouse Location</value>
         <value xml:lang="es">Nueva ubicación de almacén</value>
         <value xml:lang="fr">Nouvel emplacement de stock</value>
         <value xml:lang="it">Nuova Posizione Stabilimento</value>
@@ -21594,7 +21594,7 @@
     </property>
     <property key="ProductNoFacility">
         <value xml:lang="de">Kein Lager</value>
-        <value xml:lang="en">no Facility</value>
+        <value xml:lang="en">no Warehouse</value>
         <value xml:lang="es">No almacén</value>
         <value xml:lang="fr">Aucun lieu de stockage</value>
         <value xml:lang="it">nessuna Stabilimento</value>
@@ -22101,7 +22101,7 @@
     </property>
     <property key="ProductNotModificationRecrationFacility">
         <value xml:lang="de">Kann nicht geändert werden ohne die Einrichtung erneut zu erstellen</value>
-        <value xml:lang="en">This cannot be changed without re-creating the facility</value>
+        <value xml:lang="en">This cannot be changed without re-creating the warehouse</value>
         <value xml:lang="es">No se puede cambiar esto sin volver a crear el almacén</value>
         <value xml:lang="fr">Ceci ne peut être changé sans recréer le stock</value>
         <value xml:lang="it">Questo non può essere cambiata senza ri-creare la Stabilimento</value>
@@ -22115,7 +22115,7 @@
     </property>
     <property key="ProductNotModificationRecrationFacilityGroup">
         <value xml:lang="de">Kann nicht geändert werden ohne die Einrichtungsgruppe erneut zu erstellen</value>
-        <value xml:lang="en">This cannot be changed without re-creating the facility group</value>
+        <value xml:lang="en">This cannot be changed without re-creating the warehouse group</value>
         <value xml:lang="es">No se puede cambiar esto sin volver a crear el grupo de almacén</value>
         <value xml:lang="fr">Ne peut pas être modifié sans recréer un groupe de stock</value>
         <value xml:lang="it">Questo non può essere cambiata senza ri-creare il gruppo Stabilimento</value>
@@ -22227,7 +22227,7 @@
     </property>
     <property key="ProductNotOriginFacility">
         <value xml:lang="de">Nicht in der Herkunftseinrichtung</value>
-        <value xml:lang="en">Not In Origin Facility</value>
+        <value xml:lang="en">Not In Origin Warehouse</value>
         <value xml:lang="es">No se encuentra en almacén origen</value>
         <value xml:lang="fr">Pas dans le lieu de stockage d'origine</value>
         <value xml:lang="it">Non In Origine Stabilimento</value>
@@ -22388,7 +22388,7 @@
     </property>
     <property key="ProductNoteOnPartyId">
         <value xml:lang="de">ANMERKUNG zu Akteur ID</value>
-        <value xml:lang="en">NOTE on Party ID</value>
+        <value xml:lang="en">NOTE on User ID</value>
         <value xml:lang="es">NOTA en código de participante</value>
         <value xml:lang="fr">Note à propos de l'acteur</value>
         <value xml:lang="it">NOTA su Codice Soggetto</value>
@@ -22430,7 +22430,7 @@
     </property>
     <property key="ProductNoteRequireEmailParty">
         <value xml:lang="de">ANMERKUNG: Die "Benötigt E-Mail oder Akteur" Einstellung ist auf N (Nein) eingestellt, alle hier angegebenen E-Mail Adressen oder Akteure werden ignoriert. Um eine E-Mail Adresse oder Akteur von dieser Liste zu verwenden muss die Einstellung auf J (Ja) vorgenommen werden.</value>
-        <value xml:lang="en">NOTE: The Require Email Or Party flag is set to N (No), so any email addresses or parties listed here will be ignored. To require an email address or party from these lists, set the flag to Y (Yes).</value>
+        <value xml:lang="en">NOTE: The Require Email Or User flag is set to N (No), so any email addresses or parties listed here will be ignored. To require an email address or user from these lists, set the flag to Y (Yes).</value>
         <value xml:lang="es">NOTA: El flag "Requerir E-mail" está configurado como N (No). Cualquier dirección de e-mail o participantes listados aquí serán ignorados. Para usar alguna de estas direcciones, debe configurar el flag a Y(Si)</value>
         <value xml:lang="fr">NOTE: Pour rendre obligatoire et prendre en compte le champ acteur ou courriel, cocher (O), sinon mettre (N)</value>
         <value xml:lang="it">NOTA: L'email richiesta o se il flag soggetto è impostato a N (No), così qualsiasi indirizzo email o soggetti listati qui saranno ignorati. Per richiedere un'indirizzo email o il soggetto da queste liste, imposta il flag a Y (Si).</value>
@@ -22543,7 +22543,7 @@
     </property>
     <property key="ProductOemPartyId">
         <value xml:lang="de">OEM Akteur ID</value>
-        <value xml:lang="en">OEM Party ID</value>
+        <value xml:lang="en">OEM User ID</value>
         <value xml:lang="es">Código de proveedor OEM</value>
         <value xml:lang="fr">Réf. fournisseur OEM</value>
         <value xml:lang="it">OEM Codice Soggetto</value>
@@ -22589,7 +22589,7 @@
     </property>
     <property key="ProductOneInventoryFacility">
         <value xml:lang="de">Eine Lagereinrichtung</value>
-        <value xml:lang="en">One Inventory Facility</value>
+        <value xml:lang="en">One Inventory Warehouse</value>
         <value xml:lang="es">Un almacén de inventario</value>
         <value xml:lang="fr">Un lieu de stockage</value>
         <value xml:lang="it">Una Stabilimento Inventario</value>
@@ -22894,7 +22894,7 @@
     </property>
     <property key="ProductOriginDestinationFacility">
         <value xml:lang="de">Herkunft-Zielort Einrichtung</value>
-        <value xml:lang="en">Origin-Destination Facility</value>
+        <value xml:lang="en">Origin-Destination Warehouse</value>
         <value xml:lang="es">Almacén origen-destino</value>
         <value xml:lang="fr">Lieu de stockage expéditeur</value>
         <value xml:lang="it">Stabilimento Origine-Destinazione</value>
@@ -22922,7 +22922,7 @@
     </property>
     <property key="ProductOriginFacility">
         <value xml:lang="de">Herkunft Einrichtung</value>
-        <value xml:lang="en">Origin Facility</value>
+        <value xml:lang="en">Origin Warehouse</value>
         <value xml:lang="es">Almacén de origen</value>
         <value xml:lang="fr">Le lieu de stockage d'origine</value>
         <value xml:lang="it">Stabilimento Origine</value>
@@ -22936,7 +22936,7 @@
     </property>
     <property key="ProductOriginFacilityIs">
         <value xml:lang="de">Herkunft Einrichtung ist</value>
-        <value xml:lang="en">Origin Facility is</value>
+        <value xml:lang="en">Origin Warehouse is</value>
         <value xml:lang="es">Almacén destino es</value>
         <value xml:lang="fr">Le lieu de stockage d'origine est</value>
         <value xml:lang="it">Stabilimento Origine è</value>
@@ -23145,7 +23145,7 @@
         <value xml:lang="zh_TW">訂單狀態</value>
     </property>
     <property key="ProductOwnerPartyIsMissing">
-        <value xml:lang="en">Owner Party is missing</value>
+        <value xml:lang="en">Owner User is missing</value>
         <value xml:lang="it">Soggetto proprietario è mancante</value>
         <value xml:lang="ja">所有者取引先が正しくありません</value>
         <value xml:lang="vi">Thiếu thông tin Chủ thể</value>
@@ -23439,7 +23439,7 @@
     </property>
     <property key="ProductPartyCustomer">
         <value xml:lang="de">Akteur Kunde</value>
-        <value xml:lang="en">Party Customer</value>
+        <value xml:lang="en">User Customer</value>
         <value xml:lang="es">Participante Cliente</value>
         <value xml:lang="fr">Acteur client</value>
         <value xml:lang="it">Cliente</value>
@@ -23452,7 +23452,7 @@
     </property>
     <property key="ProductPartyFreeShipping">
         <value xml:lang="de">Die Akteur ID des Transportunternehmens für Gratis Lieferungen (falls leer werden die Gratis Lieferungen einem beliebigen Transportunternehmen zugeordnet).</value>
-        <value xml:lang="en">The Party ID for Free Shipping actions is Carrier Party ID to give free shipping for (if blank any Carrier Parties may receive free shipping).</value>
+        <value xml:lang="en">The User ID for Free Shipping actions is Carrier User ID to give free shipping for (if blank any Carrier Parties may receive free shipping).</value>
         <value xml:lang="es">El código de participante en la acción de envío gratis es el código del transportista al que se le dará envío gratis (si se deja en blanco cualquier transportista puede recibir envío gratis)</value>
         <value xml:lang="fr">Acteur (transporteur) pour l'envoi gratuit (si blanc, n'importe lequel des transporteurs peut effectuer les livraison gratuites).</value>
         <value xml:lang="it">Codice Soggetto per azioni di Spedizioni Gratuite è Codice Corriere per dare spedizioni gratuite (se vuoto qualsiasi Corriere potrebbe ricevere spedizioni gratuite).</value>
@@ -23543,7 +23543,7 @@
         <value xml:lang="zh_TW">每單價</value>
     </property>
     <property key="ProductPerUnitPriceFacility">
-        <value xml:lang="en">Per Unit Price (Facility)</value>
+        <value xml:lang="en">Per Unit Price (Warehouse)</value>
         <value xml:lang="ja">単価毎 (拠点)</value>
         <value xml:lang="vi">Giá mỗi sản phẩm (Chi nhánh / Cơ sở)</value>
         <value xml:lang="zh">每单价（场所）</value>
@@ -25551,7 +25551,7 @@
     </property>
     <property key="ProductPromotionReqEmailOrParty">
         <value xml:lang="de">Benötigt E-Mail oder Akteur</value>
-        <value xml:lang="en">Req. Email or Party</value>
+        <value xml:lang="en">Req. Email or User</value>
         <value xml:lang="es">Requiere email o participante</value>
         <value xml:lang="fr">Nécessite un courriel ou un acteur</value>
         <value xml:lang="it">Rich. Email o Soggetto</value>
@@ -26315,7 +26315,7 @@
     </property>
     <property key="ProductReceiveInventory">
         <value xml:lang="de">Bestand entgegennehmen nach ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Receive Inventory Into ${facility.facilityName} [${facility.facilityId}]</value>
+        <value xml:lang="en">Receive Inventory Into ${warehouse.facilityName} [${warehouse.facilityId}]</value>
         <value xml:lang="es">Recibir Inventario en ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Stock à recevoir dans ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Ricevi Inventario</value>
@@ -26927,7 +26927,7 @@
     </property>
     <property key="ProductReserveInventoryFromFacility">
         <value xml:lang="de">Bestand von Einrichtung reservieren</value>
-        <value xml:lang="en">Reserve inventory from facility</value>
+        <value xml:lang="en">Reserve inventory from warehouse</value>
         <value xml:lang="fr">Réserver depuis le stock d'un lieu de stockage</value>
         <value xml:lang="it">Inventario riservato dallo stabilimento</value>
         <value xml:lang="ja">拠点から在庫を予約</value>
@@ -27694,7 +27694,7 @@
     </property>
     <property key="ProductSelectFacility">
         <value xml:lang="de">Eine Einrichtung auswählen</value>
-        <value xml:lang="en">Select a Facility</value>
+        <value xml:lang="en">Select a Warehouse</value>
         <value xml:lang="es">Seleccionar un almacén</value>
         <value xml:lang="fr">Sélectionnez un service</value>
         <value xml:lang="it">Seleziona una Stabilimento</value>
@@ -28549,7 +28549,7 @@
     </property>
     <property key="ProductShipmentThirdPartyAccountNumber">
         <value xml:lang="de">Kontonummer Dritter</value>
-        <value xml:lang="en">Third Party Account Number</value>
+        <value xml:lang="en">Third User Account Number</value>
         <value xml:lang="es">Nº cuenta de tercero</value>
         <value xml:lang="fr">N° de compte d'une tierce personne</value>
         <value xml:lang="it">Numero Conto Soggetto Terzo</value>
@@ -28562,7 +28562,7 @@
     </property>
     <property key="ProductShipmentThirdCommonCountryCode">
         <value xml:lang="de">Landescode Dritter</value>
-        <value xml:lang="en">Third Party Country Code</value>
+        <value xml:lang="en">Third User Country Code</value>
         <value xml:lang="es">Código país de tercero</value>
         <value xml:lang="fr">Code du pays d'une tierce personne</value>
         <value xml:lang="it">Paese Soggetto Terzo</value>
@@ -28575,7 +28575,7 @@
     </property>
     <property key="ProductShipmentThirdPartyPostalCode">
         <value xml:lang="de">Postleitzahl Dritter</value>
-        <value xml:lang="en">Third Party Postal Code</value>
+        <value xml:lang="en">Third User Postal Code</value>
         <value xml:lang="es">Código postal de tercero</value>
         <value xml:lang="fr">Code postal d'une tierce personne</value>
         <value xml:lang="it">Codice postale soggetto terzo</value>
@@ -29220,7 +29220,7 @@
         <value xml:lang="zh_TW">商店</value>
     </property>
     <property key="ProductStoreFacilityAssocList">
-        <value xml:lang="en">Product Store Facility Settings</value>
+        <value xml:lang="en">Product Store Warehouse Settings</value>
         <value xml:lang="fr">Paramétrage des lieux de stockage du centre de profit</value>
         <value xml:lang="ja">製品店舗拠点設定</value>
         <value xml:lang="vi">Thiết lập cửa hàng Chi nhánh / Cơ sở</value>
@@ -30132,7 +30132,7 @@
         <value xml:lang="zh_TW">標題</value>
     </property>
     <property key="ProductToFacilityContainer">
-        <value xml:lang="en">To Facility / Container</value>
+        <value xml:lang="en">To Warehouse / Container</value>
         <value xml:lang="es">Almacén destino / Contenedor</value>
         <value xml:lang="fr">Vers le lieu de stockage / Contenant</value>
         <value xml:lang="it">Alla Stabilimento / Contenitore</value>
@@ -30185,7 +30185,7 @@
     </property>
     <property key="ProductToParty">
         <value xml:lang="de">Zu Akteur</value>
-        <value xml:lang="en">To Party</value>
+        <value xml:lang="en">To User</value>
         <value xml:lang="es">Participante destino</value>
         <value xml:lang="fr">Destinataire</value>
         <value xml:lang="it">Al Soggetto</value>
@@ -31055,7 +31055,7 @@
     </property>
     <property key="ProductVatTaxAuthPartyNotSet">
         <value xml:lang="ar">طرف سلطة الضريبة المضافة غير موضوع</value>
-        <value xml:lang="en">Vat Tax Auth Party not set.</value>
+        <value xml:lang="en">Vat Tax Auth User not set.</value>
         <value xml:lang="es">No se ha fijado la Autoridad Tributaria responsable del IVA</value>
         <value xml:lang="fr">La réf. de centre de TVA manque</value>
         <value xml:lang="it">Soggetto autorità tasse IVA non impostato.</value>
@@ -31655,7 +31655,7 @@
         <value xml:lang="nl">Sectie 5: Zending</value>
     </property>
     <property key="ProductCatFacSection">
-        <value xml:lang="en">Prim. Category and Facility</value>
+        <value xml:lang="en">Prim. Category and Warehouse</value>
         <value xml:lang="nl">Sectie 6: Category en faciliteit</value>
     </property>
     <property key="ProductAmountSection">

@@ -4278,7 +4278,7 @@
         <value xml:lang="zh_TW">這是庫存水準資料的來源.</value>
     </property>
     <property key="FieldDescription.ProductStore.oneInventoryFacility">
-        <value xml:lang="en">If this is a 'Single Inventory' facility. With newer or less complex businesses, you will find the Single Inventory concept much easier to work with.</value>
+        <value xml:lang="en">If this is a 'Single Inventory' warehouse. With newer or less complex businesses, you will find the Single Inventory concept much easier to work with.</value>
         <value xml:lang="fr">La boutique utilise une installation d'inventaire unique.</value>
         <value xml:lang="ja">ここが'単一在庫'拠点の場合、新規または比較的単純な業務になります。単一在庫コンセプトは比較的容易な作業になります。</value>
         <value xml:lang="vi">Nếu đây là cơ sở kho chứa đơn. Với hoạt động kinh doanh mới hoặc ít hơn, bạn sẽ thấy kiểu thiết kết kho chứa đơn dễ sử dụng hơn</value>
@@ -4317,7 +4317,7 @@
         <value xml:lang="zh_TW">如果手頭庫存不足,當這個標誌設置為是時,將不再處理訂單.</value>
     </property>
     <property key="FieldDescription.ProductStore.balanceResOnOrderCreation">
-        <value xml:lang="en">If set to Y, when a new sales order is created with backordered items, then reservations on the facility/product are reassigned according to the priority given by the shipBeforeDate field.</value>
+        <value xml:lang="en">If set to Y, when a new sales order is created with backordered items, then reservations on the warehouse/product are reassigned according to the priority given by the shipBeforeDate field.</value>
         <value xml:lang="fr">Si Oui, la priorité de réservation d'un nouvel ordre de vente avec articles en attente sera déterminée selon le champ shipBeforeDate.</value>
         <value xml:lang="ja">Y にセットした場合、発送待ちのアイテムで新規販売注文が作成されると、発送期限日で与えられた優先順位にしたがって拠点/製品の予約が再割当されます。</value>
         <value xml:lang="vi">Nếu cài đặt là Y, khi một đặt hàng mới được tạo ra với sản phẩm được đặt gia công, sau đó sự hạn chế đối với cơ sở/sản phẩm sẽ được tái chuyển giao tới đơn vị ủy quyền và cài đặt trường giao hàng trước ngày (shipBeforeDate).</value>
@@ -4577,7 +4577,7 @@
         <value xml:lang="zh_TW">加值稅徵稅機構的地理標識是什麼？</value>
     </property>
     <property key="FieldDescription.ProductStore.vatTaxAuthPartyId">
-        <value xml:lang="en">What is the Party ID of the Vat Taxing Authority?</value>
+        <value xml:lang="en">What is the User ID of the Vat Taxing Authority?</value>
         <value xml:lang="fr">Ref. ID de l'autorité fiscale TVA.</value>
         <value xml:lang="ja">消費税税務機関の取引先IDは?</value>
         <value xml:lang="vi">Mã đối tượng với cơ quan đánh thuế VAT</value>

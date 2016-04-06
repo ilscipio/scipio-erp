@@ -1069,10 +1069,16 @@
     <li><@ofbizUrl secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+    <li><@ofbizUrl fullPath=true secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+    <li><@ofbizUrl fullPath=true secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+    <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+    <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
     <li><@ofbizUrl uri="main" webSiteId="CatoWebStore"/></li>
     <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
     <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
+    <#-- Explicitly allow downgrading to HTTP -->
+    <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
     <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" /></li>
     <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
     <li>${makeOfbizInterWebappUrl("main", "CatoWebStore")}</li>

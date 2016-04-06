@@ -42,16 +42,29 @@
 ************
 Builds an Ofbiz navigation URL.
 
-THIS IS THE MAIN STOCK OFBIZ URL MACRO. It may be modified with enhanced
-capabilities for Cato.
+THIS IS THE MAIN STOCK OFBIZ URL MACRO. It is modified with enhanced
+capabilities for Cato. 
+
+WARN: {{{fullPath}}} and {{{secure}}} parameters have different behavior than stock Ofbiz!
 
 With Cato, boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).
 
+'''fullPath behavior change:''' In Cato, when fullPath is specified for a controller request, if the 
+request is defined as secure, a secure URL will be created. This method will now never allow an 
+insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was 
+different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will 
+by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify 
+request it by passing secure false.
+
+'''secure behavior change:''' In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless 
+explicitly requested by passing false as . Currently (2016-04-06), for security reasons, this 
+downgrading request request ONLY applies to the case where the target link is marked as non-secure. 
+In addition, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
+secure to force a fullPath link. Links may still generate full-path secure links when needed even 
+if not requested, however.
+
 DEV NOTES:
-* TODO: RequestHandler.makeLink has been modified noticeably in Ofbiz 14 and requires more review to integrate
-  the code from Cato magnolia project
-  * The inter-webapp is still complicated by need for webSiteId which stock apps don't have (and can't give)
 * webSiteId arg below is from stock but does not fully work and will not work with stock webapps (don't have webSiteIds and can't give them any)
 
   * Parameters *
@@ -110,7 +123,11 @@ DEV NOTES:
                                   is sacrificed to allow this flag to be used safely and more easily.
                               (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     secure                  = ((boolean), default: false) or string boolean repr
-                              If true, forces a full URL with secure protocol (HTTPS).
+                              If true, ensures the resulting URL will be a secure link.
+                              WARN: MODIFIED IN CATO: This does not guarantee a full URL will be built, only when needed.
+                                  Pass fullPath {{{true}}} to always force a full path. In addition, this parameter now
+                                  recognizes the value {{{false}}} to force downgrades to HTTP when the target controller request
+                                  is marked as non-secure.
                               (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)
     encode                  = ((boolean), default: true) or string boolean repr
                               If true, pass through HttpServletResponse.encodeURL; otherwise, don't.

@@ -1202,18 +1202,22 @@ public class RequestHandler {
      * navigation links. However, it will only build links for webapps recognized by the server,
      * because in most cases we require information from the webapp.
      * <p>
-     * <strong>fullPath behavior change</strong>: In Cato, when <code>fullPath</code> is specified for a controller
-     * request, if the request is defined as secure, a secure URL will be created. This method will now
-     * <em>never</em> allow an insecure URL to built for a controller request marked secure.
-     * In stock Ofbiz, this behavior was different: fullPath could generate insecure URLs to secure requests.
-     * In addition, fullPath will by default no longer downgrade HTTPS connections. To allow downgrades,
-     * you must explicitly specify request it by passing secure false.
+     * <strong>fullPath behavior change</strong>: In Cato, when fullPath is specified for a controller request, if the 
+     * request is defined as secure, a secure URL will be created. This method will now never allow an 
+     * insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was 
+     * different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will 
+     * by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify 
+     * request it by passing secure false, and this may still produce a secure link if the target
+     * is marked secure. Currently, this applies to all links including inter-webapp links.
      * <p>
-     * <strong>secure behavior change</strong>: In Cato, if current browsing is secure, we NEVER downgrade to HTTPS
-     * unless explicitly requested by passing false as <secure>. Currently (2016-04-06), for security reasons, this downgrading request
-     * request ONLY applies to the case where the target link is marked as non-secure.
-     * In addition, secure flag no longer forces a fullPath link. Specify fullPath true in addition to secure to force a fullPath link.
-     * Links may still generate full-path secure links when needed even if not requested, however.
+     * <strong>secure behavior change</strong>: In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless 
+     * explicitly requested by passing secure false, and secure false may still produce a secure link if
+     * needed. Currently (2016-04-06), for security reasons, this 
+     * downgrading request request only applies to the case where the target link is marked as non-secure, such
+     * that in general, setting secure false does not may the link will be insecure in all cases.
+     * In addition, in Cato, secure flag no longer forces a fullPath link. Specify fullPath true in addition to 
+     * secure to force a fullPath link. Links may still generate full-path secure links when needed even 
+     * if not requested, however.
      * <p>
      * <strong>encode behavior</strong>: The <code>encode</code> flag controls whether the link should
      * be passed through <code>HttpServletResponse.encodeURL</code> method. For our purposes, this is <strong>NOT</strong>
@@ -1246,12 +1250,12 @@ public class RequestHandler {
      * @param request the request (required)
      * @param response the response (required)
      * @param url the path or URI (required), relative (relative to controller servlet if controller true, or relative to webapp context root if controller false)
-     * @param interWebapp if true, treat the link as inter-webapp (default: false) (Cato: new parameter)
+     * @param interWebapp if true, treat the link as inter-webapp (default: null/false) (Cato: new parameter)
      * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Cato: new parameter)
-     * @param controller if true, assume is a controller link and refer to controller for building link (default: true) (Cato: new parameter)
-     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: false) (Cato: changed to Boolean instead of boolean, and changed behavior)
-     * @param secure if true, resulting links is guaranteed to be secure (default: false) (Cato: changed to Boolean instead of boolean, and changed behavior)
-     * @param encode if true, pass through response.encodeURL (default: true) (Cato: changed to Boolean instead of boolean)
+     * @param controller if true, assume is a controller link and refer to controller for building link (default: null/true) (Cato: new parameter)
+     * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: null/false) (Cato: changed to Boolean instead of boolean, and changed behavior)
+     * @param secure if true, resulting links is guaranteed to be secure (default: null/false) (Cato: changed to Boolean instead of boolean, and changed behavior)
+     * @param encode if true, pass through response.encodeURL (default: null/true) (Cato: changed to Boolean instead of boolean)
      * @return the resulting URL
      */
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 

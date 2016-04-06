@@ -186,7 +186,8 @@
                 </#if>-->
                 
                 <p>
-                <#if oldPrice?has_content>
+                <#-- Only show the "old" price if the current price is lower (otherwise, bad advertisement) -->
+                <#if oldPrice?has_content && currentPrice?has_content && (oldPrice?double > currentPrice?double)>
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  

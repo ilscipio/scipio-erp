@@ -31,6 +31,6 @@ Cato: Generic products defined using a template to help fill up categories and t
         <product productId="FD-1065" productCategoryId="FOOD-100" productName="Catfish" longDescription="Delicious catfish." defaultPrice="12.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
         <product productId="FD-1066" productCategoryId="FOOD-100" productName="Raw Shrimp (with shell)" longDescription="Delicious shrimp, with shell, zipperback." defaultPrice="11.99" quantityIncluded="0.454" quantityUomId="WT_kg"/>
         <product productId="PR-1000" productCategoryId="PC-PR-101" extraCategoryId1="ELTRN-100" productName="USB Optical Mouse" longDescription="Simple, durable, USB optical mouse." defaultPrice="19.99" />
-        <product productId="CAM-7000" productCategoryId="ELTRN-100" productName="Nikon FM2 film" description="Film for Nikon Analog Cameras." longDescription="Film for Nikon Analog Cameras." defaultPrice="19.99" quantityIncluded="100.0" weight="0.1"/>
+        <product productId="CAM-7000" productCategoryId="ELTRN-100" productName="Nikon FM2 film" description="FM2 film for Nikon Analog Cameras." longDescription="High-quality FM2 film for Nikon Analog Cameras." defaultPrice="19.99" quantityIncluded="100.0" weight="0.1"/>
     </products>
 </entity-engine-transform-xml>

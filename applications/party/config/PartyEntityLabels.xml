@@ -1056,7 +1056,7 @@
     </property>
     <property key="ContactMechType.description.INTERNAL_PARTYID">
         <value xml:lang="cs">Interní poznámka</value>
-        <value xml:lang="en">Internal Party Note</value>
+        <value xml:lang="en">Internal User Note</value>
         <value xml:lang="fr">Note Interne</value>
         <value xml:lang="ja">内部取引先連絡</value>
         <value xml:lang="vi">Ghi chú tác nhân nội bộ</value>
@@ -1979,7 +1979,7 @@
     </property>
     <property key="PartyType.description.PARTY_GROUP">
         <value xml:lang="de">Akteurgruppe</value>
-        <value xml:lang="en">Party Group</value>
+        <value xml:lang="en">User Group</value>
         <value xml:lang="es">Grupo de participantes</value>
         <value xml:lang="fr">Groupe d'acteurs</value>
         <value xml:lang="hi_IN">पार्टी समूह</value>
@@ -3443,7 +3443,7 @@
     </property>
     <property key="RoleType.description.REQ_REQUESTER">
         <value xml:lang="de">Anfragender Akteur</value>
-        <value xml:lang="en">Requesting Party</value>
+        <value xml:lang="en">Requesting User</value>
         <value xml:lang="es">Emisor de peticiones</value>
         <value xml:lang="fr">Demandeur</value>
         <value xml:lang="hi_IN">अनुरोध पार्टी</value>

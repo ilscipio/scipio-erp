@@ -175,7 +175,7 @@
     </property>
     <property key="contactmechservices.cannot_update_specified_contact_info_not_corresponds">
         <value xml:lang="de">FEHLER: Kontaktinformationen können nicht aktualisiert werden da sie nicht zum angegebenen Akteur gehören.</value>
-        <value xml:lang="en">ERROR: Cannot update specified contact info because it does not correspond to the specified party.</value>
+        <value xml:lang="en">ERROR: Cannot update specified contact info because it does not correspond to the specified user.</value>
         <value xml:lang="es">ERROR: No se puede actualizar la información del contacto, dado que no corresponte al participante</value>
         <value xml:lang="fr">ERREUR: Impossible de mettre à jour l'information de contact spécifiée parce qu'elle ne correspond pas à l'acteur spécifié.</value>
         <value xml:lang="hi_IN">त्रुटि: निर्दिष्ट संपर्क जानकारी को अद्यतन(update) नहीं कर सकते क्योंकि यह निर्दिष्ट पार्टी के अनुरूप नहीं है|</value>
@@ -303,7 +303,7 @@
     </property>
     <property key="contactmechservices.could_not_delete_contact_info_no_contact_found">
         <value xml:lang="de">Kontaktinformation konnte nicht gelöscht werden (Akteur Kontaktmechanismus nicht gefunden)</value>
-        <value xml:lang="en">Could not delete contact info (party contact mech not found).</value>
+        <value xml:lang="en">Could not delete contact info (user contact mech not found).</value>
         <value xml:lang="es">No se ha podido borrar la información de contacto (mec. de contacto no encontrado).</value>
         <value xml:lang="fr">Impossible de supprimer l'information de contact (coordonnée de l'acteur non trouvé)</value>
         <value xml:lang="hi_IN">संपर्क जानकारी को नष्ट नहीं कर पाएँ (पार्टी संपर्क तंत्र नहीं मिला)|</value>
@@ -521,7 +521,7 @@
     </property>
     <property key="party.id_generation_failure">
         <value xml:lang="de">FEHLER: Neue Akteur ID konnte nicht erstellt werden</value>
-        <value xml:lang="en">ERROR: Failure generating new party ID</value>
+        <value xml:lang="en">ERROR: Failure generating new user ID</value>
         <value xml:lang="es">ERROR: Error al generar nuevo código de participante</value>
         <value xml:lang="fr">ERREUR: Echec lors de la génération d'un nouvelle identifiant acteur</value>
         <value xml:lang="hi_IN">त्रुटि: नया पार्टी क्रमांक बनाने में असफल</value>
@@ -538,7 +538,7 @@
     </property>
     <property key="party.id_is_digit">
         <value xml:lang="de">Die angegebene Akteur ID beginnt mit einer Zahl. Numerische IDs sind für vom System automatisch erstellte IDs reserviert.</value>
-        <value xml:lang="en">Specified party ID cannot be a digit, numeric IDs are reserved for auto-generated IDs</value>
+        <value xml:lang="en">Specified user ID cannot be a digit, numeric IDs are reserved for auto-generated IDs</value>
         <value xml:lang="es">El código no puede empezar con un dígito, los códigos numericos están reservados para ser autogenerados.</value>
         <value xml:lang="fr">L'identifiant spécifié pour l'acteur ne peut démarrer par un chiffre, cela est réservé aux identifiants générés automatiquement</value>
         <value xml:lang="hi_IN">निर्दिष्ट पार्टी क्रमांक एक अंक के साथ शुरू नहीं कर सकते ऑटो उत्पन्न क्रमांको के लिए अंकीय क्रमांक आरक्षित हैं|</value>
@@ -554,7 +554,7 @@
         <value xml:lang="zh_TW">指定的團體識別不能以數字開始,數字識別為自動產生的識別預留</value>
     </property>
     <property key="partytypehelper.NotPersonType">
-        <value xml:lang="en">The party ${0} is not a PERSON type party</value>
+        <value xml:lang="en">The user ${0} is not a PERSON type user</value>
         <value xml:lang="fr">L`acteur ${0} n'est pas du type personne.</value> <!-- ` used instead of ' else because ' may interfere with the result from ${0} and prevent it to appears-->
         <value xml:lang="ja">取引先 ${0} の種類が個人ではありません</value>
         <value xml:lang="nl">De relatie ${0} is niet van het soort PERSON</value>
@@ -562,7 +562,7 @@
         <value xml:lang="zh_TW">團體${0}不是人員(PERSON)類型的團體</value>
     </property>
     <property key="partytypehelper.NotGroupType">
-        <value xml:lang="en">The party ${0} is not a PARTYGROUP type party</value>
+        <value xml:lang="en">The user ${0} is not a PARTYGROUP type user</value>
         <value xml:lang="fr">L`acteur ${0} n'est pas du type groupe.</value> <!-- ` used instead of ' else because ' may interfere with the result from ${0} and prevent it to appears-->
         <value xml:lang="ja">取引先 ${0} の種類が取引先グループではありません</value>
         <value xml:lang="nl">De relatie ${0} is not van het soort PARTYGROUP</value>
@@ -571,7 +571,7 @@
     </property>
     <property key="partyrelationshipservices.cannot_create_party_relationship_partyIdFrom_not_in_role">
         <value xml:lang="de">Kann Akteur Beziehung nicht erstellen, Akteur ID Von besitzt nicht die angebenene Rolle.</value>
-        <value xml:lang="en">Cannot create party relationship, partyIdFrom is not in specified role.</value>
+        <value xml:lang="en">Cannot create user relationship, partyIdFrom is not in specified role.</value>
         <value xml:lang="es">No se puede crear las relación.</value>
         <value xml:lang="fr">Impossible de créer la relation à l'acteur, partyIdFrom n'est pas dans le rôle spécifié.</value>
         <value xml:lang="hi_IN">पार्टी का रिश्ता नहीं बना सकते, partyIdFrom निर्दिष्ट भूमिका में नहीं है|</value>
@@ -587,7 +587,7 @@
     </property>
     <property key="partyrelationshipservices.cannot_create_party_relationship_partyIdTo_not_in_role">
         <value xml:lang="de">Kann Akteur Beziehung nicht erstellen, Akteur ID zu besitzt nicht die angegebene Rolle.</value>
-        <value xml:lang="en">Cannot create party relationship, partyIdTo is not in specified role.</value>
+        <value xml:lang="en">Cannot create user relationship, partyIdTo is not in specified role.</value>
         <value xml:lang="es">No se puede crear las relación.</value>
         <value xml:lang="fr">Impossible de créer la relation à l'acteur, partyIdTo n'est pas dans le rôle spécifié.</value>
         <value xml:lang="hi_IN">पार्टी का रिश्ता नहीं बना सकते, partyIdTo निर्दिष्ट भूमिका में नहीं है|</value>
@@ -603,7 +603,7 @@
     </property>
     <property key="partyrelationshipservices.cannot_create_party_relationship_partyIdTo_null">
         <value xml:lang="de">Kann Akteur Beziehung nicht erstellen, Akteur Id An kann nicht leer sein.</value>
-        <value xml:lang="en">Cannot create party relationship, partyIdTo cannot be null.</value>
+        <value xml:lang="en">Cannot create user relationship, partyIdTo cannot be null.</value>
         <value xml:lang="es">No se puede crear las relación, el código del participante no puede estar vacio</value>
         <value xml:lang="fr">Impossible de créer la relation à l'acteur, partyIdTo ne peut pas être nul.</value>
         <value xml:lang="hi_IN">पार्टी का रिश्ता नहीं बना सकते, partyIdTo null नहीं हो सकता|</value>
@@ -619,7 +619,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_create_party_role_exists">
         <value xml:lang="de">Kann Akteur Beziehung nicht erstellen: Diese Beziehung ist schon vorhanden.</value>
-        <value xml:lang="en">Could not create party relationship: already exists.</value>
+        <value xml:lang="en">Could not create user relationship: already exists.</value>
         <value xml:lang="es">No se puede crear la relación: ya existe en el sistema.</value>
         <value xml:lang="fr">Impossible de créer la relation à l'acteur : existe déjà.</value>
         <value xml:lang="hi_IN">पार्टी का रिश्ता नहीं बना पाएँ: पहले से ही मौजूद है|</value>
@@ -635,7 +635,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_create_party_role_read">
         <value xml:lang="de">Akteur Rolle kann nicht erstellt werden (Lesefehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not create party role (read failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not create user role (read failure): ${errMessage}.</value>
         <value xml:lang="es">No se puede crear la relación(error de lectura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de créer le rôle de l'acteur (erreur de lecture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी की भूमिका तैयार नहीं कर पाएँ (पड़ने में असफल): ${errMessage}.</value>
@@ -651,7 +651,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_create_party_role_write">
         <value xml:lang="de">Akteur Beziehung kann nicht erstellt werden (Schreibfehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not create party relationship (write failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not create user relationship (write failure): ${errMessage}.</value>
         <value xml:lang="es">No se puede crear la relación(error de escritura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de créer la relation à l'acteur (erreur d'écriture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी का रिश्ता नहीं बना पाएँ (लिखने में असफल): ${errMessage}.</value>
@@ -667,7 +667,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_update_party_relation_not_found">
         <value xml:lang="de">Akteur Beziehung kann nicht aktualisiert werden (Beziehung nicht gefunden).</value>
-        <value xml:lang="en">Could not update party relationship (relationship not found).</value>
+        <value xml:lang="en">Could not update user relationship (relationship not found).</value>
         <value xml:lang="es">No se puede actualizar las relaciones.</value>
         <value xml:lang="fr">Impossible de mettre à jour la relation à l'acteur (relation non trouvée).</value>
         <value xml:lang="hi_IN">पार्टी के रिश्ते को अद्यतन(update) नहीं कर पाएँ (रिश्ता नहीं मिला)|</value>
@@ -683,7 +683,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_update_party_relation_read">
         <value xml:lang="de">Akteur Beziehung kann nicht aktualisiert werden (Lesefehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not update party relation (read failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not update user relation (read failure): ${errMessage}.</value>
         <value xml:lang="es">No se puede actualizar las relaciones(error de lectura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de mettre à jour la relation de l'acteur (erreur de lecture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी के रिश्ते को अद्यतन(update) नहीं कर पाएँ (पड़ने में असफल): ${errMessage}|</value>
@@ -699,7 +699,7 @@
     </property>
     <property key="partyrelationshipservices.could_not_update_party_relation_write">
         <value xml:lang="de">Akteur Beziehung kann nicht aktualisiert werden (Schreibfehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not update party relationship (write failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not update user relationship (write failure): ${errMessage}.</value>
         <value xml:lang="es">No se puede actualizar las relaciones(error de escritura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de mettre à jour la relation de l'acteur (erreur d'écriture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी के रिश्ते को अद्यतन(update) नहीं कर पाएँ (लिखने में असफल): ${errMessage}|</value>
@@ -715,7 +715,7 @@
     </property>
     <property key="partyroleservices.could_not_create_party_role_exists">
         <value xml:lang="de">Akteur Rolle kann nicht erstellt werden. Rolle ist schon vorhanden.</value>
-        <value xml:lang="en">could not create party role exists</value>
+        <value xml:lang="en">could not create user role exists</value>
         <value xml:lang="fr">Impossible de créer le rôle de l'acteur : il existe déjà</value>
         <value xml:lang="hi_IN">party role exists नहीं बना पाएँ</value>
         <value xml:lang="it">Non è possibile creare un ruolo soggetto già esistente</value>
@@ -729,7 +729,7 @@
     </property>
     <property key="partyroleservices.could_not_create_party_role_read">
         <value xml:lang="de">Akteur Rolle kann nicht erstellt werden (Lesefehler).</value>
-        <value xml:lang="en">could not create party role read</value>
+        <value xml:lang="en">could not create user role read</value>
         <value xml:lang="es">No se puede crear el rol (error de lectura).</value>
         <value xml:lang="fr">Impossible de créer le rôle de l'acteur (erreur de lecture)</value>
         <value xml:lang="hi_IN">party role read नहीं बना पाएँ</value>
@@ -744,7 +744,7 @@
     </property>
     <property key="partyroleservices.could_not_create_party_role_write">
         <value xml:lang="de">Akteur Rolle kann nicht erstellt werden (Schreibfehler).</value>
-        <value xml:lang="en">could not create party role write</value>
+        <value xml:lang="en">could not create user role write</value>
         <value xml:lang="es">No se puede crear el rol (error de escritura).</value>
         <value xml:lang="fr">Impossible de créer le rôle de l'acteur (erreur d'écriture)</value>
         <value xml:lang="hi_IN">party role write नहीं बना पाएँ</value>
@@ -759,7 +759,7 @@
     </property>
     <property key="partyroleservices.could_not_delete_party_role_not_found">
         <value xml:lang="de">Akteur Rolle kann nicht gelöscht werden. Rolle nicht gefunden.</value>
-        <value xml:lang="en">could not delete party role not found</value>
+        <value xml:lang="en">could not delete user role not found</value>
         <value xml:lang="es">No se ha podido borrar el rol. Rol no encontrado.</value>
         <value xml:lang="fr">Impossible de supprimer le rôle de l'acteur : non trouvé</value>
         <value xml:lang="hi_IN">नष्ट नहीं कर पाएँ पार्टी भूमिका नहीं मिली</value>
@@ -774,7 +774,7 @@
     </property>
     <property key="partyroleservices.could_not_delete_party_role_read">
         <value xml:lang="de">Akteur Rolle kann nicht gelöscht werden (Lesefehler).</value>
-        <value xml:lang="en">could not delete party role read</value>
+        <value xml:lang="en">could not delete user role read</value>
         <value xml:lang="es">El rol no se puede borrar (error de lectura).</value>
         <value xml:lang="fr">Impossible de supprimer le rôle de l'acteur (erreur de lecture)</value>
         <value xml:lang="it">Non è possibile leggere il ruolo soggetto da cancellare</value>
@@ -788,7 +788,7 @@
     </property>
     <property key="partyroleservices.could_not_delete_party_role_write">
         <value xml:lang="de">Akteur Rolle kann nicht gelöscht werden (Schreibfehler).</value>
-        <value xml:lang="en">could not delete party role write</value>
+        <value xml:lang="en">could not delete user role write</value>
         <value xml:lang="es">El rol no se puede borrar (error de escritura).</value>
         <value xml:lang="fr">Impossible de supprimer le rôle de l'acteur (erreur d'écriture)t</value>
         <value xml:lang="it">Non è possibile scrivere il ruolo soggetto da cancellare</value>
@@ -817,7 +817,7 @@
         <value xml:lang="zh_TW">'姓氏' 和 '名字' 不能為空.</value>
     </property>
     <property key="partyservices.cannot_create_affiliate_ID_already_exists">
-        <value xml:lang="en">Cannot create, an affiliate with the specified party ID already exists.</value>
+        <value xml:lang="en">Cannot create, an affiliate with the specified user ID already exists.</value>
         <value xml:lang="es">El código especificado se encuentra en uso.</value>
         <value xml:lang="fr">Impossible de créer, un(e) affilié(e), l'acteur spécifié existe déjà.</value>
         <value xml:lang="hi_IN">नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक के साथ एक संबद्ध पहले से ही मौजूद है|</value>
@@ -832,7 +832,7 @@
         <value xml:lang="zh_TW">不能新建已存在指定團體識別的集團.</value>
     </property>
     <property key="partyservices.cannot_create_affiliate_digit">
-        <value xml:lang="en">Cannot create affiliate, specified party ID cannot be a digit, numeric IDs are reserved for auto-generated IDs.</value>
+        <value xml:lang="en">Cannot create affiliate, specified user ID cannot be a digit, numeric IDs are reserved for auto-generated IDs.</value>
         <value xml:lang="es">No se pudo crear afiliado, el código del participante no puede empezar con un dígito, los códigos numericos están reservados para ser autogenerados.</value>
         <value xml:lang="fr">Impossible de créer l'affilié(e), la réf. d'acteur ne peut pas commencer par un chiffre, les identifiants numériques sont réservés aux identifiants générés automatiquement.</value>
         <value xml:lang="hi_IN">संबद्ध नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक एक अंक के साथ शुरू नहीं कर सकते ऑटो उत्पन्न क्रमांको के लिए अंकीय क्रमांक आरक्षित हैं|</value>
@@ -862,7 +862,7 @@
         <value xml:lang="zh_TW">錯誤:無法新建集團 (產生識別失敗).</value>
     </property>
     <property key="partyservices.cannot_create_affiliate_no_party_entity">
-        <value xml:lang="en">Cannot create affiliate; no party entity found.</value>
+        <value xml:lang="en">Cannot create affiliate; no user entity found.</value>
         <value xml:lang="es">No se puede crear afiliación, no se encontro la entidad participante.</value>
         <value xml:lang="fr">Impossible de créer l'affilié(e); aucune entité acteur trouvée.</value>
         <value xml:lang="hi_IN">संबद्ध नहीं बना सकते, कोई पार्टी इकाई(entity) नहीं मिली|</value>
@@ -878,7 +878,7 @@
     </property>
     <property key="partyservices.cannot_create_party_group_already_exists">
         <value xml:lang="de">Akteurgruppe kann nicht erstellt werden. Eine Akteurgruppe mit dieser ID existiert bereits.</value>
-        <value xml:lang="en">Cannot create party group, a party group with the specified party ID already exists.</value>
+        <value xml:lang="en">Cannot create user group, a user group with the specified user ID already exists.</value>
         <value xml:lang="es">No se puede crear un grupo participante, el código está en uso</value>
         <value xml:lang="fr">Impossible de créer ce groupe d'acteur. Un groupe d'acteur avec la même réf. existe déjà.</value>
         <value xml:lang="hi_IN">पार्टी समूह नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक के साथ एक पार्टी समूह पहले से ही मौजूद है|</value>
@@ -894,7 +894,7 @@
     </property>
     <property key="partyservices.cannot_create_party_group_already_exists_not_PARTY_GROUP_type">
         <value xml:lang="de">Akteurgruppe kann nicht erstellt werden. Ein Akteur mit der angegebenen ID ist bereits vorhanden und ist kein Akteur vom Typ PARTY_GROUP oder ein untergeordneter Typ.</value>
-        <value xml:lang="en">Cannot create party group, a party with the specified party ID already exists and is not a PARTY_GROUP type party, or a child of the PARTY_GROUP type.</value>
+        <value xml:lang="en">Cannot create user group, a user with the specified user ID already exists and is not a PARTY_GROUP type user, or a child of the PARTY_GROUP type.</value>
         <value xml:lang="es">No se puede crear al grupo participante, el código está en uso por un participante.</value>
         <value xml:lang="fr">Impossible de créer le groupe d'acteur, un acteur avec l'identifiant d'acteur spécifié existe déjà et n'est pas de type PARTY_GROUP, ou un enfant du type PARTY_GROUP.</value>
         <value xml:lang="hi_IN">पार्टी समूह नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक के साथ एक पार्टी पहले से ही मौजूद है और PARTY_GROUP प्रकार की पार्टी नहीं है या PARTY_GROUP प्रकार का वंशज नहीं है|</value>
@@ -910,7 +910,7 @@
     </property>
     <property key="partyservices.cannot_delete_party_not_implemented">
         <value xml:lang="de">Akteur kann nicht gelöscht werden (ist noch nicht implementiert).</value>
-        <value xml:lang="en">Cannot delete party, operation not yet implemented.</value>
+        <value xml:lang="en">Cannot delete user, operation not yet implemented.</value>
         <value xml:lang="es">No se puede eliminar al participante, la operación no ha sido implementada</value>
         <value xml:lang="fr">Impossible de supprimer l'acteur, opération non encore implémentée.</value>
         <value xml:lang="hi_IN">पार्टी को नष्ट नहीं कर सकते, आपरेशन अभी तक लागू नहीं किया है|</value>
@@ -926,7 +926,7 @@
     </property>
     <property key="partyservices.cannot_get_party_entities_read">
         <value xml:lang="de">Akteur Entitäten können nicht geholt werden (Lesefehler): ${errMessage}.</value>
-        <value xml:lang="en">Cannot get party entities (read failure): ${errMessage}.</value>
+        <value xml:lang="en">Cannot get user entities (read failure): ${errMessage}.</value>
         <value xml:lang="es">No se pudo obtener la entidad participante: ${errMessage}</value>
         <value xml:lang="fr">Impossible d'obtenir des entités d'acteur (erreur de lecture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी इकाईयाँ नहीं मिली (पड़ने में असफल): ${errMessage}|</value>
@@ -957,7 +957,7 @@
     </property>
     <property key="partyservices.could_not_create_party_ID_digit">
         <value xml:lang="de">Akteurgruppe kann nicht erstellt werden, Akteur ID darf nicht mit Zahl beginnen. Numerische Akteur IDs sind für das System reserviert.</value>
-        <value xml:lang="en">Cannot create party group, specified party ID cannot be a digit, numeric IDs are reserved for auto-generated IDs.</value>
+        <value xml:lang="en">Cannot create user group, specified user ID cannot be a digit, numeric IDs are reserved for auto-generated IDs.</value>
         <value xml:lang="es">No se pudo crear grupo de participantes, el código no puede empezar con un dígito, los códigos numericos están reservados para ser autogenerados</value>
         <value xml:lang="fr">Impossible de créer le groupe d'acteur, L'identifiant spécifié pour l'acteur ne peut démarrer par un chiffre, cela est réservé aux identifiants générés automatiquement.</value>
         <value xml:lang="hi_IN">पार्टी समूह नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक एक अंक के साथ शुरू नहीं कर सकते ऑटो उत्पन्न क्रमांको के लिए अंकीय क्रमांक आरक्षित हैं|</value>
@@ -973,7 +973,7 @@
     </property>
     <property key="partyservices.could_not_create_party_group_generation_failure">
         <value xml:lang="de">FEHLER: Kann Akteurgruppe nicht erstellen (id generation failure).</value>
-        <value xml:lang="en">ERROR: Could not create party group (id generation failure).</value>
+        <value xml:lang="en">ERROR: Could not create user group (id generation failure).</value>
         <value xml:lang="es">ERROR: no se pudo crear el grupo participante (error de generación de código)</value>
         <value xml:lang="fr">ERREUR : Impossible de créer le groupe d'acteur (échec de génération d'identifiant).</value>
         <value xml:lang="hi_IN">त्रुटि: पार्टी समूह नहीं बना पाएँ (क्रमांक उत्पन्न करने में असफल)|</value>
@@ -1034,7 +1034,7 @@
     </property>
     <property key="partyservices.could_not_update_party_information_not_found">
         <value xml:lang="de">Kann Akteur oder Akteurgruppe nicht aktualisieren (Akteur oder Akteurgruppe nicht gefunden).</value>
-        <value xml:lang="en">Could not update party or party group information (party or partyGroup not found).</value>
+        <value xml:lang="en">Could not update user or user group information (user or partyGroup not found).</value>
         <value xml:lang="es">No se pudo actualizar la información del participante (no se encontro el participante)</value>
         <value xml:lang="fr">Impossible de mettre à jour l'information d'acteur ou de groupe d'acteur (acteur ou partyGroup non trouvé).</value>
         <value xml:lang="hi_IN">पार्टी या पार्टी समूह जानकारी का अद्यतन(update) नहीं कर पाएँ (पार्टी या पार्टी समूह नहीं मिला)|</value>
@@ -1050,7 +1050,7 @@
     </property>
     <property key="partyservices.could_not_update_party_information_read">
         <value xml:lang="de">Kann Akteur oder Akteurgruppe nicht aktualisieren (Lesefehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not update party or party group information (read failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not update user or user group information (read failure): ${errMessage}.</value>
         <value xml:lang="es">No se pudo actualizar la información del participante(error de lectura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de mettre à jour l'information d'acteur ou de groupe d'acteur (erreur de lecture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी या पार्टी समूह जानकारी का अद्यतन(update) नहीं कर पाएँ (पड़ने में असफल): ${errMessage}|</value>
@@ -1066,7 +1066,7 @@
     </property>
     <property key="partyservices.could_not_update_party_information_write">
         <value xml:lang="de">Kann Akteur oder Akteurgruppe nicht aktualisieren (Schreibfehler): ${errMessage}.</value>
-        <value xml:lang="en">Could not update party or party group information (write failure): ${errMessage}.</value>
+        <value xml:lang="en">Could not update user or user group information (write failure): ${errMessage}.</value>
         <value xml:lang="es">No se pudo actualizar la información del participante(error de escritura): ${errMessage}</value>
         <value xml:lang="fr">Impossible de mettre à jour l'information d'acteur ou de groupe d'acteur (erreur d'écriture) : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी या पार्टी समूह जानकारी का अद्यतन(update) नहीं कर पाएँ (लिखने में असफल): ${errMessage}|</value>
@@ -1082,7 +1082,7 @@
     </property>
     <property key="partyservices.data_source_error_adding_party_group">
         <value xml:lang="de">Datenbankfehler beim Hinzufügen der Akteurgruppe: ${errMessage}.</value>
-        <value xml:lang="en">Data source error occurred while adding party group: ${errMessage}.</value>
+        <value xml:lang="en">Data source error occurred while adding user group: ${errMessage}.</value>
         <value xml:lang="es">Error al crear grupo de participantes:  ${errMessage}</value>
         <value xml:lang="fr">Une erreur de source de données s'est produite en ajoutant le groupe d'acteur : ${errMessage}.</value>
         <value xml:lang="hi_IN">पार्टी समूह जोड़ते समय डेटा स्रोत(source) में त्रुटि आ गयी: ${errMessage}|</value>
@@ -1098,7 +1098,7 @@
     </property>
     <property key="partyservices.party_type_not_found_in_database_cannot_create_party_group">
         <value xml:lang="de">Der Akteur Typ mit ID PARTY_GROUP ist in der Datenbank nicht vorhanden, Akteurgruppe kann nicht erstellt werden.</value>
-        <value xml:lang="en">The party type with ID PARTY_GROUP was not found in the database, cannot create new party group.</value>
+        <value xml:lang="en">The user type with ID PARTY_GROUP was not found in the database, cannot create new user group.</value>
         <value xml:lang="es">Participante no encontrado; no se puede crear un nuevo grupo de participantes</value>
         <value xml:lang="fr">Le type d'acteur avec l'identifiant PARTY_GROUP n'a pas été trouvé dans la base de données, impossible de créer le nouveau groupe d'acteur.</value>
         <value xml:lang="hi_IN">डेटाबेस में पार्टी प्रकार क्रमांक PARTY_GROUP के साथ नहीं मिला, नया पार्टी समूह नहीं बना सकते|</value>
@@ -1114,7 +1114,7 @@
     </property>
     <property key="partyservices.problem_associating_note_with_party">
         <value xml:lang="de">Problem beim Zuweisen einer Notiz zu einem Akteur "${errMessage}".</value>
-        <value xml:lang="en">Problem associating note with party "${errMessage}".</value>
+        <value xml:lang="en">Problem associating note with user "${errMessage}".</value>
         <value xml:lang="es">Problema al asociar la nota con el participante: ${errMessage}</value>
         <value xml:lang="fr">Problème en associant la note avec l'acteur "${errMessage".</value>
         <value xml:lang="hi_IN">पार्टी के साथ नोट जोड़ने में समस्या "${errMessage}"|</value>
@@ -1189,7 +1189,7 @@
     </property>
     <property key="person.create.party_exists_not_person_type">
         <value xml:lang="de">Person kann nicht erstellt werden. Ein Akteur mit der angegebenen Akteur ID existiert bereits und ist kein Akteur vom Typ PERSON.</value>
-        <value xml:lang="en">Cannot create person, a party with the specified party ID already exists and is not a PERSON type party</value>
+        <value xml:lang="en">Cannot create person, a user with the specified user ID already exists and is not a PERSON type user</value>
         <value xml:lang="es">No se puede crear persona, un participante con ese código ya existe y no es de tipo PERSONA</value>
         <value xml:lang="fr">Il n'est pas possible de créer cette personne, un acteur avec le même identifiant existe et il n'est pas du type personne.</value>
         <value xml:lang="hi_IN">व्यक्ति नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक के साथ एक पार्टी पहले से ही मौजूद है और PERSON प्रकार की पार्टी नहीं है</value>
@@ -1206,7 +1206,7 @@
     </property>
     <property key="person.create.person_exists">
         <value xml:lang="de">Person kann nicht erstellt werden. Eine Person mit der angegebenen Akteur ID ist bereits vorhanden.</value>
-        <value xml:lang="en">Cannot create person, a person with the specified party ID already exists</value>
+        <value xml:lang="en">Cannot create person, a person with the specified user ID already exists</value>
         <value xml:lang="es">No se puede crear persona, ya existe el código</value>
         <value xml:lang="fr">Il n'est pas possible de créer cette personne, un acteur avec l'identifiant spécifié existe déja.</value>
         <value xml:lang="hi_IN">व्यक्ति नहीं बना सकते, निर्दिष्ट पार्टी क्रमांक के साथ एक पार्टी पहले से ही मौजूद है</value>

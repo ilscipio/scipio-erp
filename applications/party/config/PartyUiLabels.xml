@@ -184,7 +184,7 @@
     </property>
     <property key="FormFieldTitle_communicationPartyId">
         <value xml:lang="de">Kommunikationspartner ID</value>
-        <value xml:lang="en">Communication Party Id</value>
+        <value xml:lang="en">Communication User Id</value>
         <value xml:lang="hi_IN">संचार पार्टी क्रमांक</value>
         <value xml:lang="it">Soggetto comuicazione</value>
         <value xml:lang="ja">通信取引先ID</value>
@@ -487,7 +487,7 @@
     </property>
     <property key="FormFieldTitle_fromPartyId">
         <value xml:lang="de">Von Akteur ID</value>
-        <value xml:lang="en">From Party Id</value>
+        <value xml:lang="en">From User Id</value>
         <value xml:lang="es">Código Participante origen</value>
         <value xml:lang="fr">Expéditeur</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक से</value>
@@ -1116,7 +1116,7 @@
     <property key="FormFieldTitle_partyClassificationGroupId">
         <value xml:lang="cs">Id klasifikační skupiny partnera</value>
         <value xml:lang="de">Akteur Klassifizierungsgruppe ID</value>
-        <value xml:lang="en">Party Classification Group Id</value>
+        <value xml:lang="en">User Classification Group Id</value>
         <value xml:lang="es">Código Grupo de clasificación</value>
         <value xml:lang="fr">Classification d'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण समूह क्रमांक</value>
@@ -1133,7 +1133,7 @@
     </property>
     <property key="FormFieldTitle_partyClassificationTypeId">
         <value xml:lang="de">Akteur Klassifizierungstyp ID</value>
-        <value xml:lang="en">Party Classification Type Id</value>
+        <value xml:lang="en">User Classification Type Id</value>
         <value xml:lang="es">Codigo Tipo de clasificación</value>
         <value xml:lang="fr">Type de classification d'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण प्रकार का क्रमांक</value>
@@ -1164,7 +1164,7 @@
         <value xml:lang="ar">تعريف الطرف</value>
         <value xml:lang="cs">ID partnera</value>
         <value xml:lang="de">Akteur ID</value>
-        <value xml:lang="en">Party Id</value>
+        <value xml:lang="en">User Id</value>
         <value xml:lang="es">Id Grupo</value>
         <value xml:lang="fr">Acteur</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक</value>
@@ -1182,7 +1182,7 @@
     <property key="FormFieldTitle_partyIdFrom">
         <value xml:lang="cs">Od partnera ID</value>
         <value xml:lang="de">Akteur ID von</value>
-        <value xml:lang="en">From Party ID</value>
+        <value xml:lang="en">From User ID</value>
         <value xml:lang="es">Id Grupo Origen</value>
         <value xml:lang="fr">De l'acteur</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक से</value>
@@ -1200,7 +1200,7 @@
     <property key="FormFieldTitle_partyIdTo">
         <value xml:lang="cs">Partnerovi ID</value>
         <value xml:lang="de">Akteur ID zu</value>
-        <value xml:lang="en">To Party ID</value>
+        <value xml:lang="en">To User ID</value>
         <value xml:lang="es">Id Grupo Destino</value>
         <value xml:lang="fr">Vers l'acteur</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक को</value>
@@ -1239,7 +1239,7 @@
     </property>
     <property key="FormFieldTitle_partyInvitationId">
         <value xml:lang="de">Akteur Einladung ID</value>
-        <value xml:lang="en">Party Invitation Id</value>
+        <value xml:lang="en">User Invitation Id</value>
         <value xml:lang="es">Código Invitación de participante</value>
         <value xml:lang="fr">Invitation d'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण क्रमांक</value>
@@ -1254,7 +1254,7 @@
     </property>
     <property key="FormFieldTitle_partyRelationshipName">
         <value xml:lang="de">Akteur Beziehungsname</value>
-        <value xml:lang="en">Party Relationship Name</value>
+        <value xml:lang="en">User Relationship Name</value>
         <value xml:lang="es">Nombre de relación</value>
         <value xml:lang="fr">Nom de la relation</value>
         <value xml:lang="hi_IN">पार्टी के संबंध का नाम</value>
@@ -1271,7 +1271,7 @@
     </property>
     <property key="FormFieldTitle_partyRelationshipTypeId">
         <value xml:lang="de">Akteur Beziehungstyp ID</value>
-        <value xml:lang="en">Party Relationship Type Id</value>
+        <value xml:lang="en">User Relationship Type Id</value>
         <value xml:lang="es">Código de relación</value>
         <value xml:lang="fr">Type de relation</value>
         <value xml:lang="hi_IN">पार्टी के संबंध प्रकार का क्रमांक</value>
@@ -1289,7 +1289,7 @@
     <property key="FormFieldTitle_partyTaxId">
         <value xml:lang="cs">DIČ</value>
         <value xml:lang="de">Akteur Steuer ID</value>
-        <value xml:lang="en">Party Tax Id</value>
+        <value xml:lang="en">User Tax Id</value>
         <value xml:lang="es">CIF/NIF</value>
         <value xml:lang="fr">Taxe d'acteur</value>
         <value xml:lang="hi_IN">पार्टी कर(tax) क्रमांक</value>
@@ -1307,7 +1307,7 @@
     <property key="FormFieldTitle_partyTypeId">
         <value xml:lang="cs">Typ partnera ID</value>
         <value xml:lang="de">Gruppen Typ ID</value>
-        <value xml:lang="en">Party Type Id</value>
+        <value xml:lang="en">User Type Id</value>
         <value xml:lang="hi_IN">पार्टी के प्रकार का क्रमांक</value>
         <value xml:lang="it">Tipo soggetto</value>
         <value xml:lang="ja">取引先種類ID</value>
@@ -1462,7 +1462,7 @@
     </property>
     <property key="FormFieldTitle_quickAssignPartyId">
         <value xml:lang="de">Akteur ID rasch zuweisen</value>
-        <value xml:lang="en">Quick Assign Party Id</value>
+        <value xml:lang="en">Quick Assign User Id</value>
         <value xml:lang="fr">Assoc. rapide de l'acteur</value>
         <value xml:lang="hi_IN">जल्दी पार्टी क्रमांक आवंटित करे</value>
         <value xml:lang="it">Assegna Velocemente Soggetto</value>
@@ -1688,7 +1688,7 @@
     </property>
     <property key="FormFieldTitle_taxAuthPartyId">
         <value xml:lang="de">Steuerbehörde Akteur</value>
-        <value xml:lang="en">Tax Authority Party</value>
+        <value xml:lang="en">Tax Authority User</value>
         <value xml:lang="es">Código de la Autoridad Tributaria</value>
         <value xml:lang="fr">Administration fiscale</value>
         <value xml:lang="hi_IN">टैक्स प्राधिकरण पार्टी</value>
@@ -1734,7 +1734,7 @@
     <property key="FormFieldTitle_toPartyId">
         <value xml:lang="cs">K partnerovi s ID</value>
         <value xml:lang="de">Empfänger ID</value>
-        <value xml:lang="en">To Party Id</value>
+        <value xml:lang="en">To User Id</value>
         <value xml:lang="fr">Acteur destinataire</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक को</value>
         <value xml:lang="it">Al soggetto</value>
@@ -1885,7 +1885,7 @@
     </property>
     <property key="PageTitleAddPartyContent">
         <value xml:lang="de">Akteur Inhalt hinzufügen</value>
-        <value xml:lang="en">Add Party Content</value>
+        <value xml:lang="en">Add User Content</value>
         <value xml:lang="es">Agregar contenido de participante</value>
         <value xml:lang="fr">Ajouter l'acteur de contenu</value>
         <value xml:lang="hi_IN">पार्टी सामग्री जोड़ें</value>
@@ -1901,7 +1901,7 @@
     </property>
     <property key="PageTitleAddPartyInvitationGroupAssoc">
         <value xml:lang="de">Akteur Einladung Gruppe Verbindung hinzufügen</value>
-        <value xml:lang="en">Add Party Invitation Group Assoc</value>
+        <value xml:lang="en">Add User Invitation Group Assoc</value>
         <value xml:lang="es">Añadir asociación de grupo a invitación de participante</value>
         <value xml:lang="fr">Ajoutez le groupe d'association d'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण समूह एसोसिएशन जोड़ें</value>
@@ -1916,7 +1916,7 @@
     </property>
     <property key="PageTitleAddPartyInvitationRoleAssoc">
         <value xml:lang="de">Akteur Einladung Rolle Verbindung hinzufügen </value>
-        <value xml:lang="en">Add Party Invitation Role Assoc</value>
+        <value xml:lang="en">Add User Invitation Role Assoc</value>
         <value xml:lang="es">Añadir asociación de rol a invitación de participante</value>
         <value xml:lang="fr">Ajoutez le rôle d'association d'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण भूमिका एसोसिएशन जोड़ें</value>
@@ -1931,7 +1931,7 @@
     </property>
     <property key="PageTitleAddPartySegmentRoles">
         <value xml:lang="de">Akteur Segment Rolle hinzufügen</value>
-        <value xml:lang="en">Add Party Segment Role</value>
+        <value xml:lang="en">Add User Segment Role</value>
         <value xml:lang="es">Añadir rol de segmento de participante</value>
         <value xml:lang="fr">Ajoutez un rôle de segmentation</value>
         <value xml:lang="hi_IN">पार्टी के अनुभाग भूमिका जोड़ें</value>
@@ -1945,7 +1945,7 @@
     </property>
     <property key="PageTitleAddPartyTaxAuthInfos">
         <value xml:lang="de">Informationen zur Steuerbehörde Akteur hinzufügen</value>
-        <value xml:lang="en">Add Party Tax Authority Info</value>
+        <value xml:lang="en">Add User Tax Authority Info</value>
         <value xml:lang="es">Añadir informacion de Autoridad Tributaria de participante</value>
         <value xml:lang="fr">Ajoutez des informations sur l'administration fiscale</value>
         <value xml:lang="hi_IN">पार्टी कर(Tax) प्राधिकरण की जानकारी जोड़ें</value>
@@ -2019,7 +2019,7 @@
     </property>
     <property key="PageTitleCreateNewPartyDetail">
         <value xml:lang="de">Neuen Akteur erstellen</value>
-        <value xml:lang="en">Create New Party Detail</value>
+        <value xml:lang="en">Create New User Detail</value>
         <value xml:lang="es">Crear nuevo participante</value>
         <value xml:lang="fr">Création nouv. acteur</value>
         <value xml:lang="hi_IN">पार्टी के नए विस्तार बनाएँ</value>
@@ -2178,7 +2178,7 @@
     </property>
     <property key="PageTitleEditPartyAttribute">
         <value xml:lang="de">Akteur Attribute bearbeiten</value>
-        <value xml:lang="en">Edit Party Attribute</value>
+        <value xml:lang="en">Edit User Attribute</value>
         <value xml:lang="es">Editar atributos</value>
         <value xml:lang="fr">Modifier les attributs de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी की विशेषता को संपादित करें</value>
@@ -2195,7 +2195,7 @@
     </property>
     <property key="PageTitleEditPartyClassificationGroup">
         <value xml:lang="de">Akteur Klassifizierung bearbeiten</value>
-        <value xml:lang="en">Edit Party Classification Group</value>
+        <value xml:lang="en">Edit User Classification Group</value>
         <value xml:lang="es">Editar grupo de clasificación</value>
         <value xml:lang="fr">Modifier la classification de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण समूह को संपादित करें</value>
@@ -2228,7 +2228,7 @@
         <value xml:lang="zh_TW">修改分類群組團體</value>
     </property>
     <property key="PageTitleEditPartyInvitationGroupAssoc">
-        <value xml:lang="en">Edit Party Invitation GroupAssoc</value>
+        <value xml:lang="en">Edit User Invitation GroupAssoc</value>
         <value xml:lang="es">Editar asociación de grupo de invitación de participante</value>
         <value xml:lang="fr">Modifier le groupe d'association d'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण समूहएसोसिएशन(GroupAssoc) को संपादित करें</value>
@@ -2243,7 +2243,7 @@
     </property>
     <property key="PageTitleEditPartyInvitationRoleAssoc">
         <value xml:lang="de">Verbindung Rolle Einladung Akteur bearbeiten</value>
-        <value xml:lang="en">Edit Party Invitation RoleAssoc</value>
+        <value xml:lang="en">Edit User Invitation RoleAssoc</value>
         <value xml:lang="es">Editar asociación de rol de invitación de participante</value>
         <value xml:lang="fr">Modifier l'association du rôle d'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण भूमिका एसोसिएशन को संपादित करें</value>
@@ -2258,7 +2258,7 @@
     </property>
     <property key="PageTitleEditPartyRates">
         <value xml:lang="de">Akteur Ansätze bearbeiten</value>
-        <value xml:lang="en">Edit Party Rates</value>
+        <value xml:lang="en">Edit User Rates</value>
         <value xml:lang="es">Editar tasas de participación</value>
         <value xml:lang="fr">Modifier le taux de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी दर को संपादित करें</value>
@@ -2275,7 +2275,7 @@
     </property>
     <property key="PageTitleEditPartyRelationships">
         <value xml:lang="de">Akteur Beziehungen bearbeiten</value>
-        <value xml:lang="en">Edit Party Relationships</value>
+        <value xml:lang="en">Edit User Relationships</value>
         <value xml:lang="es">Editar relaciones de participantes</value>
         <value xml:lang="fr">Modifier les relations entre acteurs</value>
         <value xml:lang="hi_IN">पार्टी के रिश्ते को संपादित करें</value>
@@ -2292,7 +2292,7 @@
     </property>
     <property key="PageTitleEditPartyTaxAuthInfos">
         <value xml:lang="de">Informationen Steuerbehörde Akteur bearbeiten</value>
-        <value xml:lang="en">Edit Party Tax Authority Info</value>
+        <value xml:lang="en">Edit User Tax Authority Info</value>
         <value xml:lang="es">Editar información de impuestos</value>
         <value xml:lang="fr">Modifier l'information sur l'administration fiscale de l'acteur </value>
         <value xml:lang="hi_IN">पार्टी कर(Tax) प्राधिकरण की जानकारी को संपादित करें</value>
@@ -2379,7 +2379,7 @@
     <property key="PageTitleFindParty">
         <value xml:lang="cs">Vyhledat partnera</value>
         <value xml:lang="de">Akteur(e) suchen</value>
-        <value xml:lang="en">Find Party(s)</value>
+        <value xml:lang="en">Find User(s)</value>
         <value xml:lang="es">Buscar participante(s)</value>
         <value xml:lang="fr">Recherche d'acteur(s)</value>
         <value xml:lang="hi_IN">पार्टी(ओं) खोजें</value>
@@ -2397,7 +2397,7 @@
     </property>
     <property key="PageTitleFindPartyClassificationGroups">
         <value xml:lang="de">Akteur Klassifizierungsgruppen suchen</value>
-        <value xml:lang="en">Find Party Classification Groups</value>
+        <value xml:lang="en">Find User Classification Groups</value>
         <value xml:lang="es">Buscar grupos de clasificación</value>
         <value xml:lang="fr">Rechercher les classification de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण समूह खोजें</value>
@@ -2414,7 +2414,7 @@
     </property>
     <property key="PageTitleFindPartyInvitation">
         <value xml:lang="de">Akteur Einladung suchen</value>
-        <value xml:lang="en">Find Party Invitation</value>
+        <value xml:lang="en">Find User Invitation</value>
         <value xml:lang="es">Buscar invitación de participante</value>
         <value xml:lang="fr">Rechercher l'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण खोजें</value>
@@ -2526,7 +2526,7 @@
     </property>
     <property key="PageTitleNewPartyNote">
         <value xml:lang="de">Neue Notiz zum Akteur</value>
-        <value xml:lang="en">New Party Note</value>
+        <value xml:lang="en">New User Note</value>
         <value xml:lang="es">Nueva nota de participante</value>
         <value xml:lang="fr">Nouvelle note</value>
         <value xml:lang="hi_IN">नई पार्टी के नोट</value>
@@ -2543,7 +2543,7 @@
     </property>
     <property key="PageTitlePartyCarrierAccount">
         <value xml:lang="de">Akteur Spediteur Konto bearbeiten</value>
-        <value xml:lang="en">Edit Party Carrier Account</value>
+        <value xml:lang="en">Edit User Carrier Account</value>
         <value xml:lang="es">Editar cuenta de participante transportista</value>
         <value xml:lang="fr">Modifier le compte du transporteur</value>
         <value xml:lang="hi_IN">पार्टी कैरियर खाता को संपादित करें</value>
@@ -2558,7 +2558,7 @@
     </property>
     <property key="PageTitlePartyGeoLocation">
         <value xml:lang="de">Akteur Geolokalisierung</value>
-        <value xml:lang="en">Party GeoLocation</value>
+        <value xml:lang="en">User GeoLocation</value>
         <value xml:lang="fr">Géolocalisation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी भू स्थान</value>
         <value xml:lang="it">Localizzazione geografica soggetto</value>
@@ -2570,7 +2570,7 @@
     </property>
     <property key="PageTitlePartyInvitation">
         <value xml:lang="de">Akteur Einladung</value>
-        <value xml:lang="en">Party Invitation</value>
+        <value xml:lang="en">User Invitation</value>
         <value xml:lang="es">Invitación de participante</value>
         <value xml:lang="fr">Invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण</value>
@@ -2687,7 +2687,7 @@
     </property>
     <property key="PageTitleViewPartyClassificationGroupParties">
         <value xml:lang="de">Akteur-Klassifizierungsgruppe des Akteurs anzeigen</value>
-        <value xml:lang="en">View Party Classification Group Parties</value>
+        <value xml:lang="en">View User Classification Group Parties</value>
         <value xml:lang="es">Ver grupo de clasificación del participante</value>
         <value xml:lang="fr">Afficher les classification de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण समूह दलों को देखें</value>
@@ -2702,7 +2702,7 @@
     </property>
     <property key="PageTitleViewPartyClassifications">
         <value xml:lang="de">Akteur Klassifizierung anzeigen</value>
-        <value xml:lang="en">View Party Classifications</value>
+        <value xml:lang="en">View User Classifications</value>
         <value xml:lang="es">Ver clasificaciones</value>
         <value xml:lang="fr">Afficher les classifications de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण देखें</value>
@@ -2719,7 +2719,7 @@
     </property>
     <property key="PageTitleViewPartyPreferences">
         <value xml:lang="de">Akteur-Präferenzen anzeigen</value>
-        <value xml:lang="en">View Party Preference</value>
+        <value xml:lang="en">View User Preference</value>
         <value xml:lang="hi_IN">पार्टी वरीयता देखें</value>
         <value xml:lang="it">Mostra preferenze soggetto</value>
         <value xml:lang="ja">取引先設定を表示</value>
@@ -2730,7 +2730,7 @@
     </property>
     <property key="PageTitleViewPartyProfile">
         <value xml:lang="de">Akteur Profil anzeigen</value>
-        <value xml:lang="en">View Party Profile</value>
+        <value xml:lang="en">View User Profile</value>
         <value xml:lang="es">Ver perfil de participante</value>
         <value xml:lang="fr">Affichage du détail de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी प्रोफाइल देखें</value>
@@ -2748,7 +2748,7 @@
     </property>
     <property key="PageTitleViewPartyRole">
         <value xml:lang="de">Akteur Rollen anzeigen</value>
-        <value xml:lang="en">View Party Roles</value>
+        <value xml:lang="en">View User Roles</value>
         <value xml:lang="es">Ver roles</value>
         <value xml:lang="fr">Affichage des rôles de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी भूमिकाए देखें</value>
@@ -2766,7 +2766,7 @@
     </property>
     <property key="PageTitleViewPartySegmentRoles">
         <value xml:lang="de">Akteur Segment Rollen anzeigen</value>
-        <value xml:lang="en">View Party Segment Roles</value>
+        <value xml:lang="en">View User Segment Roles</value>
         <value xml:lang="es">Ver segmento de roles</value>
         <value xml:lang="fr">Afficher les rôles de segmentation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी अनुभाग भूमिकाओं को देखें</value>
@@ -2783,7 +2783,7 @@
     </property>
     <property key="PageTitleViewVendorParty">
         <value xml:lang="de">Verkäufer Akteur Informationen anzeigen</value>
-        <value xml:lang="en">View Vendor Party Info</value>
+        <value xml:lang="en">View Vendor User Info</value>
         <value xml:lang="es">Ver información de vendedor</value>
         <value xml:lang="fr">Affichage info vendeur</value>
         <value xml:lang="hi_IN">विक्रेता पार्टी की जानकारी देखें</value>
@@ -2983,7 +2983,7 @@
     </property>
     <property key="PartyAddOtherRelationship">
         <value xml:lang="de">Weitere Akteur Verbindung hinzufügen</value>
-        <value xml:lang="en">Add other party relationship</value>
+        <value xml:lang="en">Add other user relationship user ${partyId}</value>
         <value xml:lang="fr">Ajouter une autre relation entre acteurs</value>
         <value xml:lang="hi_IN">अन्य पार्टी के रिश्ते जोड़ें</value>
         <value xml:lang="it">Aggiungi altro rapporto soggetti</value>
@@ -3138,7 +3138,7 @@
     </property>
     <property key="PartyAdditionalPartyEntry">
         <value xml:lang="de">Zusätzlicher Akteureintrag</value>
-        <value xml:lang="en">Additional Party Entry</value>
+        <value xml:lang="en">Additional User Entry</value>
         <value xml:lang="es">Entrada adicional de participante</value>
         <value xml:lang="fr">Ajout d'un acteur supplémentaire</value>
         <value xml:lang="hi_IN">अतिरिक्त पार्टी प्रवेश</value>
@@ -3155,7 +3155,7 @@
     </property>
     <property key="PartyAdditionalPartyListing">
         <value xml:lang="de">Zusätzliche Auflistung Akteur</value>
-        <value xml:lang="en">Additional Party Listing</value>
+        <value xml:lang="en">Additional User Listing</value>
         <value xml:lang="es">Listado de participante adicional</value>
         <value xml:lang="fr">Liste des autres destinataires</value>
         <value xml:lang="hi_IN">अन्य पार्टी सूची</value>
@@ -3635,7 +3635,7 @@
     <property key="PartyAttribute">
         <value xml:lang="cs">Atribut partnera</value>
         <value xml:lang="de">Akteur Attribut</value>
-        <value xml:lang="en">Party Attribute</value>
+        <value xml:lang="en">User Attribute</value>
         <value xml:lang="es">Atributo</value>
         <value xml:lang="fr">Attribut de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी की विशेषता</value>
@@ -3653,7 +3653,7 @@
     <property key="PartyAttributes">
         <value xml:lang="cs">Attributy partnera</value>
         <value xml:lang="de">Akteur Attribute</value>
-        <value xml:lang="en">Party Attribute(s)</value>
+        <value xml:lang="en">User Attribute(s)</value>
         <value xml:lang="es">Atributo(s)</value>
         <value xml:lang="fr">Attribut(s) de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी की विशेषता(एँ)</value>
@@ -3884,7 +3884,7 @@
     </property>
     <property key="PartyCannotLinkPartyToItSelf">
         <value xml:lang="de">Akteur kann nicht mit sich selbst verknüpft werden</value>
-        <value xml:lang="en">Cannot link the same party with itself</value>
+        <value xml:lang="en">Cannot link the same user with itself</value>
         <value xml:lang="it">Non è possibile collegare lo stesso soggetto a se stesso</value>
         <value xml:lang="ja">同じ取引先自身をリンクできません。</value>
         <value xml:lang="vi">Không thể liên kết tác nhân với chính tác nhân đó</value>
@@ -3893,7 +3893,7 @@
     </property>
     <property key="PartyCannotMergeDisabledParty">
         <value xml:lang="de">Dies Zusammenführung von Datensätzen in deaktivierten Akteur ist nicht möglich!</value>
-        <value xml:lang="en">Cannot merge records into a disabled party!</value>
+        <value xml:lang="en">Cannot merge records into a disabled user!</value>
         <value xml:lang="it">Non è possibile fondere i soggetti se il soggetto è disabilitato!</value>
         <value xml:lang="ja">無効な取引先にレコードをマージできません!</value>
         <value xml:lang="vi">Không thể trộn dữ liệu này với tác nhân đã bị vô hiệu hóa !</value>
@@ -3902,7 +3902,7 @@
     </property>
     <property key="PartyCannotUpdateContactBecauseNotWithSpecifiedParty">
         <value xml:lang="de">FEHLER: Kann die Kontaktinformationen nicht aktualisieren da sie nicht zum angegeben Akteur gehören.</value>
-        <value xml:lang="en">ERROR: Cannot update specified contact info because it does not correspond to the specified party.</value>
+        <value xml:lang="en">ERROR: Cannot update specified contact info because it does not correspond to the specified user.</value>
         <value xml:lang="es">ERROR: No se pudo actualizar la información ya que no pertenece al participante especificado</value>
         <value xml:lang="fr">Erreur: détail des coordonnées non mises à jour, elles ne correspondent pas à l'acteur spécifié.</value>
         <value xml:lang="hi_IN">त्रुटि: निर्दिष्ट संपर्क जानकारी का अद्यतन(update) नहीं कर सकते क्योंकि यह निर्दिष्ट पार्टी के अनुरूप नहीं है|</value>
@@ -3920,7 +3920,7 @@
     </property>
     <property key="PartyChangeParty">
         <value xml:lang="de">Akteur wechseln</value>
-        <value xml:lang="en">Change Party</value>
+        <value xml:lang="en">Change User</value>
         <value xml:lang="es">Cambiar participante</value>
         <value xml:lang="fr">Changer d'acteur</value>
         <value xml:lang="hi_IN">पार्टी बदलें</value>
@@ -4309,7 +4309,7 @@
     </property>
     <property key="PartyCommEventSubject">
         <value xml:lang="de">Akteur Kommunikationsereignis Thema</value>
-        <value xml:lang="en">Party Comm Event Subject</value>
+        <value xml:lang="en">User Comm Event Subject</value>
         <value xml:lang="es">Asunto del evento de comunicación</value>
         <value xml:lang="fr">Objet d'événement de communication de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी संचार घटना का विषय</value>
@@ -4424,7 +4424,7 @@
     </property>
     <property key="PartyCommunicationsOfParty">
         <value xml:lang="de">Akteur Kommunikationen</value>
-        <value xml:lang="en">Communications of party</value>
+        <value xml:lang="en">Communications of user</value>
         <value xml:lang="fr">Communications de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के संचार</value>
         <value xml:lang="it">Comunicazioni del soggetto</value>
@@ -4454,7 +4454,7 @@
     </property>
     <property key="PartyCompanyName">
         <value xml:lang="de">CATO - Akteur Manager</value>
-        <value xml:lang="en">CATO - Party Manager</value>
+        <value xml:lang="en">CATO - User Manager</value>
         <value xml:lang="es">CATO - Gestión de participantes</value>
         <value xml:lang="fr">CATO - : Gestionnaire d'acteur</value>
         <value xml:lang="hi_IN">CATO - पार्टी प्रबंधक</value>
@@ -4659,7 +4659,7 @@
     </property>
     <property key="PartyContactListPartyCreate">
         <value xml:lang="de">Akteur zur Kontaktliste hinzufügen</value>
-        <value xml:lang="en">Add Party to Contact List</value>
+        <value xml:lang="en">Add User to Contact List</value>
         <value xml:lang="es">Añadir participante</value>
         <value xml:lang="fr">Ajouter un acteur à la liste de contacts</value>
         <value xml:lang="hi_IN">पार्टी को संपर्क सूची में जोड़ें</value>
@@ -4711,7 +4711,7 @@
     </property>
     <property key="PartyContactMechNotFoundCannotDelete">
         <value xml:lang="de">FEHLER: Kontaktinformation konnte nicht gelöscht werden (Akteur Kontakt Mechanismus nicht gefunden)</value>
-        <value xml:lang="en">ERROR: Could not delete contact info (party contact mech not found)</value>
+        <value xml:lang="en">ERROR: Could not delete contact info (user contact mech not found)</value>
         <value xml:lang="es">ERROR: No se pudo borrar la información de contacto</value>
         <value xml:lang="fr">Erreur: coordonnées de l'acteur non trouvées, suppression impossible.</value>
         <value xml:lang="hi_IN">त्रुटि: संपर्क जानकारी को नष्ट नहीं कर सके(पार्टी संपर्क यांत्रिक नहीं मिला)</value>
@@ -5002,7 +5002,7 @@
     </property>
     <property key="PartyContent">
         <value xml:lang="de">Akteur Inhalt</value>
-        <value xml:lang="en">Party Content</value>
+        <value xml:lang="en">User Content</value>
         <value xml:lang="es">Contenido de participante</value>
         <value xml:lang="fr">Contenu de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी सामग्री</value>
@@ -5063,7 +5063,7 @@
     </property>
     <property key="PartyCreateAddEmail">
         <value xml:lang="de">Email zu Akteur erstellen/hinzufügen</value>
-        <value xml:lang="en">Create/Add Email to Party</value>
+        <value xml:lang="en">Create/Add Email to User</value>
         <value xml:lang="es">Crear/añadir correo electrónico para participante</value>
         <value xml:lang="fr">Associer le mél à l'acteur</value>
         <value xml:lang="hi_IN">पार्टी का ईमेल बनाएँ/जोड़ें</value>
@@ -5338,7 +5338,7 @@
     </property>
     <property key="PartyCreateNewParty">
         <value xml:lang="de">Neuen Akteur erstellen - Details</value>
-        <value xml:lang="en">Create New Party Detail</value>
+        <value xml:lang="en">Create New User Detail</value>
         <value xml:lang="es">Nuevo participante</value>
         <value xml:lang="fr">Choisir un type d'acteur</value>
         <value xml:lang="hi_IN">पार्टी के नए विस्तार बनाएँ</value>
@@ -5356,7 +5356,7 @@
     </property>
     <property key="PartyCreateNewPartyClassificationGroup">
         <value xml:lang="de">Neue Akteur Klassifizierungsgruppe erstellen</value>
-        <value xml:lang="en">Create New Party Classification Group</value>
+        <value xml:lang="en">Create New User Classification Group</value>
         <value xml:lang="es">Crear nuevo grupo de clasificación</value>
         <value xml:lang="fr">Créer une nouvelle classification</value>
         <value xml:lang="hi_IN">पार्टी का नया वर्गीकरण समूह बनाएँ</value>
@@ -5373,7 +5373,7 @@
     </property>
     <property key="PartyCreateNewPartyGroup">
         <value xml:lang="de">Neue Akteurgruppe erstellen</value>
-        <value xml:lang="en">Create New Party Group</value>
+        <value xml:lang="en">Create New User Group</value>
         <value xml:lang="es">Nuevo grupo de participantes</value>
         <value xml:lang="fr">Créer un nouveau groupe d'acteurs</value>
         <value xml:lang="hi_IN">पार्टी का नया समूह बनाएँ</value>
@@ -5559,7 +5559,7 @@
     </property>
     <property key="PartyCreatedDate">
         <value xml:lang="de">Akteur Erstellungsdatum</value>
-        <value xml:lang="en">Party Created Date</value>
+        <value xml:lang="en">User Created Date</value>
         <value xml:lang="es">Fecha de creación de participante</value>
         <value xml:lang="fr">Date de création</value>
         <value xml:lang="hi_IN">पार्टी बनाने की दिनांक</value>
@@ -5576,7 +5576,7 @@
     </property>
     <property key="PartyCurrency">
         <value xml:lang="de">Akteur-Währung</value>
-        <value xml:lang="en">In party currency</value>
+        <value xml:lang="en">In user currency</value>
         <value xml:lang="hi_IN">पार्टी की मुद्रा</value>
         <value xml:lang="it">Nella valuta del soggetto</value>
         <value xml:lang="ja">取引先使用通貨</value>
@@ -6179,7 +6179,7 @@
     </property>
     <property key="PartyEmailMessage">
         <value xml:lang="de">Diese Nachricht zu einem neuen oder existierenden Akteur hinzufügen und E-Mail Adresse hinzufügen</value>
-        <value xml:lang="en">Allocate this message to a existing or new party and add an email address</value>
+        <value xml:lang="en">Allocate this message to a existing or new user and add an email address</value>
         <value xml:lang="fr">Associer ce message a un acteur présent ou nouveau puis lui ajouter l'adresse électronique</value>
         <value xml:lang="hi_IN">इस संदेश को एक मौजूदा या नई पार्टी को आवंटित करे और एक ईमेल पता जोड़ें|</value>
         <value xml:lang="it">Allocare questo messagio ad un soggetto esistente o nuovo e aggiungere un indirizzo email</value>
@@ -6444,7 +6444,7 @@
     </property>
     <property key="PartyFindParty">
         <value xml:lang="de">Akteur suchen</value>
-        <value xml:lang="en">Find Party</value>
+        <value xml:lang="en">Find User</value>
         <value xml:lang="es">Buscar participante</value>
         <value xml:lang="fr">Recherche d'acteur</value>
         <value xml:lang="hi_IN">पार्टि खोजें</value>
@@ -6461,7 +6461,7 @@
     </property>
     <property key="PartyFindPartyInvitations">
         <value xml:lang="de">Akteur Einladungen suchen</value>
-        <value xml:lang="en">Find Party Invitations</value>
+        <value xml:lang="en">Find User Invitations</value>
         <value xml:lang="es">Buscar invitación de participante</value>
         <value xml:lang="fr">Rechercher les invitations de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी निमंत्रण खोजें</value>
@@ -6746,7 +6746,7 @@
     </property>
     <property key="PartyGroupPartyId">
         <value xml:lang="de">Akteur Gruppen ID</value>
-        <value xml:lang="en">Group Party ID</value>
+        <value xml:lang="en">Group User ID</value>
         <value xml:lang="es">Código de grupo de participante</value>
         <value xml:lang="fr">Groupe d'acteur</value>
         <value xml:lang="hi_IN">समूह पार्टी क्रमांक</value>
@@ -7084,7 +7084,7 @@
     </property>
     <property key="PartyInvitationAccAndDecPermissionError">
         <value xml:lang="de">Sie haben keine Berechtigung eine Akteur Einladung anzunehmen oder abzulehen</value>
-        <value xml:lang="en">You do not have permission to accept or decline Party Invitation</value>
+        <value xml:lang="en">You do not have permission to accept or decline User Invitation</value>
         <value xml:lang="es">No dispone de privilegios para aceptar o denegar invitaciones de participantes</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'accepter ou de décliner l'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के निमंत्रण को स्वीकार या अस्वीकार करने की आप को अनुमति नहीं है</value>
@@ -7099,7 +7099,7 @@
     </property>
     <property key="PartyInvitationCancelPermissionError">
         <value xml:lang="de">Sie haben keine Berechtigung eine Akteur Einladung zu annullieren.</value>
-        <value xml:lang="en">You do not have permission to cancel the Party Invitation</value>
+        <value xml:lang="en">You do not have permission to cancel the User Invitation</value>
         <value xml:lang="es">No dispone de privilegios para cancelar la invitacion de participante</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'annuler l'invitation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के निमंत्रण को रद्द करने की आप को अनुमति नहीं है</value>
@@ -7130,7 +7130,7 @@
     <property key="PartyInvitationGroupAssocPartyIdTo">
         <value xml:lang="cs">Příjemce</value>
         <value xml:lang="de">Akteur ID an</value>
-        <value xml:lang="en">Party Id To</value>
+        <value xml:lang="en">User Id To</value>
         <value xml:lang="es">Codigo Participante a</value>
         <value xml:lang="fr">Acteur dest.</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक को</value>
@@ -7160,7 +7160,7 @@
     </property>
     <property key="PartyInvitationNewPartyInvitation">
         <value xml:lang="de">Neue Akteur Einladung</value>
-        <value xml:lang="en">New Party Invitation</value>
+        <value xml:lang="en">New User Invitation</value>
         <value xml:lang="es">Nueva invitación de participante</value>
         <value xml:lang="fr">Nouvelle invitation pour l'acteur</value>
         <value xml:lang="hi_IN">नया पार्टी निमंत्रण</value>
@@ -7189,7 +7189,7 @@
     </property>
     <property key="PartyInvitationNotValidError">
         <value xml:lang="de">Dies ist keine gültige Akteur Einladung</value>
-        <value xml:lang="en">This is not a valid Party Invitation</value>
+        <value xml:lang="en">This is not a valid User Invitation</value>
         <value xml:lang="es">Esto no es una invitación de participante válida</value>
         <value xml:lang="fr">Ceci n'est pas une invitation valable</value>
         <value xml:lang="hi_IN">यह एक वैध पार्टी का निमंत्रण नहीं है</value>
@@ -7396,7 +7396,7 @@
     </property>
     <property key="PartyLeaveEmpty">
         <value xml:lang="de">Leer lassen für neuen Akteur</value>
-        <value xml:lang="en">Leave empty for new 'Party'</value>
+        <value xml:lang="en">Leave empty for new 'User'</value>
         <value xml:lang="fr">Laisser vide pour les nouveaux acteurs</value>
         <value xml:lang="hi_IN">नई 'पार्टी' के लिए खाली छोड़ दें</value>
         <value xml:lang="it">Lasciare vuoto per un nuovo soggetto</value>
@@ -7408,7 +7408,7 @@
     </property>
     <property key="PartyLink">
         <value xml:lang="de">Akteur verknüpfen</value>
-        <value xml:lang="en">Link Party</value>
+        <value xml:lang="en">Link User</value>
         <value xml:lang="es">Asociar participante</value>
         <value xml:lang="fr">Lier l'acteur</value>
         <value xml:lang="hi_IN">पार्टी लिंक करे</value>
@@ -7425,7 +7425,7 @@
     </property>
     <property key="PartyLinkExplanation">
         <value xml:lang="de">Dies setzt den status des Akteurs auf 'Inaktiv' auch wenn es eine Verbindung im Feld 'partyTo' der Akteur Attribute gibt</value>
-        <value xml:lang="en">This will set the status of 'partyId' to disabled however will link it to 'partyTo' in the party Attributes</value>
+        <value xml:lang="en">This will set the status of 'partyId' to disabled however will link it to 'partyTo' in the user Attributes</value>
         <value xml:lang="fr">Désactive l'acteur sélectionné (gauche), et lie ses données vers l'acteur sélectionné à droite</value>
         <value xml:lang="ja">これは'取引先ID'のステータスを無効に設定しますが、取引先属性で'取引先(先)'にリンクします</value>
         <value xml:lang="vi">Việc này sẽ đặt trạng thái 'partyId' thành vô hiệu hóa và tạo liên kết đến 'partyTo' tại thuộc tính của tác nhân</value>
@@ -7434,7 +7434,7 @@
     </property>
     <property key="PartyLinkMessage1">
         <value xml:lang="de">WARNUNG: Dies kann nicht rückgängig gemacht werden. Bestätigen Sie bitte, dass Sie die beiden unten aufgeführten Akteure verknüpfen möchten. </value>
-        <value xml:lang="en">WARNING: This cannot be un-done, confirm you wish to link the two party records listed below.</value>
+        <value xml:lang="en">WARNING: This cannot be un-done, confirm you wish to link the two user records listed below.</value>
         <value xml:lang="es">Advertencia: Esto no se puede deshacer, confirme que desea enlazar los dos participantes listados abajo.</value>
         <value xml:lang="fr">ATTENTION: Ceci ne peut pas être défait, confirmez votre souhait de lier les deux enregistrements de l'acteur énumérés ci-dessous.</value>
         <value xml:lang="hi_IN">चेतावनी: यह पूर्ववत नहीं किया जा सकता, नीचे सूचीबद्ध दो पार्टी रिकॉर्ड जोड़ने के लिए अपनी इच्छा की पुष्टि करे|</value>
@@ -7626,7 +7626,7 @@
     </property>
     <property key="PartyLookupAccount">
         <value xml:lang="de">Akteur mit Rolle 'Konto' suchen</value>
-        <value xml:lang="en">Lookup Party with the role Account</value>
+        <value xml:lang="en">Lookup User with the role Account</value>
         <value xml:lang="fr">Consultation de l'acteur ayant le role "compte"</value>
         <value xml:lang="hi_IN">खाता भूमिका के साथ पार्टी लुकअप</value>
         <value xml:lang="it">Ricerca soggetti con ruolo contabile</value>
@@ -7639,7 +7639,7 @@
     </property>
     <property key="PartyLookupContact">
         <value xml:lang="de">Akteur mit Rolle 'Kontakt' suchen</value>
-        <value xml:lang="en">Lookup Party with the role Contact</value>
+        <value xml:lang="en">Lookup User with the role Contact</value>
         <value xml:lang="fr">Consultation de l'acteur ayant le rôle "contact"</value>
         <value xml:lang="hi_IN">संपर्क भूमिका के साथ पार्टी लुकअप</value>
         <value xml:lang="it">Ricerca soggetti con ruolo contatto</value>
@@ -7680,7 +7680,7 @@
     </property>
     <property key="PartyLookupLead">
         <value xml:lang="de">Akteur mit Rolle 'Lead' suchen</value>
-        <value xml:lang="en">Lookup Party with the role Lead</value>
+        <value xml:lang="en">Lookup User with the role Lead</value>
         <value xml:lang="it">Ricerca soggetto con il ruolo di leader</value>
         <value xml:lang="ja">ロールで取引先引合を検索</value>
         <value xml:lang="pt_BR">Buscar participante com papel de liderança</value>
@@ -7690,7 +7690,7 @@
     </property>
     <property key="PartyLookupParty">
         <value xml:lang="de">Akteur suchen</value>
-        <value xml:lang="en">Lookup Party</value>
+        <value xml:lang="en">Lookup User</value>
         <value xml:lang="es">Buscar participante</value>
         <value xml:lang="fr">Consultation d'acteur(s)</value>
         <value xml:lang="hi_IN">पार्टी लुकअप</value>
@@ -7725,7 +7725,7 @@
     <property key="PartyLookupPartyByName">
         <value xml:lang="cs">Vyhledat partnera podle jména</value>
         <value xml:lang="de">Akteur mit Name suchen</value>
-        <value xml:lang="en">Lookup Party by Name</value>
+        <value xml:lang="en">Lookup User by Name</value>
         <value xml:lang="es">Buscar participante por nombre</value>
         <value xml:lang="fr">Consultation de l'acteur par son nom</value>
         <value xml:lang="hi_IN">पार्टी के नाम से लुकअप</value>
@@ -7742,7 +7742,7 @@
     </property>
     <property key="PartyLookupPartyClassificationGroup">
         <value xml:lang="de">Akteur Klassifizierungsgruppe suchen</value>
-        <value xml:lang="en">Lookup Party Classification Group</value>
+        <value xml:lang="en">Lookup User Classification Group</value>
         <value xml:lang="es">Buscar grupo de clasificación de participante</value>
         <value xml:lang="fr">Rechercher un ou des classification(s) d'acteur</value>
         <value xml:lang="hi_IN">पार्टी वर्गीकरण समूह लुकअप</value>
@@ -7819,7 +7819,7 @@
     </property>
     <property key="PartyLookupPartyError">
         <value xml:lang="de">Fehler bei Akteur suche, Rückabwicklung der Transaktion: ${errMessage}</value>
-        <value xml:lang="en">Failure in party find operation, rolling back transaction: ${errMessage}</value>
+        <value xml:lang="en">Failure in user find operation, rolling back transaction: ${errMessage}</value>
         <value xml:lang="it">Fallita l'operazione di ricerca soggetto, transazione annullata: ${errMessage}</value>
         <value xml:lang="ja">取引先検索時にエラー。トランザクションをロールバックします: ${errMessage}</value>
         <value xml:lang="vi">Tìm kiếm tác nhân không thành công, hoàn lại giao dịch: ${errMessage}</value>
@@ -7846,7 +7846,7 @@
     </property>
     <property key="PartyLookupUserLoginAndPartyDetails">
         <value xml:lang="de">Benutzeranmeldung und Akteur suchen</value>
-        <value xml:lang="en">Lookup User Login And Party Details</value>
+        <value xml:lang="en">Lookup User Login And User Details</value>
         <value xml:lang="es">Buscar conexión y detalles de participante</value>
         <value xml:lang="fr">Rechercher un ou des identifiants de connexion et détails de l'acteur</value>
         <value xml:lang="hi_IN">उपयोगकर्तालॉगिन/पार्टीविवरण लुकअप</value>
@@ -7911,7 +7911,7 @@
     </property>
     <property key="PartyManager">
         <value xml:lang="de">Akteur Manager Anwendung</value>
-        <value xml:lang="en">Party Manager</value>
+        <value xml:lang="en">User Manager</value>
         <value xml:lang="es">Gestión de participantes</value>
         <value xml:lang="fr">Application de gestion des acteurs</value>
         <value xml:lang="hi_IN">पार्टी प्रबंधक अनुप्रयोग</value>
@@ -7929,7 +7929,7 @@
     </property>
     <property key="PartyManagerApplication">
         <value xml:lang="de">Akteur Manager Anwendung</value>
-        <value xml:lang="en">Party Manager Application</value>
+        <value xml:lang="en">User Manager Application</value>
         <value xml:lang="es">Gestión de participantes</value>
         <value xml:lang="fr">Application de gestion des acteurs</value>
         <value xml:lang="hi_IN">पार्टी प्रबंधक अनुप्रयोग</value>
@@ -8864,7 +8864,7 @@
     </property>
     <property key="PartyNoNotesForParty">
         <value xml:lang="de">Keine Notizen für diesen Akteur gefunden</value>
-        <value xml:lang="en">No notes for this party.</value>
+        <value xml:lang="en">No notes for this user.</value>
         <value xml:lang="es">No existen notas para este participante</value>
         <value xml:lang="fr">Aucune note pour cet acteur</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए नोट नहीं है|</value>
@@ -8918,7 +8918,7 @@
     </property>
     <property key="PartyNoPartyAttributesFound">
         <value xml:lang="de">Keine Akteur Attribute gefunden.</value>
-        <value xml:lang="en">No party attributes found.</value>
+        <value xml:lang="en">No user attributes found.</value>
         <value xml:lang="es">No se han encontrado atributos de participante.</value>
         <value xml:lang="fr">Aucun attribut n'a été trouvé.</value>
         <value xml:lang="hi_IN">पार्टी की कोई भी विशेषता नहीं मिली|</value>
@@ -8936,7 +8936,7 @@
     <property key="PartyNoPartyForCurrentUserName">
         <value xml:lang="cs">Nenalezen žádný současný uživatel s uživatelským jménem</value>
         <value xml:lang="de">Finde keine Akteur-Information für den aktuellen Nutzer mit Nutzernamen</value>
-        <value xml:lang="en">No party found for current user with user name</value>
+        <value xml:lang="en">No user found for current user with user name</value>
         <value xml:lang="es">No hay un actor associado a este nombre de usuario</value>
         <value xml:lang="fr">Aucun acteur associé au nom d'utilisateur</value>
         <value xml:lang="hi_IN">इस नाम से कोई पार्टी नही है</value>
@@ -8969,7 +8969,7 @@
     </property>
     <property key="PartyNoPartyFoundWithPartyId">
         <value xml:lang="de">Kein Akteur gefunden mit der Akteur ID</value>
-        <value xml:lang="en">No party found with the partyId of</value>
+        <value xml:lang="en">No user found with the partyId of</value>
         <value xml:lang="es">No se encontró participantes con esa referencia</value>
         <value xml:lang="fr">Pas d'acteur trouvé pour la référence</value>
         <value xml:lang="hi_IN">इस पार्टी क्रमांक के साथ पार्टी नहीं मिली|</value>
@@ -9013,7 +9013,7 @@
     </property>
     <property key="PartyNoPartyRolesFound">
         <value xml:lang="de">Keine Akteur Rollen gefunden.</value>
-        <value xml:lang="en">No party roles found.</value>
+        <value xml:lang="en">No user roles found.</value>
         <value xml:lang="es">No se encontraron roles</value>
         <value xml:lang="fr">Aucun rôle trouvé pour cet acteur.</value>
         <value xml:lang="hi_IN">कोई भी पार्टी भूमिकाएं नहीं मिली|</value>
@@ -9049,7 +9049,7 @@
     </property>
     <property key="PartyNoProductStoreFoundForThisParty">
         <value xml:lang="de">Kein Laden für diesen Akteur gefunden.</value>
-        <value xml:lang="en">No product store(s) found for this party.</value>
+        <value xml:lang="en">No product store(s) found for this user.</value>
         <value xml:lang="fr">Aucun centre de profit trouvé pour cet acteur</value>
         <value xml:lang="ja">この取引先に製品店舗はありません。</value>
         <value xml:lang="vi">Không tìm thấy cửa hàng cho tác nhân này.</value>
@@ -9074,7 +9074,7 @@
     </property>
     <property key="PartyNoShoppingCartSavedForParty">
         <value xml:lang="de">Kein Warenkorb gespeichert für diesen Akteur.</value>
-        <value xml:lang="en">No shopping cart saved for party</value>
+        <value xml:lang="en">No shopping cart saved for user</value>
         <value xml:lang="es">No se encontraron carros de compra</value>
         <value xml:lang="fr">Aucun panier d'achats enregistré pour cet acteur</value>
         <value xml:lang="hi_IN">पार्टी के लिए शॉपिंग कार्ट नहीं बचाई|</value>
@@ -9091,7 +9091,7 @@
     </property>
     <property key="PartyNoShoppingListsParty">
         <value xml:lang="de">Keine Einkaufsliste vorhanden für diesen Akteur</value>
-        <value xml:lang="en">No Shopping lists for party</value>
+        <value xml:lang="en">No Shopping lists for user</value>
         <value xml:lang="es">No se encontraron listas de compra</value>
         <value xml:lang="fr">Aucune liste d'achats pour cet acteur </value>
         <value xml:lang="hi_IN">पार्टी के लिए खरीदारी सूचियाँ नहीं है|</value>
@@ -9168,7 +9168,7 @@
     </property>
     <property key="PartyNoUserLogin">
         <value xml:lang="de">Keine Benutzeranmeldung gefunden für diesen Akteur.</value>
-        <value xml:lang="en">No UserLogin(s) found for this party.</value>
+        <value xml:lang="en">No UserLogin(s) found for this user.</value>
         <value xml:lang="es">No se encontró usuario para este participante</value>
         <value xml:lang="fr">Pas d'identifiant de connexion pour cet acteur</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए कोई प्रयोक्तालॉगिन नहीं मिला है|</value>
@@ -9186,7 +9186,7 @@
     </property>
     <property key="PartyNoVisitFound">
         <value xml:lang="de">Keine Webseiten-Besuche gefunden für diesen Akteur.</value>
-        <value xml:lang="en">No Visit(s) found for this party.</value>
+        <value xml:lang="en">No Visit(s) found for this user.</value>
         <value xml:lang="es">El participante no tiene visitas</value>
         <value xml:lang="fr">Aucune visite trouvée pour cet acteur.</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए कोई यात्रा नहीं मिली है|</value>
@@ -9221,7 +9221,7 @@
         <value xml:lang="zh_TW">如果不重新新建安全群組的話,不能修改這個.</value>
     </property>
     <property key="PartyNotificationMailActivated">
-        <value xml:lang="en">Party Account Activated Notification Mail</value>
+        <value xml:lang="en">User Account Activated Notification Mail</value>
         <value xml:lang="zh">会员账户激活通知邮件</value>
         <value xml:lang="zh_TW">團體帳戶啓用通知郵件</value>
     </property>
@@ -9238,7 +9238,7 @@
     </property>
     <property key="PartyNotificationMailCreate">
         <value xml:lang="de">Akteur Konto-Eröffnungsbenachrichtigung</value>
-        <value xml:lang="en">Party Account Creation Notification Mail</value>
+        <value xml:lang="en">User Account Creation Notification Mail</value>
         <value xml:lang="hi_IN">पार्टी खाता निर्माण अधिसूचना मेल</value>
         <value xml:lang="it">Mail di notifica creazione utenza</value>
         <value xml:lang="ja">取引先アカウント作成通知メール</value>
@@ -9261,7 +9261,7 @@
     </property>
     <property key="PartyOfParty">
         <value xml:lang="de">des Akteurs</value>
-        <value xml:lang="en">of Party</value>
+        <value xml:lang="en">of User</value>
         <value xml:lang="fr">de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी के</value>
         <value xml:lang="it">del soggetto</value>
@@ -9349,7 +9349,7 @@
     </property>
     <property key="PartyOrganizationParty">
         <value xml:lang="de">Organisation Akteur</value>
-        <value xml:lang="en">Organization Party</value>
+        <value xml:lang="en">Organization User</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Organisation de l'acteur</value>
         <value xml:lang="hi_IN">संगठन पार्टी</value>
@@ -9366,7 +9366,7 @@
     </property>
     <property key="PartyOrganizationPartyId">
         <value xml:lang="de">Organisation Akteur ID</value>
-        <value xml:lang="en">Organization Party ID</value>
+        <value xml:lang="en">Organization User ID</value>
         <value xml:lang="es">Código de participante</value>
         <value xml:lang="fr">Organisation de l'acteur</value>
         <value xml:lang="hi_IN">संगठन पार्टी क्रमांक</value>
@@ -9502,7 +9502,7 @@
     </property>
     <property key="PartyParty">
         <value xml:lang="de">Akteur</value>
-        <value xml:lang="en">Party</value>
+        <value xml:lang="en">User</value>
         <value xml:lang="es">Participante</value>
         <value xml:lang="fr">Acteur</value>
         <value xml:lang="hi_IN">पार्टी</value>
@@ -9520,7 +9520,7 @@
     </property>
     <property key="PartyPartyCurrentInTheRoleOf">
         <value xml:lang="de">Der aktuelle Akteur in der Rolle als</value>
-        <value xml:lang="en">The current party in the role of</value>
+        <value xml:lang="en">The current user in the role of</value>
         <value xml:lang="es">Del participante actual en el rol de</value>
         <value xml:lang="fr">L'acteur courant dans le rôle de</value>
         <value xml:lang="hi_IN">इस भूमिका में वर्तमान पार्टी</value>
@@ -9537,7 +9537,7 @@
     </property>
     <property key="PartyPartyFrom">
         <value xml:lang="de">Akteur von</value>
-        <value xml:lang="en">Party From</value>
+        <value xml:lang="en">User From</value>
         <value xml:lang="es">de participante</value>
         <value xml:lang="fr">De l'acteur</value>
         <value xml:lang="hi_IN">पार्टी से</value>
@@ -9555,7 +9555,7 @@
     </property>
     <property key="PartyPartyFromDoesNotExists">
         <value xml:lang="de">Akteur 'From' existiert nicht!</value>
-        <value xml:lang="en">Party From does not exist!</value>
+        <value xml:lang="en">User From does not exist!</value>
         <value xml:lang="it">Soggetto Da non esiste!</value>
         <value xml:lang="ja">取引先(元)が存在しません!</value>
         <value xml:lang="vi">Tác nhân Đến không tồn tại!</value>
@@ -9565,7 +9565,7 @@
     <property key="PartyPartyGroupInformation">
         <value xml:lang="cs">Informace o skupině</value>
         <value xml:lang="de">Akteurgruppe Information</value>
-        <value xml:lang="en">Party Group Information</value>
+        <value xml:lang="en">User Group Information</value>
         <value xml:lang="es">Información del grupo</value>
         <value xml:lang="fr">Information groupe d'acteurs</value>
         <value xml:lang="hi_IN">पार्टी समूह की जानकारी</value>
@@ -9584,7 +9584,7 @@
     <property key="PartyPartyGroupName">
         <value xml:lang="cs">Název organizace partnera</value>
         <value xml:lang="de">Akteurgruppe Namen</value>
-        <value xml:lang="en">Party Group Name</value>
+        <value xml:lang="en">User Group Name</value>
         <value xml:lang="es">Nombre del grupo</value>
         <value xml:lang="fr">Nom du groupe d'acteurs</value>
         <value xml:lang="hi_IN">पार्टी समूह का नाम</value>
@@ -9603,7 +9603,7 @@
     <property key="PartyPartyGroupSuccessfullyCreated">
         <value xml:lang="cs">Partner pro organizaci úspěšně vytvořen.</value>
         <value xml:lang="de">Akteurgruppe erfolgreich erstellt.</value>
-        <value xml:lang="en">Party Group successfully created.</value>
+        <value xml:lang="en">User Group successfully created.</value>
         <value xml:lang="es">EL grupo se ha creado con exito.</value>
         <value xml:lang="fr">Groupe d'acteurs créé. </value>
         <value xml:lang="hi_IN">पार्टी समूह सफलतापूर्वक बन गया है|</value>
@@ -9620,7 +9620,7 @@
     <property key="PartyPartyGroupSuccessfullyUpdated">
         <value xml:lang="cs">Partner pro organizaci byl aktualizován.</value>
         <value xml:lang="de">Akteurgruppe erfolgreich aktualisiert.</value>
-        <value xml:lang="en">Party Group successfully updated.</value>
+        <value xml:lang="en">User Group successfully updated.</value>
         <value xml:lang="es">El grupo se ha actualizado con éxito.</value>
         <value xml:lang="fr">Groupe d'acteurs mis à jour.</value>
         <value xml:lang="hi_IN">पार्टी समूह सफलतापूर्वक नवीनीकृत हो गया है|</value>
@@ -9656,7 +9656,7 @@
         <value xml:lang="ar">دليل الصلة</value>
         <value xml:lang="cs">Id partnera</value>
         <value xml:lang="de">Akteur ID</value>
-        <value xml:lang="en">Party ID</value>
+        <value xml:lang="en">User ID</value>
         <value xml:lang="es">Código de participante</value>
         <value xml:lang="fr">Acteur</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक</value>
@@ -9675,7 +9675,7 @@
     </property>
     <property key="PartyPartyIdMissing">
         <value xml:lang="de">Akteur ID fehlt</value>
-        <value xml:lang="en">Party ID missing</value>
+        <value xml:lang="en">User ID missing</value>
         <value xml:lang="es">Falta el código de participante</value>
         <value xml:lang="fr">Acteur disparu</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक गायब है</value>
@@ -9740,7 +9740,7 @@
     </property>
     <property key="PartyPartyNotDefined">
         <value xml:lang="de">Akteur nicht definiert</value>
-        <value xml:lang="en">Party not defined</value>
+        <value xml:lang="en">User not defined</value>
         <value xml:lang="es">Participante no definido</value>
         <value xml:lang="fr">Acteur non défini</value>
         <value xml:lang="hi_IN">पार्टी परिभाषित नहीं है</value>
@@ -9757,7 +9757,7 @@
     </property>
     <property key="PartyPartyOfTheRoleParty">
         <value xml:lang="de">des aktuellen Akteurs in der Rolle als</value>
-        <value xml:lang="en">of the current party in the role of</value>
+        <value xml:lang="en">of the current user in the role of</value>
         <value xml:lang="es">del participante actual en el rol de</value>
         <value xml:lang="fr">de l'acteur actuel dans le Rôle de </value>
         <value xml:lang="hi_IN">वर्तमान पार्टी भूमिका में</value>
@@ -9790,7 +9790,7 @@
     </property>
     <property key="PartyPartySuccessfullyDeleted">
         <value xml:lang="de">Akteur erfolgreich gelöscht.</value>
-        <value xml:lang="en">Party successfully deleted.</value>
+        <value xml:lang="en">User successfully deleted.</value>
         <value xml:lang="es">Participante borrado con éxito.</value>
         <value xml:lang="fr">Acteur supprimé. </value>
         <value xml:lang="hi_IN">पार्टी को सफलतापूर्वक नष्ट कर दिया है|</value>
@@ -9806,7 +9806,7 @@
     </property>
     <property key="PartyPartyTo">
         <value xml:lang="de">Akteur an</value>
-        <value xml:lang="en">Party To</value>
+        <value xml:lang="en">User To</value>
         <value xml:lang="es">al participante</value>
         <value xml:lang="fr">à l'acteur</value>
         <value xml:lang="hi_IN">पार्टी को</value>
@@ -9824,7 +9824,7 @@
     </property>
     <property key="PartyPartyToDoesNotExists">
         <value xml:lang="de">Akteur existiert nicht!</value>
-        <value xml:lang="en">Party To does not exist!</value>
+        <value xml:lang="en">User To does not exist!</value>
         <value xml:lang="it">Soggetto A non esiste!</value>
         <value xml:lang="ja">取引先(先)が存在しません!</value>
         <value xml:lang="vi">Tác nhân Đến không tồn tại !</value>
@@ -9842,7 +9842,7 @@
     </property>
     <property key="PartyPartyWithId">
         <value xml:lang="de">des Akteur mit der ID</value>
-        <value xml:lang="en">of the Party with ID </value>
+        <value xml:lang="en">of the User with ID </value>
         <value xml:lang="es">Del participante con código</value>
         <value xml:lang="fr">L'acteur avec la réf.</value>
         <value xml:lang="hi_IN">पार्टी क्रमांक के साथ</value>
@@ -10086,7 +10086,7 @@
     </property>
     <property key="PartyPermissionErrorForThisParty">
         <value xml:lang="de">Sie haben keine Berechtigung, diese Aktion für diesen Akteur auszuführen</value>
-        <value xml:lang="en">You do not have permission to perform this operation for this party</value>
+        <value xml:lang="en">You do not have permission to perform this operation for this user</value>
         <value xml:lang="es">Usted no cuenta con permisos para realizar esta acción</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'effectuer cette opération pour cet acteur.</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए आपको इस ऑपरेशन को प्रदर्शन करने की अनुमति नहीं है</value>
@@ -10104,7 +10104,7 @@
     </property>
     <property key="PartyPermissionErrorPartyId">
         <value xml:lang="de">Sicherheitsfehler: Sie haben keine Berechtigung ${resourceDescription} für diesen Akteur auszuführen.</value>
-        <value xml:lang="en">Security Error: you do not have permission to perform ${resourceDescription} for this party.</value>
+        <value xml:lang="en">Security Error: you do not have permission to perform ${resourceDescription} for this user.</value>
         <value xml:lang="es">Usted no cuenta con permisos para realizar esta acción</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation d'effectuer cette opération pour cet acteur.</value>
         <value xml:lang="hi_IN">सुरक्षा त्रुटि: आपको इस पार्टी के लिए ${resourceDescription} प्रदर्शन करने की अनुमति नहीं है|</value>
@@ -10734,7 +10734,7 @@
     </property>
     <property key="PartyRateNotSpecified">
         <value xml:lang="de">Rate nicht angegeben für diesen Akteur und keine Standard-Rate definiert</value>
-        <value xml:lang="en">Rate not specified for this party AND NO default rate</value>
+        <value xml:lang="en">Rate not specified for this user AND NO default rate</value>
         <value xml:lang="fr">Aucun taux spécifié pour cet acteur et AUCUN taux par défaut</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए दर निर्दिष्ट नहीं है और कोई डिफ़ॉल्ट दर नहीं है</value>
         <value xml:lang="it">Tasso non specificato per questo soggetto e nessun tasso di default</value>
@@ -10783,7 +10783,7 @@
     <property key="PartyRelationSecurity">
         <value xml:lang="cs">Vztah partnera k zabezpečení</value>
         <value xml:lang="de">Akteur Beziehung Sicherheit</value>
-        <value xml:lang="en">Party Relationship Security</value>
+        <value xml:lang="en">User Relationship Security</value>
         <value xml:lang="es">Relación de seguridad del participante</value>
         <value xml:lang="fr">avec la sécurité</value>
         <value xml:lang="hi_IN">पार्टी रिश्ते की सुरक्षा</value>
@@ -10800,7 +10800,7 @@
     </property>
     <property key="PartyRelationshipTypeAlreadyExists">
         <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden: existiert bereits</value>
-        <value xml:lang="en">Could not create party relationship type: already exists</value>
+        <value xml:lang="en">Could not create user relationship type: already exists</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto: esiste già</value>
         <value xml:lang="ja">取引先の関係が作成できません。すでに存在します</value>
         <value xml:lang="vi">Không thể tạo mới loại quan hệ của tác nhân: đã tồn tại</value>
@@ -10809,7 +10809,7 @@
     </property>
     <property key="PartyRelationshipTypeReadFailure">
         <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden (Lese-Fehler): ${errorString}</value>
-        <value xml:lang="en">Could not create party relationship type (read failure): ${errorString}</value>
+        <value xml:lang="en">Could not create user relationship type (read failure): ${errorString}</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto (fallita lettura): ${errorString}</value>
         <value xml:lang="ja">取引先の関係が作成できません (読み込み失敗): ${errorString}</value>
         <value xml:lang="vi">Không thể tạo mới loại quan hệ của tác nhân (đọc lỗi): ${errorString}</value>
@@ -10818,7 +10818,7 @@
     </property>
     <property key="PartyRelationshipTypeWriteFailure">
         <value xml:lang="de">Akteur-Beziehungstyp kann nicht erstellt werden (Schreib-Fehler): ${errorString}</value>
-        <value xml:lang="en">Could not create party relationship type (write failure): ${errorString}</value>
+        <value xml:lang="en">Could not create user relationship type (write failure): ${errorString}</value>
         <value xml:lang="it">Non è possibile creare il tipo rapporto soggetto (fallita scrittura): ${errorString}</value>
         <value xml:lang="ja">取引先の関係が作成できません (書き込み失敗): ${errorString}</value>
         <value xml:lang="vi">Không thể tạo mới loại quan hệ của tác nhân (ghi lỗi): ${errorString}</value>
@@ -11174,7 +11174,7 @@
         <value xml:lang="zh_TW">角色類型來自</value>
     </property>
     <property key="PartyRoleTypeNotFoundForTheParty">
-        <value xml:lang="en">Role Type ${roleTypeId} not found for the party.</value>
+        <value xml:lang="en">Role Type ${roleTypeId} not found for the user.</value>
         <value xml:lang="fr">Le rôle ${roleTypeId} n'est pas présent pour cet acteur.</value>
     </property>
     <property key="PartyRoleTypeId">
@@ -11197,7 +11197,7 @@
     </property>
     <property key="PartyRoleTypeIdFrom">
         <value xml:lang="de">Akteur Rolle Typ ID von (neu)</value>
-        <value xml:lang="en">Party Role Type Id From (NEW)</value>
+        <value xml:lang="en">User Role Type Id From (NEW)</value>
         <value xml:lang="es">Código Tipo de rol de participante, de</value>
         <value xml:lang="fr">Rôle d'origine</value>
         <value xml:lang="hi_IN">पार्टी भूमिका प्रकार क्रमांक से (नया)</value>
@@ -11227,7 +11227,7 @@
     </property>
     <property key="PartyRoleTypeIdTo">
         <value xml:lang="de">Akteur Rolle Typ ID an (neu)</value>
-        <value xml:lang="en">Party Role Type Id To (NEW)</value>
+        <value xml:lang="en">User Role Type Id To (NEW)</value>
         <value xml:lang="es">Codigo Tipo de rol de participante, para</value>
         <value xml:lang="fr">Rôle de destination</value>
         <value xml:lang="hi_IN">पार्टी भूमिका प्रकार क्रमांक को (नया)</value>
@@ -11479,7 +11479,7 @@
     </property>
     <property key="PartySelectcRoleForParty">
         <value xml:lang="de">Rolle(n) für diesen Akteur auswählen</value>
-        <value xml:lang="en">Select role(s) for this party</value>
+        <value xml:lang="en">Select role(s) for this user</value>
         <value xml:lang="es">Seleccione rol(es) para este participante</value>
         <value xml:lang="fr">Sélectionnez les rôle(s) pour cet acteur</value>
         <value xml:lang="hi_IN">इस पार्टी के लिए भूमिका(एं) चुनें</value>
@@ -11902,7 +11902,7 @@
     </property>
     <property key="PartyStatusCannotBeChanged">
         <value xml:lang="de">Akteur Status kann nicht von ${partyFromStatusId} in ${partyToStatusId} geändert werden</value>
-        <value xml:lang="en">Cannot change party status from ${partyFromStatusId} to ${partyToStatusId}</value>
+        <value xml:lang="en">Cannot change user status from ${partyFromStatusId} to ${partyToStatusId}</value>
         <value xml:lang="it">Non è possibile cambiare lo stato del soggetto da ${partyFromStatusId} a ${partyToStatusId}</value>
         <value xml:lang="ja">取引先ステータスを ${partyFromStatusId} から ${partyToStatusId} に変更できません</value>
         <value xml:lang="vi">Không thể sao chép trạng thái tác nhân từ ${partyFromStatusId} đến ${partyToStatusId}</value>
@@ -12425,7 +12425,7 @@
     <property key="PartyTypeId">
         <value xml:lang="cs">Typ partnera</value>
         <value xml:lang="de">Akteur Typ ID</value>
-        <value xml:lang="en">Party Type Id</value>
+        <value xml:lang="en">User Type Id</value>
         <value xml:lang="es">Código Tipo de participante</value>
         <value xml:lang="fr">Type identifiant</value>
         <value xml:lang="hi_IN">पार्टी के प्रकार का क्रमांक</value>
@@ -12725,7 +12725,7 @@
     </property>
     <property key="PartyValueFromPartyLevel">
         <value xml:lang="de">Wert der Akteurs-Ebene</value>
-        <value xml:lang="en">Value from party level</value>
+        <value xml:lang="en">Value from user level</value>
         <value xml:lang="fr">Valeur au niveau acteur</value>
         <value xml:lang="hi_IN">पार्टी स्तर से प्राप्त मान</value>
         <value xml:lang="it">Valore a livello di soggetto</value>
@@ -12875,7 +12875,7 @@
     <property key="PartyViewSegmentRoles">
         <value xml:lang="cs">Zobrazení segmentu rolí partnera</value>
         <value xml:lang="de">Akteur Segment Rolle anzeigen</value>
-        <value xml:lang="en">View Party Segment Roles</value>
+        <value xml:lang="en">View User Segment Roles</value>
         <value xml:lang="es">Ver roles de segmento</value>
         <value xml:lang="fr">Afficher les rôles de segmentation de l'acteur</value>
         <value xml:lang="hi_IN">पार्टी अनुभाग भूमिकाओं को देखें</value>
@@ -13168,7 +13168,7 @@
     </property>
     <property key="PartyContentType">
         <value xml:lang="de">Akteur Inhaltstyp</value>
-        <value xml:lang="en">Party Content Type</value>
+        <value xml:lang="en">User Content Type</value>
         <value xml:lang="fr">Type du contenu de l'acteur</value>
     </property>
     <property key="PageTitleCreateAddressMatchMap">

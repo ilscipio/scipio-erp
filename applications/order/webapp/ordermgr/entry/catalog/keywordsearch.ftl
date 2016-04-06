@@ -19,6 +19,7 @@ under the License.
 
 <@section title=uiLabelMap.ProductProductSearch>
 
+<#-- CATO: ToDo: reimplement refined search
 <@row>
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}
@@ -26,11 +27,11 @@ under the License.
       <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</li>
     </#list>
     </@cell>
-</@row>
+</@row>-->
 
 <@row>
     <@cell>
-        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>
+        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} (<a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
     </@cell>
 </@row>
 
@@ -38,13 +39,14 @@ under the License.
   <@commonMsg type="result-norecord">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
 <#else>
   <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-    <div class="productsummary-container">
-        <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-            ${setRequestAttribute("optProductId", productId)}
+    <@grid columns=4>    
+        <#list productIds as productId> 
+            <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+            <li>${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
-            ${screens.render(productsummaryScreen)}
+            ${screens.render(productsummaryScreen)}</li>
         </#list>
-    </div>
+    </@grid>
   </@paginate>
 </#if>
 

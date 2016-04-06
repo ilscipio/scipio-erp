@@ -262,6 +262,8 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-screen name="CatoCartProgress" location="component://shop/widget/CommonScreens.xml"/>
+
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

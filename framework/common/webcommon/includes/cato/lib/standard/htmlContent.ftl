@@ -1596,5 +1596,4 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                 <#if link?has_content></a></#if>
             </div>
     </#switch>
-    
 </#macro>

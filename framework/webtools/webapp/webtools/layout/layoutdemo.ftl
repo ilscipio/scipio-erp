@@ -173,6 +173,16 @@
   <@menuitem type="link" text="Menu Button 3" />
 </@menu>
 
+<@section title="Step navigation">
+    <@nav type="steps">
+        <@step completed=true icon="${styles.icon_prefix!}cart">Cart</@step>
+        <@step active=true icon="${styles.icon_prefix!}info">Shipping</@step>
+        <@step disabled=true icon="${styles.icon_prefix!}heart">Billing</@step>
+        <@step disabled=true icon="${styles.icon_prefix!}info">Confirm Order</@step>
+    </@nav>
+</@section>
+
+
 <p>Nested sub-menus (markup test only!)</p>
 <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
   <@menuitem type="link" text="Menu Button 1" />

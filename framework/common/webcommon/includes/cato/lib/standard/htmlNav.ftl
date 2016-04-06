@@ -32,7 +32,7 @@ Since this is very foundation specific, this function may be dropped in future i
     <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
-    type                    = (inline|magellan|breadcrumbs, default: inline)
+    type                    = (inline|magellan|breadcrumbs|steps, default: inline)
     class                   = ((css-class)) CSS classes
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -61,6 +61,12 @@ Since this is very foundation specific, this function may be dropped in future i
     <#break>
     <#case "breadcrumbs">
       <#local class = addClassArg(class, styles.nav_breadcrumbs!)>
+      <ul<@compiledClassAttribStr class=class />>
+        <#nested>
+      </ul>
+    <#break>
+    <#case "steps">
+      <#local class = addClassArg(class, styles.nav_steps!)>
       <ul<@compiledClassAttribStr class=class />>
         <#nested>
       </ul>
@@ -115,6 +121,41 @@ Makes an attrib map container a magellan-destination attribute.
 <#function makeMagTargetAttribMap id>
   <#return {"data-magellan-destination":id}>
 </#function>
+
+
+<#-- 
+*************
+* step
+************
+Creates a single step - to be used with <@nav type="steps"
+
+* Parameters *
+    icon                    = Generates icon inside the step  
+    disabled                = step is disabled
+    active                  = marks the current step
+    completed               = step is completed (will override icon if icon is set)
+    class                   = ((css-class)) CSS classes
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+-->
+<#assign step_defaultArgs = {
+  "icon":"","completed":false,"disabled":false,"active":false,"class":"","passArgs":{}
+}>
+<#macro step args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.step_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@step_markup class=class icon=icon completed=completed disabled=disabled active=active origArgs=origArgs passArgs=passArgs><#nested></@step_markup>
+</#macro>
+
+<#-- @step main markup - theme override -->
+<#macro step_markup class="" icon="" completed=false disabled=false active=false origArgs={} passArgs={} catchArgs...>
+  <li class="${styles.nav_step!}<#if active> ${styles.nav_step_active!}</#if><#if disabled> ${styles.nav_step_disabled!}</#if> ${class!""}">
+    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${icon}</#if>"></i></#if>
+    <#nested>
+  </li>
+</#macro>
 
 <#-- 
 *************

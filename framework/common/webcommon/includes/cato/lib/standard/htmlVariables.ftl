@@ -674,6 +674,15 @@
     "nav_breadcrumb_disabled" : "unavailable",
     "nav_breadcrumb_active" : "current",
     "nav_breadcrumb_link" : "",                         <#-- breadcrumb link -->
+
+    <#-- Steps -->
+    "nav_steps" : "steps",                        <#-- steps container -->
+    "nav_step" : "",                              <#-- step entry -->
+    "nav_step_disabled" : "disabled",
+    "nav_step_active" : "active",
+    "nav_step_completed" : "completed",
+    "nav_step_expanded" : "expanded",
+    "nav_step_icon_completed" : "",             
   
   <#-- Pagination -->
     "pagination_wrap" : "pagination-centered",

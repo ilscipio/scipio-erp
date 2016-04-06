@@ -10985,3 +10985,97 @@ ul[data-pie-id] {
 canvas {
   margin: 0.5em 0;
 }
+
+/*
+* Based on the works of Lyn http://foundation.zurb.com/forum/posts/18131-step-by-step-list
+*/
+/* line 4, ../scss/_steps.scss */
+.steps {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  line-height: 1;
+  box-sizing: border-box;
+  padding-left: 0;
+}
+/* line 14, ../scss/_steps.scss */
+.steps.expanded {
+  display: block;
+}
+/* line 18, ../scss/_steps.scss */
+.steps.radius {
+  border-radius: 5px;
+  border-radius: 1000px;
+}
+/* line 23, ../scss/_steps.scss */
+.steps li {
+  display: inline-block;
+  position: relative;
+  padding: 1em 2em 1em 3em;
+  vertical-align: top;
+  background-color: #fafafa;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+/* line 33, ../scss/_steps.scss */
+.steps.even-2 li {
+  width: 50%;
+}
+/* line 34, ../scss/_steps.scss */
+.steps.even-3 li {
+  width: 33.33334%;
+}
+/* line 35, ../scss/_steps.scss */
+.steps.even-4 li {
+  width: 25%;
+}
+/* line 36, ../scss/_steps.scss */
+.steps.even-5 li {
+  width: 20%;
+}
+/* line 37, ../scss/_steps.scss */
+.steps.even-6 li {
+  width: 16.66667%;
+}
+/* line 39, ../scss/_steps.scss */
+.steps li:after {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  content: "";
+  top: 0.36em;
+  right: -1.2em;
+  width: 2.3em;
+  height: 2.3em;
+  background-color: #fafafa;
+  transform: rotate(-45deg);
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+/* line 54, ../scss/_steps.scss */
+.steps li:first-child {
+  padding-left: 2.5em;
+}
+/* line 58, ../scss/_steps.scss */
+.steps li:last-child {
+  padding-right: 2.5em;
+}
+/* line 62, ../scss/_steps.scss */
+.steps li:hover, .steps li:hover:after {
+  background-color: #e6f4f9;
+}
+/* line 66, ../scss/_steps.scss */
+.steps li.active,
+.steps li.active:after {
+  background-color: #007295;
+  color: #fff;
+}
+/* line 72, ../scss/_steps.scss */
+.steps li.disabled,
+.steps li.disabled:after {
+  background-color: #fff;
+  color: #aaa;
+  cursor: default;
+}

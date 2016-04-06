@@ -335,13 +335,13 @@ ${virtualJavaScript!}
               - if price < defaultPrice and defaultPrice < listPrice, show default
               - if isSale show price with salePrice style and print "On Sale!"
       -->
-      <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
+      <#if price.competitivePrice?? && price.price?? && (price.price?double < price.competitivePrice?double)>
         <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
       </#if>
-      <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
+      <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
         <div>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>
-      <#if price.listPrice?? && price.defaultPrice?? && price.price?? && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
+      <#if price.listPrice?? && price.defaultPrice?? && price.price?? && (price.price?double < price.defaultPrice?double) && (price.defaultPrice?double < price.listPrice?double)>
         <div>${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.specialPromoPrice??>

@@ -428,7 +428,7 @@
     </property>
     <property key="FrameworkWebTools">
         <value xml:lang="de">Web Tools Framework</value>
-        <value xml:lang="en">Framework Web Tools</value>
+        <value xml:lang="en">Framework Admin</value>
         <value xml:lang="es">Framework Herramientas Web</value>
         <value xml:lang="fr">Outils web du Framework</value>
         <value xml:lang="it">Strumenti del Framework</value>
@@ -1136,7 +1136,7 @@
     </property>
     <property key="WebtoolsCompanyName">
         <value xml:lang="de">CATO - Web Tools</value>
-        <value xml:lang="en">CATO - Web Tools</value>
+        <value xml:lang="en">CATO - Admin</value>
         <value xml:lang="es">CATO - Herramientas Web</value>
         <value xml:lang="fr">CATO - outils web</value>
         <value xml:lang="it">CATO - Strumenti web</value>
@@ -3366,7 +3366,7 @@
     </property>    
     <property key="WebtoolsMainPage">
         <value xml:lang="de">WebTools Startseite</value>
-        <value xml:lang="en">Web Tools Main Page</value>
+        <value xml:lang="en">Admin Main Page</value>
         <value xml:lang="fr">Page principale des outils web</value>
         <value xml:lang="it">Pagina principale</value>
         <value xml:lang="ja">Webツールメインページ</value>
@@ -4059,7 +4059,7 @@
     </property>
     <property key="WebtoolsPermissionError">
         <value xml:lang="de">WebTools Autorisierungsfehler</value>
-        <value xml:lang="en">Web Tools Permission Error</value>
+        <value xml:lang="en">Admin Permission Error</value>
         <value xml:lang="fr">Erreur d'autorisation sur les outils web</value>
         <value xml:lang="it">Errore di autorizzazione sugli strumenti del Framework</value>
         <value xml:lang="ja">Webツール権限エラー</value>
@@ -4135,7 +4135,7 @@
     </property>
     <property key="WebtoolsPopupWebToolsMain">
         <value xml:lang="de">Pop-Up WebTools Hauptseite</value>
-        <value xml:lang="en">Pop up Web Tools Main</value>
+        <value xml:lang="en">Pop up Admin Main</value>
         <value xml:lang="fr">Page d'accueil des outils web</value>
         <value xml:lang="it">Pop up pagina principale strumenti del Framework</value>
         <value xml:lang="ja">Webツールメインを表示</value>

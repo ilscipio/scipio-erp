@@ -229,19 +229,25 @@ under the License.
             ${screens.render("component://shop/widget/CatalogScreens.xml#keywordsearchbox")}
           </li>
           <li class="divider"></li>
-          <li class="has-dropdown not-click">
-            <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
-            <ul class="dropdown">       
-                <@generalMenu />
-            </ul>
-          </li>
+          <#if userLogin??>
+              <li class="has-dropdown not-click">
+                <a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a>
+                <ul class="dropdown">       
+                    <@generalMenu />
+                </ul>
+              </li>
+          <#else>
+            <li>
+                <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
+            </li>
+          </#if>
           
           <li class="divider"></li>
           <li>${screens.render("component://shop/widget/CartScreens.xml#microcart")}</li>
           <#--
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>-->   
-          <#-- language select -->
+          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>  
+          <#-- language select
           <li>
             <div id="lang-select">
               <a href="<@ofbizUrl><#if userLogin??>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
@@ -249,4 +255,5 @@ under the License.
               </a>
             </div>
           </li>
+          --> 
         </ul>

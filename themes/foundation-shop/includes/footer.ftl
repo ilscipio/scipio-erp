@@ -26,12 +26,15 @@ under the License.
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit impedit consequuntur at! Amet sed itaque nostrum, distinctio eveniet odio, id ipsam fuga quam minima cumque nobis veniam voluptates deserunt!</p>
     </@cell>
     <@cell columns=3>
-      <@heading>Work With Us</@heading>
+      <@heading>CATO Webstore</@heading>
       <ul class="other-links">
-        <li><a href="#">What We Do</a></li>
-        <li><a href="#">Pricing</a></li>
-        <li><a href="#">Events</a></li>
-        <li><a href="#">Blog</a></li>
+        <#-- language select --> 
+          <li>
+              <a href="<@ofbizUrl><#if userLogin??>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+                ${uiLabelMap.CommonChooseLanguage}
+              </a>
+          </li>
+        <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
         <li><a href="#">FAQ's</a></li>
       <ul>
     </@cell>

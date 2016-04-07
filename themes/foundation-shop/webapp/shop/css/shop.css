@@ -30,6 +30,10 @@ body {
 	color: #0078a0;
 }
 
+.top-bar-section .has-dropdown > a:after {
+	    border-color: rgba(0, 0, 0, 0.4) transparent transparent transparent;
+}
+
 .top-bar-section li.divider{
     border:none;
 }

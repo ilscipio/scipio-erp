@@ -802,7 +802,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Locales Lookup Screen -->
+    <!-- Locales Screen (Cato: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocales">
         <section>
             <actions>
@@ -832,7 +832,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- Cato: Compact version of list locales -->
+    <!-- Cato: Compact version of list locales (Cato: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListLocalesCompact">
         <section>
             <actions>
@@ -864,7 +864,7 @@ under the License.
         </section>
     </screen>  
 
-    <!-- Timezones Lookup Screen -->
+    <!-- Timezones Screen (Cato: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListTimezones">
         <section>
             <actions>
@@ -894,6 +894,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- List visual themes (Cato: Note there is also a lookup version in LookupScreens) -->
     <screen name="ListVisualThemes">
         <section>
             <actions>

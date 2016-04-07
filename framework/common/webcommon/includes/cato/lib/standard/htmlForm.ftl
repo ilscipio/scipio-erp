@@ -1322,8 +1322,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   </#if>
   
   <#-- push this field's info (popped at end) -->
-  <#local dummy = pushRequestStack("catoFieldInfoStack", 
-    {"type":type, "inlineItems":inlineItems})>
+  <#local fieldInfo = {"type":type, "inlineItems":inlineItems, "id":id}>
+  <#local dummy = pushRequestStack("catoFieldInfoStack", fieldInfo)>
   
   <#-- main markup begin -->
   <#local labelAreaContent = "">
@@ -1649,6 +1649,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   </@field_markup_container>
   <#-- pop field info when done -->
   <#local dummy = popRequestStack("catoFieldInfoStack")>
+  <#local dummy = setRequestVar("catoLastFieldInfo", fieldInfo)>
 </#macro>
 
 <#function getNextFieldIdNum> 

@@ -71,18 +71,20 @@ function setAlternateGwp(field) {
 
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
+<#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
+  <#assign continueLink = "product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
+<#else>
+  <#assign continueLink = "main">
+</#if>
+
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-          <#assign continueLink = "product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
-        <#else>
-          <#assign continueLink = "main">
+        <#if shoppingCart.items()?has_content>
+            <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
+            <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
+            <@menuitem type="link" href="javascript:removeSelected();" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
         </#if>
-        <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
-        <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
-        <@menuitem type="link" href="javascript:removeSelected();" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
-        <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
     </@menu>
 </#macro>
 
@@ -322,7 +324,12 @@ function setAlternateGwp(field) {
             </@table>
     </form>
     <@row>
-        <@cell class="${styles.text_right!}">
+        <@cell columns=6>
+            <@menu type="button">
+                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+            </@menu>
+        </@cell>
+        <@cell columns=6 class="${styles.text_right!}">
                 <@menu type="button">
                      <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
                 </@menu>
@@ -330,6 +337,13 @@ function setAlternateGwp(field) {
     </@row>    
   <#else>
     <@commonMsg type="result-norecord">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</@commonMsg>
+    <@row>
+        <@cell>
+            <@menu type="button">
+                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+            </@menu>
+        </@cell>
+    </@row>
   </#if>
 </@section>
 

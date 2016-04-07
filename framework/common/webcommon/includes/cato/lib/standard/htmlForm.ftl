@@ -624,6 +624,10 @@ or even multiple per fieldset.
     <#local radioType = styles[stylesPrefix + "_radiotype"]!styles["fields_default_radiotype"]!"">
   </#if>
 
+  <#if !inlineItems?has_content>
+    <#local inlineItems = styles[stylesPrefix + "_inlineitems"]!styles["fields_default_inlineitems"]!"">
+  </#if>
+
   <#local fieldArgsFromStyles = styles[stylesPrefix + "_fieldargs"]!styles["fields_default_fieldargs"]!false>
   <#if fieldArgs?is_boolean>
     <#if fieldArgs == true>
@@ -950,7 +954,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
-    inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line
+    inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line
                               NOTE: this takes effect whether single-item or multiple-item radio.
                               the default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked; this can be single-value string or sequence of value strings
@@ -973,7 +977,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
-    inlineItems             = ((boolean), default: true) If true, radio items are many per line; if false, one per line
+    inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line
                               NOTE: This takes effect whether single-item or multiple-item radio.
                               The default can be overridden on a parent @field or @fields element.
     currentValue            = Current value, determines checked

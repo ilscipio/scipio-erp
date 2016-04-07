@@ -849,6 +849,7 @@
     "fields_default_collapsedinlinelabel" : "datetime", <#-- Can be true, false, or list of type names -->
     "fields_default_checkboxtype" : "",
     "fields_default_radiotype" : "",
+    <#--"fields_default_inlineitems" : false,           - uncomment this to change global inline items default for radio and checkbox -->
     "fields_default_fieldargs" : {                      <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. NOTE: This is more forced than the settings implemented individually, but can often work well enough. -->
         "requiredClass" : "required",
         "requiredTooltip" : "#LABEL:CommonRequired"

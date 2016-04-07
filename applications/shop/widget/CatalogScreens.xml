@@ -495,7 +495,7 @@ under the License.
                         <include-screen name="category"/>
                     </widgets>
                     <fail-widgets>
-                                <include-screen name="breadcrumbs" share-scope="true"/>
+                        <include-screen name="breadcrumbs" share-scope="true"/>
                         <include-screen name="category-include" share-scope="true"/>
                     </fail-widgets>
                 </section>

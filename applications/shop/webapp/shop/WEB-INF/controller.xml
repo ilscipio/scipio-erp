@@ -64,11 +64,22 @@ under the License.
     <request-map uri="license"><security https="false" auth="false"/><response name="success" type="view" value="license"/></request-map>
 
     <!-- Session Setting Requests -->
+    <!-- Cato: need a language select screen for anon users -->
+    <request-map uri="ListLocales"><security https="false" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+ 
     <request-map uri="setSessionLocale">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
         <response name="success" type="request-redirect" value="fromSetSessionLocale"/>        
         <response name="error" type="view" value="main"/>
+    </request-map>
+    
+    <!-- Cato: for profile. NOTE: fromSetSessionLocale event doesn't do anything useful, so can just redirect to profile (simpler) -->
+    <request-map uri="setSessionLocaleProfile">
+        <security https="false" auth="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
+        <response name="success" type="request-redirect" value="viewprofile"/>        
+        <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
     <request-map uri="setSessionCurrencyUom">
@@ -1777,5 +1788,8 @@ under the License.
     <!-- Shopping List 's Ajax -->
     <view-map name="showShoppingList" type="screen" page="component://shop/widget/ShoppingListScreens.xml#showShoppingList"/>
     
+    <!-- Cato: dedicated locales screen for anon users -->
+    <view-map name="ListLocales" type="screen" page="component://common/widget/LookupScreens.xml#ListLocalesCompact"/>
+
     <!-- End of View Mappings -->
 </site-conf>

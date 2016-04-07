@@ -64,6 +64,10 @@ under the License.
 
         <#-- not implemented for shop, belongs to profile settings: <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>-->
         <#-- not implemented for shop: <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>-->
+    <#else>
+        <#-- language select for anon users 
+            TODO?: icon instead of menu entry? -->
+        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
     </#if>
     <#--
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>

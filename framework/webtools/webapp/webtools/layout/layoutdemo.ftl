@@ -602,7 +602,7 @@
         {"value":"val2", "description":"Option 2"}
         {"value":"val3", "description":"Option 3", "tooltip":"this is radio option 3"}
       ]>
-      <@field type="radio" name="radio3a" label="Radio 3a (multi - inline)" items=items currentValue="val2" inlineItems=true tooltip="these are radios"/>
+      <@field type="radio" name="radio3a" label="Radio 3a (multi - inline)" items=items currentValue="val2" tooltip="these are radios"/>
       <@field type="radio" name="radio3b" label="Radio 3b (multi - one per line)" items=items currentValue="val2" inlineItems=false tooltip="these are also radios"/>
       <@field type="radio" name="radio4" label="Radio 4" value="Y" currentValue="Y" />
       <@field type="radio" name="radio5" label="Radio 5" value="Y" currentValue="N" />

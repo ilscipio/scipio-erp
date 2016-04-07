@@ -117,6 +117,45 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- Cato: Compact version of list locales -->
+    <screen name="ListLocalesCompact">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+                <set field="parameters.presentation" value="window"/>
+                <set field="setLocalesTarget" from-field="setLocalesTarget" default-value="${groovy: request.getAttribute('setLocalesTarget')}" />
+                <set field="setLocalesTargetView" from-field="setLocalesTargetView" default-value="${groovy: request.getAttribute('setLocalesTargetView')}" />
+            </actions>
+            <widgets>
+               <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-section name="body">
+                    <platform-specific>
+                        <html>
+                            <html-template location="component://common/webcommon/includes/listLocalesCompact.ftl"/>
+                        </html>
+                    </platform-specific>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+    <screen name="listLocalesCompact">
+        <section>
+            <actions>
+                <set field="setLocalesTarget" from-field="setLocalesTarget" default-value="${groovy: request.getAttribute('setLocalesTarget')}" />
+                <set field="setLocalesTargetView" from-field="setLocalesTargetView" default-value="${groovy: request.getAttribute('setLocalesTargetView')}" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listLocalesCompact.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>  
 
     <!-- Timezones Lookup Screen -->
     <screen name="ListTimezones">

@@ -43,10 +43,9 @@ under the License.
   </#if>
 </@menu>
 <#-- ============================================================= -->
-<#-- Cato: TODO: Language -->
-<@section title=uiLabelMap.EcommerceLanguage>
-  TODO
-</@section>
+<#-- Cato: Language -->
+<#assign dummy = setRequestAttribute("setLocalesTarget", "setSessionLocaleProfile")>
+${screens.render("component://common/widget/LookupScreens.xml#listLocalesCompact")}
 <#-- ============================================================= -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>

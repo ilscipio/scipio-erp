@@ -24,9 +24,11 @@ under the License.
   <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
 </#if>
 
-<div id="orderHeader">
-<#-- left side -->
-<div class="columnLeft">
+<@heading level=1>
+    <#if (orderHeader.orderId)??>
+        ${orderHeader.orderId} (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">PDF</a>)
+    </#if>
+</@heading>
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -35,339 +37,372 @@ under the License.
       </#if>
     </@menu>
 </#macro>
-<#assign sectionTitle>
-    ${uiLabelMap.OrderOrder}
-    <#if orderHeader?has_content>
-      ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>
-    </#if>
-    ${uiLabelMap.CommonInformation}
-    <#if (orderHeader.orderId)??>
-      ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.link_run_sys!} ${styles.action_export!}">PDF</a> ]
-    </#if>
-</#assign>
-<@section title=sectionTitle menuContent=menuContent>
-  <#-- placing customer information -->
-  <ul>
+
+<@section menuContent=menuContent>
+    
+    <#-- orderinfo -->
     <#if localOrderReadHelper?? && orderHeader?has_content>
-      <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
-      <#if displayParty?has_content>
-        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-      </#if>
-      <li>
-        ${uiLabelMap.PartyName}
-        ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
-      </li>
-    </#if>
-    <#-- order status information -->
-    <li>
-      ${uiLabelMap.CommonStatus}
-      <#if orderHeader?has_content>
-        ${localOrderReadHelper.getStatusString(locale)}
-      <#else>
-        ${uiLabelMap.OrderNotYetOrdered}
-      </#if>
-    </li>
-    <#-- ordered date -->
-    <#if orderHeader?has_content>
-      <li>
-        ${uiLabelMap.CommonDate}
-        ${orderHeader.orderDate.toString()}
-      </li>
-    </#if>
-    <#if distributorId??>
-      <li>
-        ${uiLabelMap.OrderDistributor}
-        ${distributorId}
-      </li>
-    </#if>
-  </ul>
-</@section>
+        <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
+        <#if displayParty?has_content>
+            <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+        </#if>
+
+        <@row>
+            <@cell columns=4>
+                <@section title=uiLabelMap.CommonOverview>
+                    <@table type="fields">
+                        <#if displayPartyNameResult?has_content>
+                            <@tr>
+                              <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}
+                              </@td>
+                              <@td colspan="3">${(displayPartyNameResult.fullName)?default("[Name Not Found]")}</@td>
+                            </@tr>
+                        </#if>
+                        <@tr>
+                          <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
+                          <@td colspan="3">
+                            <#if orderHeader?has_content>
+                                ${localOrderReadHelper.getStatusString(locale)}
+                              <#else>
+                                ${uiLabelMap.OrderNotYetOrdered}
+                            </#if>
+                          </@td>
+                        </@tr>
+                        <@tr>
+                          <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDateOrdered}</@td>
+                          <@td colspan="3">
+                              <#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if>
+                          </@td>
+                        </@tr>
+                        <#if distributorId??>
+                        <@tr>
+                          <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
+                          <@td colspan="3">
+                             <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                             ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                          </@td>
+                        </@tr>
+                      </#if>
+                    
+                      <#if affiliateId??>
+                        <@tr>
+                          <@td>${uiLabelMap.OrderAffiliate}</@td>
+                          <@td colspan="3">
+                            <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                            ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                          </@td>
+                        </@tr>
+                      </#if>
+                
+                    </@table>
+                </@section>
+            </@cell>
+
+            <#-- payment info -->
+            <@cell columns=4>
+                <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
+                    <@section title=uiLabelMap.AccountingPaymentInformation>
+                        <@table type="fields">
+                            <#if !paymentMethod?has_content && paymentMethodType?has_content>
+                            
+                                <#-- offline payment -->
+                                <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
+                                    <@tr>
+                                        <@td colspan="4"><@alert type="info">${uiLabelMap.AccountingOfflinePayment}</@alert></@td>
+                                    </@tr>
+                                    <#if orderHeader?has_content && paymentAddress?has_content>
+                                        <@tr>
+                                          <@td class="${styles.grid_large!}2">$${uiLabelMap.OrderSendPaymentTo}
+                                          </@td>
+                                          <@td colspan="3">
+                                              <#if paymentAddress.toName?has_content>${paymentAddress.toName}><br/></#if>
+                                              <#if paymentAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${paymentAddress.attnName}><br/></#if>
+                                              ${paymentAddress.address1}><br/>
+                                              <#if paymentAddress.address2?has_content>${paymentAddress.address2}><br/></#if>
+                                              <#assign paymentStateGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.stateProvinceGeoId!}, false))! />
+                                              ${paymentAddress.city}<#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if> ${paymentAddress.postalCode!}><br/>
+                                              <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
+                                              <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}><br/></#if>
+                                              ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
+                                          </@td>
+                                        </@tr>
+                                    </#if>
+                                <#else>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}
+                                          </@td>
+                                          <@td colspan="3">${paymentMethodType.get("description",locale)}</@td>
+                                    </@tr>
+                                </#if>
 
 
-<@row>
-  <@cell columns=6>
+                            <#elseif paymentMethods?has_content>
+                                <#list paymentMethods as paymentMethod>
+                                      <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
+                                        <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
+                                        <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
+                                      <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
+                                        <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
+                                      <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
+                                        <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
+                                      </#if>
+    
+                                      <#-- credit card info -->
+                                    <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
+                                        <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
+                                        <@tr>
+                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}
+                                              </@td>
+                                              <@td colspan="3">${formattedCardNumber}<br/>
+                                              
+                                                  <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}><br/></#if>
+                                                  <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}><br/></#if>
+                                                  ${creditCard.firstNameOnCard}<br/>
+                                                  <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}><br/></#if>
+                                                  ${creditCard.lastNameOnCard}<br/>
+                                                  <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
+                                              </@td>
+                                        </@tr>
+                                        
+                                    </#if>
 
-<#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-  <@section title=uiLabelMap.AccountingPaymentInformation>
-    <#-- offline payment address infomation :: change this to use Company's address -->
-    <ul>
-      <#if !paymentMethod?has_content && paymentMethodType?has_content>
-        <li>
-          <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
-            ${uiLabelMap.AccountingOfflinePayment}
-            <#if orderHeader?has_content && paymentAddress?has_content>
-              ${uiLabelMap.OrderSendPaymentTo}:
-              <#if paymentAddress.toName?has_content>${paymentAddress.toName}</#if>
-              <#if paymentAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${paymentAddress.attnName}</#if>
-              ${paymentAddress.address1}
-              <#if paymentAddress.address2?has_content>${paymentAddress.address2}</#if>
-              <#assign paymentStateGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.stateProvinceGeoId!}, false))! />
-              ${paymentAddress.city}<#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if> ${paymentAddress.postalCode!}
-              <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
-              <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}</#if>
-              ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
-            </#if>
-          <#else>
-            <#assign outputted = true>
-            ${uiLabelMap.AccountingPaymentVia} ${paymentMethodType.get("description",locale)}
-          </#if>
-        </li>
-      </#if>
-      <#if paymentMethods?has_content>
-        <#list paymentMethods as paymentMethod>
-          <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
-            <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-            <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
-          <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
-            <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-          <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
-            <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
-          </#if>
-          <#-- credit card info -->
-          <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
-            <#if outputted?default(false)>
-            </#if>
-            <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
-            <li>
-              <ul>
-                <li> ${uiLabelMap.AccountingCreditCard}
-                  <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}</#if>
-                  <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}</#if>
-                  ${creditCard.firstNameOnCard}
-                  <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}</#if>
-                  ${creditCard.lastNameOnCard}
-                  <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
-                </li>
-                <li>${formattedCardNumber}</li>
-              </ul>
-            </li>
-            <#-- Gift Card info -->
-          <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
-            <#if outputted?default(false)>
-            </#if>
-            <#if giftCard?has_content && giftCard.cardNumber?has_content>
-              <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
-              <#assign giftCardNumber = "">
-              <#assign pcardNumber = giftCard.cardNumber>
-              <#if pcardNumber?has_content>
-                <#assign psize = pcardNumber?length - 4>
-                <#if 0 < psize>
-                  <#list 0 .. psize-1 as foo>
-                    <#assign giftCardNumber = giftCardNumber + "*">
-                  </#list>
-                  <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
-                <#else>
-                  <#assign giftCardNumber = pcardNumber>
+
+                                    <#-- Gift Card info -->
+                                    <#if "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
+                                        <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                                          <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
+                                          <#assign giftCardNumber = "">
+                                          <#assign pcardNumber = giftCard.cardNumber>
+                                          <#if pcardNumber?has_content>
+                                            <#assign psize = pcardNumber?length - 4>
+                                            <#if 0 < psize>
+                                              <#list 0 .. psize-1 as foo>
+                                                <#assign giftCardNumber = giftCardNumber + "*">
+                                              </#list>
+                                              <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                                            <#else>
+                                              <#assign giftCardNumber = pcardNumber>
+                                            </#if>
+                                          </#if>
+                                        </#if>
+                                        <@tr>
+                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}
+                                            </@td>
+                                            <@td colspan="3">${giftCardNumber}</@td>
+                                        </@tr>
+                                    </#if>
+
+                                    <#-- EFT account info -->
+                                    <#if "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
+                                        <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
+                                        <@tr>
+                                            <@td class="${styles.grid_large!}2">
+                                                ${uiLabelMap.AccountingEFTAccount}
+                                                ${eftAccount.nameOnAccount!}
+                                            </@td>
+                                            <@td>
+                                                ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
+                                            </@td>
+                                            <@td colspan="2">
+                                                <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}</#if>><br/>
+                                                ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
+
+                                            </@td>
+                                        </@tr>
+                                    </#if>
+                                    
+                                    <#if pmBillingAddress?has_content>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAddress}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}<br/></#if>
+                                            <#if pmBillingAddress.attnName?has_content>${uiLabelMap.CommonAttn}: ${pmBillingAddress.attnName}<br/></#if>
+                                            ${pmBillingAddress.address1}<br/>
+                                            <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
+                                            <#assign pmBillingStateGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.stateProvinceGeoId!}, false))! />
+                                            ${pmBillingAddress.city}<#if pmBillingStateGeo?has_content>, ${ pmBillingStateGeo.geoName!}</#if> ${pmBillingAddress.postalCode!}<br/>
+                                            <#assign pmBillingCountryGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.countryGeoId!}, false))! />
+                                            <#if pmBillingCountryGeo?has_content>${pmBillingCountryGeo.geoName!}</#if>
+                                        </@td>
+                                    </@tr>
+                                  </#if>
+                                </#list>
+                            </#if>
+                            <#-- billing account info -->
+                            <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
+                                <#if billingAccount?has_content || customerPoNumberSet?has_content>>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentInformation}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#if billingAccount?has_content>
+                                                ${uiLabelMap.AccountingBillingAccount}
+                                                #${billingAccount.billingAccountId!} - ${billingAccount.description!}
+                                          </#if>
+                                          <#if (customerPoNumberSet?has_content)>
+                                              ${uiLabelMap.OrderPurchaseOrderNumber}
+                                              <#list customerPoNumberSet as customerPoNumber>
+                                                ${customerPoNumber!}
+                                              </#list>
+                                          </#if>
+                                        </@td>
+                                    </@tr>
+                                </#if>
+                            </#if>
+                            
+                        </@table>   
+                    </@section>
                 </#if>
-              </#if>
-            </#if>
-            <li>
-              ${uiLabelMap.AccountingGiftCard}
-              ${giftCardNumber}
-            </li>
-            <#-- EFT account info -->
-          <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
-            <#if outputted?default(false)>
-            </#if>
-            <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
-            <li>
-              <ul>
-                <li>
-                  ${uiLabelMap.AccountingEFTAccount}
-                  ${eftAccount.nameOnAccount!}
-                </li>
-                <li>
-                  <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}</#if>
-                </li>
-                <li>
-                  ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
-                </li>
-                <li>
-                  ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
-                </li>
-              </ul>
-            </li>
-          </#if>
-          <#if pmBillingAddress?has_content>
-            <li>
-              <ul>
-                <li>
-                  <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}</#if>
-                </li>
-                <li>
-                  <#if pmBillingAddress.attnName?has_content>${uiLabelMap.CommonAttn}: ${pmBillingAddress.attnName}</#if>
-                </li>
-                <li>
-                  ${pmBillingAddress.address1}
-                </li>
-                <li>
-                  <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}</#if>
-                </li>
-                <li>
-                <#assign pmBillingStateGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.stateProvinceGeoId!}, false))! />
-                ${pmBillingAddress.city}<#if pmBillingStateGeo?has_content>, ${ pmBillingStateGeo.geoName!}</#if> ${pmBillingAddress.postalCode!}
-                <#assign pmBillingCountryGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.countryGeoId!}, false))! />
-                <#if pmBillingCountryGeo?has_content>${pmBillingCountryGeo.geoName!}</#if>
-                </li>
-              </ul>
-            </li>
-          </#if>
-          <#assign outputted = true>
-        </#list>
-      </#if>
-      <#-- billing account info -->
-      <#if billingAccount?has_content>
-        <#if outputted?default(false)>
-        </#if>
-        <#assign outputted = true>
-        <li>
-          ${uiLabelMap.AccountingBillingAccount}
-          #${billingAccount.billingAccountId!} - ${billingAccount.description!}
-        </li>
-      </#if>
-      <#if (customerPoNumberSet?has_content)>
-        <li>
-          ${uiLabelMap.OrderPurchaseOrderNumber}
-          <#list customerPoNumberSet as customerPoNumber>
-            ${customerPoNumber!}
-          </#list>
-        </li>
-      </#if>
-    </ul>
-  </@section>
-</#if>
-  </@cell>
-  
-  <@cell columns=6>
+            </@cell>
 
-<@section title=uiLabelMap.OrderShippingInformation>
-  <#if orderItemShipGroups?has_content>
-    <#-- shipping address -->
-    <#assign groupIdx = 0>
-    <#list orderItemShipGroups as shipGroup>
-      <#if orderHeader?has_content>
-        <#assign shippingAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-        <#assign groupNumber = shipGroup.shipGroupSeqId!>
-      <#else>
-        <#assign shippingAddress = cart.getShippingAddress(groupIdx)!>
-        <#assign groupNumber = groupIdx + 1>
-      </#if>
-      <ul>
-        <#if shippingAddress?has_content>
-          <li>
-            <ul>
-              <li>
-                ${uiLabelMap.OrderDestination} [${groupNumber}]
-                <#if shippingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${shippingAddress.toName}</#if>
-              </li>
-              <li>
-                <#if shippingAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${shippingAddress.attnName}</#if>
-              </li>
-              <li>
-                ${shippingAddress.address1}
-              </li>
-              <li>
-                <#if shippingAddress.address2?has_content>${shippingAddress.address2}</#if>
-              </li>
-              <li>
-                <#assign shippingStateGeo = (delegator.findOne("Geo", {"geoId", shippingAddress.stateProvinceGeoId!}, false))! />
-                ${shippingAddress.city}<#if shippingStateGeo?has_content>, ${shippingStateGeo.geoName!}</#if> ${shippingAddress.postalCode!}
-              </li>
-              <li>
-                <#assign shippingCountryGeo = (delegator.findOne("Geo", {"geoId", shippingAddress.countryGeoId!}, false))! />
-                <#if shippingCountryGeo?has_content>${shippingCountryGeo.geoName!}</#if>
-              </li>
-            </ul>
-          </li>
-        </#if>
-        <li>
-          <ul>
-            <li>
-              ${uiLabelMap.OrderMethod}:
-              <#if orderHeader?has_content>
-                <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
-                <#assign carrierPartyId = shipGroup.carrierPartyId!>
-              <#else>
-                <#assign shipmentMethodType = cart.getShipmentMethodType(groupIdx)!>
-                <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)!>
-              </#if>
-              <#if carrierPartyId?? && carrierPartyId != "_NA_">${carrierPartyId!}</#if>
-              ${(shipmentMethodType.description)!(uiLabelMap.CommonNA)}
-            </li>
-            <li>
-              <#if shippingAccount??>${uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
-            </li>
-          </ul>
-        </li>
-        <#-- tracking number -->
-        <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
-          <li>
-            ${uiLabelMap.OrderTrackingNumber}
-            <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-            <#if shipGroup.trackingNumber?has_content>
-              ${shipGroup.trackingNumber}
-            </#if>
-            <#if orderShipmentInfoSummaryList?has_content>
-              <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
-                <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
-                Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
-                <#if orderShipmentInfoSummary.boxNumber?has_content>${uiLabelMap.OrderBoxNumber}${orderShipmentInfoSummary.boxNumber}</#if>
-                <#if orderShipmentInfoSummary.carrierPartyId?has_content>(${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})</#if>
-              </#list>
-            </#if>
-          </li>
-          </#if>
-          <#-- splitting preference -->
-          <#if orderHeader?has_content>
-            <#assign maySplit = shipGroup.maySplit?default("N")>
-          <#else>
-            <#assign maySplit = cart.getMaySplit(groupIdx)?default("N")>
-          </#if>
-          <li>
-            ${uiLabelMap.OrderSplittingPreference}:
-            <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
-            <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
-          </li>
-          <#-- shipping instructions -->
-          <#if orderHeader?has_content>
-            <#assign shippingInstructions = shipGroup.shippingInstructions!>
-          <#else>
-            <#assign shippingInstructions =  cart.getShippingInstructions(groupIdx)!>
-          </#if>
-          <#if shippingInstructions?has_content>
-            <li>
-              ${uiLabelMap.OrderInstructions}
-              ${shippingInstructions}
-            </li>
-          </#if>
-          <#-- gift settings -->
-          <#if orderHeader?has_content>
-            <#assign isGift = shipGroup.isGift?default("N")>
-            <#assign giftMessage = shipGroup.giftMessage!>
-          <#else>
-            <#assign isGift = cart.getIsGift(groupIdx)?default("N")>
-            <#assign giftMessage = cart.getGiftMessage(groupIdx)!>
-          </#if>
-          <#if (productStore.showCheckoutGiftOptions!) != "N">
-          <li>
-            ${uiLabelMap.OrderGift}?
-            <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>
-            <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisIsGift}.</#if>
-          </li>
-          <#if giftMessage?has_content>
-            <li>
-              ${uiLabelMap.OrderGiftMessage}
-              ${giftMessage}
-            </li>
-          </#if>
-        </#if>
-        <#if shipGroup_has_next>
-        </#if>
-      </ul>
-      <#assign groupIdx = groupIdx + 1>
-    </#list><#-- end list of orderItemShipGroups -->
-  </#if>
+            <#-- shipping info -->
+            <@cell columns=4>
+                <#if orderItemShipGroups?has_content>
+                    <@section title=uiLabelMap.OrderShippingInformation>
+                        <#-- shipping address -->
+
+                        <#if orderItemShipGroups?has_content>
+                            <#assign groupIdx = 0>
+                            <#list orderItemShipGroups as shipGroup>
+                              <#if orderHeader?has_content>
+                                <#assign shippingAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
+                                <#assign groupNumber = shipGroup.shipGroupSeqId!>
+                              <#else>
+                                <#assign shippingAddress = cart.getShippingAddress(groupIdx)!>
+                                <#assign groupNumber = groupIdx + 1>
+                              </#if>
+                              <@table type="fields">
+                                <#if shippingAddress?has_content>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderDestination} ${groupNumber}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#if shippingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${shippingAddress.toName}<br/></#if>
+                                            <#if shippingAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${shippingAddress.attnName}<br/></#if>
+                                            ${shippingAddress.address1}<br/>
+                                            <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>
+                                            <#assign shippingStateGeo = (delegator.findOne("Geo", {"geoId", shippingAddress.stateProvinceGeoId!}, false))! />
+                                            ${shippingAddress.city}<#if shippingStateGeo?has_content>, ${shippingStateGeo.geoName!}</#if> ${shippingAddress.postalCode!}<br/>
+                                            <#assign shippingCountryGeo = (delegator.findOne("Geo", {"geoId", shippingAddress.countryGeoId!}, false))! />
+                                            <#if shippingCountryGeo?has_content>${shippingCountryGeo.geoName!}</#if>
+
+                                        </@td>
+                                    </@tr>
+                                </#if>
+                                <@tr>
+                                    <@td class="${styles.grid_large!}2">${uiLabelMap.OrderMethod}
+                                    </@td>
+                                    <@td colspan="3">
+                                        <#if orderHeader?has_content>
+                                            <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
+                                            <#assign carrierPartyId = shipGroup.carrierPartyId!>
+                                      <#else>
+                                            <#assign shipmentMethodType = cart.getShipmentMethodType(groupIdx)!>
+                                            <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)!>
+                                      </#if>
+                                        <#if carrierPartyId?? && carrierPartyId != "_NA_">${carrierPartyId!}<br/></#if>
+                                        ${(shipmentMethodType.description)!(uiLabelMap.CommonNA)}<br/>
+                                        <#if shippingAccount??>${uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
+
+                                    </@td>
+                                </@tr>
+                                      
+                                
+                                <#-- tracking number -->
+                                <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderTrackingNumber}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
+                                            <#if shipGroup.trackingNumber?has_content>
+                                              ${shipGroup.trackingNumber}<br/>
+                                            </#if>
+                                            <#if orderShipmentInfoSummaryList?has_content>
+                                              <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
+                                                <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: <br/></#if>
+                                                Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}<br/>
+                                                <#if orderShipmentInfoSummary.boxNumber?has_content>${uiLabelMap.OrderBoxNumber}${orderShipmentInfoSummary.boxNumber}<br/></#if>
+                                                <#if orderShipmentInfoSummary.carrierPartyId?has_content>(${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})<br/></#if>
+                                              </#list>
+                                            </#if>
+                                        </@td>
+                                    </@tr>
+                                  </#if>
+
+
+                                  <#-- splitting preference -->
+                                  <#if orderHeader?has_content>
+                                    <#assign maySplit = shipGroup.maySplit?default("N")>
+                                  <#else>
+                                    <#assign maySplit = cart.getMaySplit(groupIdx)?default("N")>
+                                  </#if>
+
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderSplittingPreference}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
+                                            <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
+                                        </@td>
+                                    </@tr>
+                                 
+                                  <#-- shipping instructions -->
+                                  <#if orderHeader?has_content>
+                                    <#assign shippingInstructions = shipGroup.shippingInstructions!>
+                                  <#else>
+                                    <#assign shippingInstructions =  cart.getShippingInstructions(groupIdx)!>
+                                  </#if>
+                                  <#if shippingInstructions?has_content>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderInstructions}
+                                        </@td>
+                                        <@td colspan="3">
+                                            ${shippingInstructions}
+                                        </@td>
+                                    </@tr>
+                                  </#if>
+
+                                  <#-- gift settings -->
+                                  <#if orderHeader?has_content>
+                                    <#assign isGift = shipGroup.isGift?default("N")>
+                                    <#assign giftMessage = shipGroup.giftMessage!>
+                                  <#else>
+                                    <#assign isGift = cart.getIsGift(groupIdx)?default("N")>
+                                    <#assign giftMessage = cart.getGiftMessage(groupIdx)!>
+                                  </#if>
+                                  <#if (productStore.showCheckoutGiftOptions!) != "N">
+                                  <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGift}
+                                        </@td>
+                                        <@td colspan="3">
+                                            <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>
+                                            <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisIsGift}.</#if>
+                                        </@td>
+                                    </@tr>
+                                  <#if giftMessage?has_content>
+                                    <@tr>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGiftMessage}
+                                        </@td>
+                                        <@td colspan="3">
+                                            ${giftMessage}
+                                        </@td>
+                                    </@tr>
+                                  </#if>
+                                </#if>
+
+
+                                <#if shipGroup_has_next>
+                                </#if>
+                              </@table>
+                              <#assign groupIdx = groupIdx + 1>
+                            </#list>
+                          </#if>
+                           
+                    </@section>
+                </#if>
+            </@cell>
+        </@row>
+    </#if>
 </@section>
-
-  </@cell>
-</@row>

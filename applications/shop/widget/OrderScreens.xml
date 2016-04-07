@@ -366,7 +366,6 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="maySelectItems" value="Y"/>
-                <set field="titleProperty" value="PageTitleOrderStatus"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>

@@ -66,8 +66,8 @@ under the License.
         <#-- not implemented for shop: <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>-->
     <#else>
         <#-- language select for anon users 
-            TODO?: icon instead of menu entry? -->
-        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
+            MOVED to icon
+        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li> -->
     </#if>
     <#--
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
@@ -241,4 +241,12 @@ under the License.
           <#--
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
           <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>-->   
+          <#-- language select -->
+          <li>
+            <div id="lang-select">
+              <a href="<@ofbizUrl><#if userLogin??>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+                <i class="${styles.icon} ${styles.icon_prefix}flag"></i>
+              </a>
+            </div>
+          </li>
         </ul>

@@ -78,7 +78,7 @@ under the License.
     <request-map uri="setSessionLocaleProfile">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect" value="viewprofile"/>        
+        <response name="success" type="request-redirect-noparam" value="viewprofile"/>        
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 

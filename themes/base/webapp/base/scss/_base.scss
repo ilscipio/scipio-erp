@@ -517,12 +517,14 @@ div.scrollable-table-container > table {
   margin-bottom: 1rem;
 }
 
+// DEV NOTE: These must remain display:none always.
+// If you want items one-per-line, you must use @field inlineItems parameter or change
+// the @fields entries in global styles hash.
 .radio-item-inline.radio-item-separator {
-  display:block;
+  display:none;
 }
-
 .checkbox-item-inline.checkbox-item-separator {
-  display:block;
+  display:none;
 }
 
 // jquery asmselect

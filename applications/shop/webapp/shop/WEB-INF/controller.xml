@@ -1789,7 +1789,7 @@ under the License.
     <view-map name="showShoppingList" type="screen" page="component://shop/widget/ShoppingListScreens.xml#showShoppingList"/>
     
     <!-- Cato: dedicated locales screen for anon users -->
-    <view-map name="ListLocales" type="screen" page="component://common/widget/LookupScreens.xml#ListLocalesCompact"/>
+    <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocalesCompact"/>
 
     <!-- End of View Mappings -->
 </site-conf>

@@ -802,6 +802,134 @@ under the License.
         </section>
     </screen>
 
+    <!-- Locales Lookup Screen -->
+    <screen name="ListLocales">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listLocales" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listLocales">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listLocales.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: Compact version of list locales -->
+    <screen name="ListLocalesCompact">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listLocalesCompact" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+    <screen name="listLocalesCompact">
+        <section>
+            <actions>
+                <set field="setLocalesTarget" from-field="setLocalesTarget" default-value="${groovy: request.getAttribute('setLocalesTarget')}" />
+                <set field="setLocalesTargetView" from-field="setLocalesTargetView" default-value="${groovy: request.getAttribute('setLocalesTargetView')}" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listLocalesCompact.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>  
+
+    <!-- Timezones Lookup Screen -->
+    <screen name="ListTimezones">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonTime}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listTimezones" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listTimezones">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listTimezones.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListVisualThemes">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonVisualThemes}"/>
+                <set field="parameters.presentation" value="window"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listVisualThemes" />
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="listVisualThemes">
+        <section>
+            <actions>
+                <entity-one entity-name="WebSite" value-field="webSite"/>
+                <set field="visualThemeSetId" from-field="webSite.visualThemeSetId" default-value="BACKOFFICE" />
+                <entity-condition entity-name="VisualTheme" list="visualThemes">
+                    <condition-expr field-name="visualThemeSetId" from-field="visualThemeSetId" />
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://common/webcommon/includes/listVisualThemes.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="EventMessages">
         <section>
             <actions>

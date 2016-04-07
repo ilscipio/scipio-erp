@@ -45,7 +45,7 @@ under the License.
 <#-- ============================================================= -->
 <#-- Cato: Language -->
 <#assign dummy = setRequestAttribute("setLocalesTarget", "setSessionLocaleProfile")>
-${screens.render("component://common/widget/LookupScreens.xml#listLocalesCompact")}
+${screens.render("component://common/widget/CommonScreens.xml#listLocalesCompact")}
 <#-- ============================================================= -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>

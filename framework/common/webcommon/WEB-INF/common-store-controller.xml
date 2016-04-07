@@ -337,10 +337,10 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
     
     <!-- Cato: Not for frontend stores for now
-    <view-map name="ListLocales" type="screen" page="component://common/widget/LookupScreens.xml#ListLocales"/>
+    <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocales"/>
     <view-map name="LookupTimeDuration" type="screen" page="component://common/widget/LookupScreens.xml#TimeDuration"/>
-    <view-map name="ListTimezones" type="screen" page="component://common/widget/LookupScreens.xml#ListTimezones"/>
-    <view-map name="ListVisualThemes" type="screen" page="component://common/widget/LookupScreens.xml#ListVisualThemes"/>
+    <view-map name="ListTimezones" type="screen" page="component://common/widget/CommonScreens.xml#ListTimezones"/>
+    <view-map name="ListVisualThemes" type="screen" page="component://common/widget/CommonScreens.xml#ListVisualThemes"/>
     -->
     
     <!-- Cato: Not for frontend stores for now

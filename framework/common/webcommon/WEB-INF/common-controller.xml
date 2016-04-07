@@ -269,10 +269,11 @@ under the License.
     <view-map name="forgotPassword" type="screen" page="component://common/widget/CommonScreens.xml#forgotPassword"/>
     <view-map name="EventMessages" type="screen" page="component://common/widget/CommonScreens.xml#EventMessages"/>
 
-    <view-map name="ListLocales" type="screen" page="component://common/widget/LookupScreens.xml#ListLocales"/>
+    <!-- Cato: Some of these are moved to CommonScreens, otherwise wrong decorator settings will be used -->
+    <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocales"/>
     <view-map name="LookupTimeDuration" type="screen" page="component://common/widget/LookupScreens.xml#TimeDuration"/>
-    <view-map name="ListTimezones" type="screen" page="component://common/widget/LookupScreens.xml#ListTimezones"/>
-    <view-map name="ListVisualThemes" type="screen" page="component://common/widget/LookupScreens.xml#ListVisualThemes"/>
+    <view-map name="ListTimezones" type="screen" page="component://common/widget/CommonScreens.xml#ListTimezones"/>
+    <view-map name="ListVisualThemes" type="screen" page="component://common/widget/CommonScreens.xml#ListVisualThemes"/>
 
     <view-map name="ajaxAutocompleteOptions" type="screen" page="component://common/widget/CommonScreens.xml#ajaxAutocompleteOptions"/>
 

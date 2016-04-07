@@ -518,8 +518,7 @@ div.scrollable-table-container > table {
 }
 
 // DEV NOTE: These must remain display:none always.
-// If you want items one-per-line, you must use @field inlineItems parameter or change
-// the @fields entries in global styles hash.
+// If you want to change global default, use fields_default_inlineitems in global styles.
 .radio-item-inline.radio-item-separator {
   display:none;
 }

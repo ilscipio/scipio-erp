@@ -10374,22 +10374,22 @@ div.scrollable-table-container > table {
   margin-bottom: 1rem;
 }
 
-/* line 523, ../scss/_base.scss */
+/* line 522, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 526, ../scss/_base.scss */
+/* line 525, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 531, ../scss/_base.scss */
+/* line 530, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 536, ../scss/_base.scss */
+/* line 535, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10402,35 +10402,35 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 549, ../scss/_base.scss */
+/* line 548, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 554, ../scss/_base.scss */
+/* line 553, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 560, ../scss/_base.scss */
+/* line 559, ../scss/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 566, ../scss/_base.scss */
+/* line 565, ../scss/_base.scss */
 .has-tip.field-tooltip-wrapper {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /*Tabs*/
-/* line 574, ../scss/_base.scss */
+/* line 573, ../scss/_base.scss */
 ul.tabs {
   border-bottom: 1px solid #efefef;
 }
-/* line 576, ../scss/_base.scss */
+/* line 575, ../scss/_base.scss */
 ul.tabs li {
   position: relative;
   bottom: -1px;
@@ -10439,80 +10439,80 @@ ul.tabs li {
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 583, ../scss/_base.scss */
+/* line 582, ../scss/_base.scss */
 ul.tabs li.active {
   border-bottom: 1px solid #fff;
 }
 
-/* line 589, ../scss/_base.scss */
+/* line 588, ../scss/_base.scss */
 .tabs-content {
   border-left: 1px solid #efefef;
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 593, ../scss/_base.scss */
+/* line 592, ../scss/_base.scss */
 .tabs-content .content {
   padding: 20px;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 598, ../scss/_base.scss */
+/* line 597, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 599, ../scss/_base.scss */
+/* line 598, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 600, ../scss/_base.scss */
+/* line 599, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 601, ../scss/_base.scss */
+/* line 600, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 602, ../scss/_base.scss */
+/* line 601, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 603, ../scss/_base.scss */
+/* line 602, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 608, ../scss/_base.scss */
+/* line 607, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 609, ../scss/_base.scss */
+/* line 608, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 610, ../scss/_base.scss */
+/* line 609, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 611, ../scss/_base.scss */
+/* line 610, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 612, ../scss/_base.scss */
+/* line 611, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 613, ../scss/_base.scss */
+/* line 612, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10525,7 +10525,7 @@ ul.tabs li.active {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 626, ../scss/_base.scss */
+/* line 625, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10547,7 +10547,7 @@ ul.tabs li.active {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 638, ../scss/_base.scss */
+/* line 637, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10563,7 +10563,7 @@ ul.tabs li.active {
 }
 
 /* terminate actions (like cancel order) */
-/* line 643, ../scss/_base.scss */
+/* line 642, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10580,7 +10580,7 @@ ul.tabs li.active {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 650, ../scss/_base.scss */
+/* line 649, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10602,7 +10602,7 @@ ul.tabs li.active {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 663, ../scss/_base.scss */
+/* line 662, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10618,7 +10618,7 @@ ul.tabs li.active {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 669, ../scss/_base.scss */
+/* line 668, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10634,7 +10634,7 @@ ul.tabs li.active {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 674, ../scss/_base.scss */
+/* line 673, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

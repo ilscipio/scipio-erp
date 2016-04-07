@@ -21,39 +21,24 @@ under the License.
   <#-- initial screen show a list of options -->
   <form id="editPaymentOptions" method="post" action="<@ofbizUrl>setPaymentInformation</@ofbizUrl>" name="${parameters.formNameValue}">
      <fieldset>
+     <@fields type="default-nolabels">
        <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-         <div>
-           <input type="checkbox" name="addGiftCard" value="Y" <#if addGiftCard?? && addGiftCard == "Y">checked="checked"</#if> />
-           <label for="addGiftCard">${uiLabelMap.AccountingCheckGiftCard}</label>
-         </div>
+           <@field type="checkbox" name="addGiftCard" value="Y" checked=(addGiftCard?? && addGiftCard == "Y") label=uiLabelMap.AccountingCheckGiftCard/>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-         <div>
-           <input type="radio" id="paymentMethodTypeId_EXT_OFFLINE" name="paymentMethodTypeId" value="EXT_OFFLINE" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EXT_OFFLINE">checked="checked"</#if> />
-           <label for="paymentMethodTypeId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label>
-         </div>
+           <@field type="radio" id="paymentMethodTypeId_EXT_OFFLINE" name="paymentMethodTypeId" value="EXT_OFFLINE" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "EXT_OFFLINE") label=uiLabelMap.OrderPaymentOfflineCheckMoney/>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-         <div>
-           <input type="radio" id="paymentMethodTypeId_CREDIT_CARD" name="paymentMethodTypeId" value="CREDIT_CARD" <#if paymentMethodTypeId?? && paymentMethodTypeId == "CREDIT_CARD">checked="checked"</#if> />
-           <label for="paymentMethodTypeId_CREDIT_CARD">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</label>
-         </div>
+           <@field type="radio" id="paymentMethodTypeId_CREDIT_CARD" name="paymentMethodTypeId" value="CREDIT_CARD" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "CREDIT_CARD") label=uiLabelMap.AccountingVisaMastercardAmexDiscover/>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-         <div>
-           <input type="radio" id="paymentMethodTypeId_EFT_ACCOUNT" name="paymentMethodTypeId" value="EFT_ACCOUNT" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EFT_ACCOUNT">checked="checked"</#if> />
-           <label for="paymentMethodTypeId_EFT_ACCOUNT">${uiLabelMap.AccountingAHCElectronicCheck}</label>
-         </div>
+           <@field type="radio" id="paymentMethodTypeId_EFT_ACCOUNT" name="paymentMethodTypeId" value="EFT_ACCOUNT" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "EFT_ACCOUNT") label=uiLabelMap.AccountingAHCElectronicCheck/>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
-         <div>
-           <input type="radio" id="paymentMethodTypeId_EXT_PAYPAL" name="paymentMethodTypeId" value="EXT_PAYPAL" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EXT_PAYPAL">checked="checked"</#if> />
-           <label for="paymentMethodTypeId_EXT_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
-         </div>
+           <@field type="radio" id="paymentMethodTypeId_EXT_PAYPAL" name="paymentMethodTypeId" value="EXT_PAYPAL" checked=(paymentMethodTypeId?? && paymentMethodTypeId == "EXT_PAYPAL") label=uiLabelMap.AccountingPayWithPayPal/>
        </#if>
-       <div>
-         <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
-       </div>
+         <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}"/>
+     </@fields>
      </fieldset>
   </form>
 </@section>

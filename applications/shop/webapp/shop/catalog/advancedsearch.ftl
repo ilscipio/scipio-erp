@@ -27,47 +27,33 @@ under the License.
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>
-        <@tr valign="middle">
-          <@td>${uiLabelMap.ProductCategory}</@td>
-          <@td>${(searchCategory.description)!}</@td>
-        </@tr>
-        <@tr valign="middle">
-          <@td>${uiLabelMap.ProductIncludeSubCategories}</@td>
-          <@td>
-              ${uiLabelMap.CommonYes} <input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked="checked"/>
-              ${uiLabelMap.CommonNo} <input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
-          </@td>
-        </@tr>
+        <@field type="display" label=uiLabelMap.ProductCategory>
+            ${(searchCategory.description)!}
+        </@field>
+        <@field type="generic" label=uiLabelMap.ProductIncludeSubCategories>
+            <@field type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked=true label=uiLabelMap.CommonYes/>
+            <@field type="radio" name="SEARCH_SUB_CATEGORIES" value="N" label=uiLabelMap.CommonNo/>
+        </@field>
     </#if>
-    <@tr valign="middle">
-      <@td>${uiLabelMap.ProductKeywords}</@td>
-      <@td>
-          <input type="text" name="SEARCH_STRING" size="32" value="${requestParameters.SEARCH_STRING!}" />
-          <br />
-          ${uiLabelMap.CommonAny} <input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> />
-          ${uiLabelMap.CommonAll} <input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if> />
-      </@td>
-    </@tr>
+    <@field type="generic" label=uiLabelMap.ProductKeywords>
+        <@field type="text" name="SEARCH_STRING" size="32" value=(requestParameters.SEARCH_STRING!"") />
+
+        <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
+        <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
+    </@field>
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@tr valign="middle">
-        <@td>${(productFeatureType.get("description",locale))!}</@td>
-        <@td>
-            <select name="pft_${productFeatureTypeId}">
-              <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
-              <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description!productFeature.productFeatureId}</option>
-              </#list>
-            </select>
-        </@td>
-      </@tr>
+      <@field type="select" label=((productFeatureType.get("description",locale))!) name="pft_${productFeatureTypeId}">
+          <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
+        <#list productFeatures as productFeature>
+          <option value="${productFeature.productFeatureId}">${productFeature.description!productFeature.productFeatureId}</option>
+        </#list>
+      </@field>
     </#list>
-    <@tr valign="middle">
-      <@td>${uiLabelMap.ProductSortedBy}</@td>
-      <@td>
-          <select name="sortOrder" class="selectBox">
+    <@field type="generic" label=uiLabelMap.ProductSortedBy>
+          <@field type="select" name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
             <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
@@ -80,42 +66,32 @@ under the License.
                 <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
               </#list>
             </#if>
-          </select>
-          <br />
-          ${uiLabelMap.EcommerceLowToHigh} <input type="radio" name="sortAscending" value="Y" checked="checked"/>
-          ${uiLabelMap.EcommerceHighToLow} <input type="radio" name="sortAscending" value="N"/>
-      </@td>
-    </@tr>
+          </@field>
+          <@field type="radio" name="sortAscending" value="Y" checked=true label=uiLabelMap.EcommerceLowToHigh/>
+          <@field type="radio" name="sortAscending" value="N" label=uiLabelMap.EcommerceHighToLow/>
+    </@field>
     <#if searchConstraintStrings?has_content>
-      <@tr valign="top">
-        <@td>${uiLabelMap.ProductLastSearch}</@td>
-        <@td>
+      <@field type="generic" label=uiLabelMap.ProductLastSearch>
             <#list searchConstraintStrings as searchConstraintString>
                 <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
             <div>${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div>
-              ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
-              ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>
+              <@field type="radio" name="clearSearch" value="Y" checked=true label=uiLabelMap.ProductNewSearch/>
+              <@field type="radio" name="clearSearch" value="N" label=uiLabelMap.CommonRefineSearch/>
             </div>
-        </@td>
-      </@tr>
+      </@field>
     </#if>
-    <@tr>
-      <@td>&nbsp;</@td>
-      <@td><a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a></@td>
-    </@tr>
+    <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
   </@table>
 
   <#if searchOptionsHistoryList?has_content>
     
-
-    <@heading>${uiLabelMap.OrderLastSearches}...</@heading>
-
-    <div>
-      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
-      ${uiLabelMap.OrderClearSearchHistoryNote}
-    </div>
+    <@section title="${uiLabelMap.OrderLastSearches}...">
+      <div>
+        <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
+        ${uiLabelMap.OrderClearSearchHistoryNote}
+      </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div>
@@ -131,5 +107,6 @@ under the License.
           
         </#if>
     </#list>
+    </@section>
   </#if>
 </form>

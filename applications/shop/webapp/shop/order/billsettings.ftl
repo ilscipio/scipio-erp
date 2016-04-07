@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#include "ordercommon.ftl">
 <@script>
 function shipBillAddr() {
     <#if (requestParameters.singleUsePayment!"N") == "Y">
@@ -82,26 +82,21 @@ function shipBillAddr() {
         <input type="hidden" name="contactMechId" value="${postalFields.contactMechId}" />
       </#if>
 
-      <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
         <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
-          <@tr>
-            <@td width="26%" align="right" valign="top">
-              <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr??>checked="checked"</#if> />
-            </@td>
-            <@td colspan="2" valign="center">${uiLabelMap.FacilityBillingAddressSameShipping}
-            </@td>
-          </@tr>
-          <@tr type="util">
-            <@td colspan="2"><hr /></@td>
-          </@tr>
+          <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
+          <#assign actionContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@field type="checkbox" inline=true name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) />
+          </@invertedField>
+
+          <hr />
+   
         </#if>
 
         <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
-          <@tr>
-            <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div></@td>
-            <@td width="74%">&nbsp;</@td>
-          </@tr>
-          ${screens.render("component://shop/widget/OrderScreens.xml#genericaddress")}
+          <@section title=uiLabelMap.PartyBillingAddress>
+              ${screens.render("component://shop/widget/OrderScreens.xml#genericaddress")}
+          </@section>
         </#if>
 
         <#-- credit card fields -->
@@ -109,15 +104,10 @@ function shipBillAddr() {
           <#if !creditCard?has_content>
             <#assign creditCard = requestParameters>
           </#if>
-          <@tr type="util">
-            <@td colspan="2"><hr /></@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingCreditCardInformation}</div></@td>
-            <@td width="74%">&nbsp;</@td>
-          </@tr>
-
-          ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+          <#--<hr />-->
+          <@section title=uiLabelMap.AccountingCreditCardInformation>
+              ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+          </@section>
         </#if>
 
         <#-- eft fields -->
@@ -125,149 +115,85 @@ function shipBillAddr() {
           <#if !eftAccount?has_content>
             <#assign eftAccount = requestParameters>
           </#if>
-          <@tr type="util">
-            <@td colspan="2"><hr /></@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingEFTAccountInformation}</div></@td>
-            <@td width="74%">&nbsp;</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingNameOnAccount}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}" />
-            </@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingBankName}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingRoutingNumber}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountType}</@td>
-            <@td width="74%">
-              <select name="accountType" class="selectBox">
+          <#--<hr />-->
+          
+        <@section title=uiLabelMap.AccountingEFTAccountInformation>
+          <@field type="input" label=uiLabelMap.AccountingNameOnAccount required=true size="30" maxlength="60" name="nameOnAccount" value=(eftAccount.nameOnAccount!) />
+          <@field type="input" label=uiLabelMap.AccountingCompanyNameOnAccount size="30" maxlength="60" name="companyNameOnAccount" value=(eftAccount.companyNameOnAccount!) />
+          <@field type="input" label=uiLabelMap.AccountingBankName required=true size="30" maxlength="60" name="bankName" value=(eftAccount.bankName!) />
+          <@field type="input" label=uiLabelMap.AccountingRoutingNumber required=true size="10" maxlength="30" name="routingNumber" value=(eftAccount.routingNumber!) />
+          <@field type="select" label=uiLabelMap.AccountingAccountType required=true name="accountType">
                 <option>${eftAccount.accountType!}</option>
                 <option></option>
                 <option>Checking</option>
                 <option>Savings</option>
-              </select>
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountNumber}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${eftAccount.description!}" />
-            </@td>
-          </@tr>
+          </@field>
+          <@field type="input" label=uiLabelMap.AccountingAccountNumber required=true size="20" maxlength="40" name="accountNumber" value=(eftAccount.accountNumber!) />
+          <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(eftAccount.description!) />
+        </@section>
         </#if>
 
         <#-- gift card fields -->
-        <#if requestParameters.useGc?default("") == "GC" || paymentMethodType == "GC">
+        <#if (requestParameters.useGc!"") == "GC" || paymentMethodType == "GC">
           <#assign giftCard = requestParameters>
           <input type="hidden" name="addGiftCard" value="Y" />
           <#if paymentMethodType != "GC">
-            <@tr type="util">
-              <@td colspan="2"><hr /></@td>
-            </@tr>
+            <#--<hr />-->
           </#if>
-          <@tr>
-            <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingGiftCardInformation}</div></@td>
-            <@td width="74%">&nbsp;</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingGiftCardNumber}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingPINNumber}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber!}" />
-            *</@td>
-          </@tr>
-          <@tr>
-            <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
-            <@td width="74%">
-              <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${giftCard.description!}" />
-            </@td>
-          </@tr>
+        <@section title=uiLabelMap.AccountingGiftCardInformation>
+          <@field type="input" label=uiLabelMap.AccountingGiftCardNumber required=true size="20" maxlength="60" name="giftCardNumber" value=(giftCard.cardNumber!) />
+          <@field type="input" label=uiLabelMap.AccountingPINNumber required=true size="10" maxlength="60" name="giftCardPin" value=(giftCard.pinNumber!) />
+          <@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(giftCard.description!) />
           <#if paymentMethodType != "GC">
-            <@tr>
-              <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAmountToUse}</@td>
-              <@td width="74%">
-                <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber!}" />
-              *</@td>
-            </@tr>
+            <@field type="input" label=uiLabelMap.AccountingAmountToUse required=true size="5" maxlength="10" name="giftCardAmount" value=(giftCard.pinNumber!) />
           </#if>
+        </@section>
         </#if>
-        <@tfoot>
-          <@tr>
-            <@td align="center" colspan="2">
-              <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="Continue" />
-            </@td>
-          </@tr>
-        </@tfoot>
-      </@table>
+
+          <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+
     <#else>
       <#-- initial screen show a list of options -->
       <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="billsetupform">
         <input type="hidden" name="finalizeMode" value="payment" />
         <input type="hidden" name="createNew" value="Y" />
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
-          <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-          <@tr>
-            <@td width='5%' nowrap="nowrap"><input type="checkbox" name="useGc" value="GC" <#if paymentMethodType?? && paymentMethodType == "GC">checked="checked"</#if> /></@td>
-            <@td width='95%' nowrap="nowrap">${uiLabelMap.AccountingCheckGiftCard}</@td>
-          </@tr>
-          <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-          </#if>
-          <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-          <@tr>
-            <@td width='5%' nowrap="nowrap"><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?? && paymentMethodType == "offline">checked="checked"</#if> /></@td>
-            <@td width='95%'nowrap="nowrap">${uiLabelMap.OrderPaymentOfflineCheckMoney}</@td>
-          </@tr>
-          <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-          </#if>
-          <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-          <@tr>
-            <@td width='5%' nowrap="nowrap"><input type="radio" name="paymentMethodType" value="CC" <#if paymentMethodType?? && paymentMethodType == "CC">checked="checked"</#if> /></@td>
-            <@td width='95%' nowrap="nowrap">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</@td>
-          </@tr>
-          <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-          </#if>
-          <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-          <@tr>
-            <@td width='5%' nowrap="nowrap"><input type="radio" name="paymentMethodType" value="EFT" <#if paymentMethodType?? && paymentMethodType == "EFT">checked="checked"</#if> /></@td>
-            <@td width='95%' nowrap="nowrap">${uiLabelMap.AccountingAHCElectronicCheck}</@td>
-          </@tr>
-          </#if>
-          <@tr>
-            <@td align="center" colspan="2">
-              <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}" />
-            </@td>
-          </@tr>
-        </@table>
+        <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
+          <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
+          <#assign actionContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@field type="checkbox" inline=true name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
+          </@invertedField>
+
+          <#--<hr />-->
+        </#if>
+        <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
+          <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
+          <#assign actionContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@field type="radio" inline=true name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
+          </@invertedField>
+
+          <#--<hr />-->
+        </#if>
+        <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
+          <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
+          <#assign actionContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@field type="radio" inline=true name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
+          </@invertedField>
+
+          <#--<hr />-->
+        </#if>
+        <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
+          <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
+          <#assign actionContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@field type="radio" inline=true name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
+          </@invertedField>
+
+        </#if>
+          <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+
       </form>
     </#if>
 </@section>

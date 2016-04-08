@@ -22,17 +22,16 @@ under the License.
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
-<div id="microcart">
     <a href="<@ofbizUrl>showcart</@ofbizUrl>">
-        <div id="microCartIcon"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i></div>
-        <#-- <div id="microCartQuantity">${shoppingCart.getTotalQuantity()}</div>-->  
-        <div id="microCartTotal">
-                  
-            <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
-        </div>
+        <div id="microcart">
+            <div id="microCartIcon"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i></div>
+            <#--<div id="microCartQuantity">${shoppingCart.getTotalQuantity()}</div>-->
+            <div id="microCartTotal">   
+                <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
+            </div>
         
+        </div>
     </a>
-</div>     
             
 <#-- The following contains a list of various checkout options.
     <ul>

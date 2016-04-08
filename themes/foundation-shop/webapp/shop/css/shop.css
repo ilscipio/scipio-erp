@@ -71,18 +71,16 @@ body {
 	padding-right: 5px;
     text-decoration: none;
 }
-#microcart a {float: left;color:#333}
-#microcart a:hover,#microcart a:active  {color:#008cba}
+
 #microCartIcon {
     float: left;
-    font-size: 28px;
-    padding-right:8px;}
+    font-size: 22px;
+    }
 #microCartTotal,#microCartQuantity {
-	font-size: 18px;
 	float: left;    
 	line-height: 2.8125rem;
-    padding: 0 0.9375rem;}
-    
+	padding-left:4px;
+    } 
     
 /*BODY*/
 #content-main-section {

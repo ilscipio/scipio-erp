@@ -375,9 +375,9 @@ function setAlternateGwp(field) {
                   <@section title=uiLabelMap.OrderSpecialOffers>
                     <ol>
                       <#list productPromos as productPromo>
-                        <li>
-                           ${rawString(productPromo.promoText!)}
-                           (<a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>)
+                        <li>${rawString(productPromo.promoName!)}
+                           <#--${rawString(productPromo.promoText!)}<br/>--><#-- Enable for further promotion information -->
+                           <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                         </li>
                       </#list>
                     </ol>

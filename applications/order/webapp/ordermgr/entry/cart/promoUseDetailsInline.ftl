@@ -24,13 +24,13 @@ under the License.
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                 <li>
                     <#-- TODO: when promo pretty print is done show promo short description here -->
-                       ${uiLabelMap.OrderPromotion}
+                    <@heading>${rawString(productPromoUseInfo.promoName!)}</@heading>
                     <#if productPromoUseInfo.productPromoCodeId?has_content> - ${uiLabelMap.OrderWithPromoCode} [${productPromoUseInfo.productPromoCodeId}]</#if>
                     <#if (productPromoUseInfo.totalDiscountAmount != 0)> - ${uiLabelMap.CommonTotalValue} <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
+                    <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId!}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                     <#if productPromoUseInfo.productPromoCodeId?has_content>
-                        <a href="<@ofbizUrl>removePromotion?promoCode=${productPromoUseInfo.productPromoCodeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.OrderRemovePromotion}</a>
+                        <br/><a href="<@ofbizUrl>removePromotion?promoCode=${productPromoUseInfo.productPromoCodeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.OrderRemovePromotion}</a>
                     </#if>
-                    (<a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId!}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>)
                 </li>
                 <#if (productPromoUseInfo.quantityLeftInActions > 0)>
                     <li>- Could be used for ${productPromoUseInfo.quantityLeftInActions} more discounted item<#if (productPromoUseInfo.quantityLeftInActions > 1)>s</#if> if added to your cart.</li>

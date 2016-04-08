@@ -18,13 +18,14 @@ under the License.
 -->
 
 <@section title=uiLabelMap.OrderSpecialOffers>
-    <ul>
+    <ol>
         <#-- show promotions text -->
         <#list productPromosAllShowable as productPromo>
             <li>
+                <@heading level=3>${rawString(productPromo.promoName!)}</@heading>
                 ${rawString(productPromo.promoText!)}
-                (<a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>)
+                <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
             </li>
         </#list>
-    </ul>
+    </ol>
 </@section>

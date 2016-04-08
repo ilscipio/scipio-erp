@@ -22,8 +22,7 @@ under the License.
         <@paginate mode="content" layout="both" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
             <@grid columns=4>
                 <#list solrProducts as solrProduct>
-                    <li>${setRequestAttribute("productId", solrProduct.productId)}
-                    <@render resource=productsummaryScreen />
+                    <li><@render resource=productsummaryScreen reqAttribs={"productId":solrProduct.productId}/>
                     </li>
                 </#list>
             </@grid>

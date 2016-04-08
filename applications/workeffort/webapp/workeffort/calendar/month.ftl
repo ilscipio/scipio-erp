@@ -106,9 +106,7 @@ under the License.
           ${startDate?time?string.short}-${completionDate?time?string.short}
         </#if>
         <br />
-        ${setRequestAttribute("periodType", "month")}
-        ${setRequestAttribute("workEffortId", calEntry.workEffort.workEffortId)}
-        <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" />
+        <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"month", "workEffortId":calEntry.workEffort.workEffortId}/>
         <br />
       </#list>
       </#if>

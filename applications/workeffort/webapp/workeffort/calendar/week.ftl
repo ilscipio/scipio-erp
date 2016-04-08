@@ -80,9 +80,7 @@ under the License.
       ${startDate?time?string.short}-${completionDate?time?string.short}
     </#if>
     <br />
-    ${setRequestAttribute("periodType", "week")}
-    ${setRequestAttribute("workEffortId", calEntry.workEffort.workEffortId)}
-    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" />
+    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" reqAttribs={"periodType":"week", "workEffortId":calEntry.workEffort.workEffortId}/>
     </@td>  
     </#if>
     </#list>

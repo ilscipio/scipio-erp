@@ -20,7 +20,7 @@ under the License.
     <#-- reference number -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_CAPTURE" || 
          txType?default("") == "PRDS_PAY_RELEASE" || txType?default("") == "PRDS_PAY_REFUND">
-        ${setRequestAttribute("validTx", "true")}
+        <#assign dummy = setRequestAttribute("validTx", "true")>
         <#assign validTx = true>
         <hr />
         <@field type="input" size="30" maxlength="60" name="referenceNum" label=uiLabelMap.AccountingReferenceNumber required=true/>
@@ -28,19 +28,19 @@ under the License.
     </#if>
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_RELEASE">      
-      ${setRequestAttribute("validTx", "true")}
+      <#assign dummy = setRequestAttribute("validTx", "true")>
       <@script>
         document.manualTxForm.action = "<@ofbizUrl>processReleaseTransaction</@ofbizUrl>";
       </@script>      
     </#if>
     <#if txType?default("") == "PRDS_PAY_REFUND">      
-      ${setRequestAttribute("validTx", "true")}
+      <#assign dummy = setRequestAttribute("validTx", "true")>
       <@script>
         document.manualTxForm.action = "<@ofbizUrl>processRefundTransaction</@ofbizUrl>";
       </@script>    
     </#if>
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">     
-        ${setRequestAttribute("validTx", "true")}
+        <#assign dummy = setRequestAttribute("validTx", "true")>
         <@script>
             document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
         </@script>     

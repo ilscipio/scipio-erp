@@ -20,7 +20,7 @@ under the License.
 ${virtualJavaScript!}
 <#assign addedJavaScript = requestAttributes.addedJavaScript?default("N")/>
 <#if ("N" == addedJavaScript)>
-  ${setRequestAttribute("addedJavaScript", "Y")}
+  <#assign dummy = setRequestAttribute("addedJavaScript", "Y")>
   <@script>
 
      function popupDetailInline(inlineCounter) {

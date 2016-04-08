@@ -28,11 +28,11 @@
                         </#if>
                         </div>
                       -->
-                      ${setRequestAttribute("optProductId", assocProductId)}
-                      ${setRequestAttribute("listIndex", listIndex)}
-                      ${setRequestAttribute("formNamePrefix", formNamePrefix)}
+                      <#assign dummy = setRequestAttribute("optProductId", assocProductId)>
+                      <#assign dummy = setRequestAttribute("listIndex", listIndex)>
+                      <#assign dummy = setRequestAttribute("formNamePrefix", formNamePrefix)>
                       <#if targetRequestName?has_content>
-                        ${setRequestAttribute("targetRequestName", targetRequestName)}
+                        <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)>
                       </#if>
                       <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
                   </li>
@@ -40,9 +40,9 @@
                   <#local listIndex = listIndex + 1 />
                 </#list>
             </@grid>
-            ${setRequestAttribute("optProductId", "")}
-            ${setRequestAttribute("formNamePrefix", "")}
-            ${setRequestAttribute("targetRequestName", "")}
+            <#assign dummy = setRequestAttribute("optProductId", "")>
+            <#assign dummy = setRequestAttribute("formNamePrefix", "")>
+            <#assign dummy = setRequestAttribute("targetRequestName", "")>
 
         </@section>
       </#if>
@@ -506,10 +506,10 @@
         <#if comsmonFeatureResultIds?has_content>            
             <@section title=uiLabelMap.ProductSimilarProducts>
                 <#list commonFeatureResultIds as commonFeatureResultId>
-                    ${setRequestAttribute("optProductId", commonFeatureResultId)}
-                    ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
-                    ${setRequestAttribute("formNamePrefix", "cfeatcssl")}                    
-                    <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+                    <#assign dummy = setRequestAttribute("optProductId", commonFeatureResultId)>
+                    <#assign dummy = setRequestAttribute("listIndex", commonFeatureResultId_index)>
+                    <#assign dummy = setRequestAttribute("formNamePrefix", "cfeatcssl")>                    
+                    <#-- <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)> -->
                     <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
                 </#list>
             </@section>
@@ -518,7 +518,7 @@
         <#-- Upgrades/Up-Sell/Cross-Sell -->
         <#assign productValue = product />
         <#assign listIndex = 1 />
-        ${setRequestAttribute("productValue", productValue)}
+        <#assign dummy = setRequestAttribute("productValue", productValue)>
 
         <#-- also bought -->
         <@associated assocProducts=alsoBoughtProducts beforeName="" showName="N" afterName="${uiLabelMap.ProductAlsoBought}" formNamePrefix="albt" targetRequestName="" />

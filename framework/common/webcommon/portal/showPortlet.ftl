@@ -21,8 +21,7 @@ under the License.
 <table width="100%">
   <tr><td>
     <div>
-      ${setRequestAttribute("portalPortletId", portlet.portalPortletId)}
-      <@render resource=portlet.screenLocation name=portlet.screenName />
+      <@render resource=portlet.screenLocation name=portlet.screenName reqAttribs={"portalPortletId":portlet.portalPortletId}/>
     </div>
   </td></tr>
 </table>

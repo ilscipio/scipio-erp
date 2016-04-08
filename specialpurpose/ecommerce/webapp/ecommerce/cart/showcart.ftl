@@ -508,9 +508,7 @@ function setAlternateGwp(field) {
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
             <div>
-                ${setRequestAttribute("optProduct", assocProduct)}
-                ${setRequestAttribute("listIndex", assocProduct_index)}
-                <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" />
+                <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" reqAttribs={"optProduct":assocProduct, "listIndex":assocProduct_index}/>
             </div>
         </#list>
     </div>

@@ -68,8 +68,7 @@ under the License.
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOne("Product", true)>
           <@section>
-            ${setRequestAttribute("optProductId", productCategoryMember.productId)}
-            <@render resource=quickaddsummaryScreen />
+            <@render resource=quickaddsummaryScreen reqAttribs={"optProductId":productCategoryMember.productId}/>
           </@section>
       </#list>
       </@cell>

@@ -33,10 +33,7 @@ under the License.
       <ul>
         <#list lastViewedProducts[0..limit] as productId>
           <li>
-            ${setRequestAttribute("miniProdQuantity", "1")}
-            ${setRequestAttribute("optProductId", productId)}
-            ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-            <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" />
+            <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"miniProdQuantity":"1", "optProductId":productId, "miniProdFormName":"lastviewed" + productId_index + "form"}/>
           </li>
         </#list>
       </ul>

@@ -26,10 +26,7 @@ under the License.
         <ul class="browsecategorylist">
         <#list associatedProducts as miniProduct>
             <li class="browsecategorytext">
-                ${setRequestAttribute("miniProdQuantity", 1)}
-                ${setRequestAttribute("miniProdFormName", "theminiassocprod" + miniProduct_index + "form")}
-                ${setRequestAttribute("optProductId", miniProduct.productId)}
-                <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" />
+                <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"miniProdQuantity":1, "miniProdFormName":"theminiassocprod" + miniProduct_index + "form", "optProductId":miniProduct.productId}/>
             </li>
         </#list>
         </ul>

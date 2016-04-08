@@ -78,15 +78,11 @@ under the License.
 
         <#list productIds as productId>
           <#if (numCol?int == 1)>
-            ${setRequestAttribute("optProductId", productId)}
-            ${setRequestAttribute("listIndex", productId_index)}
-            <@render resource=productsummaryScreen />
+            <@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}/>
           <#else>
               <#if (tabCol?int == 1)><@tr open=true close=false /></#if>
                   <@td>
-                      ${setRequestAttribute("optProductId", productId)}
-                      ${setRequestAttribute("listIndex", productId_index)}
-                      <@render resource=productsummaryScreen />
+                      <@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}/>
                   </@td>
               <#if (tabCol?int == numCol)><@tr close=true open=false /></#if>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>

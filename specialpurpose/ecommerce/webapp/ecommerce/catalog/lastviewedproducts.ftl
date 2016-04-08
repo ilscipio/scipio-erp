@@ -32,9 +32,7 @@ under the License.
     <#list sessionAttributes.lastViewedProducts as productId>
       <@tr>
         <@td>
-          ${setRequestAttribute("optProductId", productId)}
-          ${setRequestAttribute("listIndex", productId_index)}
-          <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" />
+          <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" reqAttribs={"optProductId":productId, "listIndex":productId_index}/>
         </@td>
       </@tr>
     </#list>

@@ -42,9 +42,7 @@ under the License.
             <@td>[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</@td>
             <@td>[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</@td>
             <@td>
-              ${setRequestAttribute("optProductId", productId)}
-              ${setRequestAttribute("listIndex", productId_index)}
-              <@render resource=productsummaryScreen />
+              <@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}/>
             </@td>
           </@tr>
         </#list>

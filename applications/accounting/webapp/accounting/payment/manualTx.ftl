@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-    ${setRequestAttribute("validTx", "false")}
+    <#assign dummy = setRequestAttribute("validTx", "false")>
     <form name="manualTxForm" method="post" action="<@ofbizUrl>manualETx</@ofbizUrl>">
         <#if requestParameters.paymentMethodId??>
         <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />

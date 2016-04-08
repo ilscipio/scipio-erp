@@ -20,10 +20,7 @@ under the License.
 <@section title="${uiLabelMap.ProductQuickReorder}..." id="minireorderprods">
         <#list reorderProducts as miniProduct>
           <div>
-              ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
-              ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
-              ${setRequestAttribute("optProductId", miniProduct.productId)}
-              <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
+              <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"miniProdQuantity":reorderQuantities.get(miniProduct.productId), "miniProdFormName":"theminireorderprod" + miniProduct_index + "form", "optProductId":miniProduct.productId}/>
           </div>
           <#if miniProduct_has_next>
               

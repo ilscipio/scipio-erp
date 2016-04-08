@@ -393,9 +393,7 @@ function setAlternateGwp(field) {
         <#list associatedProducts as assocProduct>
             <li>
                 <#-- Product summary 
-                    ${setRequestAttribute("optProduct", assocProduct)}
-                    ${setRequestAttribute("listIndex", assocProduct_index)}
-                    <@render resource="component://shop/widget/CatalogScreens.xml#productsummary" />
+                    <@render resource="component://shop/widget/CatalogScreens.xml#productsummary" reqAttribs={"optProduct":assocProduct, "listIndex":assocProduct_index}/>
                 -->
                 <#-- mini product summary -->
                 <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"optProductId": assocProduct.productId, "productId": assocProduct.productId, "listIndex": assocProduct_index} />

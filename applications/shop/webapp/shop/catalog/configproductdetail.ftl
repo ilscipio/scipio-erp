@@ -480,10 +480,7 @@ function getConfigDetails(event) {
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
-                            ${setRequestAttribute("inlineProductId", component.productId)}
-                            ${setRequestAttribute("inlineCounter", counter+ "_" +optionCounter + "_"+componentCounter)}
-                            ${setRequestAttribute("addJavaScript", componentCounter)}
-                            <@render resource=inlineProductDetailScreen />
+                            <@render resource=inlineProductDetailScreen reqAttribs={"inlineProductId":component.productId, "inlineCounter":counter+ "_" +optionCounter + "_"+componentCounter, "addJavaScript":componentCounter}/>
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
@@ -540,10 +537,7 @@ function getConfigDetails(event) {
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
-                            ${setRequestAttribute("inlineProductId", component.productId)}
-                            ${setRequestAttribute("inlineCounter", counter+ "_" +optionCounter + "_"+componentCounter)}
-                            ${setRequestAttribute("addJavaScript", componentCounter)}
-                            <@render resource=inlineProductDetailScreen />
+                            <@render resource=inlineProductDetailScreen reqAttribs={"inlineProductId":component.productId, "inlineCounter":counter+ "_" +optionCounter + "_"+componentCounter, "addJavaScript":componentCounter}/>
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
@@ -642,11 +636,11 @@ function getConfigDetails(event) {
           </a>
           - ${productAssoc.reason!}
       </@td></@tr>
-      ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
-      ${setRequestAttribute("listIndex", listIndex)}
-      ${setRequestAttribute("formNamePrefix", formNamePrefix)}
+      <#assign dummy = setRequestAttribute("optProductId", productAssoc.productIdTo)>
+      <#assign dummy = setRequestAttribute("listIndex", listIndex)>
+      <#assign dummy = setRequestAttribute("formNamePrefix", formNamePrefix)>
       <#if targetRequestName?has_content>
-        ${setRequestAttribute("targetRequestName", targetRequestName)}
+        <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)>
       </#if>
       <@tr>
         <@td>
@@ -656,14 +650,14 @@ function getConfigDetails(event) {
       <#local listIndex = listIndex + 1>
 
     </#list>
-    ${setRequestAttribute("optProductId", "")}
-    ${setRequestAttribute("formNamePrefix", "")}
-    ${setRequestAttribute("targetRequestName", "")}
+    <#assign dummy = setRequestAttribute("optProductId", "")>
+    <#assign dummy = setRequestAttribute("formNamePrefix", "")>
+    <#assign dummy = setRequestAttribute("targetRequestName", "")>
   </#if>
 </#macro>
 <#assign productValue = product>
 <#assign listIndex = 1>
-${setRequestAttribute("productValue", productValue)}
+<#assign dummy = setRequestAttribute("productValue", productValue)>
 
 <@table type="generic">
   <#-- obsolete -->
@@ -683,10 +677,10 @@ ${setRequestAttribute("productValue", productValue)}
 
   <#list commonFeatureResultIds as commonFeatureResultId>
     <div>
-      ${setRequestAttribute("optProductId", commonFeatureResultId)}
-      ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
-      ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
-      <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+      <#assign dummy = setRequestAttribute("optProductId", commonFeatureResultId)>
+      <#assign dummy = setRequestAttribute("listIndex", commonFeatureResultId_index)>
+      <#assign dummy = setRequestAttribute("formNamePrefix", "cfeatcssl")>
+      <#-- <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)> -->
       <@render resource=productsummaryScreen />
     </div>
     <#if commonFeatureResultId_has_next>

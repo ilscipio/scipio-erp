@@ -664,26 +664,26 @@ ${virtualJavaScript!}
           </a>
           - <b>${productAssoc.reason!}</b>
         </div>
-      ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
-      ${setRequestAttribute("listIndex", listIndex)}
-      ${setRequestAttribute("formNamePrefix", formNamePrefix)}
+      <#assign dummy = setRequestAttribute("optProductId", productAssoc.productIdTo)>
+      <#assign dummy = setRequestAttribute("listIndex", listIndex)>
+      <#assign dummy = setRequestAttribute("formNamePrefix", formNamePrefix)>
       <#if targetRequestName?has_content>
-        ${setRequestAttribute("targetRequestName", targetRequestName)}
+        <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)>
       </#if>
           <@render resource=productsummaryScreen />
       <#local listIndex = listIndex + 1>
     </#list>
     </div>
 
-    ${setRequestAttribute("optProductId", "")}
-    ${setRequestAttribute("formNamePrefix", "")}
-    ${setRequestAttribute("targetRequestName", "")}
+    <#assign dummy = setRequestAttribute("optProductId", "")>
+    <#assign dummy = setRequestAttribute("formNamePrefix", "")>
+    <#assign dummy = setRequestAttribute("targetRequestName", "")>
   </#if>
 </#macro>
 
 <#assign productValue = product>
 <#assign listIndex = 1>
-${setRequestAttribute("productValue", productValue)}
+<#assign dummy = setRequestAttribute("productValue", productValue)>
 <div id="associated-products">
     <#-- obsolete -->
     <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolete}" formNamePrefix="obs" targetRequestName=""/>
@@ -700,10 +700,10 @@ ${setRequestAttribute("productValue", productValue)}
     <@section title=uiLabelMap.ProductSimilarProducts class="productsummary-container">
  
         <#list commonFeatureResultIds as commonFeatureResultId>
-            ${setRequestAttribute("optProductId", commonFeatureResultId)}
-            ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
-            ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
-            <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+            <#assign dummy = setRequestAttribute("optProductId", commonFeatureResultId)>
+            <#assign dummy = setRequestAttribute("listIndex", commonFeatureResultId_index)>
+            <#assign dummy = setRequestAttribute("formNamePrefix", "cfeatcssl")>
+            <#-- <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)> -->
             <@render resource=productsummaryScreen />
         </#list>
     </@section>

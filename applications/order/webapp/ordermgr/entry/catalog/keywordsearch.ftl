@@ -42,9 +42,7 @@ under the License.
     <@grid columns=4>    
         <#list productIds as productId> 
             <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-            <li>${setRequestAttribute("optProductId", productId)}
-            ${setRequestAttribute("listIndex", productId_index)}
-            <@render resource=productsummaryScreen /></li>
+            <li><@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}/></li>
         </#list>
     </@grid>
   </@paginate>

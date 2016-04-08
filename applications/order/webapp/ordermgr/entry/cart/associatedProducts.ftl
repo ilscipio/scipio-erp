@@ -28,9 +28,7 @@ under the License.
         <#list associatedProducts as assocProduct>
           <@tr>
             <@td>
-              ${setRequestAttribute("optProduct", assocProduct)}
-              ${setRequestAttribute("listIndex", assocProduct_index)}
-              <@render resource=productsummaryScreen />
+              <@render resource=productsummaryScreen reqAttribs={"optProduct":assocProduct, "listIndex":assocProduct_index}/>
             </@td>
           </@tr>
           <#if assocProduct_has_next>

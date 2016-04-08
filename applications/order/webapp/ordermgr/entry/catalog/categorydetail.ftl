@@ -110,8 +110,7 @@ under the License.
 <#if productCategoryLinkScreen?has_content && productCategoryLinks?has_content>
     <div class="productcategorylink-container">
         <#list productCategoryLinks as productCategoryLink>
-            ${setRequestAttribute("productCategoryLink",productCategoryLink)}
-            <@render resource=productCategoryLinkScreen />
+            <@render resource=productCategoryLinkScreen reqAttribs={"productCategoryLink":productCategoryLink}/>
         </#list>
     </div>
 </#if>
@@ -132,17 +131,11 @@ under the License.
       <@table type="data-list" autoAltRows=false open=(numCol?int > 1) close=(numCol?int > 1)> <#-- orig: class="" -->
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
-            ${setRequestAttribute("optProductId", productCategoryMember.productId)}
-            ${setRequestAttribute("productCategoryMember", productCategoryMember)}
-            ${setRequestAttribute("listIndex", productCategoryMember_index)}
-            <@render resource=productsummaryScreen />
+            <@render resource=productsummaryScreen reqAttribs={"optProductId":productCategoryMember.productId, "productCategoryMember":productCategoryMember, "listIndex":productCategoryMember_index}/>
           <#else>
               <@tr open=(tabCol?int = 1) close=(tabCol?int = 1)>
                   <@td>
-                      ${setRequestAttribute("optProductId", productCategoryMember.productId)}
-                      ${setRequestAttribute("productCategoryMember", productCategoryMember)}
-                      ${setRequestAttribute("listIndex", productCategoryMember_index)}
-                      <@render resource=productsummaryScreen />
+                      <@render resource=productsummaryScreen reqAttribs={"optProductId":productCategoryMember.productId, "productCategoryMember":productCategoryMember, "listIndex":productCategoryMember_index}/>
                   </@td>
               </@tr>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>

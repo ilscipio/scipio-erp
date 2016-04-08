@@ -146,7 +146,7 @@ function submitForm(form, mode, value) {
                 <#-- commented out by default because the TaxAuthority drop-down is just too wide...
                 <hr />
                 <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
-                ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
+                <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" />
                 -->
         </@fields>
     </@section>

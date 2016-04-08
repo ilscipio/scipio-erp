@@ -20,8 +20,8 @@ under the License.
   <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
     <input type="hidden" name="add_all" value="false" />
     <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
-    ${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
-    ${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}
+    <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
+    <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   </form>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>

@@ -30,7 +30,7 @@ under the License.
             <@td>
               ${setRequestAttribute("optProduct", assocProduct)}
               ${setRequestAttribute("listIndex", assocProduct_index)}
-              ${screens.render(productsummaryScreen)}
+              <@render resource=productsummaryScreen />
             </@td>
           </@tr>
           <#if assocProduct_has_next>

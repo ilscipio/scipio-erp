@@ -40,7 +40,7 @@ under the License.
                         <fo:block>
                             <#if toPostalAddress??>
                                 ${setContextField("postalAddress", toPostalAddress)}
-                                ${screens.render("component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter")}
+                                <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter" />
                             </#if>
                         </fo:block>
                     </fo:table-cell>

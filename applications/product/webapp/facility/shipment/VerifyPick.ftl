@@ -208,7 +208,7 @@ under the License.
                         <option value="${originGeoId}">---</option>
                       </#if>
                       <option value=""></option>
-                      ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                      <@render resource="component://common/widget/CommonScreens.xml#countries" />
                     </select>
                   </@td>
                   <@td align="right">${orderItemQuantity!}</@td>

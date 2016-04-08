@@ -23,5 +23,5 @@ under the License.
     });
 </@script>
 <div id="rmvemplposition" title="Remove Employee Position">
-    ${screens.render("component://humanres/widget/EmplPositionScreens.xml#RemoveEmplPositionOnlyForm")}
+    <@render resource="component://humanres/widget/EmplPositionScreens.xml#RemoveEmplPositionOnlyForm" />
 </div>

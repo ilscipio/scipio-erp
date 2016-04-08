@@ -40,7 +40,7 @@ under the License.
       <#else>
         <option value="">${uiLabelMap.PartyNoState}</option>
       </#if>
-      ${screens.render("component://common/widget/CommonScreens.xml#states")}
+      <@render resource="component://common/widget/CommonScreens.xml#states" />
 </@field>
 <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="postalCode" value=((parameters.postalCode)!) disabled=(requestParameters.useShipAddr??)/>
 <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" disabled=(requestParameters.useShipAddr??)>
@@ -48,7 +48,7 @@ under the License.
         <option>${parameters.countryGeoId}</option>
         <option value="${parameters.countryGeoId}">---</option>
       </#if>
-      ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+      <@render resource="component://common/widget/CommonScreens.xml#countries" />
 </@field>
 <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation" disabled=(requestParameters.useShipAddr??)>
       <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>

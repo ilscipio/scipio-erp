@@ -44,7 +44,7 @@ under the License.
             <#-- note that there is no boundary range because that is being done before the list is put in the content -->
             <li>${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
-            ${screens.render(productsummaryScreen)}</li>
+            <@render resource=productsummaryScreen /></li>
         </#list>
     </@grid>
   </@paginate>

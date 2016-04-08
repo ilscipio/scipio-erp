@@ -34,7 +34,7 @@
                       <#if targetRequestName?has_content>
                         ${setRequestAttribute("targetRequestName", targetRequestName)}
                       </#if>
-                      ${screens.render("component://shop/widget/CatalogScreens.xml#miniproductsummary")}
+                      <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
                   </li>
                   <#assign product = pageProduct />
                   <#local listIndex = listIndex + 1 />
@@ -510,7 +510,7 @@
                     ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
                     ${setRequestAttribute("formNamePrefix", "cfeatcssl")}                    
                     <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-                    ${screens.render("component://shop/widget/CatalogScreens.xml#miniproductsummary")}
+                    <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
                 </#list>
             </@section>
         </#if>

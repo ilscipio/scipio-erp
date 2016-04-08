@@ -81,7 +81,7 @@ under the License.
           <#if ccExprMonth?has_content>
             <option value="${ccExprMonth!}">${ccExprMonth!}</option>
           </#if>
-          ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
+          <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
         </select>
         <select name="expYear" class="selectBox" onchange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
@@ -92,7 +92,7 @@ under the License.
           <#if ccExprYear?has_content>
             <option value="${ccExprYear!}">${ccExprYear!}</option>
           </#if>
-          ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
+          <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
         </select>
       </@td>
     </@tr>

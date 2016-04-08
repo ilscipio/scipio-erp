@@ -34,7 +34,7 @@ under the License.
         <@td>
           ${setRequestAttribute("optProductId", productId)}
           ${setRequestAttribute("listIndex", productId_index)}
-          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
+          <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" />
         </@td>
       </@tr>
     </#list>

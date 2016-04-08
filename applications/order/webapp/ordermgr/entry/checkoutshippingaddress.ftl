@@ -125,7 +125,7 @@ function toggleBillingAccount(box) {
              <br />
             <#-- Party Tax Info -->
             <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
-            ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")} 
+            <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
   </fieldset>
 </form>
 </@section>

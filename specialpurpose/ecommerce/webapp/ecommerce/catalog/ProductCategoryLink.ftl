@@ -20,7 +20,7 @@ under the License.
 <#assign productCategoryLink = requestAttributes.productCategoryLink!/>
 <#if productCategoryLink?has_content>
 <#if productCategoryLink.detailSubScreen?has_content>
-    ${screens.render(productCategoryLink.detailSubScreen)}
+    <@render resource=productCategoryLink.detailSubScreen />
 <#else>
     <#assign titleText = productCategoryLink.titleText!/>
     <#assign imageUrl = productCategoryLink.imageUrl!/>

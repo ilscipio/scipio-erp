@@ -131,7 +131,7 @@ under the License.
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY">
     <select name="${questionFieldName}">
-      ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+      <@render resource="component://common/widget/CommonScreens.xml#countries" />
     </select>
   <#else>
     <div>Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>

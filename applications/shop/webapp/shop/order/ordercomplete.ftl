@@ -19,8 +19,8 @@ under the License.
 <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>
 <#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 <#if orderHeader?has_content>
-  ${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
-  ${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}
+  <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
+  <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.EcommerceContinueShopping}</a>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>

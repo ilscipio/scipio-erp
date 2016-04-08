@@ -335,7 +335,7 @@ under the License.
     <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
       <div>
       <input type="hidden" name="partyId" value="${party.partyId}"/>
-      ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
+      <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" />
       <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </div>
     </form>
@@ -584,18 +584,18 @@ under the License.
 
 <#-- ============================================================= -->
 <#-- only 5 messages will show; edit the ViewProfile.groovy to change this number -->
-${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
+<@render resource="component://ecommerce/widget/CustomerScreens.xml#messagelist-include" />
 
-${screens.render("component://ecommerce/widget/CustomerScreens.xml#FinAccountList-include")}
+<@render resource="component://ecommerce/widget/CustomerScreens.xml#FinAccountList-include" />
 
 <#-- Serialized Inventory Summary -->
-${screens.render('component://ecommerce/widget/CustomerScreens.xml#SerializedInventorySummary')}
+<@render resource="component://ecommerce/widget/CustomerScreens.xml#SerializedInventorySummary" />
 
 <#-- Subscription Summary -->
-${screens.render('component://ecommerce/widget/CustomerScreens.xml#SubscriptionSummary')}
+<@render resource="component://ecommerce/widget/CustomerScreens.xml#SubscriptionSummary" />
 
 <#-- Reviews -->
-${screens.render('component://ecommerce/widget/CustomerScreens.xml#showProductReviews')}
+<@render resource="component://ecommerce/widget/CustomerScreens.xml#showProductReviews" />
 
 <#else>
     <h3>${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</h3>

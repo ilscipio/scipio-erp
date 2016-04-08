@@ -27,7 +27,7 @@ under the License.
         <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
             ${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
-            ${screens.render(productsummaryScreen)}
+            <@render resource=productsummaryScreen />
         </#list>
     </div>
   </@paginate>

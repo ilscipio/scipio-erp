@@ -256,7 +256,7 @@ function submitFindForm(val){
               <#else>
                   <@field type="option" value="">---</@field>
               </#if>
-              ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+              <@render resource="component://common/widget/CommonScreens.xml#countries" />
           </@field>
           <@field type="select" name="includeCountry" label=uiLabelMap.OrderIncludeCountry>
               <@field type="option" value="">${uiLabelMap.CommonAny}</@field>

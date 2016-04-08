@@ -198,7 +198,7 @@ function makeExpDate() {
                 <option value="${postalFields.stateProvinceGeoId}">---</option>
               </#if>
                 <option value=""></option>
-                ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                <@render resource="component://common/widget/CommonScreens.xml#states" />
             </@field>
             <@field type="input" label=uiLabelMap.CommonZipPostalCode required=true size="12" maxlength="10" name="postalCode" value=(postalFields.postalCode!) disabled=fieldDisabled />
             <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" disabled=fieldDisabled>
@@ -206,7 +206,7 @@ function makeExpDate() {
                 <option>${postalFields.countryGeoId}</option>
                 <option value="${postalFields.countryGeoId}">---</option>
               </#if>
-                ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                <@render resource="component://common/widget/CommonScreens.xml#countries" />
             </@field>
 
             <#-- credit card fields -->
@@ -245,7 +245,7 @@ function makeExpDate() {
                   <option>${creditCard.cardType}</option>
                   <option value="${creditCard.cardType}">---</option>
                 </#if>
-                  ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
+                  <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
               </@field>
               <@field type="input" label=uiLabelMap.AccountingCardNumber required=true size="20" maxlength="30" name="cardNumber" value=(creditCard.cardNumber!)/>
 
@@ -264,14 +264,14 @@ function makeExpDate() {
                     <#if ccExprMonth?has_content>
                       <option value="${ccExprMonth!}">${ccExprMonth!}</option>
                     </#if>
-                    ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
+                    <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
                   </@field>
                   <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();">
                     <#if creditCard?has_content && expYear?has_content><#assign ccExprYear = expYear><#else><#assign ccExprYear = requestParameters.expYear!></#if>
                     <#if ccExprYear?has_content>
                       <option value="${ccExprYear!}">${ccExprYear!}</option>
                     </#if>
-                    ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
+                    <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
                   </@field>
               </@field>
               <@field type="input" label=uiLabelMap.CommonDescription size="20" maxlength="30" name="description" value=(creditCard.description!)/>

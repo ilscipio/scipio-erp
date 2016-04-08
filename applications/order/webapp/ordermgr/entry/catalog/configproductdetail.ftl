@@ -523,7 +523,7 @@ function getConfigDetails() {
                             ${setRequestAttribute("inlineProductId", component.productId)}
                             ${setRequestAttribute("inlineCounter", counter+ "_" +optionCounter + "_"+componentCounter)}
                             ${setRequestAttribute("addJavaScript", componentCounter)}
-                            ${screens.render(inlineProductDetailScreen)}
+                            <@render resource=inlineProductDetailScreen />
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
@@ -594,7 +594,7 @@ function getConfigDetails() {
                             ${setRequestAttribute("inlineProductId", component.productId)}
                             ${setRequestAttribute("inlineCounter", counter+ "_" +optionCounter + "_"+componentCounter)}
                             ${setRequestAttribute("addJavaScript", componentCounter)}
-                            ${screens.render(inlineProductDetailScreen)}
+                            <@render resource=inlineProductDetailScreen />
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
@@ -650,7 +650,7 @@ function getConfigDetails() {
       </#if>
       <@row>
         <@cell>
-          ${screens.render(productsummaryScreen)}
+          <@render resource=productsummaryScreen />
         </@cell>
       </@row>
       <#local listIndex = listIndex + 1>
@@ -686,7 +686,7 @@ ${setRequestAttribute("productValue", productValue)}
       ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
       ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
       <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${screens.render(productsummaryScreen)}
+      <@render resource=productsummaryScreen />
     </@section>
     <#if commonFeatureResultId_has_next>
       <hr />

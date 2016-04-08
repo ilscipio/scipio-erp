@@ -23,5 +23,5 @@ under the License.
     });
 </@script>
 <div id="person" title="Add Person">
-    ${screens.render("component://humanres/widget/EmplPositionScreens.xml#EditEmplPositionFulfillmentsFtl")}
+    <@render resource="component://humanres/widget/EmplPositionScreens.xml#EditEmplPositionFulfillmentsFtl" />
 </div>

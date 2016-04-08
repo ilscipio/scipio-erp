@@ -46,9 +46,9 @@ under the License.
 <#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 
 <#if cart?? && (0 < cart.size())>
-  ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonOrderHeader")}
+  <@render resource="component://shop/widget/OrderScreens.xml#quickAnonOrderHeader" />
   <br />
-  <div id="orderItemsSection">${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}</div>
+  <div id="orderItemsSection"><@render resource="component://shop/widget/OrderScreens.xml#orderitems" /></div>
   <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
     <@row>
       <@cell class="+${styles.text_right!}">

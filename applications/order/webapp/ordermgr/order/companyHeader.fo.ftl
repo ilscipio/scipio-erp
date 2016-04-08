@@ -27,7 +27,7 @@ under the License.
     <#if postalAddress??>
         <#if postalAddress?has_content>
             ${setContextField("postalAddress", postalAddress)}
-            ${screens.render("component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter")}
+            <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter" />
         </#if>
     <#else>
         <fo:block>${uiLabelMap.CommonNoPostalAddress}</fo:block>

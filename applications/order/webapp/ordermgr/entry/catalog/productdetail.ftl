@@ -670,7 +670,7 @@ ${virtualJavaScript!}
       <#if targetRequestName?has_content>
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
-          ${screens.render(productsummaryScreen)}
+          <@render resource=productsummaryScreen />
       <#local listIndex = listIndex + 1>
     </#list>
     </div>
@@ -704,7 +704,7 @@ ${setRequestAttribute("productValue", productValue)}
             ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
             ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
             <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-            ${screens.render(productsummaryScreen)}
+            <@render resource=productsummaryScreen />
         </#list>
     </@section>
 </#if>

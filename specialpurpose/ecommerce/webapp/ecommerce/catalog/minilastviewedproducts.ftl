@@ -36,7 +36,7 @@ under the License.
             ${setRequestAttribute("miniProdQuantity", "1")}
             ${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-            ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
+            <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" />
           </li>
         </#list>
       </ul>

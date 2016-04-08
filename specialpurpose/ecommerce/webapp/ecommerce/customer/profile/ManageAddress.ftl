@@ -62,7 +62,7 @@ under the License.
                <#if countryGeoId??>
                  <option value="${countryGeoId}">${countryGeoId}</option>
                </#if>
-               ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+               <@render resource="component://common/widget/CommonScreens.xml#countries" />
              </select>
           </div>
           <div id="states">

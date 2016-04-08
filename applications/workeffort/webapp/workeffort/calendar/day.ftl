@@ -80,7 +80,7 @@ under the License.
     <br />
     ${setRequestAttribute("periodType", "day")}
     ${setRequestAttribute("workEffortId", calEntry.workEffort.workEffortId)}
-    ${screens.render("component://workeffort/widget/CalendarScreens.xml#calendarEventContent")}
+    <@render resource="component://workeffort/widget/CalendarScreens.xml#calendarEventContent" />
     </@td>
     </#if>
     </#list>

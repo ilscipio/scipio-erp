@@ -95,7 +95,7 @@ function shipBillAddr() {
                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div></@td>
                 <@td width="74%">&nbsp;</@td>
               </@tr>
-              ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
+              <@render resource="component://ecommerce/widget/OrderScreens.xml#genericaddress" />
             </#if>
 
             <#-- credit card fields -->
@@ -111,7 +111,7 @@ function shipBillAddr() {
                 <@td width="74%">&nbsp;</@td>
               </@tr>
 
-              ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+              <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
             </#if>
 
             <#-- eft fields -->

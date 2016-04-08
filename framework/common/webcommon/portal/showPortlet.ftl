@@ -22,7 +22,7 @@ under the License.
   <tr><td>
     <div>
       ${setRequestAttribute("portalPortletId", portlet.portalPortletId)}
-      ${screens.render(portlet.screenLocation, portlet.screenName)}
+      <@render resource=portlet.screenLocation name=portlet.screenName />
     </div>
   </td></tr>
 </table>

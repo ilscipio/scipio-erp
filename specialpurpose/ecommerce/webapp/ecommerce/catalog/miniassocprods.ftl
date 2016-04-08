@@ -29,7 +29,7 @@ under the License.
                 ${setRequestAttribute("miniProdQuantity", 1)}
                 ${setRequestAttribute("miniProdFormName", "theminiassocprod" + miniProduct_index + "form")}
                 ${setRequestAttribute("optProductId", miniProduct.productId)}
-                ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
+                <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" />
             </li>
         </#list>
         </ul>

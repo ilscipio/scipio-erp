@@ -18,5 +18,5 @@ under the License.
 -->
 
 <#if (shoppingCartSize?default(0) > 0)>
-  ${screens.render(promoUseDetailsInlineScreen)}
+  <@render resource=promoUseDetailsInlineScreen />
 </#if>

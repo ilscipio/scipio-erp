@@ -23,7 +23,7 @@ under the License.
             <@grid columns=4>
                 <#list solrProducts as solrProduct>
                     <li>${setRequestAttribute("productId", solrProduct.productId)}
-                    ${screens.render(productsummaryScreen)}
+                    <@render resource=productsummaryScreen />
                     </li>
                 </#list>
             </@grid>

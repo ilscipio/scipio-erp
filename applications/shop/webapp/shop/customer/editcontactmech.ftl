@@ -182,7 +182,7 @@ under the License.
         <@td>&nbsp;</@td>
         <@td>
           <select name="countryGeoId" id="editcontactmechform_countryGeoId">
-          ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
+          <@render resource="component://common/widget/CommonScreens.xml#countries" />        
           <#if (postalAddress??) && (postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = postalAddress.countryGeoId>
           <#else>

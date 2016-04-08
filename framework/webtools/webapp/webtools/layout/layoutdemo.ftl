@@ -1116,6 +1116,6 @@
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
 <@section title="Ofbiz Widgets Layout Tests"> 
-  ${screens.render(ofbizWidgetsLayoutScreenLocation)}
+  <@render resource=ofbizWidgetsLayoutScreenLocation />
 </@section>
 

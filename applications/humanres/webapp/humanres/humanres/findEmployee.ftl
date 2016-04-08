@@ -63,7 +63,7 @@ under the License.
                     <option value="${currentStateGeo.geoId}">---</option>
                   </#if>
                     <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-                    ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                    <@render resource="component://common/widget/CommonScreens.xml#states" />
                 </@field>
                 <@field type="input" label=uiLabelMap.PartyPostalCode name="postalCode" value=(parameters.postalCode!)/>
             </#if>

@@ -25,7 +25,7 @@ under the License.
 
 <#-- ========================================================================================================================== -->
         <div id="cartPanel" class="screenlet">
-          ${screens.render("component://ecommerce/widget/CartScreens.xml#UpdateCart")}
+          <@render resource="component://ecommerce/widget/CartScreens.xml#UpdateCart" />
         </div>
 
 <#-- ========================================================================================================================== -->
@@ -186,7 +186,7 @@ under the License.
                               <#if shipToCountryGeoId??>
                                 <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
                               </#if>
-                              ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                              <@render resource="component://common/widget/CommonScreens.xml#countries" />
                             </select>
                         </span>
                     </div>
@@ -201,7 +201,7 @@ under the License.
                               <#else>
                                 <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                               </#if>
-                              ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                              <@render resource="component://common/widget/CommonScreens.xml#states" />
                             </select>
                         </span>
                     </div>
@@ -371,7 +371,7 @@ under the License.
                                   <#if cardType?has_content>
                                     <option label="${cardType!}" value="${cardType!}">${cardType!}</option>
                                   </#if>
-                                  ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
+                                  <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
                                 </select>
                           </span>
                         </div>
@@ -396,7 +396,7 @@ under the License.
                               <#if expMonth?has_content>
                                 <option label="${expMonth!}" value="${expMonth!}">${expMonth!}</option>
                               </#if>
-                              ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
+                              <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
                             </select>
                           </span>
                           <span>
@@ -407,7 +407,7 @@ under the License.
                               <#if expYear?has_content>
                                 <option value="${expYear!}">${expYear!}</option>
                               </#if>
-                              ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
+                              <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
                             </select>
                           </span>
                         </div>
@@ -447,7 +447,7 @@ under the License.
                                 <#if billToCountryGeoId??>
                                   <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo?default(billToCountryGeoId!)}</option>
                                 </#if>
-                                ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                                <@render resource="component://common/widget/CommonScreens.xml#countries" />
                               </select>
                           </div>
                           <div>

@@ -52,10 +52,7 @@ under the License.
         <@slider library="slick" jsOptions=jsOptions> <#-- Relying on Slick Slider here - requires additional seed data.-->
             <#list solrProducts as solrProduct>
                 <@slide library="slick">
-                    <#assign dummy = setRequestAttribute("productId", solrProduct.productId)>
-                    <#assign dummy = setRequestAttribute("optProductId", solrProduct.productId)>
-                    <#assign dummy = setRequestAttribute("listIndex", solrProduct_index)>
-                    ${screens.render(productsummaryScreen)}
+                    <@render resource=productsummaryScreen reqAttribs={"productId": solrProduct.productId, "optProductId": solrProduct.productId, "listIndex": solrProduct_index} />
                 </@slide>
             </#list>
         </@slider>

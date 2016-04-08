@@ -35,7 +35,7 @@ function shipBillAddr() {
 <#macro menuContent menuArgs={}>
   <#if (requestParameters.singleUsePayment!"N") != "Y">
     <@menu args=menuArgs>
-      ${screens.render(anonymoustrailScreen)}
+      <@render resource=anonymoustrailScreen />
     </@menu>
   </#if>
 </#macro>
@@ -95,7 +95,7 @@ function shipBillAddr() {
 
         <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
           <@section title=uiLabelMap.PartyBillingAddress>
-              ${screens.render("component://shop/widget/OrderScreens.xml#genericaddress")}
+              <@render resource="component://shop/widget/OrderScreens.xml#genericaddress" />
           </@section>
         </#if>
 
@@ -106,7 +106,7 @@ function shipBillAddr() {
           </#if>
           <#--<hr />-->
           <@section title=uiLabelMap.AccountingCreditCardInformation>
-              ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+              <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
           </@section>
         </#if>
 

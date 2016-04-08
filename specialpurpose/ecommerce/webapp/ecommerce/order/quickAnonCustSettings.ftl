@@ -193,7 +193,7 @@ under the License.
                     <#else>
                        <option value="">${uiLabelMap.PartyNoState}</option>
                     </#if>
-                       ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                       <@render resource="component://common/widget/CommonScreens.xml#states" />
                     </select>
                  *</@td>
               </@tr>
@@ -215,7 +215,7 @@ under the License.
                        <option>${parameters.shipToCountryGeoId}</option>
                        <option value="${parameters.shipToCountryGeoId}">---</option>
                     </#if>
-                       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                       <@render resource="component://common/widget/CommonScreens.xml#countries" />
                     </select>
                  *</@td>
               </@tr>
@@ -286,7 +286,7 @@ under the License.
                     <#else>
                        <option value="">${uiLabelMap.PartyNoState}</option>
                     </#if>
-                       ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                       <@render resource="component://common/widget/CommonScreens.xml#states" />
                     </select>
                  *</@td>
               </@tr>
@@ -308,7 +308,7 @@ under the License.
                        <option>${parameters.billToCountryGeoId}</option>
                        <option value="${parameters.billToCountryGeoId}">---</option>
                     </#if>
-                       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+                       <@render resource="component://common/widget/CommonScreens.xml#countries" />
                     </select>
                  *</@td>
               </@tr>

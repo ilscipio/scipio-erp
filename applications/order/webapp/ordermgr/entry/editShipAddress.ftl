@@ -49,11 +49,11 @@ under the License.
         <@field type="input" label=uiLabelMap.CommonCity required=true size="30" maxlength="30" name="city" value=(parameters.city!)/>
         <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId">
               <option value=""></option>
-              ${screens.render("component://common/widget/CommonScreens.xml#states")}
+              <@render resource="component://common/widget/CommonScreens.xml#states" />
         </@field>
         <@field type="input" label=uiLabelMap.CommonZipPostalCode required=true size="12" maxlength="10" name="postalCode" value=(parameters.postalCode!)/>
         <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId">
-              ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+              <@render resource="component://common/widget/CommonScreens.xml#countries" />
         </@field>
         <@field type="select" label=uiLabelMap.OrderAllowSolicitation name="allowSolicitation">
               <#assign selectedValue = parameters.allowSolicitation?default("")/>

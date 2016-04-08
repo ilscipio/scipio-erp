@@ -23,5 +23,5 @@ under the License.
     });
 </@script>
 <div id="internalOrg" title="Add Internal Organization">
-    ${screens.render("component://humanres/widget/EmplPositionScreens.xml#EditInternalOrgOnlyForm")}
+    <@render resource="component://humanres/widget/EmplPositionScreens.xml#EditInternalOrgOnlyForm" />
 </div>

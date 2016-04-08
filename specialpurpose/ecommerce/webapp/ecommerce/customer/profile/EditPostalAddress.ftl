@@ -51,7 +51,7 @@ under the License.
             <#assign geo = delegator.findOne("Geo", {"geoId":postalAddress.countryGeoId}, true) />
             <option value="${postalAddress.countryGeoId}">${geo.geoName!(postalAddress.countryGeoId)}</option>
           </#if>
-          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+          <@render resource="component://common/widget/CommonScreens.xml#countries" />
         </select>
         <span id="advice-required-countryGeoId_${contactMech.contactMechId}" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
       </div>

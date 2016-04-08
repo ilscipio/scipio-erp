@@ -51,7 +51,7 @@ under the License.
         <@field type="input" size="40" name="sendFrom" value="" label=uiLabelMap.CommonFrom/>
       </#if>
         <@field type="display" label=uiLabelMap.OrderSendConfirmationEmailContentType>${productStoreEmailSetting.contentType!"text/html"}</@field>
-        <@field type="textarea" name="body" rows="30" cols="80" label=uiLabelMap.OrderSendConfirmationEmailBody>${screens.render(productStoreEmailSetting.bodyScreenLocation!"")}</@field>
+        <@field type="textarea" name="body" rows="30" cols="80" label=uiLabelMap.OrderSendConfirmationEmailBody><@render resource=(productStoreEmailSetting.bodyScreenLocation!"") /></@field>
         </@fields>
       </form>
       

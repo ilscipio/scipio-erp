@@ -23,7 +23,7 @@ under the License.
               ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
               ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
               ${setRequestAttribute("optProductId", miniProduct.productId)}
-              ${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}
+              <@render resource="component://ecommerce/widget/CatalogScreens.xml#miniproductsummary" />
           </div>
           <#if miniProduct_has_next>
               

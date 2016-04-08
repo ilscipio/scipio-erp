@@ -35,7 +35,7 @@ under the License.
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
       <p/>
       <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
-         ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+         <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
          <@tr>
            <@td align="right" valign="top">${uiLabelMap.PartyBillingAddress}</@td>
            <@td>&nbsp;</@td>

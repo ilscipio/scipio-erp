@@ -82,7 +82,7 @@ under the License.
         </@table>
     </@section>
 
-    ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonPaymentInformation")}
+    <@render resource="component://shop/widget/OrderScreens.xml#quickAnonPaymentInformation" />
 
   </@cell>
 
@@ -121,7 +121,7 @@ under the License.
                   <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
                 </#if>
                   <@tr><@td colspan="7">
-                     ${screens.render("component://shop/widget/OrderScreens.xml#quickAnonOptionSettings")}
+                     <@render resource="component://shop/widget/OrderScreens.xml#quickAnonOptionSettings" />
                   </@td></@tr>
               </@table>
 

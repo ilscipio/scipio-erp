@@ -49,7 +49,7 @@ under the License.
         <@field type="input" size="30" maxlength="60" name="lastName" value=((person.lastName)!) label=uiLabelMap.PartyLastName required=true />   
         <@field type="input" size="30" maxlength="60" name="infoString" value="" label=uiLabelMap.PartyEmailAddress required=true />       
         <hr/>
-        ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}      
+        <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />      
         <hr/>      
         <#-- first / last name -->
         
@@ -69,7 +69,7 @@ under the License.
             <#else>
               <option value="">${uiLabelMap.CommonNone} ${uiLabelMap.CommonState}</option>
             </#if>
-            ${screens.render("component://common/widget/CommonScreens.xml#states")}
+            <@render resource="component://common/widget/CommonScreens.xml#states" />
         </@field>
         <@field type="input" size="12" maxlength="10" name="postalCode" value=((postalFields.postalCode)!) label=uiLabelMap.CommonZipPostalCode disabled=disabled required=true/>
         <@field type="select" name="countryGeoId" disabled=disabled label=uiLabelMap.CommonCountry required=true>
@@ -77,6 +77,6 @@ under the License.
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>
-            ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+            <@render resource="component://common/widget/CommonScreens.xml#countries" />
         </@field>        
     </#if>

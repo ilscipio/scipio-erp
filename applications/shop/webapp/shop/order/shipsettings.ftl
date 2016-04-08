@@ -49,7 +49,7 @@ under the License.
           <#if countryGeoId??>
             <option value="${countryGeoId!}">${countryProvinceGeo!(countryGeoId!)}</option>
           </#if>
-          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+          <@render resource="component://common/widget/CommonScreens.xml#countries" />
         </select>
         <span id="advice-required-countryGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
       </div>
@@ -61,7 +61,7 @@ under the License.
           <#else>
             <option value="_NA_">${uiLabelMap.PartyNoState}</option>
           </#if>
-          ${screens.render("component://common/widget/CommonScreens.xml#states")}
+          <@render resource="component://common/widget/CommonScreens.xml#states" />
         </select>
         <span id="advice-required-stateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
       </div>

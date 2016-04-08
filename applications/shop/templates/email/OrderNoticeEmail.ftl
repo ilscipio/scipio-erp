@@ -134,9 +134,9 @@ under the License.
 <#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 <#if note??><p>${note}</p></#if>
 <#if orderHeader??>
-${screens.render("component://shop/widget/OrderScreens.xml#orderheader")}
+<@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
 <br />
-${screens.render("component://shop/widget/OrderScreens.xml#orderitems")}
+<@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
 <#else>
 <h1>Order not found with ID [${orderId!}], or not allowed to view.</h1>
 </#if>

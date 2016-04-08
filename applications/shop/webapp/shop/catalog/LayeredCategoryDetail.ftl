@@ -80,13 +80,13 @@ under the License.
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productId)}
             ${setRequestAttribute("listIndex", productId_index)}
-            ${screens.render(productsummaryScreen)}
+            <@render resource=productsummaryScreen />
           <#else>
               <#if (tabCol?int == 1)><@tr open=true close=false /></#if>
                   <@td>
                       ${setRequestAttribute("optProductId", productId)}
                       ${setRequestAttribute("listIndex", productId_index)}
-                      ${screens.render(productsummaryScreen)}
+                      <@render resource=productsummaryScreen />
                   </@td>
               <#if (tabCol?int == numCol)><@tr close=true open=false /></#if>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>

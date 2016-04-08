@@ -111,7 +111,7 @@ under the License.
     <div class="productcategorylink-container">
         <#list productCategoryLinks as productCategoryLink>
             ${setRequestAttribute("productCategoryLink",productCategoryLink)}
-            ${screens.render(productCategoryLinkScreen)}
+            <@render resource=productCategoryLinkScreen />
         </#list>
     </div>
 </#if>
@@ -135,14 +135,14 @@ under the License.
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
             ${setRequestAttribute("productCategoryMember", productCategoryMember)}
             ${setRequestAttribute("listIndex", productCategoryMember_index)}
-            ${screens.render(productsummaryScreen)}
+            <@render resource=productsummaryScreen />
           <#else>
               <@tr open=(tabCol?int = 1) close=(tabCol?int = 1)>
                   <@td>
                       ${setRequestAttribute("optProductId", productCategoryMember.productId)}
                       ${setRequestAttribute("productCategoryMember", productCategoryMember)}
                       ${setRequestAttribute("listIndex", productCategoryMember_index)}
-                      ${screens.render(productsummaryScreen)}
+                      <@render resource=productsummaryScreen />
                   </@td>
               </@tr>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>

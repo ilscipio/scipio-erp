@@ -29,7 +29,7 @@ under the License.
       </#if>
     </div>
     <div id="right">
-      ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
+      <@render resource="component://ecommerce/widget/CartScreens.xml#microcart" />
     </div>
     <div id="middle">
       <#if !productStore??>

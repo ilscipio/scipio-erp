@@ -42,7 +42,7 @@ under the License.
         <input type="hidden" name="partyId" value="${partyId}"/>
         <@row>
           <@cell>
-            ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+            <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
           </@cell>
         </@row>
 

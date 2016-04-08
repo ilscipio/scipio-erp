@@ -49,7 +49,7 @@ under the License.
         <#if shipToCountryGeoId??>
           <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo!(shipToCountryGeoId!)}</option>
         </#if>
-        ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+        <@render resource="component://common/widget/CommonScreens.xml#countries" />
       </select>
       <span id="advice-required-shipToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
     </div>

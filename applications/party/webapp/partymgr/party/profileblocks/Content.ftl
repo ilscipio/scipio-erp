@@ -18,7 +18,7 @@ under the License.
 -->
   <@section id="partyContent" title=uiLabelMap.PartyContent>
     
-    ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
+    <@render resource="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
       
     <@section title=uiLabelMap.PartyAttachContent id="partyAttachContent">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">

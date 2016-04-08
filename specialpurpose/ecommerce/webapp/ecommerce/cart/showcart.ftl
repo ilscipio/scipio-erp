@@ -510,7 +510,7 @@ function setAlternateGwp(field) {
             <div>
                 ${setRequestAttribute("optProduct", assocProduct)}
                 ${setRequestAttribute("listIndex", assocProduct_index)}
-                ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
+                <@render resource="component://ecommerce/widget/CatalogScreens.xml#productsummary" />
             </div>
         </#list>
     </div>
@@ -518,7 +518,7 @@ function setAlternateGwp(field) {
 </#if>
 
 <#if (shoppingCartSize?default(0) > 0)>
-  ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
+  <@render resource="component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline" />
 </#if>
 
 <!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()!} locale=${shoppingCart.getLocale()!} currencyUom=${shoppingCart.getCurrency()!} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))!} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))!} -->

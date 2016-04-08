@@ -44,7 +44,7 @@ under the License.
                   <fo:table-row>
                     <fo:table-cell>
                       <fo:block>
-                        ${screens.render("component://order/widget/ordermgr/OrderPrintScreens.xml#CompanyLogo")}
+                        <@render resource="component://order/widget/ordermgr/OrderPrintScreens.xml#CompanyLogo" />
                       </fo:block>
                     </fo:table-cell>
                     <fo:table-cell>

@@ -22,7 +22,7 @@ under the License.
     <p><b>${uiLabelMap.ProductNote}:</b> ${uiLabelMap.ProductNoteKeywordSearch}</p>
     <hr />
 
-    ${screens.render("component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude")}
+    <@render resource="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsFormInclude" />
 
     <@section title="${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}">
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">

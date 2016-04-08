@@ -22,5 +22,5 @@ under the License.
 </#if>
 <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
-${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+<@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
 

@@ -226,7 +226,7 @@ under the License.
         <!-- Right Nav Section -->
         <ul class="right">
           <li class="has-form">
-            ${screens.render("component://shop/widget/CatalogScreens.xml#keywordsearchbox")}
+            <@render resource="component://shop/widget/CatalogScreens.xml#keywordsearchbox" />
           </li>
           <li class="divider"></li>
           <#if userLogin??>
@@ -243,7 +243,7 @@ under the License.
           </#if>
           
           <li class="divider"></li>
-          <li>${screens.render("component://shop/widget/CartScreens.xml#microcart")}</li>
+          <li><@render resource="component://shop/widget/CartScreens.xml#microcart" /></li>
           <#--
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
           <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>  

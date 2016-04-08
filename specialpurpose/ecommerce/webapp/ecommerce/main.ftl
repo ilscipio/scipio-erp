@@ -19,8 +19,8 @@ under the License.
 
 <#-- Render the category page -->
 <#if requestAttributes.productCategoryId?has_content>
-  ${screens.render("component://ecommerce/widget/CatalogScreens.xml#bestSellingCategory")}
-  ${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}
+  <@render resource="component://ecommerce/widget/CatalogScreens.xml#bestSellingCategory" />
+  <@render resource="component://ecommerce/widget/CatalogScreens.xml#category-include" />
 <#else>
   <center><@heading>${uiLabelMap.EcommerceNoPROMOTIONCategory}</@heading></center>
 </#if>

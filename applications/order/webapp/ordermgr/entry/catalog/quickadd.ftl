@@ -69,7 +69,7 @@ under the License.
         <#assign product = productCategoryMember.getRelatedOne("Product", true)>
           <@section>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
-            ${screens.render(quickaddsummaryScreen)}
+            <@render resource=quickaddsummaryScreen />
           </@section>
       </#list>
       </@cell>

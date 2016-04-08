@@ -88,7 +88,7 @@ function shipBillAddr() {
 
         <#if ((paymentMethodTypeId!) == "CREDIT_CARD" || (paymentMethodTypeId!) == "EFT_ACCOUNT")>
           <@section title=uiLabelMap.PartyBillingAddress>
-              ${screens.render("component://shop/widget/OrderScreens.xml#genericaddress")}
+              <@render resource="component://shop/widget/OrderScreens.xml#genericaddress" />
           </@section>
         </#if>
 
@@ -99,7 +99,7 @@ function shipBillAddr() {
           </#if>
           <#--<hr />-->
           <@section title=uiLabelMap.AccountingCreditCardInformation>
-              ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+              <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
           </@section>
         </#if>
 

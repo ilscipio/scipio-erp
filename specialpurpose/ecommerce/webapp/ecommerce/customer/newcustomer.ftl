@@ -209,7 +209,7 @@ will generally always be reserved for the logo at the top of the page.
         <label for="customerCountry">${uiLabelMap.CommonCountry}*</label>
         <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
         <select name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId">
-            ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
+            <@render resource="component://common/widget/CommonScreens.xml#countries" />        
             <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
             <option selected="selected" value="${defaultCountryGeoId}">
                 <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>

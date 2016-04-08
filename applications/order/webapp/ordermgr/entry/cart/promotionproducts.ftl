@@ -44,7 +44,7 @@ under the License.
             <@td>
               ${setRequestAttribute("optProductId", productId)}
               ${setRequestAttribute("listIndex", productId_index)}
-              ${screens.render(productsummaryScreen)}
+              <@render resource=productsummaryScreen />
             </@td>
           </@tr>
         </#list>

@@ -145,7 +145,7 @@ under the License.
     </@field>
     <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="postalCode" value=(mechMap.postalAddress.postalCode)!(request.getParameter('postalCode')!) />
     <@field type="select" label=uiLabelMap.CommonCountry name="countryGeoId" id="editcontactmechform_countryGeoId">
-        ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
+        <@render resource="component://common/widget/CommonScreens.xml#countries" />        
         <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
           <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
         <#else>

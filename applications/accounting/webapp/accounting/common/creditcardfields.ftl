@@ -52,7 +52,7 @@ under the License.
           <option>${creditCard.cardType}</option>
           <option value="${creditCard.cardType}">---</option>
         </#if>
-        ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
+        <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
     </@field>
    
     <#if creditCard?has_content>
@@ -106,7 +106,7 @@ under the License.
         <#if ccExprMonth?has_content>
         <option value="${ccExprMonth!}">${ccExprMonth!}</option>
         </#if>
-        ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
+        <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
     </@field>
     
     <@field type="select" name="expYear">
@@ -118,7 +118,7 @@ under the License.
         <#if ccExprYear?has_content>
           <option value="${ccExprYear!}">${ccExprYear!}</option>
         </#if>
-        ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
+        <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
     </@field>
 
     <@field type="input" size="20" maxlength="30" name="description" value=(paymentMethod.description!) label=uiLabelMap.CommonDescription/>

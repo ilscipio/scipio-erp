@@ -387,21 +387,29 @@ function setAlternateGwp(field) {
     </@row>
 </@section>
 
-
-<#-- CATO: Migrate
 <#if associatedProducts?has_content>
   <@section title="${uiLabelMap.EcommerceYouMightAlsoIntrested}:">
-    <#list associatedProducts as assocProduct>
-        <div>
-            ${setRequestAttribute("optProduct", assocProduct)}
-            ${setRequestAttribute("listIndex", assocProduct_index)}
-            ${screens.render("component://shop/widget/CatalogScreens.xml#productsummary")}
-        </div>
-    </#list>
+    <@grid columns=5>
+        <#list associatedProducts as assocProduct>
+            <li>
+                <#-- Product summary 
+                    ${setRequestAttribute("optProduct", assocProduct)}
+                    ${setRequestAttribute("listIndex", assocProduct_index)}
+                    ${screens.render("component://shop/widget/CatalogScreens.xml#productsummary")}
+                -->
+                <#-- mini product summary -->
+                ${setRequestAttribute("optProductId", assocProduct.productId)}
+                ${setRequestAttribute("productId", assocProduct.productId)}
+                ${setRequestAttribute("listIndex", assocProduct_index)}
+                ${screens.render("component://shop/widget/CatalogScreens.xml#miniproductsummary")}
+            </li>
+        </#list>
+    </@grid>
   </@section>
 </#if>
--->
-<#-- CATO: Migrate
+
+<#-- CATO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
+<#--
 <@section title=uiLabelMap.CommonQuickAdd>
     <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
         <fieldset>

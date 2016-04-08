@@ -28,12 +28,79 @@
 
 <#assign catoUtilitiesDefined = true> <#-- this one must use #assign, not #global -->
 
+<#-- catoNullObject: Special value which may be passed by templates to some functions which
+    recognize this object to mean they should substitute it with the value null. -->
+<#assign catoNullObject = Static["com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil"].getNullModelAlways()>
+
+<#-- catoDummyNullValue: This is a special var used in some functions and macros as an FTL hack to pass
+    the value null to function calls. WARN: It must NEVER be assigned a value!
+<#assign catoDummyNullValue = (null)>-->
+
 <#-- 
 *************************************
 * TEMPLATING API UTILITIES *
 *************************************
 * Intended for use anywhere in production templates and templating macros.
 -->
+
+<#-- 
+*************
+* render
+************
+Renders an Ofbiz screen or other resource.
+
+Screens are rendered using Ofbiz's {{{screens.render}}} utility function.
+
+  * Parameters *
+    resource                = ((string), required) The resource path and name.
+                              e.g., {{{"component://common/widget/CommonScreens.xml#listLocales"}}}
+    type                    = (screen, default: screen) The type of resource to render
+    ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
+                              NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
+                              NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    clearParams             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
+-->
+<#macro render resource type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearParams=false>
+  <#if !ctxVars?is_boolean>
+    <#list mapKeys(ctxVars) as name>
+      <#local dummy = setContextField(name, ctxVars[name])>
+    </#list>
+  </#if>
+  <#if !globalCtxVars?is_boolean>
+    <#list mapKeys(globalCtxVars) as name>
+      <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
+    </#list>
+  </#if>
+  <#if !reqAttribs?is_boolean>
+    <#list mapKeys(reqAttribs) as name>
+      <#local dummy = setRequestAttribute(name, reqAttribs[name])>
+    </#list>
+  </#if>
+  ${screens.render(resource)}<#t>
+  <#if clearParams>
+    <#if !ctxVars?is_boolean>
+      <#list mapKeys(ctxVars) as name>
+        <#local dummy = setContextField(name, catoNullObject)>
+      </#list>
+    </#if>
+    <#if !globalCtxVars?is_boolean>
+      <#list mapKeys(globalCtxVars) as name>
+        <#local dummy = setContextField(name, catoNullObject)>
+      </#list>
+    </#if>
+    <#if !reqAttribs?is_boolean>
+      <#list mapKeys(reqAttribs) as name>
+        <#local dummy = setRequestAttribute(name, catoNullObject)>
+      </#list>
+    </#if>
+  </#if>
+</#macro>
 
 
 <#-- 
@@ -42,8 +109,7 @@
 ************
 Builds an Ofbiz navigation URL.
 
-THIS IS THE MAIN STOCK OFBIZ URL MACRO. It is modified with enhanced
-capabilities for Cato. 
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.
 
 WARN: {{{fullPath}}} and {{{secure}}} parameters have different behavior than stock Ofbiz!
 
@@ -287,8 +353,7 @@ NOTE: If args is specified as map, "webSiteId" must be passed in args, not as ar
 ************
 Builds an Ofbiz content/resource URL.
 
-THIS IS THE STOCK OFBIZ CONTENT URL MACRO. It may be modified with enhanced
-capabilities for Cato.
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.
 
 TODO: Make this accept uri
 
@@ -366,6 +431,54 @@ Adds the external login key to given url
 <#function addExtLoginKey url escape=true>
   <#return rawString(Static["org.ofbiz.webapp.control.RequestUtil"].checkAddExternalLoginKey(rawString(url), request, escape))>
 </#function>
+
+<#-- 
+*************
+* setRequestAttribute
+************
+Sets a request attribute. 
+
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function setRequestAttribute name value>
+</#function>
+-->
+
+<#-- 
+*************
+* setContextField
+************
+Sets a field value in context
+
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function setContextField name value>
+</#function>
+-->
+
+<#-- 
+*************
+* setGlobalContextField
+************
+Sets a field value in global context.
+
+New in Cato.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function setGlobalContextField name value>
+</#function>
+-->
 
 <#-- 
 *************

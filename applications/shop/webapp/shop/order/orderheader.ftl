@@ -392,7 +392,6 @@ under the License.
                                   </#if>
                                 </#if>
 
-
                                 <#if shipGroup_has_next>
                                 </#if>
                               </@table>

@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.SimpleScalar;
@@ -47,8 +49,9 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel");
-        if (!(args.get(1) instanceof BeanModel) && !(args.get(1) instanceof TemplateNumberModel) && !(args.get(1) instanceof TemplateScalarModel))
-            throw new TemplateModelException("Second argument not an instance of BeanModel nor TemplateNumberModel nor TemplateScalarModel");
+        // Cato: This is too limiting...
+        //if (!(args.get(1) instanceof BeanModel) && !(args.get(1) instanceof TemplateNumberModel) && !(args.get(1) instanceof TemplateScalarModel))
+        //    throw new TemplateModelException("Second argument not an instance of BeanModel nor TemplateNumberModel nor TemplateScalarModel");
 
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = (BeanModel)env.getVariable("request");
@@ -56,13 +59,15 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
 
         String name = ((TemplateScalarModel) args.get(0)).getAsString();
         Object value = null;
-        if (args.get(1) instanceof TemplateScalarModel)
-            value = ((TemplateScalarModel) args.get(1)).getAsString();
-        if (args.get(1) instanceof TemplateNumberModel)
-            value = ((TemplateNumberModel) args.get(1)).getAsNumber();
-        if (args.get(1) instanceof BeanModel)
-            value = ((BeanModel) args.get(1)).getWrappedObject();
-
+        // Cato: Let DeepUnwrap handle this...
+        //if (args.get(1) instanceof TemplateScalarModel)
+        //    value = ((TemplateScalarModel) args.get(1)).getAsString();
+        //if (args.get(1) instanceof TemplateNumberModel)
+        //    value = ((TemplateNumberModel) args.get(1)).getAsNumber();
+        //if (args.get(1) instanceof BeanModel)
+        //    value = ((BeanModel) args.get(1)).getWrappedObject();
+        value = LangFtlUtil.unwrapAlwaysUnlessNull(args.get(1));
+        
         request.setAttribute(name, value);
         return new SimpleScalar("");
     }

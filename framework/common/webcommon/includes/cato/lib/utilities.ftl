@@ -51,6 +51,8 @@ Renders an Ofbiz screen or other resource.
 
 Screens are rendered using Ofbiz's {{{screens.render}}} utility function.
 
+TODO: Reimplement as transform.
+
   * Parameters *
     resource                = ((string), required) The resource path and name.
                               e.g., {{{"component://common/widget/CommonScreens.xml#listLocales"}}}

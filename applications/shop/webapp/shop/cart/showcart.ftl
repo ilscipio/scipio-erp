@@ -348,39 +348,48 @@ function setAlternateGwp(field) {
 </@section>
 
 
-
-<#--
-<@section title=uiLabelMap.ProductPromoCodes>
-    <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
-      <fieldset>
-        <input type="text" size="15" name="productPromoCodeId" value="" />
-        <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
-        <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
-        <#if productPromoCodeIds?has_content>
-            ${uiLabelMap.ProductPromoCodesEntered}
-            <ul>
-              <#list productPromoCodeIds as productPromoCodeId>
-                <li>${productPromoCodeId}</li>
-              </#list>
-            </ul>
-        </#if>
-      </fieldset>
-    </form>
+<@section title=uiLabelMap.ProductPromotions>
+    <@row>
+        <@cell columns=6>
+            <@section title=uiLabelMap.ProductPromoCodes>
+                <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
+                  <fieldset>
+                    <input type="text" size="15" name="productPromoCodeId" value="" />
+                    <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
+                    <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
+                    <#if productPromoCodeIds?has_content>
+                        ${uiLabelMap.ProductPromoCodesEntered}
+                        <ul>
+                          <#list productPromoCodeIds as productPromoCodeId>
+                            <li>${productPromoCodeId}</li>
+                          </#list>
+                        </ul>
+                    </#if>
+                  </fieldset>
+                </form>
+            </@section>
+        </@cell>
+        <@cell columns=6>
+            <#if showPromoText?? && showPromoText>
+                <@panel type="callout">
+                  <@section title=uiLabelMap.OrderSpecialOffers>
+                    <ol>
+                      <#list productPromos as productPromo>
+                        <li>
+                           ${rawString(productPromo.promoText!)}
+                           (<a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>)
+                        </li>
+                      </#list>
+                    </ol>
+                    <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
+                  </@section>
+                </@panel>
+            </#if>
+        </@cell>
+    </@row>
 </@section>
--->
-<#--
-<#if showPromoText?? && showPromoText>
-  <@section title=uiLabelMap.OrderSpecialOffers>
-    <ul>
-      <#list productPromos as productPromo>
-        <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> 
-           ${rawString(productPromo.promoText!)}</li>
-      </#list>
-    </ul>
-    <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a></div>
-  </@section>
-</#if>
--->
+
+
 <#-- CATO: Migrate
 <#if associatedProducts?has_content>
   <@section title="${uiLabelMap.EcommerceYouMightAlsoIntrested}:">

@@ -34,6 +34,7 @@ under the License.
                 ${uiLabelMap.CommonChooseLanguage}
               </a>
           </li>
+        <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
         <li><a href="#">FAQ's</a></li>
       <ul>

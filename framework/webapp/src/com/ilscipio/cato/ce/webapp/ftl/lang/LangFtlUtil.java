@@ -126,6 +126,14 @@ public abstract class LangFtlUtil {
     }
 
     /**
+     * Returns a TemplateModel representing a null value. Will always return
+     * a model, even if the bean wrapper does not have a null model set.
+     */
+    public static TemplateModel getNullModelAlways() {
+        return TemplateNullModel.getNullModel();
+    }
+    
+    /**
      * Unwraps template model; if cannot, returns null.
      */
     public static Object unwrapOrNull(TemplateModel templateModel) throws TemplateModelException {

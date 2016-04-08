@@ -9,7 +9,7 @@ public final class TemplateNullModel implements AdapterTemplateModel {
 
     public static final TemplateNullModel nullModel = new TemplateNullModel();
     
-    public static TemplateNullModel getNullModel() {
+    static TemplateNullModel getNullModel() {
         return nullModel;
     }
     

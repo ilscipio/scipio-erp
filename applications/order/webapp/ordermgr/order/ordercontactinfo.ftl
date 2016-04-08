@@ -157,7 +157,7 @@ under the License.
               <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
                 <#assign postalAddress = orderContactMechValueMap.postalAddress>
                 <#if postalAddress?has_content>
-                     ${setContextField("postalAddress", postalAddress)}
+                     <#assign dummy = setContextField("postalAddress", postalAddress)>
                      <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressHtmlFormatter" />
                   <@updateOrderContactMech orderHeader=(orderHeader!) contactMechTypeId=contactMech.contactMechTypeId contactMechList=(postalContactMechList!) contactMechPurposeTypeId=(contactMechPurpose.contactMechPurposeTypeId!) contactMechAddress=(postalAddress!) />
                 </#if>

@@ -26,7 +26,7 @@ under the License.
     <fo:block>${companyName}</fo:block>
     <#if postalAddress??>
         <#if postalAddress?has_content>
-            ${setContextField("postalAddress", postalAddress)}
+            <#assign dummy = setContextField("postalAddress", postalAddress)>
             <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter" />
         </#if>
     <#else>

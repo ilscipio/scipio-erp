@@ -39,7 +39,7 @@ under the License.
                     <fo:table-cell>
                         <fo:block>
                             <#if toPostalAddress??>
-                                ${setContextField("postalAddress", toPostalAddress)}
+                                <#assign dummy = setContextField("postalAddress", toPostalAddress)>
                                 <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressPdfFormatter" />
                             </#if>
                         </fo:block>

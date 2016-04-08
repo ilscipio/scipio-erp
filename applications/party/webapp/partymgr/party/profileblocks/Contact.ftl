@@ -62,7 +62,7 @@ under the License.
                 <#if "POSTAL_ADDRESS" == contactMech.contactMechTypeId>
                   <#if contactMechMap.postalAddress?has_content>
                     <#assign postalAddress = contactMechMap.postalAddress>
-                    ${setContextField("postalAddress", postalAddress)}
+                    <#assign dummy = setContextField("postalAddress", postalAddress)>
                     <@render resource="component://party/widget/partymgr/PartyScreens.xml#postalAddressHtmlFormatter" />
                     <#if postalAddress.geoPointId?has_content>
                       <#if contactMechPurposeType?has_content>

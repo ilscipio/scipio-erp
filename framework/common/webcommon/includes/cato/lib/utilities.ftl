@@ -71,51 +71,21 @@ TODO: Reimplement as transform.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{catoNullObject}}} variable.
-    clearParams             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
+    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
+    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
 -->
-<#macro render resource name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearParams=false>
-  <#if !ctxVars?is_boolean>
-    <#list mapKeys(ctxVars) as name>
-      <#local dummy = setContextField(name, ctxVars[name])>
-    </#list>
-  </#if>
-  <#if !globalCtxVars?is_boolean>
-    <#list mapKeys(globalCtxVars) as name>
-      <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
-    </#list>
-  </#if>
-  <#if !reqAttribs?is_boolean>
-    <#list mapKeys(reqAttribs) as name>
-      <#local dummy = setRequestAttribute(name, reqAttribs[name])>
-    </#list>
-  </#if>
-  <#-- assuming type=="screen" for now -->
-  <#if type == "screen">
-    <#if name?has_content>
-      ${screens.render(resource, name)}<#t>
-    <#else>
-      ${screens.render(resource)}<#t>
+<#macro render resource name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false>
+  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
+    <#-- assuming type=="screen" for now -->
+    <#if type == "screen">
+      <#if name?has_content>
+        ${screens.render(resource, name)}<#t>
+      <#else>
+        ${screens.render(resource)}<#t>
+      </#if>
     </#if>
-  </#if>
-  <#if clearParams>
-    <#if !ctxVars?is_boolean>
-      <#list mapKeys(ctxVars) as name>
-        <#local dummy = setContextField(name, catoNullObject)>
-      </#list>
-    </#if>
-    <#if !globalCtxVars?is_boolean>
-      <#list mapKeys(globalCtxVars) as name>
-        <#local dummy = setContextField(name, catoNullObject)>
-      </#list>
-    </#if>
-    <#if !reqAttribs?is_boolean>
-      <#list mapKeys(reqAttribs) as name>
-        <#local dummy = setRequestAttribute(name, catoNullObject)>
-      </#list>
-    </#if>
-  </#if>
+  </@varSection>
 </#macro>
-
 
 <#-- 
 *************
@@ -493,6 +463,176 @@ to indicate the value null.
 <#function setGlobalContextField name value>
 </#function>
 -->
+
+<#-- 
+*************
+* setVars
+************
+Sets context variables and request attributes.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+
+  * Parameters *
+    ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
+                              NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
+                              NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+-->
+<#function setVars ctxVars=false globalCtxVars=false reqAttribs=false>
+  <#if !ctxVars?is_boolean>
+    <#list mapKeys(ctxVars) as name>
+      <#local dummy = setContextField(name, ctxVars[name])>
+    </#list>
+  </#if>
+  <#if !globalCtxVars?is_boolean>
+    <#list mapKeys(globalCtxVars) as name>
+      <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
+    </#list>
+  </#if>
+  <#if !reqAttribs?is_boolean>
+    <#list mapKeys(reqAttribs) as name>
+      <#local dummy = setRequestAttribute(name, reqAttribs[name])>
+    </#list>
+  </#if>
+  <#return "">
+</#function>
+
+<#-- 
+*************
+* setVars
+************
+Sets context variables and request attributes.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+
+  * Parameters *
+    ctxVars                 = ((list), default: -empty-) A list of screen context vars names to clear
+    globalCtxVars           = ((list), default: -empty-) A list of screen global context vars names to clear
+    reqAttribs              = ((list), default: -empty-) A list of request attributes names to clear
+-->
+<#function clearVars ctxVars=false globalCtxVars=false reqAttribs=false>
+  <#if !ctxVars?is_boolean>
+    <#list ctxVars as name>
+      <#local dummy = setContextField(name, catoNullObject)>
+    </#list>
+  </#if>
+  <#if !globalCtxVars?is_boolean>
+    <#list globalCtxVars as name>
+      <#local dummy = setGlobalContextField(name, catoNullObject)>
+    </#list>
+  </#if>
+  <#if !reqAttribs?is_boolean>
+    <#list reqAttribs as name>
+      <#local dummy = setRequestAttribute(name, catoNullObject)>
+    </#list>
+  </#if>
+  <#return "">
+</#function>
+
+<#-- 
+*************
+* extractVars
+************
+Gets all the named attributes and context vars.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+
+TODO: This is currently extremely inefficient; should implement as transform.
+
+  * Parameters *
+    ctxVars                 = ((list), default: -empty-) A list of screen context vars names to extract
+    globalCtxVars           = ((list), default: -empty-) A list of screen global context vars names to extract
+    reqAttribs              = ((list), default: -empty-) A list of request attributes names to extract
+    saveNulls               = ((boolean), default: false) If true, null/missing values will get map entries with {{{CatoNullObject}}}; otherwise, omitted from results
+    
+  * Return Value *
+    A map of maps with same keys as parameters. 
+-->
+<#function extractVars ctxVars=false globalCtxVars=false reqAttribs=false saveNulls=false>
+  <#local ctxVarsMap = {}>
+  <#local globalCtxVarsMap = {}>
+  <#local reqAttribsMap = {}>
+  <#if !ctxVars?is_boolean>
+    <#list ctxVars as name>
+      <#if context[name]??>
+        <#local ctxVarsMap = ctxVarsMap + {name: context[name]}>
+      <#elseif saveNulls>
+        <#local ctxVarsMap = ctxVarsMap + {name: catoNullObject}>
+      </#if>
+    </#list>
+  </#if>
+  <#if !globalCtxVars?is_boolean>
+    <#list globalCtxVars as name>
+      <#if globalContext[name]??>
+        <#local globalCtxVarsMap = globalCtxVarsMap + {name: globalContext[name]}>
+      <#elseif saveNulls>
+        <#local globalCtxVarsMap = globalCtxVarsMap + {name: catoNullObject}>
+      </#if>
+    </#list>
+  </#if>
+  <#if !reqAttribs?is_boolean>
+    <#list reqAttribs as name>
+      <#if request.getAttribute(name)??>
+        <#local reqAttribsMap = reqAttribsMap + {name: request.getAttribute(name)}>
+      <#elseif saveNulls>
+        <#local reqAttribsMap = reqAttribsMap + {name: catoNullObject}>
+      </#if>
+    </#list>
+  </#if>
+  <#return {"ctxVars":ctxVarsMap, "globalCtxVars": globalCtxVarsMap, "reqAttribs":reqAttribsMap}>
+</#function>
+
+<#-- 
+*************
+* varSection
+************
+Sets context variables and request attributes around a nested block. Can also be used alone.
+
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.
+
+  * Parameters *
+    ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
+                              NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
+                              NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
+                                  object found in the global {{{catoNullObject}}} variable.
+    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
+    restoreValues           = ((boolean), default: false) If true, the original values are saved and restored after invocation
+-->
+<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues=false restoreValues=false>
+  <#if restoreValues>
+    <#local origParams = extractVars(mapKeysOrBool(ctxVars), mapKeysOrBool(globalCtxVars), mapKeysOrBool(reqAttribs), true)>
+  </#if>
+  <#local dummy = setVars(ctxVars, globalCtxVars, reqAttribs)>
+  <#nested>
+  <#if clearValues>
+    <#local dummy = clearVars(mapKeysOrBool(ctxVars), mapKeysOrBool(globalCtxVars), mapKeysOrBool(reqAttribs))>
+  <#elseif restoreValues>
+    <#local dummy = setVars(origParams.ctxVars, origParams.globalCtxVars, origParams.reqAttribs)>
+  </#if>
+</#macro>
+
+<#function mapKeysOrBool mapVal>
+  <#if mapVal?is_boolean>
+    <#return mapVal>
+  <#else>
+    <#return mapKeys(mapVal)>
+  </#if>
+</#function>
+
 
 <#-- 
 *************

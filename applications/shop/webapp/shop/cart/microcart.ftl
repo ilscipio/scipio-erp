@@ -22,13 +22,19 @@ under the License.
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
-
 <div id="microcart">
-            <a href="<@ofbizUrl>showcart</@ofbizUrl>">
-            <div id="microCartQuantity"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i><#--${shoppingCart.getTotalQuantity()}--></div>
-            <div id="microCartTotal"><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/></div>
-            </a>
-    <#-- The following contains a list of various checkout options.
+    <a href="<@ofbizUrl>showcart</@ofbizUrl>">
+        <div id="microCartIcon"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i></div>
+        <#-- <div id="microCartQuantity">${shoppingCart.getTotalQuantity()}</div>-->  
+        <div id="microCartTotal">
+                  
+            <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
+        </div>
+        
+    </a>
+</div>     
+            
+<#-- The following contains a list of various checkout options.
     <ul>
       <li><a href="<@ofbizUrl>view/showcart</@ofbizUrl>">[${uiLabelMap.OrderViewCart}]</a></li>
       <#if (shoppingCartSize > 0)>
@@ -53,5 +59,4 @@ under the License.
           <li class="disabled">[${uiLabelMap.EcommerceOnePageCheckout}]</li>
       </#if>
     </ul>
-    -->
-</div>
+-->

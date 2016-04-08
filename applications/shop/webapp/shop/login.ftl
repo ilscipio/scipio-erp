@@ -19,91 +19,112 @@ under the License.
 <#-- Cato: now points to shop -->
 <#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
 <#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
-<#if janrainEnabled == "Y">
-<@script>
-(function() {
-    if (typeof window.janrain !== 'object') window.janrain = {};
-    window.janrain.settings = {};
-    
-    janrain.settings.tokenUrl = '<@ofbizUrl fullPath="true" secure="true">janrainCheckLogin</@ofbizUrl>';
+<#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
 
-    function isReady() { janrain.ready = true; };
-    if (document.addEventListener) {
-      document.addEventListener("DOMContentLoaded", isReady, false);
-    } else {
-      window.attachEvent('onload', isReady);
-    }
-
-    var e = document.createElement('script');
-    e.type = 'text/javascript';
-    e.id = 'janrainAuthWidget';
-
-    if (document.location.protocol === 'https:') {
-      e.src = 'https://rpxnow.com/js/lib/${appName}/engage.js';
-    } else {
-      e.src = 'http://widget-cdn.rpxnow.com/js/lib/${appName}/engage.js';
-    }
-
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(e, s);
-})();
-</@script>
-  <@section title=uiLabelMap.CommonRegistered>
-    <@row class="+Signlogin">
-      <@cell columns=6>
-          <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
-            <fieldset>
-              
-                <label for="userName">${uiLabelMap.CommonUsername}</label>
-                <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
-              
-              <#if autoUserLogin?has_content>
-                <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
-              </#if>
-              
-                <label for="password">${uiLabelMap.CommonPassword}:</label>
-                <input type="password" id="password" name="PASSWORD" value=""/>
-              
-              
-                <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
-              
-              
-                <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
-                <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.CommonMayCreate}</a>
-              
-            </fieldset>
-          </form>
-         <div id="janrainEngageEmbed">
-      </@cell>
-    </@row>
-  </@section>
-<#else>
-  <@section title=uiLabelMap.CommonRegistered>
-    <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">
-      <fieldset>
+<@row class="+Signlogin">
+    <@cell columns=6>
+        <@section title=uiLabelMap.CommonRegistered>
+            <#-- CATO: Janrain is not fully tested. Use at your own risk -->
+            <#if janrainEnabled == "Y">
+                <@script>
+                (function() {
+                    if (typeof window.janrain !== 'object') window.janrain = {};
+                    window.janrain.settings = {};
+                    
+                    janrain.settings.tokenUrl = '<@ofbizUrl fullPath="true" secure="true">janrainCheckLogin</@ofbizUrl>';
+                
+                    function isReady() { janrain.ready = true; };
+                    if (document.addEventListener) {
+                      document.addEventListener("DOMContentLoaded", isReady, false);
+                    } else {
+                      window.attachEvent('onload', isReady);
+                    }
+                
+                    var e = document.createElement('script');
+                    e.type = 'text/javascript';
+                    e.id = 'janrainAuthWidget';
+                
+                    if (document.location.protocol === 'https:') {
+                      e.src = 'https://rpxnow.com/js/lib/${appName}/engage.js';
+                    } else {
+                      e.src = 'http://widget-cdn.rpxnow.com/js/lib/${appName}/engage.js';
+                    }
+                
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(e, s);
+                })();
+                </@script>
         
-          <label for="userName">${uiLabelMap.CommonUsername}</label>
-          <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
+                      <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">              
+                            <label for="userName">${uiLabelMap.CommonUsername}</label>
+                            <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>                          
+                              <#if autoUserLogin?has_content>
+                                <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
+                              </#if>
+                            <label for="password">${uiLabelMap.CommonPassword}:</label>
+                            <input type="password" id="password" name="PASSWORD" value=""/>
+                            <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
+                      </form>
+                     <div id="janrainEngageEmbed"></div>
         
-        <#if autoUserLogin?has_content>
-          <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
-        </#if>
-        
-          <label for="password">${uiLabelMap.CommonPassword}:</label>
-          <input type="password" id="password" name="PASSWORD" value=""/>
-        
-        
-          <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
-        
-        
-          <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
-          <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_register!}">${uiLabelMap.CommonMayCreate}</a>
-        
-      </fieldset>
-    </form>
-  </@section>
-</#if>
-
+            <#else><#-- Default login -->
+                    <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+                       <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
+                       <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
+                       <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
+                       <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
+                       <@field type="password" name="PASSWORD" value="" size="20" collapse=true placeholder=uiLabelMap.CommonPassword tooltip=uiLabelMap.CommonPassword label=(labelPassword!)/>
+                
+                          <#if ("Y" == useMultitenant) >
+                              <#if !requestAttributes.userTenantId??>
+                              <@field type="input" name="userTenantId" value=(parameters.userTenantId!) size="20" placeholder=uiLabelMap.CommonTenantId collapse=true tooltip=uiLabelMap.CommonTenantId label=(labelTenant!)/>
+                              <#else>
+                                  <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
+                              </#if>
+                          </#if>
+                         
+                         <@row>
+                             <@cell class="+${styles.text_left!}" columns=9>
+                                <small>
+                                    <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword class="${styles.medium!}">
+                                        <@row>
+                                            <@cell class="${styles.grid_large!}centered">
+                                                <@section title=uiLabelMap.CommonPassword>
+                                                    <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
+                                                        <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
+                                                        <@row>
+                                                            <@cell columns=12 >
+                                                                <a href="<@ofbizUrl>login</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+                                                                <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint container=false/>
+                                                                <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword container=false/>
+                                                            </@cell>
+                                                        </@row>
+                                                    </form>
+                                                </@section>
+                                            </@cell>
+                                        </@row>
+                                    </@modal>                                
+                                </small>
+                             </@cell>
+                            <@cell class="+${styles.text_right!}" columns=3>
+                                <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                                <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
+                            </@cell>
+                        </@row>
+                      </form>
+            </#if>
+        </@section>
+        <@script>
+          <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();<#else>document.loginform.USERNAME.focus();</#if>
+        </@script>
+    </@cell>
+    <@cell columns=6>
+        <@section title=uiLabelMap.CommonNewUser>
+            <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_add!}">${uiLabelMap.EcommerceRegister}</a>
+        </@section>
+    </@cell>
+</@row>
+<#--  
 <@section title=uiLabelMap.CommonForgotYourPassword>
   <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">
     
@@ -116,18 +137,4 @@ under the License.
     
   </form>
 </@section>
-<#--    
-<@section title=uiLabelMap.CommonNewUser>
-  <form method="post" action="<@ofbizUrl>newcustomer</@ofbizUrl>">
-    
-      <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</p>
-      <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" id="newcustomer_submit" value="${uiLabelMap.CommonMayCreate}"/>
-    
-  </form>
-</@section>
 -->
-
-<@script>
-  <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
-  <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
-</@script>

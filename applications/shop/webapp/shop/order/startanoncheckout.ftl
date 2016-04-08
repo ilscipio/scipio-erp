@@ -26,7 +26,6 @@ under the License.
 
 <#if (shoppingCartSize > 0)>
   <@section title=uiLabelMap.CommonCheckoutAnonymous>
-      <p>${uiLabelMap.CommonCheckoutAnonymousMsg}:</p>
       <@menu type="button">
         <@menuitem type="link" href=makeOfbizUrl("setCustomer") text=uiLabelMap.OrderCheckout />
         <@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") text=uiLabelMap.OrderCheckoutQuick />

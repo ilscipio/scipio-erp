@@ -353,7 +353,6 @@ function setAlternateGwp(field) {
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>
                 <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
-                  <fieldset>
                     <input type="text" size="15" name="productPromoCodeId" value="" />
                     <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
                     <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
@@ -365,7 +364,6 @@ function setAlternateGwp(field) {
                           </#list>
                         </ul>
                     </#if>
-                  </fieldset>
                 </form>
             </@section>
         </@cell>

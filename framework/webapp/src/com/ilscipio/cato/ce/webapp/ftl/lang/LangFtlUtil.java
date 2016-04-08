@@ -23,7 +23,6 @@ import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
@@ -31,7 +30,6 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
-import freemarker.template.TemplateTransformModel;
 import freemarker.template.utility.DeepUnwrap;
 import freemarker.template.utility.RichObjectWrapper;
 
@@ -238,6 +236,38 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }
+    
+    /**
+     * Unwraps template model; if cannot, throws exception. Special case where null accepted.
+     * <p>
+     * Interpretation of null depends on the ObjectWrapper.
+     */
+    public static Object unwrapAlwaysUnlessNull(TemplateModel templateModel) throws TemplateModelException {
+        if (templateModel == null) {
+            return null;
+        }
+        else {
+            // FIXME? should all these DeepUnwrap.unwrap calls be more like FreeMarkerWorker.getWrappedObject(templateModel) instead??
+            return DeepUnwrap.unwrap(templateModel); // will throw exception if improper type
+        }
+    }
+
+    /**
+     * Unwraps value if template model and unwrappable; else exception. Special case where null accepted.
+     * <p>
+     * Interpretation of null depends on the ObjectWrapper.
+     */
+    public static Object unwrapAlwaysUnlessNull(Object value) throws TemplateModelException {
+        if (value instanceof TemplateModel) {
+            return DeepUnwrap.unwrap((TemplateModel) value);
+        }
+        else if (value == null) {
+            return null;
+        }
+        else {
+            throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
+        }
+    }    
 
     public static String camelCaseToDashLowerName(String name) {
         // TODO: optimize

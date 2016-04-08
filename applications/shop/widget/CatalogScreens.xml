@@ -223,7 +223,7 @@ under the License.
             <actions>
                 <set field="numCol" value="3"/>
                 <set field="searchInCategory" value="N"/>
-                <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="9"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" default-value="9"/>
             </actions>
             <widgets>
                 <include-screen name="categorydetail"/>
@@ -390,7 +390,7 @@ under the License.
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
 
                 <set field="titleProperty" value="PageTitleSearchResults"/>
-                <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="10"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" default-value="10"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>
             </actions>
             <widgets>

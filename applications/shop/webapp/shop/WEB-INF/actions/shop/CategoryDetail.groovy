@@ -33,21 +33,41 @@ import javolution.util.FastList;
 
 // Cato: NOTE: This script is responsible for checking whether solr is applicable.
 
+// Cato: this allows to use the script for local scopes without affecting request
+localVarsOnly = context.localVarsOnly;
+if (localVarsOnly == null) {
+    localVarsOnly = false;
+}
+context.remove("localVarsOnly");
+
 try{
-	if(!context.productCategoryId){
-		productCategoryId = request.getAttribute("productCategoryId");
-		context.productCategoryId = productCategoryId;
-	}
+    productCategoryId = context.productCategoryId;
+    viewSize = context.viewSize;
+    viewIndex = context.viewIndex;
+    currIndex = context.currIndex;
+    
+    if (!localVarsOnly) {
+        if (!productCategoryId) {
+            productCategoryId = request.getAttribute("productCategoryId");
+        }
+        if (!viewSize) {
+            viewSize = parameters.VIEW_SIZE;
+        }
+        if (!viewIndex) {
+            viewIndex = parameters.VIEW_INDEX;
+        }
+        if (!currIndex) {
+            currIndex = parameters.CURR_INDEX;
+        }
+    }
+    
+    context.productCategoryId = productCategoryId;
 	currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 	
-	// get the product category & members
-	if (context.viewSize)
-	    parameters.VIEW_SIZE = context.viewSize;
-	if (context.viewIndex)
-	    parameters.VIEW_INDEX = context.viewIndex;
-	result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:parameters.VIEW_SIZE, viewIndex:parameters.VIEW_INDEX]);
+    // get the product category & members
+	result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:viewSize, viewIndex:viewIndex]);
 	
-	productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+	productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
 	solrProducts = result.results;
 	
 	// Prevents out of stock product to be displayed on site
@@ -76,28 +96,39 @@ try{
 	
 	context.productSubCategoryList = subCatList;
 	*/
-	context.productCategory = productCategory;
-	context.viewIndex = result.viewIndex;
-	context.viewSize = result.viewSize;
-	context.listSize = result.listSize;
-	
-	
-	if (result.viewSize > 0)
+
+	context.listIndex = 0;
+	if (result.viewSize > 0) {
 	    context.listIndex = Math.ceil(result.listSize/result.viewSize);
-	if (!parameters.VIEW_SIZE.equals(String.valueOf(context.viewSize))) {
-	    pageViewSize = Integer.parseInt(parameters.VIEW_SIZE).intValue();
-	    context.listIndex = Math.ceil(result.listSize/pageViewSize);
-	    context.pageViewSize = pageViewSize;
 	}
+    // Cato: this may not make sense anymore since SOLR patches
+	//if (!viewSize.equals(String.valueOf(result.viewSize))) {
+	//    pageViewSize = Integer.parseInt(viewSize).intValue();
+	//    context.listIndex = Math.ceil(result.listSize/pageViewSize);
+	//    context.pageViewSize = pageViewSize;
+	//}
 	
-	if (!parameters.CURR_INDEX)
-	    context.currIndex = 1;
-	else
-	    context.currIndex = Integer.parseInt(parameters.CURR_INDEX).intValue();
+	
+    context.productCategory = productCategory;
+    context.viewIndex = result.viewIndex;
+    context.viewSize = result.viewSize;
+    context.listSize = result.listSize;
+    
+    if (!currIndex)
+        context.currIndex = 1;
+    else
+        context.currIndex = Integer.parseInt(currIndex).intValue();  
 	
 	// set the content path prefix
 	contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 	context.put("contentPathPrefix", contentPathPrefix);
+    
+    /* Cato: do NOT do this for now (or ever?)
+    parameters.VIEW_SIZE = viewSize;
+    parameters.VIEW_INDEX = viewIndex;
+    parameters.CURR_INDEX = CURR_INDEX;
+    */
+    
 } catch(Exception e){
-	Debug.logInfo(""+e,"CategoryDetail.groovy")
+	Debug.logError(""+e, "CategoryDetail.groovy")
 }

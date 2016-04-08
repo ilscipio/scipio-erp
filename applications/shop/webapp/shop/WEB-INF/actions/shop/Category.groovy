@@ -15,10 +15,33 @@ import org.ofbiz.product.category.CategoryContentWrapper;
 
 // Cato: NOTE: This script is responsible for checking whether solr is applicable.
 
+// Cato: this allows to use the script for local scopes without affecting request
+localVarsOnly = context.localVarsOnly;
+if (localVarsOnly == null) {
+    localVarsOnly = false;
+}
+context.remove("localVarsOnly");
+// Cato: In some screens may need to read request vars/params, but not update request...
+updateRequestVars = context.updateRequestVars;
+if (updateRequestVars == null) {
+    if (localVarsOnly) {
+        updateRequestVars = false;
+    } else {
+        updateRequestVars = true; // default true for now (legacy)
+    }
+}
+context.remove("updateRequestVars");
+
 detailScreen = "categorydetail";
 catalogName = CatalogWorker.getCatalogName(request);
 
-productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
+productCategoryId = context.productCategoryId;
+if (!localVarsOnly) {
+    if (!productCategoryId) {
+        productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
+    }
+}
+
 context.productCategoryId = productCategoryId;
 
 
@@ -41,7 +64,7 @@ if (productCategoryId) {
 }
  */
 
-category = delegator.findByPrimaryKeyCache("ProductCategory", [productCategoryId : productCategoryId]);
+category = delegator.findOne("ProductCategory", [productCategoryId : productCategoryId], true);
 if (category) {
     if (category.detailScreen) {
         detailScreen = category.detailScreen;
@@ -67,6 +90,11 @@ if (templatePathPrefix) {
 }
 context.detailScreen = detailScreen;
 
-request.setAttribute("productCategoryId", productCategoryId);
-request.setAttribute("defaultViewSize", "9");
-request.setAttribute("limitView", true);
+if (updateRequestVars) {
+    // Cato: NOTE: If this happens more than once in a request, you need to set updateRequestVars Boolean false in some of the screens
+    // Ideally this should only be done from the actions of full screen definitions (not screen parts)
+    Debug.logInfo("Cato: Setting request-wide productCategoryId (should be once per request only!): " + productCategoryId, "Category.groovy");
+    request.setAttribute("productCategoryId", productCategoryId);
+    request.setAttribute("defaultViewSize", "9");
+    request.setAttribute("limitView", true);
+}

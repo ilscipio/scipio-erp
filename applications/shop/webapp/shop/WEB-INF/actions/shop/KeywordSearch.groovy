@@ -34,33 +34,70 @@ import javolution.util.FastMap;
 
 module = "KeywordSearch.groovy";
 
+// Cato: this allows to use the script for local scopes without affecting request
+localVarsOnly = context.localVarsOnly;
+if (localVarsOnly == null) {
+    localVarsOnly = false;
+}
+context.remove("localVarsOnly");
 
-if (!parameters.SEARCH_STRING)
-    parameters.SEARCH_STRING = "*:*";
+searchString = context.searchString;
+searchFilter = context.searchFilter;
+viewSize = context.viewSize;
+viewIndex = context.viewIndex;
+currIndex = context.currIndex;
+if (!localVarsOnly) {
+    if (!searchString) {
+        searchString = parameters.SEARCH_STRING;
+    }
+    if (!searchFilter) {
+        searchFilter = parameters.SEARCH_FILTER;
+    }
+    if (!viewSize) {
+        viewSize = parameters.VIEW_SIZE;
+    }
+    if (!viewIndex) {
+        viewIndex = parameters.VIEW_INDEX;
+    }
+    if (!currIndex) {
+        currIndex = parameters.CURR_INDEX;
+    }
+}
+    
+    
+if (!searchString)
+    searchString = "*:*";
+    
+if (searchFilter && !searchFilter.contains("isVirtual"))
+    searchFilter += " -isVirtual:true";
+else if (!searchFilter)
+    searchFilter = " -isVirtual:true";
 
-if (parameters.SEARCH_FILTER && !parameters.SEARCH_FILTER.contains("isVirtual"))
-    parameters.SEARCH_FILTER += " -isVirtual:true";
-else if (!parameters.SEARCH_FILTER)
-    parameters.SEARCH_FILTER = " -isVirtual:true";
 
 storeCatalogs = CatalogWorker.getStoreCatalogs(request);
 
 catalogFilter = "";
 for (catalog in storeCatalogs)
     catalogFilter += " catalog:" + catalog.prodCatalogId;
-parameters.SEARCH_FILTER += catalogFilter;
+searchFilter += catalogFilter;
 
-if (context.viewSize)
-    parameters.VIEW_SIZE = context.viewSize;
-if (context.viewIndex)
-    parameters.VIEW_INDEX = context.viewIndex;
-result = dispatcher.runSync("solrKeywordSearch",[query:parameters.SEARCH_STRING,queryFilter:parameters.SEARCH_FILTER,viewSize:parameters.VIEW_SIZE, viewIndex:parameters.VIEW_INDEX]);
-/*Debug.logInfo("query:"+parameters.SEARCH_STRING
-            +" queryFilter:"+parameters.SEARCH_FILTER
-            +" viewSize:"+parameters.VIEW_SIZE
-            +" viewIndex:"+parameters.VIEW_INDEX
+result = dispatcher.runSync("solrKeywordSearch",[query:searchString,queryFilter:searchFilter,viewSize:viewSize, viewIndex:viewIndex]);
+/*Debug.logInfo("query:"+searchString
+            +" queryFilter:"+searchFilter
+            +" viewSize:"+viewSize
+            +" viewIndex:"+viewIndex
             ,"");*/
 //Debug.logInfo("Result: "+result,"");
+
+context.listIndex = 0;
+if (result.viewSize > 0)
+    context.listIndex = Math.ceil(result.listSize/result.viewSize);
+// Cato: this may not make sense anymore since SOLR patches
+//if (!viewSize.equals(String.valueOf(result.viewSize))) {
+//    pageViewSize = Integer.parseInt(viewSize).intValue();
+//    context.listIndex = Math.ceil(result.listSize/pageViewSize);
+//    context.pageViewSize = pageViewSize;
+//}
 
 context.isCorrectlySpelled = result.isCorrectlySpelled;
 context.facetQueries = result.facetQueries;
@@ -68,26 +105,18 @@ context.products = result.results;
 context.listSize = result.listSize;
 context.viewIndex = result.viewIndex;
 context.viewSize = result.viewSize;
-Debug.log("listSize ====> " + context.listSize + " viewIndex =====> " + context.viewIndex + " viewSize ======> " + context.viewSize);
-if (result.viewSize > 0)
-    context.listIndex = Math.ceil(result.listSize/result.viewSize);
-if (!parameters.VIEW_SIZE.equals(String.valueOf(context.viewSize))) {
-    pageViewSize = Integer.parseInt(parameters.VIEW_SIZE).intValue();
-    context.listIndex = Math.ceil(result.listSize/pageViewSize);
-    context.pageViewSize = pageViewSize;
-}
 
 context.suggestions = result.suggestions;
 context.searchConstraintStrings = [];
-context.currentSearch = parameters.SEARCH_STRING;
-context.currentFilter = parameters.SEARCH_FILTER;
+context.currentSearch = searchString;
+context.currentFilter = searchFilter;
 
+Debug.logInfo("listSize ====> " + context.listSize + " viewIndex =====> " + context.viewIndex + " viewSize ======> " + context.viewSize);
 
-if (!parameters.CURR_INDEX)
+if (!currIndex)
     context.currIndex = 1;
 else
-    context.currIndex = Integer.parseInt(parameters.CURR_INDEX).intValue();    
-
+    context.currIndex = Integer.parseInt(currIndex).intValue();    
 
 categoriesTrail = FastMap.newInstance();
 for (facetField in result.facetFields.keySet())
@@ -96,8 +125,16 @@ for (facetField in result.facetFields.keySet())
 context.filterCategories = FastMap.newInstance();
 for (categoryTrail in categoriesTrail.keySet()) {
     if (categoryTrail.split("/").length > 0) {
-        productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryTrail.split("/")[categoryTrail.split("/").length - 1]))
+        productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", categoryTrail.split("/")[categoryTrail.split("/").length - 1]), true)
         context.filterCategories.put(productCategory, UtilMisc.toMap(categoryTrail, categoriesTrail.get(categoryTrail)));
 //          Debug.log("filterCategory " + categoryTrail.split("/")[categoryTrail.split("/").length - 1]);
     }
 }
+
+/* Cato: do NOT do this from here (not needed and may cause issues)
+parameters.VIEW_SIZE = viewSize;
+parameters.VIEW_INDEX = viewIndex;
+parameters.SEARCH_STRING = searchString;
+parameters.SEARCH_FILTER = searchFilter;
+parameters.CURR_INDEX = currIndex;
+*/

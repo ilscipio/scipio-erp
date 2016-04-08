@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@heading>${uiLabelMap.ProductProductTaggedWith} "${parameters.SEARCH_STRING}"</@heading>
+<@heading>${uiLabelMap.ProductProductTaggedWith} "${currentSearch}"</@heading>
 
 <#if !productIds?has_content>
   <@commonMsg type="result-norecord">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>

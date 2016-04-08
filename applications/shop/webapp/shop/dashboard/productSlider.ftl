@@ -19,8 +19,8 @@ under the License.
 <@section>
     <#if productCategory?? && solrProducts?has_content>
         <#assign jsOptions>
-            slidesToShow: ${VIEW_CLUSTER!4},
-            slidesToScroll: ${VIEW_SCROLL_CLUSTER!4},
+            slidesToShow: ${viewCluster!4},
+            slidesToScroll: ${viewScrollCluster!4},
             dots: true,
             focusOnSelect: true,
             adaptiveHeight: true,
@@ -50,14 +50,14 @@ under the License.
                 }]
         </#assign>
         <@slider library="slick" jsOptions=jsOptions> <#-- Relying on Slick Slider here - requires additional seed data.-->
-                <#list solrProducts as solrProduct>
-                        <@slide library="slick">
-                            ${setRequestAttribute("productId", solrProduct.productId)}
-                            ${setRequestAttribute("optProductId", solrProduct.productId)}
-                            ${setRequestAttribute("listIndex", solrProduct_index)}
-                            ${screens.render(productsummaryScreen)}
-                        </@slide>
-                </#list>
+            <#list solrProducts as solrProduct>
+                <@slide library="slick">
+                    <#assign dummy = setRequestAttribute("productId", solrProduct.productId)>
+                    <#assign dummy = setRequestAttribute("optProductId", solrProduct.productId)>
+                    <#assign dummy = setRequestAttribute("listIndex", solrProduct_index)>
+                    ${screens.render(productsummaryScreen)}
+                </@slide>
+            </#list>
         </@slider>
                     
     </#if>

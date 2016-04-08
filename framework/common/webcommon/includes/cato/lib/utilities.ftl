@@ -54,9 +54,14 @@ Screens are rendered using Ofbiz's {{{screens.render}}} utility function.
 TODO: Reimplement as transform.
 
   * Parameters *
-    resource                = ((string), required) The resource path and name.
-                              e.g., {{{"component://common/widget/CommonScreens.xml#listLocales"}}}
+    resource                = ((string), required) The resource identifier, with format depending on type
+                              * {{{screen}}}: path and name, or path alone
+                                e.g., 
+                                  "component://common/widget/CommonScreens.xml#listLocales"
+                                  "component://common/widget/CommonScreens.xml"
+    name                    = ((string)) A resource name part, if not already included in the resource
     type                    = (screen, default: screen) The type of resource to render
+                              * {{{screen}}}: an Ofbiz screen by {{{component://}}} location
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{catoNullObject}}} variable.
@@ -68,7 +73,7 @@ TODO: Reimplement as transform.
                                   object found in the global {{{catoNullObject}}} variable.
     clearParams             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
 -->
-<#macro render resource type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearParams=false>
+<#macro render resource name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearParams=false>
   <#if !ctxVars?is_boolean>
     <#list mapKeys(ctxVars) as name>
       <#local dummy = setContextField(name, ctxVars[name])>
@@ -84,7 +89,14 @@ TODO: Reimplement as transform.
       <#local dummy = setRequestAttribute(name, reqAttribs[name])>
     </#list>
   </#if>
-  ${screens.render(resource)}<#t>
+  <#-- assuming type=="screen" for now -->
+  <#if type == "screen">
+    <#if name?has_content>
+      ${screens.render(resource, name)}<#t>
+    <#else>
+      ${screens.render(resource)}<#t>
+    </#if>
+  </#if>
   <#if clearParams>
     <#if !ctxVars?is_boolean>
       <#list mapKeys(ctxVars) as name>

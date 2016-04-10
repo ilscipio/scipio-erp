@@ -367,6 +367,8 @@
         <value xml:lang="zh">确信包括了你的订单 #</value>
         <value xml:lang="zh_TW">確任包括你的訂單 #</value>
     </property>
+    <!-- CATO: ToDO: Remove-->
+    <!-- 
     <property key="EcommerceBlogAddResponse">
         <value xml:lang="da">Tilføj et svar</value>
         <value xml:lang="en">Add a response:</value>
@@ -507,6 +509,7 @@
         <value xml:lang="zh">浏览博客文章</value>
         <value xml:lang="zh_TW">檢視部落格文章</value>
     </property>
+    -->
     <property key="EcommerceBronze">
         <value xml:lang="da">Bronze</value>
         <value xml:lang="en">Bronze</value>

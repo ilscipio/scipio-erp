@@ -80,8 +80,8 @@ if (category) {
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     // Cato: don't want page title overridden/forced by groovy
     //context.title = categoryContentWrapper.get("CATEGORY_NAME","html");
-    context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME","html");
-    categoryDescription = categoryContentWrapper.get("DESCRIPTION","html");
+    context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME","raw").toString();
+    categoryDescription = categoryContentWrapper.get("DESCRIPTION","raw").toString();
     if (categoryDescription) {
         context.metaDescription = categoryDescription;
         context.metaKeywords = categoryDescription + ", " + catalogName;

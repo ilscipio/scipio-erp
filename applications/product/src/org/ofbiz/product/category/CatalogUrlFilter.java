@@ -207,6 +207,9 @@ public class CatalogUrlFilter extends ContextFilter {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append("/" + CONTROL_MOUNT_POINT);
             
+            // Cato: TODO: The code below should somehow be changed to delegate to makeTrailElements
+            // call; currently duplicated due to heavy var reuse.
+            
             if (UtilValidate.isNotEmpty(productId)) {
                 // Cato: factored out
                 String catId = getProductDefaultCategoryId(delegator, productId);
@@ -305,11 +308,25 @@ public class CatalogUrlFilter extends ContextFilter {
     }
 
     /**
-     * Cato: makeTrailElements. This combines some logic of original doGet method above into a reusable version.
+     * Cato: Returns appropriate trail elements for a category or ID (abstraction method).
      * <p>
      * TODO: Modify doGet above to invoke this (too much variable reuse)
+     * <p>
+     * FIXME?: Currently this forces the trail to be a path under the top category, which is desirable in
+     * some cases but not necessarily all. It does not take into account the existing trail.
+     * This is generally not desirable, but okay for simple shops.
      */
     public static List<String> makeTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
+        // FIXME?: Completely ignores current trail...
+        return makeDefaultCategoryTrailElements(request, delegator, categoryId, productId);
+    }
+    
+    /**
+     * Cato: Makes a fresh trail based on the default category for a product or category under the top catalog category.
+     * Ignores the current trail. 
+     * Based on original {@link #doFilter} code.
+     */
+    public static List<String> makeDefaultCategoryTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
         
         String productCategoryId = categoryId;
         
@@ -347,6 +364,7 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         return null;
     }
+    
 
     /**
      * Cato: Stock code factored out from {@link #doFilter}.
@@ -492,7 +510,9 @@ public class CatalogUrlFilter extends ContextFilter {
                 CategoryWorker.setTrail(request, trail);
                 //categoryId = pathElements.get(pathElements.size() - 1);  // Cato: Assume caller did this
             }
-        } 
+        } else {
+            // Cato: nothing here for now
+        }
         
         if (pathElements == null || pathElements.size() <= 0) {
           /* Cato: NOTE: This was a new addition but has been moved to CategoryWorker.getCategoryForProductFromTrail
@@ -537,10 +557,8 @@ public class CatalogUrlFilter extends ContextFilter {
      * Cato: Checks if the current category and product was already processed for this request,
      * and if not, adjusts them in request and session (including trail).
      * Returns the categoryId.
-     * <p>
-     * This may be called from other events or screen actions where modifying request and session is safe.
-     * <p>
-     * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     * 
+     * @see #getAdjustCurrentCategoryAndProduct(HttpServletRequest, String, String)
      */
     public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId) {
         return getAdjustCurrentCategoryAndProduct(request, productId, null);
@@ -550,10 +568,8 @@ public class CatalogUrlFilter extends ContextFilter {
      * Cato: Checks if the current category was already processed for this request,
      * and if not, adjusts them in request and session (including trail).
      * Returns the categoryId.
-     * <p>
-     * This may be called from other events or screen actions where modifying request and session is safe.
-     * <p>
-     * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     * 
+     * @see #getAdjustCurrentCategoryAndProduct(HttpServletRequest, String, String)
      */
     public static String getAdjustCurrentCategory(HttpServletRequest request, String categoryId) {
         return getAdjustCurrentCategoryAndProduct(request, null, categoryId);
@@ -566,7 +582,13 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * This may be called from other events or screen actions where modifying request and session is safe.
      * <p>
+     * If productId is empty, assumes dealing with categories only.
+     * <p>
      * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     * <p>
+     * FIXME?: Currently, like original CatalogUrlFilter, when trail was not already set, this will always produce 
+     * a trail based on product or category's default category under the catalog top category. 
+     * This is generally not desirable, but okay for simple shops.
      */
     public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId, String categoryId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");

@@ -587,6 +587,9 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * If productId is empty, assumes dealing with categories only.
      * <p>
+     * The passed productId should be the "main" product for the request. If no productId, then the
+     * categoryId should be the "main" category for the request.
+     * <p>
      * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
      * <p>
      * FIXME?: Currently, like original CatalogUrlFilter, when trail was not already set, this will always produce 

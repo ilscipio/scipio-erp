@@ -209,6 +209,9 @@ public class CatalogUrlFilter extends ContextFilter {
             
             // Cato: TODO: The code below should somehow be changed to delegate to makeTrailElements
             // call; currently duplicated due to heavy var reuse.
+            // FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
+            // which is it will only look up a default path under the top category, which is generally
+            // not desirable but accepted for simple shops.
             
             if (UtilValidate.isNotEmpty(productId)) {
                 // Cato: factored out

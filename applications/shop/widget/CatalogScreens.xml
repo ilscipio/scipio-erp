@@ -248,7 +248,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/shop/images/productAdditionalView.js" global="true"/>
                 <set field="configproductdetailScreen" value="component://shop/widget/CatalogScreens.xml#configproductdetail"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Product.groovy"/>
                 <!--<set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>-->
                 <set field="title" value="${productTitle}"/>
             </actions>

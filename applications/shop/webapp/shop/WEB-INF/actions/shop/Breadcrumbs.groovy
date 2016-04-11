@@ -33,12 +33,13 @@ module = "Breadcrumbs.groovy";
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";
+// Cato: IMPORTANT: Check request attribs before parameters map
+curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
 curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";
 if(UtilValidate.isEmpty(curCategoryId)){
-       if (context.product) {
-            curProductId = product.primaryProductCategoryId;
-       }
+    if (context.product) {
+        curCategoryId = product.primaryProductCategoryId;
+    }
 }
 
 topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);

@@ -37,8 +37,9 @@ currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrai
 Debug.logInfo("currentTrail: " + currentTrail, module);
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: parameters.productCategoryId ?: "";
-curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
+// Cato: IMPORTANT: Check request attribs before parameters map
+curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
+//curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
 topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
 
 catLevel = null; // use null here, not empty list

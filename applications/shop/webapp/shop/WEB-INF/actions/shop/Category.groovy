@@ -40,7 +40,15 @@ if (!localVarsOnly) {
     if (!productCategoryId) {
         productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
     }
+    if (updateRequestVars) {
+        // Cato: If we're allowed to update request vars, do this call which will ensure
+        // the session trail and request attributes are set in the case that it was not already done previously in request.
+        // In stock Ofbiz, this was only done in special filter requests, but this leaves other requests barren.
+        // NOTE: This could also be done in uri="category" request as event, but here it has more chances of running
+        productCategoryId = org.ofbiz.product.category.CatalogUrlFilter.getAdjustCurrentCategory(request, productCategoryId);
+    }
 }
+
 
 context.productCategoryId = productCategoryId;
 
@@ -94,7 +102,8 @@ if (updateRequestVars) {
     // Cato: NOTE: If this happens more than once in a request, you need to set updateRequestVars Boolean false in some of the screens
     // Ideally this should only be done from the actions of full screen definitions (not screen parts)
     Debug.logInfo("Cato: Setting request-wide productCategoryId (should be once per request only!): " + productCategoryId, "Category.groovy");
-    request.setAttribute("productCategoryId", productCategoryId);
+    // Never do this; it is already done better in a previous call (if needed)
+    //request.setAttribute("productCategoryId", productCategoryId);
     request.setAttribute("defaultViewSize", "9");
     request.setAttribute("limitView", true);
 }

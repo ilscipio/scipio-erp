@@ -20,8 +20,9 @@
 import org.ofbiz.product.catalog.*;
 
 catalogId = CatalogWorker.getCurrentCatalogId(request);
-promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
-request.setAttribute("productCategoryId", promoCat);
+// Cato: This is not necessary anymore and interferes with SideDeepCategory.groovy and Breadcrumbs.groovy
+//promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
+//request.setAttribute("productCategoryId", promoCat);
 
 /* NOTE DEJ20070220 woah, this is doing weird stuff like always showing the last viewed category when going to the main page;
  * It appears this was done for to make it go back to the desired category after logging in, but this is NOT the place to do that,

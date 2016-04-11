@@ -618,16 +618,24 @@ public class CatalogUrlFilter extends ContextFilter {
         //    (!currentCategoryId.equals(categoryId)) || // This shouldn't really happen, but can deal with it for free
         //    (productId != null && !productId.equals(currentProductId))) {
         if (!Boolean.TRUE.equals(request.getAttribute("categoryTrailUpdated"))) {
-        
-            // NOTE: We only reuse the current category ID, not product ID, because if caller passed productId null it means
-            // we're only doing categories.
-            if (categoryId == null) {
-                categoryId = currentCategoryId;
-            }
-            
-            List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
 
-            updateRequestAndTrail(request, categoryId, productId, trailElements, null);
+            if (categoryId != null || productId != null) {
+                // NOTE: We only reuse the current category ID, not product ID, because if caller passed productId null it means
+                // we're only doing categories.
+                if (categoryId == null) {
+                    categoryId = currentCategoryId;
+                }
+                
+                List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
+    
+                if (trailElements.size() >= 1) {
+                    categoryId = trailElements.get(trailElements.size() - 1);
+                }
+                
+                updateRequestAndTrail(request, categoryId, productId, trailElements, null);
+            } else {
+                Debug.logWarning("Cato: Cannot adjust current product or category in request; neither was specified", module);
+            }
         }
         return currentCategoryId;
     }

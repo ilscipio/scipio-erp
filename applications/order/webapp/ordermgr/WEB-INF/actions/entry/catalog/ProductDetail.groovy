@@ -282,7 +282,9 @@ if (product) {
                 quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
                 mainProductMap.productId = mainProduct.productId;
                 mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-                mainProductMap.uomDesc = quantityUom.description;
+                if (quantityUom) { // Cato: This could be missing
+                    mainProductMap.uomDesc = quantityUom.description;
+                }
                 mainProducts.add(mainProductMap);
             }
         }

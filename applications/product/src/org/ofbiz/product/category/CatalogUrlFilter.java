@@ -633,6 +633,8 @@ public class CatalogUrlFilter extends ContextFilter {
                 }
                 
                 updateRequestAndTrail(request, categoryId, productId, trailElements, null);
+                currentCategoryId = categoryId;
+                currentProductId = productId;
             } else {
                 Debug.logWarning("Cato: Cannot adjust current product or category in request; neither was specified", module);
             }

@@ -246,6 +246,9 @@ public class CatalogUrlFilter extends ContextFilter {
             if (UtilValidate.isNotEmpty(productCategoryId)) {
                 List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
                 
+                // Cato: NOTE: Parts of this could reuse updateRequestAndTrail but there are minor difference,
+                // not risking it for now.
+                
                 List<String> trail = CategoryWorker.getTrail(httpRequest);
                 if (trail == null) {
                     trail = FastList.newInstance();
@@ -279,32 +282,8 @@ public class CatalogUrlFilter extends ContextFilter {
                     trailElements.add(0, topCategoryId);
                 }
 
-                if (trailElements.size() == 1) {
-                    CategoryWorker.setTrail(request, trailElements.get(0), null);
-                } else if (trailElements.size() == 2) {
-                    CategoryWorker.setTrail(request, trailElements.get(1), trailElements.get(0));
-                } else if (trailElements.size() > 2) {
-                    if (trail.contains(trailElements.get(0))) {
-                        // first category is in the trail, so remove it everything after that and fill it in with the list from the pathInfo
-                        int firstElementIndex = trail.indexOf(trailElements.get(0));
-                        while (trail.size() > firstElementIndex) {
-                            trail.remove(firstElementIndex);
-                        }
-                        trail.addAll(trailElements);
-                    } else {
-                        // first category is NOT in the trail, so clear out the trail and use the trailElements list
-                        trail.clear();
-                        trail.addAll(trailElements);
-                    }
-                    CategoryWorker.setTrail(request, trail);
-                }
-
-                request.setAttribute("productCategoryId", productCategoryId);
-                
-                if (productId != null) {
-                    request.setAttribute("product_id", productId);
-                    request.setAttribute("productId", productId);
-                }
+                // Cato: this is now delegated
+                updateRequestAndTrail(httpRequest, productCategoryId, productId, trailElements, trail);
             }
             
             //Set view query parameters
@@ -324,9 +303,53 @@ public class CatalogUrlFilter extends ContextFilter {
         // we're done checking; continue on
         chain.doFilter(request, response);
     }
-    
+
     /**
-     * Cato: Stock code factored out from doGet.
+     * Cato: makeTrailElements. This combines some logic of original doGet method above into a reusable version.
+     * <p>
+     * TODO: Modify doGet above to invoke this (too much variable reuse)
+     */
+    public static List<String> makeTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
+        
+        String productCategoryId = categoryId;
+        
+        if (UtilValidate.isNotEmpty(productId)) {
+            String catId = getProductDefaultCategoryId(delegator, productId);
+            if (catId != null) {
+                productCategoryId = catId;
+            }
+        }
+        
+        // generate trail belong to a top category
+        String topCategoryId = CategoryWorker.getCatalogTopCategory(request, null);
+        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
+        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
+        
+        // look for productCategoryId from productId
+        if (UtilValidate.isNotEmpty(productId)) {
+            String catId = getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
+            if (catId != null) {
+                productCategoryId = catId;
+            }
+        }
+        
+        if (UtilValidate.isNotEmpty(productCategoryId)) {
+            List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
+    
+            // Cato: NOTE: CatalogUrlFilter#doGet does another adjustment to trail
+            // here before we add topCategoryId, but I don't know why, and I think it will 
+            // make no difference because we add topCategoryId now.
+            
+            if (trailElements.size() > 0) {
+                trailElements.add(0, topCategoryId);
+                return trailElements;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cato: Stock code factored out from {@link #doFilter}.
      */
     public static String getProductDefaultCategoryId(Delegator delegator, String productId) {
         String productCategoryId = null;
@@ -403,6 +426,186 @@ public class CatalogUrlFilter extends ContextFilter {
         return trailElements;
     }    
     
+    /**
+     * Cato: Returns true if the given category or any of the path elements is a top-level category.
+     */
+    public static boolean hasTopCategory(HttpServletRequest request, String categoryId, List<String> pathElements) {
+        if (CategoryWorker.isCategoryTop(request, categoryId)) {
+            return true;
+        }
+        String topCategoryId = CategoryWorker.getTopCategoryFromTrail(request, pathElements);
+        if (topCategoryId != null) {
+            return true;
+        }
+        List<String> trail = CategoryWorker.getTrail(request);
+        topCategoryId = CategoryWorker.getTopCategoryFromTrail(request, trail);
+        if (topCategoryId == null) {
+            return true;
+        }
+        return false;   
+    }
+    
+    /**
+     * Cato: Updates the trail elements using logic originally found in {@link CatalogUrlServlet#doGet}.
+     * <p>
+     * The caller should ensure the last path element is the same as the passed category ID.
+     * <p>
+     * trail is optional, will be fetched automatically.
+     */
+    public static void updateRequestAndTrail(HttpServletRequest request, String categoryId, String productId, List<String> pathElements, List<String> trail) {
+        if (UtilValidate.isEmpty(categoryId)) {
+            categoryId = null;
+        }
+        if (UtilValidate.isEmpty(productId)) {
+            productId = null;
+        }
+        
+        if (pathElements != null) {
+        
+            // get category info going with the IDs that remain
+            if (pathElements.size() == 1) {
+                CategoryWorker.setTrail(request, pathElements.get(0), null);
+                //categoryId = pathElements.get(0); // Cato: Assume caller did this
+            } else if (pathElements.size() == 2) {
+                CategoryWorker.setTrail(request, pathElements.get(1), pathElements.get(0));
+                //categoryId = pathElements.get(1); // Cato: Assume caller did this
+            } else if (pathElements.size() > 2) {
+                if (trail == null) {
+                    trail = CategoryWorker.getTrail(request);
+                    if (trail == null) {
+                        trail = FastList.newInstance();
+                    }
+                }
+    
+                if (trail.contains(pathElements.get(0))) {
+                    // first category is in the trail, so remove it everything after that and fill it in with the list from the pathInfo
+                    int firstElementIndex = trail.indexOf(pathElements.get(0));
+                    while (trail.size() > firstElementIndex) {
+                        trail.remove(firstElementIndex);
+                    }
+                    trail.addAll(pathElements);
+                } else {
+                    // first category is NOT in the trail, so clear out the trail and use the pathElements list
+                    trail.clear();
+                    trail.addAll(pathElements);
+                }
+                CategoryWorker.setTrail(request, trail);
+                //categoryId = pathElements.get(pathElements.size() - 1);  // Cato: Assume caller did this
+            }
+        } 
+        
+        if (pathElements == null || pathElements.size() <= 0) {
+          /* Cato: NOTE: This was a new addition but has been moved to CategoryWorker.getCategoryForProductFromTrail
+            which is called from data prep scripts instead of this (because other variables may need precedence over trail).
+          if (UtilValidate.isNotEmpty(productId)) {
+              List<String> trail = CategoryWorker.getTrail(request);
+              if (trail != null && !trail.isEmpty()) {
+                  String catId = trail.get(trail.size() - 1);
+                  if (UtilValidate.isNotEmpty(catId) && !"TOP".equals(catId)) {
+                      if (CategoryWorker.isCategoryContainsProduct(request, catId, productId)) {
+                          
+                      }
+                  }
+              }
+          }
+          */
+        }
+        
+        // Cato: Make sure we always reset this
+        //if (categoryId != null) {
+        request.setAttribute("productCategoryId", categoryId);
+        //}
+
+        String rootCategoryId = null;
+        if (pathElements.size() >= 1) {
+            rootCategoryId = pathElements.get(0);
+        }
+        // Cato: Make sure we always reset this
+        //if (rootCategoryId != null) {
+        request.setAttribute("rootCategoryId", rootCategoryId);
+        //}
+
+        if (productId != null) {
+            request.setAttribute("product_id", productId);
+            request.setAttribute("productId", productId);
+        }
+        
+        request.setAttribute("categoryTrailUpdated", Boolean.TRUE); // Cato: This is new
+    }
+    
+    /**
+     * Cato: Checks if the current category and product was already processed for this request,
+     * and if not, adjusts them in request and session (including trail).
+     * Returns the categoryId.
+     * <p>
+     * This may be called from other events or screen actions where modifying request and session is safe.
+     * <p>
+     * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     */
+    public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId) {
+        return getAdjustCurrentCategoryAndProduct(request, productId, null);
+    }
+    
+    /**
+     * Cato: Checks if the current category was already processed for this request,
+     * and if not, adjusts them in request and session (including trail).
+     * Returns the categoryId.
+     * <p>
+     * This may be called from other events or screen actions where modifying request and session is safe.
+     * <p>
+     * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     */
+    public static String getAdjustCurrentCategory(HttpServletRequest request, String categoryId) {
+        return getAdjustCurrentCategoryAndProduct(request, null, categoryId);
+    }
+    
+    /**
+     * Cato: Checks if the current category and product was already processed for this request,
+     * and if not, adjusts them in request and session (including trail).
+     * Returns the categoryId.
+     * <p>
+     * This may be called from other events or screen actions where modifying request and session is safe.
+     * <p>
+     * NOTE: This is an amalgamation of logic in {@link CatalogUrlFilter#doFilter} and {@link CatalogUrlServlet#doGet}.
+     */
+    public static String getAdjustCurrentCategoryAndProduct(HttpServletRequest request, String productId, String categoryId) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        
+        String currentProductId = (String) request.getAttribute("productId");
+        String currentCategoryId = (String) request.getAttribute("productCategoryId");
+        
+        if (UtilValidate.isEmpty(productId)) {
+            productId = null;
+        }
+        if (UtilValidate.isEmpty(categoryId)) {
+            categoryId = null;
+        }
+        if (UtilValidate.isEmpty(currentProductId)) {
+            currentProductId = null;
+        }
+        if (UtilValidate.isEmpty(currentCategoryId)) {
+            currentCategoryId = null;
+        }
+        
+        // Just use a dedicated flag instead of this. Much less likely to conflict with other code.
+        //// Generally, we want to enter this if the current category is not set. If it's set it means we already did this call (or an equivalent one) somewhere.
+        //if (currentCategoryId == null || 
+        //    (!currentCategoryId.equals(categoryId)) || // This shouldn't really happen, but can deal with it for free
+        //    (productId != null && !productId.equals(currentProductId))) {
+        if (!Boolean.TRUE.equals(request.getAttribute("categoryTrailUpdated"))) {
+        
+            // NOTE: We only reuse the current category ID, not product ID, because if caller passed productId null it means
+            // we're only doing categories.
+            if (categoryId == null) {
+                categoryId = currentCategoryId;
+            }
+            
+            List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
+
+            updateRequestAndTrail(request, categoryId, productId, trailElements, null);
+        }
+        return currentCategoryId;
+    }
     
     
     public static String makeCategoryUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {

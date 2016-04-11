@@ -38,7 +38,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * ControlServlet.java - Master servlet for the web application.
@@ -135,141 +134,29 @@ public class CatalogUrlServlet extends HttpServlet {
         // to override the default topCategory-based lookup. All other cases will use the default lookup like CatalogUrlFilter does.
         if ((UtilValidate.isNotEmpty(productId) && pathElements.size() == 0) ||
             (UtilValidate.isNotEmpty(categoryId) && pathElements.size() <= 1 && !CategoryWorker.isCategoryTop(request, categoryId)) ||
-            ((UtilValidate.isNotEmpty(productId) || UtilValidate.isNotEmpty(categoryId)) && !hasTopCategory(request, categoryId, pathElements))
+            ((UtilValidate.isNotEmpty(productId) || UtilValidate.isNotEmpty(categoryId)) && !CatalogUrlFilter.hasTopCategory(request, categoryId, pathElements))
            ) {
             // We don't have a top category anywhere. So we'll emulate CatalogUrlFilter.
-            List<String> trailElements = makeTrailElements(request, delegator, categoryId, productId);
+            List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
             if (trailElements != null) {
                 // Replace the pathElements with our trail
                 pathElements = trailElements;
             }
         }
         
-        // get category info going with the IDs that remain
-        if (pathElements.size() == 1) {
-            CategoryWorker.setTrail(request, pathElements.get(0), null);
-            categoryId = pathElements.get(0);
-        } else if (pathElements.size() == 2) {
-            CategoryWorker.setTrail(request, pathElements.get(1), pathElements.get(0));
-            categoryId = pathElements.get(1);
-        } else if (pathElements.size() > 2) {
-            List<String> trail = CategoryWorker.getTrail(request);
-            if (trail == null) {
-                trail = FastList.newInstance();
-            }
-
-            if (trail.contains(pathElements.get(0))) {
-                // first category is in the trail, so remove it everything after that and fill it in with the list from the pathInfo
-                int firstElementIndex = trail.indexOf(pathElements.get(0));
-                while (trail.size() > firstElementIndex) {
-                    trail.remove(firstElementIndex);
-                }
-                trail.addAll(pathElements);
-            } else {
-                // first category is NOT in the trail, so clear out the trail and use the pathElements list
-                trail.clear();
-                trail.addAll(pathElements);
-            }
-            CategoryWorker.setTrail(request, trail);
-            categoryId = pathElements.get(pathElements.size() - 1);
-        } else {
-            /* Cato: NOTE: This was a new addition but has been moved to CategoryWorker.getCategoryForProductFromTrail
-              which is called from data prep scripts instead of this (because other variables may need precedence over trail).
-            if (UtilValidate.isNotEmpty(productId)) {
-                List<String> trail = CategoryWorker.getTrail(request);
-                if (trail != null && !trail.isEmpty()) {
-                    String catId = trail.get(trail.size() - 1);
-                    if (UtilValidate.isNotEmpty(catId) && !"TOP".equals(catId)) {
-                        if (CategoryWorker.isCategoryContainsProduct(request, catId, productId)) {
-                            
-                        }
-                    }
-                }
-            }
-            */
-        }
-        if (categoryId != null) {
-            request.setAttribute("productCategoryId", categoryId);
-        }
-
-        String rootCategoryId = null;
+        // Cato: Update the categoryId to match the last path element
         if (pathElements.size() >= 1) {
-            rootCategoryId = pathElements.get(0);
+            categoryId = pathElements.get(pathElements.size() - 1);
         }
-        if (rootCategoryId != null) {
-            request.setAttribute("rootCategoryId", rootCategoryId);
-        }
-
-        if (productId != null) {
-            request.setAttribute("product_id", productId);
-            request.setAttribute("productId", productId);
-        }
+        
+        // Cato: Delegate the logic previously here to factored method
+        CatalogUrlFilter.updateRequestAndTrail(request, categoryId, productId, pathElements, null);
 
         RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/" + (productId != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));
         rd.forward(request, response);
         }
     }
 
-    public static boolean hasTopCategory(HttpServletRequest request, String categoryId, List<String> pathElements) {
-        if (CategoryWorker.isCategoryTop(request, categoryId)) {
-            return true;
-        }
-        String topCategoryId = CategoryWorker.getTopCategoryFromTrail(request, pathElements);
-        if (topCategoryId != null) {
-            return true;
-        }
-        List<String> trail = CategoryWorker.getTrail(request);
-        topCategoryId = CategoryWorker.getTopCategoryFromTrail(request, trail);
-        if (topCategoryId == null) {
-            return true;
-        }
-        return false;   
-    }
-    
-    
-    /**
-     * Cato: makeTrailElements, emulating CatalogUrlFilter.
-     */
-    public static List<String> makeTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
-        
-        String productCategoryId = categoryId;
-        
-        if (UtilValidate.isNotEmpty(productId)) {
-            String catId = CatalogUrlFilter.getProductDefaultCategoryId(delegator, productId);
-            if (catId != null) {
-                productCategoryId = catId;
-            }
-        }
-        
-        // generate trail belong to a top category
-        String topCategoryId = CategoryWorker.getCatalogTopCategory(request, null);
-        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
-        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-        
-        // look for productCategoryId from productId
-        if (UtilValidate.isNotEmpty(productId)) {
-            String catId = CatalogUrlFilter.getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
-            if (catId != null) {
-                productCategoryId = catId;
-            }
-        }
-        
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            List<String> trailElements = CatalogUrlFilter.getTrailElements(delegator, productCategoryId, trailCategoryIds);
-
-            // Cato: NOTE: CatalogUrlFilter does another adjustment to trail
-            // here before we add topCategoryId, but I don't know why, and I think it will 
-            // make no difference because we add topCategoryId now.
-            
-            if (trailElements.size() > 0) {
-                trailElements.add(0, topCategoryId);
-                return trailElements;
-            }
-        }
-        return null;
-    }
-    
-    
     /**
      * @see javax.servlet.http.HttpServlet#destroy()
      */

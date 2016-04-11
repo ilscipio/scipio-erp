@@ -733,6 +733,16 @@ public class CategoryWorker {
     }
     
     /**
+     * Cato: Returns true only if the category ID is child of the given parent category ID.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryChildOf(ServletRequest request, String parentProductCategoryId, String productCategoryId) {
+        return isCategoryChildOf((Delegator) request.getAttribute("delegator"), (LocalDispatcher) request.getAttribute("dispatcher"), 
+                parentProductCategoryId, productCategoryId);
+    }    
+    
+    /**
      * Cato: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching

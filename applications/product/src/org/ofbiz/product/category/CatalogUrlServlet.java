@@ -117,10 +117,10 @@ public class CatalogUrlServlet extends HttpServlet {
         // it's often possible for us to receive links that don't indicate full path AND for which we
         // don't have a trail in session.
         // So in these cases, we will emulate CatalogUrlFilter and replace everything to a path
-        // under the main top category.
+        // under the main top category OR as best determine by CatalogUrlFilter#makeTrailElements.
         // NOTE: CatalogUrlFilter's solution is imperfect and restricts browsing, so it's not
         // a great model, but we should at least follow it.
-        // WARN: this does not guarantee we have a "valid" category path; it's still possible
+        // WARN: This does not guarantee we have a "valid" category path; it's still possible
         // for other weirdness between the top category and the last part, but this should
         // help the worst cases.
         //

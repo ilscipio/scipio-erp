@@ -406,6 +406,7 @@ public class CatalogUrlFilter extends ContextFilter {
      * Cato: Makes a fresh trail based on the default category for a product or category under the top catalog category.
      * Ignores the current trail. 
      * Based on original {@link #doFilter} code.
+     * May return null.
      */
     public static List<String> makeDefaultCategoryTrailElements(HttpServletRequest request, Delegator delegator, String categoryId, String productId) {
         
@@ -692,7 +693,7 @@ public class CatalogUrlFilter extends ContextFilter {
 
                 List<String> trailElements = CatalogUrlFilter.makeTrailElements(request, delegator, categoryId, productId);
         
-                if (trailElements.size() >= 1) {
+                if (trailElements != null && trailElements.size() >= 1) {
                     categoryId = trailElements.get(trailElements.size() - 1);
                 }
                 

@@ -225,6 +225,8 @@
                         See org.ofbiz.product.product.ProductWorker.getVariantFromFeatureTree(String, List<String>, Delegator).
                         The check only happens server-side currently. -->
                     
+                    <#-- Cato: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
+                    
                     <#-- Variant Selection -->
                     <#if (product.isVirtual!?upper_case) == "Y">
                         <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>

@@ -1664,6 +1664,26 @@ TODO: doesn't handle dates (ambiguous?)
 
 <#-- 
 *************
+* contentArgRender
+************
+Renders an argument supposed to contain a string or macro representing template content.
+If it is a macro, it must accept a single {{{args}}} parameter (map), which may
+be empty or populating depending on the specific point of use.
+
+  * Parameters *
+    content                 = ((string)|(macro)) The content to render
+    args                    = ((map)) Map of arguments to pass to macro
+-->
+<#macro contentArgRender content args={}>
+  <#if content?is_directive>
+    <@content args=args /><#t>
+  <#else>
+    ${content}<#t>
+  </#if>
+</#macro>
+
+<#-- 
+*************
 * mergeArgMaps
 ************
 Merges cato macro inlineArgs/args/defaultArgs/overrideArgs argument maps for macros implementing
@@ -1750,7 +1770,7 @@ TODO?: may want helper booleans to control in/out allArgNames?
 *************
 * mergeArgMapsBasic
 ************
-a version of mergeArgMaps that only merges maps, but doesn't perform any special implied
+A version of mergeArgMaps that only merges maps, but doesn't perform any special implied
 operations on them.
 
   * Parameters *

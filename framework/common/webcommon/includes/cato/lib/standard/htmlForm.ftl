@@ -784,7 +784,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                   For generic parent fields, label type must be specified explicitly, e.g.
                                     {{{<@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields>}}}
                               NOTE: label area behavior may also be influenced by containing macros such as @fields
-    labelDetail             = Extra content (HTML) inserted with (after) label
+    labelDetail             = Extra content (HTML) inserted with label (normally after label, but theme may decide)
+                              NOTE: If need to guarantee post-markup label content, may also use {{{postLabelContent}}} (lower-level control).
     labelType               = Explicit label type (see @fields)
     labelPosition           = Explicit label layout (see @fields)
     labelArea               = ((boolean), default: -from global styles-) If true, forces a label area; if false, prevents a label area
@@ -863,7 +864,29 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               for this, can prefix with "#LABEL:" string which indicates to take the named label from uiLabelMap.
     postfix                 = ((boolean), default: false) Controls whether an extra area is appended after widget area
     postfixSize             = ((int), default: 1) Manual postfix size, in (large) grid columns
-    postfixContent          = Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
+    postfixContent          = ((string)|(macro)) Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+    postfixContentArgs      = ((map)) Optional map of arguments to pass to {{{postfixContent}}} macro, if macro
+    preWidgetContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area before widget content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+    postWidgetContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the widget area after widget content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+    preLabelContent         = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area before label content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+    postLabelContent        = ((string)|(macro)) Text or text-generating macro that will be inserted in the label area after label content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+                              NOTE: This is almost the same as labelDetail, except postLabelContent is lower level and will always occur at the specified position.
+    prePostfixContent       = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area before postfix content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default - pass using {{{prePostContentArgs}}}.
+    postPostfixContent      = ((string)|(macro)) Text or text-generating macro that will be inserted in the postfix area after postfix content (low-level control)
+                              If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
+                              NOTE: Currently, the {{{args}}} map will be empty by default by default - pass using {{{prePostContentArgs}}}.
+    prePostContentArgs      = ((map)) Optional map of extra user-supplied args to be passed to the {{{prePostXxx}}} content macros as the {{{args}}} parameter.
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
@@ -1052,6 +1075,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "inline":"", "ignoreParentField":"",
   "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
   "titleClass":"", "formatText":"",
+  "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
+  "prePostContentArgs":{}, "postfixContentArgs":{},
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1330,17 +1355,23 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local dummy = pushRequestStack("catoFieldInfoStack", fieldInfo)>
   
   <#-- main markup begin -->
-  <#local labelAreaContent = "">
+  <#local labelContent = false>
   <#if useLabelArea>
+    <#local labelContent = fieldLabelAreaInvoker><#-- macro -->
     <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
         specified a certain parameter to @field or not - the other logical args don't record this info -->
-    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail 
-        fieldType=type fieldsType=fieldsType fieldId=id collapse=collapse required=required origArgs=origArgs passArgs=passArgs/></#local>
+    <#-- DEV NOTE: WARN: If you add any arguments here, they must also be added to @fieldLabelAreaInvoker macro below! 
+        This pattern is used to get the @field_markup_labelarea invocation to occur at the correct time (within the label area) -->
+    <#local labelContentArgs = {"labelType":effLabelType, "labelPosition":effLabelPosition, "label":label, "labelDetail":labelDetail, 
+        "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
   <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixSize=postfixSize 
-    postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
-    collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass origArgs=origArgs passArgs=passArgs>
+    postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelContent=labelContent 
+    collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass 
+    preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
+    labelContentArgs=labelContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
+    origArgs=origArgs passArgs=passArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1676,7 +1707,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     labelContent is generated by field_markup_labelarea.
     nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
-<#macro field_markup_container type="" fieldsType="" class="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" origArgs={} passArgs={} catchArgs...>
+<#macro field_markup_container type="" fieldsType="" class="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
+    postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelContent="" collapse="" 
+    collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" 
+    preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
+    labelContentArgs={} postfixContentArgs={} prePostContentArgs={}
+    origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>
   <#local labelAreaClass = "">  
   <#local postfixAreaClass = "">
@@ -1718,21 +1754,27 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <@row collapse=collapse norows=(norows || !container)>
             <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-top")>
             <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
-              ${labelAreaContent}        
+              <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+              <#if !labelContent?is_boolean><@contentArgRender content=labelContent args=labelContentArgs /></#if>
+              <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
             </@cell>
           </@row>
         </#if>
           <@row collapse=(collapse || (postfix && collapsePostfix)) norows=(norows || !container)>
             <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+              <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
               <#nested>
+              <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
             </@cell>
             <#if postfix && !nocells && container>
               <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
+                <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
                 <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
                   <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
                 <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
-                  ${postfixContent}
+                  <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
                 </#if>
+                <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
               </@cell>
             </#if>
           </@row>
@@ -1742,7 +1784,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#if labelArea && labelPosition == "left">
         <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
         <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
-            ${labelAreaContent}
+          <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+          <#if !labelContent?is_boolean><@contentArgRender content=labelContent args=labelContentArgs /></#if>
+          <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
         </@cell>
       </#if>
 
@@ -1753,21 +1797,32 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->
           <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+            <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
             <#nested>
+            <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
           </@cell>
           <#if postfix && !nocells && container>
             <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
+              <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
               <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
                 <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
               <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
-                ${postfixContent}
+                <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
               </#if>
+              <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
             </@cell>
           </#if>
         </@row>
       </@cell>
     </#if>
   </@row>
+</#macro>
+
+<#-- This is a helper macro needed to get @field_markup_labelarea to render in the right spot. Themes should not override this. -->
+<#macro fieldLabelAreaInvoker args={}>
+  <@field_markup_labelarea labelType=args.labelType labelPosition=args.labelPosition label=args.label labelDetail=args.labelDetail 
+        fieldType=args.fieldType fieldsType=args.fieldsType fieldId=args.fieldId collapse=args.collapse required=args.required 
+        origArgs=args.origArgs passArgs=args.passArgs/><#t>
 </#macro>
 
 <#-- @field label area markup - theme override 

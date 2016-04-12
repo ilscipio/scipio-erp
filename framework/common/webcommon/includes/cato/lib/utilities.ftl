@@ -1672,11 +1672,14 @@ be empty or populating depending on the specific point of use.
 
   * Parameters *
     content                 = ((string)|(macro)) The content to render
+    doTrim                  = ((boolean), default: false) If string, trim it
     args                    = ((map)) Map of arguments to pass to macro
 -->
-<#macro contentArgRender content args={}>
+<#macro contentArgRender content doTrim=false args={}>
   <#if content?is_directive>
     <@content args=args /><#t>
+  <#elseif doTrim>
+    ${content?trim}<#t>
   <#else>
     ${content}<#t>
   </#if>

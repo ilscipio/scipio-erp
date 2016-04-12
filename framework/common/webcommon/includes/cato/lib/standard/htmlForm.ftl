@@ -784,8 +784,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                   For generic parent fields, label type must be specified explicitly, e.g.
                                     {{{<@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields>}}}
                               NOTE: label area behavior may also be influenced by containing macros such as @fields
-    labelDetail             = Extra content (HTML) inserted with label (normally after label, but theme may decide)
+    labelContent            = ((string)|(macro)) Alternative to {{{label}}} arg which may be a macro and allows manually overriding the basic label markup
+                              WARN: Currently (2016-04-12), unlike the {{{label}}} arg, {{{labelContent}}} will not follow any label inlining logic and
+                                  is only used by the label area markup. 
+                              FIXME?: May want to have labelContent follow label more closely.
+    labelDetail             = ((string)|(macro)) Extra content (HTML) inserted with label (normally after label, but theme may decide)
+                              2016-04-12: This may also be a macro used to generate the label, which must accept a single {{{args}}} map parameter.
                               NOTE: If need to guarantee post-markup label content, may also use {{{postLabelContent}}} (lower-level control).
+    labelContentArgs        = ((map)) Optional map of args to be passed to {{{labelContent}}} and {{{labelDetail}}} in cases where they are macros
+                              NOTE: In addition to these values, all the parameters of the theme-implementing @field_markup_labelarea macros
+                                  are also passed.
     labelType               = Explicit label type (see @fields)
     labelPosition           = Explicit label layout (see @fields)
     labelArea               = ((boolean), default: -from global styles-) If true, forces a label area; if false, prevents a label area
@@ -1060,7 +1068,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
 -->
 <#assign field_defaultArgs = {
-  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
+  "type":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
@@ -1076,7 +1084,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
   "titleClass":"", "formatText":"",
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
-  "prePostContentArgs":{}, "postfixContentArgs":{},
+  "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{},
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1141,6 +1149,32 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#local events = events + {"focus": onFocus}>
   </#if>
   
+  <#-- Backward-compability - don't consider empty string (or empty anything) as having content -->
+  <#if !labelContent?has_content && !labelContent?is_directive>
+    <#local labelContent = false>
+  </#if>
+  <#if !labelDetail?has_content && !labelDetail?is_directive>
+    <#local labelDetail = false>
+  </#if>
+  <#if !preWidgetContent?has_content && !preWidgetContent?is_directive>
+    <#local preWidgetContent = false>
+  </#if>
+  <#if !postWidgetContent?has_content && !postWidgetContent?is_directive>
+    <#local postWidgetContent = false>
+  </#if>
+  <#if !preLabelContent?has_content && !preLabelContent?is_directive>
+    <#local preLabelContent = false>
+  </#if>
+  <#if !postLabelContent?has_content && !postLabelContent?is_directive>
+    <#local postLabelContent = false>
+  </#if>
+  <#if !prePostfixContent?has_content && !prePostfixContent?is_directive>
+    <#local prePostfixContent = false>
+  </#if>
+  <#if !postPostfixContent?has_content && !postPostfixContent?is_directive>
+    <#local postPostfixContent = false>
+  </#if>
+
   <#-- parent @field elem info (if any; is possible) -->
   <#local parentFieldInfo = readRequestStack("catoFieldInfoStack")!{}>
   <#-- allow ignore parent -->
@@ -1312,7 +1346,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#-- NOTE: labelAreaRequireContent should not affect consume logic above -->
   <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
     (!(labelArea?is_boolean && labelArea == false) && 
-      (!labelAreaRequireContent || (label?has_content || labelDetail?has_content)) && (labelAreaDefault))>
+      (!labelAreaRequireContent || (label?has_content || !labelContent?is_boolean || !labelDetail?is_boolean)) && (labelAreaDefault))>
+  
+  <#-- FIXME?: labelContent currently does not follow the label inlining logic; only @field_markup_labelarea will render it -->
   
   <#-- Special case where inlineLabel is re-implemented using actual label area using collapsing. -->
   <#if !(effInlineLabel?is_boolean && effInlineLabel == false) && effInlineLabel?has_content && 
@@ -1355,22 +1391,23 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local dummy = pushRequestStack("catoFieldInfoStack", fieldInfo)>
   
   <#-- main markup begin -->
-  <#local labelContent = false>
+  <#local labelAreaContent = false>
   <#if useLabelArea>
-    <#local labelContent = fieldLabelAreaInvoker><#-- macro -->
+    <#local labelAreaContent = fieldLabelAreaInvoker><#-- macro -->
     <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
         specified a certain parameter to @field or not - the other logical args don't record this info -->
     <#-- DEV NOTE: WARN: If you add any arguments here, they must also be added to @fieldLabelAreaInvoker macro below! 
         This pattern is used to get the @field_markup_labelarea invocation to occur at the correct time (within the label area) -->
-    <#local labelContentArgs = {"labelType":effLabelType, "labelPosition":effLabelPosition, "label":label, "labelDetail":labelDetail, 
-        "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "origArgs":origArgs, "passArgs":passArgs}>
+    <#-- DEV NOTE: Also see @fieldLabelAreaInvoker - it recombines labelAreaContentArgs into labelContentArgs! -->
+    <#local labelAreaContentArgs = {"labelType":effLabelType, "labelPosition":effLabelPosition, "label":label, "labelContent":labelContent, "labelDetail":labelDetail, 
+        "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "labelContentArgs":labelContentArgs, "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
   <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixSize=postfixSize 
-    postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelContent=labelContent 
+    postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass 
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
-    labelContentArgs=labelContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
+    labelAreaContentArgs=labelAreaContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
     origArgs=origArgs passArgs=passArgs>
     <#switch type>
       <#case "input">
@@ -1704,14 +1741,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 </#function>
 
 <#-- @field container markup - theme override 
-    labelContent is generated by field_markup_labelarea.
     nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
 <#macro field_markup_container type="" fieldsType="" class="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
-    postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelContent="" collapse="" 
+    postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
     collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" 
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
-    labelContentArgs={} postfixContentArgs={} prePostContentArgs={}
+    labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
     origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>
   <#local labelAreaClass = "">  
@@ -1755,7 +1791,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
             <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-top")>
             <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
               <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-              <#if !labelContent?is_boolean><@contentArgRender content=labelContent args=labelContentArgs /></#if>
+              <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
               <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
             </@cell>
           </@row>
@@ -1785,7 +1821,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
         <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
           <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-          <#if !labelContent?is_boolean><@contentArgRender content=labelContent args=labelContentArgs /></#if>
+          <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
           <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
         </@cell>
       </#if>
@@ -1820,17 +1856,20 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 
 <#-- This is a helper macro needed to get @field_markup_labelarea to render in the right spot. Themes should not override this. -->
 <#macro fieldLabelAreaInvoker args={}>
-  <@field_markup_labelarea labelType=args.labelType labelPosition=args.labelPosition label=args.label labelDetail=args.labelDetail 
+  <#-- NOTE: Special case for labelContentArgs -->
+  <@field_markup_labelarea labelType=args.labelType labelPosition=args.labelPosition label=args.label labelContent=args.labelContent labelDetail=args.labelDetail 
         fieldType=args.fieldType fieldsType=args.fieldsType fieldId=args.fieldId collapse=args.collapse required=args.required 
-        origArgs=args.origArgs passArgs=args.passArgs/><#t>
+        labelContentArgs=(args + args.labelContentArgs) origArgs=args.origArgs passArgs=args.passArgs/><#t>
 </#macro>
 
 <#-- @field label area markup - theme override 
-    This generates labelContent passed to @field_markup_container. 
     WARN: origArgs may be empty -->
-<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldsType="" fieldId="" collapse="" required=false origArgs={} passArgs={} catchArgs...>
+<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelContent=false labelDetail=false fieldType="" fieldsType="" fieldId="" collapse="" 
+    required=false labelContentArgs={} origArgs={} passArgs={} catchArgs...>
   <#local label = label?trim>
-  <#if label?has_content>
+  <#if !labelContent?is_boolean>
+    <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
+  <#elseif label?has_content>
     <#if collapse>
       <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
@@ -1839,10 +1878,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#else>
     <#if required>*</#if>
   </#if> 
-  <#local labelDetail = labelDetail?trim>
-  <#if labelDetail?has_content>
-    ${labelDetail}
-  </#if>  
+  <#if !labelDetail?is_boolean><@contentArgRender content=labelDetail args=labelContentArgs doTrim=true /></#if>
   <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
   <#if !label?has_content && !labelDetail?has_content>
     &nbsp;

@@ -574,7 +574,10 @@
       <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
-      <@field type="input" name="input4" label="Input 4 (required)" required=true />
+      <#macro custLabelAreaTest args={}>
+        <label for="${args.fieldId}"><strong>${args.test1} (required and custom label content)</strong></label><#t>
+      </#macro>
+      <@field type="input" name="input4" labelContent=custLabelAreaTest labelContentArgs={"test1":"Input 4"} required=true />
       <@field type="input" name="input5" label="Input 5 (required, tooltip force-disabled)" required=true tooltip=false/>
 
       <@field type="datetime" label="Date 1 (timestamp)" name="date1" value="" size="25" maxlength="30" dateType="date-time" />

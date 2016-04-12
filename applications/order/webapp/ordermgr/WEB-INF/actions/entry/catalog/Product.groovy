@@ -55,7 +55,7 @@ if (productId) {
     }
     
     // first make sure this isn't a variant that has an associated virtual product, if it does show that instead of the variant
-    virtualProductId = ProductWorker.getVariantVirtualId(product);
+    virtualProductId = product ? ProductWorker.getVariantVirtualId(product) : null;
     if (virtualProductId) {
         productId = virtualProductId;
         product = from("Product").where("productId", productId).cache(true).queryOne();

@@ -50,7 +50,7 @@ under the License.
             </#if>
             <#-- order status information -->
             <@tr>
-              <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.CommonStatus}</b>
+              <@td align="right" valign="top" width="15%"><b>${uiLabelMap.CommonStatus}</b>
               </@td>
               <@td valign="top" width="80%">
                 <#if orderHeader?has_content>

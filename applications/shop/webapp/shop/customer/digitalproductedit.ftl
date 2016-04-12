@@ -21,15 +21,15 @@ under the License.
 
 <@section title=uiLabelMap.PageTitleDigitalProductEdit>
 <#if !supplierProduct?has_content && parameters.productId?has_content>
-  <div><h3>${uiLabelMap.EcommerceMessage1} [${parameters.productId}] ${uiLabelMap.EcommerceMessage2}</h3></div>
+  <@commonMsg type="info">${uiLabelMap.EcommerceMessage1} [${parameters.productId}] ${uiLabelMap.EcommerceMessage2}</@commonMsg>
 <#else>
 
     <#if !supplierProduct??>
-      <h1>${uiLabelMap.EcommerceAddNewDigitalProduct}</h1>
+      <@heading>${uiLabelMap.EcommerceAddNewDigitalProduct}</@heading>
       <form method="post" action="<@ofbizUrl>createCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform">
         <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
     <#else>
-      <h1>${uiLabelMap.EcommerceUpdateDigitalProduct}</h1>
+      <@heading>${uiLabelMap.EcommerceUpdateDigitalProduct}</@heading>
       <form method="post" action="<@ofbizUrl>updateCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform">
         <input type="hidden" name="productId" value="${parameters.productId}" />
         <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}" />

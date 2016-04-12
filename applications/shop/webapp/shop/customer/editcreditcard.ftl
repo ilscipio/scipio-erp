@@ -18,8 +18,8 @@ under the License.
 -->
 
 <#if canNotView>
-  <h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3>
-<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
 <#else>
   <#if !creditCard??>
       <@heading>${uiLabelMap.AccountingAddNewCreditCard}</@heading>

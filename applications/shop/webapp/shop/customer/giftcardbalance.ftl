@@ -17,12 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.AccountingGiftCardBalance}</h1>
-<br />
-<div>${uiLabelMap.AccountingEnterGiftCardNumber}</div>
-<br />
+<@heading>${uiLabelMap.AccountingGiftCardBalance}</@heading>
 
-<br />
+<p>${uiLabelMap.AccountingEnterGiftCardNumber}</p>
+
 <@table type="fields"> <#-- orig: align="center" -->
   <#if requestAttributes.processResult??>
     <@tr>

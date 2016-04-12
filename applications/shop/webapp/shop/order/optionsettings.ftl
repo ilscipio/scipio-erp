@@ -17,69 +17,49 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <h3>${uiLabelMap.OrderShippingInformation}</h3>
+<@section title=uiLabelMap.OrderShippingInformation>
   <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">
-    <fieldset><legend>${uiLabelMap.OrderShippingInformation}</legend>
+    <fieldset><#--<legend>${uiLabelMap.OrderShippingInformation}</legend>-->
       <input type="hidden" name="finalizeMode" value="options"/>
-      <ul>
+      <@field type="generic" label=uiLabelMap.OrderSelectShippingMethod>
       <#list carrierShipmentMethodList as carrierShipmentMethod>
-        <li>
           <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-          <input type="radio" id="shipping_method_${shippingMethod}" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == chosenShippingMethod?default("N@A")>checked="checked"</#if>/>
-          <label for="shipping_method_${shippingMethod}">
+          <#assign fieldLabel>
             <#if shoppingCart.getShippingContactMechId()??>
-              <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+              <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!(-1)>
             </#if>
             <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
               <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if>
              </#if>
-          </label>
-        </li>
+          </#assign>
+          <@field type="radio" id="shipping_method_${shippingMethod}" name="shipping_method" value="${shippingMethod}" checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
       </#list>
       <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-        <div>
-          <input type="radio" name="shipping_method" value="Default" checked="checked"/>
-          <label for="shipping_method">${uiLabelMap.OrderUseDefault}.</label>
-        </div>
+          <@field type="radio" name="shipping_method" value="Default" checked=true label="${uiLabelMap.OrderUseDefault}."/>
       </#if>
-    </fieldset>
-    <fieldset><legend>${uiLabelMap.OrderShipAllAtOnce}?</legend>
-        <div>
-          <input type="radio" id="maySplit_N" <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name="may_split" value="false"/>
-          <label for="maySplit_N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</label>
-        </div>
-        <div>
-          <input type="radio" id="maySplit_Y" <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> name="may_split" value="true"/>
-          <label for="maySplit_Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</label>
-        </div>
+      </@field>
     </fieldset>
     <fieldset>
-        <div>
-          <label for="shipping_instructions">${uiLabelMap.OrderSpecialInstructions}</label>
-          <textarea cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</textarea>
-        </div>
-        <div>
-          <label for="correspondingPoId">${uiLabelMap.OrderPoNumber}</label>
-          <input type="text" name="correspondingPoId" value="${shoppingCart.getPoNumber()!}"/>
-        </div>
+        <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+          <@field type="radio" id="maySplit_N" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
+          <@field type="radio" id="maySplit_Y" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
+        </@field>
+    </fieldset>
+    <fieldset>
+        <@field type="textarea" label=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</@field>
+        <@field type="input" name="correspondingPoId" value=(shoppingCart.getPoNumber()!) label=uiLabelMap.OrderPoNumber/>
     </fieldset>
     <#if (productStore.showCheckoutGiftOptions!) != "N">
-        <fieldset><legend>${uiLabelMap.OrderIsThisGift}</legend>
-          <div>
-            <input type="radio" id="is_gift_Y" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"/>
-            <label for="is_gift_Y">${uiLabelMap.CommonYes}</label>
-          </div>
-          <div>
-            <input type="radio" id="is_gift_N" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"/>
-            <label far="is_gift_N">${uiLabelMap.CommonNo}</label>
-          </div>
-          <div>
-            <label for="gift_message">${uiLabelMap.OrderGiftMessage}</label>
-            <textarea class="textAreaBox" name="gift_message">${shoppingCart.getGiftMessage()!}</textarea>
-          </div>
-        </fieldset>
+      <fieldset>
+          <@field type="generic" label=uiLabelMap.OrderIsThisGift>
+            <@field type="radio" id="is_gift_Y" checked=((shoppingCart.getIsGift()!"Y") == "Y") name="is_gift" value="true" label=uiLabelMap.CommonYes />
+            <@field type="radio" id="is_gift_N" checked=((shoppingCart.getIsGift()!"N") == "N") name="is_gift" value="false" label=uiLabelMap.CommonNo />
+          </@field>
+          <@field type="textarea" label=uiLabelMap.OrderGiftMessage class="textAreaBox" name="gift_message">${shoppingCart.getGiftMessage()!}</@field>   
+      </fieldset>
     </#if>
-    <div>
-      <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
-    </div>
+
+      <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue/>
+
   </form>
+</@section>

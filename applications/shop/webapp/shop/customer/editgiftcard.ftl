@@ -18,14 +18,14 @@ under the License.
 -->
 
 <#if canNotView>
-  <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
-&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">[${uiLabelMap.CommonGoBack}]</a>
+  <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
 <#else>
     <#if !giftCard??>
-      <h1>${uiLabelMap.AccountingAddNewGiftCard}</h1>
+      <@heading>${uiLabelMap.AccountingAddNewGiftCard}</@heading>
       <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
     <#else>
-      <h1>${uiLabelMap.AccountingEditGiftCard}</h1>
+      <@heading>${uiLabelMap.AccountingEditGiftCard}</@heading>
       <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>

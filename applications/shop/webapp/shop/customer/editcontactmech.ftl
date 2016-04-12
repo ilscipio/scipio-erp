@@ -40,7 +40,7 @@ under the License.
       </@table>
       </div>
     </form>
-    <#-- <p><h3>ERROR: Contact information with ID "${contactMechId}" not found!</h3></p> -->
+    <#--<@commonMsg type="error">ERROR: Contact information with ID "${contactMechId}" not found!</@commonMsg>-->
     </#if>
   </#if>
 

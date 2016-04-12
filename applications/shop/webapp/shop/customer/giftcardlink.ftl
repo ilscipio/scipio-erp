@@ -17,10 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<h1>${uiLabelMap.AccountingGiftCardLink}</h1>
-<br />
-<div>${uiLabelMap.AccountingEnterGiftCardLink}.</div>
-<br />
+<@heading>${uiLabelMap.AccountingGiftCardLink}</@heading>
+
+<p>${uiLabelMap.AccountingEnterGiftCardLink}.</p>
 
 <form name="gclink" method="post" action="<@ofbizUrl>linkgiftcard</@ofbizUrl>">
   <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />

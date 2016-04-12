@@ -18,14 +18,14 @@ under the License.
 -->
 
 <#if canNotView>
-  <p><h3>${uiLabelMap.AccountingEFTNotBelongToYou}.</h3></p>
-&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <@commonMsg type="error-perm">${uiLabelMap.AccountingEFTNotBelongToYou}.</@commonMsg>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
 <#else>
     <#if !eftAccount??>
-      <h1>${uiLabelMap.AccountingAddNewEftAccount}</h1>
+      <@heading>${uiLabelMap.AccountingAddNewEftAccount}</@heading>
       <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
     <#else>
-      <h1>${uiLabelMap.PageTitleEditEFTAccount}</h1>
+      <@heading>${uiLabelMap.PageTitleEditEFTAccount}</@heading>
       <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>

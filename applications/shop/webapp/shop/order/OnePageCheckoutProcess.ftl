@@ -80,18 +80,9 @@ under the License.
                   </#if>
                   <div id="shippingFormServerError" class="errorMessage"></div>
                   <div>
-                      <span>
-                        <label for="firstName">${uiLabelMap.PartyFirstName}*
-                          <span id="advice-required-firstName" style="display: none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                        </label>
-                        <input id="firstName" name="firstName" class="required" type="text" value="${firstName!}" />
-                      </span>
-                      <span>
-                        <label for="lastName">${uiLabelMap.PartyLastName}*
-                          <span id="advice-required-lastName" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                        </label>
-                        <input id="lastName" name="lastName" class="required" type="text" value="${lastName!}" />
-                      </span>
+                    <@field type="input" label=uiLabelMap.PartyFirstName id="firstName" name="firstName" required=true value="${firstName!}" />
+
+                    <@field type="input" label=uiLabelMap.PartyLastName id="lastName" name="lastName" required=true value="${lastName!}" />
                   </div>
                   <div>
                   <#if shipToTelecomNumber?has_content>

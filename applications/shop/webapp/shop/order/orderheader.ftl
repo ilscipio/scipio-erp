@@ -44,7 +44,7 @@ under the License.
     <#if localOrderReadHelper?? && orderHeader?has_content>
         <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
         <#if displayParty?has_content>
-            <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+            <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderHeader.orderDate!), "userLogin":userLogin})/>
         </#if>
 
         <@row>
@@ -53,9 +53,8 @@ under the License.
                     <@table type="fields">
                         <#if displayPartyNameResult?has_content>
                             <@tr>
-                              <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}
-                              </@td>
-                              <@td colspan="3">${(displayPartyNameResult.fullName)?default("[Name Not Found]")}</@td>
+                              <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}</@td>
+                              <@td colspan="3">${(displayPartyNameResult.fullName)!"[Name Not Found]"}</@td>
                             </@tr>
                         </#if>
                         <@tr>
@@ -112,8 +111,7 @@ under the License.
                                     </@tr>
                                     <#if orderHeader?has_content && paymentAddress?has_content>
                                         <@tr>
-                                          <@td class="${styles.grid_large!}2">$${uiLabelMap.OrderSendPaymentTo}
-                                          </@td>
+                                          <@td class="${styles.grid_large!}2">$${uiLabelMap.OrderSendPaymentTo}</@td>
                                           <@td colspan="3">
                                               <#if paymentAddress.toName?has_content>${paymentAddress.toName}><br/></#if>
                                               <#if paymentAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${paymentAddress.attnName}><br/></#if>
@@ -129,9 +127,8 @@ under the License.
                                     </#if>
                                 <#else>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}
-                                          </@td>
-                                          <@td colspan="3">${paymentMethodType.get("description",locale)}</@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}</@td>
+                                        <@td colspan="3">${paymentMethodType.get("description",locale)}</@td>
                                     </@tr>
                                 </#if>
 
@@ -151,17 +148,15 @@ under the License.
                                     <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
                                         <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
                                         <@tr>
-                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}
-                                              </@td>
-                                              <@td colspan="3">${formattedCardNumber}<br/>
-                                              
-                                                  <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}><br/></#if>
-                                                  <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}><br/></#if>
-                                                  ${creditCard.firstNameOnCard}<br/>
-                                                  <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}><br/></#if>
-                                                  ${creditCard.lastNameOnCard}<br/>
-                                                  <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
-                                              </@td>
+                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}</@td>
+                                            <@td colspan="3">${formattedCardNumber}<br/>
+                                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}><br/></#if>
+                                              <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}><br/></#if>
+                                              ${creditCard.firstNameOnCard}<br/>
+                                              <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}><br/></#if>
+                                              ${creditCard.lastNameOnCard}<br/>
+                                              <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
+                                            </@td>
                                         </@tr>
                                         
                                     </#if>
@@ -186,8 +181,7 @@ under the License.
                                           </#if>
                                         </#if>
                                         <@tr>
-                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}
-                                            </@td>
+                                            <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}</@td>
                                             <@td colspan="3">${giftCardNumber}</@td>
                                         </@tr>
                                     </#if>
@@ -213,8 +207,7 @@ under the License.
                                     
                                     <#if pmBillingAddress?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAddress}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAddress}</@td>
                                         <@td colspan="3">
                                             <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}<br/></#if>
                                             <#if pmBillingAddress.attnName?has_content>${uiLabelMap.CommonAttn}: ${pmBillingAddress.attnName}<br/></#if>
@@ -233,8 +226,7 @@ under the License.
                             <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
                                 <#if billingAccount?has_content || customerPoNumberSet?has_content>>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentInformation}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentInformation}</@td>
                                         <@td colspan="3">
                                             <#if billingAccount?has_content>
                                                 ${uiLabelMap.AccountingBillingAccount}
@@ -275,8 +267,7 @@ under the License.
                               <@table type="fields">
                                 <#if shippingAddress?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderDestination} ${groupNumber}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderDestination} ${groupNumber}</@td>
                                         <@td colspan="3">
                                             <#if shippingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${shippingAddress.toName}<br/></#if>
                                             <#if shippingAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${shippingAddress.attnName}<br/></#if>
@@ -291,8 +282,7 @@ under the License.
                                     </@tr>
                                 </#if>
                                 <@tr>
-                                    <@td class="${styles.grid_large!}2">${uiLabelMap.OrderMethod}
-                                    </@td>
+                                    <@td class="${styles.grid_large!}2">${uiLabelMap.OrderMethod}</@td>
                                     <@td colspan="3">
                                         <#if orderHeader?has_content>
                                             <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
@@ -312,8 +302,7 @@ under the License.
                                 <#-- tracking number -->
                                 <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderTrackingNumber}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderTrackingNumber}</@td>
                                         <@td colspan="3">
                                             <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
                                             <#if shipGroup.trackingNumber?has_content>
@@ -340,8 +329,7 @@ under the License.
                                   </#if>
 
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderSplittingPreference}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderSplittingPreference}</@td>
                                         <@td colspan="3">
                                             <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
                                             <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
@@ -356,8 +344,7 @@ under the License.
                                   </#if>
                                   <#if shippingInstructions?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderInstructions}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderInstructions}</@td>
                                         <@td colspan="3">
                                             ${shippingInstructions}
                                         </@td>
@@ -374,8 +361,7 @@ under the License.
                                   </#if>
                                   <#if (productStore.showCheckoutGiftOptions!) != "N">
                                   <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGift}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGift}</@td>
                                         <@td colspan="3">
                                             <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>
                                             <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisIsGift}.</#if>
@@ -383,8 +369,7 @@ under the License.
                                     </@tr>
                                   <#if giftMessage?has_content>
                                     <@tr>
-                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGiftMessage}
-                                        </@td>
+                                        <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGiftMessage}</@td>
                                         <@td colspan="3">
                                             ${giftMessage}
                                         </@td>

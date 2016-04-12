@@ -28,6 +28,10 @@ under the License.
     </ul>
   </#if>
 </#macro>
+<#-- Cato: invoker usable with @field pre/PostWidgetContent -->
+<#macro fieldErrorsInvoker args={}>
+  <@fieldErrors fieldName=args.fieldName />
+</#macro>
 <#macro fieldErrorsMulti fieldName1 fieldName2 fieldName3 fieldName4>
   <#if errorMessageList?has_content>
     <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName1, fieldName2, fieldName3, fieldName4, true, errorMessageList)>
@@ -37,6 +41,10 @@ under the License.
       </#list>
     </ul>
   </#if>
+</#macro>
+<#-- Cato: invoker usable with @field pre/PostWidgetContent -->
+<#macro fieldErrorsMultiInvoker args={}>
+  <@fieldErrorsMulti fieldName1=args.fieldName1 fieldName2=args.fieldName2 fieldName3=args.fieldName3 fieldName4=args.fieldName4 />
 </#macro>
 
 <@section title=uiLabelMap.PartyBasicInformation>
@@ -49,80 +57,36 @@ under the License.
 
     <@row>
       <@cell columns=6 last=true>
-          <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
-              <@tr>
-                 <@td width="26%" align="right" valign="top"></@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyNameAndConactInfo}</div></@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyFirstName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="firstName"/>
-                    <input type="text" class="inputBox required" name="firstName" id="firstName" value="${parameters.firstName!}" size="30" maxlength="30"/>*<span id="advice-required-firstName" class="required" style="display:none">(${uiLabelMap.CommonRequired})</span>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyMiddleInitial}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <input type="text" class="inputBox"  name="middleName" value="${parameters.middleName!}" size="4" maxlength="4"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyLastName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="lastName"/>
-                  <input type="text" class="inputBox required" name="lastName" value="${parameters.lastName!}" size="30" maxlength="30"/>*<span id="advice-required-lastName" class="required" style="display:none">(${uiLabelMap.CommonRequired})</span>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right" valign="top"></@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">[${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</@td>
-              </@tr>
-              <@tr>
-                <@td width="10%" align="right">${uiLabelMap.PartyHomePhone}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="88%">
-                  <@fieldErrorsMulti fieldName1="homeCountryCode" fieldName2="homeAreaCode" fieldName3="homeContactNumber" fieldName4="homeExt"/>
-                  <div>
-                    <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
-                    <input type="text" class="inputBox required" name="homeCountryCode" value="${parameters.homeCountryCode!}" size="4" maxlength="10"/>
-                    -&nbsp;<input type="text" class="inputBox required" name="homeAreaCode" value="${parameters.homeAreaCode!}" size="4" maxlength="10"/>
-                    -&nbsp;<input type="text" class="inputBox required" name="homeContactNumber" value="${parameters.homeContactNumber!}" size="15" maxlength="15"/>
-                    -&nbsp;<input type="text" class="inputBox" name="homeExt" value="${parameters.homeExt!}" size="6" maxlength="10"/> *
-                  </div>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyBusinessPhone}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
-                  <input type="text" class="inputBox" name="workCountryCode" value="${parameters.workCountryCode!}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class="inputBox" name="workAreaCode" value="${parameters.workAreaCode!}" size="4" maxlength="10"/>
-                  -&nbsp;<input type="text" class="inputBox" name="workContactNumber" value="${parameters.workContactNumber!}" size="15" maxlength="15"/>
-                  -&nbsp;<input type="text" class="inputBox" name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyEmailAddress}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="emailAddress"/>
-                  <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
-                  <input type="text" class="inputBox required validate-email" name="emailAddress" value="${parameters.emailAddress!}" size="40" maxlength="255"/> *
-                </@td>
-              </@tr>
-          </@table>
+        <@section title=uiLabelMap.PartyNameAndConactInfo>
+
+          <@field type="input" label="${uiLabelMap.PartyFirstName}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"firstName"}
+              name="firstName" id="firstName" value=(parameters.firstName!) size="30" maxlength="30"/>
+
+          <@field type="input" label="${uiLabelMap.PartyMiddleInitial}"
+              name="middleName" value=(parameters.middleName!) size="4" maxlength="4"/>
+          <@field type="input" label="${uiLabelMap.PartyLastName}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"lastName"}
+              name="lastName" value=(parameters.lastName!) size="30" maxlength="30"/>
+          <@field type="display">
+              [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
+          </@field>
+          <@field type="generic" label="${uiLabelMap.PartyHomePhone}" required=true preWidgetContent=fieldErrorsMultiInvoker prePostContentArgs={"fieldName1":"homeCountryCode", "fieldName2":"homeAreaCode", "fieldName3":"homeContactNumber", "fieldName4":"homeExt"}>
+                <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
+                <@field type="input" inline=true required=true name="homeCountryCode" value="${parameters.homeCountryCode!}" size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeAreaCode" value="${parameters.homeAreaCode!}" size="4" maxlength="10"/>
+                -&nbsp;<@field type="input" inline=true required=true name="homeContactNumber" value="${parameters.homeContactNumber!}" size="15" maxlength="15"/>
+                -&nbsp;<@field type="input" inline=true name="homeExt" value="${parameters.homeExt!}" size="6" maxlength="10"/>
+          </@field>
+          <@field type="generic" label="${uiLabelMap.PartyBusinessPhone}">
+              <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
+              <@field type="input" inline=true name="workCountryCode" value="${parameters.workCountryCode!}" size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workAreaCode" value="${parameters.workAreaCode!}" size="4" maxlength="10"/>
+              -&nbsp;<@field type="input" inline=true name="workContactNumber" value="${parameters.workContactNumber!}" size="15" maxlength="15"/>
+              -&nbsp;<@field type="input" inline=true name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
+          </@field>
+          <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
+          <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"emailAddress"}
+              class="+validate-email" name="emailAddress" value=(parameters.emailAddress!) size="40" maxlength="255"/>
+        </@section>
       </@cell>
     </@row>
 
@@ -130,191 +94,79 @@ under the License.
     
     <@row>
       <@cell columns=6>
-          <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
-              <@tr>
-                 <@td width="26%" align="right" valign="top"></@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderShippingAddress}</div></@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyToName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="shipToName"/>
-                  <input type="text" class="inputBox" name="shipToName" id="shipToName" value="${parameters.shipToName!}" size="30" maxlength="30"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyAttentionName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="shipToAttnName"/>
-                  <input type="text" class="inputBox" id="shipToAttnName" name="shipToAttnName" value="${parameters.shipToAttnName!}" size="30" maxlength="30"/>
-                </@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine1}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="shipToAddress1"/>
-                    <input type="text" class="inputBox required" size="30" maxlength="30" id="shipToAddress1" name="shipToAddress1" value="${parameters.shipToAddress1!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine2}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <input type="text" class="inputBox" size="30" maxlength="30" id="shipToAddress2" name="shipToAddress2" value="${parameters.shipToAddress2!}" />
-                 </@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyCity}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="shipToCity"/>
-                    <input type="text" class="inputBox required" size="30" maxlength="30" id="shipToCity" name="shipToCity" value="${parameters.shipToCity!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyState}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="shipToStateProvinceGeoId"/>
-                    <select name="shipToStateProvinceGeoId" id="shipToStateProvinceGeoId" class="selectBox">
-                    <#if (parameters.shipToStateProvinceGeoId)??>
-                       <option>${parameters.shipToStateProvinceGeoId}</option>
-                       <option value="${parameters.shipToStateProvinceGeoId}">---</option>
-                    <#else>
-                       <option value="">${uiLabelMap.PartyNoState}</option>
-                    </#if>
-                       <@render resource="component://common/widget/CommonScreens.xml#states" />
-                    </select>
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyZipCode}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="shipToPostalCode"/>
-                    <input type="text" class="inputBox required" size="12" maxlength="10" id="shipToPostalCode" name="shipToPostalCode" value="${parameters.shipToPostalCode!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonCountry}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="shipToCountryGeoId"/>
-                    <select name="shipToCountryGeoId" id="shipToCountryGeoId" class="selectBox">
-                    <#if (parameters.shipToCountryGeoId)??>
-                       <option>${parameters.shipToCountryGeoId}</option>
-                       <option value="${parameters.shipToCountryGeoId}">---</option>
-                    </#if>
-                       <@render resource="component://common/widget/CommonScreens.xml#countries" />
-                    </select>
-                 *</@td>
-              </@tr>
-            </@table>
+        <@section title=uiLabelMap.OrderShippingAddress>
+     
+              <@field type="input" label="${uiLabelMap.PartyToName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToName"}
+                  name="shipToName" id="shipToName" value=(parameters.shipToName!) size="30" maxlength="30"/>
+              <@field type="input" label="${uiLabelMap.PartyAttentionName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAttnName"}
+                  id="shipToAttnName" name="shipToAttnName" value=(parameters.shipToAttnName!) size="30" maxlength="30"/>
+              <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToAddress1"}
+                  size="30" maxlength="30" id="shipToAddress1" name="shipToAddress1" value=(parameters.shipToAddress1!) />
+              <@field type="input" label="${uiLabelMap.PartyAddressLine2}"
+                  size="30" maxlength="30" id="shipToAddress2" name="shipToAddress2" value=(parameters.shipToAddress2!) />
+              <@field type="input" label="${uiLabelMap.PartyCity}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCity"}
+                  size="30" maxlength="30" id="shipToCity" name="shipToCity" value=(parameters.shipToCity!) />
+              <@field type="select" label="${uiLabelMap.PartyState}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToStateProvinceGeoId"}
+                  name="shipToStateProvinceGeoId" id="shipToStateProvinceGeoId">
+                <#if (parameters.shipToStateProvinceGeoId)??>
+                   <option>${parameters.shipToStateProvinceGeoId}</option>
+                   <option value="${parameters.shipToStateProvinceGeoId}">---</option>
+                <#else>
+                   <option value="">${uiLabelMap.PartyNoState}</option>
+                </#if>
+                   <@render resource="component://common/widget/CommonScreens.xml#states" />
+              </@field>
+              <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToPostalCode"}
+                  size="12" maxlength="10" id="shipToPostalCode" name="shipToPostalCode" value=(parameters.shipToPostalCode!) />
+              <@field type="select" label="${uiLabelMap.CommonCountry}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToCountryGeoId"}
+                  name="shipToCountryGeoId" id="shipToCountryGeoId">
+                <#if (parameters.shipToCountryGeoId)??>
+                   <option>${parameters.shipToCountryGeoId}</option>
+                   <option value="${parameters.shipToCountryGeoId}">---</option>
+                </#if>
+                   <@render resource="component://common/widget/CommonScreens.xml#countries" />
+              </@field>
+        </@section>
       </@cell>
       <@cell columns=6>
-           <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" cellspacing="0" -->
-              <@tr>
-                <@td align="center" valign="top" colspan="3">
-                    <input type="checkbox" class="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y"/>
-                    ${uiLabelMap.FacilityBillingAddressSameShipping}
-                </@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div></@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">&nbsp;</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyToName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="billToName"/>
-                  <input type="text" class="inputBox" id="billToName" name="billToName" value="${parameters.billToName!}" size="30" maxlength="30"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" align="right">${uiLabelMap.PartyAttentionName}</@td>
-                <@td width="2%">&nbsp;</@td>
-                <@td width="72%">
-                  <@fieldErrors fieldName="billToAttnName"/>
-                  <input type="text" class="inputBox" id="billToAttnName" name="billToAttnName" value="${parameters.billToAttnName!}" size="30" maxlength="30"/>
-                </@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine1}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="billToAddress1"/>
-                    <input type="text" class="inputBox required" id="billToAddress1" size="30" maxlength="30" name="billToAddress1" value="${parameters.billToAddress1!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAddressLine2}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <input type="text" class="inputBox" id="billToAddress2" size="30" maxlength="30" name="billToAddress2" value="${parameters.billToAddress2!}" />
-                 </@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyCity}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="billToCity"/>
-                    <input type="text" class="inputBox required" id="billToCity" size="30" maxlength="30" name="billToCity" value="${parameters.billToCity!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyState}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="billToStateProvinceGeoId"/>
-                    <select name="billToStateProvinceGeoId" id="billToStateProvinceGeoId" class="selectBox">
-                    <#if (parameters.billToStateProvinceGeoId)??>
-                       <option>${parameters.billToStateProvinceGeoId}</option>
-                       <option value="${parameters.billToStateProvinceGeoId}">---</option>
-                    <#else>
-                       <option value="">${uiLabelMap.PartyNoState}</option>
-                    </#if>
-                       <@render resource="component://common/widget/CommonScreens.xml#states" />
-                    </select>
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyZipCode}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="billToPostalCode"/>
-                    <input type="text" class="inputBox required" size="12" maxlength="10" id="billToPostalCode" name="billToPostalCode" value="${parameters.billToPostalCode!}" />
-                 *</@td>
-              </@tr>
-              <@tr>
-                 <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonCountry}</@td>
-                 <@td width="2%">&nbsp;</@td>
-                 <@td width="72%">
-                    <@fieldErrors fieldName="billToCountryGeoId"/>
-                    <select name="billToCountryGeoId" id="billToCountryGeoId" class="selectBox">
-                    <#if (parameters.billToCountryGeoId)??>
-                       <option>${parameters.billToCountryGeoId}</option>
-                       <option value="${parameters.billToCountryGeoId}">---</option>
-                    </#if>
-                       <@render resource="component://common/widget/CommonScreens.xml#countries" />
-                    </select>
-                 *</@td>
-              </@tr>
-            </@table>
+        <@section title=uiLabelMap.PartyBillingAddress>
+              <@field type="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y" label=uiLabelMap.FacilityBillingAddressSameShipping/>
+      
+              <@field type="input" label="${uiLabelMap.PartyToName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToName"}
+                  id="billToName" name="billToName" value=(parameters.billToName!) size="30" maxlength="30"/>
+              <@field type="input" label="${uiLabelMap.PartyAttentionName}" preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToAttnName"}
+                  id="billToAttnName" name="billToAttnName" value=(parameters.billToAttnName!) size="30" maxlength="30"/>
+              <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true
+                  id="billToAddress1" size="30" maxlength="30" name="billToAddress1" value=(parameters.billToAddress1!) />
+              <@field type="input" label="${uiLabelMap.PartyAddressLine2}"
+                  id="billToAddress2" size="30" maxlength="30" name="billToAddress2" value=(parameters.billToAddress2!) />
+              <@field type="input" label="${uiLabelMap.PartyCity}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCity"}
+                  id="billToCity" size="30" maxlength="30" name="billToCity" value=(parameters.billToCity!) />
+              <@field type="select" label="${uiLabelMap.PartyState}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToStateProvinceGeoId"}
+                  name="billToStateProvinceGeoId" id="billToStateProvinceGeoId">
+                <#if (parameters.billToStateProvinceGeoId)??>
+                   <option>${parameters.billToStateProvinceGeoId}</option>
+                   <option value="${parameters.billToStateProvinceGeoId}">---</option>
+                <#else>
+                   <option value="">${uiLabelMap.PartyNoState}</option>
+                </#if>
+                   <@render resource="component://common/widget/CommonScreens.xml#states" />
+              </@field>
+              <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToPostalCode"}
+                  size="12" maxlength="10" id="billToPostalCode" name="billToPostalCode" value=(parameters.billToPostalCode!) />
+              <@field type="select" label="${uiLabelMap.CommonCountry}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToCountryGeoId"}
+                  name="billToCountryGeoId" id="billToCountryGeoId">
+                <#if (parameters.billToCountryGeoId)??>
+                   <option>${parameters.billToCountryGeoId}</option>
+                   <option value="${parameters.billToCountryGeoId}">---</option>
+                </#if>
+                   <@render resource="component://common/widget/CommonScreens.xml#countries" />
+              </@field>
+        </@section>
       </@cell>
     </@row>
 
-    <input type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" value="${uiLabelMap.CommonContinue}"/>
+    <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text="${uiLabelMap.CommonContinue}"/>
 
   </form>
 </@section>

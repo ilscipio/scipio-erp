@@ -36,9 +36,10 @@ under the License.
       <#if (orderHeader.currencyUom)?has_content>
       <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
       </#if>
-      <@table type="fields"> <#-- orig: border="0" width="100%" cellpadding="2" cellspacing="0" -->
+
+      <@table type="fields">
         <@tr>
-          <@td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></h3></@td>
+          <@td colspan="5"><@heading>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading></@td>
           <@td align="right">
             <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
             <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
@@ -57,6 +58,8 @@ under the License.
           <#assign rowCount = 0>
           <#list returnableItems.keySet() as orderItem>
           <#if !orderItem.orderAdjustmentId?has_content>    <#-- filter orderAdjustments -->
+            <@tr>
+              <@td>
             <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
             <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
             <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription!}"/>
@@ -71,8 +74,6 @@ under the License.
             <#assign itemPrice = orderItem.unitPrice>
             <#-- end of order item information -->
 
-            <@tr>
-              <@td>
                   <#if orderItem.productId??>
                     &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderItem.productId}</a>
                     <input type="hidden" name="productId_o_${rowCount}" value="${orderItem.productId}"/>

@@ -66,91 +66,49 @@ function onClickShippingMethod(e) {
 
   <@row>
     <@cell columns=6>
-      <@section>
-        <@table type="fields">
-            <@tr><@td><div class="errorMessage" id="noShippingMethodSelectedError"></div></@td></@tr>
-            <@tr>
-                <@td>
-                    <@heading>${uiLabelMap.OrderMethod}</@heading>
-                </@td>
-            </@tr>
-            <#list carrierShipmentMethodList as carrierShipmentMethod>
-            <@tr>
-                <@td>
-                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-                     <input type="radio" onclick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" <#if shippingMethod == chosenShippingMethod?default("N@A")>checked="checked"</#if>/>
-                     <#if shoppingCart.getShippingContactMechId()??>
-                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                     </#if>
-                     <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
-                </@td>
-            </@tr>
-            </#list>
-            <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-            <@tr>
-              <@td width="1%" valign="top"><input type="radio"  onclick="return onClickShippingMethod(event)" name="shipping_method" value="Default" checked="checked"/>${uiLabelMap.OrderUseDefault}.
-              </@td>
-            </@tr>
-            </#if>
-        </@table>
-        </@section>
+      <div class="errorMessage" id="noShippingMethodSelectedError"></div>
+      <@field type="generic" label=uiLabelMap.OrderMethod>
+        <#list carrierShipmentMethodList as carrierShipmentMethod>
+           <#if shoppingCart.getShippingContactMechId()??>
+               <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+           </#if>
+           <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
+           
+           <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="${shippingMethod}" checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=fieldLabel/>
+        </#list>
+        <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
+          <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="Default" checked=true label=uiLabelMap.OrderUseDefault />
+        </#if>
+      </@field>
     </@cell>
     <@cell columns=6>
-        <@table type="fields">
-            <@tr>
-              <@td colspan="2">
-                <@heading>${uiLabelMap.OrderSpecialInstructions}</@heading>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td colspan="2">
-                <textarea class="textAreaBox" cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</textarea>
-              </@td>
-            </@tr>
-            <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-            <@tr>
-              <@td colspan="2">
-                <@heading>${uiLabelMap.OrderPoNumber}</@heading>&nbsp;
-                <input type="text" class="inputBox" name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
-              </@td>
-            </@tr>
-            <#if (productStore.showCheckoutGiftOptions!) != "N">
-            <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-            <@tr>
-              <@td colspan="2">
-                  <@heading>${uiLabelMap.OrderIsThisGift}</@heading>
-                  <input type="radio" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"/><span class="tabletext">${uiLabelMap.CommonYes}</span>
-                  <input type="radio" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"/><span class="tabletext">${uiLabelMap.CommonNo}</span>
-              </@td>
-            </@tr>
-            <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-            <@tr>
-              <@td colspan="2">
-                <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td colspan="2">
-                <textarea class="textAreaBox" cols="30" rows="3" name="gift_message">${shoppingCart.getGiftMessage()!}</textarea>
-              </@td>
-            </@tr>
-            </#if>
-        </@table>
+        <@field type="textarea" label=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</@field>
+        <#--<hr />-->
+        <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
+
+      <#if (productStore.showCheckoutGiftOptions!) != "N">
+        <#--<hr />-->
+        <@field type="generic" label=uiLabelMap.OrderIsThisGift>
+          <@field type="radio" checked=((shoppingCart.getIsGift()!"Y") == "Y") name="is_gift" value="true" label=uiLabelMap.CommonYes />
+          <@field type="radio" checked=((shoppingCart.getIsGift()!"N") == "N") name="is_gift" value="false" label=uiLabelMap.CommonNo />
+        </@field>
+        <#--<hr />-->
+        <@field type="textarea" label=uiLabelMap.OrderGiftMessage cols="30" rows="3" name="gift_message">${shoppingCart.getGiftMessage()!}</@field>
+      </#if>
     </@cell>
   </@row>
 
-  <hr />
+  <#--<hr />-->
 
-    <@section title="${uiLabelMap.OrderShipAllAtOnce}?">
-      <div>
-        <input type="radio"<#if (shoppingCart.getMaySplit()!"N") == "N"> checked="checked"</#if> name="may_split" value="false"/>
-        <span>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</span>
-      </div>
-      <div>
-        <input<#if (shoppingCart.getMaySplit()!"N") == "Y"> checked="checked"</#if> type="radio" name="may_split" value="true"/>
-        <span>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</span>
-      </div>
-    </@section>
+  <@row>
+    <@cell columns=6>
+      <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
+        <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "N") name="may_split" value="false" label=uiLabelMap.OrderPleaseWaitUntilBeforeShipping />
+        <@field type="radio" checked=((shoppingCart.getMaySplit()!"N") == "Y") name="may_split" value="true" label=uiLabelMap.OrderPleaseShipItemsBecomeAvailable />
+      </@field>
+    </@cell>
+  </@row>
+
   </form>
 </@section> 

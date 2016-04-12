@@ -569,6 +569,34 @@ under the License.
     	     theme creators need to look at the FTL files in depth anyway, even with markup separation -->
         <echo message="[docs-ftl-cato] ========== Done Building (FTL docs) =========="/>
     </target>
+		
+	<target name="cato-help">
+		<java classname="org.apache.tools.ant.Main" outputproperty="projectHelpOutput" resultproperty="projectHelpResult" fork="true">
+	    <!--java classname="com.ilscipio.cato.util.CatoAntHelper" outputproperty="projectHelpOutput" resultproperty="projectHelpResult" fork="true"-->	    	
+	        <arg value="-projecthelp" />
+	    	<!--arg value="-silent" /-->
+	    	<arg value="-logger" />
+	    	<arg value="com.ilscipio.cato.util.CatoLogger" />
+	        <arg value="-buildfile" />
+	        <arg value="${ant.file}" />
+	    	<classpath>
+	    		<path location="framework/base/lib/*"/>
+                <path location="framework/common/build/lib/ofbiz-common.jar" />
+            </classpath>
+	    </java>
+		<!--echo message="projectHelpOutput ===========> ${projectHelpOutput} projectHelpResult ===========> ${projectHelpResult}  "/-->
+		<!--propertyregex property="projectHelpParsed"
+          input="${projectHelp}"
+          regexp="(^.*)"
+          select="\1"
+          casesensitive="false" 
+		  defaultValue="NoTasksFound" /-->
+		<!-- property name="projectHelpParsed" value="test"></property -->
+		<!--echo>
+			projectHelpParsed ===> ${projectHelpParsed}
+	    </echo-->
+		
+	</target>
 	
     <!-- ================================================================== -->
     <!-- Contrib Targets                                                    -->

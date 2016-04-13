@@ -1778,6 +1778,7 @@ under the License.
     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupCustomerName"><security auth="true" https="true"/><response name="success" type="view" value="LookupCustomerName"/></request-map>
     <request-map uri="LookupProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    
     <request-map uri="LookupSupplierProduct"><security https="true" auth="true"/><response name="success" type="view" value="LookupSupplierProduct"/></request-map>
     <request-map uri="LookupBulkAddSupplierProductsInApprovedOrder"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddSupplierProductsInApprovedOrder"/></request-map>
     <request-map uri="LookupProductAndPrice"><security https="true" auth="true"/><response name="success" type="view" value="LookupProductAndPrice"/></request-map>
@@ -1798,8 +1799,9 @@ under the License.
     <request-map uri="LookupOrderHeader"><security https="true" auth="true"/><response name="success" type="view" value="LookupOrderHeader"/></request-map>
 
     <request-map uri="LookupWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="LookupWorkEffort"/></request-map>
-    <request-map uri="LookupBulkAddProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddProducts"/></request-map>
-    <request-map uri="LookupBulkAddSupplierProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddSupplierProducts"/></request-map>
+    <!-- CATO: To be removed -->
+    <!-- <request-map uri="LookupBulkAddProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddProducts"/></request-map>
+    <request-map uri="LookupBulkAddSupplierProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupBulkAddSupplierProducts"/></request-map> -->
     <request-map uri="LookupAssociatedProducts"><security https="true" auth="true"/><response name="success" type="view" value="LookupAssociatedProducts"/></request-map>
 
     <!-- PDFs -->
@@ -2076,8 +2078,9 @@ under the License.
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
 
     <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort"/>
-    <view-map name="LookupBulkAddProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddProducts"/>
-    <view-map name="LookupBulkAddSupplierProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddSupplierProducts"/>
+    <!-- CATO: To be removed -->
+    <!-- <view-map name="LookupBulkAddProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddProducts"/>
+    <view-map name="LookupBulkAddSupplierProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupBulkAddSupplierProducts"/> -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
     <view-map name="LookupAssociatedProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#LookupAssociatedProducts"/>
     <!-- PDFs  -->

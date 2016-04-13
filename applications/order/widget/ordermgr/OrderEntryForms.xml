@@ -148,9 +148,9 @@ under the License.
             <hyperlink target="orderentry" description="${uiLabelMap.OrderOrderReturn}" also-hidden="false"/>
         </field>
     </form>
-
-    <form name="LookupBulkAddProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
-        odd-row-style="alternate-row" paginate-target="LookupBulkAddProducts"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+   <!-- CATO: To be removed -->
+   <!--  <form name="LookupBulkAddProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
+        odd-row-style="alternate-row" paginate-target="LookupBulkAddProducts"> orig: default-table-style=-style="basic-table hover-bar"
         <row-actions>
             <entity-one entity-name="Product" value-field="product" auto-field-map="true"/>
             <set field=""/>
@@ -180,7 +180,7 @@ under the License.
         </field>
     </form>
     <form name="LookupBulkAddSupplierProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
-        odd-row-style="alternate-row" paginate-target="LookupBulkAddSupplierProducts" view-size="5"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" paginate-target="LookupBulkAddSupplierProducts" view-size="5"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>
@@ -203,7 +203,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit/>
         </field>
-    </form>
+    </form> -->
     <form name="LookupAssociatedProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
         paginate-target="LookupAssociatedProducts" default-title-style="tableheadtext" default-widget-style="inputBox">
         <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_info_id}">

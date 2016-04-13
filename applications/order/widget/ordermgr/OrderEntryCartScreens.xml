@@ -166,7 +166,8 @@ under the License.
             </fail-widgets>
         </section>
     </screen>
-    <screen name="LookupBulkAddProducts">
+    <!-- CATO: To be removed -->
+    <!--  <screen name="LookupBulkAddProducts">
      <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLookupBulkAddProduct"/>
@@ -199,6 +200,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    -->
     <screen name="AddGiftCertificate">
         <section>
             <actions>

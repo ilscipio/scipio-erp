@@ -34,7 +34,6 @@ under the License.
 </#if>
 
 <@menu type="button">
-    <@menuitem type="link" href="javascript:quicklookup(document.quickaddform.add_product_id)" text=uiLabelMap.OrderQuickLookup class="+${styles.action_nav!} ${styles.action_find!}"/>
     <@menuitem type="link" href="javascript:quicklookupGiftCertificate()" text=uiLabelMap.OrderAddGiftCertificate class="+${styles.action_nav!} ${styles.action_add!}" />
   <#if "PURCHASE_ORDER" == shoppingCart.getOrderType()>
     <@menuitem type="link" href="javascript:showQohAtp()" text=uiLabelMap.ProductAtpQoh class="+${styles.action_nav!} ${styles.action_view!}" />

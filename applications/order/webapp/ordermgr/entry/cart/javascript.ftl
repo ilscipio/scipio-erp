@@ -88,7 +88,8 @@ function gwAll(e) {
     }
     cform.submit();
 }
-function quicklookup_popup(element) {
+<#-- CATO: To be removed -->
+<#-- function quicklookup_popup(element) {
     target = element;  // note: global var target comes from fieldlookup.js
     var searchTerm = element.value;
     var obj_lookupwindow = window.open('LookupProduct?productId_op=like&amp;productId_ic=Y&amp;productId=' + searchTerm,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
@@ -101,5 +102,5 @@ function quicklookup(element) {
     <#else>
     window.location='<@ofbizUrl>LookupBulkAddProducts</@ofbizUrl>?productId='+element.value;
     </#if>
-}
+}-->
 </@script>

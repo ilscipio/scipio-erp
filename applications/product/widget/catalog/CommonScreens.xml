@@ -634,7 +634,8 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <section>
                                    <actions>
-                                       <set field="productStoreId" value="9000" global="true"/>
+                                       <!-- Cato: FIXME: Unhardcode this -->
+                                       <set field="productStoreId" value="CatoShop" global="true"/>
                                    </actions>
                                    <widgets>
                                        <include-screen name="CatoStoreCatalogTree"/>   

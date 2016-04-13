@@ -1068,7 +1068,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
 <#assign field_submit_widget_defaultArgs = {
   "buttonType":"", "class":"", "alert":"", "formName":"", "name":"", "events":{}, "imgSrc":"", "confirmation":"", 
   "containerId":"", "ajaxUrl":"", "text":"", "description":"", "fieldTitleBlank":false, "showProgress":"", "href":"", "inputType":"", 
-  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "passArgs":{}
+  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "style":"", "passArgs":{}
 }>
 <#macro field_submit_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_submit_widget_defaultArgs)>
@@ -1088,13 +1088,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType 
-    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_submit_markup_widget>
+    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel style=style origArgs=origArgs passArgs=passArgs><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" events={} imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false 
-    progressArgs={} id="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    progressArgs={} id="" inlineLabel=false style="" origArgs={} passArgs={} catchArgs...>
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType == "text-link" || buttonType != "image") && !(text?trim?has_content)>
     <#local buttonMarkup = "">
@@ -1110,13 +1110,20 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if disabled>
           <#local href = "javascript:void(0)">
         </#if>
-        <a<@fieldClassAttribStr class=class alert=alert /> href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"</#if>><#if text?has_content>${text}</#if></a>
+        <a<@fieldClassAttribStr class=class alert=alert /><#rt>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#t>
+          <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t>
+          <#if id?has_content> id="${id}"</#if><#t>
+          <#if style?has_content> style="${style}"</#if><#t>
+          <#lt>><#if text?has_content>${text}</#if></a>
       <#elseif buttonType == "image">
-        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if>
-        <#if description?has_content> alt="${description}"</#if>
-        <#if disabled> disabled="disabled"<#else>
-          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
-        </#if>/>
+        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+        <#if description?has_content> alt="${description}"</#if><#t>
+        <#if disabled> disabled="disabled"<#else><#t>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t>
+        </#if><#t>
+        <#if style?has_content> style="${style}"</#if><#t>
+        <#lt>/>
       <#else>
         <#-- FIXME?: slow, very specific check to test if link already has an action class.
             Currently, unsure how should have this default semantic, so play it safe. -->
@@ -1124,15 +1131,17 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
           <#local class = addClassArgDefault(class, styles.link_run_sys!)>
         </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
-        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if>
-        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if>
-        <#if disabled> disabled="disabled"<#else>
-          <#if events?has_content><@commonElemEventAttribStr events=events /><#else>
-            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
-            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
-            </#if>
-          </#if>
-        </#if>/>
+        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#rt>
+        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if><#t>
+        <#if disabled> disabled="disabled"<#else><#t>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#else><#t>
+            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else><#t>
+            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t>
+            </#if><#t>
+          </#if><#t>
+        </#if><#t>
+        <#if style?has_content> style="${style}"</#if><<#t>
+        <#lt>/>
       </#if>
     </#local>
   </#if>

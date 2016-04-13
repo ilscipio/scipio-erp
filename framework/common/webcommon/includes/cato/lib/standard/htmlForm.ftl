@@ -1048,6 +1048,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     confirmMsg              = Confirmation message     
     progressArgs            = Same as for submitarea, but only works if this is a top-level submit     
     progressOptions         = Same as for submitarea, but only works if this is a top-level submit
+    style                   = Legacy HTML style string for compatibility
+                              This is set only on the widget itself (not any container).
+                              WARN: Currently this arg only works for submits, not other field types.
                       
     * reset *
     text                    = Label to show on reset button
@@ -1086,7 +1089,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
   "titleClass":"", "formatText":"",
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
-  "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{},
+  "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1683,7 +1686,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events 
           imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
-          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel passArgs=passArgs/>
+          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel 
+          style=style passArgs=passArgs/>
         <#break>
       <#case "submitarea">
         <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel passArgs=passArgs><#nested></@field_submitarea_widget>

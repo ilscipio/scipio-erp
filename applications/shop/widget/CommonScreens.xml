@@ -312,7 +312,7 @@ under the License.
                         <section>
                             <actions>
                                 <!-- Cato: TODO: This category ID should be configurable -->
-                                <set field="productCategoryId" value="ELTRN-100"/>
+                                <set field="productCategoryId" value="PROMOTIONS"/> <!-- value="ELTRN-100" -->
                                 <set field="viewSize" value="12"/>
                                 <set field="viewIndex" value="0"/>
                                 <set field="viewCluster" value="4"/>

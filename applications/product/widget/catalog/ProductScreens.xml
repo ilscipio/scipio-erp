@@ -325,16 +325,15 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="activeSubMenuItem" value="EditProductCategories"/>
-                <set field="labelTitleProperty" value="ProductCategoryMembers"/>
                 <set field="title" value="${uiLabelMap.ProductProductCategories} ${parameters.productId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-form name="AddProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/>
+                            <include-screen name="CatoAddProductCategoryMember"/>
+                            <!-- <include-form name="AddProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/> -->
                         </screenlet>
                         <screenlet>                            
                             <include-screen name="CatoProductCategoryMemberList"/>
@@ -342,6 +341,17 @@ under the License.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#AddProductCategoryMember -->
+    <screen name="CatoAddProductCategoryMember">
+        <section>
+             <widgets>
+                 <screenlet>
+                    <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoAddProductCategoryMember.ftl"/></html></platform-specific>
+                 </screenlet>
+             </widgets>
         </section>
     </screen>
     

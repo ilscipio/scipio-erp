@@ -592,6 +592,18 @@ ul.tabs {
     .content {padding:20px;}
 }
 
+/* Special panels */
+
+.text-line-list ul, ul.text-line-list {
+    list-style: none outside none;
+    margin-left: 0;
+}
+.text-line-list li:empty, .text-line-list .text-line:empty {
+    display: none;
+}
+
+
+
 /* GENERAL ELEMENT COLORS */
 
 .colored-elem.primary, .colored-elem { color:$primary-color; }

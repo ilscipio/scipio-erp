@@ -15148,5 +15148,14 @@
     <property key="OrderMayNotProceedWithOrder">
         <value xml:lang="de">Sie können nicht in der Lage sein, mit dieser Bestellung fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
         <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
-    </property>        
+    </property>     
+    <property key="OrderShippingMethod">
+        <value xml:lang="de">Versandmethode</value>
+        <value xml:lang="en">Shipping Method</value>
+        <value xml:lang="es">Método de envñio</value>
+        <value xml:lang="fr">Méthode d'expédition</value>
+        <value xml:lang="it">Metodo spedizione</value>
+        <value xml:lang="nl">Verzend methode</value>
+        <value xml:lang="pt_BR">Método de envio</value>
+    </property>    
 </resource>

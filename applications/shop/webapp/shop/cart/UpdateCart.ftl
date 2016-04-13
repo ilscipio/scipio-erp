@@ -171,15 +171,15 @@ under the License.
           </@tfoot>
         </@table>
       </fieldset>
-      <fieldset id="productPromoCodeFields">
+      <#--<fieldset id="productPromoCodeFields">-->
         <@field type="input" id="productPromoCode" name="productPromoCode" value="" label=uiLabelMap.EcommerceEnterPromoCode />
-      </fieldset>
-      <fieldset>
+      <#--</fieldset>-->
+      <#--<fieldset>-->
         <@field type="submitarea">
           <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${uiLabelMap.EcommerceContinueToStep} 2"/>
           <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${uiLabelMap.EcommercePleaseWait}..."/>
         </@field>
-      </fieldset>
+      <#--</fieldset>-->
     </form>
   </div>
   </@section>

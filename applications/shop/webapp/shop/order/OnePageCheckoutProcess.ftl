@@ -36,26 +36,26 @@ under the License.
         <@section id="shippingPanel" title="${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}">
           <div id="shippingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-            <div id="shippingCompleted">
-              <ul>
-                <li>
+            <@panel id="shippingCompleted">
+              <@row>
+                <@cell columns=6>
                   <@heading>${uiLabelMap.OrderShipTo}</@heading>
-                  <ul>
+                  <ul class="text-line-list">
                     <li id="completedShipToAttn"></li>
                     <li id="completedShippingContactNumber"></li>
                     <li id="completedEmailAddress"></li>
                   </ul>
-                </li>
-                <li>
+                </@cell>
+                <@cell columns=6>
                   <@heading>${uiLabelMap.EcommerceLocation}</@heading>
-                  <ul>
+                  <ul class="text-line-list">
                     <li id="completedShipToAddress1"></li>
                     <li id="completedShipToAddress2"></li>
                     <li id="completedShipToGeo"></li>
                   </ul>
-                </li>
-              </ul>
-            </div>
+                </@cell>
+              </@row>
+            </@panel>
           </div>
 
 <#-- ============================================================= -->
@@ -118,12 +118,12 @@ under the License.
                     </@field>
                   </div>
                 </fieldset>
-                <fieldset>
+                <#--<fieldset>-->
                   <@field type="submitarea">
                     <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${uiLabelMap.EcommerceContinueToStep} 3"/>
                     <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${uiLabelMap.EcommercePleaseWait}..."/>
                   </@field>
-                </fieldset>
+                <#--</fieldset>-->
             </form>
           </div>
         </@section>
@@ -132,12 +132,12 @@ under the License.
         <@section id="shippingOptionPanel" title="${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}">
           <div id="shippingOptionSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingOptionPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-            <div class="completed" id="shippingOptionCompleted">
-              ${uiLabelMap.CommonMethod}
-              <ul>
+            <@panel class="+completed" id="shippingOptionCompleted">
+              <@heading>${uiLabelMap.OrderShippingMethod}</@heading>
+              <ul class="text-line-list">
                 <li id="selectedShipmentOption"></li>
               </ul>
-            </div>
+            </@panel>
           </div>
 
 <#-- ============================================================= -->
@@ -149,12 +149,12 @@ under the License.
                   <option value=""></option>
                 </@field>
               </fieldset>
-              <fieldset>
+              <#--<fieldset>-->
                 <@field type="submitarea">
                   <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${uiLabelMap.EcommerceContinueToStep} 4"/>
                   <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${uiLabelMap.EcommercePleaseWait}..."/>
                 </@field>
-              </fieldset>
+              <#--</fieldset>-->
             </form>
           </div>
         </@section>
@@ -163,28 +163,28 @@ under the License.
         <@section id="billingPanel" title="${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}">
           <div id="billingSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openBillingPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-            <div class="completed" id="billingCompleted">
-              <ul>
-                <li>
+            <@panel class="+completed" id="billingCompleted">
+              <@row>
+                <@cell columns=6>
                   <@heading>${uiLabelMap.OrderBillUpTo}</@heading>
-                  <ul>
+                  <ul class="text-line-list">
                     <li id="completedBillToAttn"></li>
                     <li id="completedBillToPhoneNumber"></li>
                     <li id="paymentMethod"></li>
                     <li id="completedCCNumber"></li>
                     <li id="completedExpiryDate"></li>
                   </ul>
-                </li>
-                <li>
+                </@cell>
+                <@cell columns=6>
                   <@heading>${uiLabelMap.EcommerceLocation}</@heading>
-                  <ul>
+                  <ul class="text-line-list">
                     <li id="completedBillToAddress1"></li>
                     <li id="completedBillToAddress2"></li>
                     <li id="completedBillToGeo"></li>
                   </ul>
-                </li>
-              </ul>
-            </div>
+                </@cell>
+              </@row>
+            </@panel>
           </div>
 
 <#-- ============================================================= -->
@@ -271,12 +271,12 @@ under the License.
                   </@field>
                 </div>
               </fieldset>
-              <fieldset>
+              <#--<fieldset>-->
                 <@field type="submitarea">
                   <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${uiLabelMap.EcommerceContinueToStep} 5"/>
                   <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${uiLabelMap.EcommercePleaseWait}..."/>
                 </@field>
-              </fieldset>
+              <#--</fieldset>-->
             </form>
           </div>
         </@section>
@@ -285,12 +285,12 @@ under the License.
         <@section title="${uiLabelMap.EcommerceStep} 5: ${uiLabelMap.OrderSubmitOrder}">
           <div id="orderSubmitPanel" style="display: none;">
             <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
-                <fieldset>
+                <#--<fieldset>-->
                   <@field type="submitarea">
                     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" id="processOrderButton" name="processOrderButton" text=uiLabelMap.OrderSubmitOrder />
                     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" style="display: none;" id="processingOrderButton" name="processingOrderButton" text=uiLabelMap.OrderSubmittingOrder />
                   </@field>
-                </fieldset>
+                <#--</fieldset>-->
             </form>
           </div>
         </@section>

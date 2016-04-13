@@ -571,6 +571,22 @@ public class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, Locale locale) {
+        // Cato: This whole method can delegate to NoTrim version.
+        String value = getMessageNoTrim(resource, name, locale);
+        return value == null ? name : value.trim();
+    }
+    
+    /** Returns the value of the specified property name from the specified
+     *  resource/properties file corresponding to the given locale.
+     * <p>
+     * Cato: Version that guarantees no trim() operation. 
+     *  
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getMessageNoTrim(String resource, String name, Locale locale) {
         if (resource == null || resource.length() <= 0) return "";
         if (name == null || name.length() <= 0) return "";
 
@@ -584,8 +600,8 @@ public class UtilProperties implements Serializable {
         } catch (Exception e) {
             //Debug.logInfo(e, module);
         }
-        return value == null ? name : value.trim();
-    }
+        return value == null ? name : value;
+    }    
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
@@ -653,6 +669,30 @@ public class UtilProperties implements Serializable {
             return value;
         }
     }
+    
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
+     * <p>
+     * Cato: Version that guarantees no trim() operation.
+     * 
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param context A Map of Objects to insert into the message place holders using the ${} syntax of the FlexibleStringExpander
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getMessageNoTrim(String resource, String name, Map<String, ? extends Object> context, Locale locale) {
+        String value = getMessageNoTrim(resource, name, locale);
+
+        if (UtilValidate.isEmpty(value)) {
+            return "";
+        } else {
+            if (UtilValidate.isNotEmpty(context)) {
+                value = FlexibleStringExpander.expandString(value, context, locale);
+            }
+            return value;
+        }
+    }    
 
     public static String getMessageMap(String resource, String name, Locale locale, Object... context) {
         return getMessage(resource, name, UtilGenerics.toMap(String.class, context), locale);

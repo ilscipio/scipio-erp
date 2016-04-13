@@ -644,6 +644,30 @@ public class UtilProperties implements Serializable {
             return value;
         }
     }
+    
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * <p>
+     * Cato: Version that guarantees no trim() operation.
+     * 
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param arguments A List of Objects to insert into the message argument place holders
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static <E> String getMessageNoTrim(String resource, String name, List<E> arguments, Locale locale) {
+        String value = getMessageNoTrim(resource, name, locale);
+
+        if (UtilValidate.isEmpty(value)) {
+            return "";
+        } else {
+            if (UtilValidate.isNotEmpty(arguments)) {
+                value = MessageFormat.format(value, arguments.toArray());
+            }
+            return value;
+        }
+    }
 
     public static String getMessageList(String resource, String name, Locale locale, Object... arguments) {
         return getMessage(resource, name, arguments, locale);

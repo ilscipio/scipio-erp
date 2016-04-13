@@ -38,7 +38,7 @@ under the License.
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
             <fo:block font-size="14pt">${uiLabelMap.OrderReportSalesByStore}</fo:block>
-            <#if !showProductStore><fo:block font-size="10pt">${uiLabelMap.CommonFor} ${uiLabelMap.ProductProductStore}: ${parameters.productStoreId} - ${productReportList.get(0).storeName!}</fo:block></#if>
+            <#if !showProductStore><fo:block font-size="10pt">${uiLabelMap.CommonFor} ${uiLabelMap.ProductProductStore}: ${parameters.productStoreId}<#if (productReportList.get(0).storeName)?has_content> - ${productReportList.get(0).storeName}</#if></fo:block></#if>
             <#if !showToParty><fo:block font-size="10pt">${uiLabelMap.PartyParty}: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, toPartyId, false)}</fo:block></#if>
             <fo:block font-size="10pt">${uiLabelMap.FormFieldTitle_orderStatusId}:
                 <#if parameters.orderStatusId?has_content>${parameters.orderStatusId}<#else>${uiLabelMap.CommonAny}</#if>

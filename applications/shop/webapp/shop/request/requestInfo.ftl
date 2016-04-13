@@ -91,7 +91,7 @@ under the License.
                 </@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
-                    <#if store??>${store.storeName?default(custRequest.productStoreId!)}</#if>
+                    <#if store??>${store.storeName!(custRequest.productStoreId!)}</#if>
                 </@td>
             </@tr>
             <#-- request comment -->

@@ -28,7 +28,7 @@ under the License.
                                 <input type="hidden" name="tryEntity" value="true"/>
                                 <@field type="select" name="productStoreId">
                                   <#list productStores as productStore>
-                                    <option value="${(productStore.productStoreId)!}">${(productStore.storeName)!} [${(productStore.productStoreId)!}]</option>
+                                    <option value="${(productStore.productStoreId)!}">${(productStore.storeName)!(productStore.productStoreId)!} [${(productStore.productStoreId)!}]</option>
                                   </#list>
                                 </@field>
                             </@cell>
@@ -59,7 +59,7 @@ under the License.
                             <#assign line = line + 1>
                             <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                             <@tr valign="middle">
-                                <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
+                                <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!(productStore.productStoreId)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
                                 <#assign hasntStarted = false>
                                 <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                                 <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>

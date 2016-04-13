@@ -180,12 +180,12 @@ function submitFindForm(val){
           </@field>
           <@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId">
               <#if currentProductStore?has_content>
-                <@field type="option" value=currentProductStore.productStoreId>${currentProductStore.storeName!}</@field>
+                <@field type="option" value=currentProductStore.productStoreId>${currentProductStore.storeName!(currentProductStore.productStoreId!)}</@field>
                 <@field type="option" value=currentProductStore.productStoreId>---</@field>
               </#if>
               <@field type="option" value="">${uiLabelMap.CommonAnyStore}</@field>
               <#list productStores as store>
-                <@field type="option" value=store.productStoreId>${store.storeName!}</@field>
+                <@field type="option" value=store.productStoreId>${store.storeName!(store.productStoreId!)}</@field>
               </#list>
           </@field>
           <@field type="select" label=uiLabelMap.ProductWebSite name="orderWebSiteId">

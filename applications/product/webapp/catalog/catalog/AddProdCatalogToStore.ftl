@@ -10,7 +10,7 @@
                             <#if requestParameters.roleTypeId?has_content>
                                 <#assign selectedKey = requestParameters.productStoreeId>                               
                             </#if>                           
-                            <option<#if selectedKey == (productStore.productStoreId!)> selected="selected"</#if> value="${productStore.productStoreId}">${productStore.storeName}</option>
+                            <option<#if selectedKey == (productStore.productStoreId!)> selected="selected"</#if> value="${productStore.productStoreId}">${productStore.storeName!(productStore.productStoreId!)}</option>
                         </#list>
                     </@field>
                 </@cell>

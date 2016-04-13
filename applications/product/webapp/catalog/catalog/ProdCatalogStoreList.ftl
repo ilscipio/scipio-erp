@@ -34,7 +34,7 @@
                                   <input name="fromDate_o_${prodCatalogStore_index}" type="hidden" value="${prodCatalogStore.fromDate}"/>
                                   <input id="_rowSubmit_o_${prodCatalogStore_index}" name="_rowSubmit_o_${prodCatalogStore_index}" type="hidden" value="N"/>
                                   <a href="<@ofbizUrl>EditProductStore?productStoreId=${prodCatalogStore.productStoreId}</@ofbizUrl>" class="${styles.link_nav_info_idname}">                                  
-                                      ${productStore.storeName} - ${productStore.productStoreId}
+                                      <#if productStore.storeName?has_content>${productStore.storeName} - </#if>${productStore.productStoreId}
                                   </a>                      
                             </@td>
                             <@td>${prodCatalogStore.fromDate?string('yyyy-MM-dd')}</@td>

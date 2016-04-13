@@ -50,11 +50,11 @@ under the License.
         <@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId" >
             <#assign currentStore = shoppingCartProductStore>
             <#if defaultProductStore?has_content>
-               <option value="${defaultProductStore.productStoreId}">${defaultProductStore.storeName!}</option>
+               <option value="${defaultProductStore.productStoreId}">${defaultProductStore.storeName!(defaultProductStore.productStoreId!)}</option>
                <option value="${defaultProductStore.productStoreId}">----</option>
             </#if>
             <#list productStores as productStore>
-              <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected="selected"</#if>>${productStore.storeName!}</option>
+              <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected="selected"</#if>>${productStore.storeName!(productStore.productStoreId!)}</option>
             </#list>
             <#--<#if sessionAttributes.orderMode??>${uiLabelMap.OrderCannotBeChanged}</#if>-->
         </@field>

@@ -15140,4 +15140,13 @@
         <value xml:lang="de">Bestell-Info</value>
         <value xml:lang="en">Order Info</value>
     </property>
+    <!-- Cato: TODO: Localize -->
+    <property key="OrderNoShipMethodAvailable">
+        <value xml:lang="de">Keine Versandmethoden.</value>
+        <value xml:lang="en">No shipping methods available.</value>
+    </property>    
+    <property key="OrderMayNotProceedWithOrder">
+        <value xml:lang="de">Sie können nicht in der Lage sein, mit dieser Bestellung fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
+        <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
+    </property>        
 </resource>

@@ -1684,7 +1684,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#if inputType == "submit" && !text?has_content && value?has_content>
           <#local text = value>
         </#if>
-        <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events 
+        <@field_submit_widget buttonType=buttonType class=class id=id alert=alert formName=formName name=name events=events 
           imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
           href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel 
           style=style passArgs=passArgs/>

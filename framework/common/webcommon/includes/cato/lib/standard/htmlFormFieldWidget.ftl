@@ -1110,7 +1110,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if disabled>
           <#local href = "javascript:void(0)">
         </#if>
-        <a<@fieldClassAttribStr class=class alert=alert /><#rt>
+        <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
           href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#t>
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t>
           <#if id?has_content> id="${id}"</#if><#t>

@@ -49,7 +49,7 @@ public Map createDemoProduct(DispatcherContext ) {
     ]
 
     List<String> productStoreIds = [
-        "9000",
+        "CatoShop",
         "RentalStore"
     ]
 

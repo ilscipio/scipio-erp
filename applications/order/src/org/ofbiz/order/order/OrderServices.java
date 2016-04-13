@@ -4636,7 +4636,8 @@ public class OrderServices {
     // sample test services
     public static Map<String, Object> shoppingCartTest(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "9000", "webStore", locale, "USD");
+        // Cato: Default product store and web site have changed
+        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "CatoShop", "CatoWebStore", locale, "USD");
         try {
             cart.addOrIncreaseItem("PH-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
         } catch (CartItemModifyException e) {

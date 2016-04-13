@@ -48,7 +48,8 @@ public class SalesOrderTest extends OFBizTestCase {
     }
 
     public void testCreateSalesOrder() throws Exception {
-        Map<String, Object> ctx = UtilMisc.<String, Object>toMap("partyId", "DemoCustomer", "orderTypeId", "SALES_ORDER", "currencyUom", "USD", "productStoreId", "9000");
+        // Cato: new default store
+        Map<String, Object> ctx = UtilMisc.<String, Object>toMap("partyId", "DemoCustomer", "orderTypeId", "SALES_ORDER", "currencyUom", "USD", "productStoreId", "CatoShop");
 
         List<GenericValue> orderPaymentInfo = FastList.newInstance();
         GenericValue orderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.toMap("contactMechId", "9015", "contactMechPurposeTypeId", "BILLING_LOCATION"));

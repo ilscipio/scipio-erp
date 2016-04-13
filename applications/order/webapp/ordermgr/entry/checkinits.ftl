@@ -22,15 +22,15 @@ under the License.
 <#assign shoppingCartChannelType = "">
 <#if shoppingCart??>
   <#assign shoppingCartOrderType = shoppingCart.getOrderType()>
-  <#assign shoppingCartProductStore = shoppingCart.getProductStoreId()?default("NA")>
-  <#assign shoppingCartChannelType = shoppingCart.getChannelType()?default("")>
+  <#assign shoppingCartProductStore = shoppingCart.getProductStoreId()!"NA">
+  <#assign shoppingCartChannelType = shoppingCart.getChannelType()!"">
 <#else>
 <#-- allow the order type to be set in parameter, so only the appropriate section (Sales or Purchase Order) shows up -->
   <#if parameters.orderTypeId?has_content>
     <#assign shoppingCartOrderType = parameters.orderTypeId>
   </#if>
 </#if>
-<!-- Sales Order Entry -->
+<#-- Sales Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <#if shoppingCartOrderType != "PURCHASE_ORDER">
     <#assign sectionTitle>
@@ -81,7 +81,7 @@ under the License.
   </#if>
 </#if>
 
-<!-- Purchase Order Entry -->
+<#-- Purchase Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
   <#if shoppingCartOrderType != "SALES_ORDER">
     <#assign sectionTitle>

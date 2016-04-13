@@ -18,5 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-
+    <SecurityGroup description="Customer user of ECOMMERCE Limited access to own account" groupId="ECOMMERCE_CUSTOMER"/>
+    <SecurityGroupPermission groupId="ECOMMERCE_CUSTOMER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="ECOMMERCE_CUSTOMER" permissionId="CONTENTMGR_ROLE_UPDATE"/>
 </entity-engine-xml>

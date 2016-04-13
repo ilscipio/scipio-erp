@@ -19,8 +19,9 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <ShoppingList shoppingListId="DemoWishList" listName="Demo Wish List" partyId="DemoCustomer" shoppingListTypeId="SLT_WISH_LIST" productStoreId="9000" isActive="Y" currencyUom="USD" isPublic="N"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00001" productId="CAM-2644" quantity="5" productStoreId="9000"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00002" productId="CDR-1111" quantity="2" productStoreId="9000"/>
-    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00003" productId="KB-5569" quantity="10" productStoreId="9000"/>
+    <!-- Cato: The default product store is now CatoShop -->
+    <ShoppingList shoppingListId="DemoWishList" listName="Demo Wish List" partyId="DemoCustomer" shoppingListTypeId="SLT_WISH_LIST" productStoreId="CatoShop" isActive="Y" currencyUom="USD" isPublic="N"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00001" productId="CAM-2644" quantity="5" productStoreId="CatoShop"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00002" productId="CDR-1111" quantity="2" productStoreId="CatoShop"/>
+    <ShoppingListItem shoppingListId="DemoWishList" shoppingListItemSeqId="00003" productId="KB-5569" quantity="10" productStoreId="CatoShop"/>
 </entity-engine-xml>

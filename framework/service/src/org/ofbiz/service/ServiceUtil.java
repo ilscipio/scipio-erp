@@ -324,8 +324,26 @@ public class ServiceUtil {
         }
     }
 
+    
+    /**
+     * Cato: The default message prefix. 
+     */
+    private static final String defaultMessagePrefix = UtilProperties.getMessageNoTrim("DefaultMessages", "service.message.prefix", Locale.getDefault());;
+    
+    /**
+     * Joins messages from a list into a single string.
+     * <p>
+     * Cato: <strong>NOTE</strong> This method has been modified so that
+     * by default, if msgPrefix is null, a default will be looked up (service.message.prefix in DefaultMessages resource).
+     * This is because a number of cases fail to set a proper space separator and text ends up scrunched.
+     * This can be overridden by passing the empty string.
+     */
     public static String makeMessageList(List<? extends Object> msgList, String msgPrefix, String msgSuffix) {
         StringBuilder outMsg = new StringBuilder();
+        // Cato: Lookup default prefix
+        if (msgPrefix == null) {
+            msgPrefix = defaultMessagePrefix;
+        }
         if (UtilValidate.isNotEmpty(msgList)) {
             for (Object msg: msgList) {
                 if (msg == null) continue;

@@ -79,131 +79,51 @@ under the License.
                     <input type="hidden" name="keepAddressBook" value="N" />
                   </#if>
                   <div id="shippingFormServerError" class="errorMessage"></div>
-                  <div>
-                    <@field type="input" label=uiLabelMap.PartyFirstName id="firstName" name="firstName" required=true value="${firstName!}" />
+                  
+                  <@field type="input" label=uiLabelMap.PartyFirstName id="firstName" name="firstName" required=true value=(firstName!) />
+                  <@field type="input" label=uiLabelMap.PartyLastName id="lastName" name="lastName" required=true value=(lastName!) />
+                  <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>
+                    <#if shipToTelecomNumber?has_content>
+                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(shipToTelecomNumber.countryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
+                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(shipToTelecomNumber.areaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
+                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(shipToTelecomNumber.contactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
+                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(shipToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                    <#else>
+                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(parameters.shipToCountryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
+                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(parameters.shipToAreaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
+                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(parameters.shipToContactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
+                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(parameters.shipToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                    </#if>
+                  </@field>
+                  <@field type="input" id="emailAddress" name="emailAddress" required=true class="+validate-email" maxlength="255" size="40" value=(emailAddress!) label="${uiLabelMap.PartyEmailAddress}"/>
+                  <@field type="input" id="shipToAddress1" name="shipToAddress1" required=true value=(shipToAddress1!) maxlength="255" size="40" label="${uiLabelMap.PartyAddressLine1}"/>
+                  <@field type="input" id="shipToAddress2" name="shipToAddress2" value=(shipToAddress2!) maxlength="255" size="40" label="${uiLabelMap.PartyAddressLine2}"/>
+                  <@field type="input" id="shipToCity" name="shipToCity" required=true value=(shipToCity!) maxlength="255" size="40" label="${uiLabelMap.CommonCity}"/>
+                  <@field type="input" id="shipToPostalCode" name="shipToPostalCode" required=true value=(shipToPostalCode!) size="12" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
 
-                    <@field type="input" label=uiLabelMap.PartyLastName id="lastName" name="lastName" required=true value="${lastName!}" />
+                  <@field type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" required=true label="${uiLabelMap.CommonCountry}">
+                    <#if shipToCountryGeoId??>
+                      <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
+                    </#if>
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                  </@field>
+                  <div id="shipToStates">
+                    <@field type="select" id="shipToStateProvinceGeoId" required=true name="shipToStateProvinceGeoId" label="${uiLabelMap.CommonState}">
+                      <#if shipToStateProvinceGeoId?has_content>
+                        <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
+                      <#else>
+                        <option value="_NA_">${uiLabelMap.PartyNoState}</option>
+                      </#if>
+                      <@render resource="component://common/widget/CommonScreens.xml#states" />
+                    </@field>
                   </div>
-                  <div>
-                  <#if shipToTelecomNumber?has_content>
-                      <span>
-                          <label for="shipToCountryCode">${uiLabelMap.CommonCountry}*
-                              <span id="advice-required-shipToCountryCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToCountryCode" class="required" id="shipToCountryCode" value="${shipToTelecomNumber.countryCode!}" size="5" maxlength="10" /> -
-                      </span>
-                      <span>
-                          <label for="shipToAreaCode">${uiLabelMap.PartyAreaCode}*
-                              <span id="advice-required-shipToAreaCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToAreaCode" class="required" id="shipToAreaCode" value="${shipToTelecomNumber.areaCode!}" size="5" maxlength="10" /> -
-                      </span>
-                      <span>
-                          <label for="shipToContactNumber">${uiLabelMap.PartyContactNumber}*
-                              <span id="advice-required-shipToContactNumber" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToContactNumber" class="required" id="shipToContactNumber" value="${shipToTelecomNumber.contactNumber!}" size="10" maxlength="15" /> -
-                      </span>
-                      <span>
-                          <label for="shipToExtension">${uiLabelMap.PartyExtension}</label>
-                          <input type="text" name="shipToExtension" id="shipToExtension" value="${shipToExtension!}" size="5" maxlength="10" />
-                      </span>
-                  <#else>
-                      <span>
-                          <label for="shipToCountryCode">${uiLabelMap.CommonCountry}*
-                              <span id="advice-required-shipToCountryCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToCountryCode" class="required" id="shipToCountryCode" value="${parameters.shipToCountryCode!}" size="5" maxlength="10" /> -
-                      </span>
-                      <span>
-                          <label for="shipToAreaCode">${uiLabelMap.PartyAreaCode}*
-                              <span id="advice-required-shipToAreaCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToAreaCode" class="required" id="shipToAreaCode" value="${parameters.shipToAreaCode!}" size="5" maxlength="10" /> -
-                      </span>
-                      <span>
-                          <label for="shipToContactNumber">${uiLabelMap.PartyContactNumber}*
-                              <span id="advice-required-shipToContactNumber" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input type="text" name="shipToContactNumber" class="required" id="shipToContactNumber" value="${parameters.shipToContactNumber!}" size="10" maxlength="15" /> -
-                      </span>
-                      <span>
-                          <label for="shipToExtension">${uiLabelMap.PartyExtension}</label>
-                          <input type="text" name="shipToExtension" id="shipToExtension" value="${parameters.shipToExtension!}" size="5" maxlength="10" />
-                      </span>
-                  </#if>
-                  </div>
-                  <div>
-                      <span>
-                          <label for="emailAddress">${uiLabelMap.PartyEmailAddress}*
-                            <span id="advice-required-emailAddress" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                          </label>
-                          <input id="emailAddress" name="emailAddress" class="required validate-email" maxlength="255" size="40" type="text" value="${emailAddress!}" />
-                      </span>
-                  </div>
-                    <div>
-                        <span>
-                            <label for="shipToAddress1">${uiLabelMap.PartyAddressLine1}*
-                                <span id="advice-required-shipToAddress1" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <input id="shipToAddress1" name="shipToAddress1" class="required" type="text" value="${shipToAddress1!}" maxlength="255" size="40" />
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                          <label for="shipToAddress2">${uiLabelMap.PartyAddressLine2}</label>
-                          <input id="shipToAddress2" name="shipToAddress2" type="text" value="${shipToAddress2!}" maxlength="255" size="40" />
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <label for="shipToCity">${uiLabelMap.CommonCity}*
-                                <span id="advice-required-shipToCity" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <input id="shipToCity" name="shipToCity" class="required" type="text" value="${shipToCity!}" maxlength="255" size="40" />
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <label for="shipToPostalCode">${uiLabelMap.PartyZipCode}*
-                                <span id="advice-required-shipToPostalCode" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <input id="shipToPostalCode" name="shipToPostalCode" class="required" type="text" value="${shipToPostalCode!}" size="12" maxlength="10" />
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <label for="shipToCountryGeoId">${uiLabelMap.CommonCountry}*
-                                <span id="advice-required-shipToCountryGeo" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <select name="shipToCountryGeoId" id="shipToCountryGeoId">
-                              <#if shipToCountryGeoId??>
-                                <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
-                              </#if>
-                              <@render resource="component://common/widget/CommonScreens.xml#countries" />
-                            </select>
-                        </span>
-                    </div>
-                    <div id="shipToStates">
-                        <span>
-                            <label for="shipToStateProvinceGeoId">${uiLabelMap.CommonState}*
-                                <span id="advice-required-shipToStateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <select id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
-                              <#if shipToStateProvinceGeoId?has_content>
-                                <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
-                              <#else>
-                                <option value="_NA_">${uiLabelMap.PartyNoState}</option>
-                              </#if>
-                              <@render resource="component://common/widget/CommonScreens.xml#states" />
-                            </select>
-                        </span>
-                    </div>
-                  </fieldset>
-                  <fieldset>
-                    <a href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact">${uiLabelMap.EcommerceContinueToStep} 3</a>
-                    <a style="display:none" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShippingOptions">${uiLabelMap.EcommercePleaseWait}....</a>
-                  </fieldset>
+                </fieldset>
+                <fieldset>
+                  <@field type="submitarea">
+                    <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePartyAndShippingContact" text="${uiLabelMap.EcommerceContinueToStep} 3"/>
+                    <@field type="submit" submitType="link" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingShippingOptions" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                  </@field>
+                </fieldset>
             </form>
           </div>
         </@section>
@@ -213,8 +133,8 @@ under the License.
           <div id="shippingOptionSummaryPanel" style="display: none;">
             <a href="javascript:void(0);" id="openShippingOptionPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
             <div class="completed" id="shippingOptionCompleted">
+              ${uiLabelMap.CommonMethod}
               <ul>
-                <li>${uiLabelMap.CommonMethod}</li>
                 <li id="selectedShipmentOption"></li>
               </ul>
             </div>
@@ -224,19 +144,16 @@ under the License.
           <div id="editShippingOptionPanel" style="display: none;">
             <form id="shippingOptionForm" action="<@ofbizUrl></@ofbizUrl>" method="post">
               <fieldset>
-                  <div id="shippingOptionFormServerError" class="errorMessage"></div>
-                  <div>
-                      <label for="shipMethod">${uiLabelMap.OrderSelectShippingMethod}*
-                          <span id="advice-required-shipping_method" class="custom-advice" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-                      </label>
-                      <select id="shipMethod" name="shipMethod" class="required">
-                          <option value=""></option>
-                      </select>
-                  </div>
+                <div id="shippingOptionFormServerError" class="errorMessage"></div>
+                <@field type="select" id="shipMethod" required=true name="shipMethod" required=true label="${uiLabelMap.OrderSelectShippingMethod}">
+                  <option value=""></option>
+                </@field>
               </fieldset>
               <fieldset>
-                <a href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod">${uiLabelMap.EcommerceContinueToStep} 4</a>
-                <a style="display:none" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingBilling">${uiLabelMap.EcommercePleaseWait}....</a>
+                <@field type="submitarea">
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="saveShippingMethod" text="${uiLabelMap.EcommerceContinueToStep} 4"/>
+                  <@field type="submit" submitType="link" style="display:none" class="${styles.link_run_session!}" style="display: none;" href="javascript:void(0);" id="processingBilling" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                </@field>
               </fieldset>
             </form>
           </div>
@@ -275,192 +192,91 @@ under the License.
           <div id="editBillingPanel" style="display: none;">
             <form id="billingForm" class="theform" action="<@ofbizUrl></@ofbizUrl>" method="post">
               <fieldset class="col">
-                  <input type="hidden" id="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
-                  <input type="hidden" id="shipToContactMechIdInBillingForm" name="shipToContactMechId" value="${shipToContactMechId!}" />
-                  <input type="hidden" id="paymentMethodId" name="paymentMethodId" value="${paymentMethodId!}" />
-                  <input type="hidden" id="paymentMethodTypeId" name="paymentMethodTypeId" value="${paymentMethodTypeId?default("CREDIT_CARD")}" />
-                  <input type="hidden" id="billToPartyId" name="partyId" value="${parameters.partyId!}" />
-                  <input type="hidden" name="expireDate" value="${expireDate!}" />
-                  <input type="hidden" id="billToPhoneContactMechId" name="billToPhoneContactMechId" value="${(billToTelecomNumber.contactMechId)!}" />
-                  <input type="hidden" name="billToName" value="${billToName!}" />
-                  <input type="hidden" name="billToAttnName" value="${billToAttnName!}" />
-                  <#if userLogin??>
-                    <input type="hidden" name="keepAddressBook" value="Y" />
-                    <input type="hidden" name="setDefaultBilling" value="Y" />
-                    <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
-                    <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+                <input type="hidden" id="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
+                <input type="hidden" id="shipToContactMechIdInBillingForm" name="shipToContactMechId" value="${shipToContactMechId!}" />
+                <input type="hidden" id="paymentMethodId" name="paymentMethodId" value="${paymentMethodId!}" />
+                <input type="hidden" id="paymentMethodTypeId" name="paymentMethodTypeId" value="${paymentMethodTypeId?default("CREDIT_CARD")}" />
+                <input type="hidden" id="billToPartyId" name="partyId" value="${parameters.partyId!}" />
+                <input type="hidden" name="expireDate" value="${expireDate!}" />
+                <input type="hidden" id="billToPhoneContactMechId" name="billToPhoneContactMechId" value="${(billToTelecomNumber.contactMechId)!}" />
+                <input type="hidden" name="billToName" value="${billToName!}" />
+                <input type="hidden" name="billToAttnName" value="${billToAttnName!}" />
+                <#if userLogin??>
+                  <input type="hidden" name="keepAddressBook" value="Y" />
+                  <input type="hidden" name="setDefaultBilling" value="Y" />
+                  <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
+                  <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+                <#else>
+                  <input type="hidden" name="keepAddressBook" value="N" />
+                </#if>
+                <div id="billingFormServerError" class="errorMessage"></div>
+                
+                <@field type="input" id="firstNameOnCard" name="firstNameOnCard" required=true value=(firstNameOnCard!) label="${uiLabelMap.PartyFirstName}"/>
+                <@field type="input" id="lastNameOnCard" name="lastNameOnCard" required=true value=(lastNameOnCard!) label="${uiLabelMap.PartyLastName}"/>
+                <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>  
+                  <#if billToTelecomNumber?has_content>
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(billToTelecomNumber.countryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(billToTelecomNumber.areaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(billToTelecomNumber.contactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(billToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
                   <#else>
-                    <input type="hidden" name="keepAddressBook" value="N" />
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(parameters.billToCountryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(parameters.billToAreaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(parameters.billToContactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(parameters.billToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
                   </#if>
-                  <div id="billingFormServerError" class="errorMessage"></div>
-                        <div>
-                            <span>
-                                <label for="firstNameOnCard">${uiLabelMap.PartyFirstName}*
-                                    <span id="advice-required-firstNameOnCard" style="display: none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input id="firstNameOnCard" name="firstNameOnCard" class="required" type="text" value="${firstNameOnCard!}" />
-                            </span>
-                            <span>
-                                <label for="lastNameOnCard">${uiLabelMap.PartyLastName}*
-                                    <span id="advice-required-lastNameOnCard" style="display: none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input id="lastNameOnCard" name="lastNameOnCard" class="required" type="text" value="${lastNameOnCard!}" />
-                            </span>
-                        </div>
-                        <div>  
-                          <#if billToTelecomNumber?has_content>
-                            <span>
-                                <label for="billToCountryCode">${uiLabelMap.CommonCountry}*
-                                    <span id="advice-required-billToCountryCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToCountryCode" class="required" id="billToCountryCode" value="${billToTelecomNumber.countryCode!}" size="5" maxlength="10" /> -
-                            </span>
-                            <span>
-                                <label for="billToAreaCode">${uiLabelMap.PartyAreaCode}*
-                                    <span id="advice-required-billToAreaCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToAreaCode" class="required" id="billToAreaCode" value="${billToTelecomNumber.areaCode!}" size="5" maxlength="10" /> -
-                            </span>
-                            <span>
-                                <label for="billToContactNumber">${uiLabelMap.PartyContactNumber}*
-                                    <span id="advice-required-billToContactNumber" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToContactNumber" class="required" id="billToContactNumber" value="${billToTelecomNumber.contactNumber!}" size="10" maxlength="15" /> -
-                            </span>
-                            <span>
-                                <label for="billToExtension">${uiLabelMap.PartyExtension}</label>
-                                <input type="text" name="billToExtension" id="billToExtension" value="${billToExtension!}" size="5" maxlength="10" />
-                            </span>
-                          <#else>
-                            <span>
-                                <label for="billToCountryCode">${uiLabelMap.CommonCountry}*
-                                    <span id="advice-required-billToCountryCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToCountryCode" class="required" id="billToCountryCode" value="${parameters.billToCountryCode!}" size="5" maxlength="10" /> -
-                            </span>
-                            <span>
-                                <label for="billToAreaCode">${uiLabelMap.PartyAreaCode}*
-                                    <span id="advice-required-billToAreaCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToAreaCode" class="required" id="billToAreaCode" value="${parameters.billToAreaCode!}" size="5" maxlength="10" /> -
-                            </span>
-                            <span>
-                                <label for="billToContactNumber">${uiLabelMap.PartyContactNumber}*
-                                    <span id="advice-required-billToContactNumber" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input type="text" name="billToContactNumber" class="required" id="billToContactNumber" value="${parameters.billToContactNumber!}" size="10" maxlength="15" /> -
-                            </span>
-                            <span>
-                                <label for="billToExtension">${uiLabelMap.PartyExtension}</label>
-                                <input type="text" name="billToExtension" id="billToExtension" value="${parameters.billToExtension!}" size="5" maxlength="10" />
-                            </span>
-                          </#if>
-                        </div>
-                        <div>
-                          <span>
-                                <label for="cardType">${uiLabelMap.AccountingCardType}*<span id="advice-required-cardType" style="display: none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span></label>
-                                <select name="cardType" id="cardType">
-                                  <#if cardType?has_content>
-                                    <option label="${cardType!}" value="${cardType!}">${cardType!}</option>
-                                  </#if>
-                                  <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
-                                </select>
-                          </span>
-                        </div>
-                        <div>
-                            <span>
-                                <label for="cardNumber">${uiLabelMap.AccountingCardNumber}*
-                                    <span id="advice-required-cardNumber" style="display: none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                                </label>
-                                <input id="cardNumber" name="cardNumber" class="required creditcard" type="text" value="${cardNumber!}" size="30" maxlength="16" />
-                            </span>
-                            <span>
-                                <label for="billToCardSecurityCode">CVV2</label>
-                                <input id="billToCardSecurityCode" name="billToCardSecurityCode" size="4" type="text" maxlength="4" value="" />
-                            </span>
-                        </div>
-                        <div>
-                          <span>
-                            <label for="expMonth">${uiLabelMap.CommonMonth}:*
-                                <span id="advice-required-expMonth" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <select id="expMonth" name="expMonth" class="required">
-                              <#if expMonth?has_content>
-                                <option label="${expMonth!}" value="${expMonth!}">${expMonth!}</option>
-                              </#if>
-                              <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
-                            </select>
-                          </span>
-                          <span>
-                            <label for="expYear">${uiLabelMap.CommonYear}:*
-                                <span id="advice-required-expYear" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                            </label>
-                            <select id="expYear" name="expYear" class="required">
-                              <#if expYear?has_content>
-                                <option value="${expYear!}">${expYear!}</option>
-                              </#if>
-                              <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
-                            </select>
-                          </span>
-                        </div>
-                    </fieldset>
-                    <fieldset class="col">
-                        <div>
-                                <input class="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling" type="checkbox" value="Y" <#if useShippingAddressForBilling?has_content && useShippingAddressForBilling?default("")=="Y">checked="checked"</#if> /><label for="useShippingAddressForBilling">${uiLabelMap.FacilityBillingAddressSameShipping}</label>
-                        </div>
-                        <div id="billingAddress" <#if useShippingAddressForBilling?has_content && useShippingAddressForBilling?default("")=="Y">style="display:none"</#if>>
-                          <div>
-                              <label for="billToAddress1">${uiLabelMap.PartyAddressLine1}*
-                                <span id="advice-required-billToAddress1" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                              </label>
-                              <input id="billToAddress1" name="billToAddress1" class="required" size="30" type="text" value="${billToAddress1!}" />
-                          </div>
-                          <div>
-                              <label for="billToAddress2">${uiLabelMap.PartyAddressLine2}</label>
-                              <input id="billToAddress2" name="billToAddress2" type="text" value="${billToAddress2!}" size="30" />
-                          </div>
-                          <div>
-                              <label for="billToCity">${uiLabelMap.CommonCity}*
-                                <span id="advice-required-billToCity" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                              </label>
-                              <input id="billToCity" name="billToCity" class="required" type="text" value="${billToCity!}" />
-                          </div>
-                          <div>
-                              <label for="billToPostalCode">${uiLabelMap.PartyZipCode}*
-                                <span id="advice-required-billToPostalCode" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                              </label>
-                              <input id="billToPostalCode" name="billToPostalCode" class="required" type="text" value="${billToPostalCode!}" size="12" maxlength="10" />
-                          </div>
-                          <div>
-                              <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}*
-                                <span id="advice-required-billToCountryGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                              </label>
-                              <select name="billToCountryGeoId" id="billToCountryGeoId">
-                                <#if billToCountryGeoId??>
-                                  <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo?default(billToCountryGeoId!)}</option>
-                                </#if>
-                                <@render resource="component://common/widget/CommonScreens.xml#countries" />
-                              </select>
-                          </div>
-                          <div>
-                              <label for="billToStateProvinceGeoId">${uiLabelMap.CommonState}*
-                                <span id="advice-required-billToStateProvinceGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-                              </label>
-                              <select id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
-                                <#if billToStateProvinceGeoId?has_content>
-                                  <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
-                                <#else>
-                                  <option value="_NA_">${uiLabelMap.PartyNoState}</option>
-                                </#if>
-                              </select>
-                          </div>
-                        </div>
-                    </fieldset>
-                    <br style="clear:both;"/>
-                    <fieldset>
-                      <a href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact">${uiLabelMap.EcommerceContinueToStep} 5</a>
-                      <a href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel">${uiLabelMap.EcommercePleaseWait}....</a>
-                    </fieldset>
+                </@field>
+                <@field type="select" name="cardType" id="cardType" required=true label="${uiLabelMap.AccountingCardType}">
+                    <#if cardType?has_content>
+                      <option label="${cardType!}" value="${cardType!}">${cardType!}</option>
+                    </#if>
+                    <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
+                </@field>
+
+                <@field type="input" id="cardNumber" name="cardNumber" required=true class="+creditcard" value=(cardNumber!) size="30" maxlength="16" label="${uiLabelMap.AccountingCardNumber}"/>
+                <@field type="input" id="billToCardSecurityCode" name="billToCardSecurityCode" size="4" maxlength="4" value="" label="CVV2"/>
+                <@field type="select" id="expMonth" name="expMonth" required=true label="${uiLabelMap.CommonMonth}">
+                    <#if expMonth?has_content>
+                      <option label="${expMonth!}" value="${expMonth!}">${expMonth!}</option>
+                    </#if>
+                    <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
+                </@field>
+                <@field type="select" id="expYear" name="expYear" required=true label="${uiLabelMap.CommonYear}">
+                    <#if expYear?has_content>
+                      <option value="${expYear!}">${expYear!}</option>
+                    </#if>
+                    <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
+                </@field>
+              </fieldset>
+              <fieldset class="col">
+                <@field type="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling" type="checkbox" value="Y" checked=(useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y") label=uiLabelMap.FacilityBillingAddressSameShipping />
+  
+                <div id="billingAddress"<#if useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y"> style="display:none"</#if>>
+                  <@field type="input" id="billToAddress1" name="billToAddress1" required=true size="30" value=(billToAddress1!) label="${uiLabelMap.PartyAddressLine1}"/>
+                  <@field type="input" id="billToAddress2" name="billToAddress2" value=(billToAddress2!) size="30" label="${uiLabelMap.PartyAddressLine2}"/>
+                  <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label="${uiLabelMap.CommonCity}"/>
+                  <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
+                  <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label="${uiLabelMap.CommonCountry}">
+                    <#if billToCountryGeoId??>
+                      <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
+                    </#if>
+                    <@render resource="component://common/widget/CommonScreens.xml#countries" />
+                  </@field>
+                  <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label="${uiLabelMap.CommonState}">
+                    <#if billToStateProvinceGeoId?has_content>
+                      <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
+                    <#else>
+                      <option value="_NA_">${uiLabelMap.PartyNoState}</option>
+                    </#if>
+                  </@field>
+                </div>
+              </fieldset>
+              <fieldset>
+                <@field type="submitarea">
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="savePaymentAndBillingContact" text="${uiLabelMap.EcommerceContinueToStep} 5"/>
+                  <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!}" style="display: none;" id="processingOrderSubmitPanel" text="${uiLabelMap.EcommercePleaseWait}..."/>
+                </@field>
+              </fieldset>
             </form>
           </div>
         </@section>
@@ -470,8 +286,10 @@ under the License.
           <div id="orderSubmitPanel" style="display: none;">
             <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
                 <fieldset>
-                    <input type="${styles.link_run_sys!} ${styles.action_complete!}" id="processOrderButton" name="processOrderButton" value="${uiLabelMap.OrderSubmitOrder}" />
-                    <input type="${styles.link_run_sys!} ${styles.action_complete!}" style="display: none;" id="processingOrderButton" name="processingOrderButton" value="${uiLabelMap.OrderSubmittingOrder}" />
+                  <@field type="submitarea">
+                    <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" id="processOrderButton" name="processOrderButton" text=uiLabelMap.OrderSubmitOrder />
+                    <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" style="display: none;" id="processingOrderButton" name="processingOrderButton" text=uiLabelMap.OrderSubmittingOrder />
+                  </@field>
                 </fieldset>
             </form>
           </div>
@@ -481,10 +299,10 @@ under the License.
 
 <#-- ========================================================================================================================== -->
     
-    <#assign style><#if shoppingCart?has_content && (shoppingCart.size() > 0)>display: none;</#if></#assign>
-    <@section id="emptyCartCheckoutPanel" style=style>
+    <#assign sectionStyle><#if shoppingCart?has_content && (shoppingCart.size() > 0)>display: none;</#if></#assign>
+    <@section id="emptyCartCheckoutPanel" style=sectionStyle>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
-        <span>You currently have no items in your cart. Click <a href="<@ofbizUrl>main</@ofbizUrl>">here</a> to view our products.</span>
+        <p>You currently have no items in your cart. Click <a href="<@ofbizUrl>main</@ofbizUrl>">here</a> to view our products.</p>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}</@heading>

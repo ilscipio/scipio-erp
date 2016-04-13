@@ -8,4 +8,24 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="en">Shop</value>
         <value xml:lang="de">Shop</value>
     </property>
+    <property key="ShopThankYouForOrder">
+        <value xml:lang="cs">Děkujeme za Vaši objednávku !</value>
+        <value xml:lang="da">Tak for Deres ordre</value>
+        <value xml:lang="de">Vielen Dank für Ihre Bestellung!</value>
+        <value xml:lang="en">Thank you for your order!</value>
+        <value xml:lang="es">Grácias por su compra!</value>
+        <value xml:lang="fr">Merci pour votre commande !</value>
+        <value xml:lang="hi_IN">आर्डर के लिए धन्यवाद !</value>
+        <value xml:lang="it">Grazie per il tuo ordine!</value>
+        <value xml:lang="ja">ご注文ありがとうございます</value>
+        <value xml:lang="nl">We danken u voor uw bestelling!</value>
+        <value xml:lang="pt_BR">Muito Obrigado por seu pedido</value>
+        <value xml:lang="pt_PT">Gratos pela sua encomenda!</value>
+        <value xml:lang="ro">Multumim pentru comanda ta!</value>
+        <value xml:lang="ru">спасибо за ваш заказ!</value>
+        <value xml:lang="th">ขอบคุณสำหรับการทำรายการสั่งซื้อสินค้า!</value>
+        <value xml:lang="vi">Đơn đặt hàng toàn bộ như sau. </value>
+        <value xml:lang="zh">谢谢你的惠顾！</value>
+        <value xml:lang="zh_TW">謝謝你的惠顧！</value>
+    </property>    
 </resource>

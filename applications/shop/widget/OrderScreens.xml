@@ -327,7 +327,8 @@ under the License.
     <screen name="ordercomplete">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleOrderSummary"/>
+                <!--<set field="titleProperty" value="PageTitleOrderSummary"/>-->
+                <set field="titleProperty" value="EcommerceOrderConfirmation"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>

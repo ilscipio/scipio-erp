@@ -16,12 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>
+<#-- Cato: Moved to page title: <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>-->
+<p>${uiLabelMap.ShopThankYouForOrder}</p>
 <#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
 <#if orderHeader?has_content>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
-  <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.EcommerceContinueShopping}</a>
+  <@menu type="button">
+    <@menuitem type="link" href=makeOfbizUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />
+  </@menu>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>
 </#if>

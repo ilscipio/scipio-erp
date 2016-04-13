@@ -55,7 +55,7 @@ under the License.
         <#if (requestParameters.checkoutpage)?has_content>
           <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
         </#if>
-        <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_complete!}" />
+        <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
       </@cell>
     </@row>
   </form>

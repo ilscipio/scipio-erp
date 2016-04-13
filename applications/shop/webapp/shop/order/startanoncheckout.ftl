@@ -25,12 +25,13 @@ under the License.
 </#if>
 
 <#if (shoppingCartSize > 0)>
-  <@section title=uiLabelMap.CommonCheckoutAnonymous>
+  <#assign sectionTitle>${uiLabelMap.CommonOr?upper_case} ${uiLabelMap.CommonCheckoutAnonymous}</#assign>
+  <@section title=sectionTitle>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setCustomer") text=uiLabelMap.OrderCheckout />
-        <@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") text=uiLabelMap.OrderCheckoutQuick />
-        <@menuitem type="link" href=makeOfbizUrl("anonOnePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout />
-        <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout />
+        <@menuitem type="link" href=makeOfbizUrl("setCustomer") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout />
+        <@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.OrderCheckoutQuick />
+        <@menuitem type="link" href=makeOfbizUrl("anonOnePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.EcommerceOnePageCheckout />
+        <@menuitem type="link" href=makeOfbizUrl("googleCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.EcommerceCartToGoogleCheckout />
       </@menu>
   </@section>
 </#if>

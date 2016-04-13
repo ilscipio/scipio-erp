@@ -18,10 +18,11 @@ under the License.
 -->
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
-  <@heading>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
+  <@section title="${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}">
   <div id="cartSummaryPanel" style="display: none;">
     <a href="javascript:void(0);" id="openCartPanel" class="${styles.link_run_local!} ${styles.action_show!}">${uiLabelMap.EcommerceClickHereToEdit}</a>
-    <@table type="data-list" id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
+    <#-- Cato: Always disable responsive on this one or it won't play nice with JS... -->
+    <@table type="data-list" responsive=false id="cartSummaryPanel_cartItems" summary="This table displays the list of item added into Shopping Cart.">
       <@thead>
         <@tr>
           <@th id="orderItem">${uiLabelMap.OrderItem}</@th>
@@ -86,7 +87,8 @@ under the License.
       <fieldset>
         <input type="hidden" name="removeSelected" value="false" />
         <div id="cartFormServerError" class="errorMessage"></div>
-        <@table type="data-list" id="editCartPanel_cartItems">
+        <#-- Cato: Always disable responsive on this one or it won't play nice with JS... -->
+        <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
             <@tr>
               <@th id="editOrderItem">${uiLabelMap.OrderItem}</@th>
@@ -122,7 +124,7 @@ under the License.
                     ${cartLine.getQuantity()?string.number}
                   <#else>
                     <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" />
-                    <input type="text" name="update${cartLine_index}" id="qty_${cartLine_index}" value="${cartLine.getQuantity()?string.number}" class="required validate-number" />
+                    <@field type="input" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" value="${cartLine.getQuantity()?string.number}" required=true class="+validate-number" />
                     <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                     <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>
                   </#if>
@@ -170,15 +172,15 @@ under the License.
         </@table>
       </fieldset>
       <fieldset id="productPromoCodeFields">
-        <div>
-          <label for="productPromoCode">${uiLabelMap.EcommerceEnterPromoCode}</label>
-          <input id="productPromoCode" name="productPromoCode" type="text" value="" />
-        </div>
+        <@field type="input" id="productPromoCode" name="productPromoCode" value="" label=uiLabelMap.EcommerceEnterPromoCode />
       </fieldset>
       <fieldset>
-        <a href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart">${uiLabelMap.EcommerceContinueToStep} 2</a>
-        <a style="display: none" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping">${uiLabelMap.EcommercePleaseWait}....</a>
+        <@field type="submitarea">
+          <@field type="submit" submitType="link" href="javascript:void(0);" class="${styles.link_run_session!} ${styles.action_continue!}" id="updateShoppingCart" text="${uiLabelMap.EcommerceContinueToStep} 2"/>
+          <@field type="submit" submitType="link" style="display: none;" class="${styles.link_run_session!}" href="javascript:void(0);" id="processingShipping" text="${uiLabelMap.EcommercePleaseWait}..."/>
+        </@field>
       </fieldset>
     </form>
   </div>
+  </@section>
 </#if>

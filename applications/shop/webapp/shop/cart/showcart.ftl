@@ -324,15 +324,18 @@ function setAlternateGwp(field) {
             </@table>
     </form>
     <@row>
-        <@cell columns=6>
+        <@cell columns=3>
             <@menu type="button">
                 <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
             </@menu>
         </@cell>
-        <@cell columns=6 class="${styles.text_right!}">
-                <@menu type="button">
-                     <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
-                </@menu>
+        <@cell columns=9 class="${styles.text_right!}">
+            <@menu type="button">
+                <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
+                <@menuitem type="link" href=makeOfbizUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>
+                <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
+                <@menuitem type="link" href=makeOfbizUrl("googleCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceCartToGoogleCheckout />
+            </@menu>
         </@cell>
     </@row>    
   <#else>

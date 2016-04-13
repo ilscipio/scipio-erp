@@ -55,7 +55,7 @@ under the License.
     <OrderContactMech orderId="DEMO10090" contactMechPurposeTypeId="ORDER_EMAIL" contactMechId="9026" lastUpdatedStamp="2008-04-23 16:49:32.173" lastUpdatedTxStamp="2008-04-23 16:49:32.164" createdStamp="2008-04-23 16:49:32.173" createdTxStamp="2008-04-23 16:49:32.164"/>
     <OrderContactMech orderId="DEMO10090" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="9015" lastUpdatedStamp="2008-04-23 16:49:28.332" lastUpdatedTxStamp="2008-04-23 16:49:27.349" createdStamp="2008-04-23 16:49:28.332" createdTxStamp="2008-04-23 16:49:27.349"/>
 
-    <Shipment shipmentId="9998" shipmentTypeId="SALES_SHIPMENT" statusId="SHIPMENT_INPUT" primaryOrderId="DEMO10090" primaryShipGroupSeqId="00001" estimatedShipCost="12.45" originFacilityId="WebStoreWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destinationContactMechId="9015" destinationTelecomNumberId="9025" partyIdTo="DemoCustomer" createdDate="2008-06-10 12:59:26.8"/>
+    <Shipment shipmentId="9998" shipmentTypeId="SALES_SHIPMENT" statusId="SHIPMENT_INPUT" primaryOrderId="DEMO10090" primaryShipGroupSeqId="00001" estimatedShipCost="12.45" originFacilityId="CatoShopWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destinationContactMechId="9015" destinationTelecomNumberId="9025" partyIdTo="DemoCustomer" createdDate="2008-06-10 12:59:26.8"/>
 
     <!-- Purchase order test data -->
     <!--for jira issue - 1782-->
@@ -106,9 +106,9 @@ under the License.
     <OrderStatus orderStatusId="9014" statusId="ORDER_COMPLETED" orderId="Demo1001" statusDatetime="2009-08-13 17:47:47.344" statusUserLogin="admin"/>
     <OrderContactMech orderId="Demo1001" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="9200"/>
 
-    <Shipment shipmentId="9997" shipmentTypeId="PURCHASE_SHIPMENT" statusId="PURCH_SHIP_RECEIVED" primaryOrderId="Demo1001" primaryShipGroupSeqId="00001" estimatedShipCost="0.00" destinationFacilityId="WebStoreWarehouse" destinationContactMechId="9200" destinationTelecomNumberId="9201" partyIdFrom="DemoSupplier" createdDate="2008-06-10 12:59:26.8"/>
+    <Shipment shipmentId="9997" shipmentTypeId="PURCHASE_SHIPMENT" statusId="PURCH_SHIP_RECEIVED" primaryOrderId="Demo1001" primaryShipGroupSeqId="00001" estimatedShipCost="0.00" destinationFacilityId="CatoShopWarehouse" destinationContactMechId="9200" destinationTelecomNumberId="9201" partyIdFrom="DemoSupplier" createdDate="2008-06-10 12:59:26.8"/>
     <ShipmentItem shipmentId="9997" shipmentItemSeqId="00001" productId="CAM-2644" quantity="2.000000"/>
-    <ShipmentRouteSegment shipmentId="9997" shipmentRouteSegmentId="00001" destFacilityId="WebStoreWarehouse" destContactMechId="9200" destTelecomNumberId="9201" carrierPartyId="_NA_" shipmentMethodTypeId="NO_SHIPPING" carrierServiceStatusId="SHRSCS_NOT_STARTED"/>
+    <ShipmentRouteSegment shipmentId="9997" shipmentRouteSegmentId="00001" destFacilityId="CatoShopWarehouse" destContactMechId="9200" destTelecomNumberId="9201" carrierPartyId="_NA_" shipmentMethodTypeId="NO_SHIPPING" carrierServiceStatusId="SHRSCS_NOT_STARTED"/>
     <ShipmentPackage shipmentId="9997" shipmentPackageSeqId="00001" dateCreated="2009-08-13 17:46:29.751"/>
     <ShipmentPackageContent shipmentId="9997" shipmentPackageSeqId="00001" shipmentItemSeqId="00001" quantity="2.000000"/>
     <ShipmentPackageRouteSeg shipmentId="9997" shipmentPackageSeqId="00001" shipmentRouteSegmentId="00001"/>
@@ -119,7 +119,7 @@ under the License.
     <AcctgTransEntry acctgTransId="9000" acctgTransEntrySeqId="00001" acctgTransEntryTypeId="_NA_" partyId="DemoSupplier" roleTypeId="BILL_FROM_VENDOR" productId="CAM-2644" glAccountTypeId="UNINVOICED_SHIP_RCPT" glAccountId="214000" organizationPartyId="Company" amount="48.00" currencyUomId="USD" origAmount="48.00" origCurrencyUomId="USD" debitCreditFlag="C" reconcileStatusId="AES_NOT_RECONCILED"/>
     <AcctgTransEntry acctgTransId="9000" acctgTransEntrySeqId="00002" acctgTransEntryTypeId="_NA_" partyId="DemoSupplier" roleTypeId="BILL_FROM_VENDOR" productId="CAM-2644" glAccountTypeId="INVENTORY_ACCOUNT" glAccountId="140000" organizationPartyId="Company" amount="48.00" currencyUomId="USD" origAmount="48.00" origCurrencyUomId="USD" debitCreditFlag="D" reconcileStatusId="AES_NOT_RECONCILED"/>
 
-    <InventoryItem inventoryItemId="9025" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CAM-2644" ownerPartyId="Company" datetimeReceived="2009-08-13 17:47:31.095" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" quantityOnHandTotal="2.000000" availableToPromiseTotal="2.000000" unitCost="24.000000" currencyUomId="USD"/>
+    <InventoryItem inventoryItemId="9025" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CAM-2644" ownerPartyId="Company" datetimeReceived="2009-08-13 17:47:31.095" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL01" quantityOnHandTotal="2.000000" availableToPromiseTotal="2.000000" unitCost="24.000000" currencyUomId="USD"/>
     <ShipmentReceipt receiptId="9000" inventoryItemId="9025" productId="CAM-2644" shipmentId="9997" orderId="Demo1001" orderItemSeqId="00001" datetimeReceived="2009-08-13 17:47:31.095" quantityAccepted="2.000000" quantityRejected="0.000000"/>
     <InventoryItemDetail inventoryItemId="9025" inventoryItemDetailSeqId="00001" effectiveDate="2009-08-13 17:47:46.78" quantityOnHandDiff="2.000000" availableToPromiseDiff="2.000000" accountingQuantityDiff="2.000000" unitCost="24.000000" orderId="Demo1001" orderItemSeqId="00001" shipmentId="9997" receiptId="9000"/>
     <ItemIssuance itemIssuanceId="9000" orderId="Demo1001" orderItemSeqId="00001" shipGroupSeqId="00001" shipmentId="9997" shipmentItemSeqId="00001" issuedDateTime="2009-08-13 17:46:29.603" quantity="2.000000"/>
@@ -175,9 +175,9 @@ under the License.
     <OrderContactMech orderId="Demo1002" contactMechPurposeTypeId="ORDER_EMAIL" contactMechId="9026"/>
     <OrderContactMech orderId="Demo1002" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="9015"/>
 
-    <Shipment shipmentId="9996" shipmentTypeId="SALES_SHIPMENT" statusId="SHIPMENT_SHIPPED" primaryOrderId="Demo1002" primaryShipGroupSeqId="00001" estimatedShipCost="12.10" originFacilityId="WebStoreWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destinationContactMechId="9015" destinationTelecomNumberId="9025" partyIdTo="DemoCustomer" partyIdFrom="Company" createdDate="2009-08-17 14:56:57.553"/>
+    <Shipment shipmentId="9996" shipmentTypeId="SALES_SHIPMENT" statusId="SHIPMENT_SHIPPED" primaryOrderId="Demo1002" primaryShipGroupSeqId="00001" estimatedShipCost="12.10" originFacilityId="CatoShopWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destinationContactMechId="9015" destinationTelecomNumberId="9025" partyIdTo="DemoCustomer" partyIdFrom="Company" createdDate="2009-08-17 14:56:57.553"/>
     <ShipmentItem shipmentId="9996" shipmentItemSeqId="00001" productId="CDR-1111" quantity="3.000000"/>
-    <ShipmentRouteSegment shipmentId="9996" shipmentRouteSegmentId="00001" originFacilityId="WebStoreWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destContactMechId="9015" destTelecomNumberId="9025" carrierPartyId="UPS" shipmentMethodTypeId="NEXT_DAY" carrierServiceStatusId="SHRSCS_NOT_STARTED"/>
+    <ShipmentRouteSegment shipmentId="9996" shipmentRouteSegmentId="00001" originFacilityId="CatoShopWarehouse" originContactMechId="9200" originTelecomNumberId="9201" destContactMechId="9015" destTelecomNumberId="9025" carrierPartyId="UPS" shipmentMethodTypeId="NEXT_DAY" carrierServiceStatusId="SHRSCS_NOT_STARTED"/>
     <ShipmentPackage shipmentId="9996" shipmentPackageSeqId="00001" dateCreated="2009-08-17 14:57:02.742"/>
     <ShipmentPackageContent shipmentId="9996" shipmentPackageSeqId="00001" shipmentItemSeqId="00001" quantity="3.000000"/>
     <ShipmentPackageRouteSeg shipmentId="9996" shipmentPackageSeqId="00001" shipmentRouteSegmentId="00001"/>

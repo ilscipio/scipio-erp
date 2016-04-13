@@ -1187,85 +1187,85 @@ under the License.
     <!-- Product Facility/Stock -->
 
     <!-- some default product facility settings -->
-    <ProductFacility productId="CAM-2644" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
-    <ProductFacility productId="CL-8544" facilityId="WebStoreWarehouse" minimumStock="20" reorderQuantity="50" daysToShip="1"/>
-    <ProductFacility productId="CDR-1111" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="KB-5569" facilityId="WebStoreWarehouse" minimumStock="15" reorderQuantity="40" daysToShip="2"/>
-    <ProductFacility productId="VH-9943-B3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="VH-9943-B4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="VH-9943-S3" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="VH-9943-S4" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="PH-1000" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="PH-1001" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="PH-1004" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="SV-1001" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
-    <ProductFacility productId="CL-1000" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
+    <ProductFacility productId="CAM-2644" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
+    <ProductFacility productId="CL-8544" facilityId="CatoShopWarehouse" minimumStock="20" reorderQuantity="50" daysToShip="1"/>
+    <ProductFacility productId="CDR-1111" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="KB-5569" facilityId="CatoShopWarehouse" minimumStock="15" reorderQuantity="40" daysToShip="2"/>
+    <ProductFacility productId="VH-9943-B3" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-B4" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-S3" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="VH-9943-S4" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="PH-1000" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="PH-1001" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="PH-1004" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="SV-1001" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="1"/>
+    <ProductFacility productId="CL-1000" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
 
-    <ProductFacilityLocation productId="CAM-2644" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01"/>
-    <ProductFacilityLocation productId="CAM-2644" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" minimumStock="2" moveQuantity="5"/>
-    <ProductFacilityLocation productId="CL-8544" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02"/>
-    <ProductFacilityLocation productId="CL-8544" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="CDR-1111" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL03"/>
-    <ProductFacilityLocation productId="CDR-1111" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL03" minimumStock="2" moveQuantity="5"/>
-    <ProductFacilityLocation productId="KB-5569" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL04"/>
-    <ProductFacilityLocation productId="KB-5569" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="PH-1000" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="PH-1001" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="PH-1004" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="SV-1001" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
-    <ProductFacilityLocation productId="CL-1000" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
+    <ProductFacilityLocation productId="CAM-2644" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL01"/>
+    <ProductFacilityLocation productId="CAM-2644" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL01" minimumStock="2" moveQuantity="5"/>
+    <ProductFacilityLocation productId="CL-8544" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02"/>
+    <ProductFacilityLocation productId="CL-8544" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL02" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="CDR-1111" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL03"/>
+    <ProductFacilityLocation productId="CDR-1111" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL03" minimumStock="2" moveQuantity="5"/>
+    <ProductFacilityLocation productId="KB-5569" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL04"/>
+    <ProductFacilityLocation productId="KB-5569" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="PH-1000" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL01" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="PH-1001" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL02" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="PH-1004" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="SV-1001" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
+    <ProductFacilityLocation productId="CL-1000" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
 
     <!-- some default inventory quantities, things are a bit underutilized without these... -->
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CAM-2644" ownerPartyId="Company" currencyUomId="USD" unitCost="2.5"/>
     <InventoryItemDetail inventoryItemId="9000" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="500" quantityOnHandDiff="500" accountingQuantityDiff="500"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL01" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9001" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CAM-2644" ownerPartyId="Company" currencyUomId="USD" unitCost="2.5"/>
     <InventoryItemDetail inventoryItemId="9001" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="5" quantityOnHandDiff="5" accountingQuantityDiff="5"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9002" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CL-8544" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="9002" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="15" quantityOnHandDiff="15" accountingQuantityDiff="15"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL02" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9003" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CL-8544" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="9003" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="3" quantityOnHandDiff="3" accountingQuantityDiff="3"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL03" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL03" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9004" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CDR-1111" ownerPartyId="Company" currencyUomId="USD" unitCost="4.5"/>
     <InventoryItemDetail inventoryItemId="9004" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="5000" quantityOnHandDiff="5000" accountingQuantityDiff="5000"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL03" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLLL03" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9005" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CDR-1111" ownerPartyId="Company" currencyUomId="USD" unitCost="4.5"/>
     <InventoryItemDetail inventoryItemId="9005" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="2000" quantityOnHandDiff="2000" accountingQuantityDiff="2000"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL04" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL04" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9006" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="KB-5569" ownerPartyId="Company" currencyUomId="USD" unitCost="5.0"/>
     <InventoryItemDetail inventoryItemId="9006" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
+    <InventoryItem facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="9007" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="CL-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="9007" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="15" quantityOnHandDiff="15" accountingQuantityDiff="15"/>
     
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9010" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-B4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9011" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S3" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9012" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="VH-9943-S4" ownerPartyId="Company" currencyUomId="USD" unitCost="3.5"/>
     <InventoryItemDetail inventoryItemId="9013" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
 
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9021" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-1" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9021" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-1" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9021" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9022" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-2" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9022" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-2" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9022" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9023" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-3" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9023" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-3" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9023" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9024" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-4" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9024" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-4" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9024" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9031" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-5" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9031" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="SW-1006-5" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9031" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
     
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9026" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9026" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9026" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9027" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1001" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9027" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1001" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9027" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9028" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1004" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="9028" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="PH-1004" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="9028" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="8" quantityOnHandDiff="8" accountingQuantityDiff="8"/>
     
 
@@ -1751,9 +1751,9 @@ under the License.
     <ProductPrice productId="RT-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-09-01 12:00:00.0" price="14.99" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="RT-1000" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2011-09-01 12:00:00.0" price="15.99" createdDate="2011-09-01 12:00:00.0" createdByUserLogin="admin" lastModifiedByUserLogin="admin"/>
     <ProductCategoryMember productCategoryId="TRVL-100" productId="RT-1000" fromDate="2011-09-01 12:00:00.0"/>
-    <ProductFacility productId="RT-1000" facilityId="WebStoreWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
-    <ProductFacilityLocation productId="RT-1000" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" minimumStock="5" moveQuantity="20"/>
-    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="INV-RT-1000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="RT-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
+    <ProductFacility productId="RT-1000" facilityId="CatoShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="15"/>
+    <ProductFacilityLocation productId="RT-1000" facilityId="CatoShopWarehouse" locationSeqId="TLTLTLUL01" minimumStock="5" moveQuantity="20"/>
+    <InventoryItem facilityId="CatoShopWarehouse" inventoryItemId="INV-RT-1000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" productId="RT-1000" ownerPartyId="Company" currencyUomId="USD" unitCost="2.4"/>
     <InventoryItemDetail inventoryItemId="INV-RT-1000" inventoryItemDetailSeqId="0001" effectiveDate="2011-09-01 12:00:00.0" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
     
     <!-- Demo product tags -->

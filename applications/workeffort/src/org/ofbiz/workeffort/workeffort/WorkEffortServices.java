@@ -683,7 +683,7 @@ public class WorkEffortServices {
         * "Confirm" link (top part of the sccreen)
         * 
         * Now you have a confirmed production run (starting tomorrow) happening
-        * in facility "WebStoreWarehouse", with a task happening in fixed asset
+        * in facility "CatoShopWarehouse", with a task happening in fixed asset
         * "WORKCENTER_COST"
         * 
         * In the calendars screen, selecting the proper facility you should see

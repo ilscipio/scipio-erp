@@ -112,7 +112,7 @@ under the License.
         <set field="createShipmentInMap.statusId" value="SHIPMENT_INPUT"/>
         <set field="createShipmentInMap.primaryOrderId" value="DEMO10090"/>
         <set field="createShipmentInMap.partyIdTo" value="DemoCustomer"/>
-        <set field="createShipmentInMap.originFacilityId" value="WebStoreWarehouse"/>
+        <set field="createShipmentInMap.originFacilityId" value="CatoShopWarehouse"/>
         <entity-one entity-name="UserLogin" value-field="userLogin" auto-field-map="false">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
@@ -167,7 +167,7 @@ under the License.
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
-        <set field="serviceCtx.facilityId" value="WebStoreWarehouse"/>
+        <set field="serviceCtx.facilityId" value="CatoShopWarehouse"/>
         <set field="serviceCtx.productId" value="CAM-2644"/>
         <set field="serviceCtx.quantityAccepted" value="5" type="BigDecimal"/>
         <set field="serviceCtx.quantityRejected" value="0" type="BigDecimal"/>

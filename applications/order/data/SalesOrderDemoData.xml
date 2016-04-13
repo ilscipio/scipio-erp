@@ -20,16 +20,16 @@ under the License.
 
 <entity-engine-xml>
     <!-- to make the data load the first time -->
-    <Facility facilityId="WebStoreWarehouse"/>
+    <Facility facilityId="CatoShopWarehouse"/>
     
     <!-- PRODUCT STORE -->
     <ProductStore productStoreId="B2CStore" storeName="OFBiz the B2C Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Customer"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
-        autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="WebStoreWarehouse"
+        autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="CatoShopWarehouse"
         orderNumberPrefix="B2CS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>
     <ProductStore productStoreId="B2BStore" storeName="OFBiz the B2B Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Business"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
-        autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="WebStoreWarehouse"
+        autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="CatoShopWarehouse"
         orderNumberPrefix="B2BS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>
     
     <!-- ORDER SALES CHANNEL -->

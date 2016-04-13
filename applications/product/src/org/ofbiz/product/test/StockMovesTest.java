@@ -57,7 +57,7 @@ public class StockMovesTest extends OFBizTestCase {
         Map<?,?> stockMoveHandled = null;
         List<?> warningList = FastList.newInstance();
 
-        fsmnCtx.put("facilityId", "WebStoreWarehouse");
+        fsmnCtx.put("facilityId", "CatoShopWarehouse");
         fsmnCtx.put("userLogin", userLogin);
         Map<String, Object> respMap1 = dispatcher.runSync("findStockMovesNeeded", fsmnCtx);
         stockMoveHandled = UtilGenerics.checkMap(respMap1.get("stockMoveHandled"));
@@ -73,7 +73,7 @@ public class StockMovesTest extends OFBizTestCase {
 
         Map<String, Object> ppsmCtx = FastMap.newInstance();
         ppsmCtx.put("productId", "CAM-2644");
-        ppsmCtx.put("facilityId", "WebStoreWarehouse");
+        ppsmCtx.put("facilityId", "CatoShopWarehouse");
         ppsmCtx.put("locationSeqId","TLTLTLUL01");
         ppsmCtx.put("targetLocationSeqId", "TLTLTLLL01");
         ppsmCtx.put("quantityMoved", new BigDecimal("5"));

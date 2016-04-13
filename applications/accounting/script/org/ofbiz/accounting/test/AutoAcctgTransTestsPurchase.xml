@@ -44,7 +44,7 @@ under the License.
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
         <set field="serviceCtx.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
         <set field="serviceCtx.productId" from-field="productId"/>
-        <set field="serviceCtx.facilityId" value="WebStoreWarehouse"/>
+        <set field="serviceCtx.facilityId" value="CatoShopWarehouse"/>
         <set field="serviceCtx.quantityAccepted" value="5" type="BigDecimal"/>
         <set field="serviceCtx.quantityRejected" value="0" type="BigDecimal"/>
         <set field="serviceCtx.shipmentId" from-field="shipmentId"/>

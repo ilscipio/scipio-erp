@@ -1408,7 +1408,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         This pattern is used to get the @field_markup_labelarea invocation to occur at the correct time (within the label area) -->
     <#-- DEV NOTE: Also see @fieldLabelAreaInvoker - it recombines labelAreaContentArgs into labelContentArgs! -->
     <#local labelAreaContentArgs = {"labelType":effLabelType, "labelPosition":effLabelPosition, "label":label, "labelContent":labelContent, "labelDetail":labelDetail, 
-        "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "labelContentArgs":labelContentArgs, "origArgs":origArgs, "passArgs":passArgs}>
+        "fieldType":type, "fieldsType":fieldsType, "fieldId":id, "collapse":collapse, "required":required, "labelContentArgs":labelContentArgs, 
+        "norows":norows, "nocells":nocells, "container":container,
+        "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
   <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixSize=postfixSize 
@@ -1868,24 +1870,28 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#-- NOTE: Special case for labelContentArgs -->
   <@field_markup_labelarea labelType=args.labelType labelPosition=args.labelPosition label=args.label labelContent=args.labelContent labelDetail=args.labelDetail 
         fieldType=args.fieldType fieldsType=args.fieldsType fieldId=args.fieldId collapse=args.collapse required=args.required 
-        labelContentArgs=(args + args.labelContentArgs) origArgs=args.origArgs passArgs=args.passArgs/><#t>
+        labelContentArgs=(args + args.labelContentArgs) norows=args.norows nocells=args.nocells container=args.container
+        origArgs=args.origArgs passArgs=args.passArgs/><#t>
 </#macro>
 
 <#-- @field label area markup - theme override 
     WARN: origArgs may be empty -->
 <#macro field_markup_labelarea labelType="" labelPosition="" label="" labelContent=false labelDetail=false fieldType="" fieldsType="" fieldId="" collapse="" 
-    required=false labelContentArgs={} origArgs={} passArgs={} catchArgs...>
+    required=false labelContentArgs={} norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
   <#local label = label?trim>
   <#if !labelContent?is_boolean>
     <@contentArgRender content=labelContent args=labelContentArgs doTrim=true />
+    <#-- don't show this here, let macro handle it
+    <#if required>*</#if>-->
   <#elseif label?has_content>
     <#if collapse>
       <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
       <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
-    </#if>  
+    </#if>
+  <#-- only show this if there's a label, otherwise affects inline fields too in ugly way, and there are other indications anyhow
   <#else>
-    <#if required>*</#if>
+    <#if required>*</#if>-->
   </#if> 
   <#if !labelDetail?is_boolean><@contentArgRender content=labelDetail args=labelContentArgs doTrim=true /></#if>
   <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->

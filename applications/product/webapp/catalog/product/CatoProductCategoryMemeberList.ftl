@@ -1,7 +1,7 @@
 <@section>
     <#if productCategoryMemberList?has_content>  
          <#list productCategoryMemberList as productCategoryMember>
-            <form name="removeProductFromCategory_${removeProductFromCategory_index}" method="post" action="<@ofbizUrl>removeProductFromCategory</@ofbizUrl>">
+            <form name="removeProductFromCategory_${productCategoryMember_index}" method="post" action="<@ofbizUrl>removeProductFromCategory</@ofbizUrl>">
                   <input name="productId" type="hidden" value="${productCategoryMember.productId}"/>
                   <input name="productCategoryId" type="hidden" value="${productCategoryMember.productCategoryId}"/>
                   <input name="fromDate" type="hidden" value="${productCategoryMember.fromDate}"/>
@@ -9,6 +9,7 @@
         </#list>
         <form id="UpdateProductCategoryMember" name="UpdateProductCategoryMember" method="post" action="<@ofbizUrl>updateProductToCategory</@ofbizUrl>">            
             <input name="_useRowSubmit" type="hidden" value="Y"/>
+            <input name="productId" type="hidden" value="${parameters.productId}"/>
             <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
                 <#-- Header Begins -->
                 <@thead>
@@ -46,7 +47,7 @@
                                 <@field type="input" name="quantity_o_${productCategoryMember_index}" value=((productCategoryMember.quantity)!) size=20 maxlength=40 />
                             </@td>
                             <@td>
-                                <@field type="input" name="comments_o_${productCategoryMember_index}" value=((productCategoryMember.quantity)!) size=20 maxlength=40 />
+                                <@field type="input" name="comments_o_${productCategoryMember_index}" value=((productCategoryMember.comments)!) size=20 maxlength=40 />
                             </@td>
                             <@td>
                                 <input name="productId_o_${productCategoryMember_index}" type="hidden" value="${productCategoryMember.productId}"/>
@@ -56,7 +57,7 @@
                                 <@field type="submit" submitType="link" href="javascript:document.forms['UpdateProductCategoryMember'].elements['_rowSubmit_o_${productCategoryMember_index}'].value = 'Y';document.forms.UpdateProductCategoryMember.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>
                             </@td>
                             <@td>
-                                <a href="javascript:document.removeContentFromCategory_${productCategoryMember_index}.submit();" class="${styles.link_run_sys} ${styles.action_remove}">${uiLabelMap.CommonDelete}</a>
+                                <a href="javascript:document.removeProductFromCategory_${productCategoryMember_index}.submit();" class="${styles.link_run_sys} ${styles.action_remove}">${uiLabelMap.CommonDelete}</a>
                             </@td>
                         </@tr>
                     </#list>

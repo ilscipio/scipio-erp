@@ -13684,6 +13684,12 @@
     <property key="ProductRemoveExpiredCategoryProducts">
         <value xml:lang="en">Remove Expired Category Products</value>
     </property>
+    <property key="ProductProductCategories">
+        <value xml:lang="en">Product Categories</value>
+    </property>
+    <property key="ProductCategoryList">
+        <value xml:lang="en">Product Category List</value>
+    </property>
     <property key="ProductCatalogEmptyWarning">
         <value xml:lang="en">If you don't populate a Catalog with Categories, it will not be shown in the Browse Catalogs/Categories tree</value>
         <value xml:lang="fr">Si vous ne créez pas de catégories pour un catalogue, il n'apparaitra pas dans l'arbre des Catalogues/catégories</value>

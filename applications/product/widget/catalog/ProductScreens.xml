@@ -361,7 +361,7 @@ under the License.
 		                <not><if-empty field="productCategoryMemberList"/></not>
 		            </condition>
 	                <widgets>
-                        <screenlet title="${uiLabelMap.ProductCategoryList}">
+                        <screenlet title="${uiLabelMap.ProductCategories}">
 	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoProductCategoryMemeberList.ftl"/></html></platform-specific>
 	                    </screenlet>
 	                </widgets>

@@ -446,11 +446,11 @@ under the License.
     <screen name="CatoDashboardProductSlider">
         <section>
             <actions>
-                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" global="true" type="String" />
-                <set field="viewSize" from-field="viewSize" default-value="12" global="true"/><!-- Number of products -->
-                <set field="viewIndex" from-field="viewIndex" default-value="1" global="true"/><!-- page of result-set -->
-                <set field="viewCluster" from-field="viewCluster" default-value="4" global="true"/><!-- items per row -->
-                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" global="true"/><!-- items to slide -->
+                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
+                <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
+                <set field="viewIndex" from-field="viewIndex" default-value="1" /><!-- page of result-set -->
+                <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
+                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
                 <set field="localVarsOnly" type="Boolean" value="true" />
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#productsummary"/>
@@ -473,11 +473,11 @@ under the License.
     <screen name="CatoDashboardMiniProductSlider">
         <section>
             <actions>
-                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" global="true" type="String" />
-                <set field="viewSize" from-field="viewSize" default-value="12" global="true"/><!-- Number of products -->
-                <set field="viewIndex" from-field="viewIndex" default-value="1" global="true"/><!-- page of result-set -->
-                <set field="viewCluster" from-field="viewCluster" default-value="4" global="true"/><!-- items per row -->
-                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" global="true"/><!-- items to slide -->
+                <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
+                <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
+                <set field="viewIndex" from-field="viewIndex" default-value="1" /><!-- page of result-set -->
+                <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
+                <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
                 <set field="localVarsOnly" type="Boolean" value="true" />
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <set field="productsummaryScreen" value="component://shop/widget/CatalogScreens.xml#miniproductsummary"/>

@@ -314,7 +314,7 @@ under the License.
                                 <!-- Cato: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="ELTRN-100"/>
                                 <set field="viewSize" value="12"/>
-                                <set field="viewIndex" value="1"/>
+                                <set field="viewIndex" value="0"/>
                                 <set field="viewCluster" value="4"/>
                                 <set field="viewScrollCluster" value="4"/>
                             </actions>
@@ -328,7 +328,7 @@ under the License.
                                 <!-- Cato: TODO: This category ID should be configurable -->
                                 <set field="productCategoryId" value="ELTRN-100"/>
                                 <set field="viewSize" value="6"/>
-                                <set field="viewIndex" value="1"/>
+                                <set field="viewIndex" value="0"/>
                                 <set field="viewCluster" value="5"/>
                                 <set field="viewScrollCluster" value="1"/>
                             </actions>
@@ -448,7 +448,7 @@ under the License.
             <actions>
                 <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
                 <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
-                <set field="viewIndex" from-field="viewIndex" default-value="1" /><!-- page of result-set -->
+                <set field="viewIndex" from-field="viewIndex" default-value="0" /><!-- page of result-set -->
                 <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
                 <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
                 <set field="localVarsOnly" type="Boolean" value="true" />
@@ -475,7 +475,7 @@ under the License.
             <actions>
                 <set field="productCategoryId" from-field="productCategoryId" default-value="CATALOG1" type="String" />
                 <set field="viewSize" from-field="viewSize" default-value="12" /><!-- Number of products -->
-                <set field="viewIndex" from-field="viewIndex" default-value="1" /><!-- page of result-set -->
+                <set field="viewIndex" from-field="viewIndex" default-value="0" /><!-- page of result-set -->
                 <set field="viewCluster" from-field="viewCluster" default-value="4" /><!-- items per row -->
                 <set field="viewScrollCluster" from-field="viewScrollCluster" default-value="4" /><!-- items to slide -->
                 <set field="localVarsOnly" type="Boolean" value="true" />

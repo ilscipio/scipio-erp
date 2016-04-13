@@ -78,6 +78,8 @@ public class ShoppingCartEvents {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
+    public static final String product_resource_error = "ProductErrorUiLabels"; // Cato: new
+    
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
     private static final String ERROR = "error";
@@ -262,6 +264,12 @@ public class ShoppingCartEvents {
                 String pId = ProductWorker.findProductId(delegator, productId);
                 if (pId != null) {
                     productId = pId;
+                } else {
+                    // Cato: New error check: I currently don't see any case where we should continue if productId is set but not a valid product
+                    // in the system. If itemType is specified (see above), you probably still shouldn't pass a productId
+                    // that does not exist...
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(product_resource_error, "productservices.invalid_productId_passed", locale));
+                    return "success"; // not critical return to same page
                 }
             } catch (Throwable e) {
                 Debug.logWarning(e, module);

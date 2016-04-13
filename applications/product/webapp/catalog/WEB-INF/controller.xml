@@ -777,7 +777,7 @@ under the License.
     </request-map>
     <request-map uri="updateProductToCategory">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductToCategory"/>
+        <event type="service-multi" path="" invoke="updateProductToCategory"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
     </request-map>

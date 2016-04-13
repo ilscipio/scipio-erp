@@ -324,31 +324,51 @@ under the License.
     <screen name="EditProductCategories">
         <section>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="activeSubMenuItem" value="EditProductCategories"/>
                 <set field="labelTitleProperty" value="ProductCategoryMembers"/>
-
-                <entity-condition entity-name="ProductCategoryMember" list="productCategoryMembers">
-                    <condition-expr field-name="productId" from-field="parameters.productId"/>
-                    <order-by field-name="sequenceNum"/>
-                    <order-by field-name="productCategoryId"/>
-                </entity-condition>
+                <set field="title" value="${uiLabelMap.ProductProductCategories} ${parameters.productId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleAddProductCategories}">
+                        <screenlet>
                             <include-form name="AddProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleEditProductCategories}">
-                            <include-form name="UpdateProductCategoryMember" location="component://product/widget/catalog/ProductForms.xml"/>
+                        <screenlet>                            
+                            <include-screen name="CatoProductCategoryMemberList"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-
+    
+    <!-- Cato: FORM WIDGET REPLACEMENT: component://product/widget/catalog/ProductForms.xml#UpdateProductCategoryMember -->
+    <screen name="CatoProductCategoryMemberList"> 
+        <section>  
+             <actions>
+                 <entity-condition entity-name="ProductCategoryMember" list="productCategoryMemberList">
+                    <condition-expr field-name="productId" from-field="parameters.productId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="productCategoryId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <section>
+		            <condition>
+		                <not><if-empty field="productCategoryMemberList"/></not>
+		            </condition>
+	                <widgets>
+                        <screenlet title="${uiLabelMap.ProductCategoryList}">
+	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoProductCategoryMemeberList.ftl"/></html></platform-specific>
+	                    </screenlet>
+	                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="EditProductConfigs">
         <section>

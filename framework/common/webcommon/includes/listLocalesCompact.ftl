@@ -28,7 +28,7 @@ under the License.
 </#if>
 
 <form method="get" action="<@ofbizUrl>${setLocalesTarget}${setLocalesTargetViewStr}</@ofbizUrl>">
-<@fields type="default-nolabels">
+<@fields type="default-nolabelarea">
   <@field type="select" name="newLocale">
     <#assign altRow = true>
     <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>

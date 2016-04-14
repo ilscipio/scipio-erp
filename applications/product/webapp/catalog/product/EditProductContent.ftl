@@ -141,7 +141,7 @@ under the License.
     
     <@section title=uiLabelMap.ProductUploadImage>
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <p><em>${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</em></p><#-- orig: <span class="tooltip"> -->
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">

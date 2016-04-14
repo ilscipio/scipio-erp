@@ -447,7 +447,7 @@ or even multiple per fieldset.
       <@field attr="" />
     </@field>
      
-    <@fields type="default-nolabels">
+    <@fields type="default-nolabelarea">
       <@field attr="" />
       <@field attr="" />
     </@field>
@@ -458,12 +458,12 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type                        = (default|default-nolabels|default-compact|default-manual|generic, default: default) The type of fields arrangement. 
+    type                        = (default|default-nolabelarea|default-compact|default-manual|generic, default: default) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
                                   Cato standard markup types:
                                   * {{{default}}}: default cato field arrangement. this is the type assumed when no @fields element is present.
                                     currently, it mostly influences the label area (present for all @field types except submit).
-                                  * {{{default-nolabels}}}: default cato field arrangement for common sets of fields with no labels.
+                                  * {{{default-nolabelarea}}}: default cato field arrangement for common sets of fields with no labels.
                                     it expects that @field entries won't be passed any labels.
                                   * {{{default-compact}}}: default cato field arrangement for fields that are in limited space.
                                     by default, this means the labels will be arranged vertically with the fields.
@@ -757,7 +757,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <@field attr="" />
     </@fields>
 
-    <@fields type="default-nolabels"> <#- specific arrangement needed ->
+    <@fields type="default-nolabelarea"> <#- specific arrangement needed ->
       <@field attr="" />
     </@fields>
     

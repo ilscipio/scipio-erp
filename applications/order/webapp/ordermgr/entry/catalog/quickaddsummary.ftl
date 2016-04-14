@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if product??>
-<@fields type="default-nolabels">
+<@fields type="default-nolabelarea">
   <@row>
     <@cell class="+pid">
       <strong>${product.productId}</strong>

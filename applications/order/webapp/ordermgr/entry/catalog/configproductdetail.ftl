@@ -282,7 +282,7 @@ function getConfigDetails() {
         <#if product.isVirtual?? && product.isVirtual?upper_case == "Y">
           <#if variantTree?? && 0 < variantTree.size()>
             <#list featureSet as currentType>
-            <@fields type="default-nolabels">
+            <@fields type="default-nolabelarea">
               <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
               </@field>

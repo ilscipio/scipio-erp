@@ -869,11 +869,11 @@
     "fields_default_alt1_checkboxtype" : "simple",
 
     <#-- no left label area (usually for very short forms) -->
-    "fields_default_nolabels_labeltype" : "horizontal", <#-- NOTE: this should be "none" in principle, but this is used to implement collapsedinlinelabel. labelarea false is good enough. -->
-    "fields_default_nolabels_labelposition" : "left",
-    "fields_default_nolabels_labelarea" : false,
-    "fields_default_nolabels_labelareaexceptions" : "", 
-    "fields_default_nolabels_labelarearequirecontent" : false,
+    "fields_default_nolabelarea_labeltype" : "horizontal", <#-- NOTE: this should be "none" in principle, but this is used to implement collapsedinlinelabel. labelarea false is good enough. -->
+    "fields_default_nolabelarea_labelposition" : "left",
+    "fields_default_nolabelarea_labelarea" : false,
+    "fields_default_nolabelarea_labelareaexceptions" : "", 
+    "fields_default_nolabelarea_labelarearequirecontent" : false,
 
     <#-- limited space; labels on top -->
     "fields_default_compact_labeltype" : "vertical",

@@ -70,7 +70,7 @@ under the License.
   <@row>
     <@cell>
       <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
-        <@fields type="default-nolabels">
+        <@fields type="default-nolabelarea">
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
         <@field type="input" name="productVariantId" value=productVariantId />

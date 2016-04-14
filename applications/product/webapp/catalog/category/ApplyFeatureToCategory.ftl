@@ -2,7 +2,7 @@
 
     <@section title=uiLabelMap.ProductApplyFeatureGroupToCategory>
         <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" name="addNewCategoryForm">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@row>
                 <@cell columns=6>

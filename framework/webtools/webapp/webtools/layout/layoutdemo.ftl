@@ -685,9 +685,9 @@
     </@form>
   </@section>
 
-  <@section title="Default form fields (without label area) (@fields type=\"default-nolabels\")">
+  <@section title="Default form fields (without label area) (@fields type=\"default-nolabelarea\")">
     <@form name="form2">
-    <@fields type="default-nolabels"> <#-- see styles.fields_default_nolabels_xxx -->
+    <@fields type="default-nolabelarea"> <#-- see styles.fields_default_nolabelarea_xxx -->
       <@field type="input" name="input1"/>
       <@field type="input" name="input2" postfix=true />
       <@field type="display">Display value</@field>

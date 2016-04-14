@@ -63,7 +63,7 @@ function doPublish() {
 <@section title=uiLabelMap.PageTitleEditProductQuickAdmin>
         <#-- Name update section -->
         <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" name="editProduct">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${productId!}"/>
             <#if ((product.isVirtual)!) == "Y">
                 <input type="hidden" name="isVirtual" value="Y"/>
@@ -338,7 +338,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@field type="select" multiple=true name="categoryId">
@@ -380,7 +380,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
             <@field type="datetime" name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
@@ -393,7 +393,7 @@ function doPublish() {
     <@row>
       <@cell>
         <form  action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
             <@field type="datetime" name="thruDate" value="" size="25" maxlength="30" id="thruDate1"/>

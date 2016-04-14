@@ -116,7 +116,7 @@ function toggleBillingAccount(box) {
                        </@td>
                      </@tr>
                    <#else>
-                   <@fields type="default-nolabels">
+                   <@fields type="default-nolabelarea">
                      <#list agreements as agreement>
                         <@field type="radio" name="agreementId" value="${agreement.agreementId!}" checked=checkThisAddress label="${agreement.description!} will be used for this order." />
                      </#list>

@@ -21,7 +21,7 @@ under the License.
 
   <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value=(productId!)/>
 
-  <@fields type="default-nolabels">
+  <@fields type="default-nolabelarea">
     <@field type="select" name="imageResize">
       <option selected="selected" value="">${uiLabelMap.ImageManagementDoNotResize}</option>
       <#list productFeatures as productFeature>

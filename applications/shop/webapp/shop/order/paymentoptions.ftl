@@ -21,7 +21,7 @@ under the License.
   <#-- initial screen show a list of options -->
   <form id="editPaymentOptions" method="post" action="<@ofbizUrl>setPaymentInformation</@ofbizUrl>" name="${parameters.formNameValue}">
      <fieldset>
-     <@fields type="default-nolabels">
+     <@fields type="default-nolabelarea">
        <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
            <@field type="checkbox" name="addGiftCard" value="Y" checked=(addGiftCard?? && addGiftCard == "Y") label=uiLabelMap.AccountingCheckGiftCard/>
        </#if>

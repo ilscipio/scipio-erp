@@ -25,7 +25,7 @@ under the License.
       </@cell>
       <@cell columns=6 class="+${styles.text_right!}">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
-        <@fields type="default-nolabels">
+        <@fields type="default-nolabelarea">
           <@field type="select" name="category_id">
             <option value="${productCategory.productCategoryId}">${productCategory.categoryName!}</option>
             <option value="${productCategory.productCategoryId}">--</option>
@@ -60,7 +60,7 @@ under the License.
     <@row>
       <@cell>
   <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
-  <@fields type="default-nolabels">
+  <@fields type="default-nolabelarea">
     <input type="hidden" name="category_id" value="${categoryId}" />
     <@field type="submit" submitType="link" href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
     <@row>

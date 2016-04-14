@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title=uiLabelMap.ProductCarrierShipmentMethod>
     <form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
-      <@fields type="default-nolabels">
+      <@fields type="default-nolabelarea">
         <input type="hidden" name="newShipMethod" value="Y"/>
         <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
         <@field type="select" name="carrierShipmentString">

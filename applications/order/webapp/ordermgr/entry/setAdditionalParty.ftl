@@ -78,7 +78,7 @@ under the License.
       <@heading>3) ${uiLabelMap.OrderPartySelectRoleForParty}</@heading>
       
         <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
-          <@fields type="default-nolabels">
+          <@fields type="default-nolabelarea">
           <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
           <@field type="select" label=uiLabelMap.CommonRole name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>
               <#list roles as role>

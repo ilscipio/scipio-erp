@@ -16,6 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+</div><#-- /<div class="off-canvas-wrap" data-offcanvas id="body-content"> -->
+</div><#-- /<div class="inner-wrap"> -->
+
 <@row class="other-content">
     <@cell columns=3>
       <i class="${styles.icon} ${styles.icon_prefix}laptop"></i>

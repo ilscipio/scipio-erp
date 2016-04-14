@@ -458,19 +458,20 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type                        = (default|default-nolabelarea|default-compact|default-manual|generic, default: default) The type of fields arrangement. 
+    type                        = (default|generic|..., default: default) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
                                   Cato standard markup types:
-                                  * {{{default}}}: default cato field arrangement. this is the type assumed when no @fields element is present.
-                                    currently, it mostly influences the label area (present for all @field types except submit).
-                                  * {{{default-nolabelarea}}}: default cato field arrangement for common sets of fields with no labels.
-                                    it expects that @field entries won't be passed any labels.
+                                  * {{{default}}}: default cato field arrangement. This is the type assumed when no @fields element is present.
+                                    Currently, it mostly influences the label area (present for all @field types except submit).
+                                  * {{{default-nolabelarea}}}: default cato field arrangement for common sets of fields with no label area.
+                                    It expects that @field entries won't be passed any labels except for field types where they may trickle inline into the widget's inline label area.
                                   * {{{default-compact}}}: default cato field arrangement for fields that are in limited space.
-                                    by default, this means the labels will be arranged vertically with the fields.
-                                  * {{{default-manual}}}: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
-                                    any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
-                                  * {{{generic}}}: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
-                                    make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
+                                    By default, this means the labels will be arranged vertically with the fields.
+                                  * {{{default-manual}}}: manual field arrangement. Means field arrangement is custom and field macro and theme should not impose
+                                    Any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
+                                  * {{{default-manual-widgetonly}}}: manual field arrangement without containers. Same as {{{default-manual}}} but with wrappers/containers omitted by default.
+                                  * {{{generic}}}: generic field arrangement of no specific pattern and no specific styling. Means field arrangement is custom and field macro and theme should not
+                                    Make any assumptions except where a default is required. Caller determines arrangement/layout/label type/etc.
                                   NOTE: For default-manual, generic and similar where styles hash does not specify a label area by default, 
                                       to show a label area for a field, it is NOT sufficient to specify label="xxx".
                                       You must specify both labelArea=true and label="xxx". label arg does not influence presence of label area.

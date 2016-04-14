@@ -1044,7 +1044,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 WARN: FIXME?: Currently this is same as input-button: {{{<input type="button" ... />}}}
                                   This could change to {{{<button...>...</button>}}} without notice...
                               * {{{image}}}: {{{<input type="image" src="..." .../>}}}
-    text                    = Display text (also value for submitType "submit")                
+    text                    = Display text
+                              NOTE: {{{value}}} arg is also accepted instead of {{{text}}}.
     href                    = href for submitType "link"  
     src                     = Image url for submitType "image"    
     confirmMsg              = Confirmation message     
@@ -1687,7 +1688,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
         <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"submit">
         <#-- support legacy "value" for text as conversion help -->
-        <#if inputType == "submit" && !text?has_content && value?has_content>
+        <#if !text?has_content && value?has_content> <#-- accept this for all types now because error-prone: inputType == "submit" -->
           <#local text = value>
         </#if>
         <@field_submit_widget buttonType=buttonType class=class id=id alert=alert formName=formName name=name events=events 

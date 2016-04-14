@@ -139,8 +139,8 @@ Creates a panel box.
   <#local class = addClassArg(class, styles.panel_wrap!"")>
   <#local class = addClassArg(class, type)>
   <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
-    <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
-    <div class="${styles.panel_body!}"><#nested></div>
+    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
+    <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
   </div>
 </#macro>
 

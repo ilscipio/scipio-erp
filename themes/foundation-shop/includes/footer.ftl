@@ -37,7 +37,7 @@ under the License.
         <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
         <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
         <li><a href="#">FAQ's</a></li>
-      <ul>
+      </ul>
     </@cell>
     <@cell columns=3>      
     <@heading>Follow Us!</@heading>
@@ -46,7 +46,7 @@ under the License.
         <li><a href="#">Facebook</a></li>
         <li><a href="#">Twitter</a></li>
         <li><a href="#">Instagram</a></li>
-      <ul>
+      </ul>
     </@cell>
 </@row>
 
@@ -54,7 +54,7 @@ under the License.
     <#-- close the off-canvas menu -->
     <a class="exit-off-canvas"></a>
 
-    </section><#-- /<section role="main" class="scroll-container"> -->
+    <#-- not applicable? </section>--><#-- /<section role="main" class="scroll-container"> -->
 
 </div><#-- /<div class="off-canvas-wrap" data-offcanvas id="body-content"> -->
 </div><#-- /<div class="inner-wrap"> -->

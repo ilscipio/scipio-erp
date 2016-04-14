@@ -535,6 +535,11 @@ under the License.
       <response name="success" type="view" value="checkoutshippingaddress"/>
       <response name="error" type="request" value="checkouterror"/>
     </request-map>
+    <!-- Cato: This request is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
+    <request-map uri="checkoutshippingaddress">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="checkoutoptions"/>
+    </request-map>
     <request-map uri="setOrderCurrencyAgreementShipDates">
         <description>Handles setting the currency, agreement and shipment dates of an order.</description>
         <security https="true" auth="true"/>

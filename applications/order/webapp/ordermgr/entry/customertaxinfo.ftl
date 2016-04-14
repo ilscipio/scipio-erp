@@ -23,20 +23,16 @@ under the License.
             [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName!}): ${uiLabelMap.PartyTaxId} [${partyTaxAuthInfoAndDetail.partyTaxId!(uiLabelMap.CommonNA)}], ${uiLabelMap.PartyTaxIsExempt} [${partyTaxAuthInfoAndDetail.isExempt!"N"}]
         </div>
     </#list>
-    <div>
-        <span>${uiLabelMap.PartyTaxAddInfo}:</span>
-        <select name="taxAuthPartyGeoIds">
-          <option></option>
-          <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
-            <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName!})</option>
-          </#list>
-        </select>
-        <span>${uiLabelMap.CommonId}: </span><input type="text" name="partyTaxId" size="12" maxlength="40"/>
-
-        <#if productStore.showTaxIsExempt?default("Y") == "Y">
-        <span>${uiLabelMap.PartyTaxIsExempt} </span><input type="checkbox" name="isExempt" value="Y"/>
-        <#else>
+    <@field type="select" label=uiLabelMap.PartyTaxAddInfo name="taxAuthPartyGeoIds">
+      <option></option>
+      <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
+        <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName!})</option>
+      </#list>
+    </@field>
+    <@field type="input" label=uiLabelMap.CommonId name="partyTaxId" size="12" maxlength="40"/>
+    <#if (productStore.showTaxIsExempt!"Y") == "Y">
+        <@field type="checkbox" label=uiLabelMap.PartyTaxIsExempt name="isExempt" value="Y"/>
+    <#else>
         <input type="hidden" name="isExempt" value="N"/>
-        </#if>
-    </div>
+    </#if>
 </#if>

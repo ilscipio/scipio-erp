@@ -84,8 +84,8 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+          <#assign postfixContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
               <@field type="checkbox" inline=true name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) />
           </@invertedField>
 
@@ -159,36 +159,36 @@ function shipBillAddr() {
         <input type="hidden" name="createNew" value="Y" />
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
-              <@field type="checkbox" inline=true name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
+          <#assign postfixContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@field type="checkbox" container=false name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
           </@invertedField>
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
           <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
-              <@field type="radio" inline=true name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
+          <#assign postfixContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@field type="radio" container=false name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
           </@invertedField>
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
-              <@field type="radio" inline=true name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
+          <#assign postfixContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@field type="radio" container=false name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
           </@invertedField>
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
           <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
-              <@field type="radio" inline=true name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
+          <#assign postfixContent></#assign>
+          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@field type="radio" container=false name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
           </@invertedField>
 
         </#if>

@@ -50,19 +50,9 @@ under the License.
 <#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else>${uiLabelMap.PartyEditContactInfo}</#if></#assign>
 <@section title=sectionTitle menuContent=menuContent>
     
-    <#if !contactMech??>
-        <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
-        <div>
-          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
-          <#if contactMechPurposeType??>
-            <div>(${uiLabelMap.PartyNewContactHavePurpose} "${contactMechPurposeType.get("description",locale)!}")</div>
-          </#if>
-          <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}" /></#if>
-          <#if preContactMechTypeId?has_content><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
-          <#if paymentMethodId?has_content><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
-    <#else>
+    <#if contactMech??>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
-          <@fields type="default-manual" ignoreParentField=true>
+          <@fields type="default-manual-widgetonly" ignoreParentField=true>
             <@table type="data-complex">
               <#list (partyContactMechPurposes!) as partyContactMechPurpose>
                 <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
@@ -82,7 +72,7 @@ under the License.
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
                           <input type="hidden" name="useValues" value="true"/>
-                          <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
+                          <@field type="submit" submitType="link" href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete /></a>
                       </form> 
                   </@td>
                 </@tr>
@@ -93,22 +83,33 @@ under the License.
                     <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
-                        <select name="contactMechPurposeTypeId" class="selectBox">
+                        <@field type="select" name="contactMechPurposeTypeId" class="selectBox">
                           <option></option>
                           <#list purposeTypes as contactMechPurposeType>
                             <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                           </#list>
-                        </select>
+                        </@field>
                     </form>
                   </@td>
-                  <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a></@td>
+                  <@td><@field type="submit" submitType="link" href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.PartyAddPurpose /></@td>
                 </@tr>
               </#if>
             </@table>
           </@fields>
         </@field>
-        <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
-          <div>
+    </#if>
+    
+  <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+    
+    <#if !contactMech??>
+          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
+          <#if contactMechPurposeType??>
+            <p>(${uiLabelMap.PartyNewContactHavePurpose} "${contactMechPurposeType.get("description",locale)!}")</p>
+          </#if>
+          <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}" /></#if>
+          <#if preContactMechTypeId?has_content><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
+          <#if paymentMethodId?has_content><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
+    <#else>
           <input type="hidden" name="contactMechId" value="${contactMechId}" />
           <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
     </#if>
@@ -157,8 +158,7 @@ under the License.
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
       </@field>
-      </div>
-    </form>
+  </form>
 
   <@menuContent menuArgs={"type":"button"} />
 

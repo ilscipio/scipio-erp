@@ -16,9 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#include "ordercommon.ftl">
 <#-- Cato: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
-<!-- TODO : Need formatting -->
+<#-- TODO : Need formatting -->
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
@@ -89,21 +89,6 @@ var issuerId = "";
     <input type="hidden" name="checkoutpage" value="payment" />
     <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
     <input type="hidden" name="issuerId" id="issuerId" value="" />
-
-<#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixSize":2})>
-<#macro invertedField type="" labelContent="" actionContent="">
-  <@row>
-    <@cell class=addClassArg(defaultFieldGridStyles.labelArea, "${styles.text_right!}")>
-      <#nested>
-    </@cell>
-    <@cell class=defaultFieldGridStyles.widgetArea>
-      ${labelContent}
-    </@cell>  
-    <@cell class=defaultFieldGridStyles.postfixArea>
-      ${actionContent}
-    </@cell>  
-  </@row>
-</#macro>
 
     <@section title="3) ${uiLabelMap.OrderHowShallYouPay}?">
             <#-- Payment Method Selection -->

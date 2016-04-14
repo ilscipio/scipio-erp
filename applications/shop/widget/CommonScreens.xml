@@ -504,16 +504,10 @@ under the License.
             <actions>
                 <set field="parameters.active_step" default-value="showcart" global="true" type="String" /><!-- the current step -->  
             </actions>
-             <widgets>
-                <section>
-                    <widgets>
-                        <screenlet>
-                           <platform-specific>
-                                <html><html-template location="component://shop/webapp/shop/cart/CatoSteps.ftl"/></html>
-                            </platform-specific>
-                       </screenlet>  
-                   </widgets>
-                </section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://shop/webapp/shop/cart/CatoSteps.ftl"/></html>
+                </platform-specific>
            </widgets>
         </section>
     </screen>

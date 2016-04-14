@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#include "ordercommon.ftl">
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
@@ -54,85 +54,77 @@ function toggleBillingAccount(box) {
 
 <#assign cart = shoppingCart!/>
 
-<@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
-<form method="post" name="checkoutInfoForm">
+
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
+    <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
+  </@menu>
+</#macro>
+<@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?" menuContent=menuContent>
+  <#if (cart.getShipGroupSize() > 1)>
+    <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
+  </#if>
+
+  <form method="post" name="checkoutInfoForm">
   <#--<fieldset>-->
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
-            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
-              <@tr>
-                <@td colspan="2">
-                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitShipment}</a>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.PartyAddNewAddress}</a>
-                  <#if (cart.getShipGroupSize() > 1)>
-                    <div class="${styles.text_color_alert!}">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</div>
-                  </#if>
-                </@td>
-              </@tr>
-               <#if shippingContactMechList?has_content>
-                 <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-                 <#list shippingContactMechList as shippingContactMech>
-                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
-                   <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
-                   <@tr>
-                     <@td valign="top" width="1%" nowrap="nowrap">
-                       <@field type="radio" inline=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
-                     </@td>
-                     <@td valign="top" width="99%" nowrap="nowrap">
-                         <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
-                         <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
-                         <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
-                         <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
-                         <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                         <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
-                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
-                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                       </@td>
-                   </@tr>
-                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-                 </#list>
-               </#if>
-              </@table>
-            <@section title=uiLabelMap.AccountingAgreementInformation>
-               <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
-                 <#if agreements??>
-                   <#if agreements.size() != 1>
-                     <@tr>
-                       <@td>&nbsp;</@td>
-                       <@td align='left' valign='top' nowrap="nowrap">
-                         <div class="tableheadtext">
-                           ${uiLabelMap.OrderSelectAgreement}
-                         </div>
-                       </@td>
-                       <@td>&nbsp;</@td>
-                       <@td valign='middle'>
-                         <div class="tabletext" valign="top">
-                           <select name="agreementId">
-                             <#list agreements as agreement>
-                               <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
-                             </#list>
-                           </select>
-                         </div>
-                       </@td>
-                     </@tr>
-                   <#else>
-                   <@fields type="default-nolabelarea">
-                     <#list agreements as agreement>
-                        <@field type="radio" name="agreementId" value="${agreement.agreementId!}" checked=checkThisAddress label="${agreement.description!} will be used for this order." />
-                     </#list>
-                   </@fields>
-                   </#if>
-                 </#if>
-               </@table>
-            </@section>
+    <@section>
+        <#if shippingContactMechList?has_content>
+          <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
+          <#list shippingContactMechList as shippingContactMech>
+            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
+            <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
+            <#assign postfixContent>
+                <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+            </#assign>
+            <#assign labelContent>
+                <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
+                <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
+                <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
+                <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
+                <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
+                <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
+                <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
+            </#assign>
+            <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+               <@field type="radio" container=false name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
+            </@invertedField>
+            <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
+         </#list>
+       </#if>
+    </@section>
+    <@section title=uiLabelMap.AccountingAgreementInformation>
+      <#if agreements??>
+          <#if agreements.size() != 1>
+              <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
+                <#list agreements as agreement>
+                  <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
+                </#list>
+              </@field>
+          <#else>
+              <@fields type="default-manual-widgetonly">
+                <#list agreements as agreement>
+                  <@invertedField labelContent="${agreement.description!} will be used for this order.">
+                    <@field type="radio" name="agreementId" value=(agreement.agreementId!) checked=checkThisAddress  />
+                  </@invertedField>
+                </#list>
+              </@fields>
+          </#if>
+      </#if>
+    </@section>
 
-            <#-- Party Tax Info -->
-            <@section title=uiLabelMap.PartyTaxIdentification>
-                <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
-            </@section>
+    <#-- Party Tax Info -->
+    <@section title=uiLabelMap.PartyTaxIdentification>
+      <#-- Cato: NOTE: Can simply add this around to change the look:
+      <@fields type="default-compact"> -->
+        <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
+      <#--</@fields>-->
+    </@section>
 
   <#--</fieldset>-->
-</form>
+  </form>
 </@section>
 
 <@menu type="button">

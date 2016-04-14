@@ -19,50 +19,52 @@ under the License.
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <@menu type="button">
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+  </@menu>
 <#else>
-    <#if !giftCard??>
-      <@heading>${uiLabelMap.AccountingAddNewGiftCard}</@heading>
-      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
-    <#else>
-      <@heading>${uiLabelMap.AccountingEditGiftCard}</@heading>
-      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
-        <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
+
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
+  </@menu>
+</#macro>
+<#assign sectionTitle>
+  <#if !eftAccount??>
+    ${uiLabelMap.AccountingAddNewGiftCard}
+  <#else>
+    ${uiLabelMap.AccountingEditGiftCard}
+  </#if>
+</#assign>
+<@section title=sectionTitle menuContent=menuContent>
+
+    
+  <form method="post" action="<@ofbizUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}<#else>updateGiftCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editgiftcardform">
+
+    <#if giftCard??>
+      <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
-    &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-    &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
-    <p/> 
-    <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingCardNumber}</@td>
-      <@td width="74%">
-        <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
-          <#assign pcardNumberDisplay = "">
-          <#assign pcardNumber = giftCardData.cardNumber!>
-          <#if pcardNumber?has_content>
-            <#assign psize = pcardNumber?length - 4>
-            <#if 0 < psize>
-              <#list 0 .. psize-1 as foo>
-                <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
-              </#list>
-              <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
-            <#else>
-              <#assign pcardNumberDisplay = pcardNumber>
-            </#if>
-          </#if>
+
+    <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
+      <#assign pcardNumberDisplay = "">
+      <#assign pcardNumber = giftCardData.cardNumber!>
+      <#if pcardNumber?has_content>
+        <#assign psize = pcardNumber?length - 4>
+        <#if (0 < psize)>
+          <#list 0..(psize-1) as foo>
+            <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+          </#list>
+          <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+        <#else>
+          <#assign pcardNumberDisplay = pcardNumber>
         </#if>
-        <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${pcardNumberDisplay!}" />
-      </@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingPINNumber}</@td>
-      <@td width="74%">
-        <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber!}" />
-      </@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingExpirationDate}</@td>
-      <@td width="74%">
+      </#if>
+    </#if>
+    <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
+    <@field type="password" label="${uiLabelMap.AccountingPINNumber}" size="10" maxlength="60" name="pinNumber" value=(giftCardData.pinNumber!) />
+
+    <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}">
         <#assign expMonth = "">
         <#assign expYear = "">
         <#if giftCardData?? && giftCardData.expireDate??>
@@ -72,7 +74,7 @@ under the License.
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <select name="expMonth" class="selectBox" onchange="javascript:makeExpDate();">
+        <@field type="select" inline=true name="expMonth" class="selectBox" onChange="javascript:makeExpDate();">
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -82,8 +84,8 @@ under the License.
             <option value="${ccExprMonth!}">${ccExprMonth!}</option>
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
-        </select>
-        <select name="expYear" class="selectBox" onchange="javascript:makeExpDate();">
+        </@field>
+        <@field type="select" inline=true name="expYear" class="selectBox" onChange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>
@@ -93,17 +95,13 @@ under the License.
             <option value="${ccExprYear!}">${ccExprYear!}</option>
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
-        </select>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-      </@td>
-    </@tr>
-  </@table>
+        </@field>
+    </@field>
+    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
   </form>  
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
+
+  <@menuContent menuArgs={"type":"button"} />
+
+</@section>
+ 
 </#if>

@@ -19,41 +19,43 @@ under the License.
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <@menu type="button">
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+  </@menu>
 <#else>
-  <#if !creditCard??>
-      <@heading>${uiLabelMap.AccountingAddNewCreditCard}</@heading>
-      <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
-      <div>
-    <#else>
-      <@heading>${uiLabelMap.AccountingEditCreditCard}</@heading>
-      <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
-        <div>
-        <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
-    </#if>      
-      &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
-      <p/>
-      <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
+
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
+  </@menu>
+</#macro>
+<#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else>${uiLabelMap.AccountingEditCreditCard}</#if></#assign>
+<@section title=sectionTitle menuContent=menuContent>
+
+  <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}<#else>updateCreditCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editcreditcardform">
+  
+  <#if creditCard??>
+    <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
+  </#if>  
+
          <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
-         <@tr>
-           <@td align="right" valign="top">${uiLabelMap.PartyBillingAddress}</@td>
-           <@td>&nbsp;</@td>
-           <@td>
-        <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
-          [Create New Address]</a>&nbsp;&nbsp;
-        -->
-             <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+         <@field type="generic" label=uiLabelMap.PartyBillingAddress>
+            <@fields type="default-manual" ignoreParentField=true>
+                <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
+                <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+                  [Create New Address]</a>&nbsp;&nbsp;
+                -->
+             <@table type="data-complex">
              <#assign hasCurrent = false />
              <#if curPostalAddress?has_content>
                <#assign hasCurrent = true />
                <@tr>
                  <@td align="right" valign="top">
-                   <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked" />
+                   <@field type="radio" inline=true name="contactMechId" value="${curContactMechId}" checked="checked" />
                  </@td>
                  <@td valign="top">
-                   ${uiLabelMap.PartyUseCurrentAddress}:
+                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
                    <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                      <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
                      <div>
@@ -94,7 +96,7 @@ under the License.
                <#assign partyContactMech = postalAddressInfo.partyContactMech />
                <@tr>
                  <@td align="right" valign="top">
-                   <input type="radio" name="contactMechId" value="${contactMech.contactMechId}" />
+                   <@field type="radio" inline=true name="contactMechId" value="${contactMech.contactMechId}" />
                  </@td>
                  <@td valign="middle">
                    <#list partyContactMechPurposes as partyContactMechPurpose>
@@ -122,19 +124,20 @@ under the License.
                </#if>
                <@tr>
                  <@td align="right" valign="top">
-                   <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if> />
+                   <@field type="radio" inline=true name="contactMechId" value="_NEW_" checked=(!hasCurrent) />
                  </@td>
                  <@td valign="middle">
                    ${uiLabelMap.PartyCreateNewBillingAddress}.
                  </@td>
                </@tr>
              </@table>
-           </@td>
-         </@tr>
-       </@table>
+           </@fields>
+         </@field>
        </div>
-     </form>  
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
+  </form>  
+  
+  <@menuContent menuArgs={"type":"button"} />
+
+</@section>
 </#if>
 

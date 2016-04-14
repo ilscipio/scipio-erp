@@ -19,76 +19,52 @@ under the License.
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingEFTNotBelongToYou}.</@commonMsg>
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+  <@menu type="button">
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+  </@menu>
 <#else>
-    <#if !eftAccount??>
-      <@heading>${uiLabelMap.AccountingAddNewEftAccount}</@heading>
-      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
-    <#else>
-      <@heading>${uiLabelMap.PageTitleEditEFTAccount}</@heading>
-      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
-        <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
-    </#if>
-    &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-    &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
-    <p/>
-    <@table type="field"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingNameOnAccount}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
-      </@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingBankName}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingRoutingNumber}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingAccountType}</@td>
-      <@td width="74%">
-        <select name="accountType" class="selectBox">
-          <option>${eftAccountData.accountType!}</option>
-          <option></option>
-          <option>${uiLabelMap.CommonChecking}</option>
-          <option>${uiLabelMap.CommonSavings}</option>
-        </select>
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.AccountingAccountNumber}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.CommonDescription}</@td>
-      <@td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-      </@td>
-    </@tr>
 
-    <@tr>
-      <@td width="26%" align="right" valign="top">${uiLabelMap.PartyBillingAddress}</@td>
-      <@td width="74%">
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
+  </@menu>
+</#macro>
+<#assign sectionTitle>
+  <#if !eftAccount??>
+    ${uiLabelMap.AccountingAddNewEftAccount}
+  <#else>
+    ${uiLabelMap.PageTitleEditEFTAccount}
+  </#if>
+</#assign>
+<@section title=sectionTitle menuContent=menuContent>
+
+  <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}<#else>updateEftAccount?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editeftaccountform">
+
+    <#if eftAccount??>
+      <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
+    </#if>
+
+    <@field type="input" label="${uiLabelMap.AccountingNameOnAccount}" required=true size="30" maxlength="60" name="nameOnAccount" value=(eftAccountData.nameOnAccount!) />
+    <@field type="input" label="${uiLabelMap.AccountingCompanyNameOnAccount}" size="30" maxlength="60" name="companyNameOnAccount" value=(eftAccountData.companyNameOnAccount!) />
+    <@field type="input" label="${uiLabelMap.AccountingBankName}" required=true size="30" maxlength="60" name="bankName" value=(eftAccountData.bankName!) />
+    <@field type="input" label="${uiLabelMap.AccountingRoutingNumber}" required=true size="10" maxlength="30" name="routingNumber" value=(eftAccountData.routingNumber!) />
+    <@field type="select" label="${uiLabelMap.AccountingAccountType}" required=true name="accountType" class="selectBox">
+      <option>${eftAccountData.accountType!}</option>
+      <option></option>
+      <option>${uiLabelMap.CommonChecking}</option>
+      <option>${uiLabelMap.CommonSavings}</option>
+    </@field>
+    <@field type="input" label="${uiLabelMap.AccountingAccountNumber}" required=true size="20" maxlength="40" name="accountNumber" value=(eftAccountData.accountNumber!) />
+    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
+
+    <@field type="generic" label=uiLabelMap.PartyBillingAddress>
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
         <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+      <@fields type="default-manual" ignoreParentField=true>
+        <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="1" -->
         <#if curPostalAddress??>
           <@tr>
             <@td align="right" valign="top" width="1%">
@@ -163,11 +139,13 @@ under the License.
               <@tr type="meta"><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
           </#if>
         </@table>
-      </@td>
-    </@tr>
-  </@table>
+      </@fields>
+    </@field>
   </form>
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>  
+  
+  <@menuContent menuArgs={"type":"button"} />
+
+</@section>
+
 </#if>
 

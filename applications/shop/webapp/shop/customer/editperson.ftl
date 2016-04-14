@@ -16,23 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#if person??>
-  <@heading>${uiLabelMap.PartyEditPersonalInformation}</@heading>
-    &nbsp;<form id="editpersonform1" method="post" action="<@ofbizUrl>updatePerson</@ofbizUrl>" name="editpersonform">    
-<#else>
-  <@heading>${uiLabelMap.PartyAddNewPersonalInformation}</@heading>
-    &nbsp;<form id="editpersonform2" method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
-</#if>
-<div>
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editpersonform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
-  <p/>    
+
+<#assign sectionTitle><#if person??>${uiLabelMap.PartyEditPersonalInformation}<#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+    <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href="javascript:document.editpersonform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
+  </@menu>
+</#macro>
+<@section title=sectionTitle menuContent=menuContent>
+  <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson<#else>createPerson/${donePage}</#if></@ofbizUrl>" name="editpersonform">    
+
   <input type="hidden" name="partyId" value="${person.partyId!}" />
-  <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
-  <@tr>
-    <@td align="right">${uiLabelMap.CommonTitle}</@td>
-    <@td>
-      <select name="personalTitle" class="selectBox">
+  
+    <@field type="select" label="${uiLabelMap.CommonTitle}" name="personalTitle" class="selectBox">
         <#if personData.personalTitle?has_content >
           <option>${personData.personalTitle}</option>
           <option value="${personData.personalTitle}"> -- </option>
@@ -43,136 +40,54 @@ under the License.
         <option>${uiLabelMap.CommonTitleMrs}</option>
         <option>${uiLabelMap.CommonTitleMs}</option>
         <option>${uiLabelMap.CommonTitleDr}</option>
-      </select>
-    </@td>
-  </@tr>
-  <@tr>
-    <@td align="right">${uiLabelMap.PartyFirstName}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="30" name="firstName" value="${personData.firstName!}"/>
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyMiddleInitial}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="4" maxlength="4" name="middleName" value="${personData.middleName!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyLastName}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="30" name="lastName" value="${personData.lastName!}"/>
-      *</@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartySuffix}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="10" maxlength="30" name="suffix" value="${personData.suffix!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyNickName}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="nickname" value="${personData.nickname!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyGender}</@td>
-      <@td>
-        <select name="gender" class="selectBox">
-          <#if personData.gender?has_content >
-            <option value="${personData.gender}">
-                <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
-                <#if personData.gender == "F" >${uiLabelMap.CommonFemale}</#if>
-            </option>
-            <option value="${personData.gender}"> -- </option>
-          <#else>
-            <option value="">${uiLabelMap.CommonSelectOne}</option>
-          </#if>
-          <option value="M">${uiLabelMap.CommonMale}</option>
-          <option value="F">${uiLabelMap.CommonFemale}</option>
-        </select>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyBirthDate}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="11" maxlength="20" name="birthDate" value="${(personData.birthDate.toString())!}"/>
-        <div>${uiLabelMap.CommonFormatDate}</div>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyHeight}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="height" value="${personData.height!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyWeight}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="weight" value="${personData.weight!}"/>
-      </@td>
-    </@tr>
+    </@field>
+    <@field type="input" label="${uiLabelMap.PartyFirstName}" required=true size="30" maxlength="30" name="firstName" value=(personData.firstName!)/>
+    <@field type="input" label="${uiLabelMap.PartyMiddleInitial}" size="4" maxlength="4" name="middleName" value=(personData.middleName!)/>
+    <@field type="input" label="${uiLabelMap.PartyLastName}" required=true size="30" maxlength="30" name="lastName" value=(personData.lastName!)/>
+    <@field type="input" label="${uiLabelMap.PartySuffix}" size="10" maxlength="30" name="suffix" value=(personData.suffix!)/>
+    <@field type="input" label="${uiLabelMap.PartyNickName}" size="30" maxlength="60" name="nickname" value=(personData.nickname!)/>
+    <@field type="select" label="${uiLabelMap.PartyGender}" name="gender" class="selectBox">
+      <#if personData.gender?has_content >
+        <option value="${personData.gender}">
+            <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
+            <#if personData.gender == "F" >${uiLabelMap.CommonFemale}</#if>
+        </option>
+        <option value="${personData.gender}"> -- </option>
+      <#else>
+        <option value="">${uiLabelMap.CommonSelectOne}</option>
+      </#if>
+      <option value="M">${uiLabelMap.CommonMale}</option>
+      <option value="F">${uiLabelMap.CommonFemale}</option>
+    </@field>
+    <@field type="input" label="${uiLabelMap.PartyBirthDate}" size="11" maxlength="20" name="birthDate" value=((personData.birthDate.toString())!) tooltip="${uiLabelMap.CommonFormatDate}"/>
+    <@field type="input" label="${uiLabelMap.PartyHeight}" size="30" maxlength="60" name="height" value=(personData.height!)/>
+    <@field type="input" label="${uiLabelMap.PartyWeight}" size="30" maxlength="60" name="weight" value=(personData.weight!)/>
 
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyMaidenName}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="mothersMaidenName" value="${personData.mothersMaidenName!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyMaritalStatus}</@td>
-      <@td>
-        <select name="maritalStatus" class="selectBox">
-          <#if personData.maritalStatus?has_content>
-             <option value="${personData.maritalStatus}">
-               <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>
-               <#if personData.maritalStatus == "M">${uiLabelMap.PartyMarried}</#if>
-               <#if personData.maritalStatus == "D">${uiLabelMap.PartyDivorced}</#if>
-             </option>
-          <option value="${personData.maritalStatus}"> -- </option>
-          <#else>
-          <option></option>
-          </#if>
-          <option value="S">${uiLabelMap.PartySingle}</option>
-          <option value="M">${uiLabelMap.PartyMarried}</option>
-          <option value="D">${uiLabelMap.PartyDivorced}</option>
-        </select>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartySocialSecurityNumber}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="socialSecurityNumber" value="${personData.socialSecurityNumber!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyPassportNumber}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="passportNumber" value="${personData.passportNumber!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyPassportExpireDate}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="11" maxlength="20" name="passportExpireDate" value="${personData.passportExpireDate!}"/>
-        <div>${uiLabelMap.CommonFormatDate}</div>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.PartyTotalYearsWorkExperience}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="totalYearsWorkExperience" value="${personData.totalYearsWorkExperience!}"/>
-      </@td>
-    </@tr>
-    <@tr>
-      <@td align="right">${uiLabelMap.CommonComment}</@td>
-      <@td>
-        <input type="text" class="inputBox" size="30" maxlength="60" name="comments" value="${personData.comments!}"/>
-      </@td>
-    </@tr>
-</@table>
-</div>
-</form>
-&nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonGoBack}</a>
-&nbsp;<a id="editpersonform3" href="javascript:document.editpersonform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+    <@field type="input" label="${uiLabelMap.PartyMaidenName}" size="30" maxlength="60" name="mothersMaidenName" value=(personData.mothersMaidenName!)/>
+    <@field type="select" label="${uiLabelMap.PartyMaritalStatus}" name="maritalStatus" class="selectBox">
+    <#if personData.maritalStatus?has_content>
+       <option value="${personData.maritalStatus}">
+         <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>
+         <#if personData.maritalStatus == "M">${uiLabelMap.PartyMarried}</#if>
+         <#if personData.maritalStatus == "D">${uiLabelMap.PartyDivorced}</#if>
+       </option>
+      <option value="${personData.maritalStatus}"> -- </option>
+    <#else>
+      <option></option>
+    </#if>
+      <option value="S">${uiLabelMap.PartySingle}</option>
+      <option value="M">${uiLabelMap.PartyMarried}</option>
+      <option value="D">${uiLabelMap.PartyDivorced}</option>
+    </@field>
+    <@field type="input" label="${uiLabelMap.PartySocialSecurityNumber}" size="30" maxlength="60" name="socialSecurityNumber" value=(personData.socialSecurityNumber!)/>
+
+    <@field type="input" label="${uiLabelMap.PartyPassportNumber}" size="30" maxlength="60" name="passportNumber" value=(personData.passportNumber!)/>
+    <@field type="input" label="${uiLabelMap.PartyPassportExpireDate}" size="11" maxlength="20" name="passportExpireDate" value=(personData.passportExpireDate!) tooltip="${uiLabelMap.CommonFormatDate}"/>
+    <@field type="input" label="${uiLabelMap.PartyTotalYearsWorkExperience}" size="30" maxlength="60" name="totalYearsWorkExperience" value=(personData.totalYearsWorkExperience!)/>
+    <@field type="input" label="${uiLabelMap.CommonComment}" size="30" maxlength="60" name="comments" value=(personData.comments!)/>
+
+  </form>
+
+  <@menuContent menuArgs={"type":"button"} />
+
+</@section>

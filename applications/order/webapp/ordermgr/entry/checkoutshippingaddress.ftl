@@ -56,7 +56,7 @@ function toggleBillingAccount(box) {
 
 <@section title="1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?">
 <form method="post" name="checkoutInfoForm">
-  <fieldset>
+  <#--<fieldset>-->
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
               <@tr>
@@ -75,7 +75,7 @@ function toggleBillingAccount(box) {
                    <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
                    <@tr>
                      <@td valign="top" width="1%" nowrap="nowrap">
-                       <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"<#if checkThisAddress> checked="checked"</#if> />
+                       <@field type="radio" inline=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
                      </@td>
                      <@td valign="top" width="99%" nowrap="nowrap">
                          <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
@@ -93,7 +93,7 @@ function toggleBillingAccount(box) {
                  </#list>
                </#if>
               </@table>
-             <div>&nbsp;${uiLabelMap.AccountingAgreementInformation}</div>
+            <@section title=uiLabelMap.AccountingAgreementInformation>
                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                  <#if agreements??>
                    <#if agreements.size() != 1>
@@ -116,26 +116,27 @@ function toggleBillingAccount(box) {
                        </@td>
                      </@tr>
                    <#else>
+                   <@fields type="default-nolabels">
                      <#list agreements as agreement>
-                        <input type="radio" name="agreementId" value="${agreement.agreementId!}"<#if checkThisAddress> checked="checked"</#if> />${agreement.description!} will be used for this order.
+                        <@field type="radio" name="agreementId" value="${agreement.agreementId!}" checked=checkThisAddress label="${agreement.description!} will be used for this order." />
                      </#list>
+                   </@fields>
                    </#if>
                  </#if>
                </@table>
-             <br />
+            </@section>
+
             <#-- Party Tax Info -->
-            <div>&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
-            <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
-  </fieldset>
+            <@section title=uiLabelMap.PartyTaxIdentification>
+                <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
+            </@section>
+
+  <#--</fieldset>-->
 </form>
 </@section>
 
-<@row>
-  <@cell>
-    <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.CommonNext class="+${styles.action_run_session!} ${styles.action_continue!}" />
-    </@menu>
-  </@cell>
-</@row>
+<@menu type="button">
+  <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.CommonNext class="+${styles.action_run_session!} ${styles.action_continue!}" />
+</@menu>
 

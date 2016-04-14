@@ -94,7 +94,7 @@ will generally always be reserved for the logo at the top of the page.
   </#if>
 </#macro>
 
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonCancel}</a>
+  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
   &nbsp;<a href="javascript:document.getElementById('newuserform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
 
 <form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
@@ -398,7 +398,7 @@ class name of "button". No other class names should be used to style
 button actions.
 ------------------------------------------------------------------------------->
 <div>  
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.nav_link_cancel!}">${uiLabelMap.CommonCancel}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
   <a href="javascript:document.getElementById('newuserform').submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>   
 </div>
 

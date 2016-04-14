@@ -75,4 +75,24 @@ under the License.
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="CDR-1111" quantity="7" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="BEST-SELL-2" productId="KB-5569" quantity="1" fromDate="2010-01-01 12:00:00.0"/>
  
+ 
+    <!-- PRODUCTS (members), promotions -->
+ 
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PH-1004" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="CL-5005" fromDate="2010-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="CAM-2644" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="KB-5569" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="VH-9943" fromDate="2001-05-13 12:00:00.0"/> 
+    <!-- Cato: This doesn't make sense (percent off gift cards)
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-001" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GC-002" fromDate="2001-05-13 12:00:00.0"/>
+    -->
+    <!-- Cato: This is too strange to promote
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="FA-001" fromDate="2001-05-13 12:00:00.0"/>
+    -->
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PC-1000" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="ENCHL-01" fromDate="2007-12-27 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA-01" fromDate="2004-09-24 15:09:47.338"/>
+    <ProductCategoryMember productCategoryId="PROMOTIONS" productId="PIZZA-01" fromDate="2004-09-24 15:09:47.338"/>
+
 </entity-engine-xml>

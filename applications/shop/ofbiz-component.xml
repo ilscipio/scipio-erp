@@ -39,7 +39,6 @@ under the License.
     <!-- demo data: catalog - basic -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogGenericProductData.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalCatalogData.xml"/>
     
     <!-- demo data: survey -->
@@ -76,6 +75,7 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoFinAccountData.xml"/>
     
     <!-- auxiliary catalog data -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogImageData.xml"/>
     
     <!-- demo data: example/test records and history -->

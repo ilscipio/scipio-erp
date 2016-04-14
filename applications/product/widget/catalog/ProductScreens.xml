@@ -372,7 +372,7 @@ under the License.
 		            </condition>
 	                <widgets>
                         <screenlet title="${uiLabelMap.ProductCategories}">
-	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoProductCategoryMemeberList.ftl"/></html></platform-specific>
+	                       <platform-specific><html><html-template location="component://product/webapp/catalog/product/CatoProductCategoryMemberList.ftl"/></html></platform-specific>
 	                    </screenlet>
 	                </widgets>
                 </section>

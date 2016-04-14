@@ -110,11 +110,14 @@ under the License.
                     <#else>
                       <#assign parentProductId = cartLine.getProductId() />
                     </#if>
+                    <#-- CATO: Uncomment if you want to use the image placeholders
                     <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
-                    <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
+                    <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                     <#if smallImageUrl?string?has_content>
-                      <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
-                    </#if>
+                      <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
+                      <@img src=imgUrl width="150px;" height="75px"/>
+                    </#if>-->
+                    ${parentProductId!}
                   </#if>
                 </@td>
                 <@td headers="editDescription">${cartLine.getName()!}</@td>
@@ -136,7 +139,7 @@ under the License.
                 </#if>
                 <@td headers="editItemTotal" id="displayItem_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency() /></@td>
                 <#if !cartLine.getIsPromo()>
-                  <@td><a id="removeItemLink_${cartLine_index}" href="javascript:void(0);"><img id="remove_${cartLine_index}" src="<@ofbizContentUrl>/shop/images/remove.png</@ofbizContentUrl>" alt="Remove Item Image" /></a></@td>
+                  <@td><a id="removeItemLink_${cartLine_index}" href="javascript:void(0);" style="font-size: 24px;"><i class="fa fa-times"></i></a></@td>
                 </#if>
               </@tr>
             </#list>

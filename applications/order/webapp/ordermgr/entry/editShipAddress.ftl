@@ -21,10 +21,10 @@ under the License.
 
   <@section>
     <#if postalAddress?has_content>
-      <form method="post" action="<@ofbizUrl>updatePostalAddressOrderEntry</@ofbizUrl>" name="checkoutsetupform">
+      <form method="post" action="<@ofbizUrl>updatePostalAddressOrderEntry</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
         <input type="hidden" name="contactMechId" value="${shipContactMechId!}"/>
     <#else>
-      <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+      <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
         <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS"/>
         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
     </#if>
@@ -47,12 +47,10 @@ under the License.
         <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value=(parameters.address1!)/>
         <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value=(parameters.address2!)/>
         <@field type="input" label=uiLabelMap.CommonCity required=true size="30" maxlength="30" name="city" value=(parameters.city!)/>
-        <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId">
-              <option value=""></option>
-              <@render resource="component://common/widget/CommonScreens.xml#states" />
+        <@field type="select" label=uiLabelMap.CommonStateProvince name="stateProvinceGeoId" id="checkoutsetupform_stateProvinceGeoId">
         </@field>
         <@field type="input" label=uiLabelMap.CommonZipPostalCode required=true size="12" maxlength="10" name="postalCode" value=(parameters.postalCode!)/>
-        <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId">
+        <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" id="checkoutsetupform_countryGeoId">
               <@render resource="component://common/widget/CommonScreens.xml#countries" />
         </@field>
         <@field type="select" label=uiLabelMap.OrderAllowSolicitation name="allowSolicitation">

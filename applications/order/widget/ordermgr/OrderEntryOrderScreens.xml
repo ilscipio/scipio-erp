@@ -83,12 +83,25 @@ under the License.
                 <set field="stepTitleId" value="OrderOrderEntryShipToSettings"/>
                 <set field="stepLabelId" value="FacilityShipping"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/ShipSettings.groovy"/>
+                
+                <set field="dependentForm" value="checkoutsetupform"/>
+                <set field="paramKey" value="countryGeoId"/>
+                <set field="mainId" value="countryGeoId"/>
+                <set field="dependentId" value="stateProvinceGeoId"/>
+                <set field="requestName" value="getAssociatedStateList"/>
+                <set field="responseName" value="stateList"/>
+                <set field="dependentKeyName" value="geoId"/>
+                <set field="descName" value="geoName"/>
+                <set field="selectedDependentOption" from-field="mechMap.postalAddress.stateProvinceGeoId" default-value="_none_"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCheckoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/entry/editShipAddress.ftl"/></html>
+                            <html>
+	                            <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+	                            <html-template location="component://order/webapp/ordermgr/entry/editShipAddress.ftl"/>
+                            </html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

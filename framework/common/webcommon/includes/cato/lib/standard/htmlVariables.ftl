@@ -426,6 +426,15 @@
     "action_importance_normal" : "action-importance-normal",              <#-- normal importance (assumed default) -->
     "action_importance_high" : "action-importance-high",                  <#-- high importance (assumed default). e.g. "Create Order" -->
     
+    <#-- Convenience shorthands -->
+    "action_nav_cancel" : "action-nav action-cancel",
+    "action_nav_sys_cancel" : "action-nav action-scope-sys action-cancel",
+    "action_nav_session_cancel" : "action-nav action-scope-session action-cancel",
+    "action_nav_local_cancel" : "action-nav action-scope-local action-cancel",
+    "action_run_sys_cancel" : "action-run action-scope-sys action-cancel",
+    "action_run_session_cancel" : "action-run action-scope-session action-cancel",
+    "action_run_local_cancel" : "action-run action-scope-local action-cancel",
+    
   <#-- Link styles (fragments - part of other styles) -->
     <#-- misc/short link styles -->
     "link_long" : "link-long",                            <#-- style to identify long links -->

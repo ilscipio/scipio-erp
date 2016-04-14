@@ -74,9 +74,10 @@ Map<String, Object> uploadProductCategoryImage() {
             Debug.logError(e,module);
         }
         // Write the file
+        File file;
         try {
-            imagePath = imageServerPath + "/" + fileLocation + "." + extension.getString("fileExtensionId");            
-            File file = new File(imagePath);
+            imagePath = imageServerPath + "/" + fileLocation + "." + extension.getString("fileExtensionId");
+            file = new File(imagePath);
             RandomAccessFile out = new RandomAccessFile(file, "rw");
             out.write(imageData.array());
             out.close();
@@ -92,7 +93,7 @@ Map<String, Object> uploadProductCategoryImage() {
             productCategory.set(fileType + "ImageUrl", imageUrl);
             productCategory.store();
         } catch (Exception e) {
-            if (file && file.exists)
+            if (file && file.exists())
                 file.delete();
             Debug.logError(e,module);
             return ServiceUtil.returnError(e.getMessage(), locale);

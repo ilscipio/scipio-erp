@@ -805,7 +805,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               The label will trickle down into an inline area if one exists for the field type.
     inlineLabelArea         = ((boolean), default: -from global styles-, fallback default: false) Manual override for inline label logic
                               In general can be left to macro.
-    inlineLabel             = ((boolean), default: -from global styles-, fallback default: false) Manual override for inline label logic
+    inlineLabel             = ((string)) Manual override for inline label logic
                               In general can be left to macro.
                               NOTE: Often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip                 = Small field description - to be displayed to the customer
@@ -863,9 +863,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     norows                  = ((boolean), default: false) If true, render without the rows-container
     nocells                 = ((boolean), default: false) If true, render without the cells-container
     container               = ((boolean), default: true) If false, sets norows=true and nocells=true
-    inline                  = ((boolean), default: false) If true, forces container=false and marks the field with styles.field_inline
+    inline                  = ((boolean), default: false) If true, forces container=false, marks the field with styles.field_inline, and forces inline labels (by disabling label area)
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
+                              In addition, this will force {{{labelArea}}} false and any label specified will use the inlined label (area).
     ignoreParentField       = ((boolean), default: false) If true causes a child field to act as if it had no parent field. Rarely needed
     required                = ((boolean), default: false) Marks a required input
     requiredClass           = ((css-class)) CSS classes, default required class name
@@ -1131,6 +1132,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#if inline?is_boolean && inline == true>
     <#local container = false>
     <#local class = addClassArg(class, styles.field_inline!)>
+    <#-- force label to be inline using our own user flags (easiest) -->
+    <#local labelArea = false>
   </#if>
 
   <#-- treat tooltip and description (nearly) as synonyms for now -->

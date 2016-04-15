@@ -24,6 +24,10 @@
 *
 * TODO:
 * * Turn more of these into transforms.
+* * WARN: A number of macros and functions may currently not perform sufficient string escaping
+*   to receive values from context! Many have to be reviewed otherwise will not always work properly.
+*   This is especially a problem for maps, because toSimpleMap will NOT prevent escaping of the keys inside!
+*   Need to re-test all using values set from groovy.
 -->
 
 <#assign catoUtilitiesDefined = true> <#-- this one must use #assign, not #global -->

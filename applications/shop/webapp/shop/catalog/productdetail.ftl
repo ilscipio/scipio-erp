@@ -181,35 +181,14 @@
         
         <#-- verify quantity -->
         <#assign qtyErrorLabel = getLabel('cart.quantity_not_positive_number', 'OrderErrorUiLabels')>
-        var quantity = jQuery('#quantity').val().trim();
-        if (!quantity) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
-            return;
-        }
-        quantity = parseFloat(quantity);
-        if (isNaN(quantity)) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
-            return;
-        }
-        if (quantity <= 0) {
-            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+        if (verifyQty('quantity', '${qtyErrorLabel}') == null) {
             return;
         }
         
         <#-- verify amount (if applicable) -->
         if (checkAmtReq(productId) == 'Y') {
-            var amount = $('#add_amount').val().trim();
-            if (!amount) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
-                return;
-            }
-            amount = parseFloat(amount);
-            if (isNaN(amount)) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
-                return;
-            }
-            if (amount <= 0) {
-                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+            <#assign amtErrorLabel = getLabel('AccountingFinAccountMustBePositive', 'AccountingErrorUiLabels')>
+            if (verifyQty('add_amount', '${amtErrorLabel}') == null) {
                 return;
             }
         }
@@ -224,6 +203,34 @@
         -->
         document.addform.submit();
     }        
+    
+    function verifyQty(fieldId, qtyErrorLabel) {
+        var quantity = jQuery('#' + fieldId).val();
+        if (!quantity) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            return null;
+        }
+        quantity = quantity.trim();
+        jQuery('#' + fieldId).val(quantity);
+        if (!quantity) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            return null;
+        }
+        if (!quantity.match(/^[0-9.,]+$/)) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            return null;
+        }
+        quantity = parseFloat(quantity);
+        if (isNaN(quantity)) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            return null;
+        }
+        if (quantity <= 0) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}", qtyErrorLabel);
+            return null;
+        }
+        return quantity;
+    }
     
     function toggleAmt(toggle) {
         if (toggle == 'Y') {

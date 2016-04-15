@@ -86,10 +86,7 @@ START_ACTION=$?
 
 if [ $START_ACTION -eq 1 ]
 then    
-    echo "Cato-Commerce: Usage ./start.sh [OPTIONS] [TARGET]"
-    echo "Cato-Commerce: If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present."
-    echo "Cato-Commerce: OPTIONS \r\n -v               Verbose. Display more info while executing targets. \r\n -h --help        Display this help."
-    echo "Cato-Commerce: TARGETS: \r\n build \r\n $(sh ant -p | grep -oe '^[[:space:]].*')" 
+    sh ant cato-help -S -e -q
 elif [ $START_ACTION -eq 2 ]; then    
     echo "Cato-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
     if [ $ANT_VERBOSE -eq 1 ]; then

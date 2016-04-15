@@ -86,10 +86,12 @@ Creates a grid row.
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     alt                     = ((boolean), default: false) If true alternate row (odd), if false regular (even)
+    id                      = Row ID
+    style                   = Legacy HTML {{{style}}} attribute
     selected                = ((boolean), default: false) If true row is marked selected
 -->
 <#assign row_defaultArgs = {
-  "class":"", "id":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, "passArgs":{}
+  "class":"", "id":"", "style":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, "passArgs":{}
 }>
 <#macro row args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.row_defaultArgs)>
@@ -113,19 +115,19 @@ Creates a grid row.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("catoRowMarkupStack", {
-      "class":class, "collapse":collapse, "id":id, "alt":alt, "selected":selected, "origArgs":origArgs, "passArgs":passArgs
+      "class":class, "collapse":collapse, "id":id, "style":style, "alt":alt, "selected":selected, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoRowMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected origArgs=origArgs passArgs=passArgs><#nested /></@row_markup>
+  <@row_markup open=open close=close class=class collapse=collapse id=id style=style alt=alt selected=selected origArgs=origArgs passArgs=passArgs><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" origArgs={} passArgs={} catchArgs...>
+<#macro row_markup open=true close=true class="" collapse=false id="" style="" alt="" selected="" origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -169,6 +171,8 @@ Creates a grid cell.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    id                      = Cell ID
+    style                   = Legacy HTML {{{style}}} attribute
     columns                 = ((int), default: 12) Expected number of columns to be rendered 
                               Default only used if class empty and no column sizes specified.
     small                   = ((int)) Specific number of small columns, overrides small part general columns value above
@@ -183,7 +187,7 @@ Creates a grid cell.
 -->
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
-  "largeOffset":-1, "class":"", "id":"", "collapse":false, "nocells":false, "last":false, 
+  "largeOffset":-1, "class":"", "id":"", "style":"", "collapse":false, "nocells":false, "last":false, 
   "open":true, "close":true, "passArgs":{}
 }>
 <#macro cell args={} inlineArgs...>
@@ -223,7 +227,7 @@ Creates a grid cell.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("catoCellMarkupStack", {
-      "class":class, "id":id, "last":last, "collapse":collapse, "origArgs":origArgs, "passArgs":passArgs
+      "class":class, "id":id, "style":style, "last":last, "collapse":collapse, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoCellMarkupStack")!{}>
@@ -237,9 +241,9 @@ Creates a grid cell.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true class="" id="" last=false collapse=false origArgs={} passArgs={} catchArgs...>
+<#macro cell_markup open=true close=true class="" id="" style="" last=false collapse=false origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>

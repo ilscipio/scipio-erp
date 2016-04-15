@@ -74,7 +74,7 @@ under the License.
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <@field type="select" inline=true name="expMonth" class="selectBox" onChange="javascript:makeExpDate();">
+        <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();">
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -85,7 +85,7 @@ under the License.
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
         </@field>
-        <@field type="select" inline=true name="expYear" class="selectBox" onChange="javascript:makeExpDate();">
+        <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>

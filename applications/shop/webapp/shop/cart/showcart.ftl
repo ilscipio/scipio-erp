@@ -158,7 +158,7 @@ function setAlternateGwp(field) {
                             <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                               Show alternate gifts if there are any...
                               <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
-                              <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);" class="selectBox">
+                              <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);">
                               <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                               <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                                 <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(dispatcher, delegator, alternativeOptionProductId, requestAttributes.locale) />
@@ -183,14 +183,14 @@ function setAlternateGwp(field) {
                             <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP! />
                             <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")! />
                             <#if giftWrapOption?has_content>
-                              <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
+                              <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
                                 <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                                 <#list giftWrapOption as option>
                                   <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>selected="selected"</#if>>${option.description} : ${option.amount!0}</option>
                                 </#list>
                               </select>
                             <#elseif showNoGiftWrapOptions>
-                              <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
+                              <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
                                 <option value="">${uiLabelMap.EcommerceNoGiftWrap}</option>
                               </select>
                             </#if>
@@ -232,13 +232,13 @@ function setAlternateGwp(field) {
                                     <#if cartLine.getReservStart()??>
                                         <@tr>
                                             <@td></@td>
-                                            <@td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td>
-                                            <@td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td>
+                                            <@td><input type="text" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td>
+                                            <@td><input type="text" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td>
                                         </@tr>
                                         <@tr open=true close=false />
                                             <@td></@td>
                                             <@td>
-                                            <input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /> 
+                                            <input type="text" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /> 
                                             </@td>
                                     <#else>
                                         <@tr>
@@ -249,7 +249,7 @@ function setAlternateGwp(field) {
                                             <@td>--</@td>
                                     </#if>
                                         <@td>
-                                        <input class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
+                                        <input type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" onChange="javascript:this.form.submit();"/> 
                                         </@td>
                                         <@tr close=true open=false />
                                     </@table>
@@ -411,16 +411,16 @@ function setAlternateGwp(field) {
 <@section title=uiLabelMap.CommonQuickAdd>
     <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
         <fieldset>
-        ${uiLabelMap.EcommerceProductNumber}<input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id!}" />
+        ${uiLabelMap.EcommerceProductNumber}<input type="text" name="add_product_id" value="${requestParameters.add_product_id!}" />
          // check if rental data present  insert extra fields in Quick Add
         <#if (product?? && product.getString("productTypeId") == "ASSET_USAGE") || (product?? && product.getString("productTypeId") == "ASSET_USAGE_OUT_IN")>
-            ${uiLabelMap.EcommerceStartDate}: <input type="text" class="inputBox" size="10" name="reservStart" value="${requestParameters.reservStart!""}" />
-            ${uiLabelMap.EcommerceLength}: <input type="text" class="inputBox" size="2" name="reservLength" value="${requestParameters.reservLength!""}" />
+            ${uiLabelMap.EcommerceStartDate}: <input type="text" size="10" name="reservStart" value="${requestParameters.reservStart!""}" />
+            ${uiLabelMap.EcommerceLength}: <input type="text" size="2" name="reservLength" value="${requestParameters.reservLength!""}" />
             </div>
             <div>
-            &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" />
+            &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" />
         </#if>
-        ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
+        ${uiLabelMap.CommonQuantity}: <input type="text" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
         <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
         </fieldset>
     </form>

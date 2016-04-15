@@ -89,7 +89,7 @@ under the License.
 <@section title=uiLabelMap.EcommerceShoppingLists menuContent=menuContent>
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
-        <select name="shoppingListId" class="selectBox">
+        <select name="shoppingListId">
           <#if shoppingList?has_content>
             <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
             <option value="${shoppingList.shoppingListId}">--</option>
@@ -129,21 +129,21 @@ under the License.
   </#macro>
   <@section title="${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
         <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
-            <input type="hidden" class="inputBox" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
-            <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId!}"/>
+            <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
+            <input type="hidden" name="partyId" value="${shoppingList.partyId!}"/>
             <@table type="fields"> <#-- orig: border="0" width="100%" cellspacing="0" cellpadding="0" -->
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceListName}</div></@td>
-                <@td><input type="text" class="inputBox" size="25" name="listName" value="${shoppingList.listName}" /></@td>
+                <@td><input type="text" size="25" name="listName" value="${shoppingList.listName}" /></@td>
               </@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></@td>
-                <@td><input type="text" class="inputBox" size="70" name="description" value="${shoppingList.description!}" /></@td>
+                <@td><input type="text" size="70" name="description" value="${shoppingList.description!}" /></@td>
               </@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderListType}</div></@td>
                 <@td>
-                  <select name="shoppingListTypeId" class="selectBox">
+                  <select name="shoppingListTypeId">
                       <#if shoppingListType??>
                       <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                       <option value="${shoppingListType.shoppingListTypeId}">--</option>
@@ -157,7 +157,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommercePublic}?</div></@td>
                 <@td>
-                  <select name="isPublic" class="selectBox">
+                  <select name="isPublic">
                     <#if (((shoppingList.isPublic)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((shoppingList.isPublic)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
@@ -169,7 +169,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceActive}?</div></@td>
                 <@td>
-                  <select name="isActive" class="selectBox">
+                  <select name="isActive">
                     <#if (((shoppingList.isActive)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((shoppingList.isActive)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
@@ -181,7 +181,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceParentList}</div></@td>
                 <@td>
-                  <select name="parentShoppingListId" class="selectBox">
+                  <select name="parentShoppingListId">
                       <#if parentShoppingList??>
                       <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName!parentShoppingList.shoppingListId}</option>
                     </#if>
@@ -229,7 +229,7 @@ under the License.
                   <#if recurrenceInfo?has_content>
                     <#assign recurrenceRule = recurrenceInfo.getRelatedOne("RecurrenceRule", false)!>
                   </#if>
-                  <select name="intervalNumber" class="selectBox">
+                  <select name="intervalNumber">
                     <option value="">${uiLabelMap.EcommerceSelectInterval}</option>
                     <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected="selected"</#if>>${uiLabelMap.EcommerceEveryDay}</option>
                     <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected="selected"</#if>>${uiLabelMap.EcommerceEveryOther}</option>
@@ -238,7 +238,7 @@ under the License.
                     <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected="selected"</#if>>${uiLabelMap.EcommerceEvery9th}</option>
                   </select>
                   &nbsp;
-                  <select name="frequency" class="selectBox">
+                  <select name="frequency">
                     <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
                     <option value="4" <#if (recurrenceRule.frequency)?default("") == "DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
                     <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
@@ -262,7 +262,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderShipTo}</div></@td>
                 <@td>
-                  <select name="contactMechId" class="selectBox" onchange="javascript:document.reorderinfo.submit()">
+                  <select name="contactMechId" onchange="javascript:document.reorderinfo.submit()">
                     <option value="">${uiLabelMap.OrderSelectAShippingAddress}</option>
                     <#if shippingContactMechList?has_content>
                       <#list shippingContactMechList as shippingContactMech>
@@ -277,7 +277,7 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderShipVia}</div></@td>
                 <@td>
-                  <select name="shippingMethodString" class="selectBox">
+                  <select name="shippingMethodString">
                     <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                     <#if carrierShipMethods?has_content>
                       <#list carrierShipMethods as shipMeth>
@@ -306,7 +306,7 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderPayBy}</div></@td>
                 <@td>
-                  <select name="paymentMethodId" class="selectBox">
+                  <select name="paymentMethodId">
                     <option value="">${uiLabelMap.OrderSelectPaymentMethod}</option>
                     <#list paymentMethodList as paymentMethod>
                       <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
@@ -451,13 +451,13 @@ under the License.
                        <#if product.productTypeId == "ASSET_USAGE" || product.productTypeId == "ASSET_USAGE_OUT_IN">
                             <@tr>
                                 <@td width="1%">&nbsp;</@td>
-                                <@td><@field type="datetime" name="reservStartStr" class="+inputBox" value=(shoppingListItem.reservStart!) size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
-                                <@td><input type="text" class="inputBox" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
+                                <@td><@field type="datetime" name="reservStartStr" value=(shoppingListItem.reservStart!) size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
+                                <@td><input type="text" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
                             </@tr>
                             <@tr open=true close=false />
                             <#if product.productTypeId == "ASSET_USAGE">
                                 <@td>&nbsp;</@td>
-                                <@td><input type="text" class="inputBox" size="3" name="reservPersons" value="${shoppingListItem.reservPersons!}"/></@td>
+                                <@td><input type="text" size="3" name="reservPersons" value="${shoppingListItem.reservPersons!}"/></@td>
                             <#else>
                                 <@td>&nbsp;</@td>
                                 <@td>&nbsp;</@td>
@@ -472,7 +472,7 @@ under the License.
                                     <@td align="center">--</@td>
                                     <@td open=true close=false /><input type="hidden" name="reservStartStr" value=""/>
                        </#if>
-                    <input size="6" class="inputBox" type="text" name="quantity" value="${shoppingListItem.quantity?string.number}"/>
+                    <input size="6" type="text" name="quantity" value="${shoppingListItem.quantity?string.number}"/>
                     <@td close=true open=false /></@tr close=true open=false /></@table>
                     </div>
                   </@fields>
@@ -497,7 +497,7 @@ under the License.
                       <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                       <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                       <input type="hidden" name="quantity" value="${shoppingListItem.quantity}"/>
-                      <select name="add_product_id" class="selectBox">
+                      <select name="add_product_id">
                           <#list productVariantAssocs as productVariantAssoc>
                             <#assign variantProduct = productVariantAssoc.getRelatedOne("AssocProduct", true)>
                             <#if variantProduct??>
@@ -565,9 +565,9 @@ under the License.
   <@section title=uiLabelMap.CommonQuickAddList>
     <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
-      <input type="text" class="inputBox" name="productId" value="${requestParameters.add_product_id!}"/>
-      <@table><#if reservStart??><@tr><@td>${uiLabelMap.EcommerceStartDate}</@td><@td><input type="text" class="inputBox" size="10" name="reservStart" value="${requestParameters.reservStart!""}" /></@td><@td> ${uiLabelMap.EcommerceLength}:</@td><@td><input type="text" class="inputBox" size="2" name="reservLength" value="${requestParameters.reservLength!""}" /></@td></@tr></#if><@tr><#if reservStart??><@td>&nbsp;</@td><@td>&nbsp;</@td><@td>${uiLabelMap.OrderNbrPersons}:</@td><@td><input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" /></@td></#if><@td nowrap="nowrap">${uiLabelMap.CommonQuantity} :</@td><@td><input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" /></@td></@tr></@table>
-      <#-- <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />-->
+      <input type="text" name="productId" value="${requestParameters.add_product_id!}"/>
+      <@table><#if reservStart??><@tr><@td>${uiLabelMap.EcommerceStartDate}</@td><@td><input type="text" size="10" name="reservStart" value="${requestParameters.reservStart!""}" /></@td><@td> ${uiLabelMap.EcommerceLength}:</@td><@td><input type="text" size="2" name="reservLength" value="${requestParameters.reservLength!""}" /></@td></@tr></#if><@tr><#if reservStart??><@td>&nbsp;</@td><@td>&nbsp;</@td><@td>${uiLabelMap.OrderNbrPersons}:</@td><@td><input type="text" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" /></@td></#if><@td nowrap="nowrap">${uiLabelMap.CommonQuantity} :</@td><@td><input type="text" size="5" name="quantity" value="${requestParameters.quantity!"1"}" /></@td></@tr></@table>
+      <#-- <input type="text" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />-->
       <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
     </form>
   </@section>

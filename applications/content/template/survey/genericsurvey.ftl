@@ -45,25 +45,25 @@ under the License.
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
     <textarea cols="40" rows="5" name="${questionFieldName}">${(answer.textResponse)!}</textarea>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
-    <input type="text" size="15" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="15" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">
-    <input type="text" size="35" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="35" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL">
-    <input type="text" size="30" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="30" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL">
-    <input type="text" size="40" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="40" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE">
-    <input type="text" size="12" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="12" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD">
-    <input type="text" size="20" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
-    <input type="text" size="20" class="inputBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
-    <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.currencyResponse)?default(defValue!)}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.currencyResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
-    <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.floatResponse)?default(defValue!)}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.floatResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
-    <input type="text" size="6" class="inputBox" name="${questionFieldName}" value="${(answer.numericResponse?default(defValue)?string("#"))!}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.numericResponse?default(defValue)?string("#"))!}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
     <input type="password" size="30" class="textBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
@@ -71,7 +71,7 @@ under the License.
       <#assign content = answer.getRelatedOne("Content", false)>
       <a href="<@ofbizInterWebappUrl>/content/control/img?imgId=${content.dataResourceId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
     </#if>
-    <input type="file" size="15" name="${questionFieldName}" class="inputBox"/>
+    <input type="file" size="15" name="${questionFieldName}"/>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
     <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!/>
     <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")/>

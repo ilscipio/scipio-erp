@@ -358,7 +358,7 @@ under the License.
                             </#if>
                             <@td align="right">${uiLabelMap.OrderQtyOrdered} :</@td>
                             <@td align="right">
-                              <@field type="input" class="+inputBox" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled" />
+                              <@field type="input" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled" />
                             </@td>
                           </@tr>
                         </@tr>

@@ -174,7 +174,7 @@ will generally always be reserved for the logo at the top of the page.
     <div>
       <label for="USER_SUFFIX">${uiLabelMap.PartySuffix}</label>
       <@fieldErrors fieldName="USER_SUFFIX"/>
-      <input type="text" class="inputBox" name="USER_SUFFIX" id="USER_SUFFIX" value="${requestParameters.USER_SUFFIX!}" />
+      <input type="text" name="USER_SUFFIX" id="USER_SUFFIX" value="${requestParameters.USER_SUFFIX!}" />
     </div>
 
   </fieldset>
@@ -375,13 +375,13 @@ will generally always be reserved for the logo at the top of the page.
       <div>
         <label for="CONFIRM_PASSWORD">${uiLabelMap.PartyRepeatPassword}*</label>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
-        <input type="password" class="inputBox" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50"/>
+        <input type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50"/>
       </div>
 
       <div>
         <label for="PASSWORD_HINT">${uiLabelMap.PartyPasswordHint}</label>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
-        <input type="text" class="inputBox" name="PASSWORD_HINT" id="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT!}" maxlength="100"/>
+        <input type="text" name="PASSWORD_HINT" id="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT!}" maxlength="100"/>
       </div>
     <#else>
       <div>

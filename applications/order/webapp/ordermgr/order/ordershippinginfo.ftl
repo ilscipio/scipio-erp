@@ -140,7 +140,7 @@ under the License.
                           <@td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
                              <div>
-                                 <@field type="select" name="shipGroupSeqId" class="+selectBox" onChange="showShipByDate(this, 'shipByDate${index}')">
+                                 <@field type="select" name="shipGroupSeqId" onChange="showShipByDate(this, 'shipByDate${index}')">
                                     <#list shipGroups as shipGroup>
                                      <option value="${shipGroup.shipGroupSeqId}">[${shipGroup.shipGroupSeqId}]<#if shipGroup.shipByDate?has_content>, ${shipGroup.shipByDate?date}</#if></option>
                                     </#list>

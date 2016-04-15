@@ -84,7 +84,7 @@ under the License.
           </#if>
           <@tr>
             <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
-            <@td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/></@td>
+            <@td><input type="input" name="subject" size="20" value="${defaultSubject}"/></@td>
           </@tr>
           <@tr>
             <@td colspan="2">&nbsp;</@td>

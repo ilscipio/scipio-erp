@@ -406,14 +406,14 @@ under the License.
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="roleTypeId" value="OWNER"/>
-        <input type="file" name="uploadedFile" size="50" class="inputBox"/>
-        <select name="partyContentTypeId" class="selectBox">
+        <input type="file" name="uploadedFile" size="50"/>
+        <select name="partyContentTypeId">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)?default(partyContentType.partyContentTypeId)}</option>
           </#list>
         </select>
-        <select name="mimeTypeId" class="selectBox">
+        <select name="mimeTypeId">
           <option value="">${uiLabelMap.PartySelectMimeType}</option>
           <#list mimeTypes as mimeType>
             <option value="${mimeType.mimeTypeId}">${mimeType.get("description", locale)?default(mimeType.mimeTypeId)}</option>
@@ -475,7 +475,7 @@ under the License.
               <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
               <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
               <input type="hidden" name="statusId" value="CLPT_ACCEPTED"/>
-              <input type="text" size="10" name="optInVerifyCode" value="" class="inputBox"/>
+              <input type="text" size="10" name="optInVerifyCode" value=""/>
               <input type="submit" value="${uiLabelMap.EcommerceVerifySubscription}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
               </div>
             </form>
@@ -501,14 +501,14 @@ under the License.
         <input type="hidden" name="partyId" value="${party.partyId}"/>
         <input type="hidden" name="statusId" value="CLPT_PENDING"/>
         <span class="tableheadtext">${uiLabelMap.EcommerceNewListSubscription}: </span>
-        <select name="contactListId" class="selectBox">
+        <select name="contactListId">
           <#list publicContactLists as publicContactList>
             <#-<#assign publicContactListType = publicContactList.getRelatedOne("ContactListType", true)>->
             <#assign publicContactMechType = publicContactList.getRelatedOne("ContactMechType", true)! />
             <option value="${publicContactList.contactListId}">${publicContactList.contactListName!} <#-${publicContactListType.get("description",locale)} -> <#if publicContactMechType?has_content>[${publicContactMechType.get("description",locale)}]</#if></option>
           </#list>
         </select>
-        <select name="preferredContactMechId" class="selectBox">
+        <select name="preferredContactMechId">
         <#-<option></option>->
           <#list partyAndContactMechList as partyAndContactMech>
             <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode!}-${partyAndContactMech.tnAreaCode!}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2!}, ${partyAndContactMech.paCity!}, ${partyAndContactMech.paStateProvinceGeoId!}, ${partyAndContactMech.paPostalCode!}, ${partyAndContactMech.paPostalCodeExt!} ${partyAndContactMech.paCountryGeoId!}</#if></option>

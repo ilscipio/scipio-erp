@@ -135,7 +135,7 @@ under the License.
             </div>
             <div>
               <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}* <span id="advice-required-billToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
-              <select name="billToCountryGeoId" id="billToCountryGeoId" class="required selectBox">
+              <select name="billToCountryGeoId" id="billToCountryGeoId" class="required">
               <#if billToCountryGeoId??>
                 <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
               </#if>

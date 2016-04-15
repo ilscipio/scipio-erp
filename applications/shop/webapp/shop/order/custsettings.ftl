@@ -51,7 +51,7 @@ under the License.
     </span>
     <span>
       <label for="suffix">${uiLabelMap.PartySuffix}</label>
-      <input type="text" class="inputBox" name="suffix" value="${parameters.suffix!}" />
+      <input type="text" name="suffix" value="${parameters.suffix!}" />
     </span>
     </div>
   </fieldset>
@@ -108,11 +108,11 @@ under the License.
     <span>
       <label for="emailAddress">${uiLabelMap.PartyEmailAddress}</label>
       <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
-      <input type="text" class="inputBox" name="emailAddress" value="${parameters.emailAddress!}"/> *
+      <input type="text" name="emailAddress" value="${parameters.emailAddress!}"/> *
     </span>
     <span>
       <label for="emailSol">${uiLabelMap.PartyAllowSolicitation}</label>
-      <select name="emailSol" class="selectBox">
+      <select name="emailSol">
         <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>

@@ -69,7 +69,7 @@ function submitForm(form, mode, value) {
                 </div>
                 <div>
                   <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
-                  <select name="shippingContactMechId" class="selectBox" onchange="javascript:submitForm(document.editgroupform${groupIdx}, 'SA', null);">
+                  <select name="shippingContactMechId" onchange="javascript:submitForm(document.editgroupform${groupIdx}, 'SA', null);">
                     <option value="">${uiLabelMap.OrderSelectShippingAddress}</option>
                     <#list shippingContactMechList as shippingContactMech>
                       <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
@@ -82,7 +82,7 @@ function submitForm(form, mode, value) {
                 <#else>
                   <#assign selectedShippingMethod = "">
                 </#if>
-                <select name="shipmentMethodString" class="selectBox">
+                <select name="shipmentMethodString">
                   <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                   <#list carrierShipmentMethods as carrierShipmentMethod>
                     <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)?default(-1)>
@@ -109,7 +109,7 @@ function submitForm(form, mode, value) {
               </@td>
               <@td>
                 <div>
-                  <select name="maySplit" class="selectBox">
+                  <select name="maySplit">
                     <#assign maySplitStr = cart.getMaySplit(groupIdx)?default("")>
                     <option value="">${uiLabelMap.OrderSplittingPreference}</option>
                     <option value="false" <#if maySplitStr == "N">selected="selected"</#if>>${uiLabelMap.OrderShipAllItemsTogether}</option>
@@ -117,7 +117,7 @@ function submitForm(form, mode, value) {
                   </select>
                 </div>
                 <div>
-                  <select name="isGift" class="selectBox">
+                  <select name="isGift">
                     <#assign isGiftStr = cart.getIsGift(groupIdx)?default("")>
                     <option value="">${uiLabelMap.OrderIsGift} ?</option>
                     <option value="false" <#if isGiftStr == "N">selected="selected"</#if>>${uiLabelMap.OrderNotAGift}</option>
@@ -204,12 +204,12 @@ function submitForm(form, mode, value) {
             <@td>&nbsp;
             </@td>
             <@td align="center">
-              <input size="6" class="inputBox" type="text" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
+              <input size="6" type="text" name="quantity" value="${cartLine.getQuantity()?string.number}"/>
             </@td>
             <@td>&nbsp;
             </@td>
             <@td>${uiLabelMap.CommonFrom}:
-                <select name="fromGroupIndex" class="selectBox">
+                <select name="fromGroupIndex">
                   <#list itemShipGroups.entrySet() as group>
                     <#assign groupNumber = group.getKey() + 1>
                     <option value="${group.getKey()}">${uiLabelMap.CommonGroup} ${groupNumber}</option>
@@ -217,7 +217,7 @@ function submitForm(form, mode, value) {
                 </select>
             </@td>
             <@td>${uiLabelMap.CommonTo}:
-                <select name="toGroupIndex" class="selectBox">
+                <select name="toGroupIndex">
                   <#list 0..(cart.getShipGroupSize() - 1) as groupIdx>
                     <#assign groupNumber = groupIdx + 1>
                     <option value="${groupIdx}">${uiLabelMap.CommonGroup} ${groupNumber}</option>

@@ -428,7 +428,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-      <select<#if opSelectName?has_content> name="${opSelectName}"</#if> class="selectBox">
+      <select<#if opSelectName?has_content> name="${opSelectName}"</#if><#-- class="selectBox"-->>
         <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${opEquals}</option>
         <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${opSameDay}</option>
         <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option>
@@ -1309,7 +1309,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if !hideOptions>
           <#local newName = "${name}"/>
           <@cell class="${class1!}">
-            <select<#if name?has_content> name="${name}_op"</#if> class="selectBox">
+            <select<#if name?has_content> name="${name}_op"</#if><#-- class="selectBox"-->>
               <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${opEquals}</option>
               <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${opContains}</option>
               <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${opIsEmpty}</option>
@@ -1408,7 +1408,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#if titleClass?has_content>
         <span class="${titleClass}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox">
+      <select<#if name?has_content> name="${name}_fld0_op"</#if><#-- class="selectBox"-->>
         <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option>
         <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option>
         <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option>
@@ -1430,7 +1430,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
       <#if titleClass?has_content>
         <span class="${titleClass}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld1_op"</#if> class="selectBox">
+      <select<#if name?has_content> name="${name}_fld1_op"</#if><#-- class="selectBox"-->>
         <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${opLessThan?html}</option>
         <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option>
       </select>

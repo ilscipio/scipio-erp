@@ -49,7 +49,7 @@ under the License.
     <@field type="input" label="${uiLabelMap.AccountingCompanyNameOnAccount}" size="30" maxlength="60" name="companyNameOnAccount" value=(eftAccountData.companyNameOnAccount!) />
     <@field type="input" label="${uiLabelMap.AccountingBankName}" required=true size="30" maxlength="60" name="bankName" value=(eftAccountData.bankName!) />
     <@field type="input" label="${uiLabelMap.AccountingRoutingNumber}" required=true size="10" maxlength="30" name="routingNumber" value=(eftAccountData.routingNumber!) />
-    <@field type="select" label="${uiLabelMap.AccountingAccountType}" required=true name="accountType" class="selectBox">
+    <@field type="select" label="${uiLabelMap.AccountingAccountType}" required=true name="accountType">
       <option>${eftAccountData.accountType!}</option>
       <option></option>
       <option>${uiLabelMap.CommonChecking}</option>

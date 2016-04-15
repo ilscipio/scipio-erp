@@ -57,7 +57,7 @@ under the License.
       <@field type="input" label=uiLabelMap.OrderOrderName size="60" maxlength="100" name="orderName"/>
 
     <#if cart.getOrderType() != "PURCHASE_ORDER">
-      <@field type="input" label=uiLabelMap.OrderPONumber class="+inputBox" name="correspondingPoId" size="15" />
+      <@field type="input" label=uiLabelMap.OrderPONumber name="correspondingPoId" size="15" />
     </#if>
 
       <#assign label><#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}<#else>${uiLabelMap.OrderSelectCurrency}</#if></#assign>

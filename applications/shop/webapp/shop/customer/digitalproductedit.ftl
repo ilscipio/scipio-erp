@@ -41,15 +41,15 @@ under the License.
     <@table type="fields"> <#-- orig: width="90%" border="0" cellpadding="2" cellspacing="0" -->
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.ProductProductName}</@td>
-      <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="productName" value="${(product.productName)!}"/>*</@td>
+      <@td width="74%"><input type="text" size="30" maxlength="60" name="productName" value="${(product.productName)!}"/>*</@td>
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.ProductProductDescription}</@td>
-      <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${(product.description)!}"/></@td>
+      <@td width="74%"><input type="text" size="30" maxlength="60" name="description" value="${(product.description)!}"/></@td>
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">${uiLabelMap.ProductPrice}</@td>
-      <@td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="price" value="${(productPrice.price)!}"/>*</@td>
+      <@td width="74%"><input type="text" size="30" maxlength="60" name="price" value="${(productPrice.price)!}"/>*</@td>
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">&nbsp;</@td>
@@ -77,7 +77,7 @@ under the License.
           <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}" />
           <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />
           <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}" />
-          <select name="contentId" class="selectBox">
+          <select name="contentId">
             <#list ownerContentAndRoleList as ownerContentAndRole>
               <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
             </#list>

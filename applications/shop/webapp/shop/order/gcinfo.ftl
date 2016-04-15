@@ -32,26 +32,26 @@ under the License.
   <@tr>
     <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingGiftCardNumber}</@td>
     <@td width="74%">
-      <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber!}"/>
+      <input type="text" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber!}"/>
     *</@td>
   </@tr>
   <@tr>
     <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingPINNumber}</@td>
     <@td width="74%">
-      <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber!}"/>
+      <input type="text" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber!}"/>
     *</@td>
   </@tr>
   <@tr>
     <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
     <@td width="74%">
-      <input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${giftCard.description!}"/>
+      <input type="text" size="30" maxlength="60" name="description" value="${giftCard.description!}"/>
     </@td>
   </@tr>
   <#if (paymentMethodTypeId!) != "GIFT_CARD">
     <@tr>
       <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAmountToUse}</@td>
       <@td width="74%">
-        <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber!}"/>
+        <input type="text" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber!}"/>
       *</@td>
     </@tr>
   </#if>

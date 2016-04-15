@@ -29,7 +29,7 @@ under the License.
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   
-    <@field type="select" label="${uiLabelMap.CommonTitle}" name="personalTitle" class="selectBox">
+    <@field type="select" label="${uiLabelMap.CommonTitle}" name="personalTitle">
         <#if personData.personalTitle?has_content >
           <option>${personData.personalTitle}</option>
           <option value="${personData.personalTitle}"> -- </option>
@@ -46,7 +46,7 @@ under the License.
     <@field type="input" label="${uiLabelMap.PartyLastName}" required=true size="30" maxlength="30" name="lastName" value=(personData.lastName!)/>
     <@field type="input" label="${uiLabelMap.PartySuffix}" size="10" maxlength="30" name="suffix" value=(personData.suffix!)/>
     <@field type="input" label="${uiLabelMap.PartyNickName}" size="30" maxlength="60" name="nickname" value=(personData.nickname!)/>
-    <@field type="select" label="${uiLabelMap.PartyGender}" name="gender" class="selectBox">
+    <@field type="select" label="${uiLabelMap.PartyGender}" name="gender">
       <#if personData.gender?has_content >
         <option value="${personData.gender}">
             <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
@@ -64,7 +64,7 @@ under the License.
     <@field type="input" label="${uiLabelMap.PartyWeight}" size="30" maxlength="60" name="weight" value=(personData.weight!)/>
 
     <@field type="input" label="${uiLabelMap.PartyMaidenName}" size="30" maxlength="60" name="mothersMaidenName" value=(personData.mothersMaidenName!)/>
-    <@field type="select" label="${uiLabelMap.PartyMaritalStatus}" name="maritalStatus" class="selectBox">
+    <@field type="select" label="${uiLabelMap.PartyMaritalStatus}" name="maritalStatus">
     <#if personData.maritalStatus?has_content>
        <option value="${personData.maritalStatus}">
          <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>

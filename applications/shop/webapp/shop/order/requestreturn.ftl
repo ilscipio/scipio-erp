@@ -81,19 +81,19 @@ under the License.
                   ${orderItem.itemDescription}
               </@td>
               <@td>
-                <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}"/>
+                <input type="text" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}"/>
               </@td>
               <@td><@ofbizCurrency amount=returnableItems.get(orderItem).get("returnablePrice") isoCode=orderHeader.currencyUom/>
               </@td>
               <@td>
-                <select name="returnReasonId_o_${rowCount}" class="selectBox">
+                <select name="returnReasonId_o_${rowCount}">
                   <#list returnReasons as reason>
                     <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                   </#list>
                 </select>
               </@td>
               <@td>
-                <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
                     <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>

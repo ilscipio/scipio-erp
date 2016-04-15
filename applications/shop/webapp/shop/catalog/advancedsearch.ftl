@@ -53,7 +53,7 @@ under the License.
       </@field>
     </#list>
     <@field type="generic" label=uiLabelMap.ProductSortedBy>
-          <@field type="select" name="sortOrder" class="selectBox">
+          <@field type="select" name="sortOrder">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
             <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>

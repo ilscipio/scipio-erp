@@ -48,11 +48,11 @@ under the License.
     <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
     <@tr>
       <@td><div class="tableheadtext">${uiLabelMap.AccountingCardNumber}</div></@td>
-      <@td><input type="text" class="inputBox" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>
+      <@td><input type="text" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>
     </@tr>
     <@tr>
       <@td><div class="tableheadtext">${uiLabelMap.AccountingPINNumber}</div></@td>
-      <@td><input type="text" class="inputBox" name="pin" size="15" value="${(requestParameters.pin)!}" /></@td>
+      <@td><input type="text" name="pin" size="15" value="${(requestParameters.pin)!}" /></@td>
     </@tr>
     <@tr><@td colspan="2">&nbsp;</@td></@tr>
     <@tr>

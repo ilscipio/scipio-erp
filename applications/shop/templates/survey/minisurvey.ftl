@@ -57,7 +57,7 @@ under the License.
         <@td align="center">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <select name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
@@ -91,7 +91,7 @@ under the License.
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <select name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>

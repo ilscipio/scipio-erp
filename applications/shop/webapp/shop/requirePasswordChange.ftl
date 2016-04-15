@@ -41,15 +41,15 @@ under the License.
           </#if>
           <div>
               ${uiLabelMap.CommonPassword}:&nbsp;
-              <input type="password" class="inputBox" name="PASSWORD" value="" size="20"/>
+              <input type="password" name="PASSWORD" value="" size="20"/>
           </div>
           <div>
               ${uiLabelMap.CommonNewPassword}:&nbsp;
-              <input type="password" class="inputBox" name="newPassword" value="" size="20"/>
+              <input type="password" name="newPassword" value="" size="20"/>
           </div>
           <div>
               ${uiLabelMap.CommonNewPasswordVerify}:&nbsp;
-              <input type="password" class="inputBox" name="newPasswordVerify" value="" size="20"/>
+              <input type="password" name="newPasswordVerify" value="" size="20"/>
           </div>
           <div>
               <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>

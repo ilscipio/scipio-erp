@@ -59,46 +59,6 @@ under the License.
       </#if>
     </@tr>
     </@thead>
-    <@tfoot>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.CommonSubtotal}</@th>
-      <@td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></@td>
-      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
-    </@tr>
-    <#list headerAdjustmentsToShow as orderHeaderAdjustment>
-      <@tr>
-        <@th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</@th>
-        <@td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></@td>
-        <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
-      </@tr>
-    </#list>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderShippingAndHandling}</@th>
-      <@td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
-      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
-    </@tr>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderSalesTax}</@th>
-      <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
-      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
-    </@tr>
-    <@tr>
-      <@td colspan="3"></@td>
-      <#if maySelectItems?default("N") == "Y">
-        <@td colspan="${numColumns - 6}"></@td>
-        <@td colspan="3"></@td>
-      <#else>
-        <@td colspan="${numColumns - 3}"></@td>
-      </#if>
-    </@tr>
-    <@tr>
-      <@th colspan="7">${uiLabelMap.OrderGrandTotal}</@th>
-      <@td>
-        <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
-      </@td>
-      <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
-    </@tr>
-    </@tfoot>
     <@tbody>
     <#list orderItems as orderItem>
       <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
@@ -165,7 +125,7 @@ under the License.
                   [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}]
               </#if>
             </#if>
-            <#if maySelectItems?default("N") == "Y">
+            <#if (maySelectItems!"N") == "Y">
               <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
               <#if returns?has_content>
                 <#list returns as return>
@@ -182,7 +142,7 @@ under the License.
               </#if>
             </#if>
           </@td>
-          <#if !(maySelectItems?default("N") == "Y")>
+          <#if !((maySelectItems!"N") == "Y")>
             <@td></@td>
             <@td></@td>
             <@td></@td>
@@ -190,7 +150,7 @@ under the License.
           <@td>
             ${orderItem.quantity?string.number}
           </@td>
-          <#if maySelectItems?default("N") == "Y">
+          <#if (maySelectItems!"N") == "Y">
           <@td>
             <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
             <#if pickedQty gt 0 && orderHeader.statusId == "ORDER_APPROVED">${pickedQty?default(0)?string.number}<#else>${pickedQty?default(0)?string.number}</#if>
@@ -227,17 +187,17 @@ under the License.
         </#if>
       </@tr>
       <#-- now cancel reason and comment field -->
-      <#if maySelectItems?default("N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
+      <#if (maySelectItems!"N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
         <@tr>
           <@td colspan="7">${uiLabelMap.OrderReturnReason}
-            <select name="irm_${orderItem.orderItemSeqId}" class="selectBox">
+            <select name="irm_${orderItem.orderItemSeqId}">
               <option value=""></option>
               <#list orderItemChangeReasons as reason>
                 <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
               </#list>
             </select>
             ${uiLabelMap.CommonComments}
-            <input class="inputBox" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
+            <input type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
           </@td>
           <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
@@ -278,7 +238,7 @@ under the License.
             <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/>
           </@td>
           <@td></@td>
-          <#if maySelectItems?default("N") == "Y"><@td colspan="3"></@td></#if>
+          <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
         </@tr>
       </#list>
       <#-- show the order item ship group info -->
@@ -304,5 +264,45 @@ under the License.
     </#if>
     <@tr><@td colspan="${numColumns}"></@td></@tr>
     </@tbody>
+    <@tfoot>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.CommonSubtotal}</@th>
+      <@td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></@td>
+      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    <#list headerAdjustmentsToShow as orderHeaderAdjustment>
+      <@tr>
+        <@th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</@th>
+        <@td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></@td>
+        <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+      </@tr>
+    </#list>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderShippingAndHandling}</@th>
+      <@td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></@td>
+      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderSalesTax}</@th>
+      <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
+      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    <@tr>
+      <@td colspan="3"></@td>
+      <#if (maySelectItems!"N") == "Y">
+        <@td colspan="${numColumns - 6}"></@td>
+        <@td colspan="3"></@td>
+      <#else>
+        <@td colspan="${numColumns - 3}"></@td>
+      </#if>
+    </@tr>
+    <@tr>
+      <@th colspan="7">${uiLabelMap.OrderGrandTotal}</@th>
+      <@td>
+        <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
+      </@td>
+      <#if (maySelectItems!"N") == "Y"><@td colspan="3"></@td></#if>
+    </@tr>
+    </@tfoot>
   </@table>
 </@section>

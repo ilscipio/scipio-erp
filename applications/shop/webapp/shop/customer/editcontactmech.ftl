@@ -27,7 +27,7 @@ under the License.
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
         <form method="post" action="<@ofbizUrl>editcontactmechnosave</@ofbizUrl>" name="createcontactmechform">
-            <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId" class="selectBox">
+            <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
@@ -83,7 +83,7 @@ under the License.
                     <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
-                        <@field type="select" name="contactMechPurposeTypeId" class="selectBox">
+                        <@field type="select" name="contactMechPurposeTypeId">
                           <option></option>
                           <#list purposeTypes as contactMechPurposeType>
                             <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>

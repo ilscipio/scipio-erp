@@ -69,15 +69,13 @@ function submitForm(form, mode, value) {
                       </#if>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                       <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
-                <#assign actionContent></#assign>
-                <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                <@invertedField type="generic" labelContent=labelContent>
                     <@field type="radio" inline=true name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == rawString(chosenShippingMethod!"N@A")) />
                 </@invertedField>
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
-                <#assign actionContent></#assign>
-                <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                <@invertedField type="generic" labelContent=labelContent>
                     <@field type="radio" inline=true name="shipping_method" value="Default" checked=true />
                 </@invertedField>
               </#if>
@@ -86,13 +84,11 @@ function submitForm(form, mode, value) {
               
             <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
               <#assign labelContent>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#assign>
-              <#assign actionContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@invertedField type="generic" labelContent=labelContent>
                   <@field type="radio" inline=true checked=("Y" != (shoppingCart.getMaySplit()!"N")) name="may_split" value="false" />
               </@invertedField>
               <#assign labelContent>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#assign>
-              <#assign actionContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+              <@invertedField type="generic" labelContent=labelContent>
                   <@field type="radio" inline=true checked=("Y" == (shoppingCart.getMaySplit()!"N")) name="may_split" value="true" />
               </@invertedField>
             </@field>

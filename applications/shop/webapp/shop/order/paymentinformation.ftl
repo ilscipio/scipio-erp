@@ -79,8 +79,7 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && (paymentMethodTypeId!) != "GIFT_CARD">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <#assign actionContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+          <@invertedField type="generic" labelContent=labelContent>
               <@field type="checkbox" inline=true name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(useShipAddr??)/>
           </@invertedField>
           <#--<hr />-->

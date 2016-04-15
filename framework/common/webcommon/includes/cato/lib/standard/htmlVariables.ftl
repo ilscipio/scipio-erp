@@ -689,7 +689,7 @@
     "nav_step" : "",                              <#-- step entry -->
     "nav_step_disabled" : "disabled",
     "nav_step_active" : "active",
-    "nav_step_completed" : "completed",
+    "nav_step_completed" : "fa fa-check completed",
     "nav_step_expanded" : "expanded",
     "nav_step_icon_completed" : "",             
   

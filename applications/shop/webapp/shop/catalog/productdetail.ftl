@@ -56,8 +56,8 @@
     <#if variantTree?has_content>
     
         <#-- CATO: Function to select a product variant  -->
-        var variantTree = <@objectAsScript lang="json" object=variantTree />;
-        var currentNode =[];
+        var variantTree = <@objectAsScript lang="js" object=variantTree />;
+        var currentNode = [];
 
         <#-- Product Variant - Option Updater
              The following script takes into account that there may be a diverse selection of configuration options.
@@ -130,8 +130,11 @@
             return;
         } 
         
-        <#-- basic check (only): ensure all required features are selected 
-            NOTE: this does not do more complex checks -->
+        <#-- basic check (only): ensure all required features are selected.
+            This is most important for VV_FEATURETREE (and REQUIRED_FEATURE, but not implemented in this template)
+            We also run for VV_VARIANTTREE as a sanity check.
+            FIXME?: OPTIONAL_FEATURE would require additional checks. -->
+        <#--<#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>-->
         if (featureCount > 0) {
             for(var i=0; i < featureIdList.length; i++) {
                 var id = featureIdList[i];
@@ -142,6 +145,7 @@
                 }
             }
         }
+        <#--</#if>-->
         
         <#-- verify quantity -->
         <#assign qtyErrorLabel = getLabel('cart.quantity_not_positive_number', 'OrderErrorUiLabels')>
@@ -335,9 +339,29 @@
                     
                     <#-- Cato: TODO: There is another case not currently handled properly: ALTERNATIVE_PACKAGE - see CDR-1111-BX2 -->
                     
+                    <#-- Cato: This field should generally not be present! It is only for product that support/require an amount
+                        in ADDITION to the quantity field. You also cannot know this for sure beforehand because for virtuals it is set on the
+                        specific variant, so it has to be updated through JS lookups (the initial is only for the virtual product, but each variant can be different).  -->
+                    <#macro amountField>
+                        <#if (product.requireAmount!"N") != "Y">
+                            <#assign hiddenStyle = styles.hidden!/>
+                            <#-- Cato: FIXME: jquery hack to hide the field -->
+                            <@script>
+                                jQuery(document).ready(function() {
+                                    jQuery("#add_amount_wrapper").hide();
+                                });
+                            </@script>
+                        </#if>
+                        <@field type="input" size="5" name="add_amount" id="add_amount" value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
+                    </#macro>
+                    
                     <#-- Variant Selection -->
                     <#if (product.isVirtual!?upper_case) == "Y">
                         <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
+                            <@script>
+                                featureCount = ${featureLists?size};
+                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
+                            </@script>
                             <input type="hidden" name="add_product_id" id="add_product_id" value="${product.productId}" />
                             <#list featureLists as featureList>
                                 <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=featureList.description!"">
@@ -348,10 +372,7 @@
                                 </@field>
                             </#list>
                             <@field type="text" name="quantity" id="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
-                            <@script>
-                                featureCount = ${featureLists?size};
-                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
-                            </@script>
+                            <@amountField />
                         </#if>
                         
                         <#-- CATO: It is possible to have a limited amount of variant combination. 
@@ -403,23 +424,8 @@
                     <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
                         <@alert type="info">${uiLabelMap.ProductProductNoLongerAvailable}.</@alert>
                         <#-- check to see if the product requires inventory check and has inventory -->                        
-                    <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
+                    <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE"> <#-- Cato: NOTE: All stuff for VV_FEATURETREE should already be included above -->
                         <#if inStock>
-                            <#if (product.requireAmount!"N") != "Y">
-                                <#assign hiddenStyle = styles.hidden!/>
-                                <#-- Cato: FIXME: jquery hack to hide the field -->
-                                <@script>
-                                    jQuery(document).ready(function() {
-                                        jQuery("#add_amount_wrapper").hide();
-                                    });
-                                </@script>
-                            </#if>
-
-                            <#-- Cato: This field should generally not be present! It is only for product that support/require an amount
-                                in ADDITION to the quantity field. You also cannot know this for sure beforehand because it is set on the
-                                specific variant, so JS has to update the hidden status...  -->
-                            <@field type="input" size="5" name="add_amount" id="add_amount" value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
-
                             <#if (product.productTypeId!) == "ASSET_USAGE">
                                 <#-- Cato: TODO: format this -->
                                 <div>
@@ -436,14 +442,16 @@
                             <#else> 
                                 <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
                             </#if>
+                            <@amountField />
                         <#else>
                             <#if productStore??>
-                                 <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                                     <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
-                                 <#else>
-                                     <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                     <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
-                                 </#if>
+                                <#if productStore.requireInventory?? && productStore.requireInventory == "N">
+                                    <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
+                                    <@amountField />
+                                <#else>
+                                    <input name="quantity" id="quantity" value="1" type="hidden"/>
+                                    <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
+                                </#if>
                             </#if>
                         </#if>
                     </#if>
@@ -505,18 +513,12 @@
     </@row>
 </@section>        
 
-        
-
-    <#-- CATO: show tell a friend details only in shop application     
-    <div id="product-tell-a-friend">
-        <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
-    </div>
-     -->   
-
-
-
-
-
+<#-- CATO: show tell a friend details only in shop application     
+<div id="product-tell-a-friend">
+    <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
+</div>
+-->   
+     
 <@section>
     <#assign prodLongDescr=productContentWrapper.get("LONG_DESCRIPTION","html")!?string?trim/>
     <#if !prodLongDescr?has_content>
@@ -594,6 +596,12 @@
                     </p>
                 </#list>
             </#if>
+
+            <#-- Cato: Debugging info
+            <@heading relLevel=+1>Debugging Info</@heading>
+            <p style="font-size:0.7em;">Product ID: ${product.productId}</p>
+            <p style="font-size:0.7em;">Product info map: ${product?string}</p>
+            -->
         </div>
     </div>
 </@section>
@@ -661,7 +669,6 @@
         <#-- obsolescence -->
         <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${uiLabelMap.ProductObsolescense}" formNamePrefix="obce" targetRequestName="" />
 </@section>
-
 
 <#-- CATO: uncomment to use unavailableVariants
 <#macro showUnavailableVarients>

@@ -1597,8 +1597,9 @@ TODO: doesn't handle dates (ambiguous?)
   <#elseif object?is_hash_ex && isObjectType("map", object)>
     <#if (maxDepth < 0) || (currDepth <= maxDepth)>
       <#if wrap>{</#if><#lt>
-      <#list mapKeys(object) as key> 
-          "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+      <#list mapKeys(object) as key>
+          <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! -->
+          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
       </#list>
       <#if wrap>}</#if><#rt>
     <#else>{}</#if>

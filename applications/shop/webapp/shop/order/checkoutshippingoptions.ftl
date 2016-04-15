@@ -83,18 +83,14 @@ function submitForm(form, mode, value) {
               <hr />
               
             <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
-              <#assign labelContent>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#assign>
-              <@invertedField type="generic" labelContent=labelContent>
-                  <@field type="radio" inline=true checked=("Y" != (shoppingCart.getMaySplit()!"N")) name="may_split" value="false" />
-              </@invertedField>
-              <#assign labelContent>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#assign>
-              <@invertedField type="generic" labelContent=labelContent>
-                  <@field type="radio" inline=true checked=("Y" == (shoppingCart.getMaySplit()!"N")) name="may_split" value="true" />
-              </@invertedField>
+              <@fields inlineItems=false>
+              <@field type="radio" checked=("Y" != (shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}."/>
+              <@field type="radio" checked=("Y" == (shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}."/>
+              </@fields>
             </@field>
               <#--<hr />-->
 
-              <@field type="textarea" title=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" wrap="hard" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</@field>
+              <@field type="textarea" title=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" wrap="hard" name="shipping_instructions" label=uiLabelMap.OrderSpecialInstructions>${shoppingCart.getShippingInstructions()!}</@field>
        
               <#--<hr />-->
 
@@ -126,22 +122,22 @@ function submitForm(form, mode, value) {
                       </#list>
                     </b>
                   </div>
-                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.PartyProfile}</a>.</div>
+                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                  <@field type="input" inline=true size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
+                  <@field type="input" container=false size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
               </@field>
         </fieldset>
     </form>
 </@section>
 
 <@row>
-  <@cell column=6>
+  <@cell columns=6>
     <@menu type="button">
       <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
     </@menu>
   </@cell>
-  <@cell column=6 class="+${styles.text_right!}">
+  <@cell columns=6 class="+${styles.text_right!}">
     <@menu type="button">
       <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonNext />
     </@menu>

@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- CATO: ToDo: Migration pending -->
 <@section>
-    <@nav type="steps">
-        <@step completed=true icon="fa fa-cart-arrow-down">Cart</@step>
-        <@step active=true icon="fa fa-truck">Shipping</@step>
-        <@step disabled=true icon="fa fa-credit-card">Billing</@step>
-        <@step disabled=true icon="fa fa-info">Confirm Order</@step>
+    <@nav type="steps" activeElem=(activeStep!"cart")>
+        <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
+        <@step name="shippingAddress" icon="fa fa-truck">Shipping Address</@step>
+        <@step name="shippingOptions" icon="fa fa-truck">Shipping Options</@step>
+        <@step name="billing" icon="fa fa-credit-card">Billing</@step>
+        <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
     </@nav>
 </@section>

@@ -70,31 +70,45 @@ NOTE: Should avoid using this for regular, common inlined message results such a
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    id                      = ID on innermost container
+    style                   = Legacy HTML {{{style}}} attribute on innermost container
+    closable                = ((boolean), default: -from global styles-, fallback default: true) Whether the alert should be hidable/closable
 -->
 <#assign alert_defaultArgs = {
-  "type":"info", "class":"", "id":"", "passArgs":{}
+  "type":"info", "class":"", "id":"", "style":"", "closable":"", 
+  "containerClass":"", "containerId":"", "containerStyle":"", "passArgs":{}
 }>
 <#macro alert args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#local typeClass = "alert_type_${type!}"/>
-  <#if type="error">
+  <#if type == "error">
     <#local type = "alert">
   </#if>
-  <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=origArgs passArgs=passArgs><#nested></@alert_markup>
+  <#if !closable?is_boolean>
+    <#local closable = styles["alert_" + type + "_closable"]!styles["alert_default_closable"]!true>
+  </#if>
+  <#if id?has_content && !containerId?has_content>
+    <#local containerId = id + "_container">
+  </#if>
+  <@alert_markup type=type class=class typeClass=typeClass id=id style=style closable=closable 
+    containerClass=containerClass containerId=containerId containerStyle=containerStyle
+    origArgs=origArgs passArgs=passArgs><#nested></@alert_markup>
 </#macro>
 
 <#-- @alert main markup - theme override -->
-<#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} passArgs={} catchArgs...>
+<#macro alert_markup type="info" class="" typeClass="" id="" style="" closable=true containerId="" 
+    containerClass="" containerStyle="" origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
-  <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
+  <#local containerClass = addClassArg(containerClass, styles.grid_row!)>
+  <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if><#if containerStyle?has_content> style="${containerStyle}"</#if>>
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
       <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
         <div class="${styles.grid_row!}">
-          <div<@compiledClassAttribStr class=class />>
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
+          <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if>>
+            <#if closable><a href="#" class="${styles.closable!}" data-dismiss="alert">&times;</a></#if>
             <#nested>
           </div>
         </div>
@@ -191,7 +205,7 @@ translates to:
                               * {{{error}}}: general error message - typically an unexpected event or fatal error that should not happen in intended use.
                               * {{{error-perm}}}: permission error
                               * {{{error-security}}}: security error
-    id                      = ID
+    id                      = ID on innermost container
     class                   = ((css-class)) CSS classes or additional classes for message container (innermost containing element)
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")

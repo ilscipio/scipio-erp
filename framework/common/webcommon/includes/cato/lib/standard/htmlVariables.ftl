@@ -61,7 +61,7 @@
     "dropdown" : "dropdown",
     "fullwidth" : "fullWidth",
     "large_container_factor" : 6,       <#-- This is a special value part of a heuristic to help detect when a parent container is logically "large" or "small". It is a float value. By default, currently we assume 6. -->
-    
+    "closable" : "close",
     
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
@@ -806,6 +806,9 @@
     "alert_type_secondary" : "secondary",  
     "alert_type_alert" : "alert",        
     "alert_type_error" : "alert",
+    
+    <#-- Alert options by type -->
+    "alert_default_closable" : true,
 
   <#-- Pricing Tables -->
     "pricing_wrap" : "pricing-table",

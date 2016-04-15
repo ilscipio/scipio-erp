@@ -47,8 +47,14 @@
         </@section>
       </#if>
     </#macro>
-<#if variantTree?has_content>
-    <@script>
+
+<@script>
+
+    var featureCount = 0; <#-- NOTE: This is overridden further below -->
+    var featureIdList = [];
+
+    <#if variantTree?has_content>
+    
         <#-- CATO: Function to select a product variant  -->
         var variantTree = <@objectAsScript lang="json" object=variantTree />;
         var currentNode =[];
@@ -59,11 +65,14 @@
              have been updated according to the variantTree. -->
         function updateVariants(type, variantId, index){
             if(variantId){
-                var selectNum = $('[id^=FT_]').length; // get number of select boxes
+                <#-- This cannot be relied on; now using a variable
+                var selectNum = $('[id^=FT_]').length; // get number of select boxes -->
+                var selectNum = featureCount;
+                
                 currentNode.splice(index); // reset the node information & remove anything beyond the current selection
                 for(i = currentNode.length+1; i <= selectNum; i++){
-                        $('#FT_'+i).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
-                        }
+                    $('#FT_'+i).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
+                }
                 currentNode.push(variantId); // update the node path
          
                 //get data from variantTree
@@ -73,13 +82,14 @@
                     dataObject = dataObject[node]; // traverse down the tree, based on our path
                 });
                 
-                if(index+1 == selectNum){
-                    if (typeof dataObject == 'string' || dataObject instanceof String) {
+                if((index+1) >= selectNum){
+                    if (typeof dataObject === 'string' || dataObject instanceof String) {
                         $('#add_product_id').val(dataObject);
                     } else {
                         $('#add_product_id').val(dataObject[0]);
                     }
                 }else{
+                    $('#add_product_id').val('NULL'); <#-- make sure to reset the add_product_id! otherwise issues when starting over -->
                     var nextIndex = index+1;
                     var options = [];
                     $('#FT_'+nextIndex).empty();
@@ -88,12 +98,110 @@
                         $('#FT_'+nextIndex).append('<option value="'+object+'">'+object+'</option>');
                     });                    
                     $('#FT_'+nextIndex).prop( "disabled", false ); // activate next option
+  
+                    var productId = null; <#-- TODO -->
+                    <#-- set the variant price -->
+                    setVariantPrice(productId);
+
+                    <#-- check for amount box -->
+                    toggleAmt(checkAmtReq(productId));
                 }
             }          
         }
         
-    </@script>
-</#if>
+    </#if>
+
+    function setVariantPrice(productId) {
+        <#-- Cato: TODO -->
+        return;
+    }
+  
+    function checkAmtReq(productId) {
+        <#-- Cato: TODO -->
+        return '';
+    }
+    
+    <#-- Cato: Handles final addItem submit -->
+    function addItem() {
+        var productId = jQuery('#add_product_id').val();
+        <#-- Ensure we have a product -->
+        if (productId.length == 0 || productId === 'NULL') {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
+            return;
+        } 
+        
+        <#-- basic check (only): ensure all required features are selected 
+            NOTE: this does not do more complex checks -->
+        if (featureCount > 0) {
+            for(var i=0; i < featureIdList.length; i++) {
+                var id = featureIdList[i];
+                var val = jQuery('#FT_' + id).val();
+                if (val.length == 0) {
+                    showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
+                    return;
+                }
+            }
+        }
+        
+        <#-- verify quantity -->
+        <#assign qtyErrorLabel = getLabel('cart.quantity_not_positive_number', 'OrderErrorUiLabels')>
+        var quantity = jQuery('#quantity').val().trim();
+        if (quantity.length < 1) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+            return;
+        }
+        quantity = parseFloat(quantity);
+        if (isNaN(quantity)) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+            return;
+        }
+        if (quantity <= 0) {
+            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+            return;
+        }
+        
+        <#-- verify amount (if applicable) -->
+        if (checkAmtReq(productId) == 'Y') {
+            var amount = $('#add_amount').val().trim();
+            if (add_amount.length < 1) {
+                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+                return;
+            }
+            add_amount = parseFloat(add_amount);
+            if (isNaN(add_amount)) {
+                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+                return;
+            }
+            if (add_amount <= 0) {
+                showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
+                return;
+            }
+        }
+
+        <#-- Cato: TODO?: This appears to be a sanity check to prevent trying to add a virtual product, which would be good,
+             except it's not friendly to have this check in additem submit... isVirtual method is gone...
+             server _should_ do this check anyway...
+        if (isVirtual(addProductId)) {
+            document.location = '<@ofbizUrl>product?category_id=${categoryId!}&amp;product_id=</@ofbizUrl>' + addProductId;
+            return;
+        }
+        -->
+        document.addform.submit();
+    }        
+    
+    function toggleAmt(toggle) {
+        if (toggle == 'Y') {
+            jQuery("#add_amount").show();
+        }
+
+        if (toggle == 'N') {
+            jQuery("#add_amount").hide();
+        }
+    }
+
+</@script>
+
+
 <@section>
     <@row>
         <@cell columns=8>
@@ -190,7 +298,7 @@
                 </#if>
                  
                 <#if currentPrice?has_content>
-                    <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong><span>
+                    <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
                 </#if>
                 </p>
                 
@@ -239,7 +347,11 @@
                                     </#list>
                                 </@field>
                             </#list>
-                            <@field type="text" name="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
+                            <@field type="text" name="quantity" id="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
+                            <@script>
+                                featureCount = ${featureLists?size};
+                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
+                            </@script>
                         </#if>
                         
                         <#-- CATO: It is possible to have a limited amount of variant combination. 
@@ -258,9 +370,13 @@
                                         <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
                                     </#if>
                                 </#list>
-                                <input type="hidden" name="add_product_id" id="add_product_id" value=""/>
+                                <input type="hidden" name="add_product_id" id="add_product_id" value="NULL"/>
+                                <@script>
+                                    featureCount = ${featureSet?size};
+                                    featureIdList = <@objectAsScript lang="js" object=featureSet />;
+                                </@script>
                             <#else>
-                                <input type="hidden" name="add_product_id" id="add_product_id" value=""/>
+                                <input type="hidden" name="add_product_id" id="add_product_id" value="NULL"/>
                                 <#assign inStock = false />
                             </#if>
                         </#if>
@@ -274,7 +390,7 @@
                           </p>
                         </#if>
                     
-                        <input type="hidden" name="add_product_id" value="${product.productId}" />
+                        <input type="hidden" name="add_product_id" id="add_product_id" value="${product.productId}" />
                         <#if (availableInventory??) && (availableInventory <= 0)>
                             <#assign inStock = false />
                         </#if>
@@ -288,38 +404,50 @@
                         <@alert type="info">${uiLabelMap.ProductProductNoLongerAvailable}.</@alert>
                         <#-- check to see if the product requires inventory check and has inventory -->                        
                     <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
-                        <#if (product.productTypeId!) != "FINDIG_GOOD" && (product.productTypeId!) != "DIGITAL_GOOD">
-                             <#if inStock>
-                                 <#if product.requireAmount?default("N") != "Y">
-                                     <#assign hiddenStyle = "hidden"/>
-                                 </#if>
-                                <@field type="text" size="5" name="add_amount" value="1" label=uiLabelMap.CommonAmount />
-                                 <#if (product.productTypeId!) == "ASSET_USAGE">
-                                     <div class="inline">
-                                         <label>Start Date(yyyy-mm-dd)</label><input type="text" size="10" name="reservStart"/><a href="javascript:call_cal_notime(document.addform.reservStart, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
-                                         <label>End Date(yyyy-mm-dd)</label><input type="text" size="10" name="reservEnd"/><a href="javascript:call_cal_notime(document.addform.reservEnd, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
-                                     </div>
-                                     <div>
-                                         Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
-                                         Number of rooms<input type="text" size="5" name="quantity" value="1"/>
-                                     </div>
-                                 <#else> 
-                                     <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                 </#if>
-                             <#else>
-                                 <#if productStore??>
-                                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                                         <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                     <#else>
-                                         <input name="quantity" id="quantity" value="1" type="hidden"/>
-                                         <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
-                                     </#if>
-                                 </#if>
-                             </#if>
+                        <#if inStock>
+                            <#if (product.requireAmount!"N") != "Y">
+                                <#assign hiddenStyle = styles.hidden!/>
+                                <#-- Cato: FIXME: jquery hack to hide the field -->
+                                <@script>
+                                    jQuery(document).ready(function() {
+                                        jQuery("#add_amount_wrapper").hide();
+                                    });
+                                </@script>
+                            </#if>
+
+                            <#-- Cato: This field should generally not be present! It is only for product that support/require an amount
+                                in ADDITION to the quantity field. You also cannot know this for sure beforehand because it is set on the
+                                specific variant, so JS has to update the hidden status...  -->
+                            <@field type="input" size="5" name="add_amount" id="add_amount" value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
+
+                            <#if (product.productTypeId!) == "ASSET_USAGE">
+                                <#-- Cato: TODO: format this -->
+                                <div>
+                                    <@field type="input" size="10" name="reservStart" label="Start Date(yyyy-mm-dd)"/>
+                                    <a href="javascript:call_cal_notime(document.addform.reservStart, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
+                                    <@field type="input" size="10" name="reservEnd" label="End Date(yyyy-mm-dd)"/>
+                                    <a href="javascript:call_cal_notime(document.addform.reservEnd, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
+                                </div>
+                                <div>
+                                   <@field type="input" size="4" name="reservLength" value="" label="Number of days" />
+                                   <@field type="input" size="4" name="reservPersons" value="2" label="Number of persons"/>
+                                   <@field type="input" size="5" name="quantity" id="quantity" value="1" label="Number of rooms"/>
+                                </div>
+                            <#else> 
+                                <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
+                            </#if>
                         <#else>
+                            <#if productStore??>
+                                 <#if productStore.requireInventory?? && productStore.requireInventory == "N">
+                                     <@field name="quantity" id="quantity" label=uiLabelMap.CommonQuantity value="1" size="4" maxLength="4" type="input" /> <#-- there's no need to handle this: disabled=((product.isVirtual!?upper_case) == "Y") -->
+                                 <#else>
+                                     <input name="quantity" id="quantity" value="1" type="hidden"/>
+                                     <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
+                                 </#if>
+                            </#if>
                         </#if>
                     </#if>
-                    <@field type="submit" id="addToCart" name="addToCart" value=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
+                    <@field type="submit" submitType="link" id="addToCart" name="addToCart" href="javascript:addItem();" text=uiLabelMap.OrderAddToCart class="+${styles.grid_columns_12}"/>                  
 
             </form>
             <#-- CATO: Review 

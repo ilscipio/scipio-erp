@@ -108,7 +108,7 @@ under the License.
                                 <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                                     <@tr>
                                         <@td colspan="4">
-                                            <@alert type="info" closable="">
+                                            <@alert type="info" closable=false>
                                                 <p>${uiLabelMap.AccountingOfflinePayment}</p>
                                             <#--</@alert>
                                         </@td>
@@ -128,6 +128,7 @@ under the License.
                                               ${paymentAddress.city}<#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if> ${paymentAddress.postalCode!}<br/>
                                               <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
                                               <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}<br/></#if>
+                                              <br/>
                                               ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
                                         <#--
                                           </@td>

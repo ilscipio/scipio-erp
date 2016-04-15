@@ -107,24 +107,36 @@ under the License.
                                 <#-- offline payment -->
                                 <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                                     <@tr>
-                                        <@td colspan="4"><@alert type="info">${uiLabelMap.AccountingOfflinePayment}</@alert></@td>
-                                    </@tr>
+                                        <@td colspan="4">
+                                            <@alert type="info" closable="">
+                                                <p>${uiLabelMap.AccountingOfflinePayment}</p>
+                                            <#--</@alert>
+                                        </@td>
+                                    </@tr>-->
                                     <#if orderHeader?has_content && paymentAddress?has_content>
+                                        <#-- Cato: Integrate this into the alert
                                         <@tr>
-                                          <@td class="${styles.grid_large!}2">$${uiLabelMap.OrderSendPaymentTo}</@td>
+                                          <@td class="${styles.grid_large!}2">${uiLabelMap.OrderSendPaymentTo}</@td>
                                           <@td colspan="3">
-                                              <#if paymentAddress.toName?has_content>${paymentAddress.toName}><br/></#if>
-                                              <#if paymentAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${paymentAddress.attnName}><br/></#if>
-                                              ${paymentAddress.address1}><br/>
-                                              <#if paymentAddress.address2?has_content>${paymentAddress.address2}><br/></#if>
+                                        -->
+                                            <strong>${uiLabelMap.OrderSendPaymentTo}:</strong></br>
+                                              <#if paymentAddress.toName?has_content>${paymentAddress.toName}<br/></#if>
+                                              <#if paymentAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${paymentAddress.attnName}<br/></#if>
+                                              ${paymentAddress.address1}<br/>
+                                              <#if paymentAddress.address2?has_content>${paymentAddress.address2}<br/></#if>
                                               <#assign paymentStateGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.stateProvinceGeoId!}, false))! />
-                                              ${paymentAddress.city}<#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if> ${paymentAddress.postalCode!}><br/>
+                                              ${paymentAddress.city}<#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if> ${paymentAddress.postalCode!}<br/>
                                               <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
-                                              <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}><br/></#if>
+                                              <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}<br/></#if>
                                               ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
+                                        <#--
                                           </@td>
                                         </@tr>
+                                        -->
                                     </#if>
+                                            </@alert>
+                                        </@td>
+                                    </@tr>
                                 <#else>
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentVia}</@td>

@@ -246,11 +246,11 @@
     
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
-            jQuery("#add_amount_wrapper").show();
+            jQuery("#add_amount_container").show();
         }
 
         if (toggle == 'N') {
-            jQuery("#add_amount_wrapper").hide();
+            jQuery("#add_amount_container").hide();
         }
     }
 

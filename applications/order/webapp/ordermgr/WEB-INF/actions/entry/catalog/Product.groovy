@@ -42,8 +42,17 @@ metaKeywords = null;
 
 // get the product entity
 if (productId) {
+    // Cato: Save the orig (requested) product ID as well
+    origProductId = productId;
+    origProduct = null;
+    context.origProductId = productId;
+    
     product = from("Product").where("productId", productId).cache(true).queryOne();
     if (product) {
+        // Cato: Save the orig product
+        origProduct = product;
+        context.origProduct = origProduct;
+        
         // first make sure this isn't a virtual-variant that has an associated virtual product, if it does show that instead of the variant
         if("Y".equals(product.isVirtual) && "Y".equals(product.isVariant)){
             virtualVariantProductAssocs = from("ProductAssoc").where("productId", productId, "productAssocTypeId", "ALTERNATIVE_PACKAGE").orderBy("-fromDate").filterByDate().cache(true).queryList();
@@ -139,6 +148,9 @@ if (productId) {
             detailScreen = productTemplate;
         }
     }
+    
+    Debug.logInfo("Cato: Orig/requested product: '" + origProductId + "' " + (origProduct ? "(found)" : "(not found)") + 
+        "; effective product: '" + context.productId + "' "+ (product ? "(found)" : "(not found)"), module);
 }
 
 //  check the catalog's template path and update

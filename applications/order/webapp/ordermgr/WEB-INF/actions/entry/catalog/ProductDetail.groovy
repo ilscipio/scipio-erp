@@ -338,12 +338,13 @@ if (product) {
                     context.featureOrderFirst = featureOrder[0];
                 }
 				
-				//CATO: The original OFBiz code was removed here. 
+				// CATO: The original OFBiz code was removed here. 
                 if (variantTree && imageMap) {
                     // make a list of variant sku with requireAmount
                     variantsRes = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_VARIANT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
                     variants = variantsRes.assocProducts;
                     variantPriceList = [];
+                    variantProductInfoMap = [:]; // CATO: Maps productId to a more detailed product info map, including requireAmount flag and price
                     if (variants) {
                         if (productStore) {
                             localeString = productStore.defaultLocaleString;
@@ -386,6 +387,15 @@ if (product) {
                                 variantPriceMap = runService('calculatePurchasePrice', priceContext);
                             }
                             
+                            // CATO: Save requireAmount flag and base price for variant
+                            variantProductInfo = [:];
+                            variantProductInfo.putAll(variant);
+                            variantProductInfo.requireAmount = (variant.requireAmount ?: "N");
+                            if (variantPriceMap && variantPriceMap.basePrice) {
+                                variantProductInfo.price = variantPriceMap.basePrice;
+                            }
+                            variantProductInfoMap[variant.productId] = variantProductInfo;
+                            
                             // make a list of virtual variants sku with requireAmount
                             virtualVariantsRes = runService('getAssociatedProducts', [productIdTo : variant.productId, type : "ALTERNATIVE_PACKAGE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
                             virtualVariants = virtualVariantsRes.assocProducts;
@@ -422,8 +432,20 @@ if (product) {
                                             }
                                         }
                                         variantPriceList.add(virtualPriceMap);
+                                        // CATO: Save product info for virtual
+                                        variantProductInfo = [:];
+                                        variantProductInfo.putAll(virtual);
+                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // CATO: This doesn't apply for virtuals
+                                        variantProductInfo.price = variantPriceMap.basePrice;
+                                        variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     } else {
                                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
+                                        // CATO: Save product info for virtual
+                                        variantProductInfo = [:];
+                                        variantProductInfo.putAll(virtual);
+                                        //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // CATO: This doesn't apply for virtuals
+                                        variantProductInfo.price = variantPriceMap.price;
+                                        variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     }
                                 }
                                 
@@ -432,6 +454,7 @@ if (product) {
                     }
                     context.variantPriceList = variantPriceList;
 					context.virtualVariants = virtualVariants;
+                    context.variantProductInfoMap = variantProductInfoMap; // CATO: Save map
                 }
             }
         }

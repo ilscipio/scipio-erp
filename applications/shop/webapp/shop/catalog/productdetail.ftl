@@ -58,6 +58,7 @@
         <#-- CATO: Function to select a product variant  -->
         var variantTree = <@objectAsScript lang="js" object=variantTree />;
         var currentNode = [];
+        var variantProductInfoMap = <@objectAsScript lang="js" object=variantProductInfoMap />;
 
         <#-- Product Variant - Option Updater
              The following script takes into account that there may be a diverse selection of configuration options.
@@ -71,7 +72,8 @@
                 
                 currentNode.splice(index); // reset the node information & remove anything beyond the current selection
                 for(i = currentNode.length+1; i <= selectNum; i++){
-                    $('#FT_'+i).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
+                    var featureId = featureIdList[i];
+                    $('#FT_'+featureId).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
                 }
                 currentNode.push(variantId); // update the node path
          
@@ -83,28 +85,43 @@
                 });
                 
                 if((index+1) >= selectNum){
+                    var productId;
                     if (typeof dataObject === 'string' || dataObject instanceof String) {
-                        $('#add_product_id').val(dataObject);
+                        productId = dataObject;
                     } else {
-                        $('#add_product_id').val(dataObject[0]);
+                        productId = dataObject[0];
+                    }
+                    if (productId) {
+                        <#-- set the variant price -->
+                        setVariantPrice(productId);
+    
+                        <#-- check for amount box -->
+                        toggleAmt(checkAmtReq(productId));
+                        
+                        $('#add_product_id').val(productId);
                     }
                 }else{
                     $('#add_product_id').val('NULL'); <#-- make sure to reset the add_product_id! otherwise issues when starting over -->
                     var nextIndex = index+1;
                     var options = [];
-                    $('#FT_'+nextIndex).empty();
-                    $('#FT_'+nextIndex).append('<option value="">${uiLabelMap.EcommerceSelectOption}</option>');
+                    var nextFeatureId = featureIdList[nextIndex]; 
+                    $('#FT_'+nextFeatureId).empty();
+                    $('#FT_'+nextFeatureId).append('<option value="">${uiLabelMap.EcommerceSelectOption}</option>');
                     $.each(dataObject,function(object) { 
-                        $('#FT_'+nextIndex).append('<option value="'+object+'">'+object+'</option>');
+                        $('#FT_'+nextFeatureId).append('<option value="'+object+'">'+object+'</option>');
                     });                    
-                    $('#FT_'+nextIndex).prop( "disabled", false ); // activate next option
+                    $('#FT_'+nextFeatureId).prop( "disabled", false ); // activate next option
   
-                    var productId = null; <#-- TODO -->
-                    <#-- set the variant price -->
-                    setVariantPrice(productId);
+                    <#-- set the variant price
+                        Cato: TODO?: Currently can't do this here, at least not by productId...
+                            so if we changed any box, just reset the price to the original virtual for now...
+                    setVariantPrice(productId); -->
+                    setVariantPriceSpec(baseCurrentPrice);
 
-                    <#-- check for amount box -->
-                    toggleAmt(checkAmtReq(productId));
+                    <#-- check for amount box
+                    <#-- Cato: For now we'll only set this at the last step, because don't have a tangible product ID until then
+                    toggleAmt(checkAmtReq(productId)); -->
+                    toggleAmt('N');
                 }
             }          
         }
@@ -112,20 +129,35 @@
     </#if>
 
     function setVariantPrice(productId) {
-        <#-- Cato: TODO -->
-        return;
+        var productInfo = variantProductInfoMap[productId];
+        if (productInfo) {
+            var price = productInfo.price;
+            if (price != null) {
+                setVariantPriceSpec(price);
+            }
+        }
     }
+    
+    function setVariantPriceSpec(price) {
+        <#-- Cato: TODO -->
+    }    
   
     function checkAmtReq(productId) {
-        <#-- Cato: TODO -->
-        return '';
+        var productInfo = variantProductInfoMap[productId];
+        if (productInfo) {
+            var requireAmount = productInfo.requireAmount;
+            if (requireAmount) {
+                return requireAmount;
+            }
+        }
+        return 'N'; <#-- Cato: hide it by default -->
     }
     
     <#-- Cato: Handles final addItem submit -->
     function addItem() {
         var productId = jQuery('#add_product_id').val();
         <#-- Ensure we have a product -->
-        if (productId.length == 0 || productId === 'NULL') {
+        if (!productId || productId === 'NULL') {
             showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
             return;
         } 
@@ -139,7 +171,7 @@
             for(var i=0; i < featureIdList.length; i++) {
                 var id = featureIdList[i];
                 var val = jQuery('#FT_' + id).val();
-                if (val.length == 0) {
+                if (!val) {
                     showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllRequiredOptions}");
                     return;
                 }
@@ -150,7 +182,7 @@
         <#-- verify quantity -->
         <#assign qtyErrorLabel = getLabel('cart.quantity_not_positive_number', 'OrderErrorUiLabels')>
         var quantity = jQuery('#quantity').val().trim();
-        if (quantity.length < 1) {
+        if (!quantity) {
             showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
             return;
         }
@@ -167,16 +199,16 @@
         <#-- verify amount (if applicable) -->
         if (checkAmtReq(productId) == 'Y') {
             var amount = $('#add_amount').val().trim();
-            if (add_amount.length < 1) {
+            if (!amount) {
                 showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
                 return;
             }
-            add_amount = parseFloat(add_amount);
-            if (isNaN(add_amount)) {
+            amount = parseFloat(amount);
+            if (isNaN(amount)) {
                 showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
                 return;
             }
-            if (add_amount <= 0) {
+            if (amount <= 0) {
                 showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${qtyErrorLabel}");
                 return;
             }
@@ -195,11 +227,11 @@
     
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
-            jQuery("#add_amount").show();
+            jQuery("#add_amount_wrapper").show();
         }
 
         if (toggle == 'N') {
-            jQuery("#add_amount").hide();
+            jQuery("#add_amount_wrapper").hide();
         }
     }
 
@@ -304,6 +336,9 @@
                 <#if currentPrice?has_content>
                     <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
                 </#if>
+                    <@script>
+                        var baseCurrentPrice = "${currentPrice}";
+                    </@script>
                 </p>
                 
                 <#-- CATO: Uncomment to display how much a user is saving by buying this product
@@ -381,14 +416,14 @@
                             <#if variantTree?? && (variantTree.size() > 0)>
                                 <#list featureSet as currentType>
                                     <#if currentType_index == 0>
-                                        <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
+                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});">
                                             <option value="">${uiLabelMap.EcommerceSelectOption}</option>
                                             <#list variantTree.keySet() as variant>
                                                 <option value="${variant}">${variant}</option>
                                             </#list>
                                         </@field>
                                     <#else>
-                                        <@field type="select" id="FT_${currentType_index}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
+                                        <@field type="select" id="FT_${currentType}" name="FT${currentType}" label=featureTypes.get(currentType)!"" onChange="javascript:updateVariants(this.name,this.value,${currentType_index});" disabled=true />
                                     </#if>
                                 </#list>
                                 <input type="hidden" name="add_product_id" id="add_product_id" value="NULL"/>

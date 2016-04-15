@@ -409,10 +409,6 @@
                     <#-- Variant Selection -->
                     <#if (product.isVirtual!?upper_case) == "Y">
                         <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
-                            <@script>
-                                featureCount = ${featureLists?size};
-                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
-                            </@script>
                             <input type="hidden" name="add_product_id" id="add_product_id" value="${product.productId}" />
                             <#list featureLists as featureList>
                                 <@field type="select" id="FT_${featureList.productFeatureTypeId}" name="FT${featureList.productFeatureTypeId}" label=featureList.description!"">
@@ -424,6 +420,17 @@
                             </#list>
                             <@field type="text" name="quantity" id="quantity" value="1" size="4" maxLength="4" label=uiLabelMap.CommonQuantity/>
                             <@amountField />
+                            <@script>
+                                featureCount = ${featureLists?size};
+                                featureIdList = [<#list featureLists as featureList>"${featureList.productFeatureTypeId?js_string}"<#if featureList_has_next>,</#if></#list>];
+                                jQuery(document).ready(function() {
+                                  <#-- Cato: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                      We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
+                                  <#list featureLists as featureList>
+                                    jQuery('#FT_${featureList.productFeatureTypeId}').val('');
+                                  </#list>
+                                });
+                            </@script>
                         </#if>
                         
                         <#-- CATO: It is possible to have a limited amount of variant combination. 
@@ -446,6 +453,14 @@
                                 <@script>
                                     featureCount = ${featureSet?size};
                                     featureIdList = <@objectAsScript lang="js" object=featureSet />;
+                                    
+                                    jQuery(document).ready(function() {
+                                      <#-- Cato: FIXME?: This forces the select to return to their empty values upon page refresh.
+                                          We don't really want this, but otherwise values after browser refresh are currently too inconsistent -->
+                                      <#list featureSet as currentType>
+                                        jQuery('#FT_${currentType}').val('');
+                                      </#list>
+                                    });
                                 </@script>
                             <#else>
                                 <input type="hidden" name="add_product_id" id="add_product_id" value="NULL"/>

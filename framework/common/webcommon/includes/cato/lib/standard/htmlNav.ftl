@@ -32,27 +32,36 @@ Since this is very foundation specific, this function may be dropped in future i
     <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
-    type                    = (inline|magellan|breadcrumbs|steps, default: inline)
+    type                    = (inline|magellan|breadcrumbs|steps|, default: inline)
     class                   = ((css-class)) CSS classes
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)   
+    id                      = ID
+    style                   = Legacy HTML {{{style}}} attribute
+    activeElem              = ((string)|(list)) Name of the active element or elements
+                              The meaning and effect depends on the nav type.
 -->
 <#assign nav_defaultArgs = {
-  "type":"inline", "class":"", "passArgs":{}
+  "type":"inline", "id":"", "class":"", "style":"", "activeElem":"", "passArgs":{}
 }>
 <#macro nav args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@nav_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@nav_markup>
+  <#local navInfo = {"type":type, "id":id, "class":class, "style":style, "activeElem":activeElem, "passArgs":passArgs}>
+  <#local dummy = setRequestVar("catoNavInfo", navInfo)>
+  <#local dummy = setRequestVar("catoNavEntryIndex", 0)>
+  <#local dummy = setRequestVar("catoNavActiveElemIndex", -1)><#-- currently mainly for steps type -->
+  <@nav_markup type=type id=id class=class style=style activeElem=activeElem origArgs=origArgs passArgs=passArgs><#nested></@nav_markup>
+  <#local dummy = setRequestVar("catoNavInfo", {})>
 </#macro>
 
 <#-- @nav main markup - theme override -->
-<#macro nav_markup type="" class="" origArgs={} passArgs={} catchArgs...>
+<#macro nav_markup type="" id="" class="" style="" activeElem="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "magellan">
-      <div data-magellan-expedition="fixed">
+      <div data-magellan-expedition="fixed"<#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
         <#local class = addClassArg(class, styles.nav_subnav!)>
         <dl<@compiledClassAttribStr class=class />>
           <#nested>
@@ -61,19 +70,19 @@ Since this is very foundation specific, this function may be dropped in future i
     <#break>
     <#case "breadcrumbs">
       <#local class = addClassArg(class, styles.nav_breadcrumbs!)>
-      <ul<@compiledClassAttribStr class=class />>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
         <#nested>
       </ul>
     <#break>
     <#case "steps">
       <#local class = addClassArg(class, styles.nav_steps!)>
-      <ul<@compiledClassAttribStr class=class />>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
         <#nested>
       </ul>
     <#break>
     <#default>
       <#local class = addClassArg(class, styles.list_inline! + " " + styles.nav_subnav!)>
-      <ul<@compiledClassAttribStr class=class />>
+      <ul<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}</#if><#if style?has_content> style="${style}</#if>>
         <#nested>
       </ul>
     <#break>
@@ -127,26 +136,66 @@ Makes an attrib map container a magellan-destination attribute.
 *************
 * step
 ************
-Creates a single step - to be used with <@nav type="steps"
+Creates a single step - to be used with {{{<@nav type="steps" />}}}.
 
 * Parameters *
+    name                    = Step name, for auto-matching purposes (optional if not using auto active matching)
     icon                    = Generates icon inside the step  
-    disabled                = step is disabled
-    active                  = marks the current step
-    completed               = step is completed (will override icon if icon is set)
+    disabled                = ((boolean)) step is disabled (override)
+    active                  = ((boolean)) marks the current step (override)
+    completed               = ((boolean)) step is completed (will override icon if icon is set)
     class                   = ((css-class)) CSS classes
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign step_defaultArgs = {
-  "icon":"","completed":false,"disabled":false,"active":false,"class":"","passArgs":{}
+  "name":"", "icon":"", "completed":"", "disabled":"", "active":"", "class":"", "passArgs":{}
 }>
 <#macro step args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.step_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+  <#local navInfo = getRequestVar("catoNavInfo")!{}>
+  <#local stepIndex = getRequestVar("catoNavEntryIndex")!0>
+  <#local activeStep = navInfo.activeElem!>
+  <#local activeStepIndex = getRequestVar("catoNavActiveElemIndex")!-1>
+  
+  <#if activeStep?has_content>
+    <#if name == activeStep>
+      <#local activeStepIndex = stepIndex>
+      <#local dummy = setRequestVar("catoNavActiveElemIndex", stepIndex)>
+      <#if !active?is_boolean>
+        <#local active = true>
+      </#if>
+    <#elseif (activeStepIndex < 0)>
+      <#-- haven't reached active step yet; we assume it's somewhere down the line... -->
+      <#if !completed?is_boolean>
+        <#local completed = true>
+      </#if>
+    <#elseif (stepIndex > activeStepIndex)>
+      <#if !disabled?is_boolean>
+        <#local disabled = false>
+      </#if> 
+    <#else>
+      <#-- this shouldn't happen?... just set to disabled in case -->
+      <#if !disabled?is_boolean>
+        <#local disabled = false>
+      </#if> 
+    </#if>
+  </#if>
+  
+  <#if !completed?is_boolean>
+    <#local completed = false>
+  </#if>
+  <#if !disabled?is_boolean>
+    <#local disabled = false>
+  </#if> 
+  <#if !active?is_boolean>
+    <#local active = false>
+  </#if>
   <@step_markup class=class icon=icon completed=completed disabled=disabled active=active origArgs=origArgs passArgs=passArgs><#nested></@step_markup>
+  <#local dummy = setRequestVar("catoNavEntryIndex", stepIndex + 1)>
 </#macro>
 
 <#-- @step main markup - theme override -->

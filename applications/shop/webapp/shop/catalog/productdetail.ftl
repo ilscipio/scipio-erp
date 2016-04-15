@@ -52,13 +52,18 @@
 
     var featureCount = 0; <#-- NOTE: This is overridden further below -->
     var featureIdList = [];
+    var variantProductInfoMap = {};
+    var baseProductInfo = { <#-- TODO: move map making to groovy -->
+        "productId" : "${product.productId}",
+        "requireAmount" : "${product.requireAmount!'N'}"
+    };
 
     <#if variantTree?has_content>
     
         <#-- CATO: Function to select a product variant  -->
         var variantTree = <@objectAsScript lang="js" object=variantTree />;
         var currentNode = [];
-        var variantProductInfoMap = <@objectAsScript lang="js" object=variantProductInfoMap />;
+        variantProductInfoMap = <@objectAsScript lang="js" object=(variantProductInfoMap!{}) />;
 
         <#-- Product Variant - Option Updater
              The following script takes into account that there may be a diverse selection of configuration options.
@@ -143,11 +148,18 @@
     }    
   
     function checkAmtReq(productId) {
-        var productInfo = variantProductInfoMap[productId];
-        if (productInfo) {
-            var requireAmount = productInfo.requireAmount;
+        if (productId === baseProductInfo.productId) {
+            var requireAmount = baseProductInfo.requireAmount;
             if (requireAmount) {
                 return requireAmount;
+            }       
+        } else {
+            var productInfo = variantProductInfoMap[productId];
+            if (productInfo) {
+                var requireAmount = productInfo.requireAmount;
+                if (requireAmount) {
+                    return requireAmount;
+                }
             }
         }
         return 'N'; <#-- Cato: hide it by default -->
@@ -385,16 +397,13 @@
                         in ADDITION to the quantity field. You also cannot know this for sure beforehand because for virtuals it is set on the
                         specific variant, so it has to be updated through JS lookups (the initial is only for the virtual product, but each variant can be different).  -->
                     <#macro amountField>
+                        <#local fieldStyle = "">
                         <#if (product.requireAmount!"N") != "Y">
-                            <#assign hiddenStyle = styles.hidden!/>
-                            <#-- Cato: FIXME: jquery hack to hide the field -->
-                            <@script>
-                                jQuery(document).ready(function() {
-                                    jQuery("#add_amount_wrapper").hide();
-                                });
-                            </@script>
+                            <#-- Cato: Issues with css
+                            <#assign hiddenStyle = styles.hidden!/>-->
+                            <#local fieldStyle = "display: none;">
                         </#if>
-                        <@field type="input" size="5" name="add_amount" id="add_amount" value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
+                        <@field type="input" size="5" name="add_amount" id="add_amount" containerStyle=fieldStyle value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
                     </#macro>
                     
                     <#-- Variant Selection -->

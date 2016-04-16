@@ -632,6 +632,7 @@ public class OrderLookupServices {
         filterInventoryProblems(context, result, orderList, paramList);
 
         // format the param list
+        // Cato: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
         String paramString = StringUtil.join(paramList, "&amp;");
 
         result.put("highIndex", Integer.valueOf(highIndex));
@@ -1209,6 +1210,7 @@ public class OrderLookupServices {
         filterInventoryProblems(context, result, orderList, paramList);
 
         // format the param list
+        // Cato: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
         String paramString = StringUtil.join(paramList, "&amp;");
         result.put("showAll", showAll);
 

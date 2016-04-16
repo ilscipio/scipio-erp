@@ -1053,6 +1053,8 @@ public class ProductSearchSession {
                 ProductSearch.CategoryConstraint cc = (ProductSearch.CategoryConstraint) psc;
                 categoriesCount++;
                 if (isNotFirst) {
+                    // Cato: FIXME: The paramlist should not be escaped this early; it should be escaped by Freemarker
+                    // Same applies to all others below
                     searchParamString.append("&amp;");
                 } else {
                     isNotFirst = true;

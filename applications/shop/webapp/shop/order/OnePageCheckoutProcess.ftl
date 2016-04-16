@@ -114,7 +114,9 @@ under the License.
                       <#else>
                         <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                       </#if>
-                      <@render resource="component://common/widget/CommonScreens.xml#states" />
+                      <#--
+                      State prefill removed for now as it list too many entries
+                      <@render resource="component://common/widget/CommonScreens.xml#states" />-->
                     </@field>
                   </div>
                 </fieldset>

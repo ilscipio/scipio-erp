@@ -1706,6 +1706,12 @@ It abstracts the encoder selection.
 Currently, it uses Freemarker built-ins (subject to change); the Ofbiz encoders do not appear
 suited to handling URLs.
 
+NOTE: In addition to the above, for compability reaons, this function will currently accept param delimiters 
+    in either the escaped {{{&amp;}}} form or unescaped {{{&}}} form.
+    Ideally, we should not receive escaped delimiters here, but Ofbiz frequently escapes early.
+
+DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe way to process URLs.
+
   * Usage Examples *
   
     <a href="${escapeFullUrl('http://www.ilscipio.com/test?param1=val1&param2=val2;jsessionid=fake', 'html')}">Link</a>
@@ -1716,15 +1722,15 @@ suited to handling URLs.
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (js|js-dq|json|html|raw) The target language
-                              NOTE: This does not currently support js/json because it does not
-                                  usually make sense to escape anything but single value strings.
+    lang                    = (html|js|js-dq|json|xml|raw) The target language
                               {{{js-dq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
 -->
 <#function escapeFullUrl str lang>
   <#local str = rawString(str)>
+  <#-- Ofbiz compatibility mode: Replace &amp; back to &. Freemarker's ?html function will re-encode them after. -->
+  <#local str = str?replace("&amp;", "&")>
   <#switch lang?lower_case>
     <#case "json">
       <#return str?json_string>
@@ -1737,6 +1743,9 @@ suited to handling URLs.
       <#break>
     <#case "html">
       <#return str?html>
+      <#break>
+    <#case "xml">
+      <#return str?xml>
       <#break>
     <#case "raw">
     <#default>

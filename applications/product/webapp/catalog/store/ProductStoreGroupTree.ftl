@@ -34,9 +34,9 @@ jQuery(window).load(createTree());
 var rawdata = [
     <#list parentGroupList as parentGroup>
                    {
-                    "data": {"title" : unescapeHtmlText("<#if parentGroup.productStoreGroupName??>${parentGroup.productStoreGroupName?js_string} [${parentGroup.productStoreGroupId}]</#if>"),
-                                  "attr": {"href" : "<@ofbizUrl>EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId}');"}},
-                    "attr": {"parentGroupId" : "${parentGroup.productStoreGroupId}"}, 
+                    "data": {"title" : unescapeHtmlText("<#if parentGroup.productStoreGroupName??>${parentGroup.productStoreGroupName?js_string} [${parentGroup.productStoreGroupId?js_string}]</#if>"),
+                                  "attr": {"href" : "<@ofbizUrl>EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId?js_string}');"}},
+                    "attr": {"parentGroupId" : "${parentGroup.productStoreGroupId?js_string}"}, 
                     "state" : "closed"
                     }<#if parentGroup_has_next>,</#if>
      </#list>

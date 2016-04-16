@@ -41,8 +41,8 @@ var rawdata = [
   <#if (rootCat?has_content)>
     <#list rootCat?sort_by("productCategoryId") as root>
             {
-            "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string}<#elseif root.categoryDescription??>${root.categoryDescription?js_string}<#else>${root.productCategoryId?js_string}</#if>"), "attr": { "href":"javascript: void(0);", "onClick":"callDocument('${root.productCategoryId}', '${root.parentCategoryId}')" , "class" : "${root.cssClass!}"}},
-            "attr": {"id" : "${root.productCategoryId}"}
+            "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string}<#elseif root.categoryDescription??>${root.categoryDescription?js_string}<#else>${root.productCategoryId?js_string}</#if>"), "attr": { "href":"javascript: void(0);", "onClick":"callDocument('${root.productCategoryId?js_string}', '${root.parentCategoryId?js_string}')" , "class" : "${root.cssClass!}"}},
+            "attr": {"id" : "${root.productCategoryId?js_string}"}
             <#if root.child?has_content>
                 ,"children": [
                     <@fillTree rootCat=root.child/>

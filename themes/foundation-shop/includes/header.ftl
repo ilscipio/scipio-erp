@@ -197,11 +197,25 @@ under the License.
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
 <body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> page-auth">
 <div class="header" id="header">
-    <@row>
-    <@cell>
-    </@cell>
-    </@row>
 </div>
+
+<#macro rightMenu>
+      <#if userLogin??>
+          <li class="has-dropdown not-click">
+            <a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a>
+            <ul class="dropdown">       
+                <@generalMenu />
+            </ul>
+          </li>
+      <#else>
+        <li>
+            <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
+        </li>
+      </#if>
+      
+      
+</#macro>
+
 <div class="off-canvas-wrap" data-offcanvas id="body-content">
 <div class="inner-wrap">
 
@@ -209,10 +223,22 @@ under the License.
     <aside class="right-off-canvas-menu">
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
-          <#--<#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
-          <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if> -->  
+            <@rightMenu/>
         </ul>
     </aside>
+    
+    <nav class="tab-bar show-for-small">
+        <section class="left-small">
+            <@render resource="component://shop/widget/CartScreens.xml#microcart" />
+        </section>
+        <section class="middle tab-bar-section">
+            <h1><@logoMenu isSmall=true/></h1>
+        </section>
+        <section class="right-small">
+            <a class="right-off-canvas-toggle menu-icon"><span></span></a>
+        </section>
+    </nav>
+    
     <div class="sticky">   
     <nav class="top-bar hide-for-small" data-topbar role="navigation" data-options="sticky_on: large">
       <ul class="title-area">
@@ -229,19 +255,7 @@ under the License.
             <@render resource="component://shop/widget/CatalogScreens.xml#keywordsearchbox" />
           </li>
           <li class="divider"></li>
-          <#if userLogin??>
-              <li class="has-dropdown not-click">
-                <a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a>
-                <ul class="dropdown">       
-                    <@generalMenu />
-                </ul>
-              </li>
-          <#else>
-            <li>
-                <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
-            </li>
-          </#if>
-          
+          <@rightMenu/>
           <li class="divider"></li>
           <li><@render resource="component://shop/widget/CartScreens.xml#microcart" /></li>
           <#--

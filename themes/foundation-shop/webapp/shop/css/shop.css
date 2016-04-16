@@ -38,6 +38,9 @@ body {
     border:none;
 }
 
+.tab-bar #microCartTotal {display:none;}
+.tab-bar a {color:#fff;}
+
 .sticky {background:#f4f4f4;}
 
 .sticky_animate {

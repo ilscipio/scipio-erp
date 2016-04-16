@@ -19,7 +19,7 @@ under the License.
 <@section>
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
-        <@step name="shippingAddress" icon="fa fa-truck">Shipping Address</@step>
+        <@step name="shippingAddress" icon="fa fa-building">Shipping Address</@step>
         <@step name="shippingOptions" icon="fa fa-truck">Shipping Options</@step>
         <@step name="billing" icon="fa fa-credit-card">Billing</@step>
         <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>

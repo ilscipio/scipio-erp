@@ -1632,13 +1632,13 @@ TODO: doesn't handle dates (ambiguous?)
     <#local val = val?string>
   </#if>
   <#if escape>
-    <#switch lang?lower_case>
+    <#switch lang>
       <#case "json">
         <#return val?json_string>
         <#break>
       <#case "js">
-      <#case "javascript">
-        <#-- FIXME?: investigate this... -->
+        <#-- NOTE: We un-escape the single quotes because we know our containing quotes are double-quotes.
+            We can only assume this here. -->
         <#return val?js_string?replace("\\'", "\'")>
         <#break>
       <#case "raw">
@@ -1657,6 +1657,155 @@ TODO: doesn't handle dates (ambiguous?)
     needed for html in javascript strings -->
 <#function compressStringBlankspace str>
   <#return str?replace(r"[\n\s\r]+", " ", "r")>
+</#function>
+
+<#-- 
+*************
+* escapeFull
+************
+Encodes/escapes a COMPLETE text string for a given language, recognizing and sparing the language's delimiters.
+Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
+and encode in the requested language.
+
+This can be used on full HTML snippets, etc.
+
+This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
+It abstracts the encoder selection. 
+
+Currently, it uses Ofbiz's encoder (subject to change).
+
+  * Parameters *
+    str                     = The string to escape
+    lang                    = (html|xml|raw) The target language
+                              NOTE: This does not currently support js/json because it does not
+                                  usually make sense to escape anything but single value strings.
+                                  It also does not encode URLs; see #escapeFullUrl.
+                              
+  * Related*
+    #escapePart
+-->
+<#function escapeFull str lang>
+  <#-- NOTE: Currently we support the same types as Ofbiz, so no need for a switch -->
+  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].getEncoder(lang).encode(rawString(str)))>
+</#function>
+
+<#-- 
+*************
+* escapeFullUrl
+************
+Encodes/escapes a COMPLETE URL for a given language.
+Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
+and encode in the requested language.
+
+This is meant to be used to encode full URLs so they can be safely included in HTML attributes,
+javascript strings, etc.
+
+This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
+It abstracts the encoder selection. 
+
+Currently, it uses Freemarker built-ins (subject to change); the Ofbiz encoders do not appear
+suited to handling URLs.
+
+  * Usage Examples *
+  
+    <a href="${escapeFullUrl('http://www.ilscipio.com/test?param1=val1&param2=val2;jsessionid=fake', 'html')}">Link</a>
+
+    <@script>
+      var link = "${escapeFullUrl('http://www.ilscipio.com/test?param1=val1&param2=val2;jsessionid=fake', 'js')}";
+    </@script>
+
+  * Parameters *
+    str                     = The string to escape
+    lang                    = (js|js-dq|json|html|raw) The target language
+                              NOTE: This does not currently support js/json because it does not
+                                  usually make sense to escape anything but single value strings.
+                              {{{js-dq}}}: special case of js where it is assumed the value
+                                will be contained in double quotes, such that single quotes
+                                don't need to be escaped.
+-->
+<#function escapeFullUrl str lang>
+  <#local str = rawString(str)>
+  <#switch lang?lower_case>
+    <#case "json">
+      <#return str?json_string>
+      <#break>
+    <#case "js">
+      <#return str?js_string>
+      <#break>
+    <#case "js-dq">
+      <#return str?js_string?replace("\\'", "\'")>
+      <#break>
+    <#case "html">
+      <#return str?html>
+      <#break>
+    <#case "raw">
+    <#default>
+      <#return str>
+      <#break>
+  </#switch>
+</#function>
+
+<#-- 
+*************
+* escapePart
+************
+Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
+Will automatically call #rawString on the passed string (bypassing screen auto-escaping) 
+and encode in the requested language.
+
+This ONLY works to escape individual values of the given language. For example, "url"
+can only encode individual parameters in a URL, not the full URL; it will encoding delimiters. 
+To encode a full URL, you must use #escapeFullUrl. You can use this on HTML attributes, but for full HTML texts,
+you should use #escapeFull.
+
+Essentially this is a wrapping around #rawString and the encoders.
+It abstracts the encoder selection. 
+
+Currently, it uses Freemarker built-ins (subject to change).
+
+Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.
+
+NOTE: There are a few rare stock Ofbiz templates where this should not be used, on account of the
+    #rawString call, where there is a complex mix of javascript and html.
+
+  * Parameters *
+    str                     = The string to escape
+    lang                    = (js|js-dq|json|html|url|xml|raw) The target language
+                              These are similar to the Freemarker built-in counterparts, but may
+                              not produce the exact same results.
+                              {{{js-dq}}}: special case of js where it is assumed the value
+                                will be contained in double quotes, such that single quotes
+                                don't need to be escaped.
+                    
+  * Related*
+    #escapeFull
+-->
+<#function escapePart str lang>
+  <#local str = rawString(str)>
+  <#switch lang?lower_case>
+    <#case "json">
+      <#return str?json_string>
+      <#break>
+    <#case "js">
+      <#return str?js_string>
+      <#break>
+    <#case "js-dq">
+      <#return str?js_string?replace("\\'", "\'")>
+      <#break>
+    <#case "html">
+      <#return str?html>
+      <#break>
+    <#case "xml">
+      <#return str?xml>
+      <#break>
+    <#case "url">
+      <#return str?url>
+      <#break>
+    <#case "raw">
+    <#default>
+      <#return str>
+      <#break>
+  </#switch>
 </#function>
 
 
@@ -1795,6 +1944,7 @@ operations on them.
 *************
 * mergeArgMapsToLocals
 ************
+NOT IMPLEMENTED
 Combines mergeArgMaps and localsPutAll into one call.
 
 DO NOT USE AT CURRENT TIME. Use mergeArgMaps and localsPutAll instead.
@@ -1818,6 +1968,7 @@ This is a helper function which should be functionally identical to doing:
 *************
 * mergeArgMapsToLocalsBasic
 ************
+NOT IMPLEMENTED
 Same as mergeArgMapsToLocals but uses mergeArgMapsBasic logic instead of mergeArgMaps logic.
 -->
 <#-- NOT IMPLEMENTED

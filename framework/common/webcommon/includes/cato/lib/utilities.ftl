@@ -1722,8 +1722,8 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (html|js|js-dq|json|xml|raw) The target language
-                              {{{js-dq}}}: special case of js where it is assumed the value
+    lang                    = (html|js|jsdq|json|js-html|jsdq-html|xml|raw) The target language
+                              {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
 -->
@@ -1738,11 +1738,17 @@ DEV NOTE: Unfortunately this method adds some overhead, but it's the only safe w
     <#case "js">
       <#return str?js_string>
       <#break>
-    <#case "js-dq">
+    <#case "jsdq">
       <#return str?js_string?replace("\\'", "\'")>
       <#break>
     <#case "html">
       <#return str?html>
+      <#break>
+    <#case "js-html">
+      <#return str?js_string?html>
+      <#break>
+    <#case "jsdq-html">
+      <#return str?js_string?replace("\\'", "\'")?html>
       <#break>
     <#case "xml">
       <#return str?xml>
@@ -1779,10 +1785,10 @@ NOTE: There are a few rare stock Ofbiz templates where this should not be used, 
 
   * Parameters *
     str                     = The string to escape
-    lang                    = (js|js-dq|json|html|url|xml|raw) The target language
+    lang                    = (js|jsdq|json|html|url|xml|raw) The target language
                               These are similar to the Freemarker built-in counterparts, but may
                               not produce the exact same results.
-                              {{{js-dq}}}: special case of js where it is assumed the value
+                              {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
                     
@@ -1798,7 +1804,7 @@ NOTE: There are a few rare stock Ofbiz templates where this should not be used, 
     <#case "js">
       <#return str?js_string>
       <#break>
-    <#case "js-dq">
+    <#case "jsdq">
       <#return str?js_string?replace("\\'", "\'")>
       <#break>
     <#case "html">

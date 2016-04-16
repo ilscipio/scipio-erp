@@ -62,8 +62,8 @@ under the License.
                   <@td>${item.orderItemSeqId}</@td>
                   <@td>${item.productId?default("Not Found")}</@td>
                   <@td>${item.lotId!""}</@td>
-                  <@td>${item.unitCost?default(0)?string("##0.00")}</@td>
-                  <@td>${item.quantityRejected?default(0)?string.number}</@td>
+                  <@td>${(item.unitCost!0)?string("##0.00")}</@td>
+                  <@td>${(item.quantityRejected!0)?string.number}</@td>
                   <@td>${item.quantityAccepted?string.number}</@td>
                   <@td>
                     <#if (item.quantityAccepted?int > 0 || item.quantityRejected?int > 0)>
@@ -366,7 +366,7 @@ under the License.
                           <@td>&nbsp;</@td>
                           <@td align="right">${uiLabelMap.ProductFacilityOwner}:</@td>
                           <@td align="right"><input type="text" name="ownerPartyId_o_${rowCount}" size="20" maxlength="20" value="${facility.ownerPartyId}"/></@td>
-                          <#if currencyUomId?default('') != orderCurrencyUomId?default('')>
+                          <#if (currencyUomId!'') != (orderCurrencyUomId!'')>
                             <@td>${uiLabelMap.ProductPerUnitPriceOrder}:</@td>
                             <@td>
                               <input type="hidden" name="orderCurrencyUomId_o_${rowCount}" value="${orderCurrencyUomId!}" />

@@ -122,14 +122,16 @@ if (productId) {
             context.metaKeywords = metaKeywords.textData;
         } else {
             keywords = [];
-            keywords.add(contentWrapper.get("PRODUCT_NAME", "html"));
+            // Cato: Do NOT HTML-escape this here
+            keywords.add(contentWrapper.get("PRODUCT_NAME", "raw").toString());
             keywords.add(catalogName);
             members = from("ProductCategoryMember").where("productId", productId).cache(true).queryList();
             members.each { member ->
                 category = member.getRelatedOne("ProductCategory", true);
                 if (category.description) {
                     categoryContentWrapper = new CategoryContentWrapper(category, request);
-                    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html");
+                    // Cato: Do NOT HTML-escape this here
+                    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
                     if (categoryDescription) {
                             keywords.add(categoryDescription);
                     }

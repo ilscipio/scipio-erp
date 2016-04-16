@@ -394,7 +394,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.OrderAdjustment}&nbsp;${adjustmentType.get("description",locale)}
-                                        ${rawString(orderItemAdjustment.get("description",locale)!)}
+                                        ${orderItemAdjustment.get("description",locale)!}
                                         <#if orderItemAdjustment.comments?has_content>
                                             (${orderItemAdjustment.comments!""})
                                         </#if>

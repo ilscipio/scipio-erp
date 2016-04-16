@@ -86,7 +86,7 @@ under the License.
               <@tr>
                 <@td>
                     <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
-                    <#if orderItemAdjustment.description?has_content>: ${rawString(orderItemAdjustment.get("description",locale))}</#if>
+                    <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.get("description",locale)}</#if>
 
                     <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                       <#if orderItemAdjustment.primaryGeoId?has_content>

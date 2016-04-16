@@ -462,7 +462,8 @@ public class ProductConfigWrapper implements Serializable {
                 question = configItemAssoc.getString("description");
             } else {
                 if (content != null) {
-                    question = content.get("DESCRIPTION", "html").toString();
+                    // CATO: Do NOT HTML-escape this here (description just below is not escaped anyway!)
+                    question = content.get("DESCRIPTION", "raw").toString();
                 } else {
                     question = (configItem.getString("description") != null? configItem.getString("description"): "");
                 }
@@ -476,7 +477,8 @@ public class ProductConfigWrapper implements Serializable {
                 description = configItemAssoc.getString("longDescription");
             } else {
                 if (content != null) {
-                    description = content.get("LONG_DESCRIPTION", "html").toString();
+                    // CATO: Do NOT HTML-escape this here (description just below is not escaped anyway!)
+                    description = content.get("LONG_DESCRIPTION", "raw").toString();
                 } else {
                     description = (configItem.getString("longDescription") != null? configItem.getString("longDescription"): "");
                 }

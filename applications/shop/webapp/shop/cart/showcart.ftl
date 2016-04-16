@@ -128,7 +128,7 @@ function setAlternateGwp(field) {
                             <#else>
                                 <#assign parentProductId = cartLine.getProductId() />
                             </#if>
-                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getProductId()} -${rawString(cartLine.getName()!)}</a>
+                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getProductId()} -${cartLine.getName()!}</a>
                             <#-- For configurable products, the selected options are shown -->
                             <#if cartLine.getConfigWrapper()??>
                               <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
@@ -376,8 +376,8 @@ function setAlternateGwp(field) {
                   <@section title=uiLabelMap.OrderSpecialOffers>
                     <ol>
                       <#list productPromos as productPromo>
-                        <li>${rawString(productPromo.promoName!)}
-                           <#--${rawString(productPromo.promoText!)}<br/>--><#-- Enable for further promotion information -->
+                        <li>${productPromo.promoName!}
+                           <#--${productPromo.promoText!}<br/>--><#-- Enable for further promotion information -->
                            <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                         </li>
                       </#list>

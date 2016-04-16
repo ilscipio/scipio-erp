@@ -639,13 +639,15 @@ public class CategoryWorker {
                 
                 String categoryName = null;
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "html");
+                // CATO: Do NOT HTML-escape this here
+                StringWrapper categoryNameWrapper = wrapper.get("CATEGORY_NAME", "raw");
                 if (categoryNameWrapper != null) {
                     categoryName = categoryNameWrapper.toString();
                 }
                 if (UtilValidate.isEmpty(categoryName)) {
                     // 2016-03-22: Some categories don't have a name but have description
-                    categoryNameWrapper = wrapper.get("DESCRIPTION", "html");
+                    // CATO: Do NOT HTML-escape this here
+                    categoryNameWrapper = wrapper.get("DESCRIPTION", "raw");
                     if (categoryNameWrapper != null) {
                         categoryName = categoryNameWrapper.toString();
                     }
@@ -698,8 +700,9 @@ public class CategoryWorker {
                 if (UtilValidate.isEmpty(productName)) {
                     productName = productId;
                     ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
-                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "html")))
-                        productName = wrapper.get("CATEGORY_NAME", "html").toString();
+                    // CATO: Do NOT HTML-escape this here
+                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME", "raw").toString()))
+                        productName = wrapper.get("CATEGORY_NAME", "raw").toString();
                 }
 
                 if (library.equals("jsTree")) {

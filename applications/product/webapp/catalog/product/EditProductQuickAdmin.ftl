@@ -224,9 +224,9 @@ function doPublish() {
                     <@td><@field type="input" name="~ml${idx}" size="6" maxlength="20" value=(featureMl.get(assocProduct.productId)!)/></@td>
                     <@td><@field type="input" name="~ntwt${idx}" size="6" maxlength="20" value=(featureNtwt.get(assocProduct.productId)!)/></@td>
                     <@td><@field type="input" name="~grams${idx}" size="6" maxlength="20" value=(featureGrams.get(assocProduct.productId)!)/></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${rawString(featureHazmat.get(assocProduct.productId)!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${rawString(featureSalesThru.get(assocProduct.productId)!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${rawString(featureThruDate.get(assocProduct.productId)!)}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${featureHazmat.get(assocProduct.productId)!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${featureSalesThru.get(assocProduct.productId)!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${featureThruDate.get(assocProduct.productId)!}</a></@td>
                 </@tr>
                 <#assign idx = idx + 1/>
             </#list>
@@ -246,9 +246,9 @@ function doPublish() {
                     <@td><@field type="input" name="~ml" size="6" maxlength="20" value=(ml!) /></@td>
                     <@td><@field type="input" name="~ntwt" size="6" maxlength="20" value=(ntwt!) /></@td>
                     <@td><@field type="input" name="~grams" size="6" maxlength="20" value=(grams!) /></@td>
-                    <@td><a class="${styles.link_nav_info_value!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${rawString(hazmat!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>">${rawString(salesthru!)}</a></@td>
-                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${rawString(thrudate!)}</a></@td>
+                    <@td><a class="${styles.link_nav_info_value!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${hazmat!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>">${salesthru!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${thrudate!}</a></@td>
                 </@tr>
               <@tfoot>
                 <@tr>

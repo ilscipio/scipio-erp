@@ -979,9 +979,11 @@ public class ProductSearch {
             StringBuilder ppBuf = new StringBuilder();
             ppBuf.append(UtilProperties.getMessage(resource, "ProductCategory", locale)).append(": ");
             if (productCategory != null) {
-                String catInfo = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, null, "html");
+                // CATO: Do NOT HTML-escape this here
+                String catInfo = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, null, "raw");
                 if (UtilValidate.isEmpty(catInfo)) {
-                    catInfo = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, null, "html");
+                    // CATO: Do NOT HTML-escape this here
+                    catInfo = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, null, "raw");
                 }
                 ppBuf.append(catInfo);
             }

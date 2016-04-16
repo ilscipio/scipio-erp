@@ -50,6 +50,7 @@ under the License.
         -->
         <section>
             <actions>
+                <set field="testtest" value="test ' asdf ' &gt; asdf &lt; asdfasdf" />
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>
                 <set field="activeMainMenuItem" value="LayoutDemo"/>

@@ -23,7 +23,7 @@ under the License.
           <#list productPromos as productPromo>
             <@tr>
               <@td>
-                <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="+${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> ${rawString(productPromo.promoText!)}
+                <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="+${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText!}
               </@td>
             </@tr>
           </#list>

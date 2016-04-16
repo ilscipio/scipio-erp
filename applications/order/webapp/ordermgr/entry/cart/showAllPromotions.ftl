@@ -22,8 +22,8 @@ under the License.
         <#-- show promotions text -->
         <#list productPromosAllShowable as productPromo>
             <li>
-                <@heading level=3>${rawString(productPromo.promoName!)}</@heading>
-                ${rawString(productPromo.promoText!)}
+                <@heading level=3>${productPromo.promoName!}</@heading>
+                ${productPromo.promoText!}
                 <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
             </li>
         </#list>

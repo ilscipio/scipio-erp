@@ -59,17 +59,18 @@ List fillTree(rootCat ,CatLvl, parentCategoryId) {
                 category = from("ProductCategory").where("productCategoryId", root.productCategoryId).queryOne();
                 categoryContentWrapper = new CategoryContentWrapper(category, request);
                 // Cato: don't want page title overridden/forced by groovy
-                //context.title = categoryContentWrapper.get("CATEGORY_NAME", "html");
-                context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "html");
-                categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html");
+                // Cato: Do NOT HTML-escape this here
+                //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
+                context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
+                categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
                 
-                if(categoryContentWrapper.get("CATEGORY_NAME", "html").toString())
-                    rootMap["categoryName"] = categoryContentWrapper.get("CATEGORY_NAME", "html");
+                if(categoryContentWrapper.get("CATEGORY_NAME", "raw").toString())
+                    rootMap["categoryName"] = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
                 else
                     rootMap["categoryName"] = root.categoryName;
                 
-                if(categoryContentWrapper.get("DESCRIPTION", "html").toString())
-                    rootMap["categoryDescription"] = categoryContentWrapper.get("DESCRIPTION", "html");
+                if(categoryContentWrapper.get("DESCRIPTION", "raw").toString())
+                    rootMap["categoryDescription"] = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
                 else
                     rootMap["categoryDescription"] = root.description;
                 

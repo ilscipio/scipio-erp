@@ -24,7 +24,7 @@ under the License.
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                 <li>
                     <#-- TODO: when promo pretty print is done show promo short description here -->
-                    <@heading>${rawString(productPromoUseInfo.promoName!)}</@heading>
+                    <@heading>${productPromoUseInfo.promoName!}</@heading>
                     <#if productPromoUseInfo.productPromoCodeId?has_content> - ${uiLabelMap.OrderWithPromoCode} [${productPromoUseInfo.productPromoCodeId}]</#if>
                     <#if (productPromoUseInfo.totalDiscountAmount != 0)> - ${uiLabelMap.CommonTotalValue} <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
                     <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId!}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>

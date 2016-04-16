@@ -19,6 +19,9 @@ under the License.
 <#assign errorMessage = requestAttributes._ERROR_MESSAGE_!>
 <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
 
+  <#-- Cato: FIXME: All the rawString calls here are dangerous and not right, 
+       they should be fixed in the upstream code instead! -->
+
 <@row>
   <@cell class="${styles.grid_large!}10 ${styles.grid_large!}centered" last=true id="error">
   <@section>

@@ -331,7 +331,7 @@
             <@td colspan="2">
               <textarea id="cmsdata" name="textData" cols="40" rows="6" style="display: none;">
                 <#if (dataText?has_content)>
-                    ${rawString(dataText.textData!)}
+                    ${dataText.textData!}
                 </#if>
               </textarea>
             </@td>

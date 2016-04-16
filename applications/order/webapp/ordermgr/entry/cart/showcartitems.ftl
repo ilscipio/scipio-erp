@@ -78,7 +78,7 @@ under the License.
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
                     <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
-                    <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=rawString(cartLine.getName()!'')/><br />
+                    <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=(cartLine.getName()!"")/><br />
                     <i>${cartLine.getDescription()!}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders -->
@@ -221,7 +221,7 @@ under the License.
                   <div>${uiLabelMap.OrderChooseFollowingForGift}:</div>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", {"productId":alternativeOptionProductId}, true)>
-                    <#assign alternativeOptionName = rawString(Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "html")!)>
+                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "html")!>
                     <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>

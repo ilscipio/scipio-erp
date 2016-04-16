@@ -1098,7 +1098,8 @@ public class ProductEvents {
             compareList.add(product);
         }
         session.setAttribute("productCompareList", compareList);
-        String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "html");
+        // CATO: Do NOT HTML-escape this here
+        String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductAddToCompareListSuccess", UtilMisc.toMap("name", productName), UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
         return "success";
@@ -1135,7 +1136,8 @@ public class ProductEvents {
             }
         }
         session.setAttribute("productCompareList", compareList);
-        String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "html");
+        // CATO: Do NOT HTML-escape this here
+        String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductRemoveFromCompareListSuccess", UtilMisc.toMap("name", productName), UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
         return "success";

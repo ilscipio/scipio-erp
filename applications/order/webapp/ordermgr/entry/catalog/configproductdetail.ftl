@@ -450,7 +450,7 @@ function getConfigDetails() {
           <#assign questions = configwrapper.questions>
           <#list questions as question>
           <@row>
-            <@cell columns=4>${rawString(question.question)}</@cell>
+            <@cell columns=4>${question.question}</@cell>
             <@cell columns=8 class="+${styles.text_right!}">
               <#-- Cato: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
               <#if question.isFirst()>

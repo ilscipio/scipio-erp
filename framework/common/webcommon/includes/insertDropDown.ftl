@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-${rawString(topLine.textBegin!)}
+${topLine.textBegin!}
 <#assign listSize = topLine.dropDownList.size()>
 <#if topLine.dropDownList.size() gt 1>
 <form method="post" action="<@ofbizUrl>${topLine.action}</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${topLine.action}" id="${topLine.action}">
@@ -35,4 +35,4 @@ ${rawString(topLine.textBegin!)}
 <#else>
   ${topLine.dropDownList[0].value!}
 </#if>
-${rawString(topLine.textEnd!)}
+${topLine.textEnd!}

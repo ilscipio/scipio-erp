@@ -92,6 +92,6 @@ under the License.
     </@menu>
 </#if>
 
-<#-- currentCategoryPath: ${rawString(currentCategoryPath!"(none)")} -->
+<#-- currentCategoryPath: ${currentCategoryPath!"(none)"} -->
 <#-- baseCategoryId: ${baseCategoryId!"(none)"} -->
 

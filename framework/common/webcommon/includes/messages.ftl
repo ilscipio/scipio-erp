@@ -37,6 +37,8 @@ under the License.
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
 
+  <#-- Cato: FIXME: All the rawString calls here are dangerous and not right, 
+       they should be fixed in the upstream code instead! -->
 
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
   <#-- display the error messages -->

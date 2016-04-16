@@ -55,9 +55,9 @@ var autocomp = [
             <#if ("Y" == displayReturnField)>
                 <#assign displayString = displayString +  "[" + returnField + "]">
             </#if>
-            "id": "${returnField}",
-            "label": "<#if (displayString?trim?has_content )>${displayString?trim}<#else>${returnField}</#if>",
-            "value": "${returnField}"
+            "id": "${returnField?json_string}",
+            "label": "<#if (displayString?trim?has_content )>${displayString?trim?json_string}<#else>${returnField?json_string}</#if>",
+            "value": "${returnField?json_string}"
             }<#if autocompleteOption_has_next>,</#if>
         </#list>
     <#else>

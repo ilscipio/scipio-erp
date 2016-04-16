@@ -26,7 +26,7 @@ under the License.
         <h2>${title}</h2>
         <p>Hello ${person.firstName!} ${person.lastName!},</p>
         <p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has a note added to it:<br />
-        ${rawString(noteData.noteInfo!)}
+        ${noteData.noteInfo!}
         <br /><br />
         Please login to the url below and add another note as a reply if required.<br /><br />
         The status and used hours can always be checked <br />

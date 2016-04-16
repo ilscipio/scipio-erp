@@ -77,7 +77,7 @@ under the License.
           <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
             <#assign workEffortSave = WorkOrderItemFulfillment.getRelatedOne("WorkEffort", true)!>
             <#break>
-           </#list>
+          </#list>
         </#if>
       </#if>
       <@tr><@td colspan="${numColumns}"></@td></@tr>
@@ -153,15 +153,15 @@ under the License.
           <#if (maySelectItems!"N") == "Y">
           <@td>
             <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
-            <#if pickedQty gt 0 && orderHeader.statusId == "ORDER_APPROVED">${pickedQty?default(0)?string.number}<#else>${pickedQty?default(0)?string.number}</#if>
+            <#if (pickedQty > 0) && orderHeader.statusId == "ORDER_APPROVED">${(pickedQty!0)?string.number}<#else>${(pickedQty!0)?string.number}</#if>
           </@td>
           <@td>
             <#assign shippedQty = localOrderReadHelper.getItemShippedQuantity(orderItem)>
-            ${shippedQty?default(0)?string.number}
+            ${(shippedQty!0)?string.number}
           </@td>
           <@td>
             <#assign canceledQty = localOrderReadHelper.getItemCanceledQuantity(orderItem)>
-            ${canceledQty?default(0)?string.number}
+            ${(canceledQty!0)?string.number}
           </@td>
           </#if>
           <@td>
@@ -189,17 +189,18 @@ under the License.
       <#-- now cancel reason and comment field -->
       <#if (maySelectItems!"N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
         <@tr>
-          <@td colspan="7">${uiLabelMap.OrderReturnReason}
-            <select name="irm_${orderItem.orderItemSeqId}">
-              <option value=""></option>
-              <#list orderItemChangeReasons as reason>
-                <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
-              </#list>
-            </select>
-            ${uiLabelMap.CommonComments}
-            <input type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
+          <@td colspan="7">
+              <@fields type="default-compact">
+                <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
+                  <option value=""></option>
+                  <#list orderItemChangeReasons as reason>
+                    <option value="${reason.enumId}">${reason.get("description",locale)!(reason.enumId)}</option>
+                  </#list>
+                </@field>
+                <@field type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60" label=uiLabelMap.CommonComments/>
+              </@fields>
           </@td>
-          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
+          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")}</a>
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
           </@td>
         </@tr>
@@ -215,8 +216,8 @@ under the License.
       <#list itemAdjustments as orderItemAdjustment>
         <@tr>
           <@td>
-            ${uiLabelMap.EcommerceAdjustment}: ${rawString(localOrderReadHelper.getAdjustmentType(orderItemAdjustment))}
-            <#if orderItemAdjustment.description?has_content>: ${rawString(orderItemAdjustment.description)}</#if>
+            ${uiLabelMap.EcommerceAdjustment}: ${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}
+            <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>

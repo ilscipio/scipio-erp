@@ -51,8 +51,9 @@ if (inlineProductId) {
     if (inlineProduct) {
         context.product = inlineProduct;
         contentWrapper = new ProductContentWrapper(inlineProduct, request);
-        context.put("title", contentWrapper.get("PRODUCT_NAME", "html"));
-        context.put("metaDescription", contentWrapper.get("DESCRIPTION", "html"));
+        // Cato: Do NOT HTML-escape this here
+        context.put("title", contentWrapper.get("PRODUCT_NAME", "raw").toString());
+        context.put("metaDescription", contentWrapper.get("DESCRIPTION", "raw").toString());
         productTemplate = product.detailScreen;
         if (productTemplate) {
             detailScreen = productTemplate;

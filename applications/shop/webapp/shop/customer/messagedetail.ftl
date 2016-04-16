@@ -59,12 +59,13 @@ under the License.
       </@tr>
       <@tr>
           <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
-          <@td>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
+          <@td>&nbsp;${(communicationEvent.subject)!("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
       </@tr>
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
         <@td>&nbsp;</@td>
-        <@td>${rawString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}
+        <#-- Cato: FIXME: This must be reviewed for escaping issues, real security risk here -->
+        <@td>${rawString(communicationEvent.content)!("[${uiLabelMap.EcommerceEmptyBody}]")}
         </@td>
       </@tr>
     </@table>

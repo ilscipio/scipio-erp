@@ -79,15 +79,17 @@ if (category) {
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request);
     
-    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html");
+    // Cato: Do NOT HTML-escape this here
+    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "raw").toString();
 
     // Cato: don't want page title overridden/forced by groovy
     if (pageTitle) {
         //context.title = pageTitle.textData;
         context.categoryTitle = pageTitle.textData;
     } else {
-        //context.title = categoryContentWrapper.get("CATEGORY_NAME", "html");
-        context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "html");
+        // Cato: Do NOT HTML-escape this here
+        //context.title = categoryContentWrapper.get("CATEGORY_NAME", "raw").toString();
+        context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME", "raw".toString());
     }
 
     if (metaDescription) {

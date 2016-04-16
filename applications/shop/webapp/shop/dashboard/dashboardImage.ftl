@@ -17,5 +17,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
-   <@img src="https://unsplash.it/1400/480?random=1" width="100%" height="480px" type="bgcover"/>
+    <#assign hero_content_wrap_style>
+        position:absolute;
+        top:200px;
+        display:block;
+        width:100%;
+    </#assign>
+    <#assign hero_content_style>
+        max-width: 85em;
+        margin-left: auto;
+        margin-right: auto;
+    </#assign>
+    <#assign hero_title_style>
+        display:inline-block;
+        font-size: 34px;
+        padding: 5px 10px;
+        letter-spacing: 1px;
+        background-color: #d30422;
+        border-color: #de2d0f;
+        color: white;
+    </#assign>
+    <@img src="https://unsplash.it/1400/480?random=1" width="100%" height="480px" type="bgcover">
+        <#-- Some advertising statement - custom format to serve as an eyecatcher -->
+        <div style="${hero_content_wrap_style!}">
+            <div style="${hero_content_style}">
+                <div style="${hero_title_style!}">Limited time only: 10% off!</div>
+            </div>
+        </div>
+    </@img>
 </@section>

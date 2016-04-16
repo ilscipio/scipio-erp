@@ -1529,7 +1529,7 @@ Slider data entry - a single slide.
 * img
 ************
 Image tag - eases the positioning/styling of images with inline styles. Uses https://www.w3.org/TR/css3-images/#the-object-fit .
-Relies on custom catoObjectFit Javascript function as a fallback for IE. 
+Relies on custom catoObjectFit Javascript function as a fallback for IE.
 
   * Usage Examples *  
     <@img src="..." type="cover" height="" width=""/>
@@ -1570,6 +1570,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${width};</#if><#if height?has_content>height: ${height};</#if></#local>
+    <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">
             <#local imgStyle>
@@ -1580,12 +1581,14 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                 background-size: cover;
                 margin-bottom:0px;
                 display:block;
+                position:relative;
                 ${imgContainer}
             </#local>
             <div class="cato-image-container ${class}">
                 <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
                     <div style="${imgStyle}" class="cato-image"></div>
                 <#if link?has_content></a></#if>
+                <#if nested?has_content><#nested></#if>
             </div>
           <#break>
         <#default>
@@ -1594,6 +1597,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                 <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
                     <img src="${src}" class="cato-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
+                <#if nested?has_content><#nested></#if>
             </div>
     </#switch>
 </#macro>

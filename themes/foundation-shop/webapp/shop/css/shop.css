@@ -141,6 +141,8 @@ body {
 }
 
 .pricing-table .title {}
+.pricing-table .description {height:58px;}
+.pricing-table .price {font-size:1.8rem;}
 
 /*Product Detail*/
 #product-price_old{color: #ccc;}

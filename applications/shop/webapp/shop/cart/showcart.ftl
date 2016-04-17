@@ -332,9 +332,8 @@ function setAlternateGwp(field) {
         <@cell columns=9 class="${styles.text_right!}">
             <@menu type="button">
                 <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
-                <@menuitem type="link" href=makeOfbizUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>
+                <#--<@menuitem type="link" href=makeOfbizUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
                 <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
-                <@menuitem type="link" href=makeOfbizUrl("googleCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceCartToGoogleCheckout />
             </@menu>
         </@cell>
     </@row>    

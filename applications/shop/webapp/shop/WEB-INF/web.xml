@@ -54,6 +54,29 @@ under the License.
     </context-param>
 
     <filter>
+        <display-name>SimpleRedirectFilter</display-name>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <init-param>
+            <param-name>matchPattern</param-name>
+            <param-value>^/ecommerce$</param-value>
+        </init-param>
+        <init-param>
+            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
+                if false, matches only context path</description>
+            <param-name>matchFullPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>replacement</param-name>
+            <param-value>/shop</param-value>
+        </init-param>
+        <init-param>
+            <param-name>usePermanentRedirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
         <display-name>CatalogUrlFilter</display-name>
         <filter-name>CatalogUrlFilter</filter-name>
         <filter-class>org.ofbiz.product.category.CatalogUrlFilter</filter-class>
@@ -82,6 +105,10 @@ under the License.
             <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images</param-value>
         </init-param>
     </filter>
+    <filter-mapping>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>    
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>

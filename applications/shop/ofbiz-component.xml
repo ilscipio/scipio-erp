@@ -89,4 +89,13 @@ under the License.
         app-bar-display="true"
         menu-name="secondary"
         />
+    <!-- Cato: Redirects to shop -->
+    <webapp name="ecommerce"
+        title="CATO Commerce"
+        server="default-server"
+        location="webapp/shop"
+        mount-point="ecommerce"
+        app-bar-display="true"
+        menu-name="secondary"
+        />
 </ofbiz-component>

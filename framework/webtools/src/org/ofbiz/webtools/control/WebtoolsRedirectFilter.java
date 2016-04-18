@@ -40,7 +40,11 @@ public class WebtoolsRedirectFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         if (UtilValidate.isNotEmpty(httpRequest.getContextPath()) && httpRequest.getContextPath().equals("/webtools")) {
             if (UtilValidate.isNotEmpty(config.getInitParameter("redirectContextPath"))) {
-                httpResponse.sendRedirect(config.getInitParameter("redirectContextPath") + httpRequest.getPathInfo());
+                String pathInfo = httpRequest.getPathInfo();
+                if (UtilValidate.isEmpty(pathInfo))
+                    pathInfo = "";
+                httpResponse.sendRedirect(config.getInitParameter("redirectContextPath") + pathInfo);
+                return;
             }
         }
         // we're done checking; continue on

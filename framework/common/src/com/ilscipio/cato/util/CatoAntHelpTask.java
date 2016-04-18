@@ -12,8 +12,6 @@ public class CatoAntHelpTask extends Task {
 
     @Override
     public void execute() throws BuildException {     
-        getProject().log("original input:");
-        getProject().log(input);
         StringBuilder builder = new StringBuilder();
         Matcher m = Pattern.compile("(^\\x20+.*$)", Pattern.MULTILINE).matcher(input);
         while (m.find()) {

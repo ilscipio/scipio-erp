@@ -569,7 +569,35 @@ under the License.
     	     theme creators need to look at the FTL files in depth anyway, even with markup separation -->
         <echo message="[docs-ftl-cato] ========== Done Building (FTL docs) =========="/>
     </target>
-	<target name="cato-help">
+	
+	<!-- FIX-ME: This must be done properly, otherwise if nothing got compiled first cato-help will work partially -->
+	<target name="cato-check-ofbiz-common">
+	    <available property="ofbiz-common.present" file="framework/common/build/lib/ofbiz-common.jar" type="file"/>
+		<echo message="is present? ${ofbiz-common.present}" />
+		<if>
+		    <equals arg1="${ofbiz-common.present}" arg2="false" />
+		    <then>
+        		<java classname="org.apache.tools.ant.Main" fork="true" >
+                    <arg value="-buildfile" />
+                    <arg value="${ant.file}" />
+                    <classpath>
+                        <path location="framework/base/lib/*"/>                
+                    </classpath>    
+                </java>
+		    </then>
+		</if>
+	</target>
+	
+	<target name="cato-check-default-rdbms">
+		<taskdef name="check-rdbms" classname="com.ilscipio.cato.util.CatoAntRDBMSTask">
+            <classpath>     
+                <path location="framework/common/build/lib/ofbiz-common.jar" />
+            </classpath>
+        </taskdef>
+		<check-rdbms/>
+    </target>
+	
+	<target name="cato-help"> <!-- depends="cato-check-ofbiz-common" -->
 		<echo message="Cato-Commerce: Usage ./start.sh [OPTIONS] [TARGET]" />
 		<echo message="Cato-Commerce: If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present." />
 		<echo message="Cato-Commerce: OPTIONS:" />
@@ -582,17 +610,15 @@ under the License.
 	        <arg value="${ant.file}" />
 	    	<classpath>
 	    		<path location="framework/base/lib/*"/>                
-            </classpath>
+            </classpath>			
 	    </java>
-		<taskdef name="sanitize-help" classname="com.ilscipio.cato.util.CatoAntHelpTask"  >
+		<taskdef name="sanitize-help" classname="com.ilscipio.cato.util.CatoAntHelpTask">
 	        <classpath>     
 	            <path location="framework/common/build/lib/ofbiz-common.jar" />
 	        </classpath>
 	    </taskdef>
 	    <sanitize-help input="${projectHelpOutput}"/>
 		<echo message="${projectHelpOutputParsed}" />
-		
-	
 		
 	</target>
 	

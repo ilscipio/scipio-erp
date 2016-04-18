@@ -28,18 +28,19 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WebtoolsSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/WebtoolsSecurityGroupDemoData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-    <webapp name="webtools"
-        title="WebTools"
-        menu-name="secondary"
-        server="default-server"
-        location="webapp/webtools"
-        base-permission="OFBTOOLS,WEBTOOLS"
-        mount-point="/webtools"/>   
     <webapp name="admin"
         title="Admin"
         menu-name="secondary"
         server="default-server"
         location="webapp/webtools"
         base-permission="OFBTOOLS,WEBTOOLS"
-        mount-point="/admin"/>   
+        mount-point="/admin"/>  
+    <!-- Cato: Legacy mount-point redirect -->
+    <webapp name="webtools"
+        title="WebTools"
+        menu-name="secondary"
+        server="default-server"
+        location="webapp/webtoolsredirect"
+        app-bar-display="false"
+        mount-point="/webtools"/>  
 </ofbiz-component>

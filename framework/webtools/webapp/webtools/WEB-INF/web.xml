@@ -52,29 +52,6 @@ under the License.
   </context-param>
   
     <filter>
-        <display-name>SimpleRedirectFilter</display-name>
-        <filter-name>SimpleRedirectFilter</filter-name>
-        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
-        <init-param>
-            <param-name>matchPattern</param-name>
-            <param-value>^/webtools$</param-value>
-        </init-param>
-        <init-param>
-            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
-                if false, matches only context path</description>
-            <param-name>matchFullPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>replacement</param-name>
-            <param-value>/admin</param-value>
-        </init-param>
-        <init-param>
-            <param-name>usePermanentRedirect</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
-    <filter>
         <display-name>ContextFilter</display-name>
         <filter-name>ContextFilter</filter-name>
         <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
@@ -102,10 +79,6 @@ under the License.
         </init-param>    
     </filter>
     
-    <filter-mapping>
-        <filter-name>SimpleRedirectFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>

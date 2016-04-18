@@ -29,7 +29,7 @@ under the License.
     <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
     <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
     <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
-    <UserLogin userLoginId="DemoSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="DemoSupplier"/>
+    <UserLogin userLoginId="DemoSupplier" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa" partyId="DemoSupplier"/>
 
     <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
@@ -40,7 +40,7 @@ under the License.
     <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <UserLogin userLoginId="BigSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="BigSupplier"/>
+    <UserLogin userLoginId="BigSupplier" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa" partyId="BigSupplier"/>
 
     <Party partyId="EuroSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="EuroSupplier" groupName="European Supplier"/>
@@ -51,7 +51,7 @@ under the License.
     <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <UserLogin userLoginId="EuroSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="EuroSupplier"/>
+    <UserLogin userLoginId="EuroSupplier" currentPassword="{SHA}273a08e1cdf0eb5d698acd40a95ce6098a2420fa" partyId="EuroSupplier"/>
 
     <!-- supplier pricing -->
     <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="PH-1000" lastPrice="7.5" supplierProductId="PH-1000-0" availableFromDate="2005-01-01 00:00:00.000"/>

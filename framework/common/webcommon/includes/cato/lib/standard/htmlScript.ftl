@@ -220,7 +220,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+      commonOfbizUrls["${escapeFullUrl(uri, 'js')}"] = "${escapeFullUrl(makeOfbizUrl(uri), 'js')}";
       </#list>
     </@script>
   </#if>

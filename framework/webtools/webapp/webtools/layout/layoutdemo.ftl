@@ -1103,10 +1103,10 @@
     <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
     <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="CatoWebStore" controller=false /></li>
     <li><@ofbizInterWebappUrl uri="main" webSiteId="CatoWebStore" controller=true /></li>
-    <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/webtools/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/webtools/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/webtools/control/main" /></li>
-    <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/webtools/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
+    <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
   </ul>
   
   <ul>Misc tests:

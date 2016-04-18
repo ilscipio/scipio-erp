@@ -35,4 +35,11 @@ under the License.
         location="webapp/webtools"
         base-permission="OFBTOOLS,WEBTOOLS"
         mount-point="/webtools"/>   
+    <webapp name="admin"
+        title="Admin"
+        menu-name="secondary"
+        server="default-server"
+        location="webapp/webtools"
+        base-permission="OFBTOOLS,WEBTOOLS"
+        mount-point="/admin"/>   
 </ofbiz-component>

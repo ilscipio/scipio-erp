@@ -29,6 +29,10 @@ Creates a modal UI element.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+    href                    = Link
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
 -->
 <#assign modal_defaultArgs = {
   "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
@@ -42,7 +46,7 @@ Creates a modal UI element.
 
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if> <@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
+  <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if> <@compiledClassAttribStr class=class />><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>

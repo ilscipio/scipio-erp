@@ -99,6 +99,12 @@ Builds an Ofbiz navigation URL.
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.
 
+WARN: This utility and all similar link-generating utilities do NOT escape the URLs for
+    HTML or javascript! You may need to use #escapeFullUrl in addition if there is
+    any chance of the link containing parameters from user input or unsafe stored database data. 
+    The Ofbiz automatic context screen escaping is frequently bypassed using #rawString
+    for URLs, resulting in some dangerous URLs, particularly in javascript but also HTML.
+
 WARN: {{{fullPath}}} and {{{secure}}} parameters have different behavior than stock Ofbiz!
 
 With Cato, boolean arguments can be given as booleans, string representation of booleans

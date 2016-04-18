@@ -656,7 +656,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
   <#if ajaxEnabled>
     <@script>
       jQuery(document).ready(function(){
-        if (!jQuery('form[name="${formName}"]').length) {
+        if (!jQuery('form[name="${escapePart(formName, 'js')}"]').length) {
           alert("Developer: for lookups to work you must provide a form name!")
         }
       });
@@ -671,18 +671,19 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup3(document.${formName?html}.${name?html},document.${formName?html}.${descriptionFieldName},'${fieldFormName}', '${presentation}'<#rt/>
+      <a href="javascript:call_fieldlookup3(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')}, <#rt/>
+          document.${escapePart(formName, 'js-html')}.${escapePart(descriptionFieldName, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${formName}.${item}.value<#t/>
+          ,document.${escapePart(formName, 'js-html')}.${escapePart(item, 'js-html')}.value <#t/>
         </#list>
       </#if>
       );"></a><#rt/>
     <#elseif presentation?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup2(document.${formName?html}.${name?html},'${fieldFormName}', '${presentation}'<#rt/>
+      <a href="javascript:call_fieldlookup2(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#rt/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
-          ,document.${formName}.${item}.value<#t/>
+          ,document.${escapePart(formName, 'js-html')}.${escapePart(item, 'js-html')}.value<#t/>
         </#list>
       </#if>
       );"></a><#rt/>
@@ -743,7 +744,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         href="javascript:void(0);" 
         onclick="javascript:document.${formName}.${name}.value='';
           jQuery('#' + jQuery('#${id}_clear').next().attr('id').replace('_button','') + '_${id}_lookupDescription').html('');
-          <#if descriptionFieldName?has_content>document.${formName}.${descriptionFieldName}.value='';</#if>">
+          <#if descriptionFieldName?has_content>document.${formName}.${escapePart(descriptionFieldName, 'js-html')}.value='';</#if>">
           <#if clearText?has_content>${clearText}<#else>${uiLabelMap.CommonClear}</#if>
       </a>
     </#if>
@@ -1111,7 +1112,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
           <#local href = "javascript:void(0)">
         </#if>
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#t>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.${escapeFullUrl(formName, 'js-html')}.submit()<#else>javascript:void(0)</#if>"<#t>
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t>
           <#if id?has_content> id="${id}"</#if><#t>
           <#if style?has_content> style="${style}"</#if><#t>

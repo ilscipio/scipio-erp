@@ -518,6 +518,9 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               nested content will by default be put outside the link.
     href                    = Content link, for {{{link}}} type
                               Also supports ofbiz request URLs using the notation: {{{ofbizUrl://}}} (see interpretRequestUri function)
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
     onClick                 = ((js)) onClick (for content elem)
     title                   = Logical title attribute of content
     disabled                = ((boolean), default: false) Whether menu item disabled
@@ -693,7 +696,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 <#macro menuitem_link_markup itemType="" menuType="" menuSpecialType="" class="" id="" style="" href="" name="" onClick="" target="" title="" 
     attribs={} excludeAttribs=[] disabled=false selected=false active=false isNestedMenu=false parentMenuType="" parentMenuSpecialType="" itemIndex=0 
     origArgs={} passArgs={} catchArgs...>
-  <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
+  <#t><a href="${escapeFullUrl(href, 'html')}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
@@ -776,6 +779,9 @@ functionality.
                               Sometimes needed to work around FTL language.
                               For "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url                      = Base Url to be used for pagination
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
    class                    = ((css-class)) CSS classes 
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -789,6 +795,9 @@ functionality.
    paramStr                 = Extra URL parameters in string format, escaped 
                               e.g.
                                 param1=val1&amp;param2=val2
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
    viewIndexFirst           = ((int)) First viewIndex value number (0 or 1, only affects param values, not display)
    showCount                = ((boolean)) If true show "Displaying..." count or string provided in countMsg; if false don't; empty string is let markup/theme decide
    alwaysShowCount          = ((boolean)) If true, show count even if other pagination controls are supposed to be omitted

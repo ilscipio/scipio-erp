@@ -1044,6 +1044,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     text                    = Display text
                               NOTE: {{{value}}} arg is also accepted instead of {{{text}}}.
     href                    = href for submitType "link"  
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
     src                     = Image url for submitType "image"    
     confirmMsg              = Confirmation message     
     progressArgs            = Same as for submitarea, but only works if this is a top-level submit     

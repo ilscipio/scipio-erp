@@ -1463,6 +1463,9 @@ Slider data entry - a single slide.
                                "owl" & "slick" require additional seed data in order to run. 
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
     image                   = Background image URL
@@ -1496,7 +1499,7 @@ Slider data entry - a single slide.
     <#local slideId = "slide_${renderSeqNumber!}_${slideIdNum!}"/>
     <#if library=="owl" || library=="slick">
         <div id="${slideId!}" class="item">
-            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${title!}</h2></#if>
             <#if image?has_content>
@@ -1509,7 +1512,7 @@ Slider data entry - a single slide.
         </div>
     <#else>
         <div data-orbit-slide="${slideId!}" class="${styles.slide_container!}">
-            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${title!}</h2></#if>
             <#if image?has_content>
@@ -1545,6 +1548,9 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                               * bgcover = css background cover
     link                    = Link URL around nested content
                               WARN: can only use if no other links inside nested content
+                              NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
+                                  to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+                                  but other characters should not be manually escaped (apart from URL parameter encoding).
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
     width                   = (string) container width, e.g. "12px" - acts as a max-width
@@ -1585,7 +1591,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
                 ${imgContainer}
             </#local>
             <div class="cato-image-container ${class}">
-                <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
                     <div style="${imgStyle}" class="cato-image"></div>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
@@ -1594,7 +1600,7 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.
         <#default>
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${type};</#local>
             <div class="cato-image-container ${class}" style="${imgContainer}" catoFit="${type}">
-                <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
                     <img src="${src}" class="cato-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>

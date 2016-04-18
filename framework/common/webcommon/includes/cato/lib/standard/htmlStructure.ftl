@@ -652,7 +652,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
       <#if image?has_content>
         <div class="${imageClass}<#if imageBgColorClass?has_content> ${imageBgColorClass}</#if>" style="background-image: url(${image!});"></div>
       </#if>
-      <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+      <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
       <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
       <#local nestedContent><#nested></#local>
       <#if nestedContent?has_content><span class="${overlayClass}<#if overlayBgColorClass?has_content> ${overlayBgColorClass}</#if>">${nestedContent}</span></#if>

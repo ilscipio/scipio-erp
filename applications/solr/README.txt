@@ -126,7 +126,7 @@ AT LEAST once after installation and also following any data load operation that
 "install" starting mode (run-install, load-demo, etc.).
 
 To do this, one can simply use the Webtools backend to invoke the service manually
-(e.g., /webtools/control/setSyncServiceParameters?SERVICE_NAME=rebuildSolrIndex&POOL_NAME=pool&_RUN_SYNC_=Y)
+(e.g., /admin/control/setSyncServiceParameters?SERVICE_NAME=rebuildSolrIndex&POOL_NAME=pool&_RUN_SYNC_=Y)
 or summon the Webtools Job Scheduler.
 
 Once the initial indexing has been performed, one can then use the Job Scheduler to

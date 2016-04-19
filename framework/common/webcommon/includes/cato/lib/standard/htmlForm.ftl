@@ -919,8 +919,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               However, the calculated default grid area classes are NOT swapped by default; this allows swapping content while
                               preserving grid alignment. Mostly useful for small field widgets such as checkboxes and radios.
                               NOTE: You may want to use {{{labelContent}}} arg to specify content.
-    invertedClass           = ((css-class)) CSS classes, default inverted class name
+    standardClass           = ((css-class)) CSS classes, default standard (non-inverted) class name, added to outer container
                               Does not support extended class +/= syntax.
+                              Added for non-inverted fields.
+    invertedClass           = ((css-class)) CSS classes, default inverted class name, added to outer container
+                              Does not support extended class +/= syntax.
+                                       
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
@@ -1119,7 +1123,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
   "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
   "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
-  "inverted":false, "invertedClass":"",
+  "inverted":false, "invertedClass":"", "standardClass":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1272,8 +1276,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     </#if>
   </#if>
 
-  <#if inverted && (!invertedClass?is_boolean && invertedClass?has_content)>
-    <#local containerClass = addClassArg(containerClass, invertedClass)>
+  <#if inverted>
+    <#if (!invertedClass?is_boolean && invertedClass?has_content)>
+      <#local containerClass = addClassArg(containerClass, invertedClass)>
+    </#if>
+  <#else>
+    <#if (!standardClass?is_boolean && standardClass?has_content)>
+      <#local containerClass = addClassArg(containerClass, standardClass)>
+    </#if>  
   </#if>
 
   <#-- the widgets do this now

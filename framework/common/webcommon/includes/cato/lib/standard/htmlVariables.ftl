@@ -865,7 +865,8 @@
     "fields_default_fieldargs" : {                      <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. NOTE: This is more forced than the settings implemented individually, but can often work well enough. -->
         "requiredClass" : "required",
         "requiredTooltip" : "#LABEL:CommonRequired",
-        "invertedClass" : "field-inverted"
+        "invertedClass" : "field-inverted",
+        "standardClass" : "field-standard"
     },   
     "fields_default_totalcolumns" : 12,                 <#-- Logical field total column span. Doesn't have to be 12. NOTE: This could also be passed via fieldargs.totalColumns, but this also covers cases where @fields does not apply (calls to getDefaultFieldGridStyles_defaultArgs). These also give more control. -->          
     "fields_default_widgetpostfixcolumnsdiff" : 2,      <#-- The main field widget area size: widgetpostfixcolumns = (totalcolumns - widgetpostfixcolumnsdiff)  -->          
@@ -978,6 +979,7 @@
     "field_inline" : "field-inline",                    <#-- a field (usually input) that has to inline with other inputs or inline html elements -->
     "field_tooltip_wrap" : "field-tooltip-wrap",  <#-- for some @field types, an extra container is added to support tooltips; it receives this style -->
     "field_inverted" : "field-inverted",                <#-- style added to outer container for inverted fields NOTE: duplicated in fields_default_fieldargs -->
+    "field_standard" : "field-standard",                <#-- style added to outer container for non-inverted fields NOTE: duplicated in fields_default_fieldargs -->
 
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.

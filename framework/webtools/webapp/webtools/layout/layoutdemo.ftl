@@ -871,6 +871,16 @@
         </@cell>
       </@row>
     </@fields>
+      <@row>
+        <@cell>
+          <@field type="checkbox" name="checkbox2" label="Single checkbox with container false" value="val1" container=false />
+        </@cell>
+      </@row>
+      <@row>
+        <@cell>
+          <@field type="checkbox" name="checkbox3" label="Single checkbox with container false but label area force back on (this should look wrong)" value="val1" container=false labelArea=true />
+        </@cell>
+      </@row>
     </@form>
   </@section>
 

@@ -848,7 +848,12 @@
         NOTE: fields_default_xxx is also used as a fallback for the more specialized type for any
             missing individual definitions (same as menu and table defs) 
             the other ones simply override them. 
-        TODO?: DEV NOTE: could remove some of these fields in favor of _fieldargs entries, but requires review... -->
+        NOTE: Some settings can be specified using explicitly-coded entries (fields_default_xxx) OR
+            using the fieldargs map (fields_default_fieldargs.xxx). In general, the fieldargs
+            settings are stronger than the explicitly-coded ones and will override everything but
+            parameters manually specified on individual @field calls. The explicitly-coded ones are
+            treated more like defaults and are more likely to get overridden themselves.
+    -->
     <#-- default styles for most forms -->
     "fields_default_labeltype" : "horizontal",
     "fields_default_labelposition" : "left",
@@ -920,7 +925,7 @@
     "fields_default_manual_widgetonly_collapsedinlinelabel" : "",
     "fields_default_manual_widgetonly_checkboxtype" : "",
     "fields_default_manual_widgetonly_fieldargs" : {
-        "container" : "false"
+        "container" : "false"                                   <#-- NOTE: 2016-04-19: This now usually implies labelarea false (overrides the explicit setting above) -->
     }, 
 
     <#-- completely generic - NO imposed styles - keep styles out of this -->

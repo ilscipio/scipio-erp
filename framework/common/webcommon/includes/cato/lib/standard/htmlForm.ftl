@@ -877,9 +877,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     norows                  = ((boolean), default: false) If true, render without the rows-container
     nocells                 = ((boolean), default: false) If true, render without the cells-container
     container               = ((boolean), default: true) If false, sets norows=true and nocells=true
-                              NOTE: At current time, this does does not force labelArea=false, but it might be logical to do so.
-                                  Subject to change.
-                              TODO: Check if container=false should force labelArea=false (when labelArea=="").
+                              2016-04-19: By default, this now implies {{{labelArea}}} false by default, because generally
+                              the label area is implemented using containers; any specified label will go to the widget's inline label (if supported for type). 
+                              This always overrides the weaker @fields {{{labelArea}}} arg, but it is still possible to force a label area using the
+                              @field {{{labelArea}}} arg or the @fields {{{fieldArgs}}} arg. 
     inline                  = ((boolean), default: false) If true, forces container=false, marks the field with styles.field_inline, and forces inline labels (by disabling label area)
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
@@ -1169,7 +1170,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#local container = false>
     <#local class = addClassArg(class, styles.field_inline!)>
     <#-- force label to be inline using our own user flags (easiest) -->
-    <#local labelArea = false>
+    <#if !labelArea?is_boolean>
+      <#local labelArea = false>
+    </#if>
+  </#if>
+
+  <#if container?is_boolean && container == false>
+    <#if !labelArea?is_boolean>
+      <#local labelArea = false>
+    </#if>
   </#if>
 
   <#-- treat tooltip and description (nearly) as synonyms for now -->

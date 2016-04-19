@@ -88,10 +88,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityGroupDecorator">
                     <decorator-section name="body">
-                        <container style="page-title"><label text="${uiLabelMap.PageTitleEditFacilityGroup}"/></container>
+                        <!-- Cato: redundant
                         <container style="button-bar">
                             <link target="EditFacilityGroup" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}"/>
-                        </container>
+                        </container>-->
                         <include-form name="EditFacilityGroup" location="component://product/widget/facility/FacilityGroupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

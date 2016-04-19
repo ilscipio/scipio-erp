@@ -21,34 +21,6 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="CommonCheckoutDecorator">
-        <section>
-            <actions>
-                <!-- TODO: This needs to be a "smart" decorator that can adapt depending on which
-                    checkout process is used -->
-                <set field="checkoutType" from-field="checkoutType" default-value="full" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body">
-                        <section>
-                            <condition>
-                                <if-compare field="checkoutType" operator="equals" value="full" />
-                            </condition>
-                            <widgets>
-                                <include-screen name="CatoCartProgress" location="component://shop/widget/CartScreens.xml"/>    
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-
     <!-- Included Screens -->
     <screen name="anonymoustrail">
         <section>
@@ -87,8 +59,22 @@ under the License.
         </section>
     </screen>
 
-    <!-- =========== Top-Level and Stand-Alone Screens =========== -->
+    <!-- CATO widget to display the current progress -->
+    <screen name="CheckoutProgressFull">
+        <section>
+            <actions>
+                <set field="checkoutMode" from-field="checkoutMode" default-value="registered" />
+                <set field="activeStep" from-field="activeStep" default-value="cart" global="true" type="String" /><!-- the current step -->  
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://shop/webapp/shop/order/checkoutprogressfull.ftl"/></html>
+                </platform-specific>
+           </widgets>
+        </section>
+    </screen>
 
+    <!-- Cato: Superseded by CheckoutProgressFull
     <screen name="anonymousCheckoutLinks">
         <section>
             <actions>
@@ -98,21 +84,33 @@ under the License.
                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/anonymousCheckoutLinks.ftl"/></html></platform-specific>
             </widgets>
         </section>
-    </screen>
-    <screen name="anonymousCheckoutDecorator">
+    </screen>-->
+
+    <!-- =========== Top-Level and Stand-Alone Screens =========== -->
+
+    <!-- Cato: Base common decorator for all checkout pages of all types
+        NOTE: If AnonymousCheckoutDecorator was readded, would extend this one -->
+    <screen name="CommonCheckoutDecorator">
         <section>
             <actions>
-                <script location="component://shop/webapp/shop/WEB-INF/actions/order/AnonymousCheckoutLinks.groovy"/>
+                <!-- TODO: This needs to be a "smart" decorator that can adapt depending on which
+                    checkout process is used -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutCommon.groovy" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                    <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
                         <section>
+                            <condition>
+                                <if-compare field="checkoutType" operator="equals" value="full" />
+                            </condition>
                             <widgets>
-                                <include-screen name="anonymousCheckoutLinks"/>
-                                <decorator-section-include name="body"/>
+                                <include-screen name="CheckoutProgressFull"/>
                             </widgets>
                         </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -128,9 +126,13 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleShippingInformation"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CustSettings.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /> <!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="customer" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/custsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -148,9 +150,13 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleShippingInformation"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/ShipSettings.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/shipsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -168,9 +174,13 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleShippingOptions"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OptionSettings.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="shippingOptions" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/optionsettings.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -189,9 +199,13 @@ under the License.
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/PaymentOptions.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="billing" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/paymentoptions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -200,6 +214,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- Cato: TODO? Merge with paymentoptions? -->
     <screen name="paymentinformation">
         <section>
             <actions>
@@ -210,9 +225,13 @@ under the License.
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/PaymentInformation.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="billingInfo" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/paymentinformation.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -227,9 +246,13 @@ under the License.
                 <set field="titleProperty" value="PageTitleCheckoutReview"/>
                 <set field="parameters.formNameValue" value="orderreview" global="true"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
+                
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="anon" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="activeStep" value="orderReview" />
             </actions>
             <widgets>
-                <decorator-screen name="anonymousCheckoutDecorator">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/checkoutreview.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -249,6 +272,8 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/BillSettings.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billing" />
             </actions>
             <widgets>
@@ -290,6 +315,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutShippingAddress.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
@@ -311,6 +338,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutShippingOptions.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingOptions" />
             </actions>
             <widgets>
@@ -329,6 +358,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleSplitItemsForShipping"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SplitShip.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
@@ -352,6 +383,8 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="billing" />
             </actions>
             <widgets>
@@ -371,6 +404,8 @@ under the License.
                 <set field="parameters.formNameValue" value="orderreview" global="true"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
 
+                <set field="checkoutType" value="full" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="orderReview" />
             </actions>
             <widgets>
@@ -666,9 +701,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditBillingAddress.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditEmailAndTelecomNumber.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/OnePageCheckoutOptions.groovy"/>
+                
+                <set field="checkoutType" value="onepage" />
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/OnePageCheckoutProcess.ftl"/></html></platform-specific>
                     </decorator-section>

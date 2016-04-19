@@ -21,8 +21,8 @@ function submitForm(form) {
    form.submit();
 }
 </@script>
+<#-- Cato: old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@menu type="button">
-    <#-- Cato: TODO: localize -->
     <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
     <@menuitem type="link" href=makeOfbizUrl("setCustomer") onClick=submitFormOnClick text="Personal Info" />
     <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enableShippingAddress??)) text="Shipping Address" />
@@ -30,4 +30,7 @@ function submitForm(form) {
     <@menuitem type="link" href=makeOfbizUrl("setPaymentOption")class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enablePaymentOptions??)) text="Payment Options" />
     <@menuitem type="link" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}") class="+${styles.action_nav!} ${styles.action_update!}" onClick=submitFormOnClick disabled=(!(enablePaymentInformation??)) text="Payment Information" />
     <@menuitem type="link" href=makeOfbizUrl("reviewOrder") class="+${styles.action_nav!}" onClick=submitFormOnClick disabled=(!(enableReviewOrder??)) text="Review Order" />
-</@menu>
+</@menu>-->
+
+
+

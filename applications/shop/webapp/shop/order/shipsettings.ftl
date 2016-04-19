@@ -18,56 +18,35 @@ under the License.
 -->
 <#assign cart = sessionAttributes.shoppingCart!>
 
-<@section title=uiLabelMap.OrderShippingInformation>
+<@section>
   <div id="shippingFormServerError" class="errorMessage"></div>
   <form id="editShippingContact" method="post" action="<@ofbizUrl>processShipSettings</@ofbizUrl>" name="${parameters.formNameValue}">
-    <fieldset><legend>${uiLabelMap.OrderShippingInformation}</legend>
+
       <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
-      <input type="hidden" name="partyId" value="${cart.getPartyId()?default("_NA_")}"/>
-      <div>
-        <label for="address1">${uiLabelMap.PartyAddressLine1}*</label>
-        <input id="address1" name="address1" class="required" type="text" value="${address1!}"/>
-        <span id="advice-required-address1" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-      </div>
-      <div>
-        <label for="address2">${uiLabelMap.PartyAddressLine2}</label>
-        <input id="address2" name="address2" type="text" value="${address2!}"/>
-      </div>
-      <div>
-        <label for="city">${uiLabelMap.CommonCity}*</label>
-        <input id="city" name="city" class="required" type="text" value="${city!}"/>
-        <span id="advice-required-city" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-      </div>
-      <div>
-        <label for="postalCode">${uiLabelMap.PartyZipCode}*</label>
-        <input id="postalCode" name="postalCode" class="required" type="text" value="${postalCode!}" size="12" maxlength="10"/>
-        <span id="advice-required-postalCode" class="custom-advice errorMessage" style="display:none"> (${uiLabelMap.CommonRequired})</span>
-      </div>
-      <div>
-        <label for="countryGeoId">${uiLabelMap.CommonCountry}*</label>
-        <select name="countryGeoId" id="countryGeoId">
-          <#if countryGeoId??>
-            <option value="${countryGeoId!}">${countryProvinceGeo!(countryGeoId!)}</option>
-          </#if>
-          <@render resource="component://common/widget/CommonScreens.xml#countries" />
-        </select>
-        <span id="advice-required-countryGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
-      </div>
-      <div>
-        <label for="state">${uiLabelMap.CommonState}*</label>
-        <select id="stateProvinceGeoId" name="stateProvinceGeoId">
-          <#if stateProvinceGeoId?has_content>
-            <option value="${stateProvinceGeoId!}">${stateProvinceGeo!(stateProvinceGeoId!)}</option>
-          <#else>
-            <option value="_NA_">${uiLabelMap.PartyNoState}</option>
-          </#if>
-          <@render resource="component://common/widget/CommonScreens.xml#states" />
-        </select>
-        <span id="advice-required-stateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
-      </div>
-      <div>
-        <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
-      </div>
-    </fieldset>
+      <input type="hidden" name="partyId" value="${cart.getPartyId()!"_NA_"}"/>
+      
+      <@field type="input" id="address1" name="address1" required=true value=(address1!) label=uiLabelMap.PartyAddressLine1/>
+      <@field type="input" id="address2" name="address2" value=(address2!) label=uiLabelMap.PartyAddressLine2/>
+      <@field type="input" id="city" name="city" required=true value=(city!) label=uiLabelMap.CommonCity/>
+      <@field type="input" id="postalCode" name="postalCode" required=true value=(postalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
+
+      <@field type="select" name="countryGeoId" id="countryGeoId" required=true label=uiLabelMap.CommonCountry>
+        <#if countryGeoId??>
+          <option value="${countryGeoId!}">${countryProvinceGeo!(countryGeoId!)}</option>
+        </#if>
+        <@render resource="component://common/widget/CommonScreens.xml#countries" />
+      </@field>
+   
+      <@field type="select" id="stateProvinceGeoId" name="stateProvinceGeoId" label=uiLabelMap.CommonState required=true>
+        <#if stateProvinceGeoId?has_content>
+          <option value="${stateProvinceGeoId!}">${stateProvinceGeo!(stateProvinceGeoId!)}</option>
+        <#else>
+          <option value="_NA_">${uiLabelMap.PartyNoState}</option>
+        </#if>
+        <@render resource="component://common/widget/CommonScreens.xml#states" />
+      </@field>
+
+      <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value=(uiLabelMap.CommonContinue)/>
+    
   </form>
 </@section>

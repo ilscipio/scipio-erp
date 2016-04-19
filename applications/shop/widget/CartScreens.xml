@@ -134,17 +134,4 @@ under the License.
         </section>
     </screen>
     
-    <!-- CATO widget to display the current progress -->
-    <screen name="CatoCartProgress">
-        <section>
-            <actions>
-                <set field="active_step" from-field="active_step" default-value="showcart" global="true" type="String" /><!-- the current step -->  
-            </actions>
-            <widgets>
-                <platform-specific>
-                    <html><html-template location="component://shop/webapp/shop/cart/CatoSteps.ftl"/></html>
-                </platform-specific>
-           </widgets>
-        </section>
-    </screen>
 </screens>

@@ -96,7 +96,7 @@ under the License.
           <@tr>
             <@td colspan="2">&nbsp;</@td>
             <@td colspan="2">
-              <textarea name="content" class="textAreaBox" cols="40" rows="5"></textarea>
+              <textarea name="content" cols="40" rows="5"></textarea>
             </@td>
           </@tr>
           <@tr>

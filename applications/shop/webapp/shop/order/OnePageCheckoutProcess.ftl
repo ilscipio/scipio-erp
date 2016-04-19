@@ -69,7 +69,7 @@ under the License.
                   <input type="hidden" id="emailContactMechId" name="emailContactMechId" value="${emailContactMechId!}" />
                   <input type="hidden" name="shipToName" value="${shipToName!}" />
                   <input type="hidden" name="shipToAttnName" value="${shipToAttnName!}" />
-                  <#if userLogin??>
+                  <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
                     <input type="hidden" name="keepAddressBook" value="Y" />
                     <input type="hidden" name="setDefaultShipping" value="Y" />
                     <input type="hidden" name="userLoginId" id="userLoginId" value="${userLogin.userLoginId!}" />
@@ -84,31 +84,31 @@ under the License.
                   <@field type="input" label=uiLabelMap.PartyLastName id="lastName" name="lastName" required=true value=(lastName!) />
                   <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>
                     <#if shipToTelecomNumber?has_content>
-                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(shipToTelecomNumber.countryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
-                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(shipToTelecomNumber.areaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
-                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(shipToTelecomNumber.contactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
-                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(shipToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(shipToTelecomNumber.countryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(shipToTelecomNumber.areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(shipToTelecomNumber.contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(shipToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                     <#else>
-                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(parameters.shipToCountryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
-                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(parameters.shipToAreaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
-                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(parameters.shipToContactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
-                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(parameters.shipToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                      <@field type="input" inline=true name="shipToCountryCode" required=true id="shipToCountryCode" value=(parameters.shipToCountryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                      <@field type="input" inline=true name="shipToAreaCode" required=true id="shipToAreaCode" value=(parameters.shipToAreaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                      <@field type="input" inline=true name="shipToContactNumber" required=true id="shipToContactNumber" value=(parameters.shipToContactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                      <@field type="input" inline=true name="shipToExtension" id="shipToExtension" value=(parameters.shipToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                     </#if>
                   </@field>
-                  <@field type="input" id="emailAddress" name="emailAddress" required=true class="+validate-email" maxlength="255" size="40" value=(emailAddress!) label="${uiLabelMap.PartyEmailAddress}"/>
-                  <@field type="input" id="shipToAddress1" name="shipToAddress1" required=true value=(shipToAddress1!) maxlength="255" size="40" label="${uiLabelMap.PartyAddressLine1}"/>
-                  <@field type="input" id="shipToAddress2" name="shipToAddress2" value=(shipToAddress2!) maxlength="255" size="40" label="${uiLabelMap.PartyAddressLine2}"/>
-                  <@field type="input" id="shipToCity" name="shipToCity" required=true value=(shipToCity!) maxlength="255" size="40" label="${uiLabelMap.CommonCity}"/>
-                  <@field type="input" id="shipToPostalCode" name="shipToPostalCode" required=true value=(shipToPostalCode!) size="12" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
+                  <@field type="input" id="emailAddress" name="emailAddress" required=true class="+validate-email" maxlength="255" size="40" value=(emailAddress!) label=uiLabelMap.PartyEmailAddress/>
+                  <@field type="input" id="shipToAddress1" name="shipToAddress1" required=true value=(shipToAddress1!) maxlength="255" size="40" label=uiLabelMap.PartyAddressLine1/>
+                  <@field type="input" id="shipToAddress2" name="shipToAddress2" value=(shipToAddress2!) maxlength="255" size="40" label=uiLabelMap.PartyAddressLine2/>
+                  <@field type="input" id="shipToCity" name="shipToCity" required=true value=(shipToCity!) maxlength="255" size="40" label=uiLabelMap.CommonCity/>
+                  <@field type="input" id="shipToPostalCode" name="shipToPostalCode" required=true value=(shipToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
 
-                  <@field type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" required=true label="${uiLabelMap.CommonCountry}">
+                  <@field type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" required=true label=uiLabelMap.CommonCountry>
                     <#if shipToCountryGeoId??>
                       <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
                     </#if>
                     <@render resource="component://common/widget/CommonScreens.xml#countries" />
                   </@field>
                   <div id="shipToStates">
-                    <@field type="select" id="shipToStateProvinceGeoId" required=true name="shipToStateProvinceGeoId" label="${uiLabelMap.CommonState}">
+                    <@field type="select" id="shipToStateProvinceGeoId" required=true name="shipToStateProvinceGeoId" label=uiLabelMap.CommonState>
                       <#if shipToStateProvinceGeoId?has_content>
                         <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
                       <#else>
@@ -147,7 +147,7 @@ under the License.
             <form id="shippingOptionForm" action="<@ofbizUrl></@ofbizUrl>" method="post">
               <fieldset>
                 <div id="shippingOptionFormServerError" class="errorMessage"></div>
-                <@field type="select" id="shipMethod" required=true name="shipMethod" required=true label="${uiLabelMap.OrderSelectShippingMethod}">
+                <@field type="select" id="shipMethod" required=true name="shipMethod" required=true label=uiLabelMap.OrderSelectShippingMethod>
                   <option value=""></option>
                 </@field>
               </fieldset>
@@ -203,7 +203,7 @@ under the License.
                 <input type="hidden" id="billToPhoneContactMechId" name="billToPhoneContactMechId" value="${(billToTelecomNumber.contactMechId)!}" />
                 <input type="hidden" name="billToName" value="${billToName!}" />
                 <input type="hidden" name="billToAttnName" value="${billToAttnName!}" />
-                <#if userLogin??>
+                <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
                   <input type="hidden" name="keepAddressBook" value="Y" />
                   <input type="hidden" name="setDefaultBilling" value="Y" />
                   <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
@@ -213,37 +213,37 @@ under the License.
                 </#if>
                 <div id="billingFormServerError" class="errorMessage"></div>
                 
-                <@field type="input" id="firstNameOnCard" name="firstNameOnCard" required=true value=(firstNameOnCard!) label="${uiLabelMap.PartyFirstName}"/>
-                <@field type="input" id="lastNameOnCard" name="lastNameOnCard" required=true value=(lastNameOnCard!) label="${uiLabelMap.PartyLastName}"/>
+                <@field type="input" id="firstNameOnCard" name="firstNameOnCard" required=true value=(firstNameOnCard!) label=uiLabelMap.PartyFirstName/>
+                <@field type="input" id="lastNameOnCard" name="lastNameOnCard" required=true value=(lastNameOnCard!) label=uiLabelMap.PartyLastName/>
                 <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>  
                   <#if billToTelecomNumber?has_content>
-                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(billToTelecomNumber.countryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
-                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(billToTelecomNumber.areaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
-                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(billToTelecomNumber.contactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
-                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(billToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(billToTelecomNumber.countryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(billToTelecomNumber.areaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(billToTelecomNumber.contactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(billToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                   <#else>
-                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(parameters.billToCountryCode!) size="5" maxlength="10" label="${uiLabelMap.CommonCountry}"/> -
-                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(parameters.billToAreaCode!) size="5" maxlength="10" label="${uiLabelMap.PartyAreaCode}"/> -
-                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(parameters.billToContactNumber!) size="10" maxlength="15" label="${uiLabelMap.PartyContactNumber}"/> -
-                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(parameters.billToExtension!) size="5" maxlength="10" label="${uiLabelMap.PartyExtension}"/>
+                    <@field type="input" inline=true name="billToCountryCode" required=true id="billToCountryCode" value=(parameters.billToCountryCode!) size="5" maxlength="10" label=uiLabelMap.CommonCountry/> -
+                    <@field type="input" inline=true name="billToAreaCode" required=true id="billToAreaCode" value=(parameters.billToAreaCode!) size="5" maxlength="10" label=uiLabelMap.PartyAreaCode/> -
+                    <@field type="input" inline=true name="billToContactNumber" required=true id="billToContactNumber" value=(parameters.billToContactNumber!) size="10" maxlength="15" label=uiLabelMap.PartyContactNumber/> -
+                    <@field type="input" inline=true name="billToExtension" id="billToExtension" value=(parameters.billToExtension!) size="5" maxlength="10" label=uiLabelMap.PartyExtension/>
                   </#if>
                 </@field>
-                <@field type="select" name="cardType" id="cardType" required=true label="${uiLabelMap.AccountingCardType}">
+                <@field type="select" name="cardType" id="cardType" required=true label=uiLabelMap.AccountingCardType>
                     <#if cardType?has_content>
                       <option label="${cardType!}" value="${cardType!}">${cardType!}</option>
                     </#if>
                     <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
                 </@field>
 
-                <@field type="input" id="cardNumber" name="cardNumber" required=true class="+creditcard" value=(cardNumber!) size="30" maxlength="16" label="${uiLabelMap.AccountingCardNumber}"/>
+                <@field type="input" id="cardNumber" name="cardNumber" required=true class="+creditcard" value=(cardNumber!) size="30" maxlength="16" label=uiLabelMap.AccountingCardNumber/>
                 <@field type="input" id="billToCardSecurityCode" name="billToCardSecurityCode" size="4" maxlength="4" value="" label="CVV2"/>
-                <@field type="select" id="expMonth" name="expMonth" required=true label="${uiLabelMap.CommonMonth}">
+                <@field type="select" id="expMonth" name="expMonth" required=true label=uiLabelMap.CommonMonth>
                     <#if expMonth?has_content>
                       <option label="${expMonth!}" value="${expMonth!}">${expMonth!}</option>
                     </#if>
                     <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
                 </@field>
-                <@field type="select" id="expYear" name="expYear" required=true label="${uiLabelMap.CommonYear}">
+                <@field type="select" id="expYear" name="expYear" required=true label=uiLabelMap.CommonYear>
                     <#if expYear?has_content>
                       <option value="${expYear!}">${expYear!}</option>
                     </#if>
@@ -254,17 +254,17 @@ under the License.
                 <@field type="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling" type="checkbox" value="Y" checked=(useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y") label=uiLabelMap.FacilityBillingAddressSameShipping />
   
                 <div id="billingAddress"<#if useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y"> style="display:none"</#if>>
-                  <@field type="input" id="billToAddress1" name="billToAddress1" required=true size="30" value=(billToAddress1!) label="${uiLabelMap.PartyAddressLine1}"/>
-                  <@field type="input" id="billToAddress2" name="billToAddress2" value=(billToAddress2!) size="30" label="${uiLabelMap.PartyAddressLine2}"/>
-                  <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label="${uiLabelMap.CommonCity}"/>
-                  <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
-                  <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label="${uiLabelMap.CommonCountry}">
+                  <@field type="input" id="billToAddress1" name="billToAddress1" required=true size="30" value=(billToAddress1!) label=uiLabelMap.PartyAddressLine1/>
+                  <@field type="input" id="billToAddress2" name="billToAddress2" value=(billToAddress2!) size="30" label=uiLabelMap.PartyAddressLine2/>
+                  <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label=uiLabelMap.CommonCity/>
+                  <@field type="input" id="billToPostalCode" name="billToPostalCode" required=true value=(billToPostalCode!) size="12" maxlength="10" label=uiLabelMap.PartyZipCode/>
+                  <@field type="select" name="billToCountryGeoId" required=true id="billToCountryGeoId" label=uiLabelMap.CommonCountry>
                     <#if billToCountryGeoId??>
                       <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
                     </#if>
                     <@render resource="component://common/widget/CommonScreens.xml#countries" />
                   </@field>
-                  <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label="${uiLabelMap.CommonState}">
+                  <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label=uiLabelMap.CommonState>
                     <#if billToStateProvinceGeoId?has_content>
                       <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
                     <#else>

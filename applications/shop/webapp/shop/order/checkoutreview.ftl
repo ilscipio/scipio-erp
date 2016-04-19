@@ -46,7 +46,7 @@ under the License.
           <#if (requestAttributes.issuerId)?has_content>
             <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
           </#if>
-          <@field type="submit" submitType="input-button" name="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
+          <@field type="submit" submitType="input-button" inline=true name="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
         </form>
     </@cell>
   </@row>

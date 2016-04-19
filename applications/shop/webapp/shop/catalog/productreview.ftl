@@ -60,7 +60,7 @@ under the License.
       </div>
       <div>
         <label for="review">${uiLabelMap.CommonReview}:</label>
-        <textarea class="textAreaBox" name="productReview" cols="40"></textarea>
+        <textarea name="productReview" cols="40"></textarea>
       </div>
       <div>
         <a href="javascript:document.getElementById('reviewProduct').submit();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.CommonSave}]</a>

@@ -65,7 +65,7 @@ under the License.
               <option value="N" <#if "N" == selectedOption>selected="selected"</#if>>N</option>
             </select>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
-            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">${(answer.textResponse)!}</textarea>
+            <textarea cols="40" rows="5" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">${(answer.textResponse)!}</textarea>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
             <input type="text" size="15" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)!}"/>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">

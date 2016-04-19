@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section>
+<#if checkoutMode == "registered">
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
         <@step name="shippingAddress" icon="fa fa-building">Shipping Address</@step>
@@ -24,4 +25,17 @@ under the License.
         <@step name="billing" icon="fa fa-credit-card">Billing</@step>
         <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
     </@nav>
+<#else>
+    <#-- Cato: Migrated from anonymousCheckoutLinks.ftl -->
+    <@nav type="steps" activeElem=(activeStep!"cart")>
+        <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
+        <@step name="customer" icon="fa fa-cart-arrow-down">Personal Information</@step>
+        <@step name="shippingAddress" icon="fa fa-building">Shipping Address</@step>
+        <@step name="shippingOptions" icon="fa fa-truck">Shipping Options</@step>
+        <@step name="billing" icon="fa fa-credit-card">Billing</@step>
+        <#-- Cato: TODO? Merge with billing? -->
+        <@step name="billingInfo" icon="fa fa-credit-card">Billing Information</@step>
+        <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
+    </@nav>
+</#if>
 </@section>

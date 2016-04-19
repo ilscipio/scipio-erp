@@ -22,7 +22,7 @@ under the License.
 </#if>
 <@script>
 function shipBillAddr() {
-    <#if requestParameters.singleUsePayment?default("N") == "Y">
+    <#if (requestParameters.singleUsePayment!"N") == "Y">
       <#assign singleUse = "&amp;singleUsePayment=Y">
     <#else>
       <#assign singleUse = "">
@@ -35,7 +35,7 @@ function shipBillAddr() {
 }
 </@script>
 
-<@section title=uiLabelMap.AccountingPaymentInformation>
+<@section><#--  title=uiLabelMap.AccountingPaymentInformation -->
       <#-- after initial screen; show detailed screens for selected type -->
       <#if (paymentMethodTypeId!) == "CREDIT_CARD">
         <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
@@ -62,7 +62,8 @@ function shipBillAddr() {
       <#elseif (paymentMethodTypeId!) == "EXT_OFFLINE">
         <form method="post" action="<@ofbizUrl>processPaymentSettings</@ofbizUrl>" name="${parameters.formNameValue}">
       <#else>
-        <div>${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!}</div>
+        <@commonMsg type="error">${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!uiLabelMap.CommonNA}</@commonMsg>
+        <form method="post" action="#" name="${parameters.formNameValue!}">
       </#if>
 
       <#if (requestParameters.singleUsePayment!"N") == "Y">

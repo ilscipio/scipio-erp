@@ -18,11 +18,13 @@ under the License.
 -->
 <#-- CATO: ToDo: Rewrite the following javascript -->
 <@script>
+<#-- Cato: This is a duplicate from selectall.js, better version there
 function removeSelected() {
     var cform = document.cartform;
     cform.removeSelected.value = true;
     cform.submit();
 }
+-->
 function addToList() {
     var cform = document.cartform;
     cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
@@ -83,7 +85,7 @@ function setAlternateGwp(field) {
         <#if shoppingCart.items()?has_content>
             <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
             <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
-            <@menuitem type="link" href="javascript:removeSelected();" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
+            <@menuitem type="link" href="javascript:removeSelected('cartform');" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
         </#if>
     </@menu>
 </#macro>
@@ -104,7 +106,7 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this, 'cartform');" /></@th>
+                    <@th width="5%"><@field type="checkbox" container=false name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform');" /></@th>
                 </@tr>
                 </@thead>
                 <#assign itemClass = "2">

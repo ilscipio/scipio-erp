@@ -19,10 +19,10 @@ under the License.
 
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl secure=true>keywordsearch</@ofbizUrl>">
       <@row collapse=true>
-            <@cell class="${styles.grid_small!}9">
+            <@cell small=9>
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) widgetOnly=true/>
             </@cell>
-            <@cell class="${styles.grid_small!}3">
+            <@cell small=3>
               <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a>
             </@cell>
         </@row>

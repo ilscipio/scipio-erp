@@ -17,6 +17,7 @@ import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
+import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
@@ -24,6 +25,7 @@ import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.utility.ObjectWrapperWithAPISupport;
 
 /**
  * Cato: Ofbiz and Freemarker context-handling Freemarker utils.
@@ -144,45 +146,48 @@ public abstract class ContextFtlUtil {
      */
     public static void resetRequestVars(HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
-        Map<String, Object> requestVarMap = new HashMap<String, Object>();
+        RequestVarMapWrapper mapWrapper = new RequestVarMapWrapper();
         if (request != null) {
-            request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, requestVarMap);
+            request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, mapWrapper);
         }
         Map<String, Object> globalContext = getGlobalContext(context, env);
         if (globalContext != null) {
-            globalContext.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, requestVarMap);
+            globalContext.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, mapWrapper);
         }
         if (env != null) {
             // FIXME?: this doesn't share the map with the above. currently makes no real difference
             // because resetRequestVars usually called with env null, and fallback to ftl globals should be rare anyway.
-            // possible could change SimpleHash into SimpleMapModel (around requestVarMap)...
+            // possible could change SimpleHash into SimpleMapModel (around requestVarMap) 
+            // OR could make a custom TemplateModel type that refs same internal map as RequestVarMapWrapper...
+            //new RequestVarMapWrapperTemplateModel(mapWrapper.getRawMap())
             env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, new SimpleHash(env.getObjectWrapper()));
         }
     }
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object> getRequestVarMapFromReqAttribs(HttpServletRequest request) {
-        Map<String, Object> map = (Map<String, Object>) request.getAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS);
-        if (map == null) {
-            map = new HashMap<String, Object>();
-            request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, map);
+        RequestVarMapWrapper mapWrapper = (RequestVarMapWrapper) request.getAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS);
+        if (mapWrapper == null) {
+            mapWrapper = new RequestVarMapWrapper();
+            request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, mapWrapper);
         }
-        return map;
+        return mapWrapper.getRawMap();
     }
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object> getRequestVarMapFromGlobalContext(Map<String, Object> parentMap) {
-        Map<String, Object> map = (Map<String, Object>) parentMap.get(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT);
-        if (map == null) {
-            map = new HashMap<String, Object>();
-            parentMap.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, map);
+        RequestVarMapWrapper mapWrapper = (RequestVarMapWrapper) parentMap.get(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT);
+        if (mapWrapper == null) {
+            mapWrapper = new RequestVarMapWrapper();
+            parentMap.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, mapWrapper);
         }
-        return map;
+        return mapWrapper.getRawMap();
     }
 
     private static SimpleHash getRequestVarMapFromFtlGlobals(Environment env) {
         // WARN: we violate Freemarker immutability logic by changing SimpleHash after initial creation,
         // but it doesn't really matter since no template should ever read it.
+        // FIXME: We should be using RequestVarMapWrapperTemplateModel here
         SimpleHash map = null;
         try {
             map = (SimpleHash) env.getGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS);
@@ -194,6 +199,50 @@ public abstract class ContextFtlUtil {
             env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, map);
         }
         return map;
+    }
+    
+    
+    /**
+     * This silly wrapper is needed to prevent Ofbiz context's auto-escaping mechanism from wrapping our map and
+     * creating auto-escaping issues.
+     * <p>
+     * It must NOT extend Map interface.
+     */
+    public static class RequestVarMapWrapper {
+        private final Map<String, Object> map;
+
+        public RequestVarMapWrapper(Map<String, Object> map) {
+            this.map = map;
+        }
+        
+        public RequestVarMapWrapper() {
+            this.map = new HashMap<String, Object>();
+        }
+        
+        public Map<String, Object> getRawMap() {
+            return map;
+        }
+    }
+    
+    /**
+     * TODO: Should use this instead of SimpleHash so we can share underlying map with
+     * request and global context
+     */
+    public static class RequestVarMapWrapperTemplateModel implements TemplateModel {
+        private final DefaultMapAdapter mapAdapter;
+
+        public RequestVarMapWrapperTemplateModel(DefaultMapAdapter mapAdapter) {
+            this.mapAdapter = mapAdapter;
+        }
+        
+        public RequestVarMapWrapperTemplateModel(Map<String, Object> map, ObjectWrapperWithAPISupport objectWrapper) {
+            this.mapAdapter = DefaultMapAdapter.adapt(map, objectWrapper);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public Map<String, Object> getRawMap() {
+            return (Map<String, Object>) mapAdapter.getWrappedObject();
+        }
     }
 
     /**

@@ -769,6 +769,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               parameter sections (groups of parameters), as there are type-specific field parameters.
                               * {{{generic}}}: Means input defined manually with nested content. Mostly for grouping multiple sub-fields, but can be used anywhere.
                                   Specific field types should be preferred to manually defining content, where possible.
+    fieldsType              = (|default|..., default: -empty-) CONVENIENCE fields type override
+                              By default, this is empty and inherited from parent @fields element.
+                              Specifying {{{fieldsType="xxx"}}} as in:
+                                <@field type="generic" fieldsType="xxx" .../>
+                              is the same as doing:
+                                <@fields type="xxx">
+                                  <@field type="generic .../>
+                                </@fields>
     label                   = Field label
                               For top-level @field elements and and parent fields, normally the label will get consumed
                               by the label area and shown there. for child fields and some other circumstances, or whenever there is
@@ -1108,7 +1116,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
 -->
 <#assign field_defaultArgs = {
-  "type":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
+  "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
   "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
@@ -1132,14 +1140,19 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 <#macro field args={} inlineArgs...> 
   <#-- TODO: Group arguments above so easier to read... -->
 
-  <#-- parent @fields group elem info (if any; may be omitted) -->
-  <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
-  <#if !fieldsInfo.type??>
-    <#if !catoDefaultFieldsInfo?has_content>
-      <#-- optimization -->
-      <#global catoDefaultFieldsInfo = makeFieldsInfo({"type":"default"})>
+  <#-- parent @fields group elem info (if any; may be omitted in templates) -->
+  <#local fieldsType = inlineArgs.fieldsType!args.fieldsType!field_defaultArgs.fieldsType>
+  <#if fieldsType?has_content>
+    <#local fieldsInfo = makeFieldsInfo({"type":fieldsType})>
+  <#else>
+    <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
+    <#if !fieldsInfo.type??>
+      <#if !catoDefaultFieldsInfo?has_content>
+        <#-- optimization -->
+        <#global catoDefaultFieldsInfo = makeFieldsInfo({"type":"default"})>
+      </#if>
+      <#local fieldsInfo = catoDefaultFieldsInfo>
     </#if>
-    <#local fieldsInfo = catoDefaultFieldsInfo>
   </#if>
 
   <#-- special default fields override -->

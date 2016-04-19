@@ -881,6 +881,11 @@
           <@field type="checkbox" name="checkbox3" label="Single checkbox with container false but label area force back on (this should look wrong)" value="val1" widgetOnly=true labelArea=true />
         </@cell>
       </@row>
+      <@row>
+        <@cell>
+          <@field type="checkbox" fieldsType="default-manual-widgetonly" name="checkbox4" label="Single checkbox with own fields type (convenience arg)" value="val1" />
+        </@cell>
+      </@row>
     </@form>
   </@section>
 

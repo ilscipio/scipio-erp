@@ -69,12 +69,15 @@ under the License.
     <service-resource type="model" loader="main" location="servicedef/services_website.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="mca" loader="main" location="servicedef/mca.xml"/>
-
+    
+    <!-- Cato: NOTE: Even if hidden, this webapp must never be removed because it hosts some
+        essential application-agnostic content access requests (such as streaming) part of common rendering -->
     <webapp name="content"
         title="Content"
         server="default-server"
         location="webapp/content"
         base-permission="OFBTOOLS,CONTENTMGR"
+        app-bar-display="false"
         mount-point="/content"/>
 
 </ofbiz-component>

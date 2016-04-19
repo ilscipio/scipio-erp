@@ -9322,7 +9322,7 @@
         <value xml:lang="zh_TW">編輯庫存細項標簽用途</value>
     </property>
     <property key="PageTitleEditInventoryItemLabelTypes">
-        <value xml:lang="de">Bestandspositione Etikettentypen bearbeiten</value>
+        <value xml:lang="de">Bestandsposition Etikettentypen bearbeiten</value>
         <value xml:lang="en">Edit Inventory Item Label Types</value>
         <value xml:lang="es">Editar tipos de etiquetas de ítems de inventario</value>
         <value xml:lang="fr">Modifier les types d'étiquette de ligne d'inventaire</value>
@@ -9374,7 +9374,7 @@
         <value xml:lang="zh_TW">編輯產品資產用途</value>
     </property>
     <property key="PageTitleEditProductAssociations">
-        <value xml:lang="de">Produkt Zuordnungen bearbeiten</value>
+        <value xml:lang="de">Produktzuordnungen bearbeiten</value>
         <value xml:lang="en">Edit Product Associations</value>
         <value xml:lang="es">Editar Asociaciones de un Producto</value>
         <value xml:lang="fr">Modification des associations d'articles</value>

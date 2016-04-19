@@ -26,7 +26,7 @@ under the License.
   <#assign userName = person.firstName! + " " + person.middleName! + " " + person.lastName!>
 <#elseif partyGroup?has_content>
   <#assign userName = partyGroup.groupName!>
-<#elseif userLogin??>
+<#elseif userLogin?has_content && userLogin.userLoginId != "anonymous">
   <#assign userName = userLogin.userLoginId>
 <#else>
   <#assign userName = "">
@@ -37,7 +37,7 @@ under the License.
   <#assign orgName = "">
 </#if>
 <#macro generalMenu>
-    <#if userLogin??>
+    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
         <#--
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
@@ -73,7 +73,7 @@ under the License.
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
         <#include "component://common/webcommon/includes/helplink.ftl" />
     </#if>-->
-    <#if userLogin??>
+    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
         <li class="divider"></li>
         <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
@@ -200,7 +200,7 @@ under the License.
 </div>
 
 <#macro rightMenu>
-      <#if userLogin??>
+      <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
           <li class="has-dropdown not-click">
             <a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a>
             <ul class="dropdown">       
@@ -264,7 +264,7 @@ under the License.
           <#-- language select
           <li>
             <div id="lang-select">
-              <a href="<@ofbizUrl><#if userLogin??>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@ofbizUrl><#if userLogin?has_content && userLogin.userLoginId != "anonymous">viewprofile<#else>ListLocales</#if></@ofbizUrl>">
                 <i class="${styles.icon} ${styles.icon_prefix}flag"></i>
               </a>
             </div>

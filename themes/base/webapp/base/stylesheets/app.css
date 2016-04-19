@@ -10420,7 +10420,7 @@ input.field-inline, select.field-inline, textarea.field-inline {
 }
 
 /* line 565, ../scss/_base.scss */
-.has-tip.field-tooltip-wrapper {
+.has-tip.field-tooltip-wrap {
   font-weight: normal;
   border-bottom: 0;
 }

@@ -829,6 +829,22 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    widgetAreaClass         = ((css-class)) CSS classes, optional class for widget area container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    labelAreaClass          = ((css-class)) CSS classes, optional class for label area container 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    postfixAreaClass        = ((css-class)) CSS classes, optional class for postfix area container 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    widgetPostfixAreaClass  = ((css-class)) CSS classes, optional class for combined widget and postfix parent container 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
     maxlength               = ((int)) Max allowed length 
                               e.g. For text inputs, max number of characters.
     id                      = ((string), default: -auto-generated-) ID for the widget itself
@@ -896,6 +912,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
                               NOTE: Currently, the {{{args}}} map will be empty by default by default - pass using {{{prePostContentArgs}}}.
     prePostContentArgs      = ((map)) Optional map of extra user-supplied args to be passed to the {{{prePostXxx}}} content macros as the {{{args}}} parameter.
+    inverted                = ((boolean), default: false) If true, invert the widget and label area content and user-supplied and identifying classes
+                              If this is set to true, the widget area content is swapped with the label area content and the user-supplied
+                              classes and identifying classes are also swapped - {{{labelAreaClass}}} and {{{widgetAreaClass}}}. 
+                              In addition, the top-level container gets a class to mark it as inverted.
+                              However, the calculated default grid area classes are NOT swapped by default; this allows swapping content while
+                              preserving grid alignment. Mostly useful for small field widgets such as checkboxes and radios.
+                              NOTE: You may want to use {{{labelContent}}} arg to specify content.
+    invertedClass           = ((css-class)) CSS classes, default inverted class name
+                              Does not support extended class +/= syntax.
         
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
@@ -1093,6 +1118,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "titleClass":"", "formatText":"",
   "preWidgetContent":false, "postWidgetContent":false, "preLabelContent":false, "postLabelContent":false, "prePostfixContent":false, "postPostfixContent":false,
   "prePostContentArgs":{}, "postfixContentArgs":{}, "labelContentArgs":{}, "style":"",
+  "widgetAreaClass":"", "labelAreaClass":"", "postfixAreaClass":"", "widgetPostfixAreaClass":"",
+  "inverted":false, "invertedClass":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1244,6 +1271,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#local tooltip = getTextLabelFromExpr(requiredTooltip)>
     </#if>
   </#if>
+
+  <#if inverted && (!invertedClass?is_boolean && invertedClass?has_content)>
+    <#local containerClass = addClassArg(containerClass, invertedClass)>
+  </#if>
+
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->
     
@@ -1423,7 +1455,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
     labelAreaContentArgs=labelAreaContentArgs postfixContentArgs=postfixContentArgs prePostContentArgs=prePostContentArgs
-    origArgs=origArgs passArgs=passArgs>
+    widgetAreaClass=widgetAreaClass labelAreaClass=labelAreaClass postfixAreaClass=postfixAreaClass widgetPostfixAreaClass=widgetPostfixAreaClass
+    inverted=inverted origArgs=origArgs passArgs=passArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1759,16 +1792,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 <#-- @field container markup - theme override 
     nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
-<#macro field_markup_container type="" fieldsType="" class="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
+<#macro field_markup_container type="" fieldsType="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
     postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
     collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" containerStyle=""
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
+    widgetAreaClass="" labelAreaClass="" postfixAreaClass="" widgetPostfixAreaClass="" inverted=false
     origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>
-  <#local labelAreaClass = "">  
-  <#local postfixAreaClass = "">
-  <#local widgetPostfixAreaClass = "">
 
   <#local labelInRow = (labelType != "vertical")>
   
@@ -1791,32 +1822,49 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":labelArea, 
     "labelInRow":labelInRow, "postfix":postfix, "postfixSize":postfixSize,
     "fieldsType":fieldsType })>
+  <#-- NOTE: For inverted, we don't swap the defaultGridStyles grid classes, only the user-supplied and identifying ones -->
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
   <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
-  <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>
+  <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget " + fieldEntryTypeClass)>
   <#local postfixAreaClass = addClassArg(postfixAreaClass, "field-entry-postfix " + fieldEntryTypeClass)>
   <#local widgetPostfixAreaClass = addClassArg(widgetPostfixAreaClass, "field-entry-widgetpostfix " + fieldEntryTypeClass)>
 
   <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
-  <@row class=rowClass collapse=collapse!false norows=(norows || !container) id=containerId style=containerStyle>
+  <@row class=compileClassArg(rowClass) collapse=collapse!false norows=(norows || !container) id=containerId style=containerStyle>
     <#if labelType == "vertical">
       <@cell>
         <#if labelArea && labelPosition == "top">
           <@row collapse=collapse norows=(norows || !container)>
-            <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-top")>
-            <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
-              <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-              <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
-              <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+            <#if inverted>
+              <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-top")>
+            <#else>
+              <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-top")>
+            </#if>
+            <@cell class=compileClassArg(inverted?string(widgetAreaClass, labelAreaClass), defaultGridStyles.labelArea) nocells=(nocells || !container)>
+              <#if inverted>
+                <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+                <#nested>
+                <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+              <#else>
+                <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+                <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+                <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+              </#if>
             </@cell>
           </@row>
         </#if>
           <@row collapse=(collapse || (postfix && collapsePostfix)) norows=(norows || !container)>
-            <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
-              <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
-              <#nested>
-              <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+            <@cell class=compileClassArg(inverted?string(labelAreaClass, widgetAreaClass), defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+              <#if inverted>
+                <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+                <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+                <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+              <#else>
+                <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+                <#nested>
+                <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+              </#if>
             </@cell>
             <#if postfix && !nocells && container>
               <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
@@ -1834,11 +1882,21 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#else> <#-- elseif labelType == "horizontal" -->
       <#-- TODO: support more label configurations (besides horizontal left) -->
       <#if labelArea && labelPosition == "left">
-        <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
-        <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
-          <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-          <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
-          <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+        <#if inverted>
+          <#local widgetAreaClass = addClassArg(labelAreaClass, "field-entry-widget-left")>
+        <#else>
+          <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
+        </#if>
+        <@cell class=compileClassArg(inverted?string(widgetAreaClass, labelAreaClass), defaultGridStyles.labelArea) nocells=(nocells || !container)>
+          <#if inverted>
+            <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+            <#nested>
+            <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+          <#else>
+            <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+            <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+            <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+          </#if>
         </@cell>
       </#if>
 
@@ -1848,10 +1906,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#-- NOTE: here this is the same as doing 
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->
-          <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
-            <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
-            <#nested>
-            <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+          <@cell class=compileClassArg(inverted?string(labelAreaClass, widgetAreaClass), defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+            <#if inverted>
+              <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+              <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+              <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+            <#else>
+              <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+              <#nested>
+              <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+            </#if>
           </@cell>
           <#if postfix && !nocells && container>
             <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>

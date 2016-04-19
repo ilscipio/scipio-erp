@@ -944,6 +944,26 @@ public class ShoppingCartEvents {
 
         return "success";
     }
+    
+    /**
+     * Cato: Clears the cart, and if it gets destroyed in the process, make sure another is created.
+     * <p>
+     * Helps with template compatibility.
+     */
+    public static String clearAndEnsureCart(HttpServletRequest request, HttpServletResponse response) {
+        String result;
+        
+        result = clearCart(request, response);
+        if (!"success".equals(result)) {
+            return "error";
+        }
+        ShoppingCart cart = getCartObject(request);
+        if (cart == null) {
+            return "error";
+        }
+        
+        return "success";
+    }
 
     /** Totally wipe out the cart, removes all stored info. */
     public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {

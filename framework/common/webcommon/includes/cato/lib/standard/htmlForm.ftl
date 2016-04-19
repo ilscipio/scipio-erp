@@ -877,6 +877,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     norows                  = ((boolean), default: false) If true, render without the rows-container
     nocells                 = ((boolean), default: false) If true, render without the cells-container
     container               = ((boolean), default: true) If false, sets norows=true and nocells=true
+                              NOTE: At current time, this does does not force labelArea=false, but it might be logical to do so.
+                                  Subject to change.
+                              TODO: Check if container=false should force labelArea=false (when labelArea=="").
     inline                  = ((boolean), default: false) If true, forces container=false, marks the field with styles.field_inline, and forces inline labels (by disabling label area)
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
@@ -1973,12 +1976,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if required>*</#if>-->
   </#if> 
   <#if !labelDetail?is_boolean><@contentArgRender content=labelDetail args=labelContentArgs doTrim=true /></#if>
+  <#-- This was nbsp to prevent collapsing empty cells in foundation, now replaced by a CSS hack (see _base.scss)
   <#if container && !nocells>
-    <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
     <#if !label?has_content && labelDetail?is_boolean && labelContent?is_boolean>
       &nbsp;
     </#if>
-  </#if>
+  </#if>-->
 </#macro>
 
 <#-- 

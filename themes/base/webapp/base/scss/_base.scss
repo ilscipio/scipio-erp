@@ -2,6 +2,11 @@
 $include-html-reveal-classes: $include-html-classes;
 body {}
 
+/* FOUNDATION HACK: empty cells sometimes arbitrarily collapse to zero despite width, this prevents */ 
+.column, .columns {
+  min-height: 1px;
+}
+
 .fullWidth {
     width: 100%;
     /*max-width: 85em;*/

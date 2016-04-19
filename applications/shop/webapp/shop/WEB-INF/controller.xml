@@ -235,7 +235,7 @@ under the License.
     </request-map>
     <request-map uri="emptycart">
         <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearAndEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
@@ -687,7 +687,7 @@ under the License.
     </request-map>
     <request-map uri="clearcartfororder">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearAndEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="request" value="checkExternalPayment"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
@@ -1475,7 +1475,7 @@ under the License.
 
     <request-map uri="onePageClearCartForOrder">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearAndEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="request" value="onePageCheckExternalPayment"/>
         <response name="error" type="view" value="OnePageCheckout"/>
     </request-map>
@@ -1584,7 +1584,7 @@ under the License.
     
     <request-map uri="returnBackFromGoogle">
         <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearAndEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- Cato: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>

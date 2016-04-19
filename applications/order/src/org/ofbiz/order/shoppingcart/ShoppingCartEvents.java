@@ -950,7 +950,7 @@ public class ShoppingCartEvents {
      * <p>
      * Helps with template compatibility.
      */
-    public static String clearAndEnsureCart(HttpServletRequest request, HttpServletResponse response) {
+    public static String clearEnsureCart(HttpServletRequest request, HttpServletResponse response) {
         String result;
         
         result = clearCart(request, response);

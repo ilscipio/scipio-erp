@@ -25,9 +25,13 @@ under the License.
     <a href="<@ofbizUrl>showcart</@ofbizUrl>">
         <div id="microcart">
             <div id="microCartIcon"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i></div>
-            <#--<div id="microCartQuantity">${shoppingCart.getTotalQuantity()}</div>-->
+            <#--<div id="microCartQuantity">${(shoppingCart.getTotalQuantity())!0}</div>-->
             <div id="microCartTotal">   
-                <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
+                <#assign currencyUomId = (shoppingCart.getCurrency())!false>
+                <#if currencyUomId?is_boolean>
+                  <#assign currencyUomId = rawString(Static["org.ofbiz.product.store.ProductStoreWorker"].getStoreCurrencyUomId(request)!"")>
+                </#if>
+                <@ofbizCurrency amount=((shoppingCart.getDisplayGrandTotal())!0) isoCode=currencyUomId/>
             </div>
         
         </div>

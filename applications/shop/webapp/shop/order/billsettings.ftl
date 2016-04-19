@@ -161,7 +161,7 @@ function shipBillAddr() {
           <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
           <#assign postfixContent></#assign>
           <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="checkbox" container=false name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
+              <@field type="checkbox" widgetOnly=true name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
           </@invertedField>
 
           <#--<hr />-->
@@ -170,7 +170,7 @@ function shipBillAddr() {
           <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
           <#assign postfixContent></#assign>
           <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" container=false name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
+              <@field type="radio" widgetOnly=true name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
           </@invertedField>
 
           <#--<hr />-->
@@ -179,7 +179,7 @@ function shipBillAddr() {
           <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
           <#assign postfixContent></#assign>
           <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" container=false name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
+              <@field type="radio" widgetOnly=true name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
           </@invertedField>
 
           <#--<hr />-->
@@ -188,7 +188,7 @@ function shipBillAddr() {
           <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
           <#assign postfixContent></#assign>
           <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" container=false name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
+              <@field type="radio" widgetOnly=true name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
           </@invertedField>
 
         </#if>

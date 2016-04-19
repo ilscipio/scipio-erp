@@ -106,7 +106,7 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><@field type="checkbox" container=false name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform');" /></@th>
+                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform');" /></@th>
                 </@tr>
                 </@thead>
                 <#assign itemClass = "2">
@@ -256,7 +256,7 @@ function setAlternateGwp(field) {
                                         <@tr close=true open=false />
                                     </@table>
                                 <#else><#-- fixedAssetExist -->
-                                    <@field type="select" container=false name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
+                                    <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
                                         <#list 1..99 as x>
                                             <#if cartLine.getQuantity()==x>
                                                 <#assign selected = true/>

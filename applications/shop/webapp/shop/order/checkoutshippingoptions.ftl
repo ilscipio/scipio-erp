@@ -125,7 +125,7 @@ function submitForm(form, mode, value) {
                   <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                  <@field type="input" container=false size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
+                  <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
               </@field>
         </fieldset>
     </form>

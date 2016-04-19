@@ -89,7 +89,7 @@ function toggleBillingAccount(box) {
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
             </#assign>
             <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-               <@field type="radio" container=false name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
+               <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
             </@invertedField>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>

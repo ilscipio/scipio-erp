@@ -874,17 +874,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               of an inlined label using collapsing (instead of passing the inline label
                               down to the individual field type widget).
                               this may be needed for some field types.
-    norows                  = ((boolean), default: false) If true, render without the rows-container
-    nocells                 = ((boolean), default: false) If true, render without the cells-container
-    container               = ((boolean), default: true) If false, sets norows=true and nocells=true
-                              2016-04-19: By default, this now implies {{{labelArea}}} false by default, because generally
-                              the label area is implemented using containers; any specified label will go to the widget's inline label (if supported for type). 
-                              This always overrides the weaker @fields {{{labelArea}}} arg, but it is still possible to force a label area using the
-                              @field {{{labelArea}}} arg or the @fields {{{fieldArgs}}} arg. 
+    widgetOnly              = ((boolean), default: false) If true, renders only the widget element by default (no containers)
+                              Implies {{{container}}} false and {{{labelArea}}} false by default.
+                              NOTE: When there is no label area, the {{{label}}} arg trickles down into the widget's inline label area IF it supports one.
     inline                  = ((boolean), default: false) If true, forces container=false, marks the field with styles.field_inline, and forces inline labels (by disabling label area)
                               In other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                               Theme should act on this style to prevent taking up all the width.
                               In addition, this will force {{{labelArea}}} false and any label specified will use the inlined label (area).
+    norows                  = ((boolean), default: false) If true, render without the rows-container
+    nocells                 = ((boolean), default: false) If true, render without the cells-container
+    container               = ((boolean), default: true) If false, sets norows=true and nocells=true
     ignoreParentField       = ((boolean), default: false) If true causes a child field to act as if it had no parent field. Rarely needed
     required                = ((boolean), default: false) Marks a required input
     requiredClass           = ((css-class)) CSS classes, default required class name
@@ -1114,7 +1113,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
-  "tooltip":"", "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "containerId":"", "containerClass":"", "containerStyle":"",
+  "tooltip":"", "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
@@ -1175,7 +1174,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     </#if>
   </#if>
 
-  <#if container?is_boolean && container == false>
+  <#if widgetOnly?is_boolean && widgetOnly == true>
+    <#local container = false>
     <#if !labelArea?is_boolean>
       <#local labelArea = false>
     </#if>

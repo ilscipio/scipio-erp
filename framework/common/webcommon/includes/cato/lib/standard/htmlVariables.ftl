@@ -925,7 +925,7 @@
     "fields_default_manual_widgetonly_collapsedinlinelabel" : "",
     "fields_default_manual_widgetonly_checkboxtype" : "",
     "fields_default_manual_widgetonly_fieldargs" : {
-        "container" : "false"                                   <#-- NOTE: 2016-04-19: This now usually implies labelarea false (overrides the explicit setting above) -->
+        "widgetOnly" : "true"
     }, 
 
     <#-- completely generic - NO imposed styles - keep styles out of this -->

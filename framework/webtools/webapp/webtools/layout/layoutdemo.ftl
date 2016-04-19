@@ -873,12 +873,12 @@
     </@fields>
       <@row>
         <@cell>
-          <@field type="checkbox" name="checkbox2" label="Single checkbox with container false" value="val1" container=false />
+          <@field type="checkbox" name="checkbox2" label="Single checkbox with container false" value="val1" widgetOnly=true />
         </@cell>
       </@row>
       <@row>
         <@cell>
-          <@field type="checkbox" name="checkbox3" label="Single checkbox with container false but label area force back on (this should look wrong)" value="val1" container=false labelArea=true />
+          <@field type="checkbox" name="checkbox3" label="Single checkbox with container false but label area force back on (this should look wrong)" value="val1" widgetOnly=true labelArea=true />
         </@cell>
       </@row>
     </@form>

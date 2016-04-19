@@ -99,7 +99,7 @@ under the License.
                     <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                     <input type="hidden" name="useValues" value="true" />
                     <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                    <@field type="select" name="contactMechPurposeTypeId" container=false>
+                    <@field type="select" name="contactMechPurposeTypeId" widgetOnly=true>
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>

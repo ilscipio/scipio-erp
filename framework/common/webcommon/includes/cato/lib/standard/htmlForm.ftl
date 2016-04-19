@@ -1973,9 +1973,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if required>*</#if>-->
   </#if> 
   <#if !labelDetail?is_boolean><@contentArgRender content=labelDetail args=labelContentArgs doTrim=true /></#if>
-  <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
-  <#if !label?has_content && labelDetail?is_boolean && labelContent?is_boolean>
-    &nbsp;
+  <#if container && !nocells>
+    <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
+    <#if !label?has_content && labelDetail?is_boolean && labelContent?is_boolean>
+      &nbsp;
+    </#if>
   </#if>
 </#macro>
 

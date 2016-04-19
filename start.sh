@@ -21,17 +21,7 @@ check_task () {
     done
     return 1
 }
-check_rdbms () {
-    if [ -e "$OFBIZ_ENTITY_ENGINE_PATH" ] && [ -f "$OFBIZ_ENTITY_ENGINE_PATH" ] && [ -r "$OFBIZ_ENTITY_ENGINE_PATH" ]; then        
-        DEFAULT_DATASOURCES="$(sed -n -r '/<delegator name="default".*>/,/<\/delegator>/ s/.*/&/p' $OFBIZ_ENTITY_ENGINE_PATH | sed -n -e 's/^.*datasource-name="\(.*\)".*/\1/p')"
-        for ds in ${DEFAULT_DATASOURCES}; do 
-            if [ "$ds" = "$OFBIZ_DEFAULT_FS_RDBMS" ]; then return 0; fi;
-        done
-        return 1
-    else 
-        echo "$OFBIZ_ENTITY_ENGINE is an INVALID file"
-    fi
-}
+
 check_arguments () {
     # If '-h' or 'help' is found either in $1 or $2, display the help message, don't care what the other argument is.
     if [ "$#" -lt 3 ]; then
@@ -95,24 +85,5 @@ elif [ $START_ACTION -eq 2 ]; then
         sh ant $ANT_TARGET > /dev/null 2>&1
     fi   
 elif [ $START_ACTION -eq 3 ]; then
-    echo "Cato-Commerce: Welcome to Cato-Commerce"
-    check_rdbms
-    if [ $? -eq 0 ]; then    
-        echo "Cato-Commerce: Default RDBMS has been detected [$OFBIZ_DEFAULT_FS_RDBMS]"
-        if [ ! -e "$OFBIZ_DEFAULT_FS_RDBMS_PATH" ]; then
-            echo "Cato-Commerce: No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."
-            if [ $ANT_VERBOSE -eq 1 ]; then
-                sh ant load-demo
-            else
-                sh ant load-demo > /dev/null 2>&1
-            fi
-        fi            
-    fi
-    echo "Cato-Commerce: Starting framework..."
-    if [ $ANT_VERBOSE -eq 1 ]; then        
-        sh ant start &
-    else
-        sh ant start > /dev/null 2>&1 &
-    fi
-    echo "Cato-Commerce: Framework successfully started. Goto https://localhost:8443/webtoools to access the admin application."
+    sh ant cato-default-start -S -e -q
 fi

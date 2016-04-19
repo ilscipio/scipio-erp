@@ -571,33 +571,52 @@ under the License.
     </target>
 	
 	<!-- FIX-ME: This must be done properly, otherwise if nothing got compiled first cato-help will work partially -->
-	<target name="cato-check-ofbiz-common">
-	    <available property="ofbiz-common.present" file="framework/common/build/lib/ofbiz-common.jar" type="file"/>
-		<echo message="is present? ${ofbiz-common.present}" />
-		<if>
-		    <equals arg1="${ofbiz-common.present}" arg2="false" />
-		    <then>
-        		<java classname="org.apache.tools.ant.Main" fork="true" >
-                    <arg value="-buildfile" />
-                    <arg value="${ant.file}" />
-                    <classpath>
-                        <path location="framework/base/lib/*"/>                
-                    </classpath>    
-                </java>
-		    </then>
-		</if>
+	<available property="ofbiz-common.present" file="framework/common/build/lib/ofbiz-common.jar" type="file"/>
+	<target name="cato-check-ofbiz-common" unless="${ofbiz-common.present}">
+		<echo message="ofbiz-common is not present" />
+		<antcall target="build-framework" />		
 	</target>
 	
-	<target name="cato-check-default-rdbms">
+	<target name="cato-check-default-rdbms" depends="cato-check-ofbiz-common">
 		<taskdef name="check-rdbms" classname="com.ilscipio.cato.util.CatoAntRDBMSTask">
             <classpath>     
                 <path location="framework/common/build/lib/ofbiz-common.jar" />
             </classpath>
         </taskdef>
 		<check-rdbms/>
+		
     </target>
 	
-	<target name="cato-help"> <!-- depends="cato-check-ofbiz-common" -->
+	<target name="cato-default-start" depends="cato-check-default-rdbms">
+		<echo message="Cato-Commerce: Welcome to Cato-Commerce" />		
+		<echo message="Cato-Commerce: Default RDBMS has been detected [${fs.rdbms.name}]"/>
+        <if>
+            <equals arg1="${fs.rdbms.result}" arg2="presentWithNoData" />
+            <then>       
+            	<echo message="Cato-Commerce: No demo data found. Compiling and loading demo data. Please wait, this may take a few minutes..."/>
+                <antcall target="load-demo"/>            	
+            	<echo message="Cato-Commerce: Starting framework..." />
+            	<antcall target="start">
+                  <param name="cato.start.spawn" value="true" />
+                </antcall>
+            </then>
+            <elseif>
+               <equals arg1="${fs.rdbms.result}" arg2="presentWithData" />
+               <then>
+                   <echo message="Cato-Commerce: Starting framework..." />
+                   <antcall target="start">
+                      <param name="cato.start.spawn" value="true" />
+                   </antcall>
+               </then>
+            </elseif>
+            <else>
+                <echo message="No file system RDBMS." />
+            </else>
+        </if>
+	    <echo message="Cato-Commerce: Framework successfully started. Goto https://localhost:8443/admin to access the admin application." />
+	</target>	
+	
+	<target name="cato-help" depends="cato-check-ofbiz-common">
 		<echo message="Cato-Commerce: Usage ./start.sh [OPTIONS] [TARGET]" />
 		<echo message="Cato-Commerce: If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present." />
 		<echo message="Cato-Commerce: OPTIONS:" />
@@ -693,7 +712,11 @@ under the License.
 
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
-        <java jar="ofbiz.jar" fork="true">
+    	<!-- Cato: -->
+    	<condition property="spawn" else="false" >
+    	     <isset property="cato.start.spawn"/>
+    	</condition>
+        <java jar="ofbiz.jar" fork="true" spawn="${spawn}">
             <jvmarg value="${memory.initial.param}"/>
             <jvmarg value="${memory.max.param}"/>
             <jvmarg value="${memory.maxpermsize.param}"/>

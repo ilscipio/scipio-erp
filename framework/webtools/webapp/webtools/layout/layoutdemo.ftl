@@ -574,6 +574,7 @@
       <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
+      <@field type="input" name="input3nolabel" />
       <#macro custLabelAreaTest args={}>
         <label for="${args.fieldId}"><strong>${args.test1} (required and custom label content)</strong></label><#t>
       </#macro>

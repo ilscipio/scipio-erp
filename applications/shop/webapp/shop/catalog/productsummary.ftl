@@ -77,7 +77,7 @@
                     <#assign priceSaved = price.listPrice?double - price.price?double>
                     <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
                     <#--<@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/>--> 
-                    <#if (percentSaved?int > 0)><sup><small>(-${percentSaved?int}%)</small><sup></#if>
+                    <#if (percentSaved?int > 0)><sup><small>(-${percentSaved?int}%)</small></sup></#if>
                 </#if>
             </#if>
             <#if showPriceDetails?? && (showPriceDetails!"N") == "Y">

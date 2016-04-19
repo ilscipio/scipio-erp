@@ -366,7 +366,7 @@
                         <#assign priceSaved = oldPrice - currentPrice />
                         <#assign percentSaved = (priceSaved / oldPrice) * 100 />
                         ${uiLabelMap.OrderSave}: <@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed /> (${percentSaved?int}%)
-                        <sup>
+                        </sup>
                     </span>
                 </#if>
                 -->

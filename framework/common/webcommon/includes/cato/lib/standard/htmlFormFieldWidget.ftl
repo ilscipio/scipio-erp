@@ -672,7 +672,7 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#if autocomplete?has_content> autocomplete="off"</#if>/></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <a href="javascript:call_fieldlookup3(document.${escapePart(formName, 'js-html')}.${escapePart(name, 'js-html')}, <#rt/>
-          document.${escapePart(formName, 'js-html')}.${escapePart(descriptionFieldName, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t>
+          document.${escapePart(formName, 'js-html')}.${escapePart(descriptionFieldName, 'js-html')},'${escapePart(fieldFormName, 'js-html')}', '${escapePart(presentation, 'js-html')}'<#t/>
       <#if targetParameterIter?has_content>
         <#list targetParameterIter as item>
           ,document.${escapePart(formName, 'js-html')}.${escapePart(item, 'js-html')}.value <#t/>
@@ -1112,18 +1112,18 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
           <#local href = "javascript:void(0)">
         </#if>
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.${escapeFullUrl(formName, 'js-html')}.submit()<#else>javascript:void(0)</#if>"<#t>
-          <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t>
-          <#if id?has_content> id="${id}"</#if><#t>
-          <#if style?has_content> style="${style}"</#if><#t>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:document.${escapeFullUrl(formName, 'js-html')}.submit()<#else>javascript:void(0)</#if>"<#t/>
+          <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#t/>
+          <#if id?has_content> id="${id}"</#if><#t/>
+          <#if style?has_content> style="${style}"</#if><#t/>
           <#lt>><#if text?has_content>${text}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if><#rt>
-        <#if description?has_content> alt="${description}"</#if><#t>
-        <#if disabled> disabled="disabled"<#else><#t>
-          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t>
-        </#if><#t>
-        <#if style?has_content> style="${style}"</#if><#t>
+        <#if description?has_content> alt="${description}"</#if><#t/>
+        <#if disabled> disabled="disabled"<#else><#t/>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t/>
+        </#if><#t/>
+        <#if style?has_content> style="${style}"</#if><#t/>
         <#lt>/>
       <#else>
         <#-- FIXME?: slow, very specific check to test if link already has an action class.
@@ -1133,15 +1133,15 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#rt>
-        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if><#t>
-        <#if disabled> disabled="disabled"<#else><#t>
-          <#if events?has_content><@commonElemEventAttribStr events=events /><#else><#t>
-            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else><#t>
-            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t>
-            </#if><#t>
-          </#if><#t>
-        </#if><#t>
-        <#if style?has_content> style="${style}"</#if><<#t>
+        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if><#t/>
+        <#if disabled> disabled="disabled"<#else><#t/>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#else><#t/>
+            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else><#t/>
+            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if><#t/>
+            </#if><#t/>
+          </#if><#t/>
+        </#if><#t/>
+        <#if style?has_content> style="${style}"</#if><#t/>
         <#lt>/>
       </#if>
     </#local>

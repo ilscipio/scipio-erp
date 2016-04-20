@@ -32,15 +32,25 @@ function toggle(e) {
 function checkToggleDefault(e) {
     checkToggle(e, "selectAllForm");
 }
-function checkToggle(e, formName) {
+// Cato: Extended with prefix and exact name options (optional)
+function checkToggle(e, formName, name, namePrefix) {
+	if (!name && !namePrefix) {
+		namePrefix = "_rowSubmit";
+	}
     var cform = document[formName];
     if (e.checked) {
         var len = cform.elements.length;
         var allchecked = true;
         for (var i = 0; i < len; i++) {
             var element = cform.elements[i];
-            if (element.name.substring(0, 10) == "_rowSubmit" && !element.checked) {
-                allchecked = false;
+            if (namePrefix) {
+	            if (element.name.substring(0, namePrefix.length) == namePrefix && !element.checked) {
+	                allchecked = false;
+	            }
+            } else if (name) {
+            	if (element.name == name && !element.checked) {
+	                allchecked = false;
+	            }
             }
             cform.selectAll.checked = allchecked;
         }
@@ -52,13 +62,23 @@ function checkToggle(e, formName) {
 function toggleAllDefault(e) {
     toggleAll(e, "selectAllForm");
 }
-function toggleAll(e, formName) {
+// Cato: Extended with prefix and exact name options (optional)
+function toggleAll(e, formName, name, namePrefix) {
+	if (!name && !namePrefix) {
+		namePrefix = "_rowSubmit";
+	}
     var cform = document[formName];
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];
-        if (element.name.substring(0, 10) == "_rowSubmit" && element.checked != e.checked) {
-            toggle(element);
+        if (namePrefix) {
+	        if (element.name.substring(0, namePrefix.length) == namePrefix && element.checked != e.checked) {
+	            toggle(element);
+	        }
+        } else if (name) {
+        	if (element.name == name && element.checked != e.checked) {
+	            toggle(element);
+	        }
         }
     }
 }

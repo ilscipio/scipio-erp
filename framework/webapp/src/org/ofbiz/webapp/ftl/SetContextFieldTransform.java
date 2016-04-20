@@ -54,15 +54,19 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
         Map context = (Map) req.getWrappedObject();
 
         String name = ((TemplateScalarModel) args.get(0)).getAsString();
+        Object valueModel = args.get(1);
         Object value = null;
         // Cato: Let DeepUnwrap handle this...
-        //if (args.get(1) instanceof TemplateScalarModel)
-        //    value = ((TemplateScalarModel) args.get(1)).getAsString();
         //if (args.get(1) instanceof TemplateNumberModel)
         //    value = ((TemplateNumberModel) args.get(1)).getAsNumber();
         //if (args.get(1) instanceof BeanModel)
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
-        value = LangFtlUtil.unwrapAlwaysUnlessNull(args.get(1));
+        // Cato: First check if the value if escaping, if so, PREVENT escaping before (re-)storing
+        // This is because the underlying collection will re-escape values read out of it.
+        value = LangFtlUtil.unwrapIfEscapingOrNull(valueModel);
+        if (value == null) {
+            value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
+        }
                 
         context.put(name, value);
         return new SimpleScalar("");

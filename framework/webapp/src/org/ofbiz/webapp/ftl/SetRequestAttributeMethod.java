@@ -58,6 +58,7 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
 
         String name = ((TemplateScalarModel) args.get(0)).getAsString();
+        Object valueModel = args.get(1);
         Object value = null;
         // Cato: Let DeepUnwrap handle this...
         //if (args.get(1) instanceof TemplateScalarModel)
@@ -66,7 +67,12 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         //    value = ((TemplateNumberModel) args.get(1)).getAsNumber();
         //if (args.get(1) instanceof BeanModel)
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
-        value = LangFtlUtil.unwrapAlwaysUnlessNull(args.get(1));
+        // Cato: First check if the value if escaping, if so, PREVENT escaping before (re-)storing
+        // This is because the underlying collection will re-escape values read out of it.
+        value = LangFtlUtil.unwrapIfEscapingOrNull(valueModel);
+        if (value == null) {
+            value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
+        }
         
         request.setAttribute(name, value);
         return new SimpleScalar("");

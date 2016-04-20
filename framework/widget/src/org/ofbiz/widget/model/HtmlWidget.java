@@ -37,6 +37,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.ftl.EscapingModel;
 import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
@@ -83,7 +84,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public static class StringHtmlWrapperForFtl extends StringModel {
+    public static class StringHtmlWrapperForFtl extends StringModel implements EscapingModel { // Cato: special interface
         public StringHtmlWrapperForFtl(String str, BeansWrapper wrapper) {
             super(str, wrapper);
         }
@@ -93,7 +94,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public static class CollectionHtmlWrapperForFtl extends CollectionModel {
+    public static class CollectionHtmlWrapperForFtl extends CollectionModel implements EscapingModel { // Cato: special interface
 
         public CollectionHtmlWrapperForFtl(Collection<?> collection, BeansWrapper wrapper) {
             super(collection, wrapper);

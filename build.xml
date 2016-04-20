@@ -570,21 +570,14 @@ under the License.
         <echo message="[docs-ftl-cato] ========== Done Building (FTL docs) =========="/>
     </target>
 	
-	<!-- FIX-ME: This must be done properly, otherwise if nothing got compiled first cato-help will work partially -->
-	<available property="ofbiz-common.present" file="framework/common/build/lib/ofbiz-common.jar" type="file"/>
-	<target name="cato-check-ofbiz-common" unless="${ofbiz-common.present}">
-		<echo message="ofbiz-common is not present" />
-		<antcall target="build-framework" />		
-	</target>
-	
-	<target name="cato-check-default-rdbms" depends="cato-check-ofbiz-common">
+    <!-- Cato: Targets used by start.(sh|bat) scripts --> 
+	<target name="cato-check-default-rdbms">
 		<taskdef name="check-rdbms" classname="com.ilscipio.cato.util.CatoAntRDBMSTask">
             <classpath>     
                 <path location="framework/common/build/lib/ofbiz-common.jar" />
             </classpath>
         </taskdef>
 		<check-rdbms/>
-		
     </target>
 	
 	<target name="cato-default-start" depends="cato-check-default-rdbms">
@@ -616,14 +609,14 @@ under the License.
 	    <echo message="Cato-Commerce: Framework successfully started. Goto https://localhost:8443/admin to access the admin application." />
 	</target>	
 	
-	<target name="cato-help" depends="cato-check-ofbiz-common">
-		<echo message="Cato-Commerce: Usage ./start.sh [OPTIONS] [TARGET]" />
-		<echo message="Cato-Commerce: If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present." />
-		<echo message="Cato-Commerce: OPTIONS:" />
-		<echo message=" -v        Verbose. Display more info while executing targets." />
-		<echo message=" -h --help Display this help." />
-		<echo message="Cato-Commerce: TARGETS:" /> 
-		<java classname="org.apache.tools.ant.Main" outputproperty="projectHelpOutput" fork="true">	    	    	
+	<target name="cato-help">
+		<echo message="Usage ./start.sh [OPTIONS] [TARGET]" />
+		<echo message="If no arguments are passed, 'load-demo' and afterwards 'start' targets will be automatically executed. The former only if the configured datasource in $OFBIZ_ENTITY_ENGINE_PATH is $OFBIZ_DEFAULT_FS_RDBMS and no data under $OFBIZ_ENTITY_ENGINE_PATH is present." />
+		<echo message="OPTIONS:" />
+		<echo message=" -v        Verbose. Display more info while executing targets." level="error"/>
+		<echo message=" -h --help Display this help." level="error"/>
+		<echo message="TARGETS:" /> 
+		<java classname="org.apache.tools.ant.Main" outputproperty="project.help.output" fork="true">	    	    	
 		    <arg value="-projecthelp" />
 	        <arg value="-buildfile" />
 	        <arg value="${ant.file}" />
@@ -631,13 +624,13 @@ under the License.
 	    		<path location="framework/base/lib/*"/>                
             </classpath>			
 	    </java>
-		<taskdef name="sanitize-help" classname="com.ilscipio.cato.util.CatoAntHelpTask">
+		<taskdef name="sanitize-help" classname="com.ilscipio.cato.util.ant.task.CatoAntHelpTask">
 	        <classpath>     
-	            <path location="framework/common/build/lib/ofbiz-common.jar" />
+	            <path location="framework/base/lib/ant/cato-ant-util.jar" />
 	        </classpath>
 	    </taskdef>
-	    <sanitize-help input="${projectHelpOutput}"/>
-		<echo message="${projectHelpOutputParsed}" />
+	    <sanitize-help input="${project.help.output}"/>
+		<!--echo message="${project.help.output.parsed}" /-->
 		
 	</target>
 	

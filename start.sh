@@ -76,7 +76,7 @@ START_ACTION=$?
 
 if [ $START_ACTION -eq 1 ]
 then    
-    sh ant cato-help -S -e -q
+    sh ant cato-help -logger com.ilscipio.cato.util.ant.logger.CatoLogger -lib ./framework/base/lib/ant
 elif [ $START_ACTION -eq 2 ]; then    
     echo "Cato-Commerce: Specific build task found: [$ANT_TARGET]. Launching..."
     if [ $ANT_VERBOSE -eq 1 ]; then

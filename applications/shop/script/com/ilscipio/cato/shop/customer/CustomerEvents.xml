@@ -512,6 +512,16 @@ under the License.
         </if-empty>
         <check-errors/>
         <log level="info" message="If anonymous, user-login has been activated"/>
+        <!-- Cato: Don't show a success message, it only looks odd during checkout -->
+        <set field="_event_message_" value="" set-if-empty="true" set-if-null="true"/>
+        <field-to-result field="_event_message_" result-name="_event_message_"/>
+        <set field="_event_message_list_" type="List" value="" set-if-empty="true" set-if-null="true"/>
+        <field-to-result field="_event_message_list_" result-name="_event_message_list_"/>
+        <call-bsh><![CDATA[
+            // Cato: Also have to clear the previous request attribs manually because the above is not enough (both required)
+            request.removeAttribute("_EVENT_MESSAGE_");
+            request.removeAttribute("_EVENT_MESSAGE_LIST_");
+        ]]></call-bsh>
     </simple-method>
 
 
@@ -723,6 +733,7 @@ under the License.
             <!-- call create userLogin -->
             <!-- call reset password (to email a password) -->
         </if-not-empty>
+        
     </simple-method>
 
     <simple-method method-name="processShipSettings" short-description="Process Ship Settings; to be called as a Request Event" login-required="false">

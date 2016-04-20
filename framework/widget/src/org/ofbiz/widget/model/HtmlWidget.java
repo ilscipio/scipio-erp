@@ -37,6 +37,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
@@ -63,7 +64,7 @@ public class HtmlWidget extends ModelScreenWidget {
     protected static Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version));
 
     // not sure if this is the best way to get FTL to use my fancy MapModel derivative, but should work at least...
-    public static class ExtendedWrapper extends BeansWrapper {
+    public static class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // Cato: Now implements EscapingObjectWrapper for identification purposes
         public ExtendedWrapper(Version version) {
             super(version);
         }

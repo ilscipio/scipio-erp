@@ -84,7 +84,8 @@ under the License.
       <@tr>
         <#if !orderItem.productId?? || orderItem.productId == "_?_">
           <@td>
-            ${orderItem.itemDescription!""}
+            <#-- Cato: WARN: This is potentially unsafe rawString, but currently required due to HTML in descriptions... -->
+            ${rawString(orderItem.itemDescription!"")}
           </@td>
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
@@ -217,7 +218,8 @@ under the License.
         <@tr>
           <@td>
             ${uiLabelMap.EcommerceAdjustment}: ${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}
-            <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
+            <#-- Cato: WARN: description here potentially unsafe, but may contain HTML, allow for now -->
+            <#if orderItemAdjustment.description?has_content>: ${rawString(orderItemAdjustment.description)}</#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
               <#if orderItemAdjustment.primaryGeoId?has_content>
                 <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>

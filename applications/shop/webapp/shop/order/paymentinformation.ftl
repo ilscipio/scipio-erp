@@ -22,49 +22,51 @@ under the License.
 </#if>
 <@script>
 function shipBillAddr() {
+    <#-- Cato: NOTE: delim here is &, NOT &amp; -->
     <#if (requestParameters.singleUsePayment!"N") == "Y">
-      <#assign singleUse = "&amp;singleUsePayment=Y">
+      <#assign singleUse = "&singleUsePayment=Y">
     <#else>
       <#assign singleUse = "">
     </#if>
     if (document.billsetupform.useShipAddr.checked) {
-        window.location.replace("setPaymentInformation?createNew=Y&amp;addGiftCard=${requestParameters.addGiftCard!}&amp;paymentMethodTypeId=${paymentMethodTypeId!}&amp;useShipAddr=Y${singleUse}");
+        window.location.replace("setPaymentInformation?createNew=Y&addGiftCard=${requestParameters.addGiftCard!?js_string}&paymentMethodTypeId=${paymentMethodTypeId!?js_string}&useShipAddr=Y${singleUse}");
     } else {
-        window.location.replace("setPaymentInformation?createNew=Y&amp;addGiftCard=${requestParameters.addGiftCard!}&amp;paymentMethodTypeId=${paymentMethodTypeId!}${singleUse}");
+        window.location.replace("setPaymentInformation?createNew=Y&addGiftCard=${requestParameters.addGiftCard!?js_string}&paymentMethodTypeId=${paymentMethodTypeId!?js_string}${singleUse}");
     }
 }
 </@script>
 
 <@section><#--  title=uiLabelMap.AccountingPaymentInformation -->
+  <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- FIXME: proper type="..." -->
       <#-- after initial screen; show detailed screens for selected type -->
-      <#if (paymentMethodTypeId!) == "CREDIT_CARD">
-        <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
-          <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
-            <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
-            <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
-        <#elseif requestParameters.useShipAddr??>
-          <form method="post" action="<@ofbizUrl>enterCreditCard</@ofbizUrl>" name="${parameters.formNameValue}">
-        <#else>
-          <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
-        </#if>
-      <#elseif (paymentMethodTypeId!) == "EFT_ACCOUNT">
-        <#if eftAccount?has_content && postalAddress?has_content>
-          <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
-            <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
-            <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
-        <#elseif requestParameters.useShipAddr??>
-          <form method="post" action="<@ofbizUrl>enterEftAccount</@ofbizUrl>" name="${parameters.formNameValue}">
-        <#else>
-          <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
-        </#if>
-      <#elseif (paymentMethodTypeId!) == "GIFT_CARD"> <#--Don't know much how this is handled -->
-        <form method="post" action="<@ofbizUrl>enterGiftCard</@ofbizUrl>" name="${parameters.formNameValue}">
-      <#elseif (paymentMethodTypeId!) == "EXT_OFFLINE">
-        <form method="post" action="<@ofbizUrl>processPaymentSettings</@ofbizUrl>" name="${parameters.formNameValue}">
-      <#else>
-        <@commonMsg type="error">${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!uiLabelMap.CommonNA}</@commonMsg>
-        <form method="post" action="#" name="${parameters.formNameValue!}">
-      </#if>
+  <#if (paymentMethodTypeId!) == "CREDIT_CARD">
+    <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
+      <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+        <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
+        <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
+    <#elseif requestParameters.useShipAddr??>
+      <form method="post" action="<@ofbizUrl>enterCreditCard</@ofbizUrl>" name="${parameters.formNameValue}">
+    <#else>
+      <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+    </#if>
+  <#elseif (paymentMethodTypeId!) == "EFT_ACCOUNT">
+    <#if eftAccount?has_content && postalAddress?has_content>
+      <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+        <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
+        <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
+    <#elseif requestParameters.useShipAddr??>
+      <form method="post" action="<@ofbizUrl>enterEftAccount</@ofbizUrl>" name="${parameters.formNameValue}">
+    <#else>
+      <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+    </#if>
+  <#elseif (paymentMethodTypeId!) == "GIFT_CARD"> <#--Don't know much how this is handled -->
+    <form method="post" action="<@ofbizUrl>enterGiftCard</@ofbizUrl>" name="${parameters.formNameValue}">
+  <#elseif (paymentMethodTypeId!) == "EXT_OFFLINE">
+    <form method="post" action="<@ofbizUrl>processPaymentSettings</@ofbizUrl>" name="${parameters.formNameValue}">
+  <#else>
+    <@commonMsg type="error">${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!uiLabelMap.CommonNA}</@commonMsg>
+    <form method="post" action="#" name="${parameters.formNameValue!}">
+  </#if>
 
       <#if (requestParameters.singleUsePayment!"N") == "Y">
         <input type="hidden" name="singleUsePayment" value="Y"/>
@@ -142,7 +144,6 @@ function shipBillAddr() {
         </@section>
         </#if>
         <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue/>
-     
-
     </form>
+  </@fields>
 </@section>

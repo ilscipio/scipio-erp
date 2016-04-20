@@ -36,6 +36,8 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestUtil;
 
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateBooleanModel;
@@ -116,6 +118,12 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
+                    // Cato: FIXME: This should probably bypass auto-escaping,
+                    // but currently we cannot do this because in some cases there
+                    // may be security risks in existing templates, largely because 
+                    // HTML and javascript escaping are not really done properly.
+                    // This applies only to the "uri" argument (the others would be mostly safe)
+                    //result = LangFtlUtil.getAsStringNonEscaping(s);
                     result = s.getAsString();
                 } catch (TemplateModelException e) {
                     Debug.logError(e, "Template Exception", module);

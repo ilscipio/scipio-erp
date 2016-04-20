@@ -42,6 +42,8 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+
 /**
  * OfbizCurrencyTransform - Freemarker Transform for content links
  */
@@ -58,7 +60,8 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             if (o instanceof TemplateScalarModel) {
                 TemplateScalarModel s = (TemplateScalarModel) o;
                 try {
-                    result = s.getAsString();
+                    // Cato: This should bypass auto-escaping
+                    result = LangFtlUtil.getAsStringNonEscaping(s);
                 } catch (TemplateModelException e) {
                     Debug.logError(e, "Template Exception", module);
                 }
@@ -82,7 +85,13 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                return new BigDecimal(s.getAsString());
+                // Cato: This needs to bypass auto-escaping
+                //return new BigDecimal(s.getAsString());
+                try {
+                    return new BigDecimal(LangFtlUtil.getAsStringNonEscaping(s));
+                } catch (TemplateModelException e) {
+                    Debug.logError(e, "Template Exception", module);
+                }
             }
             return new BigDecimal(o.toString());
         }
@@ -110,7 +119,13 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             }
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
-                return Integer.valueOf(s.getAsString());
+                // Cato: This should bypass auto-escaping
+                //return Integer.valueOf(s.getAsString());
+                try {
+                    return Integer.valueOf(LangFtlUtil.getAsStringNonEscaping(s));
+                } catch (TemplateModelException e) {
+                    Debug.logError(e, "Template Exception", module);
+                }
             }
             return Integer.valueOf(o.toString());
         }

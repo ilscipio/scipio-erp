@@ -1345,7 +1345,7 @@ under the License.
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
+    <view-map name="main" type="screen" page="component://product/widget/facility/CommonScreens.xml#main"/>
 
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="FacilitySearchResults" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilitySearchResults"/>

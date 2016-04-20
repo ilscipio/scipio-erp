@@ -203,6 +203,63 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="main">
+        <section>
+            <actions>
+                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="titleProperty" value="ProductFacilityManager"/>
+                <set field="parameters.lookupFlag" value="Y"/>
+            </actions>
+            <widgets> 
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				    <decorator-section name="body">
+				        <container style="${styles.grid_row}">
+				            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+				                <screenlet title="${uiLabelMap.CommonRecentActivity}">
+				                    <container style="${styles.grid_row}">           
+				                        <section>
+				                            <actions>
+				                                <set field="parameters.shipmentTypeId" value="PURCHASE_SHIPMENT"/>
+				                                <set field="sectionTitle" value="${uiLabelMap.ProductIncomingShipments}"/>
+				                                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/FindShipment.groovy"/>
+				                            </actions>
+				                            <widgets>
+				                                 <container style="${styles.grid_large}6 ${styles.grid_cell}">                                                    
+                                                    <platform-specific><html><html-template location="component://product/webapp/facility/dashboard/FacilityShipments.ftl"/></html></platform-specific>
+                                                </container>
+				                            </widgets>
+				                       </section>
+				                       <section>
+                                            <actions>
+                                                <set field="parameters.shipmentTypeId" value="SALES_SHIPMENT"/>
+                                                <set field="sectionTitle" value="${uiLabelMap.ProductOutgoingShipments}"/>
+                                                <script location="component://product/webapp/facility/WEB-INF/actions/shipment/FindShipment.groovy"/>
+                                            </actions>
+                                            <widgets>
+                                                <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                    <platform-specific><html><html-template location="component://product/webapp/facility/dashboard/FacilityShipments.ftl"/></html></platform-specific>    
+                                                </container>
+                                            </widgets>
+                                        </section>            
+				                    </container>
+				                </screenlet>
+				            </container>
+				        </container>
+				        <container style="${styles.grid_row}">
+				            <container style="${styles.grid_large}6 ${styles.grid_cell}">                               
+				                                                
+				            </container>
+				            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+				                
+				            </container>
+				        </container>
+				    </decorator-section>
+				</decorator-screen>         
+            </widgets>
+        </section>
+     </screen>
 
 </screens>
 

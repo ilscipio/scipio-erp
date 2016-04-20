@@ -18,13 +18,6 @@ under the License.
 -->
 <#-- CATO: ToDo: Rewrite the following javascript -->
 <@script>
-<#-- Cato: This is a duplicate from selectall.js, better version there
-function removeSelected() {
-    var cform = document.cartform;
-    cform.removeSelected.value = true;
-    cform.submit();
-}
--->
 function addToList() {
     var cform = document.cartform;
     cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
@@ -96,9 +89,10 @@ function setAlternateGwp(field) {
     <#assign itemsFromList = false />
     <#assign promoItems = false />
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
+    <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- TODO: type="..." -->
       <input type="hidden" name="removeSelected" value="false" />
-      <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-              <@thead>
+        <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="25%">${uiLabelMap.ProductProduct}</@th>
                     <@th width="15%" class="${styles.text_right!}"></@th>
@@ -106,9 +100,10 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform');" /></@th>
+                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value="${uiLabelMap.CommonY}" onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
                 </@tr>
-                </@thead>
+            </@thead>
+            <@tbody>
                 <#assign itemClass = "2">
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine) />
@@ -273,13 +268,19 @@ function setAlternateGwp(field) {
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-                            <@td><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this,'cartform');" /><#else>&nbsp;</#if></@td>
+                            <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value="${cartLineIndex}" onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                         </@tr>
                     </#list>
+            <#--Cato: styling issues: 
+            </@tbody>
+            <@tfoot>-->
                     <@tr>
                         <@td colspan="5"></@td>
                         <@td colspan="1"><hr /></@td>
+                        <@td>&nbsp;</@td>
                     </@tr>
+
+            
                     <@tr>
                         <@td colspan="5" class="${styles.text_right!}">
                             ${uiLabelMap.CommonSubTotal}
@@ -287,6 +288,7 @@ function setAlternateGwp(field) {
                         <@td nowrap="nowrap" class="${styles.text_right!}">
                             <@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/>
                         </@td>
+                        <@td>&nbsp;</@td>
                     </@tr>
 
                <#-- other adjustments -->
@@ -297,6 +299,7 @@ function setAlternateGwp(field) {
                             ${uiLabelMap.OrderPromotion}: ${cartAdjustment.description!""}
                         </@td>
                         <@td nowrap="nowrap" class="${styles.text_right!}"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></@td>
+                        <@td>&nbsp;</@td>
                     </@tr>
                 </#list>
 
@@ -314,6 +317,7 @@ function setAlternateGwp(field) {
                 <@tr valign="top">
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
+                    <@td>&nbsp;</@td>
                 </@tr>
                 <@tr valign="top">
                     <@td colspan="5" class="${styles.text_right!}">
@@ -322,8 +326,14 @@ function setAlternateGwp(field) {
                     <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
                     </@td>
+                    <@td>&nbsp;</@td>
                 </@tr>
-            </@table>
+
+            <#--Cato: styling issues: 
+            </@tfoot>-->
+            </@tbody>
+        </@table>
+    </@fields>
     </form>
     <@row>
         <@cell columns=3>
@@ -352,7 +362,7 @@ function setAlternateGwp(field) {
 </@section>
 
 
-<@section title=uiLabelMap.ProductPromotions>
+<@section> <#-- Cato: look strange: title=uiLabelMap.ProductPromotions -->
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>

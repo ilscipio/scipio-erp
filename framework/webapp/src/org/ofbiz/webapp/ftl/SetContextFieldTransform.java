@@ -53,7 +53,9 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
         BeanModel req = (BeanModel)env.getVariable("context");
         Map context = (Map) req.getWrappedObject();
 
-        String name = ((TemplateScalarModel) args.get(0)).getAsString();
+        // Cato: name should not be escaped
+        //String name = ((TemplateScalarModel) args.get(0)).getAsString();
+        String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         Object valueModel = args.get(1);
         Object value = null;
         // Cato: Let DeepUnwrap handle this...

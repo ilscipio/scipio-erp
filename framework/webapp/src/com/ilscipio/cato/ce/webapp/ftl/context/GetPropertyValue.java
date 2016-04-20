@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.ofbiz.base.util.UtilProperties;
 
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
@@ -55,7 +57,9 @@ public class GetPropertyValue implements TemplateMethodModelEx {
         if (res != null && res.isEmpty()) {
             res = null;
         }
-        return res;
+        // Prevent escaping by EscapingObjectWrapper - values from properties are always coded
+        // by trusted people
+        return LangFtlUtil.wrapNonEscaping(res);
     }
 
 }

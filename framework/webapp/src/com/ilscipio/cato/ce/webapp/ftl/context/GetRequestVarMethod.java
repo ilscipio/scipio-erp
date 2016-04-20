@@ -21,8 +21,10 @@ package com.ilscipio.cato.ce.webapp.ftl.context;
 import java.util.List;
 
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -53,9 +55,27 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env, env.getObjectWrapper());
+        ObjectWrapper objectWrapper = getResultObjectWrapper(env);
+        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env, objectWrapper);
         
-        return res; // NOTE: result gets automatically wrapped by Freemarker on need basis
+        return LangFtlUtil.wrap(res, objectWrapper);
     }
 
+    /**
+     * Returns the appropriate result object wrapper for getRequestVar and analogous
+     * methods. 
+     * <p>
+     * CURRENTLY (2016-04-20) this returns the current and potentially-escaping wrapper.
+     * <p>
+     * In all known cases, values are stored in their original TemplateModel format and
+     * returned as such, therefore ignored by this wrapper (default BeansWrapper implementation).
+     * <p>
+     * HOWEVER, foreign code may store other values in the request vars, which we don't know
+     * the intentions of, and therefore we allow the escaping wrapper to take effect because
+     * safety is unknown to us.
+     */
+    public static ObjectWrapper getResultObjectWrapper(Environment env) {
+        //return LangFtlUtil.getNonEscapingObjectWrapper(env);
+        return LangFtlUtil.getCurrentObjectWrapper(env);
+    }
 }

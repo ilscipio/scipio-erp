@@ -24,6 +24,7 @@ import java.util.List;
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -49,7 +50,8 @@ public class ToSetMethod implements TemplateMethodModelEx {
         if (args.size() > 0) {
             TemplateModel object = (TemplateModel) args.get(0);
     
-            return LangFtlUtil.toSet(object, env.getObjectWrapper());
+            ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
+            return LangFtlUtil.toSet(object, objectWrapper);
         }
         else {
             return new HashSet<Object>();

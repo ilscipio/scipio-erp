@@ -23,6 +23,7 @@ import java.util.List;
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
@@ -72,9 +73,9 @@ public class CopyMapMethod implements TemplateMethodModelEx {
                 include = Boolean.FALSE;
             }
         }
-        
+        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
         return LangFtlUtil.copyMap(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, 
-                LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL, env.getObjectWrapper());
+                LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL, objectWrapper);
     }
     
 }

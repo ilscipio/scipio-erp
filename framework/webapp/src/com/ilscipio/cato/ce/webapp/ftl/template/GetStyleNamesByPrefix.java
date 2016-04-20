@@ -24,8 +24,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
@@ -50,12 +52,12 @@ public class GetStyleNamesByPrefix implements TemplateMethodModelEx {
         String styleString = ((TemplateScalarModel) args.get(0)).getAsString();
         styleString = TemplateFtlUtil.getPlainClassArgNames(styleString);
         
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-
         String prefix = ((TemplateScalarModel) args.get(1)).getAsString();
         
         String[] names = StringUtils.split(styleString, ' ');
-        SimpleSequence res = new SimpleSequence(names.length, env.getObjectWrapper());
+        // NonEscaping: needed because getAsString above already escapes string through EscapingObjectWrapper
+        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper();
+        SimpleSequence res = new SimpleSequence(names.length, objectWrapper);
 
         for(String name : names) {
             if (name.startsWith(prefix)) {

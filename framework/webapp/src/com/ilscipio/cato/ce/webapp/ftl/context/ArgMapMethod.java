@@ -24,6 +24,7 @@ import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateHashModelEx;
@@ -61,7 +62,10 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
             overrideArgs = (TemplateHashModelEx) methodArgs.get(3);
         }
         
-        return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, env.getObjectWrapper());
+        // NOTE: Here the choice of wrapper might make no difference, but because inputs are likely to be in escaping models,
+        // we should use non-escaping wrapper in case the strings ever got unwrapped (and therefore escaped, by getAsString) by the method
+        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
+        return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, objectWrapper);
     }    
     
     @SuppressWarnings("unchecked")

@@ -14,10 +14,10 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
-import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
@@ -25,7 +25,6 @@ import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.utility.ObjectWrapperWithAPISupport;
 
 /**
  * Cato: Ofbiz and Freemarker context-handling Freemarker utils.
@@ -159,12 +158,8 @@ public abstract class ContextFtlUtil {
             globalContext.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, mapWrapper);
         }
         if (env != null) {
-            // FIXME?: this doesn't share the map with the above. currently makes no real difference
-            // because resetRequestVars usually called with env null, and fallback to ftl globals should be rare anyway.
-            // possible could change SimpleHash into SimpleMapModel (around requestVarMap) 
-            // OR could make a custom TemplateModel type that refs same internal map as RequestVarMapWrapper...
-            //new RequestVarMapWrapperTemplateModel(mapWrapper.getRawMap())
-            env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, new SimpleHash(objectWrapper));
+            // Here we "hide" our variables in freemarker globals
+            env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, new RequestVarMapWrapperModel(mapWrapper.getRawMap()));
         }
     }
     
@@ -175,6 +170,7 @@ public abstract class ContextFtlUtil {
     private static Map<String, Object> getRequestVarMapFromReqAttribs(HttpServletRequest request) {
         RequestVarMapWrapper mapWrapper = (RequestVarMapWrapper) request.getAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS);
         if (mapWrapper == null) {
+            // FIXME: should try to get underlying map from globalContext or FTL globals
             mapWrapper = new RequestVarMapWrapper();
             request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, mapWrapper);
         }
@@ -184,27 +180,26 @@ public abstract class ContextFtlUtil {
     private static Map<String, Object> getRequestVarMapFromGlobalContext(Map<String, Object> parentMap) {
         RequestVarMapWrapper mapWrapper = (RequestVarMapWrapper) parentMap.get(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT);
         if (mapWrapper == null) {
+            // FIXME: should try to get underlying map from request or FTL globals
             mapWrapper = new RequestVarMapWrapper();
             parentMap.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, mapWrapper);
         }
         return mapWrapper.getRawMap();
     }
 
-    private static SimpleHash getRequestVarMapFromFtlGlobals(Environment env, ObjectWrapper objectWrapper) {
-        // WARN: we violate Freemarker immutability logic by changing SimpleHash after initial creation,
-        // but it doesn't really matter since no template should ever read it.
-        // FIXME: We should be using RequestVarMapWrapperTemplateModel here
-        SimpleHash map = null;
+    private static Map<String, Object> getRequestVarMapFromFtlGlobals(Environment env, ObjectWrapper objectWrapper) {
+        RequestVarMapWrapperModel mapWrapper = null;
         try {
-            map = (SimpleHash) env.getGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS);
+            mapWrapper = (RequestVarMapWrapperModel) env.getGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS);
         } catch (TemplateModelException e) {
             Debug.logError(e, "Cato: Error getting request var map from FTL globals", module);
         }
-        if (map == null) {
-            map = new SimpleHash(objectWrapper);
-            env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, map);
+        if (mapWrapper == null) {
+            // FIXME: should try to get underlying map from request or globalContext
+            mapWrapper = new RequestVarMapWrapperModel();
+            env.setGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS, mapWrapper);
         }
-        return map;
+        return mapWrapper.getRawMap();
     }
     
     
@@ -231,23 +226,23 @@ public abstract class ContextFtlUtil {
     }
     
     /**
-     * TODO: Should use this instead of SimpleHash so we can share underlying map with
-     * request and global context
+     * This wrapper essentially hides the request var map values from Freemarker
+     * so we don't have to deal with wrapping/unwrapping anymore. We simply
+     * store this in FTL vars and use methods provided here to read/write it.
      */
-    public static class RequestVarMapWrapperTemplateModel implements TemplateModel {
-        private final DefaultMapAdapter mapAdapter;
+    public static class RequestVarMapWrapperModel implements TemplateModel {
+        private final Map<String, Object> map;
 
-        public RequestVarMapWrapperTemplateModel(DefaultMapAdapter mapAdapter) {
-            this.mapAdapter = mapAdapter;
+        public RequestVarMapWrapperModel(Map<String, Object> map) {
+            this.map = map;
         }
         
-        public RequestVarMapWrapperTemplateModel(Map<String, Object> map, ObjectWrapperWithAPISupport objectWrapper) {
-            this.mapAdapter = DefaultMapAdapter.adapt(map, objectWrapper);
+        public RequestVarMapWrapperModel() {
+            this.map = new HashMap<String, Object>();
         }
         
-        @SuppressWarnings("unchecked")
         public Map<String, Object> getRawMap() {
-            return (Map<String, Object>) mapAdapter.getWrappedObject();
+            return map;
         }
     }
 
@@ -305,8 +300,7 @@ public abstract class ContextFtlUtil {
                 //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
             }
             else if (env != null) {
-                getRequestVarMapFromFtlGlobals(env, objectWrapper).put(name, (value instanceof TemplateModel) ? 
-                        (TemplateModel) value : objectWrapper.wrap(value));
+                getRequestVarMapFromFtlGlobals(env, objectWrapper).put(name, value);
                 //Debug.logInfo("setRequestVar: ftl global var (name: " + name + ")", module);
             }
             else {
@@ -394,116 +388,52 @@ public abstract class ContextFtlUtil {
         //    value = FtlTransformUtil.unwrapPermissive((TemplateModel) value);
         //}
         // if env.setGlobalVariable: 
-        //[wrapping code]
-    
         if (request != null) {
-            Map<String, Object> requestVarMap = getRequestVarMapFromReqAttribs(request);
-            
-            List<Object> stack;
-            Object stackObj = requestVarMap.get(name);
-            if (stackObj instanceof List) {
-                stack = UtilGenerics.checkList(stackObj);
-            }
-            else {
-                if (stackObj != null) {
-                    Debug.logWarning("Overriding request attribute with new stack (name: " + name + ")", module);
-                }
-                stack = new ArrayList<Object>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
-            }
-            
-            if (setLast) {
-                if (stack.isEmpty()) {
-                    stack.add(value);
-                }
-                else {
-                    stack.set(stack.size() - 1, value);
-                }                    
-            }
-            else {
-                stack.add(value);
-            }
-    
-            requestVarMap.put(name, stack);
-            //Debug.logInfo("pushRequestStack: request attrib (name: " + name + ")", module);
+            updateStack(getRequestVarMapFromReqAttribs(request), name, value, setLast, "request attributes");
         }
         else {
             Map<String, Object> globalContext = getGlobalContext(context, env);
             if (globalContext != null) {   
-                Map<String, Object> requestVarMap = getRequestVarMapFromGlobalContext(globalContext);
-                
-                List<Object> stack;
-                Object stackObj = requestVarMap.get(name);
-                if (stackObj instanceof List) {
-                    stack = UtilGenerics.checkList(stackObj);
-                }
-                else {
-                    if (stackObj != null) {
-                        Debug.logWarning("Overriding globalContext var with new stack (name: " + name + ")", module);
-                    }
-                    stack = new ArrayList<Object>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
-                }
-                
-                if (setLast) {
-                    if (stack.isEmpty()) {
-                        stack.add(value);
-                    }
-                    else {
-                        stack.set(stack.size() - 1, value);
-                    }                    
-                }
-                else {
-                    stack.add(value);
-                }
-    
-                requestVarMap.put(name, stack);
-                //Debug.logInfo("pushRequestStack: globalContext var (name: " + name + ")", module);
+                updateStack(getRequestVarMapFromGlobalContext(globalContext), name, value, setLast, "globalContext");
             }
             else if (env != null) {
-                SimpleHash requestVarMap = getRequestVarMapFromFtlGlobals(env, objectWrapper);
-                
-                SimpleSequence stack;
-                Object stackObj = requestVarMap.get(name);
-                if (stackObj instanceof SimpleSequence) {
-                    stack = (SimpleSequence) stackObj;
-                }
-                else {
-                    if (stackObj != null) {
-                        Debug.logWarning("Overriding FTL globals var with new stack (name: " + name + ")", module);
-                    }
-                    stack = new SimpleSequence(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY, objectWrapper);
-                }
-                
-                // WARN: stack.add() sort of violates freemarker language by modifying list in-place after initial construction,
-                // but no one should ever be accessing this list directly anyway apart from these methods
-                if (setLast) {
-                    if (stack.size() <= 0) {
-                        stack.add(value);
-                    }
-                    else {
-                        // NOTE: unfortunately we are forced to create a new stack here... still faster than multiple push/pop calls
-                        SimpleSequence newStack = new SimpleSequence(
-                                (stack.size() >= ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY) ? stack.size() + ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY : ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY, 
-                                        objectWrapper);
-                        for(int i=0; i < (stack.size() - 1); i++) {
-                            newStack.add(stack.get(i));
-                        }
-                        stack = newStack;
-                        stack.add(value);
-                    }                    
-                }
-                else {
-                    stack.add(value);
-                }
-                
-                requestVarMap.put(name, stack);
-                //Debug.logInfo("pushRequestStack: ftl global var (name: " + name + ")", module);
+                updateStack(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, value, setLast, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to push request scope stack (name: " + name + ")");
             }
         }
     }
-
+    
+    private static void updateStack(Map<String, Object> varMap, String name, Object value, boolean setLast, String desc) {
+        List<Object> stack;
+        Object stackObj = varMap.get(name);
+        if (stackObj instanceof List) {
+            stack = UtilGenerics.checkList(stackObj);
+        }
+        else {
+            if (stackObj != null) {
+                Debug.logWarning("Overriding " + desc + " var with new stack (name: " + name + ")", module);
+            }
+            stack = new ArrayList<Object>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
+        }
+        
+        if (setLast) {
+            if (stack.isEmpty()) {
+                stack.add(value);
+            }
+            else {
+                stack.set(stack.size() - 1, value);
+            }                    
+        }
+        else {
+            stack.add(value);
+        }
+        
+        varMap.put(name, stack);
+        //Debug.logInfo("pushRequestStack: " + desc + " var (name: " + name + ")", module);
+    }
+    
     static void pushRequestStack(String name, Object value, boolean setLast, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
@@ -592,72 +522,15 @@ public abstract class ContextFtlUtil {
         Object res = null;
     
         if (request != null) {
-            List<Object> stack = null;
-            Object stackObj = getRequestVarMapFromReqAttribs(request).get(name);
-            if (stackObj instanceof List) {
-                stack = UtilGenerics.checkList(stackObj);
-            }
-            if (stack != null && !stack.isEmpty()) {
-                res = pop ? stack.remove(stack.size() - 1) : stack.get(stack.size() - 1);
-                // don't need, just rely on references
-                //if (pop) {
-                //    request.setAttribute(name, stack);
-                //}
-            }
-            else if (pop) {
-                Debug.logError("Trying to pop empty request attrib stack (name: " + name + ")", module);
-            }
-            //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: request attrib (name: " + name + ")", module);
+            res = readStack(getRequestVarMapFromReqAttribs(request), name, pop, "request attributes");
         }
         else {
             Map<String, Object> globalContext = getGlobalContext(context, env);
             if (globalContext != null) {   
-                List<Object> stack = null;
-                Object stackObj = getRequestVarMapFromGlobalContext(globalContext).get(name);
-                if (stackObj instanceof List) {
-                    stack = UtilGenerics.checkList(stackObj);
-                }
-                if (stack != null && !stack.isEmpty()) {
-                    res = pop ? stack.remove(stack.size() - 1) : stack.get(stack.size() - 1);
-                    //if (pop) {
-                    //    globalContext.put(name, stack);
-                    //}
-                }
-                else if (pop) {
-                    Debug.logError("Trying to pop empty globalContext stack (name: " + name + ")", module);
-                }
-                //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: globalContext var (name: " + name + ")", module);
+                res = readStack(getRequestVarMapFromGlobalContext(globalContext), name, pop, "globalContext");
             }
             else if (env != null) {
-                SimpleHash requestVarMap = getRequestVarMapFromFtlGlobals(env, objectWrapper);
-                SimpleSequence stack = null;
-                Object stackObj = requestVarMap.get(name);
-                if (stackObj instanceof SimpleSequence) {
-                    stack = (SimpleSequence) stackObj;
-                }
-                if (stack != null && stack.size() >= 1) {
-                    res = stack.get(stack.size() - 1);
-                    if (pop) {
-                        if (stack.size() <= 1) {
-                            env.setGlobalVariable(name, null);
-                        }
-                        else {
-                            // unfortunately this part is poor performance, but it's the only slow op
-                            // in all of this (apart from recursive wrapping/unwrapping), so not big deal
-                            SimpleSequence newStack = new SimpleSequence(
-                                    (stack.size() >= ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY) ? stack.size() + ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY : ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY, 
-                                            objectWrapper);
-                            for(int i=0; i < (stack.size() - 1); i++) {
-                                newStack.add(stack.get(i));
-                            }
-                            requestVarMap.put(name, newStack);
-                        }
-                    }
-                }
-                else if (pop) {
-                    Debug.logError("Trying to pop empty FTL globals stack (name: " + name + ")", module);
-                }
-                //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: ftl global var (name: " + name + ")", module);
+                res = readStack(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, pop, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to " + (pop ? "pop" : "read") + " request scope stack (name: " + name + ")");
@@ -666,6 +539,28 @@ public abstract class ContextFtlUtil {
         return res;
     }
 
+    private static Object readStack(Map<String, Object> varMap, String name, boolean pop, String desc) {
+        Object res = null;
+        List<Object> stack = null;
+        Object stackObj = varMap.get(name);
+        if (stackObj instanceof List) {
+            stack = UtilGenerics.checkList(stackObj);
+        }
+        if (stack != null && !stack.isEmpty()) {
+            res = pop ? stack.remove(stack.size() - 1) : stack.get(stack.size() - 1);
+            // don't need, just rely on references
+            //if (pop) {
+            //    request.setAttribute(name, stack);
+            //}
+        }
+        else if (pop) {
+            Debug.logError("Trying to pop empty " + desc + " stack (name: " + name + ")", module);
+        }
+        //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: " + desc + " (name: " + name + ")", module);
+        return res;
+    }
+    
+    
     static Object readRequestStack(String name, boolean pop, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
@@ -719,63 +614,17 @@ public abstract class ContextFtlUtil {
      * @throws TemplateModelException
      */
     static Object getRequestStackAsList(String name, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper, LangFtlUtil.TemplateValueTargetType copyTargetType) throws TemplateModelException {
+            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper, TemplateValueTargetType copyTargetType) throws TemplateModelException {
         if (request != null) {
-            List<Object> stack = null;
-            Object stackObj = getRequestVarMapFromReqAttribs(request).get(name);
-            if (stackObj instanceof List) {
-                stack = UtilGenerics.checkList(stackObj);
-            }
-            if (stack != null) {
-                if (copyTargetType == null) {
-                    return Collections.unmodifiableList(stack);
-                }
-                else {
-                    return LangFtlUtil.copyList(stack, copyTargetType, objectWrapper);
-                }
-            }
-            else {
-                return null;
-            }
+            return getStackAsList(getRequestVarMapFromReqAttribs(request), name, copyTargetType, objectWrapper, "request attributes");
         }
         else {
             Map<String, Object> globalContext = getGlobalContext(context, env);
-            if (globalContext != null) {   
-                List<Object> stack = null;
-                Object stackObj = getRequestVarMapFromGlobalContext(globalContext).get(name);
-                if (stackObj instanceof List) {
-                    stack = UtilGenerics.checkList(stackObj);
-                }
-                if (stack != null) {
-                    if (copyTargetType == null) {
-                        return Collections.unmodifiableList(stack);
-                    }
-                    else {
-                        return LangFtlUtil.copyList(stack, copyTargetType, objectWrapper);
-                    }
-                }
-                else {
-                    return null;
-                }
+            if (globalContext != null) {  
+                return getStackAsList(getRequestVarMapFromGlobalContext(globalContext), name, copyTargetType, objectWrapper, "globalContext");
             }
             else if (env != null) {
-                SimpleHash requestVarMap = getRequestVarMapFromFtlGlobals(env, objectWrapper);
-                SimpleSequence stack = null;
-                Object stackObj = requestVarMap.get(name);
-                if (stackObj instanceof SimpleSequence) {
-                    stack = (SimpleSequence) stackObj;
-                }
-                if (stack != null) {
-                    if (copyTargetType == null) {
-                        return stack; // WARN: can't make unmodifiable?!
-                    }
-                    else {
-                        return LangFtlUtil.copyList(stack, copyTargetType, objectWrapper);
-                    }
-                }
-                else {
-                    return null;
-                }
+                return getStackAsList(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, copyTargetType, objectWrapper, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to get request scope stack (name: " + name + ")");
@@ -783,6 +632,26 @@ public abstract class ContextFtlUtil {
         }
     }
 
+    private static Object getStackAsList(Map<String, Object> varMap, String name, TemplateValueTargetType copyTargetType, ObjectWrapper objectWrapper, String desc) throws TemplateModelException {
+        List<Object> stack = null;
+        Object stackObj = varMap.get(name);
+        if (stackObj instanceof List) {
+            stack = UtilGenerics.checkList(stackObj);
+        }
+        if (stack != null) {
+            if (copyTargetType == null) {
+                return Collections.unmodifiableList(stack);
+            }
+            else {
+                return LangFtlUtil.copyList(stack, copyTargetType, objectWrapper);
+            }
+        }
+        else {
+            return null;
+        }
+    }
+    
+    
     /**
      * Returns copy of request stack as a SimpleSequence.
      */

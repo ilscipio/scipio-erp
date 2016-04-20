@@ -24,6 +24,7 @@ import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
@@ -50,7 +51,8 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        ContextFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env, env.getObjectWrapper());
+        ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
+        ContextFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env, objectWrapper);
         
         return new SimpleScalar("");
     }
@@ -66,7 +68,8 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = ContextFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env, env.getObjectWrapper());
+        ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
+        Object res = ContextFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env, objectWrapper);
  
         return res; // NOTE: result automatically wrapped as needed by freemarker
     }
@@ -93,8 +96,9 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
         
         Environment env = CommonFtlUtil.getCurrentEnvironment();
+        ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
         Object res = ContextFtlUtil.getRequestStackAsList(stackName, 
-                (origList ? null : LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL), env, env.getObjectWrapper());
+                (origList ? null : LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL), env, objectWrapper);
         return res;
     }    
     

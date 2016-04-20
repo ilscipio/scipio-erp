@@ -23,6 +23,7 @@ import java.util.List;
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -45,7 +46,8 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        return LangFtlUtil.copyObject(object, null, env.getObjectWrapper());
+        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
+        return LangFtlUtil.copyObject(object, null, objectWrapper);
     }
     
 }

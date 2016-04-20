@@ -78,8 +78,10 @@ under the License.
                   <#else>
                     <input type="hidden" name="keepAddressBook" value="N" />
                   </#if>
-                  <div id="shippingFormServerError" class="errorMessage"></div>
-                  
+                  <@alert type="error" containerId="shippingFormServerError_container" containerStyle="display:none;">
+                    <div id="shippingFormServerError" class="errorMessage"></div>
+                  </@alert>
+                
                   <@field type="input" label=uiLabelMap.PartyFirstName id="firstName" name="firstName" required=true value=(firstName!) />
                   <@field type="input" label=uiLabelMap.PartyLastName id="lastName" name="lastName" required=true value=(lastName!) />
                   <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>
@@ -146,7 +148,9 @@ under the License.
           <div id="editShippingOptionPanel" style="display: none;">
             <form id="shippingOptionForm" action="<@ofbizUrl></@ofbizUrl>" method="post">
               <fieldset>
-                <div id="shippingOptionFormServerError" class="errorMessage"></div>
+                <@alert type="error" containerId="shippingOptionFormServerError_container" containerStyle="display:none;">
+                  <div id="shippingOptionFormServerError" class="errorMessage"></div>
+                </@alert>
                 <@field type="select" id="shipMethod" required=true name="shipMethod" required=true label=uiLabelMap.OrderSelectShippingMethod>
                   <option value=""></option>
                 </@field>
@@ -211,7 +215,9 @@ under the License.
                 <#else>
                   <input type="hidden" name="keepAddressBook" value="N" />
                 </#if>
-                <div id="billingFormServerError" class="errorMessage"></div>
+                <@alert type="error" containerId="billingFormServerError_container" containerStyle="display:none;">
+                  <div id="billingFormServerError" class="errorMessage"></div>
+                </@alert>
                 
                 <@field type="input" id="firstNameOnCard" name="firstNameOnCard" required=true value=(firstNameOnCard!) label=uiLabelMap.PartyFirstName/>
                 <@field type="input" id="lastNameOnCard" name="lastNameOnCard" required=true value=(lastNameOnCard!) label=uiLabelMap.PartyLastName/>

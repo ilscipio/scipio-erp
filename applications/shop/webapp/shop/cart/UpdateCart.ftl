@@ -35,17 +35,22 @@ under the License.
       </@thead>
       <@tbody>
         <#list shoppingCart.items() as cartLine>
-          <#if cartLine.getProductId()??>
-            <#if cartLine.getParentProductId()??>
-              <#assign parentProductId = cartLine.getParentProductId() />
-            <#else>
-              <#assign parentProductId = cartLine.getProductId() />
-            </#if>
-            <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
-            <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-          </#if>
           <@tr id="cartItemDisplayRow_${cartLine_index}">
-            <@td headers="orderItem"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" /></@td>
+            <@td headers="orderItem">
+              <#if cartLine.getProductId()??>
+                <#if cartLine.getParentProductId()??>
+                  <#assign parentProductId = cartLine.getParentProductId() />
+                <#else>
+                  <#assign parentProductId = cartLine.getProductId() />
+                </#if>
+              </#if>
+              <#-- CATO: Uncomment if you want to use the image placeholders
+                <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
+                <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
+                <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+              -->
+              ${cartLine.getProductId()!}
+            </@td>
             <@td headers="description">${cartLine.getName()!}</@td>
             <@td headers="unitPrice">${cartLine.getDisplayPrice()}</@td>
             <@td headers="quantity"><span id="completedCartItemQty_${cartLine_index}">${cartLine.getQuantity()?string.number}</span></@td>
@@ -86,7 +91,11 @@ under the License.
     <form id="cartForm" method="post" action="<@ofbizUrl></@ofbizUrl>">
       <fieldset>
         <input type="hidden" name="removeSelected" value="false" />
-        <div id="cartFormServerError" class="errorMessage"></div>
+        
+        <@alert type="error" containerId="cartFormServerError_container" containerStyle="display:none;">
+          <div id="cartFormServerError" class="errorMessage"></div>
+        </@alert>
+
         <#-- Cato: Always disable responsive on this one or it won't play nice with JS... -->
         <@table type="data-list" responsive=false id="editCartPanel_cartItems">
           <@thead>
@@ -110,15 +119,22 @@ under the License.
                     <#else>
                       <#assign parentProductId = cartLine.getProductId() />
                     </#if>
-                    <#-- CATO: Uncomment if you want to use the image placeholders
+                  </#if>
+                  <#-- CATO: Uncomment if you want to use the image placeholders
+                  <#if cartLine.getProductId()??>
+                    <#if cartLine.getParentProductId()??>
+                      <#assign parentProductId = cartLine.getParentProductId() />
+                    <#else>
+                      <#assign parentProductId = cartLine.getProductId() />
+                    </#if>
                     <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                     <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                     <#if smallImageUrl?string?has_content>
                       <#assign imgUrl><@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl></#assign>
                       <@img src=imgUrl width="150px;" height="75px"/>
-                    </#if>-->
-                    ${parentProductId!}
-                  </#if>
+                    </#if>
+                  -->
+                  ${cartLine.getProductId()!}
                 </@td>
                 <@td headers="editDescription">${cartLine.getName()!}</@td>
                 <@td headers="editUnitPrice" id="itemUnitPrice_${cartLine_index}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency() /></@td>

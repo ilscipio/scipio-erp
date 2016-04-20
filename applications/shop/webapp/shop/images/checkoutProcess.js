@@ -141,14 +141,22 @@ jQuery(document).ready(function(){
 function getServerError(data) {
     var serverErrorHash = [];
     var serverError = "";
-    if (data._ERROR_MESSAGE_LIST_ != undefined) {
+    if (jQuery.type(data._ERROR_MESSAGE_LIST_) !== 'undefined') {
         serverErrorHash = data._ERROR_MESSAGE_LIST_;
         jQuery.each(serverErrorHash, function(i, error) {
-            var encodedErrorMessage = jQuery('<div/>').text(error.message).html();
-            serverError += encodedErrorMessage + '<br/>';
+        	// Cato: error appears to be a simple string, not an object; test to make sure
+        	var encodedErrorMessage = null;
+        	if (jQuery.type(error.message) == 'string') {
+            	encodedErrorMessage = jQuery('<div/>').text(error.message).html();
+        	} else if (jQuery.type(error) === 'string') {
+        		encodedErrorMessage = jQuery('<div/>').text(error).html();
+        	}
+        	if (encodedErrorMessage != null) {
+        		serverError += encodedErrorMessage + '<br/>';
+        	}
         });
     }
-    if (data._ERROR_MESSAGE_ != undefined) {
+    if (jQuery.type(data._ERROR_MESSAGE_) === 'string') {
         serverError = jQuery('<div/>').text(data._ERROR_MESSAGE_).html();
     }
     return serverError;
@@ -260,7 +268,7 @@ function createUpdateCustomerAndShippingAddress() {
         success: function(json) {
                 var serverError = getServerError(json);
                 if (!serverError) {
-                    jQuery('#shippingFormServerError').fadeOut('fast');
+                    jQuery('#shippingFormServerError_container').fadeOut('fast');
                     // Process Shipping data response.
                     jQuery('#shipToPartyId').val(json.partyId);
                     jQuery('#billToPartyId').val(json.partyId);
@@ -273,12 +281,14 @@ function createUpdateCustomerAndShippingAddress() {
                     result = true;
                 } else {
                     jQuery('#shippingFormServerError').html(serverError);
+                    jQuery('#shippingFormServerError_container').fadeIn('fast');
                     result = false;
                 }
         },
         error: function(error) {
             if (error != "") {
                 jQuery('#shippingFormServerError').html(error);
+                jQuery('#shippingFormServerError_container').fadeIn('fast');
             }
             result = false;
         }
@@ -298,7 +308,7 @@ function getShipOptions() {
             success: function(json) {
                 var serverError = getServerError(json);
                 if (!serverError) {
-                        jQuery('#shippingFormServerError').fadeOut('fast');
+                        jQuery('#shippingFormServerError_container').fadeOut('fast');
                         isShipStepValidate = true;
                         shipOptions = json.shippingOptions;
                         var shipMethod = jQuery('#shipMethod');
@@ -313,13 +323,14 @@ function getShipOptions() {
                         result = true;
                     } else {
                         jQuery('#shippingFormServerError').html(serverError);
+                        jQuery('#shippingFormServerError_container').fadeIn('fast');
                         result = false;
                     }
             },
             error: function(error) {
                 if (error != "") {
-                    jQuery('#shippingFormServerError').fadeIn('fast');
                     jQuery('#shippingFormServerError').html(error);
+                    jQuery('#shippingFormServerError_container').fadeIn('fast');
                     isShipStepValidate = false;
                 }
                 result = false;
@@ -334,7 +345,7 @@ function setShippingOption() {
     var shipTotal = null;
     var shipMethod = null;
     var result = false;
-    jQuery('#shippingOptionFormServerError').fadeOut('fast');
+    jQuery('#shippingOptionFormServerError_container').fadeOut('fast');
     jQuery.ajax({
         url: 'setShippingOption',
         type: 'POST',
@@ -343,7 +354,8 @@ function setShippingOption() {
         success: function(json) {
             var serverError = getServerError(json);
             if (!serverError) {
-            shipTotal = json.shippingTotal;
+            	shipTotal = json.shippingTotal;
+            	jQuery('#shippingOptionFormServerError_container').fadeOut('fast');
                 isShipOptionStepValidate = true;
                 jQuery('#selectedShipmentOption').html(json.shippingDescription);
                 //jQuery('#shippingDescription').value = json.shippingDescription;
@@ -352,14 +364,15 @@ function setShippingOption() {
                 //jQuery('#totalSalesTax').val(json.totalSalesTax);
                 result = true;
             } else {
-                jQuery('#shippingFormServerError').html(serverError);
+                jQuery('#shippingOptionFormServerError').html(error);
+                jQuery('#shippingOptionFormServerError_container').fadeIn('fast');
                 result = false;
             }
         },
         error: function(error) {
             if(error != "") {
-                jQuery('#shippingOptionFormServerError').fadeIn('fast');
                 jQuery('#shippingOptionFormServerError').html(error);
+                jQuery('#shippingOptionFormServerError_container').fadeIn('fast');
                 isShipOptionStepValidate = false;
             }
             result = false;
@@ -395,22 +408,23 @@ function processBillingAndPayment() {
         success: function(json) {
             var serverError = getServerError(json);
             if (!serverError) {
-                    jQuery('#billingFormServerError').fadeOut('fast');
-                    isBillStepValidate = true;
-                    jQuery('#billToContactMechId').val(json.contactMechId);
-                    jQuery('#paymentMethodId').val(json.paymentMethodId);
-                    jQuery('#billToPhoneContactMechId').val(json.billToPhoneContactMechId);
-                    updateBillingSummary();
-                    result = true;
-                } else {
-                    jQuery('#billingFormServerError').html(serverError);
-                    result = false;
-                }
+                jQuery('#billingFormServerError_container').fadeOut('fast');
+                isBillStepValidate = true;
+                jQuery('#billToContactMechId').val(json.contactMechId);
+                jQuery('#paymentMethodId').val(json.paymentMethodId);
+                jQuery('#billToPhoneContactMechId').val(json.billToPhoneContactMechId);
+                updateBillingSummary();
+                result = true;
+            } else {
+                jQuery('#billingFormServerError').html(serverError);
+                jQuery('#billingFormServerError_container').fadeIn('fast');
+                result = false;
+            }
         },
         error: function(error) {
             if(error != "") {
-                jQuery('#billingFormServerError').fadeIn('fast');
                 jQuery('#billingFormServerError').html(error);
+                jQuery('#billingFormServerError_container').fadeIn('fast');
                 isBillStepValidate = false;
             }
             result = false;
@@ -457,16 +471,16 @@ function addPromoCode() {
         success: function(json) {
             var serverError = getServerError(json);
             if (!serverError) {
-                jQuery('#cartFormServerError').fadeOut('fast');
+                jQuery('#cartFormServerError_container').fadeOut('fast');
                 updateCartData();
             } else {
-                jQuery('#shippingFormServerError').html(serverError);
+                jQuery('#cartFormServerError').html(serverError);
                 result = false;
             }
         },
         error: function(error) {
             if(error != "") {
-                jQuery('#cartFormServerError').fadeIn('fast');
+                jQuery('#cartFormServerError_container').fadeIn('fast');
                 jQuery('#cartFormServerError').html(error);
             }
         }

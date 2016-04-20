@@ -60,8 +60,8 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
         Map<String, Object> globalContext = (Map<String, Object>) globalContextModel.getWrappedObject();
 
         String name = ((TemplateScalarModel) args.get(0)).getAsString();
-        Object value = args.get(1);
-        Object rawValue = null;
+        Object valueModel = args.get(1);
+        Object value = null;
         // Cato: Let DeepUnwrap handle this...
         //if (args.get(1) instanceof TemplateScalarModel)
         //    value = ((TemplateScalarModel) args.get(1)).getAsString();
@@ -70,12 +70,12 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
         //if (args.get(1) instanceof BeanModel)
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
         // Cato: First check if the value if escaping, if so, PREVENT escaping before (re-)storing
-        rawValue = LangFtlUtil.unwrapIfEscapingOrNull(value);
-        if (rawValue == null) {
-            rawValue = LangFtlUtil.unwrapAlwaysUnlessNull(value);
+        value = LangFtlUtil.unwrapIfEscapingOrNull(valueModel);
+        if (value == null) {
+            value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
         }
         
-        globalContext.put(name, rawValue);
+        globalContext.put(name, value);
         return new SimpleScalar("");
     }
 

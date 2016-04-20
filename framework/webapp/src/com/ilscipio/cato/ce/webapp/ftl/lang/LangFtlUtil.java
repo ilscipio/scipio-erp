@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -150,8 +151,7 @@ public abstract class LangFtlUtil {
      * screen wrappers, which the passed objectWrapper may in fact be.
      */
     public static Object wrapNonEscaping(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
-        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
-        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+        if (objectWrapper instanceof EscapingObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper().wrap(object);
         } else {
             return objectWrapper.wrap(object);
@@ -163,8 +163,7 @@ public abstract class LangFtlUtil {
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
-        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
-        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+        if (objectWrapper instanceof EscapingObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -177,8 +176,7 @@ public abstract class LangFtlUtil {
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(Environment env) {
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
-        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+        if (objectWrapper instanceof EscapingObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -192,8 +190,7 @@ public abstract class LangFtlUtil {
     public static ObjectWrapper getNonEscapingObjectWrapper() {
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
-        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+        if (objectWrapper instanceof EscapingObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;

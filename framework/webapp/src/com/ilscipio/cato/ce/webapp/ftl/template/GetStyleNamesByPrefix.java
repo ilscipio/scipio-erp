@@ -46,16 +46,15 @@ public class GetStyleNamesByPrefix implements TemplateMethodModelEx {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
-        // NOTE: getAsString triggers auto-escaping, this is okay here
-        String styleString = ((TemplateScalarModel) args.get(0)).getAsString();
+        String styleString = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         styleString = TemplateFtlUtil.getPlainClassArgNames(styleString);
         
-        // NOTE: getAsString triggers auto-escaping, this is okay here
-        String prefix = ((TemplateScalarModel) args.get(1)).getAsString();
+        String prefix = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         
         String[] names = StringUtils.split(styleString, ' ');
-        // NonEscaping: needed because getAsString above already escapes string through EscapingObjectWrapper
-        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper();
+        // NOTE: For emergency/safety reasons, use the current wrapper, which MAY be escaping.
+        // style strings contain only simple characters anyway.
+        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper();
         SimpleSequence res = new SimpleSequence(names.length, objectWrapper);
 
         for(String name : names) {
@@ -64,6 +63,8 @@ public class GetStyleNamesByPrefix implements TemplateMethodModelEx {
             }
         }
         
+        // redundant
+        //return LangFtlUtil.wrap(res, objectWrapper);
         return res;
     }
 

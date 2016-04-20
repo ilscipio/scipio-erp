@@ -62,7 +62,7 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
 
         String mode = null;
         if (args.size() >= 2) {
-            mode = ((TemplateScalarModel) args.get(1)).getAsString();
+            mode = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         }
         
         TemplateModel keysModel = null;

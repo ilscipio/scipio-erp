@@ -48,8 +48,8 @@ public class GetPropertyValue implements TemplateMethodModelEx {
         if (!(args.get(1) instanceof TemplateScalarModel))
             throw new TemplateModelException("Second argument not an instance of TemplateScalarModel (string)");
 
-        String resource = ((TemplateScalarModel) args.get(0)).getAsString();
-        String name = ((TemplateScalarModel) args.get(1)).getAsString();
+        String resource = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
+        String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         
         String res = UtilProperties.getPropertyValue(resource, name);
 

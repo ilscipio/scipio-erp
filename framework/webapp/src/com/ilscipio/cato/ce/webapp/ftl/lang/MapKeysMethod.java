@@ -42,7 +42,9 @@ public class MapKeysMethod implements TemplateMethodModelEx {
         }
         TemplateModel object = (TemplateModel) args.get(0);
         
-        return LangFtlUtil.getMapKeys(object);
+        // 2016-04-20: We must wrap the keys with non-escaping wrapper, otherwise keying
+        // into map using values will not work for escaped values
+        return LangFtlUtil.wrapNonEscaping(LangFtlUtil.getMapKeys(object));
     }
     
 }

@@ -41,7 +41,7 @@ import freemarker.template.utility.RichObjectWrapper;
  * <p>
  * These should generally not include Ofbiz-specific utils, except in the case
  * where the Ofbiz-specific code is merely a configuration of Freemarker (e.g.
- * selected usage of <code>BeansWrapper</code>).
+ * selected usage of <code>BeansWrapper</code> or the special case of <code>EscapingModel</code>).
  * <p>
  * <strong>WARN:</strong> All utility methods here (except special wrap methods)
  * using ObjectWrapper should take an ObjectWrapper from caller - let caller decide which - and never
@@ -496,9 +496,15 @@ public abstract class LangFtlUtil {
         return OfbizFtlObjectType.isObjectTypeSafe(ftlTypeName, object);
     }
 
+    /**
+     * Gets map keys, either as collection or Set.
+     * <p>
+     * WARN: auto-escaping is bypassed on complex map models. Caller must decide
+     * how he wants to wrap the results.
+     */
     public static Object getMapKeys(TemplateModel object) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+            // WARN: bypasses auto-escaping
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             return wrappedObject.keySet();
         }
@@ -533,13 +539,18 @@ public abstract class LangFtlUtil {
         }
     }
 
+    /**
+     * Copies map.
+     * <p>
+     * WARN: For complex maps, auto-escaping is bypassed; caller must decide how to handle.
+     */
     public static Object copyMap(TemplateModel object, Set<String> inExKeys, Boolean include, 
             TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetType == null) {
             targetType = TemplateValueTargetType.PRESERVE;
         }
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+            // WARN: bypasses auto-escaping
             Map<String, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             // TODO: this only handles most urgent targetType case
             if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
@@ -580,7 +591,7 @@ public abstract class LangFtlUtil {
             TemplateModelIterator keysIt = keys.iterator();
     
             while(keysIt.hasNext()) {
-                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 res.put(key, hashModel.get(key));
             }                
         }
@@ -593,7 +604,7 @@ public abstract class LangFtlUtil {
             TemplateModelIterator keysIt = keys.iterator();
     
             while(keysIt.hasNext()) {
-                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 TemplateModel valueModel = hashModel.get(key);
                 if (!inExKeys.contains(key)) {
                     res.put(key, valueModel);
@@ -722,6 +733,11 @@ public abstract class LangFtlUtil {
                 " to target type: " + targetType.toString());
     }
 
+    /**
+     * Copies list.
+     * <p>
+     * WARN: For complex lists, auto-escaping is bypassed. Caller must decide how to handle.
+     */
     public static Object copyList(TemplateModel object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetType == null) {
             targetType = TemplateValueTargetType.PRESERVE;
@@ -773,7 +789,7 @@ public abstract class LangFtlUtil {
             } 
         }
         else if (object instanceof WrapperTemplateModel) {
-            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+            // WARN: bypasses auto-escaping
             Object wrappedObj = ((WrapperTemplateModel) object).getWrappedObject();
             if (wrappedObj instanceof Collection) {
                 Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
@@ -816,9 +832,14 @@ public abstract class LangFtlUtil {
                 " to target type: " + targetType.toString());
     }
 
+    /**
+     * Converts map to a simple wrapper, if applicable.
+     * <p>
+     * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle.
+     */
     public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+            // WARN: bypasses auto-escaping
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
         }
@@ -833,6 +854,8 @@ public abstract class LangFtlUtil {
     /**
      * Supposed to convert to simple sequence.
      * <p>
+     * WARN: Bypasses auto-escaping for complex maps, caller must decide how to handle.
+     * <p>
      * DEV NOTE: I stopped writing/testing this when found out most of the problems w.r.t. collections are not
      * the FTL types this time but the way they're used in Ofbiz templates.
      * FTL's CollectionModel (subclass of TemplateCollectionModel) is supposed to cover everything and
@@ -845,7 +868,7 @@ public abstract class LangFtlUtil {
         }
         else if (object instanceof WrapperTemplateModel) {
             WrapperTemplateModel wrapperModel = (WrapperTemplateModel) object;
-            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+            // WARN: bypasses auto-escaping
             Object wrappedObject = wrapperModel.getWrappedObject();
             if (wrappedObject instanceof List) {
                 return DefaultListAdapter.adapt((List<Object>) wrappedObject, (RichObjectWrapper) objectWrapper);
@@ -935,7 +958,7 @@ public abstract class LangFtlUtil {
         TemplateCollectionModel keysModel = source.keys();
         TemplateModelIterator modelIt = keysModel.iterator();
         while(modelIt.hasNext()) {
-            String key = ((TemplateScalarModel) modelIt.next()).getAsString();
+            String key = getAsStringNonEscaping((TemplateScalarModel) modelIt.next());
             dest.put(key, source.get(key));
         }
     }
@@ -969,33 +992,53 @@ public abstract class LangFtlUtil {
         return res;
     }
 
+    /**
+     * To string set.
+     * <p>
+     * WARN: Bypasses auto-escaping, caller handles.
+     */
     public static Set<String> toStringSet(TemplateCollectionModel collModel) throws TemplateModelException {
         Set<String> set = new HashSet<String>();
         TemplateModelIterator modelIt = collModel.iterator();
         while(modelIt.hasNext()) {
-            set.add(((TemplateScalarModel) modelIt.next()).getAsString());
+            set.add(getAsStringNonEscaping((TemplateScalarModel) modelIt.next()));
         }
         return set;
     }
 
+    /**
+     * Add to string set.
+     * <p>
+     * WARN: bypasses auto-escaping, caller handles
+     */
     public static void addToStringSet(Set<String> dest, TemplateCollectionModel collModel) throws TemplateModelException {
         TemplateModelIterator modelIt = collModel.iterator();
         while(modelIt.hasNext()) {
-            dest.add(((TemplateScalarModel) modelIt.next()).getAsString());
+            dest.add(getAsStringNonEscaping((TemplateScalarModel) modelIt.next()));
         }
     }
 
+    /**
+     * To string set.
+     * <p>
+     * WARN: bypasses auto-escaping, caller handles
+     */
     public static Set<String> toStringSet(TemplateSequenceModel seqModel) throws TemplateModelException {
         Set<String> set = new HashSet<String>();
         for(int i=0; i < seqModel.size(); i++) {
-            set.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+            set.add(getAsStringNonEscaping((TemplateScalarModel) seqModel.get(i)));
         }
         return set;
     }
 
+    /**
+     * Add to string set.
+     * <p>
+     * WARN: bypasses auto-escaping, caller handles
+     */
     public static void addToStringSet(Set<String> dest, TemplateSequenceModel seqModel) throws TemplateModelException {
         for(int i=0; i < seqModel.size(); i++) {
-            dest.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+            dest.add(getAsStringNonEscaping(((TemplateScalarModel) seqModel.get(i))));
         }
     }
 
@@ -1026,25 +1069,30 @@ public abstract class LangFtlUtil {
         return res;
     }
 
+    /**
+     * Gets collection as a keys.
+     * <p>
+     * WARN: This bypasses auto-escaping, caller must decide how to handle.
+     */
     public static Set<String> getAsStringSet(TemplateModel model) throws TemplateModelException {
         Set<String> exKeys = null;
         if (model != null) {
             if (model instanceof BeanModel && ((BeanModel) model).getWrappedObject() instanceof Set) {
-                // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
+                // WARN: UNSAFE: bypasses auto-escaping
                 exKeys = UtilGenerics.cast(((BeanModel) model).getWrappedObject());
             }
             else if (model instanceof TemplateCollectionModel) {
                 exKeys = new HashSet<String>();
                 TemplateModelIterator keysIt = ((TemplateCollectionModel) model).iterator();
                 while(keysIt.hasNext()) {
-                    exKeys.add(((TemplateScalarModel) keysIt.next()).getAsString());
+                    exKeys.add(getAsStringNonEscaping((TemplateScalarModel) keysIt.next()));
                 }
             }
             else if (model instanceof TemplateSequenceModel) {
                 TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
                 exKeys = new HashSet<String>(seqModel.size());
                 for(int i=0; i < seqModel.size(); i++) {
-                    exKeys.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+                    exKeys.add(getAsStringNonEscaping((TemplateScalarModel) seqModel.get(i)));
                 }
             }
             else {
@@ -1107,7 +1155,7 @@ public abstract class LangFtlUtil {
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
             while(keysIt.hasNext()) {
-                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 varHandler.setVariable(key, hashModel.get(key));
             }                
         }
@@ -1119,7 +1167,7 @@ public abstract class LangFtlUtil {
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
             while(keysIt.hasNext()) {
-                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 TemplateModel valueModel = hashModel.get(key);
                 if (!inExKeys.contains(key)) {
                     varHandler.setVariable(key, valueModel);
@@ -1175,6 +1223,8 @@ public abstract class LangFtlUtil {
     
     /**
      * Returns the given model as string, bypassing auto-escaping done by EscapingModels.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
      */
     public static String getAsStringNonEscaping(TemplateScalarModel model) throws TemplateModelException {
         if (model instanceof EscapingModel) {

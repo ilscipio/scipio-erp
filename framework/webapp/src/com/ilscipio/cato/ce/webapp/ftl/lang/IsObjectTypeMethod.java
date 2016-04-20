@@ -42,7 +42,7 @@ public class IsObjectTypeMethod implements TemplateMethodModelEx {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
-        String type = ((TemplateScalarModel) args.get(0)).getAsString();
+        String type = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         TemplateModel object = (TemplateModel) args.get(1);
 
         return OfbizFtlObjectType.isObjectTypeSafe(type, object);

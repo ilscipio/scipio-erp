@@ -51,7 +51,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        ContextFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env);
+        ContextFtlUtil.pushRequestStack(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), valueModel, setLast, env);
         
         return new SimpleScalar("");
     }
@@ -67,7 +67,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = ContextFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env);
+        Object res = ContextFtlUtil.readRequestStack(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), pop, env);
  
         ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
         return LangFtlUtil.wrap(res, objectWrapper);
@@ -82,13 +82,13 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         if (!(nameModel instanceof TemplateScalarModel)) {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
-        String stackName = ((TemplateScalarModel) nameModel).getAsString();
+        String stackName = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel));
         
         boolean origList = false;
         
         if (args.size() >= 2) {
             TemplateModel listTypeModel = (TemplateModel) args.get(1);
-            String listType = ((TemplateScalarModel) listTypeModel).getAsString();
+            String listType = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) listTypeModel));
             if ("orig".equals(listType)) {
                 origList = true;
             }

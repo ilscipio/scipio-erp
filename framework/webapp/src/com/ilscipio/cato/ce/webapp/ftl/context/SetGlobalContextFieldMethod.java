@@ -59,7 +59,7 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
         BeanModel globalContextModel = (BeanModel) env.getVariable("globalContext");
         Map<String, Object> globalContext = (Map<String, Object>) globalContextModel.getWrappedObject();
 
-        String name = ((TemplateScalarModel) args.get(0)).getAsString();
+        String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         Object valueModel = args.get(1);
         Object value = null;
         // Cato: Let DeepUnwrap handle this...

@@ -1331,6 +1331,9 @@ a bean-wrapped context var (.ketSet()).
 
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
 
+WARN: The resulting keys are unescaped, not passed through auto-escaping, so that 
+    the map values can be keyed back without having to call #rawString.
+
   * Parameters *
     object                  = ((map), required) The source map
 -->

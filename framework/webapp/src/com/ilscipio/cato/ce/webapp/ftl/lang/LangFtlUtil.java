@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.ftl.EscapingModel;
 import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
 
 import freemarker.core.Environment;
@@ -140,26 +141,21 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Wraps the object without doing anything special. 
+     * Gets current object wrapper, whatever it may be.
      */
-    public static Object wrap(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
-        return objectWrapper.wrap(object);
-    }
+    public static ObjectWrapper getCurrentObjectWrapper(Environment env) {
+        return env.getObjectWrapper();
+    }    
     
     /**
-     * Wraps an object using the standard system wrapper (BeansWrapper), bypassing any special Ofbiz
-     * screen wrappers, which the passed objectWrapper may in fact be.
+     * Gets current object wrapper, whatever it may be.
      */
-    public static Object wrapNonEscaping(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
-        if (objectWrapper instanceof EscapingObjectWrapper) {
-            return FreeMarkerWorker.getDefaultOfbizWrapper().wrap(object);
-        } else {
-            return objectWrapper.wrap(object);
-        }
-    }
+    public static ObjectWrapper getCurrentObjectWrapper() {
+        return FreeMarkerWorker.getCurrentEnvironment().getObjectWrapper();
+    }     
     
     /**
-     * Checks if the wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * Checks if the wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
@@ -171,7 +167,7 @@ public abstract class LangFtlUtil {
     }
     
     /**
-     * Checks if the current env wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * Checks if the current env wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(Environment env) {
@@ -184,7 +180,7 @@ public abstract class LangFtlUtil {
     }    
     
     /**
-     * Checks if the curent env wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * Checks if the current env wrapper is a special escaping wrapper, and if so,
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper() {
@@ -195,7 +191,61 @@ public abstract class LangFtlUtil {
         } else {
             return objectWrapper;
         }
-    }  
+    }
+    
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrap(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        return objectWrapper.wrap(object);
+    }
+    
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrap(Object object, Environment env) throws TemplateModelException {
+        return getCurrentObjectWrapper(env).wrap(object);
+    }
+    
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrap(Object object) throws TemplateModelException {
+        return getCurrentObjectWrapper().wrap(object);
+    }
+   
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrapNonEscaping(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        return getNonEscapingObjectWrapper(objectWrapper).wrap(object);
+    }    
+    
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrapNonEscaping(Object object, Environment env) throws TemplateModelException {
+        return getNonEscapingObjectWrapper(env).wrap(object);
+    }    
+   
+    /**
+     * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
+     * <p>
+     * Currently leaving all to object wrapper, but may change... 
+     */
+    public static TemplateModel wrapNonEscaping(Object object) throws TemplateModelException {
+        return getNonEscapingObjectWrapper().wrap(object);
+    }       
     
     /**
      * Unwraps template model; if cannot, returns null.
@@ -340,6 +390,50 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }    
+    
+    /**
+     * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * If doesn't apply to the value, returns the value as-is.
+     */
+    public static Object unwrapIfEscaping(TemplateModel templateModel) throws TemplateModelException {
+        if (templateModel instanceof EscapingModel) {
+            return ((EscapingModel) templateModel).getWrappedObject();
+        }
+        return templateModel;
+    }
+    
+    /**
+     * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * If doesn't apply to the value, returns the value as-is.
+     */
+    public static Object unwrapIfEscaping(Object value) throws TemplateModelException {
+        if (value instanceof EscapingModel) {
+            return ((EscapingModel) value).getWrappedObject();
+        }
+        return value;
+    }
+
+    /**
+     * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * If doesn't apply to the value, returns null.
+     */
+    public static Object unwrapIfEscapingOrNull(TemplateModel templateModel) throws TemplateModelException {
+        if (templateModel instanceof EscapingModel) {
+            return ((EscapingModel) templateModel).getWrappedObject();
+        }
+        return null;
+    }
+    
+    /**
+     * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
+     * If doesn't apply to the value, returns null.
+     */
+    public static Object unwrapIfEscapingOrNull(Object value) throws TemplateModelException {
+        if (value instanceof EscapingModel) {
+            return ((EscapingModel) value).getWrappedObject();
+        }
+        return null;
+    }
 
     public static String camelCaseToDashLowerName(String name) {
         // TODO: optimize
@@ -561,7 +655,7 @@ public abstract class LangFtlUtil {
                 return new SimpleSequence(collection, objectWrapper);
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                return objectWrapper.wrap(new ArrayList<Object>(collection));
+                return wrap(new ArrayList<Object>(collection), objectWrapper);
             }
         }
         else {
@@ -585,7 +679,7 @@ public abstract class LangFtlUtil {
                 for(Object val : iterable) {
                     res.add(val);
                 }
-                return objectWrapper.wrap(res);
+                return wrap(res, objectWrapper);
             } 
         }
         throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
@@ -615,7 +709,7 @@ public abstract class LangFtlUtil {
                 while(it.hasNext()) {
                     res.add(it.next());
                 }
-                return objectWrapper.wrap(res);
+                return wrap(res, objectWrapper);
             } 
         }
         else if (object instanceof TemplateSequenceModel) { // TODO: isObjectType
@@ -639,7 +733,7 @@ public abstract class LangFtlUtil {
                 for(int i=0; i < seqModel.size(); i++) {
                     res.add(seqModel.get(i));
                 }
-                return objectWrapper.wrap(res);
+                return wrap(res, objectWrapper);
             } 
         }
         else if (object instanceof WrapperTemplateModel) {
@@ -653,7 +747,7 @@ public abstract class LangFtlUtil {
                     return new SimpleSequence(collection, objectWrapper);
                 }
                 else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                    return objectWrapper.wrap(new ArrayList<Object>(collection));
+                    return wrap(new ArrayList<Object>(collection), objectWrapper);
                 }
             }
             else if (wrappedObj instanceof Iterable) {
@@ -677,7 +771,7 @@ public abstract class LangFtlUtil {
                     for(Object val : iterable) {
                         res.add(val);
                     }
-                    return objectWrapper.wrap(res);
+                    return wrap(res, objectWrapper);
                 }
             }
         }

@@ -82,7 +82,8 @@ under the License.
                                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
                               </#if>
                           </#if>
-                         
+                        <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                    </form>
                          <@row>
                              <@cell class="+${styles.text_left!}" columns=9>
                                 <small>
@@ -90,10 +91,11 @@ under the License.
                                         <@row>
                                             <@cell class="${styles.grid_large!}centered">
                                                 <@section title=uiLabelMap.CommonPassword>
-                                                    <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
+                                                    <#-- Cato: WARN: Proper HTML-escaping of params high importance here -->
+                                                    <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
                                                         <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
                                                         <@row>
-                                                            <@cell columns=12 >
+                                                            <@cell columns=12>
                                                                 <a href="<@ofbizUrl>login</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
                                                                 <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint widgetOnly=true/>
                                                                 <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword widgetOnly=true/>
@@ -107,15 +109,21 @@ under the License.
                                 </small>
                              </@cell>
                             <@cell class="+${styles.text_right!}" columns=3>
-                                <input type="hidden" name="JavaScriptEnabled" value="N"/>
-                                <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
+                                <#-- Cato: workaround for form-within-form and form fields getting mixed up (form closed earlier):
+                                <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>-->
+                                <@field type="submit" submitType="link" href="javascript:document.loginform.submit();" widgetOnly=true value=uiLabelMap.CommonLogin class="${styles.link_run_session!} ${styles.action_login!}"/>
                             </@cell>
                         </@row>
-                      </form>
             </#if>
         </@section>
         <@script>
-          <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();<#else>document.loginform.USERNAME.focus();</#if>
+          jQuery(document).ready(function() {
+            <#if autoUserLogin?has_content>
+              document.loginform.PASSWORD.focus();
+            <#else>
+              document.loginform.USERNAME.focus();
+            </#if>
+          });
         </@script>
     </@cell>
     <@cell columns=6>

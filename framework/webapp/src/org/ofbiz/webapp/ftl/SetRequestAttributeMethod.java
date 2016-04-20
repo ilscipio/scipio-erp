@@ -67,12 +67,8 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         //    value = ((TemplateNumberModel) args.get(1)).getAsNumber();
         //if (args.get(1) instanceof BeanModel)
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
-        // Cato: First check if the value if escaping, if so, PREVENT escaping before (re-)storing
-        // This is because the underlying collection will re-escape values read out of it.
-        value = LangFtlUtil.unwrapIfEscapingOrNull(valueModel);
-        if (value == null) {
-            value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
-        }
+        // Cato: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
+        value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
         
         request.setAttribute(name, value);
         return new SimpleScalar("");

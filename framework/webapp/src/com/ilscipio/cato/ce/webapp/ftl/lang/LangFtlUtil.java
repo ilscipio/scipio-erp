@@ -172,6 +172,35 @@ public abstract class LangFtlUtil {
     }
     
     /**
+     * Checks if the current env wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * returns a non-escaping one.
+     */
+    public static ObjectWrapper getNonEscapingObjectWrapper(Environment env) {
+        ObjectWrapper objectWrapper = env.getObjectWrapper();
+        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
+        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+            return FreeMarkerWorker.getDefaultOfbizWrapper();
+        } else {
+            return objectWrapper;
+        }
+    }    
+    
+    /**
+     * Checks if the curent env wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * returns a non-escaping one.
+     */
+    public static ObjectWrapper getNonEscapingObjectWrapper() {
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
+        ObjectWrapper objectWrapper = env.getObjectWrapper();
+        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
+        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+            return FreeMarkerWorker.getDefaultOfbizWrapper();
+        } else {
+            return objectWrapper;
+        }
+    }  
+    
+    /**
      * Unwraps template model; if cannot, returns null.
      */
     public static Object unwrapOrNull(TemplateModel templateModel) throws TemplateModelException {

@@ -61,7 +61,7 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
             overrideArgs = (TemplateHashModelEx) methodArgs.get(3);
         }
         
-        return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env);
+        return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, env.getObjectWrapper());
     }    
     
     @SuppressWarnings("unchecked")

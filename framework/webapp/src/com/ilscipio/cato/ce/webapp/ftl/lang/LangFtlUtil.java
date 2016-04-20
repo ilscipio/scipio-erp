@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -39,6 +40,10 @@ import freemarker.template.utility.RichObjectWrapper;
  * These should generally not include Ofbiz-specific utils, except in the case
  * where the Ofbiz-specific code is merely a configuration of Freemarker (e.g.
  * selected usage of <code>BeansWrapper</code>).
+ * <p>
+ * <strong>WARN:</strong> All utility methods here (except special wrap methods)
+ * using ObjectWrapper should take an ObjectWrapper from caller - let caller decide which - and never
+ * call Environment.getObjectWrapper anymore.
  *
  * @see com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil
  */
@@ -131,6 +136,39 @@ public abstract class LangFtlUtil {
      */
     public static TemplateModel getNullModelAlways() {
         return TemplateNullModel.getNullModel();
+    }
+    
+    /**
+     * Wraps the object without doing anything special. 
+     */
+    public static Object wrap(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        return objectWrapper.wrap(object);
+    }
+    
+    /**
+     * Wraps an object using the standard system wrapper (BeansWrapper), bypassing any special Ofbiz
+     * screen wrappers, which the passed objectWrapper may in fact be.
+     */
+    public static Object wrapNonEscaping(Object object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
+        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+            return FreeMarkerWorker.getDefaultOfbizWrapper().wrap(object);
+        } else {
+            return objectWrapper.wrap(object);
+        }
+    }
+    
+    /**
+     * Checks if the wrapper is a special Ofbiz widget escaping wrapper, and if so,
+     * returns a non-escaping one.
+     */
+    public static ObjectWrapper getNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
+        // FIXME: This is a DIRTY reflection hack to get around build dependency issue!!!
+        if ("ExtendedWrapper".equals(objectWrapper.getClass().getSimpleName())) {
+            return FreeMarkerWorker.getDefaultOfbizWrapper();
+        } else {
+            return objectWrapper;
+        }
     }
     
     /**

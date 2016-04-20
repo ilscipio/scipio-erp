@@ -50,7 +50,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        ContextFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env);
+        ContextFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env, env.getObjectWrapper());
         
         return new SimpleScalar("");
     }
@@ -66,7 +66,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = ContextFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env);
+        Object res = ContextFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env, env.getObjectWrapper());
  
         return res; // NOTE: result automatically wrapped as needed by freemarker
     }
@@ -93,7 +93,8 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
         
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = ContextFtlUtil.getRequestStackAsList(stackName, (origList ? null : LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL), env);
+        Object res = ContextFtlUtil.getRequestStackAsList(stackName, 
+                (origList ? null : LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL), env, env.getObjectWrapper());
         return res;
     }    
     

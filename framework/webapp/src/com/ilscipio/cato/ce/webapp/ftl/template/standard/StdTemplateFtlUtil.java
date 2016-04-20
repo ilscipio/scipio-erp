@@ -1,6 +1,5 @@
 package com.ilscipio.cato.ce.webapp.ftl.template.standard;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

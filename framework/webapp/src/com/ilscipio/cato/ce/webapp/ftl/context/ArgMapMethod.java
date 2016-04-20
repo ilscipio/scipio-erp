@@ -62,9 +62,8 @@ public abstract class ArgMapMethod implements TemplateMethodModelEx {
             overrideArgs = (TemplateHashModelEx) methodArgs.get(3);
         }
         
-        // NOTE: Here the choice of wrapper might make no difference, but because inputs are likely to be in escaping models,
-        // we should use non-escaping wrapper in case the strings ever got unwrapped (and therefore escaped, by getAsString) by the method
-        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
+        // NOTE: Here the choice of wrapper makes no real difference.
+        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
         return ContextFtlUtil.mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs, recordArgNames, env, objectWrapper);
     }    
     

@@ -24,7 +24,6 @@ import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
@@ -77,12 +76,9 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
         if (unwrap == Boolean.TRUE) {
             value = LangFtlUtil.unwrapPermissive(valueModel);
         }
-        ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
-        ContextFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), value, env, objectWrapper);
+        ContextFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), value, env);
 
         return new SimpleScalar("");
     }
-
-    
 
 }

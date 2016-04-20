@@ -29,11 +29,11 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: ToSimpleMapMethod - Another workaround for BeansWrapper kludge.
+ * Cato: ToRawDeepMethod - Deep-unwraps an object, bypassing escaping
  */
-public class ToSimpleMapMethod implements TemplateMethodModelEx {
+public class ToRawDeepMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleMapMethod.class.getName();
+    public static final String module = ToRawDeepMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -46,8 +46,12 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
-        return LangFtlUtil.toSimpleMap(object, objectWrapper);
+        
+        Object unwrapped = LangFtlUtil.unwrapAlways(object);
+        
+        // Return non-escaping wrapper so we get raw values
+        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
+        return LangFtlUtil.wrap(unwrapped, objectWrapper);
     }
     
 }

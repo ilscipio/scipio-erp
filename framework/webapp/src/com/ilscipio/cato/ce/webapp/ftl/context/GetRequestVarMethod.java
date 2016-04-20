@@ -55,27 +55,25 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        ObjectWrapper objectWrapper = getResultObjectWrapper(env);
-        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env, objectWrapper);
+        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
         
+        ObjectWrapper objectWrapper = getResultObjectWrapper(env);
         return LangFtlUtil.wrap(res, objectWrapper);
     }
 
     /**
      * Returns the appropriate result object wrapper for getRequestVar and analogous
-     * methods. 
+     * methods that return results from the cato request var map.
      * <p>
-     * CURRENTLY (2016-04-20) this returns the current and potentially-escaping wrapper.
+     * CURRENTLY (2016-04-20) This returns a NON-escaping wrapper. The values are generally
+     * stored in the request map as TemplateModels so this wrapper has no effect, and
+     * in general we define the interface such that what you put into the map is what you
+     * get out.
      * <p>
-     * In all known cases, values are stored in their original TemplateModel format and
-     * returned as such, therefore ignored by this wrapper (default BeansWrapper implementation).
-     * <p>
-     * HOWEVER, foreign code may store other values in the request vars, which we don't know
-     * the intentions of, and therefore we allow the escaping wrapper to take effect because
-     * safety is unknown to us.
+     * This differs from other calls such as request.getAttribute() which perform auto-escaping.
      */
     public static ObjectWrapper getResultObjectWrapper(Environment env) {
-        //return LangFtlUtil.getNonEscapingObjectWrapper(env);
-        return LangFtlUtil.getCurrentObjectWrapper(env);
+        return LangFtlUtil.getNonEscapingObjectWrapper(env);
+        //return LangFtlUtil.getCurrentObjectWrapper(env);
     }
 }

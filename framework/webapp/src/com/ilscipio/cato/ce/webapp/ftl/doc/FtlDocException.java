@@ -19,7 +19,6 @@ public class FtlDocException extends Exception {
     }
 
     
-    @SuppressWarnings("serial")
     public static class ParseException extends FtlDocException {
 
         public ParseException() {

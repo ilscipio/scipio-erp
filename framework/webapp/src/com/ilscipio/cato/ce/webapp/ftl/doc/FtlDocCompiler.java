@@ -50,7 +50,7 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public class FtlDocCompiler {
 
-    private static final boolean DEBUG = false;
+    public static boolean DEBUG = false;
     
     public static final String CATO_LIB_FORMAT = "cato-lib";
     public static final Charset DEFAULT_FILE_ENCODING = StandardCharsets.UTF_8;

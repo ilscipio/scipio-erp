@@ -18,15 +18,12 @@
  *******************************************************************************/
 package com.ilscipio.cato.ce.webapp.ftl.template;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
-import freemarker.core.Environment;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateMethodModelEx;
@@ -49,9 +46,11 @@ public class GetStyleNamesByPrefix implements TemplateMethodModelEx {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
+        // NOTE: getAsString triggers auto-escaping, this is okay here
         String styleString = ((TemplateScalarModel) args.get(0)).getAsString();
         styleString = TemplateFtlUtil.getPlainClassArgNames(styleString);
         
+        // NOTE: getAsString triggers auto-escaping, this is okay here
         String prefix = ((TemplateScalarModel) args.get(1)).getAsString();
         
         String[] names = StringUtils.split(styleString, ' ');

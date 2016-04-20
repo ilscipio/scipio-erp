@@ -249,6 +249,9 @@ public abstract class LangFtlUtil {
     
     /**
      * Unwraps template model; if cannot, returns null.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapOrNull(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel != null) {
@@ -270,6 +273,9 @@ public abstract class LangFtlUtil {
      * if not TemplateModel, returns as-is.
      * <p>
      * Ensures no TemplateModels remain.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapOrNull(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
@@ -288,6 +294,9 @@ public abstract class LangFtlUtil {
 
     /**
      * Unwraps template model; if cannot, returns as-is.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapPermissive(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel != null) {
@@ -300,6 +309,9 @@ public abstract class LangFtlUtil {
 
     /**
      * Unwraps value; if cannot, returns value, even if still TemplateModel.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapPermissive(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
@@ -312,6 +324,9 @@ public abstract class LangFtlUtil {
 
     /**
      * Unwraps template model; if cannot, throws exception. If null, returns null.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrap(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel != null) {
@@ -325,6 +340,9 @@ public abstract class LangFtlUtil {
     /**
      * If template model, unwraps, or if cannot, throws exception;
      * if not template model or null, returns value.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrap(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
@@ -339,9 +357,11 @@ public abstract class LangFtlUtil {
      * Unwraps template model; if cannot, throws exception.
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlways(TemplateModel templateModel) throws TemplateModelException {
-        // FIXME? should all these DeepUnwrap.unwrap calls be more like FreeMarkerWorker.getWrappedObject(templateModel) instead??
         return DeepUnwrap.unwrap(templateModel); // will throw exception if improper type
     }
 
@@ -349,6 +369,9 @@ public abstract class LangFtlUtil {
      * Unwraps value if template model and unwrappable; else exception.
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlways(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel || value == null) {
@@ -363,13 +386,15 @@ public abstract class LangFtlUtil {
      * Unwraps template model; if cannot, throws exception. Special case where null accepted.
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlwaysUnlessNull(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel == null) {
             return null;
         }
         else {
-            // FIXME? should all these DeepUnwrap.unwrap calls be more like FreeMarkerWorker.getWrappedObject(templateModel) instead??
             return DeepUnwrap.unwrap(templateModel); // will throw exception if improper type
         }
     }
@@ -378,6 +403,9 @@ public abstract class LangFtlUtil {
      * Unwraps value if template model and unwrappable; else exception. Special case where null accepted.
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
+     * <p>
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlwaysUnlessNull(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
@@ -394,6 +422,8 @@ public abstract class LangFtlUtil {
     /**
      * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
+     * <p>
+     * NOTE: The other unwrap methods automatically perform this operation as well.
      */
     public static Object unwrapIfEscaping(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel instanceof EscapingModel) {
@@ -405,6 +435,8 @@ public abstract class LangFtlUtil {
     /**
      * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns the value as-is.
+     * <p>
+     * NOTE: The other unwrap methods automatically perform this operation as well.
      */
     public static Object unwrapIfEscaping(Object value) throws TemplateModelException {
         if (value instanceof EscapingModel) {
@@ -416,6 +448,8 @@ public abstract class LangFtlUtil {
     /**
      * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns null.
+     * <p>
+     * NOTE: The other unwrap methods automatically perform this operation as well.
      */
     public static Object unwrapIfEscapingOrNull(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel instanceof EscapingModel) {
@@ -427,6 +461,8 @@ public abstract class LangFtlUtil {
     /**
      * Cato: Special unwrap that unwraps only objects wrapped with special escaping (Ofbiz) wrappers.
      * If doesn't apply to the value, returns null.
+     * <p>
+     * NOTE: The other unwrap methods automatically perform this operation as well.
      */
     public static Object unwrapIfEscapingOrNull(Object value) throws TemplateModelException {
         if (value instanceof EscapingModel) {
@@ -462,7 +498,7 @@ public abstract class LangFtlUtil {
 
     public static Object getMapKeys(TemplateModel object) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             return wrappedObject.keySet();
         }
@@ -503,7 +539,7 @@ public abstract class LangFtlUtil {
             targetType = TemplateValueTargetType.PRESERVE;
         }
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
             Map<String, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             // TODO: this only handles most urgent targetType case
             if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
@@ -737,6 +773,7 @@ public abstract class LangFtlUtil {
             } 
         }
         else if (object instanceof WrapperTemplateModel) {
+            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
             Object wrappedObj = ((WrapperTemplateModel) object).getWrappedObject();
             if (wrappedObj instanceof Collection) {
                 Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
@@ -781,7 +818,7 @@ public abstract class LangFtlUtil {
 
     public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
         }
@@ -808,6 +845,7 @@ public abstract class LangFtlUtil {
         }
         else if (object instanceof WrapperTemplateModel) {
             WrapperTemplateModel wrapperModel = (WrapperTemplateModel) object;
+            // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
             Object wrappedObject = wrapperModel.getWrappedObject();
             if (wrappedObject instanceof List) {
                 return DefaultListAdapter.adapt((List<Object>) wrappedObject, (RichObjectWrapper) objectWrapper);
@@ -992,6 +1030,7 @@ public abstract class LangFtlUtil {
         Set<String> exKeys = null;
         if (model != null) {
             if (model instanceof BeanModel && ((BeanModel) model).getWrappedObject() instanceof Set) {
+                // FIXME: UNSAFE: bypasses auto-escaping, we don't want that here
                 exKeys = UtilGenerics.cast(((BeanModel) model).getWrappedObject());
             }
             else if (model instanceof TemplateCollectionModel) {
@@ -1133,4 +1172,15 @@ public abstract class LangFtlUtil {
         varsPutAll(hashModel, null, null, new LocalFtlVarHandler(env), env);
     }
     
+    
+    /**
+     * Returns the given model as string, bypassing auto-escaping done by EscapingModels.
+     */
+    public static String getAsStringNonEscaping(TemplateScalarModel model) throws TemplateModelException {
+        if (model instanceof EscapingModel) {
+            return (String) ((EscapingModel) model).getWrappedObject();
+        } else {
+            return model.getAsString();
+        }
+    }
 }

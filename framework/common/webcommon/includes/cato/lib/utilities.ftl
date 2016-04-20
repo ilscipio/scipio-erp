@@ -1263,6 +1263,23 @@ possible.
 
 <#-- 
 *************
+* toRawDeep
+************
+Takes any object and deep-unwraps it, returning it in a wrapper that will never perform
+auto-escaping of strings.
+
+NOTE: The result is NOT guaranteed to be a simple type. Use #toSimpleMap or other calls.
+
+  * Parameters *
+    object                  = ((object), required) The object to make raw
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toRawDeep object>
+</#function>
+-->
+
+<#-- 
+*************
 * copyMap
 ************
 Performs a shallow copy of a map. 
@@ -1294,6 +1311,8 @@ Takes a bean-wrapped map and switches it to a simple map adapter instead, withou
 any copies.
 
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
+
+NOTE: This is a shallow operation only.
 
   * Parameters *
     object                  = ((map), required) The source map
@@ -2507,6 +2526,9 @@ Pushes a value onto a global stack variable in request scope (request attributes
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
 
+NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not auto-escaped,
+    unless they were inserted already escaped. In general, what you put in is what you get out.
+    
   * Parameters *
     name                    = (required) Global request stack var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
@@ -2540,6 +2562,9 @@ do a pushRequestStack, and much more efficient.
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
 
+NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not auto-escaped,
+    unless they were inserted already escaped. In general, what you put in is what you get out.
+
   * Parameters *
     name                    = (required) Global request stack var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
@@ -2555,6 +2580,9 @@ Reads the last value added to the named global stack variable in request scope
 ************
 Gets a copy of the named request stack as a list (read-only).
 
+NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not auto-escaped,
+    unless they were inserted already escaped. In general, what you put in is what you get out.
+    
   * Parameters *
     name                    = (required) Global request stack var name
                               Must be unique across all known types of contexts (request attribs, screen context, FTL globals)
@@ -2599,6 +2627,9 @@ Gets a global var from request scope (request attributes, or if no request, glob
 
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
+
+NOTE: AUTO-ESCAPING: Unlike {{{request.getAttribute}}}, values retrieved are not auto-escaped,
+    unless they were inserted already escaped. In general, what you put in is what you get out.
 
   * Parameters *
     name                    = (required) Global request var name

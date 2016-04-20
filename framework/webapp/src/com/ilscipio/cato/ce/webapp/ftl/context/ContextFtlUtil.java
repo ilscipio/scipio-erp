@@ -187,7 +187,7 @@ public abstract class ContextFtlUtil {
         return mapWrapper.getRawMap();
     }
 
-    private static Map<String, Object> getRequestVarMapFromFtlGlobals(Environment env, ObjectWrapper objectWrapper) {
+    private static Map<String, Object> getRequestVarMapFromFtlGlobals(Environment env) {
         RequestVarMapWrapperModel mapWrapper = null;
         try {
             mapWrapper = (RequestVarMapWrapperModel) env.getGlobalVariable(ContextFtlUtil.REQUEST_VAR_MAP_NAME_FTLGLOBALS);
@@ -260,10 +260,12 @@ public abstract class ContextFtlUtil {
      * (from passed context; if context null, fished out of FTL env). If globalContext is missing, last resort is to set
      * an FTL #global var. i.e. tries to use longest-lived scope possible.
      * <p>
-     * <em>NOTE</em>: In general the values are NOT unwrapped or wrapped by this method before being stored; they preserve their original types
-     * wherever possible; caller handles unwrapping if desired.
-     * The only exception currently is wrapping forcefully needed for storage into FTL variables, but it uses the caller's
-     * objectWrapper for this operation (required if env non-null).
+     * <em>WARN</em>: In general the values are NOT unwrapped by this method before being stored; they preserve their original types
+     * wherever possible; caller handles unwrapping if desired. In theory we should unwrap EVERYTHING before
+     * storage because the request var map may be used across different rendering contexts;
+     * however this adds even more performance overhead. 
+     * FIXME?: Maybe should force unwrapping to be safe (and prevent auto-escape wrapping as well)...
+     * but will affect all callers.
      * <p>
      * <em>NOTE</em>: 2015-10-30: All set/getRequestVar and push/read/popRequestStack variables are now stored in
      * a second map within request attributes and context to give them their own namespace and make them trackable.
@@ -287,7 +289,7 @@ public abstract class ContextFtlUtil {
      * @see #getRequestVar
      */
     static void setRequestVar(String name, Object value, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+            Map<String, Object> context, Environment env) throws TemplateModelException {
         if (request != null) {
             getRequestVarMapFromReqAttribs(request).put(name, value);
             //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
@@ -300,7 +302,7 @@ public abstract class ContextFtlUtil {
                 //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
             }
             else if (env != null) {
-                getRequestVarMapFromFtlGlobals(env, objectWrapper).put(name, value);
+                getRequestVarMapFromFtlGlobals(env).put(name, value);
                 //Debug.logInfo("setRequestVar: ftl global var (name: " + name + ")", module);
             }
             else {
@@ -309,18 +311,18 @@ public abstract class ContextFtlUtil {
         }
     }
 
-    public static void setRequestVar(String name, Object value, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static void setRequestVar(String name, Object value, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
             context = getContext(env);
         }
-        setRequestVar(name, value, request, context, env, objectWrapper);
+        setRequestVar(name, value, request, context, env);
     }
 
     public static void setRequestVar(String name, Object value, HttpServletRequest request, 
             Map<String, Object> context) throws TemplateModelException {
-        setRequestVar(name, value, request, context, null, null);
+        setRequestVar(name, value, request, context, null);
     }
 
 
@@ -335,7 +337,7 @@ public abstract class ContextFtlUtil {
      * @see setRequestVar
      */
     static Object getRequestVar(String name, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+            Map<String, Object> context, Environment env) throws TemplateModelException {
         Object res = null;
     
         if (request != null) {
@@ -349,7 +351,7 @@ public abstract class ContextFtlUtil {
                 //Debug.logInfo("getRequestVar: globalContext var (name: " + name + ")", module);
             }
             else if (env != null) {
-                res = getRequestVarMapFromFtlGlobals(env, objectWrapper).get(name);
+                res = getRequestVarMapFromFtlGlobals(env).get(name);
                 //Debug.logInfo("getRequestVar: ftl global var (name: " + name + ")", module);
             }
             else {
@@ -360,17 +362,17 @@ public abstract class ContextFtlUtil {
         return res;
     }
 
-    public static Object getRequestVar(String name, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static Object getRequestVar(String name, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        return getRequestVar(name, request, context, env, objectWrapper);
+        return getRequestVar(name, request, context, env);
     }
 
     public static Object getRequestVar(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        return getRequestVar(name, request, context, null, null);
+        return getRequestVar(name, request, context, null);
     }
 
     /**
@@ -381,7 +383,7 @@ public abstract class ContextFtlUtil {
      * @see setRequestVar
      */
     static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+            Map<String, Object> context, Environment env) throws TemplateModelException {
         // NOTE: There is no value wrapping or unwrapping in these methods anymore; we just store them and all wrapping/unwrapping
         // is left to caller unless absolutely necessary (and in those cases, he specifies the objectWrapper for behavior).
         //if (value instanceof TemplateModel) {
@@ -397,7 +399,7 @@ public abstract class ContextFtlUtil {
                 updateStack(getRequestVarMapFromGlobalContext(globalContext), name, value, setLast, "globalContext");
             }
             else if (env != null) {
-                updateStack(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, value, setLast, "FTL globals");
+                updateStack(getRequestVarMapFromFtlGlobals(env), name, value, setLast, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to push request scope stack (name: " + name + ")");
@@ -434,35 +436,35 @@ public abstract class ContextFtlUtil {
         //Debug.logInfo("pushRequestStack: " + desc + " var (name: " + name + ")", module);
     }
     
-    static void pushRequestStack(String name, Object value, boolean setLast, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    static void pushRequestStack(String name, Object value, boolean setLast, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        pushRequestStack(name, value, setLast, request, context, env, objectWrapper);
+        pushRequestStack(name, value, setLast, request, context, env);
     }
 
     static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        pushRequestStack(name, value, setLast, request, context, null, null);
+        pushRequestStack(name, value, setLast, request, context, null);
     }
 
     static void pushRequestStack(String name, Object value, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
-        pushRequestStack(name, value, false, request, context, env, objectWrapper);
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        pushRequestStack(name, value, false, request, context, env);
     }
 
-    public static void pushRequestStack(String name, Object value, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static void pushRequestStack(String name, Object value, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        pushRequestStack(name, value, false, request, context, env, objectWrapper);
+        pushRequestStack(name, value, false, request, context, env);
     }
 
     public static void pushRequestStack(String name, Object value, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        pushRequestStack(name, value, false, request, context, null, null);
+        pushRequestStack(name, value, false, request, context, null);
     }
 
     /**
@@ -473,21 +475,21 @@ public abstract class ContextFtlUtil {
      * @see setRequestVar
      */
     static void setLastRequestStack(String name, Object value, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
-        pushRequestStack(name, value, true, request, context, env, objectWrapper);
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        pushRequestStack(name, value, true, request, context, env);
     }
 
-    public static void setLastRequestStack(String name, Object value, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static void setLastRequestStack(String name, Object value, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        pushRequestStack(name, value, true, request, context, env, objectWrapper);
+        pushRequestStack(name, value, true, request, context, env);
     }
 
     public static void setLastRequestStack(String name, Object value, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        pushRequestStack(name, value, true, request, context, null, null);
+        pushRequestStack(name, value, true, request, context, null);
     }
 
     /**
@@ -500,25 +502,25 @@ public abstract class ContextFtlUtil {
      * @see setRequestVar
      */
     static Object readRequestStack(String name, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
-        return ContextFtlUtil.readRequestStack(name, false, request, context, env, objectWrapper);
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        return ContextFtlUtil.readRequestStack(name, false, request, context, env);
     }
 
-    public static Object readRequestStack(String name, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static Object readRequestStack(String name, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        return ContextFtlUtil.readRequestStack(name, false, request, context, env, objectWrapper);
+        return ContextFtlUtil.readRequestStack(name, false, request, context, env);
     }
 
     public static Object readRequestStack(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        return ContextFtlUtil.readRequestStack(name, false, request, context, null, null);
+        return ContextFtlUtil.readRequestStack(name, false, request, context, null);
     }
 
     static Object readRequestStack(String name, boolean pop, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+            Map<String, Object> context, Environment env) throws TemplateModelException {
         Object res = null;
     
         if (request != null) {
@@ -530,7 +532,7 @@ public abstract class ContextFtlUtil {
                 res = readStack(getRequestVarMapFromGlobalContext(globalContext), name, pop, "globalContext");
             }
             else if (env != null) {
-                res = readStack(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, pop, "FTL globals");
+                res = readStack(getRequestVarMapFromFtlGlobals(env), name, pop, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to " + (pop ? "pop" : "read") + " request scope stack (name: " + name + ")");
@@ -561,17 +563,17 @@ public abstract class ContextFtlUtil {
     }
     
     
-    static Object readRequestStack(String name, boolean pop, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+    static Object readRequestStack(String name, boolean pop, Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = getContext(env);
         }
-        return readRequestStack(name, pop, request, context, env, objectWrapper);
+        return readRequestStack(name, pop, request, context, env);
     }
 
     static Object readRequestStack(String name, boolean pop, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        return readRequestStack(name, pop, request, context, null, null);
+        return readRequestStack(name, pop, request, context, null);
     }
 
     /**
@@ -584,8 +586,8 @@ public abstract class ContextFtlUtil {
      * @see setRequestVar
      */ 
     static Object popRequestStack(String name, HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
-        return readRequestStack(name, true, request, context, env, objectWrapper);
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        return readRequestStack(name, true, request, context, env);
     }
 
     public static Object popRequestStack(String name, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
@@ -594,11 +596,11 @@ public abstract class ContextFtlUtil {
         if (request == null) {
             context = getContext(env);
         }
-        return readRequestStack(name, true, request, context, env, objectWrapper);
+        return readRequestStack(name, true, request, context, env);
     }
 
     public static Object popRequestStack(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        return readRequestStack(name, true, request, context, null, null);
+        return readRequestStack(name, true, request, context, null);
     }
 
     /**
@@ -624,7 +626,7 @@ public abstract class ContextFtlUtil {
                 return getStackAsList(getRequestVarMapFromGlobalContext(globalContext), name, copyTargetType, objectWrapper, "globalContext");
             }
             else if (env != null) {
-                return getStackAsList(getRequestVarMapFromFtlGlobals(env, objectWrapper), name, copyTargetType, objectWrapper, "FTL globals");
+                return getStackAsList(getRequestVarMapFromFtlGlobals(env), name, copyTargetType, objectWrapper, "FTL globals");
             }
             else {
                 throw new IllegalArgumentException("No request, context or ftl environment to get request scope stack (name: " + name + ")");
@@ -684,9 +686,13 @@ public abstract class ContextFtlUtil {
      * Merges macro argument maps following the args/inlineArgs pattern.
      * Auto-converts maps to simple maps (but only those where this is logical; usually only
      * the args parameter).
-     * 
-     * FIXME? suboptimal; must optimize;hard to do. complication is we have no access to the concatenation operator "+"
+     * <p>
+     * NOTE: The objectWrapper is the one the resulting SimpleHash is initialized with, but usually it is
+     * not used for any of the initial values merged into it by this call.
+     * <p>
+     * FIXME? suboptimal; must optimize; hard to do. complication is we have no access to the concatenation operator "+"
      * and its implementation is private in Freemarker.
+     * 
      */
     public static TemplateHashModelEx mergeArgMaps(TemplateHashModelEx args, TemplateHashModelEx inlineArgs,
             TemplateHashModelEx defaultArgs, TemplateHashModelEx overrideArgs, boolean recordArgNames, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
@@ -737,6 +743,5 @@ public abstract class ContextFtlUtil {
         }
         return res;
     }
-
 
 }

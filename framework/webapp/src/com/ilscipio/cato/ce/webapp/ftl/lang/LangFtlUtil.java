@@ -499,8 +499,8 @@ public abstract class LangFtlUtil {
     /**
      * Gets map keys, either as collection or Set.
      * <p>
-     * WARN: auto-escaping is bypassed on complex map models. Caller must decide
-     * how he wants to wrap the results.
+     * WARN: auto-escaping is bypassed on all keys, caller handles.
+     * DEV NOTE: we MUST manually bypass auto-escaping for all on this one.
      */
     public static Object getMapKeys(TemplateModel object) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
@@ -509,7 +509,11 @@ public abstract class LangFtlUtil {
             return wrappedObject.keySet();
         }
         else if (object instanceof TemplateHashModelEx) {
-            return ((TemplateHashModelEx) object).keys();
+            // 2016-04-20: cannot do this because we MUST trigger bypass of auto-escaping,
+            // so just do a deep unwrap, which automatically bypasses the escaping,
+            // and then caller handles the result, which is probably an arraylist
+            //return ((TemplateHashModelEx) object).keys();
+            return unwrapAlways(((TemplateHashModelEx) object).keys());
         }
         else {
             throw new TemplateModelException("object is not a map or does not support key iteration");
@@ -543,6 +547,8 @@ public abstract class LangFtlUtil {
      * Copies map.
      * <p>
      * WARN: For complex maps, auto-escaping is bypassed; caller must decide how to handle.
+     * <p>
+     * FIXME: The rewrapping objectWrapper behavior is inconsistent! may lead to auto-escape issues
      */
     public static Object copyMap(TemplateModel object, Set<String> inExKeys, Boolean include, 
             TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
@@ -737,6 +743,8 @@ public abstract class LangFtlUtil {
      * Copies list.
      * <p>
      * WARN: For complex lists, auto-escaping is bypassed. Caller must decide how to handle.
+     * <p>
+     * FIXME: The rewrapping objectWrapper behavior is inconsistent! may lead to auto-escape issues
      */
     public static Object copyList(TemplateModel object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetType == null) {
@@ -836,6 +844,7 @@ public abstract class LangFtlUtil {
      * Converts map to a simple wrapper, if applicable.
      * <p>
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle.
+     * Other types of maps are not altered.
      */
     public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
@@ -862,6 +871,7 @@ public abstract class LangFtlUtil {
      * won't suffer from the same problems maps have.
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     private static TemplateSequenceModel toSimpleSequence(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof TemplateSequenceModel) {
             return (TemplateSequenceModel) object;
@@ -1009,7 +1019,7 @@ public abstract class LangFtlUtil {
     /**
      * Add to string set.
      * <p>
-     * WARN: bypasses auto-escaping, caller handles
+     * WARN: bypasses auto-escaping, caller handles.
      */
     public static void addToStringSet(Set<String> dest, TemplateCollectionModel collModel) throws TemplateModelException {
         TemplateModelIterator modelIt = collModel.iterator();
@@ -1021,7 +1031,7 @@ public abstract class LangFtlUtil {
     /**
      * To string set.
      * <p>
-     * WARN: bypasses auto-escaping, caller handles
+     * WARN: bypasses auto-escaping, caller handles.
      */
     public static Set<String> toStringSet(TemplateSequenceModel seqModel) throws TemplateModelException {
         Set<String> set = new HashSet<String>();
@@ -1034,7 +1044,7 @@ public abstract class LangFtlUtil {
     /**
      * Add to string set.
      * <p>
-     * WARN: bypasses auto-escaping, caller handles
+     * WARN: bypasses auto-escaping, caller handles.
      */
     public static void addToStringSet(Set<String> dest, TemplateSequenceModel seqModel) throws TemplateModelException {
         for(int i=0; i < seqModel.size(); i++) {
@@ -1072,13 +1082,13 @@ public abstract class LangFtlUtil {
     /**
      * Gets collection as a keys.
      * <p>
-     * WARN: This bypasses auto-escaping, caller must decide how to handle.
+     * WARN: This bypasses auto-escaping in all cases. Caller must decide how to handle.
      */
     public static Set<String> getAsStringSet(TemplateModel model) throws TemplateModelException {
         Set<String> exKeys = null;
         if (model != null) {
             if (model instanceof BeanModel && ((BeanModel) model).getWrappedObject() instanceof Set) {
-                // WARN: UNSAFE: bypasses auto-escaping
+                // WARN: bypasses auto-escaping
                 exKeys = UtilGenerics.cast(((BeanModel) model).getWrappedObject());
             }
             else if (model instanceof TemplateCollectionModel) {

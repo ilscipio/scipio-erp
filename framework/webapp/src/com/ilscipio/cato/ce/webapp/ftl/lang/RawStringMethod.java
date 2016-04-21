@@ -24,16 +24,18 @@ import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: ToRawDeepMethod - Deep-unwraps an object, bypassing escaping
+ * Cato: RawStringMethod - Prevents Ofbiz auto-escaping of string.
  */
-public class ToRawDeepMethod implements TemplateMethodModelEx {
+public class RawStringMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToRawDeepMethod.class.getName();
+    public static final String module = RawStringMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -41,17 +43,13 @@ public class ToRawDeepMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        Object arg = args.get(0);
+        if (arg == null) { // Emulates StringUtil.wrapString
+            return null;
         }
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        
-        Object unwrapped = LangFtlUtil.unwrapAlways(object);
-        
-        // Return non-escaping wrapper so we get raw values
-        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
-        return LangFtlUtil.wrap(unwrapped, objectWrapper);
+        TemplateScalarModel strModel = (TemplateScalarModel) arg;
+        String str = LangFtlUtil.getAsStringNonEscaping(strModel);
+        return new SimpleScalar(str); // Emulates Freemarker ?string built-in
     }
     
 }

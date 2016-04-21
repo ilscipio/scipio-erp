@@ -669,19 +669,20 @@ Returns empty string if no label is found
 *************
 * rawString
 ************
-Returns the given string, free of Ofbiz auto HTML encoding. 
-This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
-the resulting type.
+Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
 
-TODO: implement as transform
+This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
+the resulting type into a simple Freemarker string.
 
   * Parameters *
     str                     = ((string), required) The string to return raw.
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function rawString str>
-  <#-- ?string turns it into a basic FTL string -->
+  <#- ?string turns it into a basic FTL string ->
   <#return StringUtil.wrapString(str)?string> 
 </#function>
+-->
 
 <#-- 
 *************
@@ -1253,6 +1254,10 @@ Usually not needed in FTL; provided for advanced usage.
 The resulting underlying type may differ from the original, but tries to keep the type similar when 
 possible.
 
+WARN: Behavior w.r.t. auto-escaping is currently inconsistent and poorly-defined.
+
+FIXME: Auto-escaping issues
+
   * Parameters *
     object                  = ((object)) The object to copy
 -->
@@ -1263,10 +1268,12 @@ possible.
 
 <#-- 
 *************
-* toRawDeep
+* rawObjectDeep
 ************
-Takes any object and deep-unwraps it, returning it in a wrapper that will never perform
+Takes any object and performs an explicit deep-unwrap, returning it in a wrapper that will never perform
 auto-escaping of strings.
+
+Generally this is very slow and for diagnostic purposes.
 
 NOTE: The result is NOT guaranteed to be a simple type. Use #toSimpleMap or other calls.
 
@@ -1274,7 +1281,7 @@ NOTE: The result is NOT guaranteed to be a simple type. Use #toSimpleMap or othe
     object                  = ((object), required) The object to make raw
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function toRawDeep object>
+<#function rawObjectDeep object>
 </#function>
 -->
 
@@ -1286,6 +1293,10 @@ Performs a shallow copy of a map.
 
 Usually not needed in FTL; for advanced usage. The resulting underlying type may differ from the 
 original; in principle tries to preserve, but in most cases will create a simple FTL hash.
+
+WARN: Behavior w.r.t. auto-escaping is currently inconsistent and poorly-defined.
+
+FIXME: Auto-escaping issues
 
 NOTES: 
 * copyObject will also work fine on maps, but this provides more map-specific options.
@@ -1312,10 +1323,15 @@ any copies.
 
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
 
-NOTE: This is a shallow operation only.
+NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
+    called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
+    is why its behavior is to leave maps alone unless they are complex bean maps.
 
   * Parameters *
     object                  = ((map), required) The source map
+    
+  * Related *
+    #toSimpleRawMap
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>

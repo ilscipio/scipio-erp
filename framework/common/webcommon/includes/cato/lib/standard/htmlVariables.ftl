@@ -426,14 +426,17 @@
     <#-- Misc action flags (fragments) -->
     "action_external" : "action-external",                                <#-- external action, notably for marking external links -->
     
+    <#-- NOTE: There is a dedicated action-primary-inline to prevent CSS selection issues. Using action_inline alone as extra style on a link is not a good idea. -->
     "action_primary" : "action-primary",                                  <#-- indicates the UI elem's primary reason for existing is to provide this action. usually implied for action_run. most action_nav that are part of a menu or with a static word like "View" fall into this category. -->
+    "action_primary_inline" : "action-primary-inline action-inline",      <#-- primary action that should explicitly blend in with surroundings, e.g. a link that shouln't have a button -->
     "action_secondary" : "action-secondary",                              <#-- indicates the UI elem is providing this action as a secondary or convenience function, secondary to something else like providing information. for example, many action_nav (link_nav) text links with an entity value ID would fall into here. -->
+    "action_secondary_inline" : "action-secondary-inline action-inline",  <#-- secondary action that should explicitly blend in with surroundings, e.g. a link that shouln't have a button -->
     
     "action_importance_low" : "action-importance-low",                    <#-- lowered importance -->
     "action_importance_normal" : "action-importance-normal",              <#-- normal importance (assumed default) -->
     "action_importance_high" : "action-importance-high",                  <#-- high importance (assumed default). e.g. "Create Order" -->
     
-    "action_inline" : "action-secondary",                                 <#-- action that must blend in with surrounding elements (e.g. link without a button) FIXME?: this probably shouldn't be implemented with action-secondary -->
+    "action_inline" : "action-inline",                                    <#-- NOTE: Avoid using this in templates; use action_xxx_inline above instead -->
     
     <#-- Convenience shorthands -->
     "action_nav_cancel" : "action-nav action-cancel",
@@ -478,6 +481,9 @@
                   a "View" button for an entity value
                   <a href="${makeOfbizUrl("EditEntity?mode=new")}" class="${styles.link_nav!} ${styles.action_add!}">New</a>
                   <a href="${makeOfbizUrl("ViewEntity?id=abc")}" class="${styles.link_nav!}">View Entity</a>
+      * INLINE TEXT LINKS (link_nav_inline, link_run_sys_inline): These are primary link actions like main text links, but with an explicit request by the template
+        to mark the link as inline and blending in, or in practical terms, a link without a button.
+        NOTE: If the link text is information first, please use info links instead (secondary action).
       * CANCEL TEXT LINKS (link_xxx_cancel, implies action_cancel): These are a special case. They are not actions - they are anti-actions, and get their own convenience styles that also help with factoring styles (instead of link_run_xxx/link_nav + action_cancel).
         NOTE: This does NOT include "logical" cancel actions on records, such as "Cancel Order" or "Set Status Cancelled" links, which should usually get link_run_sys + action_terminate or other appropriate style instead. Do not use action_cancel or link_xxx_cancel on these.
         Anti-action cancel text links should be given the following styles (no extra action_xxx necessary):
@@ -497,12 +503,7 @@
           * e.g.: a "WS10000" order ID in an order listing table
                   a party name that links to a profile
                   <a href="${makeOfbizUrl("ViewOrder?orderId=WS10000")}" class="${styles.link_nav_info_id!}">WS10000</a>
-      * INLINE TEXT LINKS: This is functionally similar to info text links but semantically different, they
-        are an explicit request by the template to mark the link as something that should inline with its surroundings.
-        In other words (practically-speaking), a link that shouldn't have a button. Note this causes the template
-        to make styling decisions (essentially).
-        This may be used when none of the other types (like info) are appropriate.
-        FIXME?: Currently these are implemented using the action-secondary label, but it's not semantically appropriate.
+
 
     TYPE MODIFIERS:
       * ACTION SCOPES: All links and actions can be given a specific scope (but usually not useful on nav links, whereas link_run_xxx always requires and implies scope). If missing, usually action_scope_sys is assumed.
@@ -553,24 +554,24 @@
     <#-- Action text links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
     "link_run_sys" :                "link-type-text action-run action-scope-sys action-primary button tiny",                        <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
     "link_run_sys_long" :           "link-type-text action-run action-scope-sys action-primary link-long",
-    "link_run_sys_inline" :         "link-type-text action-run action-scope-sys action-secondary",
-    "link_run_sys_inline_long" :    "link-type-text action-run action-scope-sys action-secondary link-long",
+    "link_run_sys_inline" :         "link-type-text action-run action-scope-sys action-primary-inline action-inline",
+    "link_run_sys_inline_long" :    "link-type-text action-run action-scope-sys action-primary-inline action-inline link-long",
     "link_run_sys_cancel" :         "link-type-text action-run action-scope-sys action-primary action-cancel button tiny",          <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
     "link_run_sys_cancel_long" :    "link-type-text action-run action-scope-sys action-primary action-cancel link-long",
     "link_run_sys_info" :           "link-type-text action-run action-scope-sys action-secondary",                                  <#-- informational sys run-action (gives information first, triggers action as secondary purpose) -->
     "link_run_sys_info_long" :      "link-type-text action-run action-scope-sys action-secondary link-long",
     "link_run_session" :            "link-type-text action-run action-scope-session action-primary button tiny",                    <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
     "link_run_session_long" :       "link-type-text action-run action-scope-session action-primary link-long",
-    "link_run_session_inline" :     "link-type-text action-run action-scope-session action-secondary",                              <#-- informational session run-action (gives information first, triggers action as secondary purpose) -->
-    "link_run_session_inline_long" :"link-type-text action-run action-scope-session action-secondary link-long",
+    "link_run_session_inline" :     "link-type-text action-run action-scope-session action-primary-inline action-inline",                              <#-- informational session run-action (gives information first, triggers action as secondary purpose) -->
+    "link_run_session_inline_long" :"link-type-text action-run action-scope-session action-primary-inline action-inline link-long",
     "link_run_session_cancel" :     "link-type-text action-run action-scope-session action-primary action-cancel button tiny",      <#-- link for any action that cancels another session action (rare). -->
     "link_run_session_cancel_long" :"link-type-text action-run action-scope-session action-primary action-cancel link-long",
     "link_run_session_info" :       "link-type-text action-run action-scope-session action-secondary",                              <#-- informational session run-action (gives information first, triggers action as secondary purpose) -->
     "link_run_session_info_long" :  "link-type-text action-run action-scope-session action-secondary link-long",
     "link_run_local" :              "link-type-text action-run action-scope-local action-primary button tiny",                      <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
     "link_run_local_long" :         "link-type-text action-run action-scope-local action-primary link-long",
-    "link_run_local_inline" :       "link-type-text action-run action-scope-local action-secondary",                                <#-- informational local run-action (gives information first, triggers action as secondary purpose) -->
-    "link_run_local_inline_long" :  "link-type-text action-run action-scope-local action-secondary link-long",
+    "link_run_local_inline" :       "link-type-text action-run action-scope-local action-primary-inline action-inline",                                <#-- informational local run-action (gives information first, triggers action as secondary purpose) -->
+    "link_run_local_inline_long" :  "link-type-text action-run action-scope-local action-primary-inline action-inline link-long",
     "link_run_local_cancel" :       "link-type-text action-run action-scope-local action-primary action-cancel button tiny",        <#-- link for any action that cancels another page-scope action (rare). -->
     "link_run_local_cancel_long" :  "link-type-text action-run action-scope-local action-primary action-cancel link-long",
     "link_run_local_info" :         "link-type-text action-run action-scope-local action-secondary",                                <#-- informational local run-action (gives information first, triggers action as secondary purpose) -->
@@ -580,8 +581,8 @@
         NOTE: unlike link_run_xxx, we omit sys/session/local scope from these because "predicting" the scope of an action in a nav link is not really useful in a UI. -->
     "link_nav" :                    "link-type-text action-nav action-primary button tiny",                                         <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View". the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate the action that the link is leading the user to do. -->
     "link_nav_long" :               "link-type-text action-nav action-primary link-long",                                           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_nav_inline" :             "link-type-text action-nav action-secondary", 
-    "link_nav_inline_long" :        "link-type-text action-nav action-secondary link-long", 
+    "link_nav_inline" :             "link-type-text action-nav action-primary-inline action-inline", 
+    "link_nav_inline_long" :        "link-type-text action-nav action-primary-inline action-inline link-long", 
     "link_nav_cancel" :             "link-type-text action-nav action-primary action-cancel button tiny",                           <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. NOTE: may often appear as if is part of a form submit (run action), but is not really. -->
     "link_nav_cancel_long" :        "link-type-text action-nav action-primary action-cancel link-long",                    
     "link_nav_info" :               "link-type-text action-nav action-secondary",                                                   <#-- informational navigation text links: link whose main purpose is to show information and is secondarily a navigation link. the types below are specializations of this. -->

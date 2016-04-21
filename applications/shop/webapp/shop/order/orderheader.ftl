@@ -372,7 +372,7 @@ under the License.
                                     <#assign isGift = cart.getIsGift(groupIdx)?default("N")>
                                     <#assign giftMessage = cart.getGiftMessage(groupIdx)!>
                                   </#if>
-                                  <#if (productStore.showCheckoutGiftOptions!) != "N">
+                                  <#if ((productStore.showCheckoutGiftOptions)!) != "N">
                                   <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.OrderGift}</@td>
                                         <@td colspan="3">

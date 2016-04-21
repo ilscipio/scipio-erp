@@ -899,6 +899,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#local contentFlagClasses = makeSectionContentFlagClasses(sLevel, hLevel, hasMenu, hasTitle, hasContent, 
       menuLayoutTitle, menuLayoutGeneral, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
   
+    <#local menuMarkup = "">
     <#if showMore>
       <#if hasMenu>
         <#local menuMarkup>
@@ -1017,7 +1018,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   <#if open>
     <#if showMore>
       <#-- FIXME: This call should not be captured, but run at the correct time... -->
-      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral
+      <#local menuTitleMarkup><@section_markup_menutitle sectionType=type sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
         contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef position="top" origArgs=origArgs passArgs=passArgs/></#local>
     </#if>
@@ -1028,7 +1029,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#-- save stack of all the args passed to markup macros that have open/close 
         so they don't have to remember a stack themselves -->
     <#local dummy = pushRequestStack("catoSectionMarkupStack", {
-      "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
+      "type":type, "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
       "id":id, "title":title, "style":style, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup, "menuMarkup":menuMarkup,
       
       "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
@@ -1045,7 +1046,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-  <@section_markup_container open=open close=close
+  <@section_markup_container type=type open=open close=close
     sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuContent=menuMarkup class=class innerClass=innerClass
     contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 

@@ -93,6 +93,8 @@ under the License.
               <#if security.hasEntityPermission("FACILITY", "_UPDATE", session)>
                 <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
               </#if>
+            </@td>
+            <@td>
               <#if security.hasEntityPermission("FACILITY", "_DELETE", session)>
                 <form action="<@ofbizUrl>deleteContactMech/ViewContactMechs</@ofbizUrl>" name="deleteContactForm_${contactMechMap_index}" method="post">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -100,6 +102,7 @@ under the License.
                 </form>
                 <a href="javascript:document.deleteContactForm_${contactMechMap_index}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
               </#if>
+
             </@td>
           </@tr>
       </#list>

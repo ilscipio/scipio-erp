@@ -148,7 +148,7 @@ public abstract class ContextFtlUtil {
      * are non-null as possible (but env will probably usually be null).
      */
     public static void resetRequestVars(HttpServletRequest request, 
-            Map<String, Object> context, Environment env, ObjectWrapper objectWrapper) throws TemplateModelException {
+            Map<String, Object> context, Environment env) throws TemplateModelException {
         RequestVarMapWrapper mapWrapper = new RequestVarMapWrapper();
         if (request != null) {
             request.setAttribute(ContextFtlUtil.REQUEST_VAR_MAP_NAME_REQATTRIBS, mapWrapper);
@@ -164,7 +164,7 @@ public abstract class ContextFtlUtil {
     }
     
     public static void resetRequestVars(HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        resetRequestVars(request, context, null, null);
+        resetRequestVars(request, context, null);
     }
 
     private static Map<String, Object> getRequestVarMapFromReqAttribs(HttpServletRequest request) {

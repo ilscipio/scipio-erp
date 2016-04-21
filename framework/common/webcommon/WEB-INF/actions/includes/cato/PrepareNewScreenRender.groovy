@@ -19,4 +19,4 @@ Debug.logInfo("Cato: Preparing new templating API render; clearing request-scope
 
 // note: env param will usually be null here, but just in case...
 env = FreeMarkerWorker.getCurrentEnvironment();
-ContextFtlUtil.resetRequestVars(context.request, context, env, (env != null ? env.getObjectWrapper() : null));
+ContextFtlUtil.resetRequestVars(context.request, context, env);

@@ -250,6 +250,13 @@
     "menu_noclear" : "menu-no-clear",                   <#-- A remnant from stock Ofbiz menu widgets, some of which label with a "no-clear" style -->
     "menu_link_href_default" : "javascript:void(0);",
     
+  <#-- Sections -->
+    <#-- type-based styles -->
+    "section_generic_menulayouttitle" : "post-title",  
+    "section_generic_menulayoutgeneral" : "top", 
+    "section_default_menulayouttitle" : "post-title",  
+    "section_default_menulayoutgeneral" : "top",  
+    
   <#-- Data and Tables 
     NOTES:
       * Currently, despite settings here, responsive tables will automatically be disabled for tables that have no header. See @table.

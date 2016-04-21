@@ -26,7 +26,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ProductFindFacilities"/>
                 <set field="activeMainMenuItem" value="facility"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

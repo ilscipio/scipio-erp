@@ -249,7 +249,8 @@ under the License.
     </request-map>
 
     <!-- ================ Facility Group Requests ================= -->
-    <request-map uri="FindFacilityGroup">
+   <!-- Cato: Commented out for now -->
+   <!--  <request-map uri="FindFacilityGroup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityGroup"/>
     </request-map>
@@ -269,9 +270,10 @@ under the License.
         <response name="success" type="view" value="EditFacilityGroup"/>
         <response name="error" type="view" value="EditFacilityGroup"/>
     </request-map>
-
+ -->
     <!-- ================ Facility Group Rollup Requests ================= -->
-    <request-map uri="EditFacilityGroupRollup">
+    <!-- Cato: Commented out for now -->
+    <!--  <request-map uri="EditFacilityGroupRollup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroupRollup"/>
     </request-map>
@@ -292,10 +294,11 @@ under the License.
         <event type="service" path="" invoke="removeFacilityGroupFromGroup"/>
         <response name="success" type="view" value="EditFacilityGroupRollup"/>
         <response name="error" type="view" value="EditFacilityGroupRollup"/>
-    </request-map>
+    </request-map> -->
 
     <!-- ================ Facility Group Member Requests ================= -->
-    <request-map uri="EditFacilityGroupMembers">
+    <!-- Cato: Commented out for now -->
+<!--     <request-map uri="EditFacilityGroupMembers">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroupMembers"/>
     </request-map>
@@ -341,10 +344,11 @@ under the License.
         <event type="service" path="" invoke="removeFacilityFromGroup"/>
         <response name="success" type="view" value="EditFacilityGroups"/>
         <response name="error" type="view" value="EditFacilityGroups"/>
-    </request-map>
+    </request-map> -->
 
     <!-- ================ Facility Group Role Requests ================= -->
-    <request-map uri="EditFacilityGroupRoles">
+    <!-- Cato: Commented out for now -->
+   <!--  <request-map uri="EditFacilityGroupRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroupRoles"/>
     </request-map>
@@ -360,7 +364,7 @@ under the License.
         <response name="success" type="view" value="EditFacilityGroupRoles"/>
         <response name="error" type="view" value="EditFacilityGroupRoles"/>
     </request-map>
-
+ -->
     <!-- ================ Facility Role Requests ================= -->
     <request-map uri="EditFacilityParties">
         <security https="true" auth="true"/>
@@ -380,7 +384,8 @@ under the License.
     </request-map>
 
     <!-- ================ Inventory Item Labels Requests ================= -->
-    <request-map uri="EditInventoryItemLabelTypes">
+   <!-- Cato: to be removed -->
+   <!--  <request-map uri="EditInventoryItemLabelTypes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditInventoryItemLabelTypes"/>
     </request-map>
@@ -449,7 +454,7 @@ under the License.
         <event type="service" path="" invoke="deleteInventoryItemLabelAppl"/>
         <response name="success" type="view" value="EditInventoryItemLabelAppls"/>
         <response name="error" type="view" value="EditInventoryItemLabelAppls"/>
-    </request-map>
+    </request-map> -->
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditInventoryItem">
         <security https="true" auth="true"/>
@@ -1383,16 +1388,18 @@ under the License.
     <view-map name="PrintPickSheets.pdf" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#PrintPickSheets.fo" content-type="application/pdf" encoding="none"/>
     <view-map name="ReviewOrdersNotPickedOrPacked" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReviewOrdersNotPickedOrPacked"/>
 
-    <view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
+    <!-- Cato: Commented out for now -->
+    <!--    <view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
     <view-map name="EditFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroup"/>
     <view-map name="EditFacilityGroupMembers" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupMembers"/>
     <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
-    <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/>
+    <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/> -->
 
-    <view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
+    <!-- Cato: To be removed -->
+<!--     <view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
     <view-map name="FindInventoryItemLabels" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#FindInventoryItemLabels"/>
     <view-map name="EditInventoryItemLabel" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabel"/>
-    <view-map name="EditInventoryItemLabelAppls" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelAppls"/>
+    <view-map name="EditInventoryItemLabelAppls" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelAppls"/> -->
 
     <view-map name="PackOrder" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#PackOrder"/>
     <view-map name="PackingSlip.pdf" type="screenfop" page="component://product/widget/facility/ShipmentScreens.xml#PackingSlip.fo" content-type="application/pdf" encoding="none"/>

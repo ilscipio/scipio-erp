@@ -20,7 +20,9 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="FindFacilityGroup">
+    <screen name=""><section></section></screen>
+    <!-- Cato: Commenting this out for now. -->
+    <!-- <screen name="FindFacilityGroup">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFacilityGroup"/>
@@ -88,10 +90,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityGroupDecorator">
                     <decorator-section name="body">
-                        <!-- Cato: redundant
+                        Cato: redundant
                         <container style="button-bar">
                             <link target="EditFacilityGroup" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}"/>
-                        </container>-->
+                        </container>
                         <include-form name="EditFacilityGroup" location="component://product/widget/facility/FacilityGroupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -185,4 +187,4 @@ under the License.
             </widgets>
         </section>
     </screen>
-</screens>
+ --></screens>

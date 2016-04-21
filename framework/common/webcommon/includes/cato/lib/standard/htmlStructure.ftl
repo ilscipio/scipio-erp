@@ -896,7 +896,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     </#if>
     <#local hasMenu = (menuContent?is_directive || menuContent?has_content || requireMenu || forceEmptyMenu)>
     <#local hasTitle = title?has_content>
-    <#local contentFlagClasses = makeSectionContentFlagClasses(sLevel, hLevel, hasMenu, hasTitle, hasContent, 
+    <#local contentFlagClasses = makeSectionContentFlagClasses(type, sLevel, hLevel, hasMenu, hasTitle, hasContent, 
       menuLayoutTitle, menuLayoutGeneral, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
   
     <#local menuMarkup = "">
@@ -921,7 +921,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
             <#local preMenuItems = []>
             <#local postMenuItems = []>
           <#else>
-            <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(sectionLevel, headingLevel, menuLayoutTitle, menuLayoutGeneral, menuRole, hasMenu, 
+            <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(type, sectionLevel, headingLevel, menuLayoutTitle, menuLayoutGeneral, menuRole, hasMenu, 
               contentFlagClasses, collapsible, collapsed, javaScriptEnabled, collapsibleAreaId, saveCollapsed, expandToolTip, 
               collapseToolTip, fullUrlString, fromScreenDef)!{}>
             <#local preMenuItems = extraMenuItemsMap.preMenuItems![]>
@@ -1077,7 +1077,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 <#-- @section content classes markup - theme override
   * Return Value *
     string of classes (plain; no starting/trailing spaces or special class arg syntax) -->
-<#function makeSectionContentFlagClasses sectionLevel=1 headingLevel=1hasMenu=false hasTitle=false hasContent=true
+<#function makeSectionContentFlagClasses type sectionLevel=1 headingLevel=1hasMenu=false hasTitle=false hasContent=true
      menuLayoutTitle="" menuLayoutGeneral="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false catchArgs...>
   <#local contentFlagClasses>section-level-${sectionLevel} heading-level-${headingLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
   <#return contentFlagClasses>
@@ -1086,7 +1086,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 <#-- @section extra main menu items markup - theme override
   * Return Value *
     map of lists, in the format {"preMenuItems":[...], "postMenuItems":[...]} -->
-<#function makeSectionExtraMainMenuItems sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false contentFlagClasses="" 
+<#function makeSectionExtraMainMenuItems type sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false contentFlagClasses="" 
     collapsible=false collapsed=false javaScriptEnabled=false collapsibleAreaId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
@@ -1109,7 +1109,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuContent="" class="" outerClass="" 
+<#macro section_markup_container type="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
@@ -1152,7 +1152,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false menuMarkup="" 
+<#macro section_markup_menutitle sectionType="" sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false menuMarkup="" 
     hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false position="top" origArgs={} passArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->

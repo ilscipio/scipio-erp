@@ -133,65 +133,43 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="CommonInventoryItemLabelsDecorator">
+    
+    <screen name="CommonFacilitySettingsDecorator">
         <section>
+            <actions>
+                <set field="activeMainMenuItem" value="facility"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <entity-one entity-name="Facility" value-field="facility"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="InventoryItemLabelsSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
+                                <section>                                    
+                                    <widgets>
+                                        <include-menu name="FacilitySettingsSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                    </widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CommonInventoryItemLabelDecorator">
-        <section>
-            <actions>
-                <set field="inventoryItemLabelId" from-field="parameters.inventoryItemLabelId"/>
-                <entity-one entity-name="InventoryItemLabel" value-field="inventoryItemLabel"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-menu name="InventoryItemLabelsSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="inventoryItemLabel"/></not>
-                                    </condition>
+                                <section>                                   
                                     <widgets>
-                                        <label style="heading">${uiLabelMap.ProductInventoryItemLabel} [${inventoryItemLabelId}]</label>
                                         <decorator-section-include name="body"/>
                                     </widgets>
-                                    <fail-widgets>
-                                        <label style="common-msg-error">${uiLabelMap.ProductErrorInventoryItemLabelIdNotFound}</label>
-                                    </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -203,8 +181,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-     <screen name="main">
+        
+    <screen name="main">
         <section>
             <actions>
                 <set field="activeMainMenuItem" value="main"/>

@@ -45,15 +45,16 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
     </form>
 
-    <form name="FindFacility10" method="get" type="single" target="EditFacility"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- Cato: to be removed. This was absurd apart of useless as it has been removed -->
+   <!--  <form name="FindFacility10" method="get" type="single" target="EditFacility"
+        odd-row-style="alternate-row" header-row-style="header-row-2"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="facilityId">
             <drop-down allow-empty="false">
                 <entity-options description="${facilityName}" entity-name="Facility" key-field-name="facilityId"/>
             </drop-down>
         </field>
         <field name="selectAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_nav} ${styles.action_view}"><submit button-type="button"/></field>
-    </form>
+    </form> -->
 
     <form name="FindFacilityOptions" extends="lookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
@@ -852,54 +853,6 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_complete}">
             <submit/>
         </field>
-    </form>
-
-    <!--Facility Content-->
-    <form name="AddFacilityContent" type="upload" focus-field-name="contentId" 
-        header-row-style="header-row" target="createFacilityContent?facilityId=${facilityId}"> <!-- orig: default-table-style=-style="basic-table" -->
-        <field name="facilityId"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}">
-            <lookup target-form-name="LookupContent"/>
-        </field>
-        <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}">
-            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT">
-                <entity-options description="${description}" entity-name="ContentType">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down allow-empty="false" no-current-selected-key="CTNT_AVAILABLE">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="CONTENT_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
-        <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupContent"/></field>
-        <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
-    </form>
-    
-    <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <field name="facilityId"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.CommonView}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" target-type="inter-app">
-                <parameter param-name="contentId"/>
-            </hyperlink>
-        </field>
-        <field name="contentName"><display/></field>
-        <field name="mimeTypeId"><display/></field>
-        <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}"><display-entity entity-name="ContentType" also-hidden="false"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteFacilityContent">
-                <parameter param-name="facilityId"/>
-                <parameter param-name="contentId"/>
-                <parameter param-name="fromDate"/>
-           </hyperlink>
-        </field>   
     </form>
 
     <form name="EditFacilityGeoPoint" type="single" target="createUpdateFacilityGeoPoint" default-map-name="geoPoint"

@@ -22,7 +22,11 @@ under the License.
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="FacilityAppBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="facility" title="${uiLabelMap.ProductFacilities}"><link target="FindFacility"/></menu-item>
+        <menu-item name="facility" title="${uiLabelMap.ProductFacilities}">
+            <link target="FindFacility">
+                <parameter param-name="noConditionFind" value="Y"/>
+            </link>
+        </menu-item>
         <!-- Cato: Commmented out for now. Seems to not be used at the moment -->
         <!-- <menu-item name="facilityGroup" title="${uiLabelMap.ProductFacilityGroups}"><link target="FindFacilityGroup"/></menu-item> -->        
         <menu-item name="ShipmentGatewayConfig" title="${uiLabelMap.FacilityShipmentGatewayConfig}">
@@ -40,8 +44,6 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <menu-item name="settings" title="${uiLabelMap.CommonSettings}"><link target="FacilitySettings"/></menu-item>
-        <menu-item name="inventory" title="${uiLabelMap.ProductInventory}"><link target="EditInventoryItem"/></menu-item>
     </menu>
     
     <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -55,33 +57,35 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
+        <menu-item name="settings" title="${uiLabelMap.CommonSettings}">
+            <link target="settings">
+                 <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="inventory" title="${uiLabelMap.ProductInventory}"><link target="FindFacilityPhysicalInventory"/></menu-item>
         <!-- Cato: To be removed -->
        <!--  <menu-item name="FacilityChildren" title="${uiLabelMap.CommonEntityChildren}">
             <link target="FacilityChildren">
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item> -->
-        <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
-            <link target="ViewContactMechs">
-                <parameter param-name="facilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="EditFacilityGroups" title="${uiLabelMap.ProductGroups}">
+        <!-- Cato: ViewContactMechs moved to FacilitySettingsTabBar -->
+        <!-- Cato: To be removed -->
+        <!-- <menu-item name="EditFacilityGroups" title="${uiLabelMap.ProductGroups}">
             <link target="EditFacilityGroups">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
-        <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
-            <link target="FindFacilityLocation">
-                <parameter param-name="facilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
+        </menu-item> -->
+
+       
+        <!-- Cato: To be removed -->
+     <!--    <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
             <link target="EditFacilityParties">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
-        <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
+        </menu-item> -->
+        
+        <!-- <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
             <link target="ViewFacilityInventoryByProduct">
                 <parameter param-name="facilityId"/>
             </link>
@@ -140,7 +144,7 @@ under the License.
             <link target="PackOrder">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="Scheduling" title="${uiLabelMap.ProductScheduling}">
             <link target="Scheduling">
                 <parameter param-name="facilityId"/>
@@ -158,21 +162,23 @@ under the License.
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
         </menu-item>
-        <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
+        <!-- Cato: to be removed -->
+       <!--  <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
             <link target="EditFacilityContent">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditFacilityGeoPoint" title="${uiLabelMap.CommonGeoLocation}">
             <link target="EditFacilityGeoPoint">
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <menu-item name="EditFacilityAgreements" title="${uiLabelMap.PageTitleViewFacilityAgreements}">
+        <!-- Cato: Hide for now -->
+        <!-- <menu-item name="EditFacilityAgreements" title="${uiLabelMap.PageTitleViewFacilityAgreements}">
             <link target="EditFacilityAgreements">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility">
@@ -312,6 +318,19 @@ under the License.
     
     <menu name="FacilityGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FacilityGroupTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="FacilitySettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">         
+         <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
+            <link target="ViewContactMechs">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
+            <link target="FindFacilityLocation">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
     </menu>
     
 </menus>

@@ -64,10 +64,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacility"/>
     </request-map>
-    <request-map uri="FacilityChildren">
+    <!-- Cato: To be removed -->
+    <!-- <request-map uri="FacilityChildren">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FacilityChildren"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="CreateFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFacility"/>
@@ -814,28 +815,6 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ShipmentManifest.pdf"/>
     </request-map>
-
-    <!-- Facility Content -->
-    <request-map uri="EditFacilityContent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFacilityContent"/>
-    </request-map>
-    <request-map uri="createFacilityContent">
-        <security auth="true" https="true"/>
-        <event path="component://product/script/org/ofbiz/product/storage/FacilityEvents.xml" type="simple" invoke="createFacilityContent"/>
-        <response name="success" type="request-redirect" value="EditFacilityContent">
-            <redirect-parameter name="facilityId"/>
-        </response>
-        <response name="error" type="view" value="EditFacilityContent"/>
-    </request-map>
-    <request-map uri="deleteFacilityContent">
-        <security auth="true" https="true"/>
-        <event invoke="deleteFacilityContent" type="service"/>
-        <response name="success" type="request-redirect" value="EditFacilityContent">
-            <redirect-parameter name="facilityId"/>
-        </response>
-        <response name="error" type="view" value="EditFacilityContent"/>
-    </request-map>
     
     <request-map uri="EditFacilityGeoPoint">
         <security https="true" auth="true"/>
@@ -1333,6 +1312,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityAgreements"/>
     </request-map>
+    
+    <request-map uri="settings">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilitySettings"/>
+    </request-map>
+    
 
     <!-- ================ Lookup Requests ================= -->
     <request-map uri="LookupOrderHeaderAndShipInfo"><security https="true" auth="true"/><response name="success" type="view" value="LookupOrderHeaderAndShipInfo"/></request-map>
@@ -1355,7 +1340,8 @@ under the License.
     <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="FacilitySearchResults" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilitySearchResults"/>
     <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
-    <view-map name="FacilityChildren" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityChildren"/>
+    <!-- Cato: To be removed -->
+    <!-- <view-map name="FacilityChildren" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityChildren"/> -->
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
     <view-map name="FindFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityLocation"/>
     <view-map name="EditFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityLocation"/>
@@ -1458,5 +1444,9 @@ under the License.
     <view-map name="EditShipmentGatewayConfigType" page="component://product//widget/facility/ShipmentGatewayConfigScreens.xml#EditShipmentGatewayConfigType" type="screen"/>
 
     <view-map name="EditFacilityAgreements" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityAgreements"/>
+    
+    <!-- Settings -->
+    <view-map name="FacilitySettings" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>
+    
     <!-- end of view mappings -->
 </site-conf>

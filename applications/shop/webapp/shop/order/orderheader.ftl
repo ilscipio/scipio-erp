@@ -336,16 +336,16 @@ under the License.
 
                                   <#-- splitting preference -->
                                   <#if orderHeader?has_content>
-                                    <#assign maySplit = shipGroup.maySplit?default("N")>
+                                    <#assign maySplit = shipGroup.maySplit!"N">
                                   <#else>
-                                    <#assign maySplit = cart.getMaySplit(groupIdx)?default("N")>
+                                    <#assign maySplit = cart.getMaySplit(groupIdx)!"N">
                                   </#if>
 
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.OrderSplittingPreference}</@td>
                                         <@td colspan="3">
-                                            <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
-                                            <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
+                                            <#if (maySplit!"N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
+                                            <#if (maySplit!"N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
                                         </@td>
                                     </@tr>
                                  

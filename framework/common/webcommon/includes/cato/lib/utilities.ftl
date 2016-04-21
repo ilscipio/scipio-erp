@@ -1326,6 +1326,7 @@ If the object is not a complex map but already another type of map, returns it a
 NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
     called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
     is why its behavior is to leave maps alone unless they are complex bean maps.
+    Calling ?keys on this map may give escaped keys; use #mapKeys or #toSimpleRawMap.
 
   * Parameters *
     object                  = ((map), required) The source map
@@ -1335,6 +1336,92 @@ NOTE: This only changes the complexity of the map; it does NOT prevent auto-esca
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>
+</#function>
+-->
+
+<#-- 
+*************
+* toSimpleMapAny
+************
+Takes a map wrapper of any kind and switches it to a simple map adapter instead, without performing
+any copies. Will even switch Freemarker built-ins. FOR ADVANCED USAGE AND TESTING.
+
+This function is more permissive than #toSimpleMap.
+
+If the object is not wrapper but another type of map, returns it as-is. Other types throw errors.
+
+NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping.
+
+  * Parameters *
+    object                  = ((map), required) The source map
+    
+  * Related *
+    #toSimpleMap
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toSimpleMapAny object>
+</#function>
+-->
+
+<#-- 
+*************
+* toSimpleRawMap
+************
+Takes a bean-wrapped or simple-wrapped map or and switches it to a simple map adapter instead, 
+without performing any copies, with the new adapter having a non-escaping object wrapper.
+This bypasses screen auto-escaping for such maps.
+
+This function is more permissive than #toSimpleMap in which maps it will re-wrap.
+It will return as-is types of map it does not recognize such as simple hashes.
+
+WARN: The resulting map is inherently unsafe! Values should be escaped manually.
+
+WARN: This tries to cover the known types of maps in Ofbiz, but it does not convert any
+    map that is not based on wrappers, like simple hashes. But typically simple hashes are
+    created in FTL templates and aren't subject to escaping issues.
+
+NOTE: The auto-escaping bypass will only work properly on map types that do not already contain
+    TemplateModels internally. If TemplateModels are stored in a map from groovy, this method
+    will likely not prevent them from auto-escaping. These cases are very rare.
+
+  * Parameters *
+    object                  = ((map), required) The source map
+    
+  * Related *
+    #toSimpleMap
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toSimpleRawMap object>
+</#function>
+-->
+
+<#-- 
+*************
+* toSimpleRawMapAny
+************
+Takes a map wrapper of any kind and switch it simple map adapter instead, without performing
+any copies. In addition, it will switch the map adapter for other types of maps to
+non-escaping maps, allowing contents of the result to be automatically spared screen
+auto-escaping. It will even rewrap built in FTL types. FOR ADVANCED USAGE AND TESTING.
+
+This function is more permissive than #toSimpleRawMap. It will even switch built in FTL types.
+
+WARN: This tries to cover the known types of maps in Ofbiz, but it does not convert any
+    map that is not based on wrappers, like simple hashes. But typically simple hashes are
+    created in FTL templates and aren't subject to escaping issues.
+
+NOTE: The auto-escaping bypass will only work properly on map types that do not already contain
+    TemplateModels internally. If TemplateModels are stored in a map from groovy, this method
+    will likely not prevent them from auto-escaping. These cases are very rare.
+
+  * Parameters *
+    object                  = ((map), required) The source map
+    
+  * Related *
+    #toSimpleRawMap
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toSimpleRawMapAny object>
 </#function>
 -->
 

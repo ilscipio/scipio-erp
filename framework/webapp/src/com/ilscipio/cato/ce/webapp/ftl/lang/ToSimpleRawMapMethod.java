@@ -31,9 +31,9 @@ import freemarker.template.TemplateModelException;
 /**
  * Cato: ToSimpleRawMapMethod - Another workaround for BeansWrapper kludge.
  */
-public class ToSimpleMapMethod implements TemplateMethodModelEx {
+public class ToSimpleRawMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleMapMethod.class.getName();
+    public static final String module = ToSimpleRawMapMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -46,8 +46,8 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
-        return LangFtlUtil.toSimpleMap(object, objectWrapper);
+        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
+        return LangFtlUtil.toSimpleMapRewrapAdapters(object, objectWrapper);
     }
     
 }

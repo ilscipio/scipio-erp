@@ -21,6 +21,7 @@ import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.DefaultArrayAdapter;
 import freemarker.template.DefaultListAdapter;
+import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
@@ -250,7 +251,7 @@ public abstract class LangFtlUtil {
     /**
      * Unwraps template model; if cannot, returns null.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapOrNull(TemplateModel templateModel) throws TemplateModelException {
@@ -274,7 +275,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Ensures no TemplateModels remain.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapOrNull(Object value) throws TemplateModelException {
@@ -295,7 +296,7 @@ public abstract class LangFtlUtil {
     /**
      * Unwraps template model; if cannot, returns as-is.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapPermissive(TemplateModel templateModel) throws TemplateModelException {
@@ -310,7 +311,7 @@ public abstract class LangFtlUtil {
     /**
      * Unwraps value; if cannot, returns value, even if still TemplateModel.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapPermissive(Object value) throws TemplateModelException {
@@ -325,7 +326,7 @@ public abstract class LangFtlUtil {
     /**
      * Unwraps template model; if cannot, throws exception. If null, returns null.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrap(TemplateModel templateModel) throws TemplateModelException {
@@ -341,7 +342,7 @@ public abstract class LangFtlUtil {
      * If template model, unwraps, or if cannot, throws exception;
      * if not template model or null, returns value.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrap(Object value) throws TemplateModelException {
@@ -358,7 +359,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlways(TemplateModel templateModel) throws TemplateModelException {
@@ -370,7 +371,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlways(Object value) throws TemplateModelException {
@@ -387,7 +388,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlwaysUnlessNull(TemplateModel templateModel) throws TemplateModelException {
@@ -404,7 +405,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Interpretation of null depends on the ObjectWrapper.
      * <p>
-     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the {{{EscapingModel}}} interface
+     * NOTE: This automatically bypasses the auto-escaping done by wrappers implementing the <code>EscapingModel</code> interface
      * (such as Ofbiz special widget wrappers).
      */
     public static Object unwrapAlwaysUnlessNull(Object value) throws TemplateModelException {
@@ -500,6 +501,7 @@ public abstract class LangFtlUtil {
      * Gets map keys, either as collection or Set.
      * <p>
      * WARN: auto-escaping is bypassed on all keys, caller handles.
+     * (e.g. the object wrapper used to rewrap the result).
      * DEV NOTE: we MUST manually bypass auto-escaping for all on this one.
      */
     public static Object getMapKeys(TemplateModel object) throws TemplateModelException {
@@ -547,6 +549,7 @@ public abstract class LangFtlUtil {
      * Copies map.
      * <p>
      * WARN: For complex maps, auto-escaping is bypassed; caller must decide how to handle.
+     * (e.g. the object wrapper used to rewrap the result).
      * <p>
      * FIXME: The rewrapping objectWrapper behavior is inconsistent! may lead to auto-escape issues
      */
@@ -708,6 +711,7 @@ public abstract class LangFtlUtil {
                 return new SimpleSequence(collection, objectWrapper);
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                // no choice but to use user-supplied object wrapper
                 return wrap(new ArrayList<Object>(collection), objectWrapper);
             }
         }
@@ -743,6 +747,7 @@ public abstract class LangFtlUtil {
      * Copies list.
      * <p>
      * WARN: For complex lists, auto-escaping is bypassed. Caller must decide how to handle.
+     * (e.g. the object wrapper used to rewrap the result).
      * <p>
      * FIXME: The rewrapping objectWrapper behavior is inconsistent! may lead to auto-escape issues
      */
@@ -761,7 +766,15 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL || targetType == TemplateValueTargetType.PRESERVE) {
-                return new SimpleSequence(collectionModel);
+                // We CANNOT do this, we must make a new one with the specified object wrapper (unfortunately),
+                // even if nothing else about it changes
+                //return new SimpleSequence(collectionModel);
+                SimpleSequence res = new SimpleSequence(objectWrapper);
+                TemplateModelIterator it = collectionModel.iterator();
+                while(it.hasNext()) {
+                    res.add(it.next());
+                }
+                return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
                 List<Object> res = new ArrayList<Object>();
@@ -841,9 +854,10 @@ public abstract class LangFtlUtil {
     }
 
     /**
-     * Converts map to a simple wrapper, if applicable.
+     * Converts map to a simple wrapper, if applicable. Currently only applies to complex maps.
      * <p>
-     * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle.
+     * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
+     * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
      */
     public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
@@ -859,11 +873,60 @@ public abstract class LangFtlUtil {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
+    
+    /**
+     * Converts map to a simple wrapper, if applicable, by rewrapping
+     * known complex map wrappers that implement <code>WrapperTemplateModel</code>.
+     * <p>
+     * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
+     * (e.g. the object wrapper used to rewrap the result).
+     * Other types of maps are not altered.
+     */
+    public static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (object instanceof SimpleMapModel || object instanceof BeanModel || object instanceof DefaultMapAdapter) {
+            // Permissive
+            Map<?, ?> map = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
+            return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
+        }
+        else if (object instanceof TemplateHashModel) {
+            return (TemplateHashModel) object;
+        }
+        else {
+            throw new TemplateModelException("object is not a recognized map type");
+        }
+    }
+    
+    /**
+     * Converts map to a simple wrapper, if applicable, by rewrapping
+     * any map wrappers that implement <code>WrapperTemplateModel</code>.
+     * <p>
+     * This method is very permissive: anything that wraps a Map is accepted.
+     * Other types of hashes are returned as-is.
+     * <p>
+     * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
+     * (e.g. the object wrapper used to rewrap the result).
+     * Other types of maps are not altered.
+     */
+    public static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (object instanceof WrapperTemplateModel) {
+            // Permissive
+            Map<?, ?> map = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
+            return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
+        }
+        else if (object instanceof TemplateHashModel) {
+            return (TemplateHashModel) object;
+        }
+        else {
+            throw new TemplateModelException("object is not a recognized map type");
+        }
+    }
+    
 
     /**
      * Supposed to convert to simple sequence.
      * <p>
      * WARN: Bypasses auto-escaping for complex maps, caller must decide how to handle.
+     * (e.g. the object wrapper used to rewrap the result).
      * <p>
      * DEV NOTE: I stopped writing/testing this when found out most of the problems w.r.t. collections are not
      * the FTL types this time but the way they're used in Ofbiz templates.
@@ -1006,6 +1069,7 @@ public abstract class LangFtlUtil {
      * To string set.
      * <p>
      * WARN: Bypasses auto-escaping, caller handles.
+     * (e.g. the object wrapper used to rewrap the result).
      */
     public static Set<String> toStringSet(TemplateCollectionModel collModel) throws TemplateModelException {
         Set<String> set = new HashSet<String>();
@@ -1020,6 +1084,7 @@ public abstract class LangFtlUtil {
      * Add to string set.
      * <p>
      * WARN: bypasses auto-escaping, caller handles.
+     * (e.g. the object wrapper used to rewrap the result).
      */
     public static void addToStringSet(Set<String> dest, TemplateCollectionModel collModel) throws TemplateModelException {
         TemplateModelIterator modelIt = collModel.iterator();
@@ -1032,6 +1097,7 @@ public abstract class LangFtlUtil {
      * To string set.
      * <p>
      * WARN: bypasses auto-escaping, caller handles.
+     * (e.g. the object wrapper used to rewrap the result).
      */
     public static Set<String> toStringSet(TemplateSequenceModel seqModel) throws TemplateModelException {
         Set<String> set = new HashSet<String>();
@@ -1045,6 +1111,7 @@ public abstract class LangFtlUtil {
      * Add to string set.
      * <p>
      * WARN: bypasses auto-escaping, caller handles.
+     * (e.g. the object wrapper used to rewrap the result).
      */
     public static void addToStringSet(Set<String> dest, TemplateSequenceModel seqModel) throws TemplateModelException {
         for(int i=0; i < seqModel.size(); i++) {
@@ -1083,6 +1150,7 @@ public abstract class LangFtlUtil {
      * Gets collection as a keys.
      * <p>
      * WARN: This bypasses auto-escaping in all cases. Caller must decide how to handle.
+     * (e.g. the object wrapper used to rewrap the result).
      */
     public static Set<String> getAsStringSet(TemplateModel model) throws TemplateModelException {
         Set<String> exKeys = null;

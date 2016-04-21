@@ -715,8 +715,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                               * {{{string}}} (HTML markup): Should be <li> elements only, generated manually or using <@menu type="section" ... inlineItems=true>.
                                 WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                                     assumed to be "section" or "section-inline".
-    menuLayout              = (post-title|pre-title|inline-title, default: post-title) 
-                              This is a low-level control; avoid where possible.
+    menuLayoutTitle         = (post-title|pre-title|inline-title, default: post-title) 
+                              This is a low-level control; avoid where possible.                         
     menuRole                = (nav-menu|paginate-menu, default: nav-menu)
     menuClass               = ((css-class)) (optional) CSS classes, extra menu classes
                               Supports prefixes (see #compileClassArg for more info):
@@ -734,7 +734,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 -->
 <#assign section_defaultArgs = {
   "type":"", "id":"", "title":"", "style":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
-  "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayout":"", "menuRole":"", 
+  "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayoutTitle":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleClass":"", 
   "open":true, "close":true, "passArgs":{}
 }>
@@ -760,7 +760,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local menuId = "">    
   </#if>
   <@section_core id=id collapsibleAreaId=contentId title=title class=class style=style padded=padded menuContent=menuContent 
-    fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+    fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
     open=open close=close passArgs=passArgs><#nested /></@section_core>
@@ -778,7 +778,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   "id":"", "title":"", "class":"", "style":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
   "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
-  "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
+  "menuLayoutTitle":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "menuItemsInlined":"", "hasContent":true, "titleStyle":"", 
   "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
   "defaultHeadingLevel":"", "open":true, "close":true, "passArgs":{}
 }>
@@ -879,7 +879,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local hasMenu = (menuContent?is_directive || menuContent?has_content || requireMenu || forceEmptyMenu)>
     <#local hasTitle = title?has_content>
     <#local contentFlagClasses = makeSectionContentFlagClasses(sLevel, hLevel, hasMenu, hasTitle, hasContent, 
-      menuLayout, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
+      menuLayoutTitle, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
   
     <#if showMore>
       <#if hasMenu>
@@ -892,7 +892,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
           <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
           -->
     
-          <#if menuLayout == "inline-title">
+          <#if menuLayoutTitle == "inline-title">
             <#local defaultMenuType = "section-inline">
           <#else>
             <#local defaultMenuType = "section">
@@ -902,7 +902,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
             <#local preMenuItems = []>
             <#local postMenuItems = []>
           <#else>
-            <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(sectionLevel, headingLevel, menuLayout, menuRole, hasMenu, 
+            <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(sectionLevel, headingLevel, menuLayoutTitle, menuRole, hasMenu, 
               contentFlagClasses, collapsible, collapsed, javaScriptEnabled, collapsibleAreaId, saveCollapsed, expandToolTip, 
               collapseToolTip, fullUrlString, fromScreenDef)!{}>
             <#local preMenuItems = extraMenuItemsMap.preMenuItems![]>
@@ -996,7 +996,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#-- render menu + title combo; for now, only need to do at open and then save the markup -->
   <#if open>
     <#if showMore>
-      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
+      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle 
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
         contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=origArgs passArgs=passArgs/></#local>
     </#if>
@@ -1013,7 +1013,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
       "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
       "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
-      "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
+      "menuLayoutTitle":menuLayoutTitle, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
       
       "origArgs":origArgs, "passArgs":passArgs
     })>
@@ -1029,7 +1029,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
-    fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+    fromScreenDef=fromScreenDef hasContent=hasContent menuLayoutTitle=menuLayoutTitle menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu origArgs=origArgs passArgs=passArgs><#nested></@section_markup_container>
   
   <#if close>
@@ -1056,7 +1056,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   * Return Value *
     string of classes (plain; no starting/trailing spaces or special class arg syntax) -->
 <#function makeSectionContentFlagClasses sectionLevel=1 headingLevel=1hasMenu=false hasTitle=false hasContent=true
-     menuLayout="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false catchArgs...>
+     menuLayoutTitle="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false catchArgs...>
   <#local contentFlagClasses>section-level-${sectionLevel} heading-level-${headingLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
   <#return contentFlagClasses>
 </#function>
@@ -1064,14 +1064,14 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#-- @section extra main menu items markup - theme override
   * Return Value *
     map of lists, in the format {"preMenuItems":[...], "postMenuItems":[...]} -->
-<#function makeSectionExtraMainMenuItems sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false contentFlagClasses="" 
+<#function makeSectionExtraMainMenuItems sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuRole="" hasMenu=false contentFlagClasses="" 
     collapsible=false collapsed=false javaScriptEnabled=false collapsibleAreaId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
   <#-- Cato: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
   <#local preMenuItems></#local>
   <#local postMenuItems>
-    <#if menuLayout != "pre-title" && menuLayout != "inline-title">
+    <#if menuLayoutTitle != "pre-title" && menuLayoutTitle != "inline-title">
     <#if collapsible>
     <li class="<#rt/>
     <#if collapsed>
@@ -1090,7 +1090,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
-    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
+    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
   <#if open>
     <#local outerClass = "">
     <#local outerClass = addClassArg(outerClass, "section-screenlet")>
@@ -1125,18 +1125,18 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
+<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuRole="" hasMenu=false menuMarkup="" 
     hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} passArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
-  <#if menuLayout == "pre-title">
+  <#if menuLayoutTitle == "pre-title">
     <#if hasMenu>
       ${menuMarkup}
     </#if>
     <#if hasTitle>
       ${titleMarkup}
     </#if>
-  <#elseif menuLayout == "inline-title">
+  <#elseif menuLayoutTitle == "inline-title">
     <div class="${styles.float_clearfix!}">
       <div class="${styles.float_left!}">
         <#if hasTitle>

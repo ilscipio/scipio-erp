@@ -20,18 +20,6 @@
  import org.ofbiz.entity.util.EntityUtil;
 
 findResult = delegator.findByAnd("Facility", [ownerPartyId: partyId], null, false);
-findResultSize = findResult.size();
-if (findResultSize == 1) {
-    context.showScreen = "one";
-    facility = findResult.get(0);
-    context.facility = facility;
-    context.parameters.facilityId = context.facility.facilityId;
-}
-if ((findResultSize > 1 ) && (findResultSize <= 10)) {
-    context.showScreen = "ten";
-} else if ((findResultSize > 10 ) || (findResultSize <= 0)) {
-    context.showScreen = "more";
-}
 
 listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: partyId], null, false);
 partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));

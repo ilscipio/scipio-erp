@@ -536,7 +536,8 @@ if (product) {
     context.accessoryProducts = accessoryProducts.assocProducts;
 
     // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
-    downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").cache(true).queryList();
+    // Cato: This should order by sequenceNum
+    downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
     context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
 
     // not the best to save info in an action, but this is probably the best place to count a view; it is done async

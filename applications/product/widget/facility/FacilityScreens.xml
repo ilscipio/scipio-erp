@@ -183,6 +183,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindFacilityTransfers"/>
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacilityTransfers.groovy"/>
             </actions>
@@ -239,6 +240,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.ProductFacilityLocation} ${facilityId}"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilitySettingsDecorator" location="component://product/widget/facility/CommonScreens.xml">
@@ -262,6 +264,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleNewFacilityLocation}"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <section>
@@ -292,7 +295,9 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.PageTitleEditFacilityInventoryItems}"/>
+                <set field="facilityId" value="${parameters.facilityId}" />
+                <set field="title" value="${uiLabelMap.ProductFacilityInventoryItems} ${facilityId}"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -300,7 +305,6 @@ under the License.
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="${styles.link_nav} ${styles.action_add}"/>
                                     <link target="EditInventoryItem" text="${uiLabelMap.ProductNewInventoryItem}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="facilityId" from-field="parameters.facilityId"/>
                                     </link>
@@ -383,6 +387,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleFindFacilityInventoryItems}"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -430,6 +435,7 @@ under the License.
                 <set field="productId" from-field="parameters.productId"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/CountFacilityInventoryByProduct.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
@@ -474,6 +480,7 @@ under the License.
                 <set field="productId" from-field="parameters.productId"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/CountFacilityInventoryByProduct.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
@@ -486,7 +493,9 @@ under the License.
         </section>
     </screen>
 
-    <screen name="ViewFacilityInventoryItemsDetails">
+    <!-- Cato: Commented out, it is very similar to EditFacilityInventoryItems but showing more data. 
+        Quite cumbersome, inventory item detail must be presented to the user in a more friendly way -->
+    <!-- <screen name="ViewFacilityInventoryItemsDetails">
         <section>
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
@@ -499,6 +508,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
 
                 <entity-one entity-name="Facility" value-field="facility"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -546,7 +556,7 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
 
     <screen name="InventoryItemTotals">
         <section>
@@ -562,6 +572,7 @@ under the License.
 
                 <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryItemTotals.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -587,6 +598,7 @@ under the License.
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryItemTotals.groovy"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleInventoryItemGrandTotals}"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -614,6 +626,7 @@ under the License.
 
                 <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryItemTotals.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <label style="heading" text="${uiLabelMap.ProductInventoryItemTotals} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
@@ -635,6 +648,7 @@ under the License.
 
                 <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/InventoryAverageCosts.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -648,8 +662,9 @@ under the License.
             </widgets>
         </section>
     </screen>
-
-    <screen name="EditFacilityGroups">
+    
+    <!-- Cato: Hide for now -->
+    <!-- <screen name="EditFacilityGroups">
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="EditFacilityGroups"/>
@@ -678,9 +693,11 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
 
-    <screen name="EditFacilityParties">
+
+    <!-- Cato: To be removed -->
+    <!-- <screen name="EditFacilityParties">
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="EditFacilityParties"/>
@@ -712,7 +729,7 @@ under the License.
                 </decorator-screen>
             </widgets>
          </section>
-    </screen>
+    </screen> -->
 
     <screen name="ViewContactMechs">
         <section>
@@ -723,6 +740,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.ProductFacilityContactMech} ${facilityId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewContactMechs.groovy"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilitySettingsDecorator" location="component://product/widget/facility/CommonScreens.xml">
@@ -746,7 +764,7 @@ under the License.
                                 </widgets>
                             </section>
                         </container>
-                        <screenlet title="${uiLabelMap.PartyContactInformation}">
+                        <screenlet>
                             <platform-specific><html><html-template location="component://product/webapp/facility/facility/ViewContactMechs.ftl"/></html></platform-specific>
                         </screenlet>
                     </decorator-section>
@@ -775,6 +793,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleNewFacilityContactMech}"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <section>
@@ -818,6 +837,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="reservedDatetime"/>
                 </entity-condition>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <section>
@@ -911,6 +931,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="-inventoryItemDetailSeqId"/>
                 </entity-condition>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -944,6 +965,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="sequenceNum"/>
                 </entity-condition>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -965,7 +987,7 @@ under the License.
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PhysicalInventory"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/FindFacilityPhysicalInventory.groovy"/>
-
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -991,6 +1013,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleTransferInventoryItem}"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1014,6 +1037,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.ProductReceiveInventory}"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/ConvertUom.js" global="true"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1034,6 +1058,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ReceiveReturn"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
+                <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1087,6 +1112,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="picklistDate"/>
                 </entity-condition>
+                <set field="facilityMenu" value="FacilityPickingSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1147,6 +1173,7 @@ under the License.
         <section>
             <actions>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ReviewOrdersNotPickedOrPacked.groovy"/>
+                <set field="facilityMenu" value="FacilityPickingSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1185,6 +1212,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="picklistDate"/>
                 </entity-condition>
+                <set field="facilityMenu" value="FacilityPickingSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1214,6 +1242,7 @@ under the License.
                     <field-map field-name="stockMoveHandled"/>
                 </service>
                 <set field="pflWarningMessageList" from-field="warningMessageList"/>
+                <set field="facilityMenu" value="FacilityPickingSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1327,6 +1356,7 @@ under the License.
                 <entity-one entity-name="Uom" value-field="defaultWeightUom" use-cache="true" auto-field-map="false">
                     <field-map from-field="facility.defaultWeightUomId" field-name="uomId"/>
                 </entity-one>
+                <set field="facilityMenu" value="FacilityPickingSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityScheduleDecorator">
@@ -1389,6 +1419,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFacilityLocationGeoLocation"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FacilityLocationGeoLocation.groovy"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1419,6 +1450,7 @@ under the License.
                 <set field="geoChart.points" from-field="geoPoints"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleFacilityGeoLocation} - ${facility.facilityName}"/>
+                <set field="facilityMenu" value="FacilitySettingsSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
@@ -1434,7 +1466,8 @@ under the License.
         </section>
     </screen>
 
-    <screen name="EditFacilityAgreements">
+    <!-- Cato: Hide for now -->
+    <!-- <screen name="EditFacilityAgreements">
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
@@ -1458,24 +1491,5 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
-    
-    <screen name="FacilitySettings">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="facility"/>
-                <set field="activeSubMenuItem" value="settings"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonFacilitySettingsDecorator" location="component://product/widget/facility/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <screenlet>
-                                                                    
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
+    </screen> -->    
 </screens>

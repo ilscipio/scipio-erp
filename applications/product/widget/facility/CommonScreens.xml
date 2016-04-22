@@ -91,7 +91,15 @@ under the License.
                                         </or>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="FacilitySideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <section>
+                                            <condition><not><if-empty field="facilityMenu"/></not></condition>
+                                            <widgets>
+                                                <include-menu name="${facilityMenu}" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <include-menu name="FacilitySideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                            </fail-widgets>
+                                        </section>
                                     </widgets>
                                     <fail-widgets>
                                         <include-menu name="FacilityAppSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
@@ -134,54 +142,6 @@ under the License.
         </section>
     </screen>
     
-    <screen name="CommonFacilitySettingsDecorator">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="facility"/>
-                <set field="facilityId" from-field="parameters.facilityId"/>
-                <entity-one entity-name="Facility" value-field="facility"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>                                    
-                                    <widgets>
-                                        <include-menu name="FacilitySettingsSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                                    </widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>                                   
-                                    <widgets>
-                                        <decorator-section-include name="body"/>
-                                    </widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-        
     <screen name="main">
         <section>
             <actions>

@@ -21121,6 +21121,9 @@
         <value xml:lang="zh">新建分类</value>
         <value xml:lang="zh_TW">新建分類</value>
     </property>
+    <property key="ProductFacilityContactMech">
+        <value xml:lang="en">Contact Information</value>
+    </property>
     <property key="ProductNewContactMech">
         <value xml:lang="de">Neuer Kontaktmechanismus</value>
         <value xml:lang="en">New Contact Information</value>

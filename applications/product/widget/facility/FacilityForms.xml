@@ -598,8 +598,9 @@ under the License.
         </field>
     </form>
     <!-- FacilityGroups -->
-    <form name="EditFacilityGroups" type="list" target="updateGroupToFacility" paginate-target="EditFacilityGroups" title="" list-name="facilityGroupMembers"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- Cato: Hide for now -->
+    <!-- <form name="EditFacilityGroups" type="list" target="updateGroupToFacility" paginate-target="EditFacilityGroups" title="" list-name="facilityGroupMembers"
+        header-row-style="header-row-2" odd-row-style="alternate-row"> orig: default-table-style=-style="basic-table hover-bar"
         <auto-fields-entity entity-name="FacilityGroupMember"/>
         <field name="facilityId"><hidden/></field>
         <field name="facilityGroupId" title="${uiLabelMap.ProductFacilityGroupId}">
@@ -620,7 +621,7 @@ under the License.
         </field>
     </form>
     <form name="addGroupToFacility" type="single" target="addGroupToFacility" title=""
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row"> orig: default-table-style=-style="basic-table"
         <auto-fields-entity entity-name="FacilityGroupMember"/>
         <field name="facilityId"><hidden/></field>
         <field name="facilityGroupId" title="${uiLabelMap.ProductFacilityGroupId}">
@@ -629,11 +630,12 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
-    </form>
+    </form> -->
 
     <!-- FacilityParty -->
-    <form name="EditFacilityParties" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- Cato: To be removed -->
+    <!-- <form name="EditFacilityParties" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
+        header-row-style="header-row-2" odd-row-style="alternate-row"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="facilityId"><hidden/></field>
         <field name="partyId">
             <display-entity description="${groupName} ${firstName} ${lastName} [${partyId}]" entity-name="PartyNameView"/>
@@ -653,7 +655,7 @@ under the License.
         </field>
     </form>
     <form name="AddPartyToFacility" type="single" target="addPartyToFacility" title=""
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row"> orig: default-table-style=-style="basic-table"
         <auto-fields-entity entity-name="FacilityParty"/>
         <field name="facilityId"><hidden/></field>
         <field name="partyId">
@@ -665,7 +667,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
-    </form>
+    </form> -->
     <form name="ListInventoryItemTotals" type="list" target="" title="" list-name="inventoryItemTotals"
         odd-row-style="alternate-row"
         paginate-target="InventoryItemTotals" override-list-size="${overrideListSize}"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

@@ -673,7 +673,7 @@ under the License.
 
     <!-- Cato: processorder first checks if cart empty, if empty then redirects to shopping cart, otherwise page refresh is confusing -->
     <request-map uri="processorder">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false" />
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="checkCart"/>
         <response name="success" type="request" value="processordercreate"/>
         <response name="cartEmpty" type="request-redirect-noparam" value="showcart" />

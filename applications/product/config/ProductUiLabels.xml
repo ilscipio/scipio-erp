@@ -19404,6 +19404,9 @@
         <value xml:lang="zh">库存转运</value>
         <value xml:lang="zh_TW">庫存轉運</value>
     </property>
+    <property key="ProductNewInventoryTransfer">        
+        <value xml:lang="en">New Inventory Transfer</value>
+    </property>
     <property key="ProductInventoryTransfersFor">
         <value xml:lang="de">Bestandstransfer für</value>
         <value xml:lang="en">Inventory Transfers for</value>

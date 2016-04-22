@@ -39,5 +39,6 @@ orderHeaderList = EntityUtil.orderBy(EntityUtil.filterByAnd(EntityUtil.getRelate
         [EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED")]), ["orderDate DESC"]);
 context.orderHeaderList = orderHeaderList;
 
-downloadOrderRoleAndProductContentInfoList = from("OrderRoleAndProductContentInfo").where("partyId", userLogin.partyId, "roleTypeId", "PLACING_CUSTOMER", "productContentTypeId", "DIGITAL_DOWNLOAD", "statusId", "ITEM_COMPLETED").queryList();
+// Cato: order by ProductContent.sequenceNum
+downloadOrderRoleAndProductContentInfoList = from("OrderRoleAndProductContentInfo").where("partyId", userLogin.partyId, "roleTypeId", "PLACING_CUSTOMER", "productContentTypeId", "DIGITAL_DOWNLOAD", "statusId", "ITEM_COMPLETED").orderBy("sequenceNum ASC").queryList();
 context.downloadOrderRoleAndProductContentInfoList = downloadOrderRoleAndProductContentInfoList;

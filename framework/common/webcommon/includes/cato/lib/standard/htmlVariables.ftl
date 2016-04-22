@@ -69,6 +69,7 @@
     "tooltip_top" : "has-tip tip-top",
     "tooltip_right" : "has-tip tip-right",
     "tooltip_bottom" : "has-tip tip-bottom",
+    "tooltip_delim" : " - ",
     
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
@@ -956,7 +957,8 @@
     "fields_default_manual_widgetonly_collapsedinlinelabel" : "",
     "fields_default_manual_widgetonly_checkboxtype" : "",
     "fields_default_manual_widgetonly_fieldargs" : {
-        "widgetOnly" : "true"
+        "widgetOnly" : "true",
+        "asdfasdfasdf" : "asdfasdfasdf"
     }, 
 
     <#-- completely generic - NO imposed styles - keep styles out of this -->

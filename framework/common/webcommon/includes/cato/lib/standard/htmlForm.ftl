@@ -625,15 +625,38 @@ or even multiple per fieldset.
     <#local inlineItems = styles[stylesPrefix + "_inlineitems"]!styles["fields_default_inlineitems"]!"">
   </#if>
 
-  <#local fieldArgsFromStyles = styles[stylesPrefix + "_fieldargs"]!styles["fields_default_fieldargs"]!false>
+  <#local fieldArgsFromStyles = styles[stylesPrefix + "_fieldargs"]!true>
+  <#local fieldArgsFromDefaultStyles = styles["fields_default_fieldargs"]!true>
   <#if fieldArgs?is_boolean>
     <#if fieldArgs == true>
-      <#local fieldArgs = fieldArgsFromStyles>
+      <#if fieldArgsFromStyles?is_boolean>
+        <#if fieldArgsFromStyles>
+          <#local fieldArgs = fieldArgsFromDefaultStyles>
+        <#else>
+          <#-- if false, prevents fallback on defaults -->
+        </#if>
+      <#else>
+        <#local fieldArgs = fieldArgsFromStyles>
+        <#if !fieldArgsFromDefaultStyles?is_boolean>
+          <#local fieldArgs = fieldArgsFromDefaultStyles + fieldArgs>
+        </#if>
+      </#if>
     </#if>
   <#else>
     <#local fieldArgs = toSimpleMap(fieldArgs)>
-    <#if !fieldArgsFromStyles?is_boolean>
+    <#if fieldArgsFromStyles?is_boolean>
+      <#if fieldArgsFromStyles>
+        <#if !fieldArgsFromDefaultStyles?is_boolean>
+          <#local fieldArgs = fieldArgsFromDefaultStyles + fieldArgs>
+        </#if>
+      <#else>
+        <#-- if false, prevents fallback on defaults -->
+      </#if>
+    <#else>
       <#local fieldArgs = fieldArgsFromStyles + fieldArgs>
+      <#if !fieldArgsFromDefaultStyles?is_boolean>
+        <#local fieldArgs = fieldArgsFromDefaultStyles + fieldArgs>
+      </#if>
     </#if>
   </#if>
 
@@ -814,7 +837,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               In general can be left to macro.
                               NOTE: Often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip                 = Small field description - to be displayed to the customer
-                              May be set to boolean false to manually prevent tooltip defaults.
+                              May be set to boolean false to manually prevent tooltip defaults.                       
     description             = Field description
                               NOTE: currently this is treated as an alternative arg for tooltip
                               TODO?: DEV NOTE: this should probably be separate from tooltip in the end...
@@ -1194,17 +1217,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     </#if>
   </#if>
 
-  <#-- treat tooltip and description (nearly) as synonyms for now -->
-  <#if !tooltip?is_boolean && tooltip?has_content>
-    <#if !(description?is_boolean && description == false) && !description?has_content>
-      <#local description = tooltip>
-    </#if>
-  <#else>
-    <#if (!description?is_boolean && description?has_content) && !(tooltip?is_boolean && tooltip == false)>
-      <#local tooltip = description>
-    </#if>
-  </#if>
-
   <#if onClick?has_content>
     <#local events = events + {"click": onClick}>
   </#if>
@@ -1295,9 +1307,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#if required && (!requiredClass?is_boolean && requiredClass?has_content)>
     <#local class = addClassArg(class, requiredClass)>
   </#if>
-  <#if required && ((tooltip?is_boolean && tooltip == true) || (!tooltip?is_boolean && !tooltip?has_content)) && !(requiredTooltip?is_boolean && requiredTooltip == false)>
+
+  <#if required && !(tooltip?is_boolean && tooltip == false) && !(requiredTooltip?is_boolean && requiredTooltip == false)>
     <#if !requiredTooltip?is_boolean && requiredTooltip?has_content>
-      <#local tooltip = getTextLabelFromExpr(requiredTooltip)>
+      <#-- 2016-04-21: This should ADD to the tooltip, not replace it
+      <#local tooltip = getTextLabelFromExpr(requiredTooltip)>-->
+      <#local tooltip = addStringToBoolStringVal(tooltip, getTextLabelFromExpr(requiredTooltip)!"", styles.tooltip_delim!" - ")>
     </#if>
   </#if>
 
@@ -1309,6 +1324,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if (!standardClass?is_boolean && standardClass?has_content)>
       <#local containerClass = addClassArg(containerClass, standardClass)>
     </#if>  
+  </#if>
+
+  <#-- treat tooltip and description (nearly) as synonyms for now -->
+  <#if !tooltip?is_boolean && tooltip?has_content>
+    <#if !(description?is_boolean && description == false) && !description?has_content>
+      <#local description = tooltip>
+    </#if>
+  <#else>
+    <#if (!description?is_boolean && description?has_content) && !(tooltip?is_boolean && tooltip == false)>
+      <#local tooltip = description>
+    </#if>
   </#if>
 
   <#-- the widgets do this now

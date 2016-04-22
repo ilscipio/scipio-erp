@@ -2612,6 +2612,29 @@ Usually those macro args take "" by default, to mean default.
 
 <#-- 
 *************
+* addStringToBoolStringVal
+************
+Adds a string with optional delimiter to a string that supports boolean values.
+-->
+<#function addStringToBoolStringVal orig toAdd delim="">
+  <#if orig?is_boolean>
+    <#if orig>
+      <#return toAdd>
+    <#else>
+      <#return orig>
+    </#if>
+  <#else>
+    <#if orig?has_content>
+      <#return orig + delim + toAdd>
+    <#else>
+      <#return toAdd>
+    </#if>
+  </#if>
+</#function>
+
+
+<#-- 
+*************
 * pushRequestStack
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).

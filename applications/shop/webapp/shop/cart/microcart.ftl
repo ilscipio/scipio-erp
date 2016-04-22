@@ -27,7 +27,7 @@ under the License.
 <#-- 2016-04-21: Quick access to checkout; set to true for testing -->
 <#assign useQuickAccess = false>
 
-<#if includeMenuItem>
+<#if microCartMenuItem>
   <li<#if useQuickAccess && (shoppingCartSize > 0)> class="has-dropdown not-click"</#if>>
 </#if>
     <a href="<@ofbizUrl>showcart</@ofbizUrl>">

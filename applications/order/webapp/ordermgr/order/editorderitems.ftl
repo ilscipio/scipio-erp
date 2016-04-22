@@ -110,14 +110,16 @@ under the License.
                                       </#if>
                                   </div>
                                   <#if productId??>
+                                  <#-- Cato: these are duplicates from far right column
                                   <div>
-                                      <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                      <#-- Cato: Now points to shop -->
-                                      <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                      <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <#- Cato: Now points to shop ->
+                                      <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
+                                  -->
                                   </#if>
                               </@td>
 
@@ -173,22 +175,22 @@ under the License.
                                   </#list>
                                 </#if>
                                 <#if orderHeader.orderTypeId == "PURCHASE_ORDER">
-                                  <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - totalReceived?double)>
+                                  <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - totalReceived?double)>
                                 <#else>
-                                  <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
+                                  <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double)>
                                 </#if>
                                 <@modal id="${productId}_q" label="${orderItem.quantity?default(0)?string.number}">    
                                             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
-                                                    <@td>${orderItem.quantity?default(0)?string.number}</@td>
+                                                    <@td>${(orderItem.quantity!0)?string.number}</@td>
                                                     <@td><b>${uiLabelMap.OrderShipRequest}</b></@td>
                                                     <@td>${orderReadHelper.getItemReservedQuantity(orderItem)}</@td>
                                                 </@tr>
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderCancelled}</b></@td>
-                                                    <@td>${orderItem.cancelQuantity?default(0)?string.number}</@td>
+                                                    <@td>${(orderItem.cancelQuantity!0)?string.number}</@td>
                                                 </@tr>
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderRemaining}</b></@td>
@@ -208,9 +210,9 @@ under the License.
                                                         <#if (orderItem.statusId?has_content) && (orderItem.statusId == "ITEM_COMPLETED")>
                                                             0
                                                         <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER">
-                                                            ${(orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - totalReceived?double}
+                                                            ${((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - totalReceived?double}
                                                         <#elseif orderHeader.orderTypeId == "SALES_ORDER">
-                                                            ${(orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double}
+                                                            ${((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double}
                                                         </#if>
                                                     </@td>
                                                 </@tr>
@@ -245,15 +247,28 @@ under the License.
                               </@td>
                               <@td>
                                     <@menu type="button">
-                                        <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
+                                        <#-- Cato: order by ProductContent.sequenceNum -->
+                                        <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
+                                       
                                         <#if downloadContents?has_content>
+                                          <#--
                                           <#list downloadContents as downloadContent>
                                             <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
+                                          -->
+                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">
+                                              <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
+                                              <ol>
+                                              <#list downloadContents as downloadContent>
+                                                    <li><a href="<@ofbizInterWebappUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"<#rt/>
+                                                        <#lt/> target="_blank" class="${styles.link_run_sys_inline!} ${styles.action_export!}">${downloadContent.contentName!downloadContent.contentId!}</a>
+                                              </#list>
+                                              </ol>
+                                          </@modal>
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
                                         <#-- Cato: Now points to shop -->
-                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=uiLabelMap.OrderEcommerce target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
+                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")!?string?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>

@@ -31,7 +31,7 @@ under the License.
   </@menu>
 </#macro>
 <#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else>${uiLabelMap.AccountingEditCreditCard}</#if></#assign>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}<#else>updateCreditCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editcreditcardform">
   
@@ -135,9 +135,6 @@ under the License.
          </@field>
        </div>
   </form>  
-  
-  <@menuContent menuArgs={"type":"button"} />
-
 </@section>
 </#if>
 

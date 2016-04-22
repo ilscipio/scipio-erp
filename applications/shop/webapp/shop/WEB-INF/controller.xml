@@ -711,6 +711,20 @@ under the License.
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="ordercomplete"/>
     </request-map>
+    
+    <!-- Cato: Re-accessible order view pages; need to be accessible anonymously -->
+    <request-map uri="ordercomplete"><!-- to re-view the exact ordercomplete page -->
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="ordercomplete"/>
+    </request-map>
+    <request-map uri="orderviewonly"><!-- view only (no interaction) -->
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="orderviewonly"/>
+    </request-map>
+    <request-map uri="orderprint"><!-- printable version -->
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="orderprint"/>
+    </request-map>
 
     <request-map uri="callWorldPay">
         <security https="true" direct-request="false"/>
@@ -866,6 +880,10 @@ under the License.
     <request-map uri="orderhistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderhistory"/>
+    </request-map>
+    <request-map uri="orderdownloads">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderdownloads"/>
     </request-map>
     <request-map uri="orderstatus">
         <security https="true" auth="true"/>
@@ -1722,8 +1740,11 @@ under the License.
     <view-map name="orderreview" type="screen" page="component://shop/widget/OrderScreens.xml#orderreview"/>
     <view-map name="billsetting" type="screen" page="component://shop/widget/OrderScreens.xml#billsettings"/>
     <view-map name="ordercomplete" type="screen" page="component://shop/widget/OrderScreens.xml#ordercomplete"/>
-
+    <view-map name="orderviewonly" type="screen" page="component://shop/widget/OrderScreens.xml#orderviewonly"/>
+    <view-map name="orderprint" type="screen" page="component://shop/widget/OrderScreens.xml#orderprint"/>
+    
     <view-map name="orderhistory" type="screen" page="component://shop/widget/OrderScreens.xml#orderhistory"/>
+    <view-map name="orderdownloads" type="screen" page="component://shop/widget/OrderScreens.xml#orderdownloads"/>
     <view-map name="orderstatus" type="screen" page="component://shop/widget/OrderScreens.xml#orderstatus"/>
     <view-map name="requestreturn" type="screen" page="component://shop/widget/OrderScreens.xml#requestreturn"/>
 

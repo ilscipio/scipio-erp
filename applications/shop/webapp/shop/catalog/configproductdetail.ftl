@@ -176,7 +176,7 @@ function getConfigDetails(event) {
         <div>
           <#if (sizeProductFeatureAndAppls?size == 1)>
             <#-- TODO : i18n -->
-            Size:
+            ${uiLabelMap.CommonSize}:
           <#else>
             Sizes Available:
           </#if>

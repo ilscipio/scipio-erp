@@ -48,7 +48,7 @@ under the License.
   </@menu>
 </#macro>
 <#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else>${uiLabelMap.PartyEditContactInfo}</#if></#assign>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
     
     <#if contactMech??>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
@@ -159,9 +159,6 @@ under the License.
         <option value="N">${uiLabelMap.CommonN}</option>
       </@field>
   </form>
-
-  <@menuContent menuArgs={"type":"button"} />
-
 </@section>
 
   <#else>    

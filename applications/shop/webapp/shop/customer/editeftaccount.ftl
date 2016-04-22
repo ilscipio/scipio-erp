@@ -37,7 +37,7 @@ under the License.
     ${uiLabelMap.PageTitleEditEFTAccount}
   </#if>
 </#assign>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}<#else>updateEftAccount?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editeftaccountform">
 
@@ -142,9 +142,6 @@ under the License.
       </@fields>
     </@field>
   </form>
-  
-  <@menuContent menuArgs={"type":"button"} />
-
 </@section>
 
 </#if>

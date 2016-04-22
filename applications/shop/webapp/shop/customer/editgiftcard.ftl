@@ -37,11 +37,8 @@ under the License.
     ${uiLabelMap.AccountingEditGiftCard}
   </#if>
 </#assign>
-<@section title=sectionTitle menuContent=menuContent>
-
-    
+<@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <form method="post" action="<@ofbizUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}<#else>updateGiftCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editgiftcardform">
-
     <#if giftCard??>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
@@ -99,9 +96,6 @@ under the License.
     </@field>
     <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value=(paymentMethodData.description!) />
   </form>  
-
-  <@menuContent menuArgs={"type":"button"} />
-
 </@section>
  
 </#if>

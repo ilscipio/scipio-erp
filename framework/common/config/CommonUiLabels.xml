@@ -16160,4 +16160,8 @@
         <value xml:lang="zh">版权</value>
         <value xml:lang="zh_TW">版權</value>
     </property>
+    <property key="CommonPrintable">
+        <value xml:lang="de">Druckfähig</value>
+        <value xml:lang="en">Printable</value>
+    </property>
 </resource>

@@ -15158,4 +15158,8 @@
         <value xml:lang="nl">Verzend methode</value>
         <value xml:lang="pt_BR">Método de envio</value>
     </property>    
+    <property key="OrderDownloadableFileTitles">
+        <value xml:lang="de">Herunterladbaren Datei Titel</value>
+        <value xml:lang="en">Downloadable File Titles</value>
+    </property>
 </resource>

@@ -57,7 +57,7 @@ under the License.
       </@tbody>
     </@table>
   <#else>
-    <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg>
+    <@commonMsg type="result-norecord">(${uiLabelMap.OrderNoOrderFound})</@commonMsg>
   </#if>
 </@section>
 
@@ -87,37 +87,11 @@ under the License.
       </@tbody>
     </@table>
   <#else>
-    <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg>
+    <@commonMsg type="result-norecord">(${uiLabelMap.OrderNoOrderFound})</@commonMsg>
   </#if>
 </@section>
 
-<@section title=uiLabelMap.EcommerceDownloadsAvailableTitle>
-  <#if downloadOrderRoleAndProductContentInfoList?has_content>
-    <@table type="data-list" id="availableTitleDownload" summary="This table display available title for download.">
-      <@thead>
-        <@tr>
-          <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
-          <@th>${uiLabelMap.ProductProductName}</@th>
-          <@th>${uiLabelMap.CommonName}</@th>
-          <@th>${uiLabelMap.CommonDescription}</@th>
-          <@th></@th>
-        </@tr>
-      </@thead>
-      <@tbody>
-          <#list downloadOrderRoleAndProductContentInfoList as downloadOrderRoleAndProductContentInfo>
-            <@tr>
-              <@td>${downloadOrderRoleAndProductContentInfo.orderId}</@td>
-              <@td>${downloadOrderRoleAndProductContentInfo.productName}</@td>
-              <@td>${downloadOrderRoleAndProductContentInfo.contentName!}</@td>
-              <@td>${downloadOrderRoleAndProductContentInfo.description!}</@td>
-              <@td>
-                <a href="<@ofbizUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">Download</a>
-              </@td>
-            </@tr>
-          </#list>
-      </@tbody>
-    </@table>
-  <#else>
-    <@commonMsg type="result-norecord">${uiLabelMap.EcommerceDownloadNotFound}</@commonMsg>
-  </#if>
+<#assign sectionTitle><a href="<@ofbizUrl uri="orderdownloads"/>" class="${styles.link_nav_info!}">${uiLabelMap.EcommerceDownloadsAvailableTitle}</a></#assign>
+<@section title=sectionTitle>
+    <@render resource="component://shop/widget/OrderScreens.xml#orderdownloadswidget" />
 </@section>

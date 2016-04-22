@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign sectionTitle><#if person??>${uiLabelMap.PartyEditPersonalInformation}<#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
+<#assign sectionTitle><#if person??><#--${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editpersonform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<@section title=sectionTitle menuContent=menuContent>
+<@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson<#else>createPerson/${donePage}</#if></@ofbizUrl>" name="editpersonform">    
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
@@ -85,9 +85,5 @@ under the License.
     <@field type="input" label="${uiLabelMap.PartyPassportExpireDate}" size="11" maxlength="20" name="passportExpireDate" value=(personData.passportExpireDate!) tooltip="${uiLabelMap.CommonFormatDate}"/>
     <@field type="input" label="${uiLabelMap.PartyTotalYearsWorkExperience}" size="30" maxlength="60" name="totalYearsWorkExperience" value=(personData.totalYearsWorkExperience!)/>
     <@field type="input" label="${uiLabelMap.CommonComment}" size="30" maxlength="60" name="comments" value=(personData.comments!)/>
-
   </form>
-
-  <@menuContent menuArgs={"type":"button"} />
-
 </@section>

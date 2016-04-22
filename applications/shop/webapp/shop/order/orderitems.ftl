@@ -21,6 +21,9 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
+<#assign maySelect = ((maySelectItems!"N") == "Y")>
+<#assign printable = printable!false>
+
 <#assign numColumns = 8>
 <#if (maySelectItems!"N") == "Y" && (roleTypeId!) == "PLACING_CUSTOMER">
   <#assign numColumns = 11>
@@ -90,7 +93,16 @@ under the License.
         <#else>
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
-            <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}">${orderItem.productId} - ${orderItem.itemDescription!""}</a>
+            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+            <#-- Cato: Link to downloads to consume -->
+            <#-- TODO: delegate status tests -->
+            <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
+              <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
+                <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
+                <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
+                    <#if !dlAvail> title="Downloads will be available once the order is completed."</#if>>${uiLabelMap.ContentDownload}</a><#lt/>
+              </#if>
+            </#if>
             <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
             <#if orderItemAttributes?has_content>
                 <ul>
@@ -188,7 +200,7 @@ under the License.
         </#if>
       </@tr>
       <#-- now cancel reason and comment field -->
-      <#if (maySelectItems!"N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
+      <#if !printable && (maySelectItems!"N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
         <@tr>
           <@td colspan="7">
               <@fields type="default-compact">
@@ -255,7 +267,10 @@ under the License.
               ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.CommonNA)}
             </@td>
             <@td>
+              <#-- Cato: Don't show this if maySelect false because in that case there's no header and the quantity comes out of thin air. -->
+            <#if (maySelectItems!"N") == "Y">
               ${shipGroupAssoc.quantity?string.number}
+            </#if>
             </@td>
             <@td colspan="${numColumns - 2}"></@td>
           </@tr>

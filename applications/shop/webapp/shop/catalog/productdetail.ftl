@@ -603,13 +603,14 @@
             <#if warnings?has_content><@alert type="warning">${prodWarnings!""}</@alert></#if>
 
             <#-- Digital Download Files Associated with this Product -->
-                <#if downloadProductContentAndInfoList?has_content>            
-                    <p>${uiLabelMap.OrderDownloadFilesTitle}:</p>
-                    <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
-                        <p>${downloadProductContentAndInfo.contentName!}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></p>
-                    </#list>
-                </#if>
-
+            <#if downloadProductContentAndInfoList?has_content>            
+                <@heading relLevel=+2>${uiLabelMap.OrderDownloadableFileTitles}:</@heading><#--${uiLabelMap.OrderDownloadFilesTitle}-->
+                <ol>
+                  <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
+                    <li><i>${downloadProductContentAndInfo.contentName!}</i><#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></li>
+                  </#list>
+                </ol>
+            </#if>
         </div>
             
         <div class="content" id="panel21">

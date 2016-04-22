@@ -118,7 +118,8 @@ under the License.
     <screen name="editperson">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditPerson"/>
+                <!--<set field="titleProperty" value="PageTitleEditPerson"/>-->
+                <set field="titleProperty" value="PartyEditPersonalInformation"/>
                 <get-related-one value-field="userLogin" relation-name="Person" to-value-field="person"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPerson.groovy"/>

@@ -23,26 +23,13 @@ under the License.
         <@menuitem type="link" id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
 </#macro>
-<@section title=uiLabelMap.PartyChangePassword menuContent=menuContent>
+<@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
-      <fieldset>
-        <div>
-          <label for="currentPassword">${uiLabelMap.PartyOldPassword}</label>
-          <input type="password" name="currentPassword" id="currentPassword" maxlength="20" />*
-        </div>
-        <div>
-          <label for="newPassword">${uiLabelMap.PartyNewPassword}</label>
-          <input type="password" name="newPassword" id="newPassword" maxlength="20" />*
-        </div>
-        <div>
-          <label for="newPasswordVerify">${uiLabelMap.PartyNewPasswordVerify}</label>
-          <input type="password" name="newPasswordVerify" id="newPasswordVerify" maxlength="20" />*
-        </div>
-        <div>
-          <label for="passwordHint">${uiLabelMap.PartyPasswordHint}</label>
-          <input type="text" maxlength="100" name="passwordHint" id="passwordHint" value="${userLoginData.passwordHint!}" />
-        </div>
-        <label>${uiLabelMap.CommonFieldsMarkedAreRequired}</label>
-      </fieldset>
+
+      <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label="${uiLabelMap.PartyOldPassword}"/>
+      <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label="${uiLabelMap.PartyNewPassword}"/>
+      <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label="${uiLabelMap.PartyNewPasswordVerify}"/>
+      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value="${userLoginData.passwordHint!}" label="${uiLabelMap.PartyPasswordHint}"/>
+      
     </form>
 </@section>

@@ -20,30 +20,30 @@ under the License.
 <#if party??>
 <#-- Main Heading -->
 
-<p>${uiLabelMap.PartyTheProfileOf}
-    <#if person??>
-      ${person.personalTitle!}
-      ${person.firstName!}
-      ${person.middleName!}
-      ${person.lastName!}
-      ${person.suffix!}
-    <#else>
-      ${uiLabelMap.PartyNewUser}
-    </#if>
-    <#-- Loyalty points -->
-    <#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
-      <@section title=uiLabelMap.EcommerceLoyaltyPoints>
-        <p>${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}</p>
-      </@section>
-    </#if>
+<p>
+  ${uiLabelMap.CommonWelcome},<#--${uiLabelMap.PartyTheProfileOf}-->
+  <#if person??>
+    ${person.personalTitle!} ${person.firstName!} ${person.middleName!} ${person.lastName!} ${person.suffix!}
+  <#else>
+    ${uiLabelMap.PartyNewUser}
+  </#if>
+  !
 </p>
 
+<#-- Loyalty points -->
+<#if monthsToInclude?? && totalSubRemainingAmount?? && totalOrders??>
+  <@section title=uiLabelMap.EcommerceLoyaltyPoints>
+    ${uiLabelMap.EcommerceYouHave} ${totalSubRemainingAmount} ${uiLabelMap.EcommercePointsFrom} ${totalOrders} ${uiLabelMap.EcommerceOrderInLast} ${monthsToInclude} ${uiLabelMap.EcommerceMonths}.
+  </@section>
+</#if>
+
 <@menu type="button">
+  <#-- Cato: No store in the world will encourage to view expired records. Use direct link for testing. WARN: SHOW_OLD still implemented by screen.
   <#if showOld>
     <@menuitem type="link" href=makeOfbizUrl("viewprofile") class="+${styles.action_run_sys!} ${styles.action_hide!}" text=uiLabelMap.PartyHideOld />
   <#else>
     <@menuitem type="link" href=makeOfbizUrl("viewprofile?SHOW_OLD=true") class="+${styles.action_run_sys!} ${styles.action_show!}" text=uiLabelMap.PartyShowOld />
-  </#if>
+  </#if>-->
   <#if ((productStore.enableDigProdUpload)!) == "Y">
     <@menuitem type="link" href=makeOfbizUrl("digitalproductlist") class="${styles.link_nav!} ${styles.action_import!}" text=uiLabelMap.EcommerceDigitalProductUpload />
   </#if>
@@ -74,30 +74,20 @@ under the License.
      <div class="content active" id="panel1">
         <@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
             <#if person??>
-              <@table type="summary"> <#-- orig: width="100%" border="0" cellpadding="0" cellspacing="0" -->
-                <@tr>
-                  <@td align="right">${uiLabelMap.PartyName}</@td>
-                  <@td>
-                      ${person.personalTitle!}
-                      ${person.firstName!}
-                      ${person.middleName!}
-                      ${person.lastName!}
-                      ${person.suffix!}
-                  </@td>
-                </@tr>
-              <#if person.nickname?has_content><@tr><@td align="right">${uiLabelMap.PartyNickName}</@td><@td>${person.nickname}</@td></@tr></#if>
-              <#if person.gender?has_content><@tr><@td align="right">${uiLabelMap.PartyGender}</@td><@td>${person.gender}</@td></@tr></#if>
-              <#if person.birthDate??><@tr><@td align="right">${uiLabelMap.PartyBirthDate}</@td><@td>${person.birthDate.toString()}</@td></@tr></#if>
-              <#if person.height??><@tr><@td align="right">${uiLabelMap.PartyHeight}</@td><@td>${person.height}</@td></@tr></#if>
-              <#if person.weight??><@tr><@td align="right">${uiLabelMap.PartyWeight}</@td><@td>${person.weight}</@td></@tr></#if>
-              <#if person.mothersMaidenName?has_content><@tr><@td align="right">${uiLabelMap.PartyMaidenName}</@td><@td>${person.mothersMaidenName}</@td></@tr></#if>
-              <#if person.maritalStatus?has_content><@tr><@td align="right">${uiLabelMap.PartyMaritalStatus}</@td><@td>${person.maritalStatus}</@td></@tr></#if>
-              <#if person.socialSecurityNumber?has_content><@tr><@td align="right">${uiLabelMap.PartySocialSecurityNumber}</@td><@td>${person.socialSecurityNumber}</@td></@tr></#if>
-              <#if person.passportNumber?has_content><@tr><@td align="right">${uiLabelMap.PartyPassportNumber}</@td><@td>${person.passportNumber}</@td></@tr></#if>
-              <#if person.passportExpireDate??><@tr><@td align="right">${uiLabelMap.PartyPassportExpireDate}</@td><@td>${person.passportExpireDate.toString()}</@td></@tr></#if>
-              <#if person.totalYearsWorkExperience??><@tr><@td align="right">${uiLabelMap.PartyYearsWork}</@td><@td>${person.totalYearsWorkExperience}</@td></@tr></#if>
-              <#if person.comments?has_content><@tr><@td align="right">${uiLabelMap.CommonComments}</@td><@td>${person.comments}</@td></@tr></#if>
-              </@table>
+              <#-- Cato: This was a table, not illogical but will look better as fields -->
+              <@field type="display" label="${uiLabelMap.PartyName}">${person.personalTitle!} ${person.firstName!} ${person.middleName!} ${person.lastName!} ${person.suffix!}</@field>
+              <#if person.nickname?has_content><@field type="display" label="${uiLabelMap.PartyNickName}">${person.nickname}</@field></#if>
+              <#if person.gender?has_content><@field type="display" label="${uiLabelMap.PartyGender}">${person.gender}</@field></#if>
+              <#if person.birthDate??><@field type="display" label="${uiLabelMap.PartyBirthDate}">${person.birthDate.toString()}</@field></#if>
+              <#if person.height??><@field type="display" label="${uiLabelMap.PartyHeight}">${person.height}</@field></#if>
+              <#if person.weight??><@field type="display" label="${uiLabelMap.PartyWeight}">${person.weight}</@field></#if>
+              <#if person.mothersMaidenName?has_content><@field type="display" label="${uiLabelMap.PartyMaidenName}">${person.mothersMaidenName}</@field></#if>
+              <#if person.maritalStatus?has_content><@field type="display" label="${uiLabelMap.PartyMaritalStatus}">${person.maritalStatus}</@field></#if>
+              <#if person.socialSecurityNumber?has_content><@field type="display" label="${uiLabelMap.PartySocialSecurityNumber}">${person.socialSecurityNumber}</@field></#if>
+              <#if person.passportNumber?has_content><@field type="display" label="${uiLabelMap.PartyPassportNumber}">${person.passportNumber}</@field></#if>
+              <#if person.passportExpireDate??><@field type="display" label="${uiLabelMap.PartyPassportExpireDate}">${person.passportExpireDate.toString()}</@field></#if>
+              <#if person.totalYearsWorkExperience??><@field type="display" label="${uiLabelMap.PartyYearsWork}">${person.totalYearsWorkExperience}</@field></#if>
+              <#if person.comments?has_content><@field type="display" label="${uiLabelMap.CommonComments}">${person.comments}</@field></#if>
             <#else>
               <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
             </#if>
@@ -112,13 +102,10 @@ under the License.
             </@menu>
         </#macro>
         <@section title="${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}" menuContent=menuContent>
-            <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
-              <@tr>
-                <@td align="right" valign="top">${uiLabelMap.CommonUsername}</@td>
-                <@td>&nbsp;</@td>
-                <@td valign="top">${userLogin.userLoginId}</@td>
-              </@tr>
-            </@table>
+            <#-- Cato: This was a table, not illogical but will look better as fields -->
+            <@field type="display" label="${uiLabelMap.CommonUsername}">
+              ${userLogin.userLoginId}
+            </@field>
         </@section>
     </div>
     
@@ -132,32 +119,31 @@ under the License.
         <@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>
           <#if partyContactMechValueMaps?has_content>
             <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="0" -->
-              <@tr valign="bottom">
-                <@th>${uiLabelMap.PartyContactType}</@th>
-                <@th></@th>
-                <@th>${uiLabelMap.CommonInformation}</@th>
-                <@th colspan="2">${uiLabelMap.PartySolicitingOk}?</@th>
-                <@th></@th>
-                <@th></@th>
-              </@tr>
+              <@thead>
+                <@tr valign="bottom">
+                  <@th>${uiLabelMap.PartyContactType}</@th>
+                  <@th>${uiLabelMap.CommonInformation}</@th>
+                  <@th>${uiLabelMap.PartySolicitingOk}?</@th>
+                  <@th></@th>
+                </@tr>
+              </@thead>
+              <@tbody>
               <#list partyContactMechValueMaps as partyContactMechValueMap>
                 <#assign contactMech = partyContactMechValueMap.contactMech! />
                 <#assign contactMechType = partyContactMechValueMap.contactMechType! />
                 <#assign partyContactMech = partyContactMechValueMap.partyContactMech! />
-                  <@tr><@td colspan="7"></@td></@tr>
                   <@tr>
-                    <@td align="right" valign="top">
+                    <@td>
                       ${contactMechType.get("description",locale)}
                     </@td>
-                    <@td>&nbsp;</@td>
-                    <@td valign="top">
+                    <@td>
                       <#list partyContactMechValueMap.partyContactMechPurposes! as partyContactMechPurpose>
                         <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
                         <div>
                           <#if contactMechPurposeType??>
                             ${contactMechPurposeType.get("description",locale)}
                             <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                              <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+                              <span><strong>[${uiLabelMap.EcommerceIsDefault}]</strong></span>
                             <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
                               <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                                 <input type="hidden" name="productStoreId" value="${productStoreId}" />
@@ -169,7 +155,7 @@ under the License.
                           <#else>
                             ${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"
                           </#if>
-                          <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate.toString()})</#if>
+                          <#if partyContactMechPurpose.thruDate??>${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate.toString()}</#if>
                         </div>
                       </#list>
                       <#if (contactMech.contactMechTypeId!) == "POSTAL_ADDRESS">
@@ -187,7 +173,7 @@ under the License.
                               <#if (addr1.indexOf(" ") > 0)>
                                 <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
                                 <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1) />
-                                <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">(${uiLabelMap.CommonLookupWhitepages})</a>
+                                <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                               </#if>
                             </#if>
                           <#else>
@@ -210,14 +196,13 @@ under the License.
                         </#if>
                         </div>
                       <#elseif (contactMech.contactMechTypeId!) == "EMAIL_ADDRESS">
-                          ${contactMech.infoString}
-                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
+                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys_inline!} ${styles.action_send!} ${styles.action_external!}">${contactMech.infoString}</a>
                       <#elseif (contactMech.contactMechTypeId!) == "WEB_ADDRESS">
                         <div>
                           ${contactMech.infoString}
                           <#assign openAddress = contactMech.infoString! />
                           <#if !openAddress.startsWith("http") && !openAddress.startsWith("HTTP")><#assign openAddress = "http://" + openAddress /></#if>
-                          <a target="_blank" href="${openAddress}" class="${styles.link_nav!} ${styles.action_view!} ${styles.action_external!}">(${uiLabelMap.CommonOpenNewWindow})</a>
+                          <a target="_blank" href="${openAddress}" class="${styles.link_nav!} ${styles.action_view!} ${styles.action_external!}">${uiLabelMap.CommonOpenNewWindow}</a>
                         </div>
                       <#else>
                         ${contactMech.infoString!}
@@ -225,21 +210,20 @@ under the License.
                       <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
                       <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
                     </@td>
-                    <@td align="center" valign="top">(${partyContactMech.allowSolicitation!})</@td>
-                    <@td>&nbsp;</@td>
-                    <@td align="right" valign="top">
-                      <a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    </@td>
-                    <@td align="right" valign="top">
-                      <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
-                        <div>
-                        <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
-                        <a href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
-                      </div>
-                      </form>
+                    <@td>(${partyContactMech.allowSolicitation!})</@td>
+                    <@td>
+                      <@menu type="button">
+                        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?contactMechId=${contactMech.contactMechId}") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
+                        <@menuitem type="link" href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire>
+                          <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
+                            <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
+                          </form>
+                        </@menuitem>
+                      </@menu>
                     </@td>
                   </@tr>
               </#list>
+              </@tbody>
             </@table>
           <#else>
             <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
@@ -326,7 +310,7 @@ under the License.
                      <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
                     </@td>
                     <@td align="right" valign="top">
-                      <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
+                      <#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
                         <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                       <#else>
                         <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
@@ -349,29 +333,29 @@ under the License.
     <div class="content" id="panel5">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
+            <#-- Cato: this isn't a link, it's a form submit, put it at bottom so not mistakable
               <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
                 <@menuitem type="link" href="javascript:document.setdefaultshipmeth.submit();" text=uiLabelMap.EcommerceSetDefault />
               </#if>
+             -->
             </@menu>
         </#macro>
-        <@section title=uiLabelMap.EcommerceDefaultShipmentMethod menuContent=menuContent>
+        <@section title=uiLabelMap.EcommerceDefaultShipmentMethod><#--menuContent=menuContent-->
           <form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
-            <input type="hidden" name="productStoreId" value="${productStoreId}" />
-              <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
-                <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
-                  <#list carrierShipMethods as shipMeth>
-                    <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId />
-                    <@tr>
-                      <@td>&nbsp;</@td>
-                      <@td><span style="white-space:;"><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description",locale)!}</span>
-                      </@td>
-                      <@td><input type="radio" name="defaultShipMeth" value="${shippingMethod}" <#if profiledefs.defaultShipMeth?default("") == shippingMethod>checked="checked"</#if> /></@td>
-                    </@tr>
-                  </#list>
-                <#else>
-                <@tr><@td>${uiLabelMap.EcommerceDefaultShipmentMethodMsg}</@td></@tr>
-                </#if>
-              </@table>
+          <@fields type="default-compact">
+            <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+            <input type="hidden" name="partyId" value="${(userLogin.partyId)!}" />
+            <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
+              <#list carrierShipMethods as shipMeth>
+                <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
+                <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=shippingMethodLabel />
+              </#list>
+              <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
+            <#else>
+              ${uiLabelMap.EcommerceDefaultShipmentMethodMsg} (<i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation})
+            </#if>
+          </@fields>
           </form>
         </@section>
     </div>

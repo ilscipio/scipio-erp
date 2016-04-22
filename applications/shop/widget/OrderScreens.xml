@@ -53,6 +53,9 @@ under the License.
 
     <screen name="orderitems">
         <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderItems.groovy"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderitems.ftl"/></html></platform-specific>
             </widgets>
@@ -453,6 +456,35 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="orderdownloads">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="rightonly"/>
+
+                <set field="titleProperty" value="EcommerceDownloadsAvailableTitle"/><!--OrderDigitalProductFiles-->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-screen name="orderdownloadswidget" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="orderdownloadswidget">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderdownloads.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="orderstatus">
         <section>
@@ -472,6 +504,37 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="orderviewonly">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="ordercomplete" />
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: NOTE: This is informal - not necessarily a valid invoice like the PDF -->
+    <screen name="orderprint">
+        <section>
+            <actions>
+                <!--<set field="titleProperty" value="PageTitleOrderSummary"/>-->
+                <set field="titleProperty" value="EcommerceOrderConfirmation"/>
+                <set field="printable" type="Boolean" value="true" />
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
+            </actions>
+            <widgets>
+                <!-- FIXME? This isn't the best decorator for this -->
+                <decorator-screen name="CommonEmptyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 
     <screen name="requestreturn">
         <section>
@@ -684,6 +747,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderItems.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderitems.ftl"/></html></platform-specific>

@@ -18,13 +18,22 @@ under the License.
 -->
 <#-- Cato: Moved to page title: <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>-->
 <p>${uiLabelMap.ShopThankYouForOrder}</p>
-<#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
+<#assign printable = printable!false>
+<#if !isDemoStore?? || isDemoStore>
+  <#if printable>
+    <p>${uiLabelMap.OrderDemoFrontNote}.</p>
+  <#else>
+    <@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert>
+  </#if>
+</#if>
 <#if orderHeader?has_content>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />
-  </@menu>
+  <#if !printable>
+    <@menu type="button">
+      <@menuitem type="link" href=makeOfbizUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />
+    </@menu>
+  </#if>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>
 </#if>

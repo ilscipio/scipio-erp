@@ -1384,7 +1384,8 @@ under the License.
     </request-map>
 
     <!-- PDFs -->
-    <request-map uri="order.pdf"><security https="true" auth="true"/><response name="success" type="view" value="OrderPDF"/></request-map>
+    <!-- Cato: Anon customer must be able to print his PDF, so auth="false" -->
+    <request-map uri="order.pdf"><security https="true" auth="false"/><response name="success" type="view" value="OrderPDF"/></request-map>
     <request-map uri="invoice.pdf"><security https="true" auth="true"/><response name="success" type="view" value="InvoicePDF"/></request-map>
 
     <!-- ================ SimpleContent Requests ================= -->

@@ -24,6 +24,8 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 
+final module = "ShipSettings.groovy";
+
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();
 context.cart = cart;
@@ -41,35 +43,42 @@ if (partyId && !partyId.equals("_NA_")) {
 if (cart?.getShippingContactMechId()) {
     shippingContactMechId = cart.getShippingContactMechId();
     shippingPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechId", shippingContactMechId).filterByDate().queryFirst();
-    parameters.shippingContactMechId = shippingPartyContactDetail.contactMechId;
+    // Cato: NOTE: Null checks added to all below
+    if (!shippingPartyContactDetail) {
+        Debug.logError("Cato: Missing shipping party contact detail for partyId '" + partyId + "' and contactMechId '" + shippingContactMechId + "'", module);
+    }
+    
+    parameters.shippingContactMechId = shippingPartyContactDetail?.contactMechId;
     context.callSubmitForm = true;
 
     fullAddressBuf = new StringBuffer();
-    fullAddressBuf.append(shippingPartyContactDetail.address1);
-    if (shippingPartyContactDetail.address2) {
+    if (shippingPartyContactDetail) { // Cato: null check
+        fullAddressBuf.append(shippingPartyContactDetail.address1);
+        if (shippingPartyContactDetail.address2) {
+            fullAddressBuf.append(", ");
+            fullAddressBuf.append(shippingPartyContactDetail.address2);
+        }
         fullAddressBuf.append(", ");
-        fullAddressBuf.append(shippingPartyContactDetail.address2);
+        fullAddressBuf.append(shippingPartyContactDetail.city);
+        fullAddressBuf.append(", ");
+        fullAddressBuf.append(shippingPartyContactDetail.postalCode);
     }
-    fullAddressBuf.append(", ");
-    fullAddressBuf.append(shippingPartyContactDetail.city);
-    fullAddressBuf.append(", ");
-    fullAddressBuf.append(shippingPartyContactDetail.postalCode);
     parameters.fullAddress = fullAddressBuf.toString();
 
     // NOTE: these parameters are a special case because they might be filled in by the address lookup service, so if they are there we won't fill in over them...
     if (!parameters.postalCode) {
-        parameters.attnName = shippingPartyContactDetail.attnName;
-        parameters.address1 = shippingPartyContactDetail.address1;
-        parameters.address2 = shippingPartyContactDetail.address2;
-        parameters.city = shippingPartyContactDetail.city;
-        parameters.postalCode = shippingPartyContactDetail.postalCode;
-        parameters.stateProvinceGeoId = shippingPartyContactDetail.stateProvinceGeoId;
-        parameters.countryGeoId = shippingPartyContactDetail.countryGeoId;
-        parameters.allowSolicitation = shippingPartyContactDetail.allowSolicitation;
+        parameters.attnName = shippingPartyContactDetail?.attnName;
+        parameters.address1 = shippingPartyContactDetail?.address1;
+        parameters.address2 = shippingPartyContactDetail?.address2;
+        parameters.city = shippingPartyContactDetail?.city;
+        parameters.postalCode = shippingPartyContactDetail?.postalCode;
+        parameters.stateProvinceGeoId = shippingPartyContactDetail?.stateProvinceGeoId;
+        parameters.countryGeoId = shippingPartyContactDetail?.countryGeoId;
+        parameters.allowSolicitation = shippingPartyContactDetail?.allowSolicitation;
     }
 
-    parameters.yearsAtAddress = shippingPartyContactDetail.yearsWithContactMech;
-    parameters.monthsAtAddress = shippingPartyContactDetail.monthsWithContactMech;
+    parameters.yearsAtAddress = shippingPartyContactDetail?.yearsWithContactMech;
+    parameters.monthsAtAddress = shippingPartyContactDetail?.monthsWithContactMech;
 } else {
     context.postalFields = UtilHttp.getParameterMap(request);
 }

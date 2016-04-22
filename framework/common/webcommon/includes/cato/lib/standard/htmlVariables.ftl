@@ -63,6 +63,13 @@
     "large_container_factor" : 6,       <#-- This is a special value part of a heuristic to help detect when a parent container is logically "large" or "small". It is a float value. By default, currently we assume 6. -->
     "closable" : "close",
     
+  <#-- basic tooltip -->
+    "tooltip" : "has-tip",
+    "tooltip_left" : "has-tip tip-left",
+    "tooltip_top" : "has-tip tip-top",
+    "tooltip_right" : "has-tip tip-right",
+    "tooltip_bottom" : "has-tip tip-bottom",
+    
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
     "commonmsg_result" : "result-msg",

@@ -1918,7 +1918,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#-- TODO: support more label configurations (besides horizontal left) -->
       <#if labelArea && labelPosition == "left">
         <#if inverted>
-          <#local widgetAreaClass = addClassArg(labelAreaClass, "field-entry-widget-left")>
+          <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-left")>
         <#else>
           <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
         </#if>

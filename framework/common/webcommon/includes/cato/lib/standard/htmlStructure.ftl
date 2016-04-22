@@ -1019,7 +1019,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     <#if showMore>
       <#-- FIXME: This call should not be captured, but run at the correct time... -->
       <#local menuTitleMarkup><@section_markup_menutitle sectionType=type sectionLevel=sLevel headingLevel=hLevel menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral
-        menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
+        menuRole=menuRole hasMenu=hasMenu menuContent=menuMarkup menuContentArgs={} hasTitle=hasTitle titleContent=titleMarkup titleContentArgs={}
         contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef position="top" origArgs=origArgs passArgs=passArgs/></#local>
     </#if>
   </#if> 
@@ -1047,7 +1047,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
   <@section_markup_container type=type open=open close=close
-    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuContent=menuMarkup class=class innerClass=innerClass
+    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup menuTitleContentArgs={} menuContent=menuMarkup menuContentArgs={} class=class innerClass=innerClass
     contentFlagClasses=contentFlagClasses id=id title=title style=style collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
@@ -1109,7 +1109,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container type="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuContent="" class="" outerClass="" 
+<#macro section_markup_container type="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" style="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
@@ -1132,7 +1132,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
         <@cell open=true close=false class=compileClassArg(class) />
           <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
-          ${menuTitleContent}
+          <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
           <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
@@ -1143,7 +1143,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           </div>
           
           <#if menuLayoutGeneral == "bottom" || menuLayoutGeneral == "top-bottom">
-            ${menuContent}
+            <@contentArgRender content=menuContent args=menuContentArgs />
           </#if>
         <@cell close=true open=false />
       <@row close=true open=false />
@@ -1152,8 +1152,9 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle sectionType="" sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" hasMenu=false menuMarkup="" 
-    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false position="top" origArgs={} passArgs={} catchArgs...>
+<#macro section_markup_menutitle sectionType="" sectionLevel=1 headingLevel=1 menuLayoutTitle="" menuLayoutGeneral="" menuRole="" 
+    hasMenu=false menuContent="" menuContentArgs={} hasTitle=false titleContent="" titleContentArgs={} 
+    contentFlagClasses="" fromScreenDef=false position="top" origArgs={} passArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
   <#if position == "top" && menuLayoutGeneral == "bottom">
@@ -1161,30 +1162,30 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
   </#if>
   <#if menuLayoutTitle == "pre-title">
     <#if hasMenu>
-      ${menuMarkup}
+      <@contentArgRender content=menuContent args=menuContentArgs />
     </#if>
     <#if hasTitle>
-      ${titleMarkup}
+      <@contentArgRender content=titleContent args=titleContentArgs />
     </#if>
   <#elseif menuLayoutTitle == "inline-title">
     <div class="${styles.float_clearfix!}">
       <div class="${styles.float_left!}">
         <#if hasTitle>
-          ${titleMarkup}
+          <@contentArgRender content=titleContent args=titleContentArgs />
         </#if>
       </div>
       <div class="${styles.float_right!}">
         <#if hasMenu>
-          ${menuMarkup}
+          <@contentArgRender content=menuContent args=menuContentArgs />
         </#if>
       </div>
     </div>
   <#else>
     <#if hasTitle>
-      ${titleMarkup}
+      <@contentArgRender content=titleContent args=titleContentArgs />
     </#if>
     <#if hasMenu>
-      ${menuMarkup}
+      <@contentArgRender content=menuContent args=menuContentArgs />
     </#if>
   </#if>
 </#macro>

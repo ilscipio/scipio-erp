@@ -257,7 +257,7 @@ under the License.
           <li class="divider"></li>
           <@rightMenu/>
           <li class="divider"></li>
-          <li><@render resource="component://shop/widget/CartScreens.xml#microcart" /></li>
+          <@render resource="component://shop/widget/CartScreens.xml#microcart" ctxVars={"includeMenuItem":true}/>
           <#--
           <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
           <#if helpLink?has_content><li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href="${helpLink}"></@modal></li></#if>  

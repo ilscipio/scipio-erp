@@ -22,6 +22,14 @@ under the License.
 <#else>
     <#assign shoppingCartSize = 0>
 </#if>
+<#assign includeMenuItem = includeMenuItem!false>
+
+<#-- 2016-04-21: Quick access to checkout; set to true for testing -->
+<#assign useQuickAccess = false>
+
+<#if includeMenuItem>
+  <li<#if useQuickAccess && (shoppingCartSize > 0)> class="has-dropdown not-click"</#if>>
+</#if>
     <a href="<@ofbizUrl>showcart</@ofbizUrl>">
         <div id="microcart">
             <div id="microCartIcon"><i class="${styles.icon} ${styles.icon_shopping_cart}"></i></div>
@@ -33,8 +41,14 @@ under the License.
                 </#if>
                 <@ofbizCurrency amount=((shoppingCart.getDisplayGrandTotal())!0) isoCode=currencyUomId/>
             </div>
-        
         </div>
+      <#if useQuickAccess && (shoppingCartSize > 0)>
+        <ul class="dropdown">      
+            <li><a href="<@ofbizUrl>showcart</@ofbizUrl>">${uiLabelMap.PageTitleOrderShowCart}</a></li>
+            <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
+            <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
+        </ul>
+      </#if>
     </a>
             
 <#-- The following contains a list of various checkout options.
@@ -63,3 +77,6 @@ under the License.
       </#if>
     </ul>
 -->
+<#if includeMenuItem>
+  </li>
+</#if>

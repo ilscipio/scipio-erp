@@ -964,6 +964,20 @@ public class ShoppingCartEvents {
         
         return "success";
     }
+    
+    /**
+     * Cato: Checks if cart empty and valid. If missing or empty, returns cartEmpty. If broken some other way,
+     * returns "error". Otherwise, returns "success".
+     * <p>
+     * Helps with template compatibility.
+     */
+    public static String checkCart(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        if (cart == null || cart.size() <= 0) {
+            return "cartEmpty";
+        }
+        return "success";
+    }
 
     /** Totally wipe out the cart, removes all stored info. */
     public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {

@@ -671,8 +671,16 @@ under the License.
         <response name="error" type="view" value="error"/>
     </request-map>
 
+    <!-- Cato: processorder first checks if cart empty, if empty then redirects to shopping cart, otherwise page refresh is confusing -->
     <request-map uri="processorder">
-        <security https="true" auth="false"/>
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="checkCart"/>
+        <response name="success" type="request" value="processordercreate"/>
+        <response name="cartEmpty" type="request-redirect-noparam" value="showcart" />
+        <response name="error" type="view" value="confirm"/>
+    </request-map>
+    <request-map uri="processordercreate">
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
         <response name="sales_order" type="request" value="checkBlacklist"/>
         <response name="work_order" type="request" value="checkBlacklist"/>

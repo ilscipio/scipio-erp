@@ -347,11 +347,18 @@ public class CheckOutHelper {
                     inf.securityCode = securityCode;
                 }
             }
-        } else if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0) {
-            // only return an error if the order total is not 0.00
-            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.select_method_of_payment",
-                    (cart != null ? cart.getLocale() : Locale.getDefault()));
-            errorMessages.add(errMsg);
+        } else { // if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0) 
+            // CATO: 2016-04-21: This is patched so that storefront and backend processes can be tweaked
+            // and also will have same behavior. The default here is changed to Y so that the backend
+            // functions the same as the frontend, and default Y is chosen because it is the most "safe" default
+            // and is the stock default for ecommerce.
+            GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
+            if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0 || !(productStore != null && "N".equals(productStore.getString("reqPayMethForFreeOrders")))) {
+                // only return an error if the order total is not 0.00
+                errMsg = UtilProperties.getMessage(resource_error,"checkhelper.select_method_of_payment",
+                        (cart != null ? cart.getLocale() : Locale.getDefault()));
+                errorMessages.add(errMsg);
+            }
         }
 
         return errorMessages;

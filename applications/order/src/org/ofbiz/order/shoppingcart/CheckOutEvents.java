@@ -185,9 +185,18 @@ public class CheckOutEvents {
             }
 
             if (UtilValidate.isEmpty(selectedPaymentMethods)) {
-                return "error";
+                // CATO: 2016-04-21: patch is based on logic from org.ofbiz.order.shoppingcart.CheckOutHelper.setCheckOutPaymentInternal
+                // we need an error message and the behavior for whether to require it is now based on ProductStore.reqPayMethForFreeOrders,
+                // otherwise the different checkout methods known to stock are too inconsistent.
+                // The default is Y which was the original behavior of this part of code, and is the most "safe" default.
+                GenericValue productStore = ProductStoreWorker.getProductStore(request);
+                if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0 || !(productStore != null && "N".equals(productStore.getString("reqPayMethForFreeOrders")))) {
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"checkhelper.select_method_of_payment",
+                            (cart != null ? cart.getLocale() : Locale.getDefault())));
+                    return "error";
+                }
             }
-
+            
             List<String> singleUsePayments = new ArrayList<String>();
 
             // check for gift card not on file

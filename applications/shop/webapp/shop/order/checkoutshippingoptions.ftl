@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#include "ordercommon.ftl">
+
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
@@ -56,11 +57,15 @@ function submitForm(form, mode, value) {
 
 </@script>
 
-<@section title="2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?">
-    <form method="post" name="checkoutInfoForm">
+<@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
+    <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
         <fieldset>
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
+            <#-- Cato: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
+                everything else on this form and with some other pages -->
+            <@field type="generic" label=uiLabelMap.OrderShippingMethod>
+            <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
                 <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                 <#assign labelContent>
@@ -68,19 +73,22 @@ function submitForm(form, mode, value) {
                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                       </#if>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                      <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
-                <@invertedField type="generic" labelContent=labelContent>
-                    <@field type="radio" inline=true name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == rawString(chosenShippingMethod!"N@A")) />
-                </@invertedField>
+                      <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
+                </#assign>
+                <#--<@invertedField type="generic" labelContent=labelContent>-->
+                <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == rawString(chosenShippingMethod!"N@A")) label=labelContent /><#--inline=true -->
+                <#--</@invertedField>-->
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
-                <@invertedField type="generic" labelContent=labelContent>
-                    <@field type="radio" inline=true name="shipping_method" value="Default" checked=true />
-                </@invertedField>
+                <#--<@invertedField type="generic" labelContent=labelContent>-->
+                <@field type="radio" name="shipping_method" value="Default" checked=true label=labelContent/><#--inline=true -->
+                <#--</@invertedField>-->
               </#if>
+            </@fields>
+            </@field>
 
-              <hr />
+            <#--<hr />-->
               
             <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
               <@fields inlineItems=false>
@@ -122,7 +130,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </b>
                   </div>
-                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}">${uiLabelMap.PartyProfile}</a>.</div>
+                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}" target="_BLANK">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                   <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
@@ -131,16 +139,6 @@ function submitForm(form, mode, value) {
     </form>
 </@section>
 
-<@row>
-  <@cell columns=6>
-    <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
-    </@menu>
-  </@cell>
-  <@cell columns=6 class="+${styles.text_right!}">
-    <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonNext />
-    </@menu>
-  </@cell>
-</@row>
+<@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" />
+
 

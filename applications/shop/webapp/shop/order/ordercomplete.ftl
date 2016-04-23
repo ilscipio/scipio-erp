@@ -16,6 +16,10 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
+
+<#if orderHeader?has_content>
+
 <#-- Cato: Moved to page title: <@heading>${uiLabelMap.EcommerceOrderConfirmation}</@heading>-->
 <p>${uiLabelMap.ShopThankYouForOrder}</p>
 <#assign printable = printable!false>
@@ -26,7 +30,7 @@ under the License.
     <@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert>
   </#if>
 </#if>
-<#if orderHeader?has_content>
+
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   <#if !printable>

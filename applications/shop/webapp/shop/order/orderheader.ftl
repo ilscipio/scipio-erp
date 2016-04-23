@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
 
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
@@ -41,15 +42,15 @@ under the License.
 <#if (orderHeader.orderId)?has_content><#-- Cato: Only if order not yet placed -->
   <#if !printable>
     <@menu args=menuArgs>
-      <#if maySelect>
-        <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
-      </#if>
+      <#-- Cato: No reason to hide it: <#if maySelect>-->
+      <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
+      <#--</#if>-->
       <#-- above will be better
       <#if maySelect>
         <@menuitem type="link" href=makeOfbizUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       </#if>
       -->
-      <#-- Cato: Always show it here <#if maySelect>-->
+      <#-- Cato: Always show it here: <#if maySelect>-->
       <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${uiLabelMap.CommonInvoice} (${uiLabelMap.CommonPdf})" />
       <#--</#if>-->
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">

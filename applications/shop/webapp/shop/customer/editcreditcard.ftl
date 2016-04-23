@@ -30,7 +30,7 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else>${uiLabelMap.AccountingEditCreditCard}</#if></#assign>
+<#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else><#-- Cato: duplicate: ${uiLabelMap.AccountingEditCreditCard}--></#if></#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
   <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}<#else>updateCreditCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editcreditcardform">

@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
 
 <@section><#-- title=uiLabelMap.OrderShippingInformation -->
   <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">
@@ -55,7 +56,10 @@ under the License.
       <@field type="textarea" label=uiLabelMap.OrderGiftMessage name="gift_message">${shoppingCart.getGiftMessage()!}</@field>   
     </#if>
 
+    <#--
       <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue/>
-
+    -->
   </form>
 </@section>
+
+<@checkoutActionsMenu directLinks=true />

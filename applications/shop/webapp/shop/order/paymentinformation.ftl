@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#include "ordercommon.ftl">
+
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
@@ -82,9 +83,7 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && (paymentMethodTypeId!) != "GIFT_CARD">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <@invertedField type="generic" labelContent=labelContent>
-              <@field type="checkbox" inline=true name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(useShipAddr??)/>
-          </@invertedField>
+          <@invertedField type="checkbox" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(useShipAddr??) labelContent=labelContent />
           <#--<hr />-->
         </#if>
 
@@ -143,7 +142,11 @@ function shipBillAddr() {
           </#if>
         </@section>
         </#if>
+      <#--
         <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue/>
+      -->
     </form>
   </@fields>
 </@section>
+
+<@checkoutActionsMenu text=OrderContinueToFinalOrderReview directLinks=true />

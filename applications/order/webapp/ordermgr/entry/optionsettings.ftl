@@ -26,19 +26,7 @@ under the License.
   </#if>
 
   <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
-  <@section>
-    <@row>
-      <@cell columns=columns>   
-        <@field type="textarea" label=uiLabelMap.OrderInternalNote name="internal_order_notes" cols="30" rows="3"><#rt>
-          <#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if><#t>
-        </@field><#lt>
-        <@field type="textarea" label=uiLabelMap.OrderShippingNotes name="shippingNotes" cols="30" rows="3"><#rt>
-          <#if (cart.getOrderNotes().size()>0)>${(cart.getOrderNotes()[0])!}</#if><#t>
-        </@field><#lt>
-      </@cell>
-    </@row>
-  </@section>
-              <input type="hidden" name="finalizeMode" value="options"/>
+      <input type="hidden" name="finalizeMode" value="options"/>
               
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
@@ -107,6 +95,20 @@ under the License.
       </@row>
    </@section>
 </#list>
+
+  <@section title=getLabel("AcctgTransType.description.INTERNAL_ACCTG_TRANS", "AccountingEntityLabels")>
+    <@row>
+      <@cell columns=columns>   
+        <@field type="textarea" label=uiLabelMap.OrderInternalNote name="internal_order_notes" cols="30" rows="3"><#rt>
+          <#if (cart.getInternalOrderNotes().size()>0)>${(cart.getInternalOrderNotes()[0])!}</#if><#t>
+        </@field><#lt>
+        <@field type="textarea" label=uiLabelMap.OrderShippingNotes name="shippingNotes" cols="30" rows="3"><#rt>
+          <#if (cart.getOrderNotes().size()>0)>${(cart.getOrderNotes()[0])!}</#if><#t>
+        </@field><#lt>
+      </@cell>
+    </@row>
+  </@section>
+
   </form>
 
 <#else>

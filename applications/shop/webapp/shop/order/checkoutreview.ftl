@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
 
 <@script>
     var clicked = 0;
@@ -37,19 +38,17 @@ under the License.
 <#if cart?? && (0 < cart.size())>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
-  <@row>
-    <@cell class="+${styles.text_right!}">
-        <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
-          <#if (requestParameters.checkoutpage)?has_content>
-            <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
-          </#if>
-          <#if (requestAttributes.issuerId)?has_content>
-            <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
-          </#if>
-          <@field type="submit" submitType="input-button" inline=true name="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
-        </form>
-    </@cell>
-  </@row>
+  <@checkoutActionsMenu directLinks=true>
+    <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+      <#if (requestParameters.checkoutpage)?has_content>
+        <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
+      </#if>
+      <#if (requestAttributes.issuerId)?has_content>
+        <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
+      </#if>
+      <@field type="submit" submitType="input-button" inline=true name="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
+    </form>
+  </@checkoutActionsMenu>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderErrorShoppingCartEmpty}.</@commonMsg>
 </#if>

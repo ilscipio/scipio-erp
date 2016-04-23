@@ -34,7 +34,7 @@ under the License.
   <#if !eftAccount??>
     ${uiLabelMap.AccountingAddNewEftAccount}
   <#else>
-    ${uiLabelMap.PageTitleEditEFTAccount}
+    <#-- Cato: duplicate: ${uiLabelMap.PageTitleEditEFTAccount}-->
   </#if>
 </#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">

@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#include "ordercommon.ftl">
+
 <@script>
 function shipBillAddr() {
     <#if (requestParameters.singleUsePayment!"N") == "Y">
@@ -34,12 +35,12 @@ function shipBillAddr() {
 
 <#macro menuContent menuArgs={}>
   <#if (requestParameters.singleUsePayment!"N") != "Y">
-    <@menu args=menuArgs>
-      <@render resource=anonymoustrailScreen />
-    </@menu>
+    <#-- Cato: WARN: Freemarker does not support capturing output of screens.render currently, we must
+        pass our args to the screen so it will do the @menu itself -->
+    <@render resource=anonymoustrailScreen ctxVars={"anontrailMenuArgs":menuArgs}/>
   </#if>
 </#macro>
-<@section title=uiLabelMap.AccountingPaymentInformation menuContent=menuContent>
+<@section menuContent=menuContent><#-- title=uiLabelMap.AccountingPaymentInformation-->
     <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || (finalizeMode!"") == "payment">
       <#-- after initial screen; show detailed screens for selected type -->
       <#if paymentMethodType == "CC">
@@ -84,10 +85,7 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <#assign postfixContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="checkbox" inline=true name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) />
-          </@invertedField>
+          <@invertedField type="checkbox" checkboxType="simple" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) labelContent=labelContent />
 
           <hr />
    
@@ -150,8 +148,9 @@ function shipBillAddr() {
         </@section>
         </#if>
 
+        <#--
           <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
-
+        -->
     <#else>
       <#-- initial screen show a list of options -->
       <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="billsetupform">
@@ -159,41 +158,34 @@ function shipBillAddr() {
         <input type="hidden" name="createNew" value="Y" />
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
-          <#assign postfixContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="checkbox" widgetOnly=true name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") />
-          </@invertedField>
+          <@invertedField type="checkbox" name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
           <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
-          <#assign postfixContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" widgetOnly=true name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") />
-          </@invertedField>
+          <@invertedField type="radio" name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
-          <#assign postfixContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" widgetOnly=true name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") />
-          </@invertedField>
+          <@invertedField type="radio" name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
           <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
-          <#assign postfixContent></#assign>
-          <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-              <@field type="radio" widgetOnly=true name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") />
-          </@invertedField>
+          <@invertedField type="radio" name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") labelContent=labelContent />
 
         </#if>
-          <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
 
+        <#--
+          <@field type="submit" class="${styles.link_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+        -->
       </form>
     </#if>
 </@section>
+
+<@checkoutActionsMenu directLinks=true formName="billsetupform" />
+

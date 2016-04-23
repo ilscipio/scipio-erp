@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
 
 <@section><#-- title=uiLabelMap.AccountingPaymentInformation-->
   <#-- initial screen show a list of options -->
@@ -47,7 +48,11 @@ under the License.
     </fieldset>
     <#--</@field>-->
 
+    <#--
     <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}"/>
-
+    -->
+    
   </form>
 </@section>
+
+<@checkoutActionsMenu directLinks=true />

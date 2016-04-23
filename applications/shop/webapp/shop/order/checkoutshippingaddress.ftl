@@ -16,13 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: WARN: 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-This template is no longer used by shop. If core fixes are applied to this file,
-they may need to be duplicated to:
-  component://shop/webapp/shop/order/checkoutshippingaddress.ftl
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--->
+<#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl -->
+
 <#include "ordercommon.ftl">
 
 <@script>
@@ -62,7 +57,6 @@ function toggleBillingAccount(box) {
 
 <#assign cart = shoppingCart!/>
 
-
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
@@ -74,7 +68,7 @@ function toggleBillingAccount(box) {
     <@alert type="info">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</@alert>
   </#if>
 
-  <form method="post" name="checkoutInfoForm">
+  <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
   <#--<fieldset>-->
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
     <@section>
@@ -96,9 +90,7 @@ function toggleBillingAccount(box) {
                 <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
             </#assign>
-            <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
-               <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
-            </@invertedField>
+            <@invertedField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent/>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>
        </#if>
@@ -127,7 +119,7 @@ function toggleBillingAccount(box) {
     <@section title=uiLabelMap.PartyTaxIdentification>
       <#-- Cato: NOTE: Can simply add this around to change the look:
       <@fields type="default-compact"> -->
-        <@render resource="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo" /> 
+        <@render resource="component://shop/widget/OrderScreens.xml#customertaxinfo" /> 
       <#--</@fields>-->
     </@section>
 
@@ -135,8 +127,4 @@ function toggleBillingAccount(box) {
   </form>
 </@section>
 
-<@menu type="button">
-  <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text=uiLabelMap.OrderBacktoShoppingCart class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text=uiLabelMap.CommonNext class="+${styles.action_run_session!} ${styles.action_continue!}" />
-</@menu>
-
+<@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" />

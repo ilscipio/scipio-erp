@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
+
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = (requestParameters.paymentMethodTypeId!"")?string>
 </#if>

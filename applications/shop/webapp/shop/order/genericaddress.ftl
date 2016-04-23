@@ -33,22 +33,22 @@ under the License.
 <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="30" maxlength="30" name="address1" value=((parameters.address1)!) disabled=(requestParameters.useShipAddr??)/>
 <@field type="input" label=uiLabelMap.PartyAddressLine2 size="30" maxlength="30" name="address2" value=((parameters.address2)!) disabled=(requestParameters.useShipAddr??)/>
 <@field type="input" label=uiLabelMap.PartyCity required=true size="30" maxlength="30" name="city" value=((parameters.city)!) disabled=(requestParameters.useShipAddr??)/>
-<@field type="select" label=uiLabelMap.PartyState required=true name="stateProvinceGeoId" disabled=(requestParameters.useShipAddr??)>
-      <#if (parameters.stateProvinceGeoId)??>
-        <option>${parameters.stateProvinceGeoId}</option>
-        <option value="${parameters.stateProvinceGeoId}">---</option>
-      <#else>
-        <option value="">${uiLabelMap.PartyNoState}</option>
-      </#if>
-      <@render resource="component://common/widget/CommonScreens.xml#states" />
-</@field>
 <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="postalCode" value=((parameters.postalCode)!) disabled=(requestParameters.useShipAddr??)/>
 <@field type="select" label=uiLabelMap.CommonCountry required=true name="countryGeoId" disabled=(requestParameters.useShipAddr??)>
-      <#if (parameters.countryGeoId)??>
-        <option>${parameters.countryGeoId}</option>
-        <option value="${parameters.countryGeoId}">---</option>
-      </#if>
-      <@render resource="component://common/widget/CommonScreens.xml#countries" />
+  <#if (parameters.countryGeoId)??>
+    <option>${parameters.countryGeoId}</option>
+    <option value="${parameters.countryGeoId}">---</option>
+  </#if>
+  <@render resource="component://common/widget/CommonScreens.xml#countries" />
+</@field>
+<@field type="select" label=uiLabelMap.PartyState required=true name="stateProvinceGeoId" disabled=(requestParameters.useShipAddr??)>
+  <#if (parameters.stateProvinceGeoId)??>
+    <option>${parameters.stateProvinceGeoId}</option>
+    <option value="${parameters.stateProvinceGeoId}">---</option>
+  <#else>
+    <option value="">${uiLabelMap.PartyNoState}</option>
+  </#if>
+  <@render resource="component://common/widget/CommonScreens.xml#states" />
 </@field>
 <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation" disabled=(requestParameters.useShipAddr??)>
       <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>

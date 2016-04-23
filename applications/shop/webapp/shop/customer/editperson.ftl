@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign sectionTitle><#if person??><#--${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
+<#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />

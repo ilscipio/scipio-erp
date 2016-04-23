@@ -34,7 +34,7 @@ under the License.
   <#if !eftAccount??>
     ${uiLabelMap.AccountingAddNewGiftCard}
   <#else>
-    ${uiLabelMap.AccountingEditGiftCard}
+    <#-- Cato: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->
   </#if>
 </#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
@@ -71,7 +71,7 @@ under the License.
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();">
+        <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();" tooltip=uiLabelMap.CommonMonth>
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -82,7 +82,7 @@ under the License.
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
         </@field>
-        <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();">
+        <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();" tooltip=uiLabelMap.CommonYear>
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>

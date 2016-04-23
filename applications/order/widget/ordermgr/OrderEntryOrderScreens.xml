@@ -294,6 +294,18 @@ under the License.
         <!-- meant to be included, generally through a screens.render type of thing -->
         <section>
             <actions>
+                <set field="customerTaxInfoTemplateLocation" value="component://order/webapp/ordermgr/entry/customertaxinfo.ftl" />
+            </actions>
+            <widgets>
+                <include-screen name="customertaxinfoimpl" />
+            </widgets>
+        </section>
+    </screen>
+    <!-- Cato: Reusable actions -->
+    <screen name="customertaxinfoimpl">
+        <!-- meant to be included, generally through a screens.render type of thing -->
+        <section>
+            <actions>
                 <set field="partyId" from-field="userLogin.partyId"/>
                 <entity-condition entity-name="PartyTaxAuthInfoAndDetail" list="partyTaxAuthInfoAndDetailList">
                     <condition-expr field-name="partyId" from-field="partyId"/>
@@ -306,7 +318,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/customertaxinfo.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="${customerTaxInfoTemplateLocation}"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

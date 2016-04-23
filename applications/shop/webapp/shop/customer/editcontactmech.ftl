@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#assign requireCreate = false>
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
@@ -25,6 +26,7 @@ under the License.
   <#if !contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
+      <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
         <form method="post" action="<@ofbizUrl>editcontactmechnosave</@ofbizUrl>" name="createcontactmechform">
             <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
@@ -32,7 +34,9 @@ under the License.
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </@field>
+          <#-- Cato: make it part of menu further below, otherwise looks strange
             <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
+          -->
         </form>
       <#--<@commonMsg type="error">ERROR: Contact information with ID "${contactMechId}" not found!</@commonMsg>-->
       </@section>
@@ -47,7 +51,7 @@ under the License.
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
-<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else>${uiLabelMap.PartyEditContactInfo}</#if></#assign>
+<#assign sectionTitle><#if !contactMech??>${uiLabelMap.PartyCreateNewContactInfo}<#else><#-- Cato: duplicate: ${uiLabelMap.PartyEditContactInfo}--></#if></#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
     
     <#if contactMech??>
@@ -137,14 +141,16 @@ under the License.
       </@field>
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
-          <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(telecomNumberData.countryCode!) />
-          -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(telecomNumberData.areaCode!) />
-          -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="contactNumber" value=(telecomNumberData.contactNumber!) />
-          &nbsp;${uiLabelMap.PartyExtension}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="extension" value=(partyContactMechData.extension!) />
+          <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(telecomNumberData.countryCode!) tooltip=uiLabelMap.CommonCountryCode />
+          -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(telecomNumberData.areaCode!) tooltip=uiLabelMap.PartyAreaCode />
+          -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="contactNumber" value=(telecomNumberData.contactNumber!) tooltip=uiLabelMap.PartyContactNumber />
+          &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="extension" value=(partyContactMechData.extension!) tooltip=uiLabelMap.PartyExtension />
       </@field>
+      <#-- Cato: use tooltips
       <@field type="display">
           [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
       </@field>
+      -->
     <#elseif contactMechTypeId == "EMAIL_ADDRESS">
       <#assign fieldValue><#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if></#assign>
       <@field type="input" label="${uiLabelMap.PartyEmailAddress}" required=true size="60" maxlength="255" name="emailAddress" value=fieldValue />
@@ -164,6 +170,9 @@ under the License.
   <#else>    
     <@menu type="button">
       <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <#if requireCreate>
+      <@menuitem type="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
+    </#if>
     </@menu>
   </#if>
 </#if>

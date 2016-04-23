@@ -24,6 +24,8 @@ under the License.
     <screen name="editcontactmech">
         <section>
             <actions>
+                <set field="titleProperty" value="PartyEditContactInfo"/>
+                
                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditContactMech.groovy"/>
                 <set field="reqName" from-field="requestName" />
                 

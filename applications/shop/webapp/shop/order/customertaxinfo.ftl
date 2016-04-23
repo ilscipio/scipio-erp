@@ -16,13 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: WARN: 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-This template is no longer used by shop. If core fixes are applied to this file,
-they may need to be duplicated to:
-  component://shop/webapp/shop/order/customertaxinfo.ftl
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--->
 <#if partyTaxAuthInfoAndDetailList??>
     <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
         <div>
@@ -38,7 +31,7 @@ they may need to be duplicated to:
     </@field>
     <@field type="input" label=uiLabelMap.CommonId name="partyTaxId" size="12" maxlength="40"/>
     <#if (productStore.showTaxIsExempt!"Y") == "Y">
-        <@field type="checkbox" label=uiLabelMap.PartyTaxIsExempt name="isExempt" value="Y"/>
+        <@field type="checkbox" checkboxType="simple-standard" label=uiLabelMap.PartyTaxIsExempt name="isExempt" value="Y"/>
     <#else>
         <input type="hidden" name="isExempt" value="N"/>
     </#if>

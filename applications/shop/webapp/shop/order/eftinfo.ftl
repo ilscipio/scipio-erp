@@ -19,41 +19,26 @@ under the License.
 
 <#-- eft fields -->
 <#if !eftAccount?has_content><#assign eftAccount = requestParameters></#if>
-<@tr><@td colspan="2"><hr />
-<input type="hidden" name="paymentMethodId" value="${parameters.paymentMethodId!}"/></@td></@tr>
-<@tr><@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.AccountingEFTAccountInformation}</div></@td><@td width="74%">&nbsp;</@td></@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingNameOnAccount}</@td>
-  <@td width="74%"><input type="text" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>*</@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingCompanyNameOnAccount}</@td>
-  <@td width="74%"><input type="text" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/></@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingBankName}</@td>
-  <@td width="74%"><input type="text" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>*</@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingRoutingNumber}</@td>
-  <@td width="74%"><input type="text" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>*</@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountType}</@td>
-  <@td width="74%">
-    <select name="accountType">
-      <option>${eftAccount.accountType!}</option>
-      <option></option>
-      <option>Checking</option>
-      <option>Savings</option>
-    </select>*
-  </@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountNumber}</@td>
-  <@td width="74%"><input type="text" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>*</@td>
-</@tr>
-<@tr>
-  <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonDescription}</@td>
-  <@td width="74%"><input type="text" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/></@td>
-</@tr>
+
+<hr />
+
+<input type="hidden" name="paymentMethodId" value="${parameters.paymentMethodId!}"/>
+
+<@heading>${uiLabelMap.AccountingEFTAccountInformation}</@heading>
+
+<@field type="input" label=uiLabelMap.AccountingNameOnAccount required=true size="30" maxlength="60" name="nameOnAccount" value=(eftAccount.nameOnAccount!)/>
+<@field type="input" label=uiLabelMap.AccountingCompanyNameOnAccount size="30" maxlength="60" name="companyNameOnAccount" value=(eftAccount.companyNameOnAccount!)/>
+<@field type="input" label=uiLabelMap.AccountingBankName required=true size="30" maxlength="60" name="bankName" value=(eftAccount.bankName!)/>
+<@field type="input" label=uiLabelMap.AccountingRoutingNumber required=true size="10" maxlength="30" name="routingNumber" value=(eftAccount.routingNumber!)/>
+
+<@field type="select" name="accountType" label=uiLabelMap.AccountingAccountType required=true>
+  <option>${eftAccount.accountType!}</option>
+  <option></option>
+  <option>Checking</option>
+  <option>Savings</option>
+</@field>
+
+<@field type="input" label=uiLabelMap.AccountingAccountNumber required=true size="20" maxlength="40" name="accountNumber" value=(eftAccount.accountNumber!)/>
+
+<@field type="input" label=uiLabelMap.CommonDescription size="30" maxlength="60" name="description" value=(eftAccount.description!)/>
+

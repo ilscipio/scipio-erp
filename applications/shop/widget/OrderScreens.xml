@@ -61,8 +61,21 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- CATO: Original: component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo -->
+    <screen name="customertaxinfo">
+        <!-- meant to be included, generally through a screens.render type of thing -->
+        <section>
+            <actions>
+                <set field="customerTaxInfoTemplateLocation" value="component://shop/webapp/shop/order/customertaxinfo.ftl" />
+            </actions>
+            <widgets>
+                <include-screen name="customertaxinfoimpl" location="component://order/widget/ordermgr/OrderEntryOrderScreens.xml" />
+            </widgets>
+        </section>
+    </screen>
 
-    <!-- CATO widget to display the current progress -->
+    <!-- CATO: widget to display the current progress -->
     <screen name="CheckoutProgressFull">
         <section>
             <actions>
@@ -92,7 +105,8 @@ under the License.
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
     <!-- Cato: Base common decorator for all checkout pages of all types
-        NOTE: If AnonymousCheckoutDecorator was readded, would extend this one -->
+        Currently all types are implemented in this single controller so may be able to determine dynamically,
+        but each checkout type (full vs quick vs onepage) could also have its own that extends this instead (e.g. the stock anonymousCheckoutDecorator that was removed) -->
     <screen name="CommonCheckoutDecorator">
         <section>
             <actions>
@@ -289,6 +303,8 @@ under the License.
         </section>
     </screen>
 
+    <!-- Cato: NOTE: This is the "quick" checkout, currently unsupported and unmaintained
+        Leave for reference (if need to prevent access, comment controller view-map instead) -->
     <screen name="checkoutoptions">
         <section>
             <actions>
@@ -297,10 +313,12 @@ under the License.
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutOptions.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
+
+                <set field="checkoutType" value="quick" />
+                <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
             </actions>
             <widgets>
-                <!-- TODO?: CommonCheckoutDecorator? -->
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutoptions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -325,7 +343,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/checkoutshippingaddress.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -393,7 +411,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutpayment.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/checkoutpayment.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
 
 <@section title=uiLabelMap.EcommerceYourNamePhoneAndEmail>
 <form id="editCustomerNamePhoneAndEmail" name="${parameters.formNameValue}" method="post" action="<@ofbizUrl>processCustomerSettings</@ofbizUrl>">
@@ -40,10 +41,10 @@ under the License.
 
     <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
     <@field type="generic" label=uiLabelMap.PartyHomePhone required=true tooltip=false>
-        <@field type="input" inline=true size="4" maxlength="10" name="homeCountryCode" value=(parameters.homeCountryCode!) />
-        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="homeAreaCode" value=(parameters.homeAreaCode!) required=true />
-        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="homeContactNumber" value=(parameters.homeContactNumber!) required=true />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="homeExt" value=(parameters.homeExt!) />
+        <@field type="input" inline=true size="4" maxlength="10" name="homeCountryCode" value=(parameters.homeCountryCode!) required=true tooltip=uiLabelMap.CommonCountryCode/>
+        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="homeAreaCode" value=(parameters.homeAreaCode!) required=true tooltip=uiLabelMap.PartyAreaCode />
+        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="homeContactNumber" value=(parameters.homeContactNumber!) required=true tooltip=uiLabelMap.PartyContactNumber />
+        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="homeExt" value=(parameters.homeExt!) tooltip=uiLabelMap.PartyExtension />
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="homeSol" label="${uiLabelMap.PartyAllowSolicitation}?">
@@ -58,10 +59,10 @@ under the License.
 
     <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
     <@field type="generic" label=uiLabelMap.PartyBusinessPhone>
-        <@field type="input" inline=true size="4" maxlength="10" name="workCountryCode" value=(parameters.workCountryCode!) />
-        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="workAreaCode" value=(parameters.workAreaCode!) />
-        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="workContactNumber" value=(parameters.workContactNumber!) />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="workExt" value=(parameters.workExt!) />
+        <@field type="input" inline=true size="4" maxlength="10" name="workCountryCode" value=(parameters.workCountryCode!) tooltip=uiLabelMap.CommonCountryCode/>
+        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="workAreaCode" value=(parameters.workAreaCode!) tooltip=uiLabelMap.PartyAreaCode />
+        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="workContactNumber" value=(parameters.workContactNumber!) tooltip=uiLabelMap.PartyContactNumber />
+        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="workExt" value=(parameters.workExt!) tooltip=uiLabelMap.PartyExtension />
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="workSol" label="${uiLabelMap.PartyAllowSolicitation}?">
@@ -85,8 +86,15 @@ under the License.
       <option value="N">${uiLabelMap.CommonN}</option>
     </@field>
 
+    <#--
     <@field type="submit" text=uiLabelMap.CommonContinue class="${styles.link_run_session!} ${styles.action_update!}"/>
+    -->
 
 </form>
-
 </@section>
+
+<@checkoutActionsMenu directLinks=true />
+
+
+
+

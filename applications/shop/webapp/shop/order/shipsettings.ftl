@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "ordercommon.ftl">
+
 <#assign cart = sessionAttributes.shoppingCart!>
 
 <@section>
@@ -45,8 +47,11 @@ under the License.
         </#if>
         <@render resource="component://common/widget/CommonScreens.xml#states" />
       </@field>
-
+    <#--
       <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value=(uiLabelMap.CommonContinue)/>
-    
+    -->
   </form>
 </@section>
+
+<@checkoutActionsMenu directLinks=true />
+

@@ -16,13 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: WARN: 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-This template is no longer used by shop. If core fixes are applied to this file,
-they may need to be duplicated to:
-  component://shop/webapp/shop/order/checkoutpayment.ftl
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--->
+<#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
 <#include "ordercommon.ftl">
 <#-- Cato: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
@@ -94,8 +88,19 @@ var issuerId = "";
  
 <#assign cart = shoppingCart! />
 
-<@section title="${uiLabelMap.OrderHowShallYouPay}?"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
+  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
+    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NC', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingCreditCard}" />
+  </#if>
+  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
+    <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingEFTAccount}" />
+  </#if>
+  </@menu>
+</#macro>
+<@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
 
+  <@fields checkboxType="simple">
     <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
         <input type="hidden" name="checkoutpage" value="payment" />
         <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
@@ -233,10 +238,9 @@ var issuerId = "";
 
             <#-- End Payment Method Selection -->
     </form>
+    
+  </@fields>
 </@section>
 
-<@menu type="button">
-  <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
-  <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderContinueToFinalOrderReview />
-</@menu>
+<@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" text=uiLabelMap.OrderContinueToFinalOrderReview />
 

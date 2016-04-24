@@ -348,22 +348,33 @@ under the License.
                 <set field="activeMainMenuItem" value="login"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
                 <set field="shoppingCart" value="${groovy:sessionAttributes.shoppingCart}"/>
-                
+                <set field="checkoutType" value="full" />
+                <set field="activeStep" value="shippingAddress" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
+                        <section>
+                            
+                            <condition>
+                            </condition>
+                            <widgets>
+                                <include-screen name="CheckoutProgressFull" location="component://shop/widget/OrderScreens.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                <platform-specific>
-                                    <html><html-template location="component://shop/webapp/shop/order/startanoncheckout.ftl"/></html>
+                                 <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/login.ftl"/></html>
                                 </platform-specific>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                 <platform-specific>
-                                    <html><html-template location="component://shop/webapp/shop/login.ftl"/></html>
+                                <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/order/startanoncheckout.ftl"/></html>
                                 </platform-specific>
                             </container>
                         </container>

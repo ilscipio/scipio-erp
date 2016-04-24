@@ -415,8 +415,18 @@ pre.scrollable {
 }
 
 ul {
-    &.chart-legend{
+    &.chart-legend, &.checkmark{
         list-style:none;
+    }
+    
+    &.checkmark {
+        margin:0px;
+    }
+    
+    &.checkmark li:before {
+        font-family: "FontAwesome";
+        content:"\f00c";
+        padding-right: 10px;
     }
 }
 

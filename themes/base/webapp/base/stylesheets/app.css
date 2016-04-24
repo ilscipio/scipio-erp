@@ -10279,49 +10279,59 @@ pre.scrollable {
 }
 
 /* line 418, ../scss/_base.scss */
-ul.chart-legend {
+ul.chart-legend, ul.checkmark {
   list-style: none;
 }
-
+/* line 422, ../scss/_base.scss */
+ul.checkmark {
+  margin: 0px;
+}
 /* line 426, ../scss/_base.scss */
+ul.checkmark li:before {
+  font-family: "FontAwesome";
+  content: "\f00c";
+  padding-right: 10px;
+}
+
+/* line 436, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 432, ../scss/_base.scss */
+/* line 442, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 441, ../scss/_base.scss */
+/* line 451, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 445, ../scss/_base.scss */
+/* line 455, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 450, ../scss/_base.scss */
+/* line 460, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 455, ../scss/_base.scss */
+/* line 465, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 460, ../scss/_base.scss */
+/* line 470, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 464, ../scss/_base.scss */
+/* line 474, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10329,12 +10339,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 474, ../scss/_base.scss */
+/* line 484, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 479, ../scss/_base.scss */
+/* line 489, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10348,18 +10358,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 494, ../scss/_base.scss */
+  /* line 504, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 499, ../scss/_base.scss */
+  /* line 509, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 501, ../scss/_base.scss */
+  /* line 511, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10375,27 +10385,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 521, ../scss/_base.scss */
+/* line 531, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 527, ../scss/_base.scss */
+/* line 537, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 530, ../scss/_base.scss */
+/* line 540, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 535, ../scss/_base.scss */
+/* line 545, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 540, ../scss/_base.scss */
+/* line 550, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10408,35 +10418,35 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 553, ../scss/_base.scss */
+/* line 563, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 558, ../scss/_base.scss */
+/* line 568, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 564, ../scss/_base.scss */
+/* line 574, ../scss/_base.scss */
 input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }
 
-/* line 570, ../scss/_base.scss */
+/* line 580, ../scss/_base.scss */
 .has-tip.field-tooltip-wrap {
   font-weight: normal;
   border-bottom: 0;
 }
 
 /*Tabs*/
-/* line 578, ../scss/_base.scss */
+/* line 588, ../scss/_base.scss */
 ul.tabs {
   border-bottom: 1px solid #efefef;
 }
-/* line 580, ../scss/_base.scss */
+/* line 590, ../scss/_base.scss */
 ul.tabs li {
   position: relative;
   bottom: -1px;
@@ -10445,92 +10455,92 @@ ul.tabs li {
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 587, ../scss/_base.scss */
+/* line 597, ../scss/_base.scss */
 ul.tabs li.active {
   border-bottom: 1px solid #fff;
 }
 
-/* line 593, ../scss/_base.scss */
+/* line 603, ../scss/_base.scss */
 .tabs-content {
   border-left: 1px solid #efefef;
   border-right: 1px solid #efefef;
   border-bottom: 1px solid #efefef;
 }
-/* line 597, ../scss/_base.scss */
+/* line 607, ../scss/_base.scss */
 .tabs-content .content {
   padding: 20px;
 }
 
 /* Special panels */
-/* line 602, ../scss/_base.scss */
+/* line 612, ../scss/_base.scss */
 .text-line-list ul, ul.text-line-list {
   list-style: none outside none;
   margin-left: 0;
 }
 
-/* line 606, ../scss/_base.scss */
+/* line 616, ../scss/_base.scss */
 .text-line-list li:empty, .text-line-list .text-line:empty {
   display: none;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 614, ../scss/_base.scss */
+/* line 624, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 615, ../scss/_base.scss */
+/* line 625, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 616, ../scss/_base.scss */
+/* line 626, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 617, ../scss/_base.scss */
+/* line 627, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 618, ../scss/_base.scss */
+/* line 628, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 619, ../scss/_base.scss */
+/* line 629, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 624, ../scss/_base.scss */
+/* line 634, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 625, ../scss/_base.scss */
+/* line 635, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 626, ../scss/_base.scss */
+/* line 636, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 627, ../scss/_base.scss */
+/* line 637, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 628, ../scss/_base.scss */
+/* line 638, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 629, ../scss/_base.scss */
+/* line 639, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10543,7 +10553,7 @@ ul.tabs li.active {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 642, ../scss/_base.scss */
+/* line 652, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10565,7 +10575,7 @@ ul.tabs li.active {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 654, ../scss/_base.scss */
+/* line 664, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10581,7 +10591,7 @@ ul.tabs li.active {
 }
 
 /* terminate actions (like cancel order) */
-/* line 659, ../scss/_base.scss */
+/* line 669, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10598,7 +10608,7 @@ ul.tabs li.active {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 666, ../scss/_base.scss */
+/* line 676, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10620,7 +10630,7 @@ ul.tabs li.active {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 679, ../scss/_base.scss */
+/* line 689, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10636,7 +10646,7 @@ ul.tabs li.active {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 685, ../scss/_base.scss */
+/* line 695, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10652,7 +10662,7 @@ ul.tabs li.active {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 690, ../scss/_base.scss */
+/* line 700, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10668,7 +10678,7 @@ ul.tabs li.active {
 }
 
 /*Firefox specific fixes*/
-/* line 697, ../scss/_base.scss */
+/* line 707, ../scss/_base.scss */
 input::-moz-focus-inner {
   border: 0;
   padding: 0;

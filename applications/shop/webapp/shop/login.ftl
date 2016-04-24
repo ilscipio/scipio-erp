@@ -115,21 +115,39 @@ under the License.
                             </@cell>
                         </@row>
             </#if>
+        
         </@section>
-        <@script>
-          jQuery(document).ready(function() {
-            <#if autoUserLogin?has_content>
-              document.loginform.PASSWORD.focus();
-            <#else>
-              document.loginform.USERNAME.focus();
-            </#if>
-          });
-        </@script>
+            <@script>
+              jQuery(document).ready(function() {
+                <#if autoUserLogin?has_content>
+                  document.loginform.PASSWORD.focus();
+                <#else>
+                  document.loginform.USERNAME.focus();
+                </#if>
+              });
+            </@script>
     </@cell>
     <@cell columns=6>
         <@section title=uiLabelMap.CommonNewUser>
-            <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_add!}">${uiLabelMap.EcommerceRegister}</a>
+            <@panel>
+            <@row>
+                <@cell>
+             Create a customer account:
+              <ul class="checkmark">
+                    <li>Place orders quickly and easily</li>
+                    <li>View orders and track your shipping status</li>
+                    <li>Receive special deals</li>
+              </ul>
+             </@cell>
+            </@row>
+            <@row>
+                          <@cell class="+${styles.text_right!}">
+                <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_add!}">${uiLabelMap.EcommerceRegister}</a>
+            </@cell>
+            </@row>
+             </@panel>
         </@section>
+
     </@cell>
 </@row>
 <#--  

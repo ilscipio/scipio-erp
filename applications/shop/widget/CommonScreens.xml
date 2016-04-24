@@ -353,16 +353,17 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <!--
                     <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
-                        <section>
-                            
+                        <section> 
                             <condition>
+                                <if-compare field="shoppingCart" operator="greater" value="0" />
                             </condition>
                             <widgets>
                                 <include-screen name="CheckoutProgressFull" location="component://shop/widget/OrderScreens.xml"/>
                             </widgets>
                         </section>
-                    </decorator-section>
+                    </decorator-section>-->
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">

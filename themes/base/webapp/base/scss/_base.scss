@@ -692,3 +692,9 @@ ul.tabs {
 }
 
 
+/*Firefox specific fixes*/
+// Fix for wrong box height
+input::-moz-focus-inner { 
+    border: 0; 
+    padding: 0; 
+}

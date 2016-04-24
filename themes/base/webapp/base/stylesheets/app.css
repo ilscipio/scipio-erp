@@ -10667,6 +10667,13 @@ ul.tabs li.active {
   color: white;
 }
 
+/*Firefox specific fixes*/
+/* line 697, ../scss/_base.scss */
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

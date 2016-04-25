@@ -686,6 +686,27 @@ the resulting type into a simple Freemarker string.
 
 <#-- 
 *************
+* htmlContentString
+************
+Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
+depending on current implementation and system policy may process the string for allowed HTML.
+
+Typically for database-stored content such as product descriptions which use limited HTML.
+
+WARN: This is NOT fully implemented and currently does the same as #rawString.
+
+  * Parameters *
+    str                     = ((string), required) The string
+    
+  * Related *
+    #rawString
+-->
+<#function htmlContentString str>
+  <#return rawString(str)> 
+</#function>
+
+<#-- 
+*************
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.

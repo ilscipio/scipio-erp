@@ -70,6 +70,26 @@ public class CommonServices {
         String singleVisualThemeId = (String) context.get("visualThemeId");
 
         try {
+            // 2016-04-25: VS type defs in file
+            // TODO: unhardcode locations into properties
+            {
+                final String filename = "component://common/data/CommonVisualThemeTypeData.xml"; // TODO: Unhardcode
+                List<String> messages = new ArrayList<String>();
+                Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
+                servCtx.put("filename", filename);
+                servCtx.put("isUrl", "Y");
+                servCtx.put("messages", messages);
+                Map<String, Object> servResult = dispatcher.runSync("entityImport", servCtx);
+                if (ServiceUtil.isError(servResult)) {
+                    return ServiceUtil.returnError("Could not import common visual theme type data from " + filename + ": " + 
+                            ServiceUtil.getErrorMessage(servResult)); 
+                }
+            }
+            
+            delegator.clearCacheLine("EnumerationType"); // FIXME: overly broad, but it's probably okay
+            delegator.clearCacheLine("Enumeration");
+            delegator.clearCacheLine("VisualThemeSet");
+            
             List<String> visualThemeIds = new ArrayList<String>();
             if (singleVisualThemeId != null) {
                 GenericValue visualTheme = delegator.findOne("VisualTheme", false, UtilMisc.toMap("visualThemeId", singleVisualThemeId));
@@ -135,6 +155,7 @@ public class CommonServices {
                     }
                 }
                 
+                delegator.clearCacheLine("VisualThemeSet");
                 delegator.clearCacheLine("VisualThemeResource");
                 delegator.clearCacheLine("VisualTheme");
                 

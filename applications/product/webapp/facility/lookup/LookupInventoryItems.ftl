@@ -70,4 +70,7 @@ under the License.
   <#if !(inventoryItemsForPo?? && inventoryItemsForPo?has_content) && !(inventoryItemsForSupplier?? && inventoryItemsForSupplier?has_content) && !(inventoryItemsForProduct?? && inventoryItemsForProduct?has_content)>
     <@tr><@td>${uiLabelMap.CommonNo} ${uiLabelMap.ProductInventoryItems} ${uiLabelMap.ProductAvailable}.</@td></@tr>
   </#if>
+  <#if inventoryItem?has_content && internalName?has_content>
+    <@tr><@td>${inventoryItem.inventoryItemId} - ${internalName}</@td></@tr>
+  </#if>
 </@table>

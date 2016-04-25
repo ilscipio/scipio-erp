@@ -191,15 +191,22 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                        <!-- <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-screen name="CatoFindFacilityTransfers"/>
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <include-screen name="CatoFacilityTransferList"/>
                             </decorator-section>
-                        </decorator-screen>
-                        <section>
+                        </decorator-screen> -->
+                        
+                        <platform-specific>
+                           <html><html-template location="component://product/webapp/facility/facility/FindFacilityTransfers.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/facility/facility/FacilityTransferList.ftl"/></html>
+                        </platform-specific>
+                        <!-- <section>
                            <condition>
                                 <and>
                                     <not><if-empty field="parameters.parameters.transferInventoryItem"/></not>
@@ -211,7 +218,7 @@ under the License.
                                     <html><html-template location="component://product/webapp/facility/inventory/TransferInventoryItem.ftl"/></html>
                                 </platform-specific>
                            </widgets>
-                        </section>
+                        </section> -->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -239,22 +246,6 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
-    
-    
-    <screen name="CatoFindFacilityTransfers">
-        <section>
-            <widgets>
-                <platform-specific><html><html-template location="component://product/webapp/facility/facility/FindFacilityTransfers.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CatoFacilityTransferList">
-		<section>
-			<widgets>
-				<platform-specific><html><html-template location="component://product/webapp/facility/facility/FacilityTransferList.ftl"/></html></platform-specific>
-			</widgets>
-		</section>
     </screen>
 
     <screen name="FindFacilityLocation">

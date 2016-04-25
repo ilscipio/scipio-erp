@@ -24,7 +24,7 @@ under the License.
 -->    
 <entity-engine-xml>
     <VisualTheme visualThemeId="FOUNDATION_SHOP" visualThemeSetId="ECOMMERCE" description="Foundation CSS Shop Theme"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://base-theme/data/ShopThemeData.xml" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://foundation-shop-theme/data/ShopThemeData.xml" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_NAME" resourceValue="FOUNDATION_SHOP" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/foundation-shop-theme/screenshot.jpg" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://foundation-shop-theme/includes/header.ftl" sequenceId="01"/>

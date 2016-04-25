@@ -1333,6 +1333,12 @@ under the License.
         <response name="addparty" type="request" value="calcShipping"/> <!-- this actually wants to go to a page to set another party, but for shop we'll skip it and go to the beginning of the chain for review and checkout -->
         <response name="paysplit" type="view" value="checkoutpayment"/>
         <response name="sales" type="request" value="calcShipping"/>
+        <!-- Cato: handle paymentError, previously unhandled  -->
+        <response name="paymentError" type="request" value="calcShippingBeforePayment"/>
+        <!-- Cato: handle shipGroups, previously unhandled -->
+        <response name="shipGroups" type="request" value="finalizeOrderError"/>
+        <!-- Cato: handle po, previously unhandled -->
+        <response name="po" type="request" value="calcTax"/>
         <response name="error" type="request" value="finalizeOrderError"/>
     </request-map>
     <request-map uri="finalizeOrderError">

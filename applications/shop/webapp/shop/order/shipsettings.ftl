@@ -45,7 +45,7 @@ under the License.
         <#else>
           <option value="_NA_">${uiLabelMap.PartyNoState}</option>
         </#if>
-        <@render resource="component://common/widget/CommonScreens.xml#states" />
+        <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
       </@field>
     <#--
       <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value=(uiLabelMap.CommonContinue)/>

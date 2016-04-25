@@ -114,7 +114,7 @@ under the License.
                 <#else>
                    <option value="">${uiLabelMap.PartyNoState}</option>
                 </#if>
-                   <@render resource="component://common/widget/CommonScreens.xml#states" />
+                   <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
               </@field>
               <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"shipToPostalCode"}
                   size="12" maxlength="10" id="shipToPostalCode" name="shipToPostalCode" value=(parameters.shipToPostalCode!) />
@@ -150,7 +150,7 @@ under the License.
                 <#else>
                    <option value="">${uiLabelMap.PartyNoState}</option>
                 </#if>
-                   <@render resource="component://common/widget/CommonScreens.xml#states" />
+                   <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
               </@field>
               <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true preWidgetContent=fieldErrorsInvoker prePostContentArgs={"fieldName":"billToPostalCode"}
                   size="12" maxlength="10" id="billToPostalCode" name="billToPostalCode" value=(parameters.billToPostalCode!) />

@@ -48,7 +48,7 @@ under the License.
   <#else>
     <option value="">${uiLabelMap.PartyNoState}</option>
   </#if>
-  <@render resource="component://common/widget/CommonScreens.xml#states" />
+  <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
 </@field>
 <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation" disabled=(requestParameters.useShipAddr??)>
       <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>

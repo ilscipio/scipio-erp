@@ -27,7 +27,21 @@ jQuery(document).ready(function(){
     validateCart.validate();
 
     var validateShip = jQuery("#shippingForm");
-    validateShip.validate();
+    validateShip.validate({
+    		 groups: {
+ 			    phone: "shipToCountryCode shipToAreaCode shipToContactNumber shipToExtension"
+ 			  },
+			  errorPlacement: function(error, element) {
+				  if (element.attr("name") == "shipToCountryCode" 
+					  || element.attr("name") == "shipToAreaCode"  
+				      || element.attr("name") == "shipToContactNumber" 
+				      || element.attr("name") == "shipToExtension" ){
+				      error.insertAfter("#shipToExtension");
+				    } else {
+				      error.insertAfter(element);
+				    }
+				  }
+    });
 
     var validateShipOption = jQuery("#shippingOptionForm");
     validateShipOption.validate();

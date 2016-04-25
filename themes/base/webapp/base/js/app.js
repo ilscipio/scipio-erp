@@ -46,6 +46,15 @@ $(function(){
 	if (typeof Pizza !== 'undefined') {
 		Pizza.init(); // Create charts
 	}
+	
+
+	//jQuery validate specific options
+	$.validator.setDefaults({
+	   	errorElement: "span",
+	   	errorClass: "error",
+	   	debug: true
+	 });
+	 
 });
 
 /* no longer needed; macros can decide where since patch

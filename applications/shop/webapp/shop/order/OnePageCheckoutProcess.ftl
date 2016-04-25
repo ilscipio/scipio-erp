@@ -220,6 +220,15 @@ under the License.
                   <div id="billingFormServerError" class="errorMessage"></div>
                 </@alert>
                 
+                <#-- Cato: default is now Y if billToContactMechId was not set on page load. Only case we don't is if there was an initial billing contact mech different from ship contact mech.
+                    old: checked=((useShippingAddressForBilling!"")=="Y") 
+                    NOTE: The values will be loaded by Javascript, which we can get away with and need to do anyway because the user may have changed
+                        the ship address since this page was loaded, so no point in doing statically 
+                    NOTE: The JS re-implements this logic its own way -->
+                <#assign useShipAddrForBillingBool = (((useShippingAddressForBilling!"")=="Y") || !billToContactMechId?has_content)>
+
+                <@field type="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling" type="checkbox" value="Y" checked=useShipAddrForBillingBool label=uiLabelMap.FacilityBillingAddressSameShipping />
+                
                 <@field type="input" id="firstNameOnCard" name="firstNameOnCard" required=true value=(firstNameOnCard!) label=uiLabelMap.PartyFirstName/>
                 <@field type="input" id="lastNameOnCard" name="lastNameOnCard" required=true value=(lastNameOnCard!) label=uiLabelMap.PartyLastName/>
                 <@field type="generic" label=uiLabelMap.PartyContactNumber required=true>  
@@ -257,10 +266,8 @@ under the License.
                     <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
                 </@field>
               </fieldset>
-              <fieldset class="col">
-                <@field type="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling" type="checkbox" value="Y" checked=(useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y") label=uiLabelMap.FacilityBillingAddressSameShipping />
-  
-                <div id="billingAddress"<#if useShippingAddressForBilling?has_content && (useShippingAddressForBilling!"")=="Y"> style="display:none"</#if>>
+              <fieldset class="col">  
+                <div id="billingAddress"<#if useShipAddrForBillingBool> style="display:none"</#if>>
                   <@field type="input" id="billToAddress1" name="billToAddress1" required=true size="30" value=(billToAddress1!) label=uiLabelMap.PartyAddressLine1/>
                   <@field type="input" id="billToAddress2" name="billToAddress2" value=(billToAddress2!) size="30" label=uiLabelMap.PartyAddressLine2/>
                   <@field type="input" id="billToCity" name="billToCity" required=true value=(billToCity!) label=uiLabelMap.CommonCity/>
@@ -273,7 +280,7 @@ under the License.
                   </@field>
                   <@field type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId" required=true label=uiLabelMap.CommonState>
                     <#if billToStateProvinceGeoId?has_content>
-                      <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
+                      <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo!(billToStateProvinceGeoId!)}</option>
                     <#else>
                       <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                     </#if>

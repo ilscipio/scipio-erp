@@ -21,6 +21,9 @@ var isShipStepValidate = false;
 var isShipOptionStepValidate = false;
 var isBillStepValidate = false;
 
+// Cato: Flag to request trigger reset of billing info when the form comes up
+var useResetBillingInfo = true;
+
 jQuery(document).ready(function(){
     // Cart
     var validateCart = jQuery("#cartForm");
@@ -58,6 +61,7 @@ jQuery(document).ready(function(){
     // Update Shipping Address
     jQuery('#savePartyAndShippingContact').click(function() {
         if (validateShip.valid()) {
+        	useResetBillingInfo = true; // Cato: This will trigger a reset of billing info (which may depend on shipping info, but not always)
             jQuery('#savePartyAndShippingContact').fadeOut('fast');
             jQuery('#processingShippingOptions').fadeIn('fast');
             if (createUpdateCustomerAndShippingAddress()){
@@ -116,7 +120,8 @@ jQuery(document).ready(function(){
     // For Billing Address Same As Shipping
     jQuery('#useShippingAddressForBilling').click(function() {
         useShippingAddressForBillingToggle();
-        validateBill.valid();
+        // Cato: this should happen upon submit only...
+        //validateBill.valid();
     });
 
     // Initiate Observing Edit Cart Events
@@ -253,10 +258,38 @@ function showEditBillingPanel() {
          hideOrderSubmitPanel();
          jQuery('#editBillingPanel').slideDown();
     }
-    if (jQuery('#shipToContactMechId').val() != jQuery('#billToContactMechId').val()) {
-        jQuery('#useShippingAddressForBilling').val('false');
-        jQuery('#billingAddress').slideDown();
-        jQuery('#useShippingAddressForBilling').val('N');
+    // Cato: We will only change these settings if it's the first time the panel is shown OR
+    // whenever ship info panel info gets resubmitted.
+    // Otherwise user loses input if he goes back and forth
+    if (useResetBillingInfo) {
+	    // Cato: New case: if there was no initial billing contact mech, we use shipping by default
+	    // IN ADDITION we can also pre-populate the first and last name
+	    if (!jQuery('#billToContactMechId').val()) {
+	    	// Cato: This doesn't work
+	    	//jQuery('#useShippingAddressForBilling').val('true');
+	    	copyShippingAddressToBilling(true); // Cato: override
+	    	copyShippingFieldsToBilling(false); // Cato: don't override these ones, no harm to keep names
+	    	jQuery('#billingAddress').slideUp();
+	    	// Cato: This doesn't make sense, value should always be "N"
+	    	//jQuery('#useShippingAddressForBilling').val('Y');
+	    	jQuery('#useShippingAddressForBilling').prop('checked', true);
+	    } else if (jQuery('#shipToContactMechId').val() != jQuery('#billToContactMechId').val()) {
+	    	// Cato: NOTE: I think we never transfer anything here because relying on a past or default bill method.
+	    	// If it was changed, it's still based on an existing bill method.
+	    	// Cato: This doesn't work
+	        //jQuery('#useShippingAddressForBilling').val('false');
+	        jQuery('#billingAddress').slideDown();
+	        // Cato: This doesn't make sense, value should always be "N"
+	        //jQuery('#useShippingAddressForBilling').val('N');
+	        jQuery('#useShippingAddressForBilling').prop('checked', false);
+	    } else if (jQuery('#shipToContactMechId').val() == jQuery('#billToContactMechId').val()) {
+	    	// Cato: New case: Even if contact mech IDs were the same we still have to retransfer these
+	    	// because they may have changed since page loads. I think if don't it becomes inconsistent, but
+	    	// it's not 100% clear.
+	    	copyShippingAddressToBilling(true); // Cato: override
+	    	copyShippingFieldsToBilling(false); // Cato: don't override these ones, no harm to keep names
+	    }
+	    useResetBillingInfo = false;
     }
 }
 
@@ -398,20 +431,64 @@ function setShippingOption() {
 // Billing
 function useShippingAddressForBillingToggle() {
     if (jQuery('#useShippingAddressForBilling').is(':checked') ) {
-        jQuery('#billToAddress1').val(jQuery('#shipToAddress1').val());
-        jQuery('#billToAddress2').val(jQuery('#shipToAddress2').val());
-        jQuery('#billToCity').val(jQuery('#shipToCity').val());
-        jQuery('#billToPostalCode').val(jQuery('#shipToPostalCode').val());
-        jQuery('#billToCountryGeoId').val(jQuery('#shipToCountryGeoId').val());
-        getAssociatedStateList('billToCountryGeoId', 'billToStateProvinceGeoId','advice-required-billToStateProvinceGeoId','billToStates');
-        jQuery('#useShippingAddressForBilling').val("Y");
-        jQuery('#billToStateProvinceGeoId').val(jQuery('#shipToStateProvinceGeoId').val());
+    	copyShippingAddressToBilling(true);
+    	// Cato: This doesn't make sense
+        //jQuery('#useShippingAddressForBilling').val("Y");
+    	jQuery('#useShippingAddressForBilling').prop('checked', true);
         jQuery('#billingAddress').slideUp();
     } else {
         jQuery('#billingAddress').slideDown();
-        jQuery('#useShippingAddressForBilling').val("N");
+        // Cato: This doesn't make sense
+        //jQuery('#useShippingAddressForBilling').val("N");
+        jQuery('#useShippingAddressForBilling').prop('checked', false);
     }
 }
+// Cato: Factored out copy of shipping address to billing, also FIXED
+// so that we first check if fields are empty before overriding
+function copyShippingAddressToBilling(override) {
+	if (override !== true) {
+		override = false;
+	}
+	if (override || !jQuery('#billToAddress1').val()) {
+		jQuery('#billToAddress1').val(jQuery('#shipToAddress1').val());
+	}
+	if (override || !jQuery('#billToAddress2').val()) {
+		jQuery('#billToAddress2').val(jQuery('#shipToAddress2').val());
+	}
+	if (override || !jQuery('#billToCity').val()) {
+	    jQuery('#billToCity').val(jQuery('#shipToCity').val());
+	}
+	if (override || !jQuery('#billToPostalCode').val()) {
+	    jQuery('#billToPostalCode').val(jQuery('#shipToPostalCode').val());
+	}
+	var prevCountry = jQuery('#billToCountryGeoId').val();
+	var newCountry = null;
+	var countryChanged = false;
+	if (override || !prevCountry) {
+		newCountry = jQuery('#shipToCountryGeoId').val();
+	    jQuery('#billToCountryGeoId').val(newCountry);
+	    if (newCountry != prevCountry) {
+	    	countryChanged = true;
+	    }
+	}
+    getAssociatedStateList('billToCountryGeoId', 'billToStateProvinceGeoId','advice-required-billToStateProvinceGeoId','billToStates');
+	if (override || !jQuery('#billToStateProvinceGeoId').val() || countryChanged) {
+	    jQuery('#billToStateProvinceGeoId').val(jQuery('#shipToStateProvinceGeoId').val());
+	}
+}
+// Cato: Copies shipping name to billing for convenience, but ONLY if they are not already filled
+function copyShippingFieldsToBilling(override) {
+	if (override !== true) {
+		override = false;
+	}
+	if (override || !jQuery('#firstNameOnCard').val()) {
+		jQuery('#firstNameOnCard').val(jQuery('#firstName').val());
+	}
+	if (override || !jQuery('#lastNameOnCard').val()) {
+		jQuery('#lastNameOnCard').val(jQuery('#lastName').val());
+	}
+}
+
 function processBillingAndPayment() {
     var result = false;
     jQuery.ajax({

@@ -330,6 +330,9 @@ under the License.
     <screen name="checkoutshippingaddress">
         <section>
             <actions>
+                <!-- Cato: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                    if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
+                    It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
@@ -353,6 +356,9 @@ under the License.
     <screen name="checkoutshippingoptions">
         <section>
             <actions>
+                <!-- Cato: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                    if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
+                    It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
@@ -397,6 +403,9 @@ under the License.
     <screen name="checkoutpayment">
         <section>
             <actions>
+                <!-- Cato: FIXME: This screen groovy must be reviewed so that it doesn't permit access to shipping options
+                    if the checkout process has not reached this point or the data was invalidated by modification of a prior step. 
+                    It is NOT sufficient to do this in events due to view overrides. -->
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 

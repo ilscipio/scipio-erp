@@ -229,7 +229,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/TransferInventoryItem.groovy"/>
+                <!-- <script location="component://product/webapp/facility/WEB-INF/actions/inventory/TransferInventoryItem.groovy"/> -->
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
@@ -244,6 +244,23 @@ under the License.
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TransferInventoryItemDetail">
+        
+        <section>
+             <actions>
+                <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/TransferInventoryItem.groovy"/>
+                <entity-one entity-name="Facility" value-field="facility"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+            </actions>
+            <widgets>
+		        <platform-specific>
+		            <html><html-template location="component://product/webapp/facility/inventory/TransferInventoryItemDetail.ftl"/></html>
+		        </platform-specific>
             </widgets>
         </section>
     </screen>

@@ -37,81 +37,56 @@ under the License.
         </@row>
     </form>
 <#else>-->
-    <#if !(inventoryTransfer??)>
-        <form method="post" action="<@ofbizUrl>CreateInventoryTransfer</@ofbizUrl>" name="transferform">
-        <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId"  size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem"/>
-         <@script>
-            jQuery(document).ready(function() {
-                $("input[name=inventoryItemId]").focusout(function() {
-                    console.log('show inventory item id for ' + $('input[name=inventoryItemId]').val());
-                    $.ajax({
-                        url : 'TransferInventoryItem',
-                        method: 'POST',
-                        data: { 'inventoryItemId' :  "$('input[name=inventoryItemId]').val())" }
-                    }).done(function(msg) {
-                        console.log("message ===> " + msg);
+    <@section id="inventoryItemDetail">
+        <#if !(inventoryTransfer??)>
+            <form method="post" action="<@ofbizUrl>CreateInventoryTransfer</@ofbizUrl>" name="transferform">
+            <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId"  size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem"/>
+             <@script>
+                jQuery(document).ready(function() {
+                    $("input[name=inventoryItemId]").focusout(function() {
+                        console.log('show inventory item id for ' + $('input[name=inventoryItemId]').val());
+                        if ($('input[name=inventoryItemId]').val().length > 0) {
+                            $.ajax({
+                                url : 'TransferInventoryItem',
+                                method: 'POST',
+                                data: { 'inventoryItemId' :  "$('input[name=inventoryItemId]').val())", 'facilityId': "${facilityId!}" }
+                            }).done(function(data) {
+                                $("#inventoryItemDetail").html(data);
+                            });
+                        }
                     });
+            
                 });
-        
-            });
-        </@script>
-    <#else>
-        <form method="post" action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" name="transferform">
-        <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId!}" />
-        <input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
-        <input type="hidden" name="facilityId" value="${facilityId!}" />            
-        <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
-        <@field type="display" label=uiLabelMap.ProductInventoryItemId>
-            ${inventoryItemId}
-        </@field>
-         <@field type="display" label=uiLabelMap.ProductInventoryItemTypeId>
-        <#if inventoryItemType??>
-            ${(inventoryItemType.get("description",locale))!}
+            </@script>
+            
+        <#else>
+            <form method="post" action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" name="transferform">
+            <#include "InventoryItems.ftl"/>
         </#if>
-        </@field>
-        <@field type="display" label=uiLabelMap.ProductProductId>
-            <#if inventoryItem?? && (inventoryItem.productId)??>
-                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${(inventoryItem.productId)!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.productId)!}</a>
-            </#if>
-        </@field>
-        <@field type="display" label=uiLabelMap.CommonStatus>
-            ${(inventoryStatus.get("description",locale))!("--")}
-        </@field>
-    
-        <@field type="display" label=uiLabelMap.ProductComments>
-            ${(inventoryItem.comments)!("--")}
-        </@field>
-    
-        <@field type="display" label=uiLabelMap.ProductSerialAtpQoh>
-            <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                    ${(inventoryItem.availableToPromiseTotal)!}&nbsp;
-                    /&nbsp;${(inventoryItem.quantityOnHandTotal)!}
-            <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
-                ${(inventoryItem.serialNumber)!}
-            <#elseif inventoryItem??>
-                <@commonMsg type="error">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@commonMsg>
-            </#if>
-        </@field>
-    </#if>
+    </@section>
   
     <@field type="select" label=uiLabelMap.ProductTransferStatus name="statusId">
         <#if (inventoryTransfer.statusId)??>
             <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
             <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
         </#if>
-        <#list statusItems as statusItem>
-        <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
-        </#list>
+        <#if statusItems?has_content>
+            <#list statusItems as statusItem>
+            <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
+            </#list>
+        </#if>
     </@field>
     <@field type="generic" label=uiLabelMap.ProductTransferSendDate>
-        <@field type="input" name="sendDate" value=((inventoryTransfer.sendDate)!) size="22" />        
+        <@field type="datetime" dateType="date-time" name="sendDate" value=((inventoryTransfer.sendDate)!) size="22" />        
     </@field>
     <#if !(inventoryTransfer??)>
         <@field type="generic" label=uiLabelMap.ProductToFacilityContainer>
             <@field type="select" name="facilityIdTo" tooltip=(uiLabelMap.ProductSelectFacility!)>
-                <#list facilities as nextFacility>
-                <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
-                </#list>
+                <#if facilities?has_content>
+                    <#list facilities as nextFacility>
+                    <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
+                    </#list>
+                </#if>
             </@field>
             <@field type="input" name="containerIdTo" value=((inventoryTransfer.containerIdTo)!) size="20" maxlength="20" tooltip=(uiLabelMap.ProductOrEnterContainerId!)/>
         </@field>

@@ -1,7 +1,7 @@
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("TransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_nav!} ${styles.action_update!}" />    
-      <@menuitem type="link" href=makeOfbizUrl("FindFacilityTransfers?facilityId=${facilityId}&completeRequested=true") text=uiLabelMap.ProductCompleteRequestedTransfers class="+${styles.action_nav!} ${styles.action_find!}" />
+        <@menuitem type="link" href=makeOfbizUrl("NewTransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindFacilityTransfers?facilityId=${facilityId}&completeRequested=true") text=uiLabelMap.ProductCompleteRequestedTransfers class="+${styles.action_nav!} ${styles.action_find!}" />         
   </@menu>
 </#macro>
 
@@ -10,7 +10,12 @@
         <input type="hidden" name="facilityId" value="${facilityId}" />
         <@row>
             <@cell columns=12>
-                <@field type="input" label=uiLabelMap.ProductInventoryId name="inventoryId" value="" size="20" maxlength="50" />
+                <@field type="input" label=uiLabelMap.ProductInventoryItemId name="inventoryId" value="" size="20" maxlength="50" />
+            </@cell>
+        </@row>
+        <@row>
+            <@cell columns=12>
+                <@field type="input" label=uiLabelMap.ProductProductId name="productId" value="" size="20" maxlength="50" />
             </@cell>
         </@row>
         <@row>

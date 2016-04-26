@@ -528,6 +528,12 @@ under the License.
     <!-- ================ Inventory Transfer Requests ================= -->
     <request-map uri="TransferInventoryItem">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="getTransferInventoryItem"/>
+        <response name="success" type="view" value="TransferInventoryItemDetail"/>
+        <response name="error" type="none" />
+    </request-map>
+    <request-map uri="NewTransferInventoryItem">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="TransferInventoryItem"/>
     </request-map>
     <request-map uri="CreateInventoryTransfer">
@@ -1365,6 +1371,8 @@ under the License.
     <view-map name="ViewInventoryItemDetail" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewInventoryItemDetail"/>
     <view-map name="EditInventoryItemLabels" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditInventoryItemLabels"/>
     <view-map name="TransferInventoryItem" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItem"/>
+    <view-map name="TransferInventoryItemDetail" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail"/>
+    
     <view-map name="ReceiveInventory" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveInventory"/>
     <view-map name="ReceiveReturn" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveReturn"/>
     <view-map name="UpdatedInventoryItemStatus" type="screen" page="component://product/widget/facility/FacilityScreens.xml#UpdatedInventoryItemStatus"/>

@@ -970,6 +970,9 @@ public class ShoppingCartEvents {
      * returns "error". Otherwise, returns "success".
      * <p>
      * Helps with template compatibility.
+     * <p>
+     * NOTE: There is a org.ofbiz.order.shoppingcart.CheckOutEvents.cartNotEmpty, but it returns
+     * error when cart empty.
      */
     public static String checkCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);

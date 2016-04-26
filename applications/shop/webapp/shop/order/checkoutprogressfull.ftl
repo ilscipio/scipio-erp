@@ -21,22 +21,22 @@ under the License.
 <@section>
 <#if checkoutMode == "registered">
     <@nav type="steps" activeElem=(activeStep!"cart")>
-        <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
-        <@step name="shippingAddress" icon="fa fa-building">Shipping Address</@step>
-        <@step name="shippingOptions" icon="fa fa-truck">Shipping Options</@step>
-        <@step name="billing" icon="fa fa-credit-card">Billing</@step>
+        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>Shipping Address</@step>
+        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>Shipping Options</@step>
+        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>Billing</@step>
         <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
     </@nav>
 <#else>
     <#-- Cato: Migrated from anonymousCheckoutLinks.ftl -->
     <@nav type="steps" activeElem=(activeStep!"cart")>
-        <@step name="cart" icon="fa fa-cart-arrow-down">Cart</@step>
-        <@step name="customer" icon="fa fa-user">Personal Information</@step>
-        <@step name="shippingAddress" icon="fa fa-building">Shipping Address</@step>
-        <@step name="shippingOptions" icon="fa fa-truck">Shipping Options</@step>
-        <@step name="billing" icon="fa fa-credit-card">Billing</@step>
+        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
+        <@step name="customer" icon="fa fa-user" href=makeOfbizUrl("setCustomer")>Personal Information</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>Shipping Address</@step>
+        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("setShipOptions")>Shipping Options</@step>
+        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentOption")>Billing</@step>
         <#-- Cato: TODO? Merge with billing? -->
-        <@step name="billingInfo" icon="fa fa-credit-card">Billing Information</@step>
+        <@step name="billingInfo" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}")>Billing Information</@step>
         <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
     </@nav>
 </#if>

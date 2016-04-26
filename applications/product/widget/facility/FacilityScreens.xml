@@ -185,7 +185,7 @@ under the License.
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
                 <entity-one entity-name="Facility" value-field="facility"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacilityTransfers.groovy"/>
+                
                 <set field="title" value="${uiLabelMap.ProductFacilityTransfers} ${facilityId}"/>
             </actions>
             <widgets>
@@ -203,9 +203,16 @@ under the License.
                         <platform-specific>
                            <html><html-template location="component://product/webapp/facility/facility/FindFacilityTransfers.ftl"/></html>
                         </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/facility/FacilityTransferList.ftl"/></html>
-                        </platform-specific>
+                        
+                        <section>
+                            <actions>
+                                
+                            </actions>
+                            <widgets>
+                                <include-screen name="CatoFacilityTransferList"/>
+                            </widgets>
+                        </section>
+                        
                         <!-- <section>
                            <condition>
                                 <and>
@@ -223,6 +230,20 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    
+    <screen name="CatoFacilityTransferList">
+        <section>
+            <actions>
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacilityTransfers.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <html><html-template location="component://product/webapp/facility/facility/FacilityTransferList.ftl"/></html>
+               </platform-specific>
+            </widgets>
+        </section>
+        
     </screen>
     
     <screen name="TransferInventoryItem">
@@ -255,9 +276,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
             </actions>
             <widgets>
-		        <platform-specific>
-		            <html><html-template location="component://product/webapp/facility/inventory/TransferInventoryItemDetail.ftl"/></html>
-		        </platform-specific>
+                <platform-specific><html><html-template location="component://product/webapp/facility/inventory/TransferInventoryItemDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

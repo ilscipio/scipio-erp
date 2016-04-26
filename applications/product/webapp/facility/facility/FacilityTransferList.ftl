@@ -6,22 +6,22 @@
 
 <@section menuContent=menuContent>
     <#if transferList?has_content>
-        <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
+        <form action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId!}" />        
         
-            <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
                         <@th>${uiLabelMap.ProductInventoryTransfer}</@th>
                         <@th>${uiLabelMap.ProductInventoryItemId}</@th>
                         <@th>${uiLabelMap.ProductFacilityId}</@th>
-                        <@th>${uiLabelMap.ProductFacilityName}</@th>
-                        <@th>${uiLabelMap.ProductLocationSeqIdTo}</@th>
+                        <@th>${uiLabelMap.FormFieldTitle_facilityName}</@th>
+                        <@th>${uiLabelMap.ProductLocationSeqIdFrom}</@th>
                         <@th>${uiLabelMap.ProductId}</@th>
                         <@th>${uiLabelMap.ProductProductName}</@th>
                         <@th>${uiLabelMap.ProductSerialNumber}</@th>
-                        <@th>${uiLabelMap.ProductLocationSeqIdFrom}</@th>
+                        <@th>${uiLabelMap.ProductLocationSeqIdTo}</@th>
                         <@th>${uiLabelMap.ProductAtpQoh}</@th>
                         <@th>${uiLabelMap.CommonSendDate}</@th>
                         <@th>${uiLabelMap.CommonReceiveDate}</@th>
@@ -32,28 +32,30 @@
                     </@tr>
                 </@thead>
                 <#-- Header Ends-->
-                <@tbody>
+                
                     <#list fromTransfers as transfer>
                         <#assign inventoryItem = delegator.findOne("InventoryItem", { "inventoryItemId" : transfer.inventoryItemId }, false) />
-                        <#assign product = delegator.findOne("Product", { "productId" : transfer.productId}, false)!>
-                        <#assign statusItem = delegator.findOne("StatusItem", { "statusId" : inventoryItem.statusId }, true) />
+                        <#assign facility = delegator.findOne("Facility", { "facilityId" : inventoryItem.facilityId }, true) />
+                        <#assign product = delegator.findOne("Product", { "productId" : inventoryItem.productId}, false)!>
+                        <#assign statusItem = delegator.findOne("StatusItem", { "statusId" : transfer.statusId }, true) />
                         <@tr>
                             <@td>${transfer.inventoryTransferId}</@td>
                             <@td>${transfer.inventoryItemId}</@td>
                             <@td>${transfer.facilityId}</@td>
-                            <@td>${transfer.facilityName!}</@td>
-                            <@td>${transfer.locationSeqId}</@td>
+                            <@td>${facility.facilityName!}</@td>
+                            <@td>${transfer.locationSeqId!}</@td>                            
                             <@td><a href="<@ofbizUrl>${product.productId}</@ofbizUrl>">${product.productId}</a></@td>
-                            <@td>${product.productName!}</@td>S                            
-                            <@td>${inventoryItem.serialName!}</@td>
+                            <@td>${product.productName!}</@td>                        
+                            <@td>${inventoryItem.serialNumber!}</@td>
+                            <@td>${transfer.locationSeqIdTo!}</@td>
                             <@td>${inventoryItem.availableToPromiseTotal!}/${inventoryItem.quantityOnHandTotal!}</@td>
-                            <@td>${inventoryItem.sendDate}</@td>
-                            <@td>${inventoryItem.recieveDate}</@td>
-                            <@td>${inventoryItem.sendDate}</@td>
-                            <@td>${statusItem.description}</@td>
+                            <@td>${transfer.sendDate!}</@td>
+                            <@td>${transfer.receiveDate!}</@td>
+                            <@td></@td>
+                            <@td><#if statusItem?has_content>${statusItem.description!}</#if></@td>
                         </@tr>
                     </#list>
-                </@tbody>
+                
             </@table>    
         </form>
     </#if>

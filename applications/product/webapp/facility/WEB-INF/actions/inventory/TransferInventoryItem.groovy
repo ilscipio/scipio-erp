@@ -26,10 +26,7 @@ import org.ofbiz.entity.util.*
     inventoryTransferId = parameters.inventoryTransferId;
     inventoryItemId = parameters.inventoryItemId;
     inventoryTransfer = null;
-    Debug.log("facilityId ============> " + facilityId);
-    Debug.log("inventoryTransferId ============> " + inventoryTransferId);
-    Debug.log("inventoryItemId ============> " + inventoryItemId);
-    
+
     if (inventoryTransferId) {
         inventoryTransfer = from("InventoryTransfer").where("inventoryTransferId", inventoryTransferId).queryOne();
         if (inventoryTransfer) {
@@ -52,12 +49,11 @@ import org.ofbiz.entity.util.*
         facility = from("Facility").where("facilityId", facilityId).queryOne();
     }
     
-    String illegalInventoryItem = null;
     if (inventoryItemId) {
         context.inventoryItemId = inventoryItemId
         inventoryItem = from("InventoryItem").where("inventoryItemId", inventoryItemId).queryOne();
         if (facilityId && inventoryItem && inventoryItem.facilityId && !inventoryItem.facilityId.equals(facilityId)) {
-            illegalInventoryItem = "Inventory item not found for this facility.";
+            context.illegalInventoryItem = "Inventory item not found for this facility.";
             inventoryItem = null;
         }
         if (inventoryItem) {
@@ -96,7 +92,6 @@ import org.ofbiz.entity.util.*
         }
     } else {
         statusItems = from("StatusItem").where("statusTypeId", "INVENTORY_XFER_STTS").orderBy("sequenceId").queryList();
-        Debug.log("statusItems =========> " + statusItems);
         if (statusItems) {
             context.statusItems = statusItems;
         }

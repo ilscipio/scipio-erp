@@ -31713,5 +31713,15 @@
         <value xml:lang="es">Métodos de pago</value>
         <value xml:lang="fr">Méthodes de paiement</value>
         <value xml:lang="it">Metodos di Pagamento</value>
-    </property>    
+    </property> 
+    <property key="ProductLocationSeqIdTo">
+        <value xml:lang="en">Location Seq Id To</value>
+    </property>
+    <property key="ProductLocationSeqIdFrom">
+        <value xml:lang="en">Location Seq Id From</value>
+    </property>
+    <property key="ProductFacilityTransfers">
+        <value xml:lang="en">Inventory transfers</value>
+    </property> 
+    
 </resource>

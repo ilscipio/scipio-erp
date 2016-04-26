@@ -17,9 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#if illegalInventoryItem??>
-    <@commonMsg type="error">${illegalInventoryItem}</@commonMsg>
-</#if>
+
 <@menu type="button">
     <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") class="+${styles.action_run_sys!} ${styles.action_export!}" text=uiLabelMap.CommonPrint />
 </@menu>
@@ -32,14 +30,17 @@ under the License.
 
 <form method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="transferform">
     <#if !(inventoryTransfer??)>         
-         <@script>
+        
+        <@section id="inventoryItemDetail">
+            <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true/>             
+        </@section>
+        <@script>
             jQuery(document).ready(function() {
-                $('#inventoryItemDetail input[type=submit]').click(function(e) {
+                $('body').on('click','#inventoryItemDetail input[type=submit].fi-widget', function(e) {
                     e.preventDefault();
                     submitInventoryItemId();
                 });                    
-                function submitInventoryItemId(){
-                    console.log('show inventory item id for ' + $('input[name=inventoryItemId]').val());
+                function submitInventoryItemId() {                    
                     if ($('input[name=inventoryItemId]').val().length > 0) {
                         $.ajax({
                             url : 'TransferInventoryItemDetail',
@@ -52,9 +53,6 @@ under the License.
                 }
             });
         </@script>
-        <@section id="inventoryItemDetail">
-            <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true/>
-        </@section>
     <#else>
         <#include "TransferInventoryItemDetail.ftl"/>
     </#if>

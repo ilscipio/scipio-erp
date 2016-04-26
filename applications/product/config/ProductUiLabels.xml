@@ -9172,7 +9172,7 @@
     </property>
     <property key="PageTitleEditFacilityInventoryItems">
         <value xml:lang="de">Einrichtung Bestandspositionen für ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Edit Warehouse Inventory Items for ${warehouse.facilityName} [${warehouse.facilityId}]</value>
+        <value xml:lang="en">Edit Warehouse Inventory Items for ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="es">Editar Artículos del Inventario de un Almacén</value>
         <value xml:lang="fr">Modification des lignes de stocks pour ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Aggiorna Righe Inventario Stabilimento</value>
@@ -11088,7 +11088,7 @@
     </property>
     <property key="PageTitleTransferInventoryItem">
         <value xml:lang="de">Bestandspositionen transferieren von ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Transfer Inventory Item From ${warehouse.facilityName} [${warehouse.facilityId}]</value>
+        <value xml:lang="en">Transfer Inventory Item From ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="es">Transferir Artículo de Inventario desde ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Transfert de stock depuis ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Trasferimento Riga Inventario</value>
@@ -26327,7 +26327,7 @@
     </property>
     <property key="ProductReceiveInventory">
         <value xml:lang="de">Bestand entgegennehmen nach ${facility.facilityName} [${facility.facilityId}]</value>
-        <value xml:lang="en">Receive Inventory Into ${warehouse.facilityName} [${warehouse.facilityId}]</value>
+        <value xml:lang="en">Receive Inventory Into ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="es">Recibir Inventario en ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="fr">Stock à recevoir dans ${facility.facilityName} [${facility.facilityId}]</value>
         <value xml:lang="it">Ricevi Inventario</value>

@@ -326,7 +326,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="facilityId" value="${parameters.facilityId}" />
-                <set field="title" value="${uiLabelMap.ProductFacilityInventoryItems} ${facilityId}"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditFacilityInventoryItems}"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>

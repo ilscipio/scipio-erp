@@ -532,7 +532,7 @@ under the License.
     </request-map>
     <request-map uri="TransferInventoryItemDetail">
         <security https="true" auth="true" />
-        <event type="service" path="" invoke="getTransferInventoryItem"/>
+       <!--  <event type="service" path="" invoke="getTransferInventoryItem"/> -->
         <response name="success" type="view" value="TransferInventoryItemDetail"/>
         <response name="error" type="none" />
     </request-map>

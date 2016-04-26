@@ -1,10 +1,15 @@
-<input type="hidden" name="inventoryTransferId" value="${inventoryTransferId!}" />
-<input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
-<input type="hidden" name="facilityId" value="${facilityId!}" />            
-<input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
-<@field type="display" label=uiLabelMap.ProductInventoryItemId>
-    ${inventoryItemId!}
-</@field>
+<input type="hidden" name="facilityId" value="${facilityId!}" />        
+
+<#if !(inventoryTransfer??)>
+    <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true value="${inventoryItemId!}" />
+<#else>
+    <@field type="display" label=uiLabelMap.ProductInventoryItemId>
+        ${inventoryItemId!}
+    </@field>
+    <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId!}" />
+    <input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
+    <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
+</#if>
  <@field type="display" label=uiLabelMap.ProductInventoryItemTypeId>
 <#if inventoryItemType??>
     ${(inventoryItemType.get("description",locale))!}
@@ -25,8 +30,7 @@
 
 <@field type="display" label=uiLabelMap.ProductSerialAtpQoh>
     <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-            ${(inventoryItem.availableToPromiseTotal)!}&nbsp;
-            /&nbsp;${(inventoryItem.quantityOnHandTotal)!}
+            ${(inventoryItem.availableToPromiseTotal)!}&nbsp;/&nbsp;${(inventoryItem.quantityOnHandTotal)!}
     <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
         ${(inventoryItem.serialNumber)!}
     <#elseif inventoryItem??>

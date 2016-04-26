@@ -21,11 +21,14 @@ import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 
-public Map getTransferInventoryItem() {
-    facilityId = context.facilityId;
-    inventoryTransferId = context.inventoryTransferId;
-    inventoryItemId = context.inventoryItemId;
+//public Map getTransferInventoryItem() {
+    facilityId = parameters.facilityId;
+    inventoryTransferId = parameters.inventoryTransferId;
+    inventoryItemId = parameters.inventoryItemId;
     inventoryTransfer = null;
+    Debug.log("facilityId ============> " + facilityId);
+    Debug.log("inventoryTransferId ============> " + inventoryTransferId);
+    Debug.log("inventoryItemId ============> " + inventoryItemId);
     
     if (inventoryTransferId) {
         inventoryTransfer = from("InventoryTransfer").where("inventoryTransferId", inventoryTransferId).queryOne();
@@ -43,6 +46,7 @@ public Map getTransferInventoryItem() {
     
     facility = from("Facility").where("facilityId", facilityId).queryOne();
    
+    context.facilityId = facilityId;
     context.facility = facility;
     if (facilityId) {
         facility = from("Facility").where("facilityId", facilityId).queryOne();
@@ -50,6 +54,7 @@ public Map getTransferInventoryItem() {
     
     String illegalInventoryItem = null;
     if (inventoryItemId) {
+        context.inventoryItemId = inventoryItemId
         inventoryItem = from("InventoryItem").where("inventoryItemId", inventoryItemId).queryOne();
         if (facilityId && inventoryItem && inventoryItem.facilityId && !inventoryItem.facilityId.equals(facilityId)) {
             illegalInventoryItem = "Inventory item not found for this facility.";
@@ -76,7 +81,6 @@ public Map getTransferInventoryItem() {
     
     // status items
     List statusItems;
-    Debug.log("context.statusItems =========> " + context.statusItems);
     if (inventoryTransfer && inventoryTransfer.statusId) {
         statusChange = from("StatusValidChange").where("statusId", inventoryTransfer.statusId).queryList();
         if (statusChange) {
@@ -94,8 +98,8 @@ public Map getTransferInventoryItem() {
         statusItems = from("StatusItem").where("statusTypeId", "INVENTORY_XFER_STTS").orderBy("sequenceId").queryList();
         Debug.log("statusItems =========> " + statusItems);
         if (statusItems) {
-//            context.statusItems = statusItems;
+            context.statusItems = statusItems;
         }
     }
 
-}
+//}

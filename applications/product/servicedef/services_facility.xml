@@ -972,15 +972,4 @@ under the License.
         <override name="latitude" optional="false"/>
         <override name="longitude" optional="false"/>
     </service>
-    
-    
-    <service name="getTransferInventoryItem" engine="groovy" default-entity-name="InventoryItem"
-                location="component://product/webapp/facility/WEB-INF/actions/inventory/TransferInventoryItem.groovy" invoke="getTransferInventoryItem">
-        <description>Gets the inventoryItemId </description>
-        <permission-service service-name="facilityGenericPermission" main-action="VIEW"/>
-        <attribute name="facilityId" mode="IN" type="String"/>
-        <attribute name="inventoryItemId" mode="IN" type="String"/>
-        <auto-attributes include="all" mode="IN" optional="true"/>
-    </service>
-    
 </services>

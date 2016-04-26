@@ -24,19 +24,6 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") class="+${styles.action_run_sys!} ${styles.action_export!}" text=uiLabelMap.CommonPrint />
 </@menu>
 
-<#--<#if !(inventoryItem??)>
-    <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
-        <input type="hidden" name="facilityId" value="${facilityId}" />
-        <@row>
-            <@cell columns=9>
-                
-            </@cell>
-            <@cell columns=3>
-                <@field type="submit" text=uiLabelMap.ProductGetItem class="+${styles.link_run_sys!} ${styles.action_transfer!}" />
-            </@cell>
-        </@row>
-    </form>
-<#else>-->
 <#if !(inventoryTransfer??)>
     <#assign formAction="CreateInventoryTransfer" />
 <#else>
@@ -44,28 +31,29 @@ under the License.
 </#if>
 
 <form method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="transferform">
-    <#if !(inventoryTransfer??)>
-        <@section id="inventoryItemDetail">        
-             <@field type="generic" label=uiLabelMap.ProductInventoryItemId>
-                <@field type="lookup" inline=true label=uiLabelMap.ProductInventoryItemId name="inventoryItemId"  size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem"/>
-                <@field type="submit" inline=true submitType="button" text=uiLabelMap.CommonFind id="findInventoryItem" />
-             </@field>
-             <@script>
-                jQuery(document).ready(function() {
-                    $("#findInventoryItem").click(function() {
-                        console.log('show inventory item id for ' + $('input[name=inventoryItemId]').val());
-                        if ($('input[name=inventoryItemId]').val().length > 0) {
-                            $.ajax({
-                                url : 'TransferInventoryItemDetail',
-                                method: 'POST',
-                                data: { 'inventoryItemId' :  "$('input[name=inventoryItemId]').val())", 'facilityId': "${facilityId!}" }
-                            }).done(function(data) {
-                                $("#inventoryItemDetail").html(data);
-                            });
-                        }
-                    });
-                });
-            </@script>
+    <#if !(inventoryTransfer??)>         
+         <@script>
+            jQuery(document).ready(function() {
+                $('#inventoryItemDetail input[type=submit]').click(function(e) {
+                    e.preventDefault();
+                    submitInventoryItemId();
+                });                    
+                function submitInventoryItemId(){
+                    console.log('show inventory item id for ' + $('input[name=inventoryItemId]').val());
+                    if ($('input[name=inventoryItemId]').val().length > 0) {
+                        $.ajax({
+                            url : 'TransferInventoryItemDetail',
+                            method: 'POST',
+                            data: { 'inventoryItemId' : $('input[name=inventoryItemId]').val(), 'facilityId': "${facilityId!}" }
+                        }).done(function(data) {
+                            $("#inventoryItemDetail").html(data);
+                        });
+                    }
+                }
+            });
+        </@script>
+        <@section id="inventoryItemDetail">
+            <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true/>
         </@section>
     <#else>
         <#include "TransferInventoryItemDetail.ftl"/>

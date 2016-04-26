@@ -922,7 +922,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     requiredTooltip         = tooltip to use when field is required. this is overridden by regular tooltip
                               for this, can prefix with "#LABEL:" string which indicates to take the named label from uiLabelMap.
     postfix                 = ((boolean), default: false) Controls whether an extra area is appended after widget area
-    postfixSize             = ((int), default: 1) Manual postfix size, in (large) grid columns
+    postfixColumns          = ((int), default: 1) Manual postfix size, in (large) grid columns
     postfixContent          = ((string)|(macro)) Manual postfix markup/content - set to boolean false to prevent any content (but not area container)
                               If macro, the macro must accept a single argument, {{{args}}}, a map of arguments.
     postfixContentArgs      = ((map)) Optional map of arguments to pass to {{{postfixContent}}} macro, if macro
@@ -1145,7 +1145,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "cols":"50", "dateType":"date-time", "dateDisplayType":"",  "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
   "tooltip":"", "totalColumns":"", "widgetPostfixColumns":"", "widgetPostfixCombined":"", "norows":false, "nocells":false, "container":"", "widgetOnly":"", "containerId":"", "containerClass":"", "containerStyle":"",
-  "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
+  "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixColumns":"", "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
@@ -1511,7 +1511,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         "origArgs":origArgs, "passArgs":passArgs}>
   </#if>
       
-  <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixSize=postfixSize 
+  <@field_markup_container type=type fieldsType=fieldsType totalColumns=totalColumns widgetPostfixColumns=widgetPostfixColumns widgetPostfixCombined=widgetPostfixCombined postfix=postfix postfixColumns=postfixColumns 
     postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle
     preWidgetContent=preWidgetContent postWidgetContent=postWidgetContent preLabelContent=preLabelContent postLabelContent=postLabelContent prePostfixContent=prePostfixContent postPostfixContent=postPostfixContent
@@ -1854,7 +1854,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     nested content is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
 <#macro field_markup_container type="" fieldsType="" totalColumns="" widgetPostfixColumns="" widgetPostfixCombined="" 
-    postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
+    postfix=false postfixColumns=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" 
     collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" containerStyle=""
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
@@ -1881,7 +1881,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       can't be calculated statically in the styles hash -->
   <#local defaultGridStyles = getDefaultFieldGridStyles({"totalColumns":totalColumns, "widgetPostfixColumns":widgetPostfixColumns, 
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":labelArea, 
-    "labelInRow":labelInRow, "postfix":postfix, "postfixSize":postfixSize,
+    "labelInRow":labelInRow, "postfix":postfix, "postfixColumns":postfixColumns,
     "fieldsType":fieldsType })>
   <#-- NOTE: For inverted, we don't swap the defaultGridStyles grid classes, only the user-supplied and identifying ones -->
 
@@ -2057,7 +2057,7 @@ NOTE: This is used both internally by @field and in some cases is also needed in
 <#-- calculates the default @field grid styles - used unless overridden by @field's caller -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
   "totalColumns":"", "widgetPostfixColumns":"", "labelArea":true, "labelInRow":true,
-  "postfix":false, "postfixSize":"", "isLargeParent":"", "labelSmallColDiff":"",
+  "postfix":false, "postfixColumns":"", "isLargeParent":"", "labelSmallColDiff":"",
   "widgetPostfixCombined":false, "fieldsType":""
 }>
 <#function getDefaultFieldGridStyles args={} catchArgs...>
@@ -2073,8 +2073,8 @@ NOTE: This is used both internally by @field and in some cases is also needed in
     <#local totalColumns = styles["fields_" + fieldsType + "_totalcolumns"]!styles["fields_default_totalcolumns"]!12>
   </#if>
   <#local widgetPostfixColumnsDiff = styles["fields_" + fieldsType + "_widgetpostfixcolumnsdiff"]!styles["fields_default_widgetpostfixcolumnsdiff"]!2>
-  <#if !postfixSize?has_content>
-    <#local postfixSize = styles["fields_" + fieldsType + "_postfixsize"]!styles["fields_default_postfixsize"]!1>
+  <#if !postfixColumns?has_content>
+    <#local postfixColumns = styles["fields_" + fieldsType + "_postfixsize"]!styles["fields_default_postfixsize"]!1>
   </#if>
   <#if !labelSmallColDiff?has_content>
     <#local labelSmallColDiff = styles["fields_" + fieldsType + "_labelsmallcoldiff"]!styles["fields_default_labelsmallcoldiff"]!1>
@@ -2096,7 +2096,7 @@ NOTE: This is used both internally by @field and in some cases is also needed in
   </#if>
 
   <#if postfix>
-    <#local columnspostfix = postfixSize>
+    <#local columnspostfix = postfixColumns>
   <#else>
     <#local columnspostfix = 0>
   </#if>

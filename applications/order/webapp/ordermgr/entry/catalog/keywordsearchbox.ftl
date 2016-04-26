@@ -28,7 +28,7 @@ under the License.
         </@row>
         <#-- ALTERNATIVE (example):
         <#assign postfixContent><a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a></#assign>
-        <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) collapse=true labelArea=false postfixSize=3 postfix=true postfixContent=postfixContent/>
+        <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) collapse=true labelArea=false postfixColumns=3 postfix=true postfixContent=postfixContent/>
         -->
     </form>
 

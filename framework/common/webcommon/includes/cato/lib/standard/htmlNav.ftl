@@ -148,9 +148,10 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    href                    = link (if not disabled or active)
 -->
 <#assign step_defaultArgs = {
-  "name":"", "icon":"", "completed":"", "disabled":"", "active":"", "class":"", "passArgs":{}
+  "name":"", "icon":"", "completed":"", "disabled":"", "active":"", "class":"", "href":"", "passArgs":{}
 }>
 <#macro step args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.step_defaultArgs)>
@@ -175,12 +176,12 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
       </#if>
     <#elseif (stepIndex > activeStepIndex)>
       <#if !disabled?is_boolean>
-        <#local disabled = false>
+        <#local disabled = true>
       </#if> 
     <#else>
       <#-- this shouldn't happen?... just set to disabled in case -->
       <#if !disabled?is_boolean>
-        <#local disabled = false>
+        <#local disabled = true>
       </#if> 
     </#if>
   </#if>
@@ -194,15 +195,22 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
   <#if !active?is_boolean>
     <#local active = false>
   </#if>
-  <@step_markup class=class icon=icon completed=completed disabled=disabled active=active origArgs=origArgs passArgs=passArgs><#nested></@step_markup>
+  <@step_markup class=class icon=icon completed=completed disabled=disabled active=active 
+    href=href origArgs=origArgs passArgs=passArgs><#nested></@step_markup>
   <#local dummy = setRequestVar("catoNavEntryIndex", stepIndex + 1)>
 </#macro>
 
 <#-- @step main markup - theme override -->
-<#macro step_markup class="" icon="" completed=false disabled=false active=false origArgs={} passArgs={} catchArgs...>
+<#macro step_markup class="" icon="" completed=false disabled=false active=false href="" origArgs={} passArgs={} catchArgs...>
   <li class="${styles.nav_step!}<#if active> ${styles.nav_step_active!}</#if><#if disabled> ${styles.nav_step_disabled!}</#if> ${class!""}">
+    <#if href?has_content && !disabled && !active>
+      <a href="${escapeFullUrl(href, 'html')}">
+    </#if>
     <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${icon}</#if>"></i></#if>
     <#nested>
+    <#if href?has_content && !disabled && !active>
+      </a>
+    </#if>
   </li>
 </#macro>
 

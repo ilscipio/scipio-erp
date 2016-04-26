@@ -229,9 +229,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
-                <!-- <script location="component://product/webapp/facility/WEB-INF/actions/inventory/TransferInventoryItem.groovy"/> -->
                 <set field="facilityId" from-field="parameters.facilityId"/>
-                <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.PageTitleTransferInventoryItem}"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
@@ -249,7 +247,6 @@ under the License.
     </screen>
     
     <screen name="TransferInventoryItemDetail">
-        
         <section>
              <actions>
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>

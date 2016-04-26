@@ -1,6 +1,6 @@
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("NewTransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makeOfbizUrl("TransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_run_sys!} ${styles.action_update!}" />
         <@menuitem type="link" href=makeOfbizUrl("FindFacilityTransfers?facilityId=${facilityId}&completeRequested=true") text=uiLabelMap.ProductCompleteRequestedTransfers class="+${styles.action_nav!} ${styles.action_find!}" />         
   </@menu>
 </#macro>

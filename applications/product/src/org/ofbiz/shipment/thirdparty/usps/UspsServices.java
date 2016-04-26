@@ -224,7 +224,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("RateV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsRateDomesticSendingError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -379,7 +384,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("IntlRate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsRateInternationalSendingError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -463,7 +473,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("TrackV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsTrackingSendingError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -561,7 +576,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("Verify", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsAddressValidationSendingError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -647,7 +667,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("CityStateLookup", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsCityStateLookupSendingError", 
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
@@ -761,7 +786,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest(type, requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsServiceStandardSendingError", 
                     UtilMisc.toMap("serviceType", type, "errorString", e.getMessage()), locale));
@@ -866,7 +896,12 @@ public class UspsServices {
         try {
             responseDocument = sendUspsRequest("Rate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
-            Debug.logInfo(e, module);
+            // Cato: Handle config errors more gracefully and use logError
+            if (e instanceof UspsConfigurationException) {
+                Debug.logError(e.getMessage(), module);
+            } else {
+                Debug.logError(e, module);
+            }
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsRateDomesticSendingError", 
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
@@ -1121,7 +1156,12 @@ public class UspsServices {
                 try {
                     responseDocument = sendUspsRequest("Rate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
                 } catch (UspsRequestException e) {
-                    Debug.logInfo(e, module);
+                    // Cato: Handle config errors more gracefully and use logError
+                    if (e instanceof UspsConfigurationException) {
+                        Debug.logError(e.getMessage(), module);
+                    } else {
+                        Debug.logError(e, module);
+                    }
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "FacilityShipmentUspsRateDomesticSendingError", 
                             UtilMisc.toMap("errorString", e.getMessage()), locale));
@@ -1387,7 +1427,12 @@ public class UspsServices {
                 try {
                     responseDocument = sendUspsRequest("DeliveryConfirmationV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
                 } catch (UspsRequestException e) {
-                    Debug.logInfo(e, module);
+                    // Cato: Handle config errors more gracefully and use logError
+                    if (e instanceof UspsConfigurationException) {
+                        Debug.logError(e.getMessage(), module);
+                    } else {
+                        Debug.logError(e, module);
+                    }
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                             "FacilityShipmentUspsDeliveryConfirmationSendingError", 
                             UtilMisc.toMap("errorString", e.getMessage()), locale));
@@ -1642,7 +1687,12 @@ public class UspsServices {
             try {
                 responseDocument = sendUspsRequest(api, requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
             } catch (UspsRequestException e) {
-                Debug.logInfo(e, module);
+                // Cato: Handle config errors more gracefully and use logError
+                if (e instanceof UspsConfigurationException) {
+                    Debug.logError(e.getMessage(), module);
+                } else {
+                    Debug.logError(e, module);
+                }
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                         "FacilityShipmentUspsPriorityMailLabelSendingError", 
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
@@ -1695,7 +1745,8 @@ public class UspsServices {
             conUrl = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "connectUrl", resource, "shipment.usps.connect.url");
         }
         if (UtilValidate.isEmpty(conUrl)) {
-            throw new UspsRequestException(UtilProperties.getMessage(resourceError, 
+            // Cato: Throw config exception to can handle more gracefully
+            throw new UspsConfigurationException(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsConnectUrlIncomplete", locale));
         }
 
@@ -1824,3 +1875,28 @@ class UspsRequestException extends GeneralException {
         super(msg, t);
     }
 }
+
+/**
+ * Cato: Special case to identify config errors
+ */
+@SuppressWarnings("serial")
+class UspsConfigurationException extends UspsRequestException {
+
+    public UspsConfigurationException() {
+        super();
+    }
+
+    public UspsConfigurationException(String msg, Throwable t) {
+        super(msg, t);
+    }
+
+    public UspsConfigurationException(String msg) {
+        super(msg);
+    }
+
+    public UspsConfigurationException(Throwable t) {
+        super(t);
+    }
+    
+}
+

@@ -49,8 +49,10 @@ webSiteId = WebSiteWorker.getWebSiteId(request);
 context.productStoreId = productStoreId;
 context.currencyUomId = currencyUomId;
 
+// Cato: Some patches to prevent missing userLogin crash
+
 // get the top level shopping lists for the logged in user
-exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.partyId),
+exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),
         EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
@@ -161,7 +163,7 @@ if (shoppingListId) {
         context.shoppingListType = shoppingListType;
 
         // get the child shopping lists of the current list for the logged in user
-        childShoppingLists = from("ShoppingList").where("partyId", userLogin.partyId, "parentShoppingListId", shoppingListId).orderBy("listName").cache(true).queryList();
+        childShoppingLists = from("ShoppingList").where("partyId", userLogin?.partyId, "parentShoppingListId", shoppingListId).orderBy("listName").cache(true).queryList();
         // now get prices for each child shopping list...
         if (childShoppingLists) {
             childShoppingListDatas = new ArrayList(childShoppingLists.size());
@@ -186,14 +188,14 @@ if (shoppingListId) {
         parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList", false);
         context.parentShoppingList = parentShoppingList;
 
-        context.canView = userLogin.partyId.equals(shoppingList.partyId);
+        context.canView = (userLogin?.partyId) && (userLogin?.partyId.equals(shoppingList.partyId));
 
         // auto-reorder info
         if ("SLT_AUTO_REODR".equals(shoppingListType?.shoppingListTypeId)) {
             recurrenceVo = shoppingList.getRelatedOne("RecurrenceInfo", false);
             context.recurrenceInfo = recurrenceVo;
 
-            if (userLogin.partyId.equals(shoppingList.partyId)) {
+            if ((userLogin?.partyId) && (userLogin.partyId.equals(shoppingList.partyId))) {
                 listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, locale);
 
                 // get customer's shipping & payment info

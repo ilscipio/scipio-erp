@@ -45,7 +45,7 @@ under the License.
       <#if microCartQuickMenu && (shoppingCartSize > 0)>
         <ul class="dropdown">      
             <li><a href="<@ofbizUrl>showcart</@ofbizUrl>">${uiLabelMap.PageTitleOrderShowCart}</a></li>
-            <li><a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
+            <li><a href="<@ofbizUrl>checkoutoptionslogin</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
             <li><a href="<@ofbizUrl>onePageCheckout</@ofbizUrl>">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
         </ul>
       </#if>

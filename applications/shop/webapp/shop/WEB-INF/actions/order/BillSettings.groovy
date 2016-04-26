@@ -24,6 +24,8 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
+// Cato: Some fixes to prevent crash on missing userLogin
+
 cart = session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
 payType = parameters.paymentMethodType;
@@ -33,7 +35,7 @@ if (!payType && parameters.useGc) {
 context.cart = cart;
 context.paymentMethodType = payType;
 
-partyId = cart.getPartyId() ?: userLogin.partyId;
+partyId = cart.getPartyId() ?: userLogin?.partyId;
 context.partyId = partyId;
 
 // nuke the event messages

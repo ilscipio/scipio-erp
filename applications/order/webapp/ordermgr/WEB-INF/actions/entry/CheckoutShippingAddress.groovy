@@ -28,9 +28,11 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import javolution.util.FastList;
 
+// Cato: NOTE: some patches so doesn't crash without userLogin
+
 cart = session.getAttribute("shoppingCart");
-party = userLogin.getRelatedOne("Party", false);
-partyId = party.partyId;
+party = userLogin?.getRelatedOne("Party", false);
+partyId = party?.partyId;
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 productStoreId = cart.getProductStoreId();

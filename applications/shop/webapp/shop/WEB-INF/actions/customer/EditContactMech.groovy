@@ -22,13 +22,15 @@ import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 
+// Cato: Some patches to prevent crash for missing userLogin
+
 /* puts the following in the context: "contactMech", "contactMechId",
         "partyContactMech", "partyContactMechPurposes", "contactMechTypeId",
         "contactMechType", "purposeTypes", "postalAddress", "telecomNumber",
         "requestName", "donePage", "tryEntity", "contactMechTypes"
  */
 target = [:];
-ContactMechWorker.getContactMechAndRelated(request, userLogin.partyId, target);
+ContactMechWorker.getContactMechAndRelated(request, userLogin?.partyId, target);
 context.putAll(target);
 
 

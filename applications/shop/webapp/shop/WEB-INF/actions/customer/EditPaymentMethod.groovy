@@ -22,15 +22,17 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.party.contact.ContactMechWorker;
 
-paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.partyId);
+// Cato: prevent crash on missing userLogin
+
+paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin?.partyId);
 //returns the following: "paymentMethod", "creditCard", "giftCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
 context.putAll(paymentResults);
 
-curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.partyId, paymentResults.curContactMechId);
+curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin?.partyId, paymentResults.curContactMechId);
 //returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
 context.putAll(curPostalAddressResults);
 
-postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.partyId, paymentResults.curContactMechId);
+postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin?.partyId, paymentResults.curContactMechId);
 context.put("postalAddressInfos", postalAddressInfos);
 
 //prepare "Data" maps for filling form input boxes
@@ -57,7 +59,7 @@ if (!paymentMethodData) paymentMethodData = [:];
 if (paymentMethodData) context.paymentMethodData = paymentMethodData;
 
 //prepare security flag
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.creditCard || context.giftCard || context.eftAccount) && context.paymentMethod && !userLogin.partyId.equals(context.paymentMethod.partyId)) {
+if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.creditCard || context.giftCard || context.eftAccount) && context.paymentMethod && (!userLogin?.partyId || !userLogin.partyId.equals(context.paymentMethod.partyId))) {
     context.canNotView = true;
 } else {
     context.canNotView = false;

@@ -524,36 +524,47 @@ under the License.
     <request-map uri="checkoutpayment">
         <!-- Cato: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutpayment"/>
     </request-map>
-    <!-- Cato: This request is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
+    <!-- Cato: This is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
     <request-map uri="checkoutshippingaddress">
         <!-- Cato: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
-    <!-- Cato: This request is a compatibility request to make sure can return to shipping options -->
+    <!-- Cato: This is a compatibility request to make sure can return to shipping options -->
     <request-map uri="checkoutshippingoptions">
         <!-- Cato: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="checkoutshippingoptions"/>
     </request-map>
+    <!-- Cato: New entry point for checkout options, so we may show login page and give a chance to login.
+        NOTE: checkoutoptions itself must directly support anon on its own because it is not just entry but central submit for all screens  -->
+    <request-map uri="checkoutoptionslogin">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="checkoutoptions"/> 
+    </request-map>
+    <!-- Cato: New request, currently mainly for consistency -->
+    <request-map uri="anoncheckoutoptions">
+        <security https="true" auth="false"/>
+        <response name="success" type="request" value="checkoutoptions"/> 
+    </request-map>
     <request-map uri="checkoutoptions">
-      <security https="true" auth="true"/>
-      <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutPages"/>
-      <response name="shippingaddress" type="view" value="checkoutshippingaddress" save-current-view="true"/>
-      <response name="shippingoptions" type="request" value="setOrderCurrencyAgreementShipDates"/>
-      <response name="payment" type="request" value="setPoNumber"/>
-      <response name="confirm" type="request" value="calcShipping"/>
-      <response name="success" type="view" value="checkoutshippingaddress"/>
-      <response name="error" type="request" value="checkouterror"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutPages"/>
+        <response name="shippingaddress" type="view" value="checkoutshippingaddress" save-current-view="true"/>
+        <response name="shippingoptions" type="request" value="setOrderCurrencyAgreementShipDates"/>
+        <response name="payment" type="request" value="setPoNumber"/>
+        <response name="confirm" type="request" value="calcShipping"/>
+        <response name="success" type="view" value="checkoutshippingaddress"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="setOrderCurrencyAgreementShipDates">
         <description>Handles setting the currency, agreement and shipment dates of an order.</description>
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>
         <response name="success" type="view" value="checkoutshippingoptions"/>
         <response name="error" type="request" value="checkouterror"/>
@@ -564,7 +575,7 @@ under the License.
       <response name="success" type="request" value="calcShippingBeforePayment"/>
     </request-map>
     <request-map uri="checkouterror">
-      <security https="true" auth="true"/>
+      <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
       <response name="shippingaddress" type="view" value="checkoutshippingaddress"/>
       <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
@@ -574,13 +585,14 @@ under the License.
       <response name="error" type="view" value="checkoutshippingaddress"/>
       <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
+    <!-- Cato: NOTE: In shop, quickcheckout is currently not supported.
+        DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything. -->
     <request-map uri="quickcheckout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="view"  save-current-view="true" value="quickcheckout"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-
     <request-map uri="splitship">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="splitship"/>
@@ -601,13 +613,13 @@ under the License.
 
     <!-- old checkout options events -->
     <request-map uri="updateCheckoutOptions">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
         <response name="success" type="view" value="checkoutshippingaddress"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="setOptions">
-        <security https="true" auth="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
         <response name="success" type="request" value="calcShipping"/>
         <response name="error" type="request" value="checkouterror"/>
@@ -685,10 +697,9 @@ under the License.
     <!-- Cato: processorder first checks if cart empty, if empty then redirects to shopping cart, otherwise page refresh is confusing -->
     <request-map uri="processorder">
         <security https="true" auth="false" />
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="checkCart"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="request" value="processordercreate"/>
-        <response name="cartEmpty" type="request-redirect-noparam" value="showcart" />
-        <response name="error" type="view" value="confirm"/>
+        <response name="error" type="request-redirect-noparam" value="showcart" />
     </request-map>
     <request-map uri="processordercreate">
         <security https="true" auth="false" direct-request="false"/>

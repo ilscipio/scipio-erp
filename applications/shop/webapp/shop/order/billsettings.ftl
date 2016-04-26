@@ -41,6 +41,7 @@ function shipBillAddr() {
   </#if>
 </#macro>
 <@section menuContent=menuContent><#-- title=uiLabelMap.AccountingPaymentInformation-->
+  <@fields type="default" checkboxType="simple-standard">
     <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || (finalizeMode!"") == "payment">
       <#-- after initial screen; show detailed screens for selected type -->
       <#if paymentMethodType == "CC">
@@ -185,6 +186,7 @@ function shipBillAddr() {
         -->
       </form>
     </#if>
+  </@fields>
 </@section>
 
 <@checkoutActionsMenu directLinks=true formName="billsetupform" />

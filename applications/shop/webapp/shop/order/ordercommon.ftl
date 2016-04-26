@@ -6,7 +6,7 @@ Cato: Local order template common defs
 -->
 
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
-<#macro invertedField type="generic" labelContent="" postfixContent="" postfixSize=3 inlineArgs...>
+<#macro invertedField type="generic" postfixSize="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixSize":postfixSize, "widgetPostfixCombined":false})>
   <@row>
@@ -22,7 +22,16 @@ Cato: Local order template common defs
     </@cell>  
   </@row>
 -->
-  <@field type=type inverted=true args=inlineArgs widgetAreaClass="+${styles.text_right!}" labelContent=labelContent postfixContent=postfixContent postfixSize=postfixSize><#nested></@field>
+  <#if !postfixSize?has_content>
+    <#local postfixSize = 3>
+  </#if>
+  <#if !widgetPostfixColumns?has_content>
+    <#local widgetPostfixColumns = 11>
+  </#if>
+  <#if postfixContent?is_directive || postfixContent?has_content>
+    <#local postfix = true>
+  </#if>
+  <@field type=type inverted=true args=inlineArgs widgetAreaClass="+${styles.text_right!}" postfix=postfix postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixSize=postfixSize><#nested></@field>
 </#macro>
 
 <#macro checkoutActionsMenu text="" formName="" directLinks=true>

@@ -15162,4 +15162,14 @@
         <value xml:lang="de">Herunterladbaren Datei Titel</value>
         <value xml:lang="en">Downloadable File Titles</value>
     </property>
+    <property key="PageTitleAllPromotions">
+        <value xml:lang="de">Aktionen anzeigen</value>
+        <value xml:lang="en">All Promotions</value>
+        <value xml:lang="es">Las promociones</value>
+        <value xml:lang="fr">Toutes les promotions</value>
+        <value xml:lang="it">Tutte le promozioni</value>
+        <value xml:lang="nl">Alle promoties</value>
+        <value xml:lang="pt_BR">Todas as promoções</value>
+        <value xml:lang="ro">Toate Promotiile </value>
+    </property>
 </resource>

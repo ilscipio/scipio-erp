@@ -96,6 +96,10 @@ var issuerId = "";
   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
     <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingEFTAccount}" />
   </#if>
+  <#-- Cato: These used to be on their own menu below... -->
+  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
+  <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
+  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
@@ -140,7 +144,9 @@ var issuerId = "";
             </#if>
 
             <#if !paymentMethodList?has_content>
-              <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>
+              <#-- Cato: This is too weird because there are clearly options above, they mean the user has no payment
+                methods set in his account: 
+              <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>-->
             <#else>
               <#list paymentMethodList as paymentMethodLocal>
                 <#-- Cato: workaround for access from macros -->
@@ -167,7 +173,7 @@ var issuerId = "";
                   </#if>
 
                   <#macro labelContent args={}>
-                    <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}:${giftCardNumber}</label>
+                    <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
                     <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                     <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
@@ -185,7 +191,8 @@ var issuerId = "";
                       <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                       <@field type="input" fieldsType="default-compact" ignoreParentField=true label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                     </#macro>
-                    <@invertedField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent/>
+                    <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon -->
+                    <@invertedField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent/>
                   </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
@@ -230,11 +237,13 @@ var issuerId = "";
               <@invertedField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=labelContent/>
             </#if>
 
+          <#-- Cato: put as part of other menu for now...
             <@menu type="button">
                 <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
                 <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
                 <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
             </@menu>
+          -->
 
             <#-- End Payment Method Selection -->
     </form>

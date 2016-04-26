@@ -77,9 +77,9 @@ function toggleBillingAccount(box) {
           <#list shippingContactMechList as shippingContactMech>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
-            <#assign postfixContent>
-                <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-            </#assign>
+            <#-- Cato: auto check if it's the only one -->
+            <#assign checkThisAddress = checkThisAddress || (shippingContactMechList?size == 1)>
+            <#assign postfixContent></#assign>
             <#assign labelContent>
                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
@@ -89,31 +89,13 @@ function toggleBillingAccount(box) {
                 <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                 <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
+                <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </#assign>
-            <@invertedField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent/>
+            <@invertedField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent/>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>
        </#if>
     </@section>
-  <#if agreements?has_content>
-    <@section title=uiLabelMap.AccountingAgreementInformation>
-      <#if agreements.size() != 1>
-          <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
-            <#list agreements as agreement>
-              <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
-            </#list>
-          </@field>
-      <#else>
-          <@fields type="default-manual-widgetonly">
-            <#list agreements as agreement>
-              <@invertedField labelContent="${agreement.description!} will be used for this order.">
-                <@field type="radio" name="agreementId" value=(agreement.agreementId!) checked=checkThisAddress  />
-              </@invertedField>
-            </#list>
-          </@fields>
-      </#if>
-    </@section>
-  </#if>
 
     <#-- Party Tax Info -->
     <@section title=uiLabelMap.PartyTaxIdentification>
@@ -122,6 +104,30 @@ function toggleBillingAccount(box) {
         <@render resource="component://shop/widget/OrderScreens.xml#customertaxinfo" /> 
       <#--</@fields>-->
     </@section>
+
+  <#if agreements?has_content>
+    <@section title=uiLabelMap.AccountingAgreementInformation>
+      <#-- Cato: for shop, use only select boxes, otherwise can't link to anything -->
+      <#if false && agreements.size() != 1>
+          <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
+            <#list agreements as agreement>
+              <option value="${agreement.agreementId!}">${agreement.agreementId} - ${agreement.description!}</option>
+            </#list>
+          </@field>
+      <#else>
+        <#list agreements as agreement>
+          <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
+          <#assign labelContent>${agreement.description!} will be used for this order. 
+            <@modal id="agreement_info_${agreement.agreementId!}" label="Click here for more details">
+                <#-- Cato: I don't know what else to put here at current time -->
+                ${agreement.description!}
+            </@modal>
+          </#assign>
+          <@invertedField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
+        </#list>
+      </#if>
+    </@section>
+  </#if>
 
   <#--</fieldset>-->
   </form>

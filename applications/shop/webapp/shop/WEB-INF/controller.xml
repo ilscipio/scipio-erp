@@ -588,24 +588,24 @@ under the License.
     <!-- Cato: NOTE: In shop, quickcheckout is currently not supported.
         DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything. -->
     <request-map uri="quickcheckout">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="view"  save-current-view="true" value="quickcheckout"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="splitship">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="splitship"/>
     </request-map>
     <request-map uri="updatesplit">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="assignItemShipGroup"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="view" value="splitship"/>
     </request-map>
 
     <request-map uri="checkout">
-      <security https="true" auth="true"/>
+      <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
       <response name="error" type="view" value="showcart"/>
@@ -627,13 +627,13 @@ under the License.
 
     <!-- new checkout option services -->
     <request-map uri="updateShippingAddress">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="setCartShippingAddress"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="request" value="splitship"/>
     </request-map>
     <request-map uri="updateShippingOptions">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="setCartShippingOptions"/>
         <response name="success" type="view" value="splitship"/>
         <response name="error" type="request" value="splitship"/>

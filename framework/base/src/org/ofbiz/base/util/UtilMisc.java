@@ -790,4 +790,17 @@ public class UtilMisc {
         return (int)Math.ceil(listSize / (float) viewSize) - 1;
     }
     
+    /**
+     * Cato: Gets map entries matching the given prefix.
+     */
+    public static Map<String, Object> getPrefixedMapEntries(Map<String, Object> map, String prefix) {
+        Map<String, Object> res = new HashMap<String, Object>();
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+            String name = entry.getKey();
+            if (name != null && name.startsWith(prefix)) {
+                res.put(name.substring(prefix.length()), entry.getValue());
+            }
+        }
+        return res;
+    }
 }

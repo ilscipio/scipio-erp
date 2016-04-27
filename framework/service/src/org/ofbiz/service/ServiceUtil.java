@@ -20,6 +20,7 @@ package org.ofbiz.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -235,6 +236,39 @@ public class ServiceUtil {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
         String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
         setMessages(request, errorMessage, successMessage, defaultMessage);
+    }
+    
+    /**
+     * Cato: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
+     * The lists are appended to existing, but single message is replaced.
+     */
+    public static void appendMessageLists(HttpServletRequest request, Map<String, ? extends Object> result) {
+        String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
+        String successMessage =  (String) result.get(ModelService.SUCCESS_MESSAGE);
+        List<?> errorList = UtilGenerics.checkList(result.get(ModelService.ERROR_MESSAGE_LIST));
+        List<?> successList = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
+        if (UtilValidate.isNotEmpty(errorMessage)) {
+            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+        }
+        if (UtilValidate.isNotEmpty(successMessage)) {
+            request.setAttribute("_EVENT_MESSAGE_", successMessage);
+        }
+        if (UtilValidate.isNotEmpty(errorList)) {
+            List<Object> reqErrorList = UtilGenerics.checkList(request.getAttribute("_ERROR_MESSAGE_LIST_"));
+            if (reqErrorList == null) {
+                reqErrorList = new ArrayList<Object>();
+            }
+            reqErrorList.addAll(errorList);
+            request.setAttribute("_ERROR_MESSAGE_LIST_", reqErrorList);
+        }
+        if (UtilValidate.isNotEmpty(successList)) {
+            List<Object> reqEventList = UtilGenerics.checkList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
+            if (reqEventList == null) {
+                reqEventList = new ArrayList<Object>();
+            }
+            reqEventList.addAll(successList);
+            request.setAttribute("_ERROR_MESSAGE_LIST_", reqEventList);
+        }
     }
 
     public static String getErrorMessage(Map<String, ? extends Object> result) {

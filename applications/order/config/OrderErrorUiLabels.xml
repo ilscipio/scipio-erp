@@ -6265,4 +6265,8 @@
         <value xml:lang="vi">Bạn không thể thêm sản phẩm ảo ('Virtual' product) tại đây, bạn hãy chọn trong các hàng hóa liên quan (related variants).</value>
         <value xml:lang="zh">在这里你不能添加一个虚拟产品，请选择一个相关的变型。</value>
     </property>
+    <!-- Cato: TODO: Localize -->
+    <property key="OrderUnexpectedErrorHelp">
+        <value xml:lang="en">Unexpected error. Please try again later or contact us for help.</value>
+    </property>
 </resource>

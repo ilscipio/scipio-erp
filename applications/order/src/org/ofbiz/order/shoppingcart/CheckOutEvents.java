@@ -34,6 +34,7 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.base.util.MapValidator;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -107,8 +108,21 @@ public class CheckOutEvents {
 
         if ("shippingaddress".equals(curPage) == true) {
             // Set the shipping address options
-            String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-
+            // Cato: Allow inlined address creation
+            //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+            String shippingContactMechId;
+            try {
+                shippingContactMechId = getCheckShipContactMechIdOrCreateNewAddr(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+            } catch (TargetServiceErrorException e1) {
+                Debug.logInfo(e1, module); // normal occurrence
+                ServiceUtil.appendMessageLists(request, e1.getServResult());
+                return "error";
+            } catch (GeneralException e1) {
+                Debug.logError(e1, module); // unexpected error
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
+                return "error";
+            }
+            
             String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
             String partyTaxId = request.getParameter("partyTaxId");
             String isExempt = request.getParameter("isExempt");
@@ -367,7 +381,21 @@ public class CheckOutEvents {
         }
 
         String shippingMethod = request.getParameter("shipping_method");
-        String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        
+        // Cato: Allow inlined address creation
+        //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        String shippingContactMechId;
+        try {
+            shippingContactMechId = getCheckShipContactMechIdOrCreateNewAddr(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+        } catch (TargetServiceErrorException e1) {
+            Debug.logInfo(e1, module); // normal occurrence
+            ServiceUtil.appendMessageLists(request, e1.getServResult());
+            return "error";
+        } catch (GeneralException e1) {
+            Debug.logError(e1, module); // unexpected error
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
+            return "error";
+        }
 
         String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
         String partyTaxId = request.getParameter("partyTaxId");
@@ -1194,4 +1222,175 @@ public class CheckOutEvents {
             return "success";
         }
     }
+    
+    /**
+     * Cato: Checks a ship contact meth ID; if it has the special value _NEW_RECORD_, it will check other
+     * params and try to create a new address before the new contact mech ID. This allows inlining
+     * new ship address forms.
+     * <p>
+     * Mostly for checkout's shipping_contact_mech_id.
+     * <p>
+     * NOTE: This checks request attribs before request parameters so that other events may influence.
+     * <p>
+     * Errors are set in the request.
+     */
+    public static String getCheckShipContactMechIdOrCreateNewAddr(HttpServletRequest request, String paramName, String prefixParamName) throws GeneralException {
+        // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
+        String paramPrefix = getRequestAttribOrParam(request, prefixParamName);
+        
+        String setShippingPurpose = getRequestAttribOrParam(request, (paramPrefix != null ? paramPrefix : "") + "setShippingPurpose");
+        Map<String, Object> overrideParams = UtilMisc.toMap("setBillingPurpose", null);
+        // We can only set either setShippingPurpose or contactMechPurposeTypeId here
+        if ("Y".equals(setShippingPurpose)) {
+            overrideParams.put("setShippingPurpose", "Y");
+            overrideParams.put("contactMechPurposeTypeId", null);
+        } else {
+            overrideParams.put("setShippingPurpose", null);
+            overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+        }
+        return getCheckContactMechIdOrCreateNew(request, paramName, prefixParamName, "createPostalAddressAndPurposes",
+                overrideParams, 
+                new ShippingAddressValidator(request));
+    }
+
+    
+    /**
+     * Cato: Checks a contact meth ID; if it has the special value _NEW_RECORD_, it will check other
+     * params and try to create a new address before the new contact mech ID. This allows inlining
+     * new contact mech forms.
+     * <p>
+     * NOTE: This checks request attribs before request parameters so that other events may influence.
+     * <p>
+     * Errors are set in the request.
+     */
+    public static String getCheckContactMechIdOrCreateNew(HttpServletRequest request, String paramName, String prefixParamName, 
+            String serviceName, Map<String, Object> overrideParams, MapValidator paramValidator) throws GeneralException {
+        String contactMechId = getRequestAttribOrParam(request, paramName);
+        if ("_NEW_RECORD_".equals(contactMechId)) {
+            String paramPrefix = null;
+            if (prefixParamName != null && !prefixParamName.isEmpty()) {
+                paramPrefix = getRequestAttribOrParam(request, prefixParamName);
+            }
+            if (paramPrefix == null) {
+                paramPrefix = "";
+            }
+            
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+            
+            Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
+            Map<String, Object> context;
+            if (paramPrefix.isEmpty()) {
+                context = combinedMap;
+            } else {
+                context = UtilMisc.getPrefixedMapEntries(combinedMap, paramPrefix);
+            }
+
+            Map<String, Object> servCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
+            servCtx.put("userLogin", combinedMap.get("userLogin"));
+            servCtx.put("locale", combinedMap.get("locale"));
+            servCtx.putAll(overrideParams);
+            if (paramValidator != null) {
+                Map<String, String> errorMsgs = new HashMap<String, String>();
+                paramValidator.validate(servCtx, errorMsgs);
+                if (errorMsgs.size() > 0) {
+                    Map<String, Object> validateRes = ServiceUtil.returnError(new ArrayList<String>(errorMsgs.values()));
+                    throw new TargetServiceErrorException(validateRes, "Could not validate contact mech fields: " + ServiceUtil.getErrorMessage(validateRes));
+                }
+            }
+            Map<String, Object> servResult = dispatcher.runSync(serviceName, servCtx);
+            if (!ServiceUtil.isSuccess(servResult)) {
+                throw new TargetServiceErrorException(servResult, "Could not create contact mech: " + ServiceUtil.getErrorMessage(servResult));
+            } else {
+                contactMechId = (String) servResult.get("contactMechId");
+            }
+        }
+        return contactMechId;
+    }
+    
+    /**
+     * Cato: Util to get request attrib or param of same name.
+     * If request attrib is non-null but empty, params are ignored.
+     */
+    private static String getRequestAttribOrParam(HttpServletRequest request, String name) {
+        String res = (String) request.getAttribute(name);
+        if (res == null) {
+            res = request.getParameter(name);
+        }
+        return res;
+    }
+    
+    /**
+     * Cato: Small exception class to pass around service results.
+     */
+    @SuppressWarnings("serial")
+    static class TargetServiceErrorException extends GeneralException {
+
+        private final Map<String, Object> servResult;
+        
+        public TargetServiceErrorException(Map<String, Object> servResult, String exMsg) {
+            super(exMsg);
+            this.servResult = servResult;
+        }
+        
+        public TargetServiceErrorException(List<String> errorMessageList, String exMsg) {
+            super(exMsg);
+            this.servResult = ServiceUtil.returnError(errorMessageList);
+        }
+        
+        public TargetServiceErrorException(String errorMessage, String exMsg) {
+            super(exMsg);
+            this.servResult = ServiceUtil.returnError(errorMessage);
+        }
+
+        public Map<String, Object> getServResult() {
+            return servResult;
+        }
+    }
+    
+    /**
+     * Cato: Shippign address validator class for checkout.
+     * <p>
+     * TODO: factor out into party app?
+     */
+    public static class ShippingAddressValidator implements MapValidator {
+
+        private final HttpServletRequest request;
+        
+        public ShippingAddressValidator(HttpServletRequest request) {
+            super();
+            this.request = request;
+        }
+
+        @Override
+        public void validate(Map<String, Object> map, Map<String, String> errorMessages) {
+            // TODO: This is definitely insufficient... for now just make sure the essential fields are not empty
+            // TODO: localize
+            // toName
+            // attnName
+            // address1
+            // address2
+            // city
+            // stateProvinceGeoId
+            // postalCode
+            // countryGeoId
+            // allowSolicitation
+            if (!stringNotEmpty(map.get("address1"))) {
+                errorMessages.put("address1", "Missing address line");
+            }
+            if (!stringNotEmpty(map.get("city"))) {
+                errorMessages.put("city", "Missing city");
+            }
+            if (!stringNotEmpty(map.get("postalCode"))) {
+                errorMessages.put("postalCode", "Missing postal code");
+            }
+            if (!stringNotEmpty(map.get("countryGeoId"))) {
+                errorMessages.put("countryGeoId", "Missing country");
+            }
+        }
+        
+        private static boolean stringNotEmpty(Object str) {
+            return (str instanceof String) && ((String) str).trim().length() > 0;
+        }
+    }
+    
 }

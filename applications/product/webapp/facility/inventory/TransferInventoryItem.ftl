@@ -16,12 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-
-<@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") class="+${styles.action_run_sys!} ${styles.action_export!}" text=uiLabelMap.CommonPrint />
-</@menu>
-
 <#if !(requestParameters.inventoryTransferId?has_content)>
     <#assign formAction="CreateInventoryTransfer" />
 <#else>

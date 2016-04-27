@@ -224,7 +224,7 @@ under the License.
                 <set field="activeSubMenuItem" value="FindFacilityTransfers"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.PageTitleTransferInventoryItem}"/>
+                <set field="title" value="${uiLabelMap.ProductInventoryTransfer}"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
@@ -317,7 +317,7 @@ under the License.
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="facilityId" value="${parameters.facilityId}" />
-                <set field="title" value="${uiLabelMap.PageTitleEditFacilityInventoryItems}"/>
+                <set field="title" value="${uiLabelMap.ProductInventoryItems} ${facilityId}"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>

@@ -3101,7 +3101,7 @@
     <property key="AccountingCompanyNameCard">
         <value xml:lang="ar">اسم الموسسة على البطاقة</value>
         <value xml:lang="de">Firmenname auf Karte</value>
-        <value xml:lang="en">Company Name Card</value>
+        <value xml:lang="en">Company Name on Card</value>
         <value xml:lang="es">Nombre de compañía de la tarjeta</value>
         <value xml:lang="fr">Nom de l'entreprise sur la carte</value>
         <value xml:lang="hi_IN">कार्ड पर कंपनी का नाम</value>
@@ -5698,7 +5698,7 @@
     <property key="AccountingFirstNameCard">
         <value xml:lang="ar">الإسم على البطاقة</value>
         <value xml:lang="de">Vorname auf Karte</value>
-        <value xml:lang="en">First Name Card</value>
+        <value xml:lang="en">First Name on Card</value>
         <value xml:lang="es">Primer nombre en tarjeta</value>
         <value xml:lang="fr">Prénom sur la carte</value>
         <value xml:lang="hi_IN">कार्ड पर पहला नाम</value>
@@ -8634,7 +8634,7 @@
     <property key="AccountingLastNameCard">
         <value xml:lang="ar">اللقب عاى البطاقة</value>
         <value xml:lang="de">Nachname auf Karte</value>
-        <value xml:lang="en">Last Name Card</value>
+        <value xml:lang="en">Last Name on Card</value>
         <value xml:lang="es">Apellido en tarjeta</value>
         <value xml:lang="fr">Nom sur la carte</value>
         <value xml:lang="hi_IN">कार्ड पर अंतिम नाम</value>
@@ -9069,7 +9069,7 @@
     <property key="AccountingMiddleNameCard">
         <value xml:lang="ar">الإسم الوسط على البطاقة</value>
         <value xml:lang="de">Mittlerer Name auf Karte</value>
-        <value xml:lang="en">Middle Name Card</value>
+        <value xml:lang="en">Middle Name on Card</value>
         <value xml:lang="es">Nombre medio en tarjeta</value>
         <value xml:lang="fr">Nom intermédiaire sur la carte</value>
         <value xml:lang="hi_IN">कार्ड पर मध्य नाम</value>
@@ -12736,7 +12736,7 @@
     </property>
     <property key="AccountingPrefixCard">
         <value xml:lang="de">Prefix auf der Karte</value>
-        <value xml:lang="en">Prefix Card</value>
+        <value xml:lang="en">Prefix on Card</value>
         <value xml:lang="es">Prefijo en tarjeta</value>
         <value xml:lang="fr">Préfixe de la carte</value>
         <value xml:lang="hi_IN">उपसर्ग कार्ड</value>
@@ -14189,6 +14189,7 @@
         <value xml:lang="zh_TW">成功</value>
     </property>
     <property key="AccountingSuffixCard">
+        <value xml:lang="de">Suffix auf Karte</value>
         <value xml:lang="en">Suffix on Card</value>
         <value xml:lang="es">Sufijo en tarjeta</value>
         <value xml:lang="fr">Suffixe sur la carte</value>

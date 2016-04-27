@@ -6,7 +6,7 @@ Cato: Local order template common defs
 -->
 
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
-<#macro invertedField type="generic" postfixColumns="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#macro invertedField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>
@@ -31,7 +31,8 @@ Cato: Local order template common defs
   <#if postfixContent?is_directive || postfixContent?has_content>
     <#local postfix = true>
   </#if>
-  <@field type=type inverted=true args=inlineArgs widgetAreaClass="+${styles.text_right!}" postfix=postfix postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+  <#local widgetAreaClass = addClassArg(widgetAreaClass, styles.text_right!)>
+  <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
 </#macro>
 
 <#macro checkoutActionsMenu text="" formName="" directLinks=true>
@@ -55,7 +56,9 @@ Cato: Local order template common defs
       <@cell columns=6 class="+${styles.text_right!}">
       <#local mainButtons><#nested></#local>
       <#if mainButtons?has_content>
-        ${mainButtons}
+        <@menu type="button">
+          <#nested><#-- NOTE: must re-run #nested here -->
+        </@menu>
       <#else>
         <@menu type="button">
           <#if !text?has_content>

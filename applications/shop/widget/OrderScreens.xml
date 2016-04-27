@@ -337,6 +337,10 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
+                
+                <!-- Cato: CustSettings script is new, required because of inline anon user creation support -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/CustSettings.groovy"/>
+                
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutShippingAddress.groovy"/>
 
                 <set field="checkoutType" value="full" />

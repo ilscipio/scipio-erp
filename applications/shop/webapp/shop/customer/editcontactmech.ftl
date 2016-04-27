@@ -67,7 +67,7 @@ under the License.
                     <#else>
                       ${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"
                     </#if>
-                     (${uiLabelMap.CommonSince}:${partyContactMechPurpose.fromDate.toString()})
+                     (${uiLabelMap.CommonSince}: ${partyContactMechPurpose.fromDate.toString()})
                     <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpires}:${partyContactMechPurpose.thruDate.toString()})</#if>
                   </@td>
                   <@td>

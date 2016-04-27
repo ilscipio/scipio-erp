@@ -451,6 +451,18 @@ under the License.
     <!-- ======== Anonymous Checkout Events ======== -->
     <!-- =========================================== -->
 
+    <!-- Cato: This is currently a simple wrapper around processCustomerSettings. 
+        It will enable if the form contained an input createUpdateAnonUser with value "Y".
+        It should work as long as there are no field name conflicts with the form being submitted
+        (whose real target may be another event). -->
+    <simple-method method-name="checkCreateUpdateAnonUser" short-description="Cato: Check and Update Basic Anon Customer Settings; to be called as a Request Event" login-required="false">
+        <if-compare field="parameters.createUpdateAnonUser" operator="equals" value="Y" >
+            <!-- WARN: Field name conflicts are possible; if needed, override them to null here  -->
+            <call-simple-method method-name="processCustomerSettings"/>
+        </if-compare>
+        <check-errors/>
+    </simple-method>
+
     <simple-method method-name="processCustomerSettings" short-description="Process Customer Settings; to be called as a Request Event" login-required="false">
         <if-empty field="parameters.partyId">
             <call-simple-method method-name="createAnonymousCustomer"/>

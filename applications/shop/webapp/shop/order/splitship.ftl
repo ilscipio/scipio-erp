@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
               </@td>
               <@td>
                 <div>
-                  <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
+                  <#--<span class="tabletext">${uiLabelMap.CommonAdd}:</span>-->
                   <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.PartyAddNewAddress}</a>
                 </div>
                 <div>
@@ -146,16 +146,20 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@section title=uiLabelMap.EcommerceAssignItems>
-    <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+  <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+    <@thead>
       <@tr>
-        <@td><b>${uiLabelMap.OrderProduct}</b></@td>
-        <@td align="center"><b>${uiLabelMap.OrderTotalQty}</b></@td>
-        <@td>&nbsp;</@td>
-        <@td align="center"><b>${uiLabelMap.OrderMoveQty}</b></@td>
-        <@td>&nbsp;</@td>
-        <@td>&nbsp;</@td>
+        <@td>${uiLabelMap.OrderProduct}</@td>
+        <@td align="center">${uiLabelMap.OrderTotalQty}</@td>
+        <@td></@td>
+        <@td align="center">${uiLabelMap.OrderMoveQty}</@td>
+        <@td></@td>
+        <@td></@td>
+        <@td></@td>
+        <@td></@td>
       </@tr>
-
+    </@thead>
+    <@tbody>
       <#list cart.items() as cartLine>
         <#assign cartLineIndex = cart.getItemIndex(cartLine)>
         <@tr>
@@ -166,6 +170,7 @@ function submitForm(form, mode, value) {
                 <#if cartLine.getProductId()??>
                   <#-- product item -->
                   <#-- start code to display a small image of the product -->
+                  <#-- Cato: Uncomment to display image
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")!>
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                   <#if smallImageUrl?string?has_content>
@@ -173,6 +178,7 @@ function submitForm(form, mode, value) {
                       <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
                     </a>
                   </#if>
+                  -->
                   <#-- end code to display a small image of the product -->
                   <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${cartLine.getProductId()} -
                   ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
@@ -230,14 +236,10 @@ function submitForm(form, mode, value) {
           </form>
         </@tr>
       </#list>
-    </@table>
+    </@tbody>
+  </@table>
 </@section>
 
-<@row>
-  <@cell type="+${styles.text_right!}">
-    <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("view/showcart") class="+${styles.action_nav_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
-      <@menuitem type="link" href=makeOfbizUrl("view/checkoutpayment") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.CommonContinue />
-    </@menu>
-  </@cell>
-</@row>
+<@checkoutActionsMenu directLinks=true >
+  <@menuitem type="link" href=makeOfbizUrl("checkoutpayment") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+</@checkoutActionsMenu>

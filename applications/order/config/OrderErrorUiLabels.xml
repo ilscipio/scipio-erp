@@ -6267,6 +6267,11 @@
     </property>
     <!-- Cato: TODO: Localize -->
     <property key="OrderUnexpectedErrorHelp">
+        <value xml:lang="de">Unerwarteter Fehler. Bitte versuchen Sie es später noch einmal oder kontaktieren Sie uns um Hilfe.</value>
         <value xml:lang="en">Unexpected error. Please try again later or contact us for help.</value>
+    </property>
+    <property key="checkhelper.value_not_valid_email">
+        <value xml:lang="de">Der Wert '${email}' ist keine gültige E-Mail-Adresse ein.</value>
+        <value xml:lang="en">The value '${email}' is not a valid email address.</value>
     </property>
 </resource>

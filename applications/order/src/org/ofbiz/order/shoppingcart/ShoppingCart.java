@@ -44,6 +44,7 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -5144,5 +5145,38 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             minQuantity = minimumOrderPrice.divide(itemBasePrice, 0, BigDecimal.ROUND_UP);
         }
         return minQuantity;
+    }
+    
+    /**
+     * Cato: Gets all emails that are OR are to be associated with the order, including
+     * party's to-be-associated emails and order additional emails.
+     * <p>
+     * WARN: This is not guaranteed to match the final order! The party's
+     * emails are not stored in cart.
+     * <p>
+     * This attempts to emulate {@link OrderReadHelper#getOrderEmailList()}.
+     */
+    public List<String> getOrderEmailList() {
+        List<String> emailList = new ArrayList<String>();
+        // WARN: This must match what is done in CheckOutHelper!
+        String partyId = this.getPlacingCustomerPartyId();
+        if (UtilValidate.isNotEmpty(partyId)) {
+            GenericValue party;
+            try {
+                party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
+                Collection<GenericValue> contactMechList = ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false);
+                for(GenericValue contactMech : contactMechList) {
+                    emailList.add(contactMech.getString("infoString"));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError("Could not get order emails for party '" + partyId + "'", module);
+            }
+        }
+        // WARN: This must match waht is done in CheckOutHelper!
+        List<String> addEmailList = StringUtil.split(this.getOrderAdditionalEmails(), ",");
+        if (UtilValidate.isNotEmpty(addEmailList)) {
+            emailList.addAll(addEmailList);
+        }
+        return emailList;
     }
 }

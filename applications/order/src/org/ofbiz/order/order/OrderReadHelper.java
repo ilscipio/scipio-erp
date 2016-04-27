@@ -1239,6 +1239,36 @@ public class OrderReadHelper {
         }
         return emails.toString();
     }
+    
+    /**
+     * Cato: Alternate to getOrderEmailString that returns as a list.
+     */
+    public List<String> getOrderEmailList() {
+        Delegator delegator = orderHeader.getDelegator();
+        // get the email addresses from the order contact mech(s)
+        List<GenericValue> orderContactMechs = null;
+        try {
+            orderContactMechs = EntityQuery.use(delegator).from("OrderContactMech")
+                    .where("orderId", orderHeader.get("orderId"),
+                            "contactMechPurposeTypeId", "ORDER_EMAIL")
+                    .queryList();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Problems getting order contact mechs", module);
+        }
+
+        List<String> emails = new ArrayList<String>();
+        if (orderContactMechs != null) {
+            for (GenericValue orderContactMech : orderContactMechs) {
+                try {
+                    GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech", false);
+                    emails.add(contactMech.getString("infoString"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
+                }
+            }
+        }
+        return emails;
+    }
 
     public BigDecimal getOrderGrandTotal() {
         if (totalPrice == null) {

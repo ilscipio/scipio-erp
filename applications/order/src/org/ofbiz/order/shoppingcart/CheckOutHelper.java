@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -216,7 +217,14 @@ public class CheckOutHelper {
         }
 
         // set any additional notification emails
-        this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
+        // Cato: Validation for add. emails (error prone)
+        List<String> emailErrorMessages = new ArrayList<String>();
+        orderAdditionalEmails = cleanVerifyEmailListToString(orderAdditionalEmails, emailErrorMessages);
+        if (errorMessages.size() <= 0) {
+            this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
+        } else {
+            errorMessages.addAll(emailErrorMessages);
+        }
 
         return errorMessages;
     }
@@ -1387,6 +1395,12 @@ public class CheckOutHelper {
      */
     public Map<String, Object> finalizeOrderEntryOptions(int shipGroupIndex, String shippingMethod, String shippingInstructions, String maySplit,
             String giftMessage, String isGift, String internalCode, String shipBeforeDate, String shipAfterDate, String orderAdditionalEmails) {
+        // Cato: Validation for add. emails (error prone)
+        List<String> errorMessages = new ArrayList<String>();
+        orderAdditionalEmails = cleanVerifyEmailListToString(orderAdditionalEmails, errorMessages);
+        if (errorMessages.size() > 0) {
+            return ServiceUtil.returnError(errorMessages);
+        }
         this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
         return finalizeOrderEntryOptions(shipGroupIndex, shippingMethod, shippingInstructions, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate, null, null);
     }
@@ -1657,5 +1671,35 @@ public class CheckOutHelper {
                 cart.addPaymentAmount(gc.getString("paymentMethodId"), gcBalance);
             }
         }
+    }
+    
+    public String cleanVerifyEmailListToString(String emailListString, List<String> errorMessages) {
+        List<String> emailList = cleanVerifyEmailList(emailListString, errorMessages);
+        if (emailList != null) {
+            return StringUtils.join(emailList, ",");
+        } else {
+            return null;
+        }
+    }
+    
+    public List<String> cleanVerifyEmailList(String emailListString, List<String> errorMessages) {
+        List<String> res = null;
+        if (emailListString != null) {
+            res = new ArrayList<String>();
+            List<String> inEmailList = StringUtil.split(emailListString, ",");
+            if (inEmailList != null) {
+                for(String inEmail : inEmailList) {
+                    String email = inEmail.trim();
+                    if (email.length() > 0) {
+                        if (UtilValidate.isEmail(email)) {
+                            res.add(email);
+                        } else {
+                            errorMessages.add(UtilProperties.getMessage(resource_error, "checkhelper.value_not_valid_email", UtilMisc.toMap("email", email), (cart != null ? cart.getLocale() : Locale.getDefault())));
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 }

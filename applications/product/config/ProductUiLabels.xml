@@ -19423,7 +19423,7 @@
     </property>
     <property key="ProductInventoryXfers">
         <value xml:lang="de">Bestandstransfers</value>
-        <value xml:lang="en">Inventory Xfers</value>
+        <value xml:lang="en">Inventory Transfers</value>
         <value xml:lang="es">Transferencia de inventario</value>
         <value xml:lang="fr">Transfert de stock</value>
         <value xml:lang="it">Inventario x Trasferimenti</value>
@@ -31720,8 +31720,10 @@
     <property key="ProductLocationSeqIdFrom">
         <value xml:lang="en">Location Seq Id From</value>
     </property>
-    <property key="ProductFacilityTransfers">
-        <value xml:lang="en">Inventory transfers</value>
-    </property> 
-    
+    <property key="ProductInventoryTransfers">
+        <value xml:lang="en">Inventory transfer List</value>
+    </property>
+    <property key="ProductRequestedTransfers">
+        <value xml:lang="en">Requested transfers</value>
+    </property
 </resource>

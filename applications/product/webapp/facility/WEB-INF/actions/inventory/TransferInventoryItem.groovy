@@ -21,80 +21,79 @@ import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 
-//public Map getTransferInventoryItem() {
-    facilityId = parameters.facilityId;
-    inventoryTransferId = parameters.inventoryTransferId;
-    inventoryItemId = parameters.inventoryItemId;
-    inventoryTransfer = null;
 
-    if (inventoryTransferId) {
-        inventoryTransfer = from("InventoryTransfer").where("inventoryTransferId", inventoryTransferId).queryOne();
-        if (inventoryTransfer) {
-            context.inventoryTransfer = inventoryTransfer;
-            if (!facilityId) {
-                facilityId = inventoryTransfer.facilityId;
-                parameters.facilityId = facilityId;
-            }
-            if (!inventoryItemId) {
-                inventoryItemId = inventoryTransfer.inventoryItemId;
-            }
+facilityId = parameters.facilityId;
+inventoryTransferId = parameters.inventoryTransferId;
+inventoryItemId = parameters.inventoryItemId;
+inventoryTransfer = null;
+Debug.log("inventoryTransferId ================> " + inventoryTransferId);
+if (inventoryTransferId) {
+    
+    inventoryTransfer = from("InventoryTransfer").where("inventoryTransferId", inventoryTransferId).queryOne();
+    if (inventoryTransfer) {
+        context.inventoryTransfer = inventoryTransfer;
+        if (!facilityId) {
+            facilityId = inventoryTransfer.facilityId;
+            parameters.facilityId = facilityId;
+        }
+        if (!inventoryItemId) {
+            inventoryItemId = inventoryTransfer.inventoryItemId;
         }
     }
-    
-    facility = from("Facility").where("facilityId", facilityId).queryOne();
+}
+
+facility = from("Facility").where("facilityId", facilityId).queryOne();
    
-    context.facilityId = facilityId;
-    context.facility = facility;
-    if (facilityId) {
-        facility = from("Facility").where("facilityId", facilityId).queryOne();
-    }
-    
-    if (inventoryItemId) {
-        context.inventoryItemId = inventoryItemId
-        inventoryItem = from("InventoryItem").where("inventoryItemId", inventoryItemId).queryOne();
-        if (facilityId && inventoryItem && inventoryItem.facilityId && !inventoryItem.facilityId.equals(facilityId)) {
-            context.illegalInventoryItem = "Inventory item not found for this facility.";
-            inventoryItem = null;
-        }
-        if (inventoryItem) {
-            context.inventoryItem = inventoryItem;
-            inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType", false);
-    
-            if (inventoryItemType) {
-                context.inventoryItemType = inventoryItemType;
-            }
-            if (inventoryItem.statusId) {
-                inventoryStatus = inventoryItem.getRelatedOne("StatusItem", false);
-                if (inventoryStatus) {
-                    context.inventoryStatus = inventoryStatus;
-                }
-            }
-        }
-    }
-    
-    // facilities
-    context.facilities = from("Facility").queryList();
-    
-    // status items
-    List statusItems;
-    if (inventoryTransfer && inventoryTransfer.statusId) {
-        statusChange = from("StatusValidChange").where("statusId", inventoryTransfer.statusId).queryList();
-        if (statusChange) {
-//            statusItems = [];
-            statusChange.each { curStatusChange ->
-                curStatusItem = from("StatusItem").where("statusId", curStatusChange.statusIdTo).queryOne();
-                if (curStatusItem) {
-                    statusItems.add(curStatusItem);
-                }
-            }
-            statusItem = EntityUtil.orderBy(statusItems, ['sequenceId']);
-            context.statusItems = statusItems;
-        }
-    } else {
-        statusItems = from("StatusItem").where("statusTypeId", "INVENTORY_XFER_STTS").orderBy("sequenceId").queryList();
-        if (statusItems) {
-            context.statusItems = statusItems;
-        }
-    }
+context.facilityId = facilityId;
+context.facility = facility;
+if (facilityId) {
+    facility = from("Facility").where("facilityId", facilityId).queryOne();
+}
 
-//}
+if (inventoryItemId) {
+    context.inventoryItemId = inventoryItemId
+    inventoryItem = from("InventoryItem").where("inventoryItemId", inventoryItemId).queryOne();
+    if (facilityId && inventoryItem && inventoryItem.facilityId && !inventoryItem.facilityId.equals(facilityId)) {
+        context.illegalInventoryItem = "Inventory item not found for this facility.";
+        inventoryItem = null;
+    }
+    if (inventoryItem) {
+        context.inventoryItem = inventoryItem;
+        inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType", false);
+
+        if (inventoryItemType) {
+            context.inventoryItemType = inventoryItemType;
+        }
+        if (inventoryItem.statusId) {
+            inventoryStatus = inventoryItem.getRelatedOne("StatusItem", false);
+            if (inventoryStatus) {
+                context.inventoryStatus = inventoryStatus;
+            }
+        }
+    }
+}
+
+// facilities
+context.facilities = from("Facility").queryList();
+
+// status items
+List statusItems;
+if (inventoryTransfer && inventoryTransfer.statusId) {
+    statusChange = from("StatusValidChange").where("statusId", inventoryTransfer.statusId).queryList();
+    if (statusChange) {
+        statusItems = [];
+        statusChange.each { curStatusChange ->
+            curStatusItem = from("StatusItem").where("statusId", curStatusChange.statusIdTo).queryOne();
+            if (curStatusItem) {
+                statusItems.add(curStatusItem);
+            }
+        }
+        statusItem = EntityUtil.orderBy(statusItems, ['sequenceId']);
+        context.statusItems = statusItems;
+    }
+} else {
+    statusItems = from("StatusItem").where("statusTypeId", "INVENTORY_XFER_STTS").orderBy("sequenceId").queryList();
+    if (statusItems) {
+        context.statusItems = statusItems;
+    }
+}

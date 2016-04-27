@@ -22,15 +22,14 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") class="+${styles.action_run_sys!} ${styles.action_export!}" text=uiLabelMap.CommonPrint />
 </@menu>
 
-<#if !(inventoryTransfer??)>
+<#if !(requestParameters.inventoryTransferId?has_content)>
     <#assign formAction="CreateInventoryTransfer" />
 <#else>
     <#assign formAction="UpdateInventoryTransfer" />
 </#if>
 
 <form method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="transferform">
-    <#if !(inventoryTransfer??)>         
-        
+    <#if !(requestParameters.inventoryTransferId?has_content)>
         <@section id="inventoryItemDetail">
             <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true/>             
         </@section>
@@ -54,7 +53,7 @@ under the License.
             });
         </@script>
     <#else>
-        <#include "TransferInventoryItemDetail.ftl"/>
+        <@render resource="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail" />
     </#if>
 </form>
    

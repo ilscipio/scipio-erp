@@ -6,9 +6,9 @@
     <@field type="display" label=uiLabelMap.ProductInventoryItemId>
         ${inventoryItemId!}
     </@field>
-    <input type="hidden" name="inventoryTransferId" value="${inventoryTransferId!}" />
-    <input type="hidden" name="inventoryItemId" value="${inventoryItemId!}" />
-    <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)!}" />
+    <input type="hidden" name="inventoryTransferId" value="${inventoryTransfer.inventoryTransferId!}" />
+    <input type="hidden" name="inventoryItemId" value="${inventoryTransfer.inventoryItemId!}" />
+    <input type="hidden" name="locationSeqId" value="${(inventoryTransfer.locationSeqId)!}" />
 </#if>
 <#if !(inventoryItem)??>
     <@commonMsg type="error">${uiLabelMap.ProductInventoryIdNotFound} ${uiLabelMap.ProductInventoryPleaseEnterAValidInventoryId}</@commonMsg> 
@@ -81,7 +81,7 @@
         </@field>
     <#else>
         <@field type="generic" label=uiLabelMap.ProductTransferReceiveDate>
-            <@field type="input" name="receiveDate" value=((inventoryTransfer.receiveDate)!) size="22" />          
+            <@field type="datetime" dateType="date-time" name="receiveDate" value=((inventoryTransfer.receiveDate)!) size="22" />          
         </@field>
         <@field type="display" label=uiLabelMap.ProductToFacilityContainer>
             <#assign fac = delegator.findOne("Facility", {"facilityId":inventoryTransfer.facilityIdTo}, false)> 

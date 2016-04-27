@@ -3,60 +3,51 @@
 <#elseif toTransfers?has_content>
     <#assign transferList = toTransfers />
 </#if>
-
-<@section menuContent=menuContent>
-    <#if transferList?has_content>
+<#if transferList?has_content>
+    <@section menuContent=menuContent title=uiLabelMap.ProductInventoryTransfers>
         <form action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId!}" />        
         
-            <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
                         <@th>${uiLabelMap.ProductInventoryTransfer}</@th>
                         <@th>${uiLabelMap.ProductInventoryItemId}</@th>
-                        <@th>${uiLabelMap.ProductFacilityId}</@th>
-                        <@th>${uiLabelMap.FormFieldTitle_facilityName}</@th>
-                        <@th>${uiLabelMap.ProductLocationSeqIdFrom}</@th>
+                        <@th>${uiLabelMap.FormFieldTitle_facilityName}</@th>                       
                         <@th>${uiLabelMap.ProductId}</@th>
                         <@th>${uiLabelMap.ProductProductName}</@th>
+                        <@th>${uiLabelMap.CommonStatus}</@th>
                         <@th>${uiLabelMap.ProductSerialNumber}</@th>
                         <@th>${uiLabelMap.ProductLocationSeqIdTo}</@th>
                         <@th>${uiLabelMap.ProductAtpQoh}</@th>
                         <@th>${uiLabelMap.CommonSendDate}</@th>
-                        <@th>${uiLabelMap.CommonReceiveDate}</@th>
-                        <@th>${uiLabelMap.CommonStatus}</@th>
-        
-                        <#-- <@th>${uiLabelMap.CommonUpdate}</@th>
-                        <@th>${uiLabelMap.CommonDelete}</@th> -->
+                        <@th>${uiLabelMap.FormFieldTitle_receiveDate}</@th>                                
+                        <@th>${uiLabelMap.CommonUpdate}</@th>                        
                     </@tr>
                 </@thead>
                 <#-- Header Ends-->
-                
-                    <#list fromTransfers as transfer>
-                        <#assign inventoryItem = delegator.findOne("InventoryItem", { "inventoryItemId" : transfer.inventoryItemId }, false) />
-                        <#assign facility = delegator.findOne("Facility", { "facilityId" : inventoryItem.facilityId }, true) />
-                        <#assign product = delegator.findOne("Product", { "productId" : inventoryItem.productId}, false)!>
-                        <#assign statusItem = delegator.findOne("StatusItem", { "statusId" : transfer.statusId }, true) />
-                        <@tr>
-                            <@td>${transfer.inventoryTransferId}</@td>
-                            <@td>${transfer.inventoryItemId}</@td>
-                            <@td>${transfer.facilityId}</@td>
-                            <@td>${facility.facilityName!}</@td>
-                            <@td>${transfer.locationSeqId!}</@td>                            
-                            <@td><a href="<@ofbizUrl>${product.productId}</@ofbizUrl>">${product.productId}</a></@td>
-                            <@td>${product.productName!}</@td>                        
-                            <@td>${inventoryItem.serialNumber!}</@td>
-                            <@td>${transfer.locationSeqIdTo!}</@td>
-                            <@td>${inventoryItem.availableToPromiseTotal!}/${inventoryItem.quantityOnHandTotal!}</@td>
-                            <@td>${transfer.sendDate!}</@td>
-                            <@td>${transfer.receiveDate!}</@td>
-                            <@td></@td>
-                            <@td><#if statusItem?has_content>${statusItem.description!}</#if></@td>
-                        </@tr>
-                    </#list>
-                
+                <#list fromTransfers as transfer>
+                    <#assign inventoryItem = delegator.findOne("InventoryItem", { "inventoryItemId" : transfer.inventoryItemId }, false) />
+                    <#assign facility = delegator.findOne("Facility", { "facilityId" : inventoryItem.facilityId }, true) />
+                    <#assign product = delegator.findOne("Product", { "productId" : inventoryItem.productId}, false)!>
+                    <#assign statusItem = delegator.findOne("StatusItem", { "statusId" : transfer.statusId }, true) />
+                    <@tr>
+                        <@td><a href="<@ofbizUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@ofbizUrl>">${transfer.inventoryTransferId}</a></@td>
+                        <@td><a href="<@ofbizUrl>EditFacilityInventoryItems?inventoryItemId=${transfer.inventoryItemId}</@ofbizUrl>">${transfer.inventoryItemId}</a></@td>
+                        <@td><a href="<@ofbizUrl>EditFacility?facilityId=${transfer.facilityId}</@ofbizUrl>">${facility.facilityName!}</a></@td>                                                 
+                        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}</@ofbizInterWebappUrl>">${product.productId}</a></@td>
+                        <@td>${product.productName!}</@td>
+                        <@td><#if statusItem?has_content>${statusItem.description!}</#if></@td>                      
+                        <@td>${inventoryItem.serialNumber!}</@td>
+                        <@td>${transfer.locationSeqIdTo!}</@td>
+                        <@td>${inventoryItem.availableToPromiseTotal!}/${inventoryItem.quantityOnHandTotal!}</@td>
+                        <@td>${transfer.sendDate!}</@td>
+                        <@td>${transfer.receiveDate!}</@td>
+                        <@td><@field type="submit" submitType="link" href=makeOfbizUrl("TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}") text=uiLabelMap.CommonUpdate /></@td>
+                    </@tr>
+                </#list>
             </@table>    
         </form>
-    </#if>
-</@section>
+    </@section>
+</#if>

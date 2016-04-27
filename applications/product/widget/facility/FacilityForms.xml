@@ -720,95 +720,9 @@ under the License.
         <field name="totalRetailPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
 
-    <form name="ToFacilityTransfers" type="list" target="" title="" list-name="toTransfers"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <row-actions>
-            <entity-one entity-name="InventoryItem" value-field="inventoryItem">
-                <field-map field-name="inventoryItemId"/>
-            </entity-one>
-            <entity-one entity-name="Product" value-field="product">
-                <field-map field-name="productId" from-field="inventoryItem.productId"/>
-            </entity-one>
-        </row-actions>
+    <!-- Cato: ToFacilityTransfers form moved to /cato-foundation/applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
 
-        <field name="inventoryTransferId" title="${uiLabelMap.ProductInventoryTransfer}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="TransferInventoryItem" description="${inventoryTransferId}">
-                <parameter param-name="inventoryTransferId"/>
-            </hyperlink>
-        </field>
-        <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditInventoryItem" description="${inventoryItemId}">
-                <parameter param-name="inventoryItemId"/>
-            </hyperlink>
-        </field>
-        <field name="facilityId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditFacility" description="${facilityId}">
-                <parameter param-name="facilityId"/>
-            </hyperlink>
-        </field>
-        <field name="facilityName" entry-name="facilityId">
-            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"/>
-        </field>
-        <field name="locationSeqId"><display/></field>
-        <field name="productId" entry-name="product.productId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="/catalog/control/ViewProduct" target-type="inter-app" description="${product.productId}">
-                <parameter param-name="productId" from-field="product.productId"/>
-            </hyperlink>
-        </field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}" entry-name="product.internalName"><display/></field>
-        <field name="serialNumber" entry-name="inventoryItem.serialNumber"><display/></field>
-        <field name="atpQoh" title="${uiLabelMap.ProductAtpQoh}"><display description="${inventoryItem.availableToPromiseTotal}/${inventoryItem.quantityOnHandTotal}"/></field>
-        <field name="locationSeqIdTo"><display/></field>
-        <field name="sendDate"><display/></field>
-        <field name="receiveDate"><display/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <display-entity entity-name="StatusItem"/>
-        </field>
-    </form>
-    <form name="FromFacilityTransfers" type="list" target="" title="" list-name="fromTransfers"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <row-actions>
-            <entity-one entity-name="InventoryItem" value-field="inventoryItem">
-                <field-map field-name="inventoryItemId"/>
-            </entity-one>
-            <entity-one entity-name="Product" value-field="product">
-                <field-map field-name="productId" from-field="inventoryItem.productId"/>
-            </entity-one>
-        </row-actions>
-        <field name="inventoryTransferId" title="${uiLabelMap.ProductInventoryTransfer}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="TransferInventoryItem" description="${inventoryTransferId}">
-                <parameter param-name="inventoryTransferId"/>
-            </hyperlink>
-        </field>
-        <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditInventoryItem" description="${inventoryItemId}">
-                <parameter param-name="inventoryItemId"/>
-            </hyperlink>
-        </field>
-        <field name="facilityIdTo" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="EditFacility" description="${facilityIdTo}">
-                <parameter param-name="facilityId" from-field="facilityIdTo"/>
-            </hyperlink>
-        </field>
-        <field name="facilityName" entry-name="facilityIdTo">
-            <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"/>
-        </field>
-        <field name="locationSeqIdTo"><display/></field>
-        <field name="productId" entry-name="product.productId" widget-style="${styles.link_nav_info_id}">
-            <hyperlink target="/catalog/control/ViewProduct" target-type="inter-app" description="${product.productId}">
-                <parameter param-name="productId" from-field="product.productId"/>
-            </hyperlink>
-        </field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}" entry-name="product.internalName"><display/></field>
-        <field name="serialNumber" entry-name="inventoryItem.serialNumber"><display/></field>
-        <field name="atpQoh" title="${uiLabelMap.ProductAtpQoh}"><display description="${inventoryItem.availableToPromiseTotal}/${inventoryItem.quantityOnHandTotal}"/></field>
-        <field name="locationSeqId"><display/></field>
-        <field name="sendDate"><display/></field>
-        <field name="receiveDate"><display/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <display-entity entity-name="StatusItem"/>
-        </field>
-    </form>
+    <!-- Cato: FromFacilityTransfers form moved to /cato-foundation/applications/product/widget/facility/FacilityScreens.xml#TransferInventoryItem  -->
 
     <form name="FromFacilityTransfersComplete" type="multi" target="CompleteRequestedTransfers?completeRequested=true&amp;facilityId=${facilityId}" title="" list-name="fromTransfers"
         odd-row-style="alternate-row" use-row-submit="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

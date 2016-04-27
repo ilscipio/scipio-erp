@@ -51,6 +51,8 @@ under the License.
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
                 
+                <!-- A lot of pages still need this -->
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="FOUNDATION_SHOP" global="false"/>

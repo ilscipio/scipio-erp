@@ -81,7 +81,9 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
-        <security https="true" auth="true"/>
+        <!-- Cato: CHANGED TO AUTH FALSE because request handler doesn't recognize need
+            to logout anonymous user in some cases -->
+        <security https="true" auth="false"/><!-- auth="true" -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
         <response name="success" type="request-redirect" value="main"/>
         <response name="error" type="view" value="main"/>

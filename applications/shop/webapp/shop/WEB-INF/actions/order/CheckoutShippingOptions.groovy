@@ -25,7 +25,7 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
 cart = session.getAttribute("shoppingCart");
-party = userLogin.getRelatedOne("Party", false);
+party = userLogin?.getRelatedOne("Party", false); // Cato: Prevent NPE
 productStore = ProductStoreWorker.getProductStore(request);
 
 if (cart) {

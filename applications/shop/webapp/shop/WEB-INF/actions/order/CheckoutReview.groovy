@@ -20,6 +20,7 @@
 import java.lang.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
@@ -108,3 +109,22 @@ context.orderGrandTotal = cart.getGrandTotal();
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
+
+// CATO: Get placing party
+placingPartyId = cart.getPlacingCustomerPartyId();
+context.placingPartyId = placingPartyId;
+placingParty = null;
+if (placingPartyId) {
+    // emulates OrderReadHelper
+    placingParty = EntityQuery.use(delegator).from("Person").where("partyId", placingPartyId).queryOne();
+    if (!placingParty) {
+        placingParty = EntityQuery.use(delegator).from("PartyGroup").where("partyId", placingPartyId).queryOne();
+    }
+}
+context.placingParty = placingParty;
+
+// CATO: Get order date. If it's not yet set, use nowTimestamp
+context.orderDate = cart.getOrderDate() ?: nowTimestamp;
+
+// CATO: Get emails (all combined)
+context.orderEmailList = cart.getOrderEmailList();

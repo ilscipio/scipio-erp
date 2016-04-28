@@ -215,4 +215,14 @@ if (orderHeader) {
 
     orderItemChangeReasons = from("Enumeration").where("enumTypeId", "ODR_ITM_CH_REASON").queryList();
     context.orderItemChangeReasons = orderItemChangeReasons;
+    
+    // CATO: Get placing party
+    context.placingParty = orderReadHelper.getPlacingParty();
+    
+    // CATO: Get order date
+    context.orderDate = orderHeader.orderDate;
+    
+    // CATO: Get emails (includes both party's contact emails and additional order emails)
+    context.orderEmailList = orderReadHelper.getOrderEmailList();
+    
 }

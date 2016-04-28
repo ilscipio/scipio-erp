@@ -939,7 +939,19 @@ public class ShoppingCartEvents {
             // to allow the display of the order confirmation page put the userLogin in the request, but leave it out of the session
             request.setAttribute("temporaryAnonymousUserLogin", userLogin);
 
-            Debug.logInfo("Doing clearCart for anonymous user, so logging out but put anonymous userLogin in temporaryAnonymousUserLogin request attribute", module);
+            // CATO: Changing this behavior to PRESERVE the previous anon user login (especially the temporary userLogin.partyId).
+            // This is to allow the anon user to view additional order documents after the next immediate request. 
+            // If we don't do this, the anon user only gets to see one page and any refresh
+            // causes him to lose access to all information not mailed to him.
+            // Keeping the anon userLogin also allows keeping the previous temporary partyId which
+            // will conveniently remember his address if he places another order.
+            // I do not see a reason why keeping userLogin should cause any problems for screens,
+            // because all screens must be "anonymous"-login aware anyway (because of multiple tabs).
+            // NOTE: The comment above says that UserLogin is modified for logouts, but our LoginWorker should be
+            // patched to prevent this for the anonymous user.
+            //Debug.logInfo("Doing clearCart for anonymous user, so logging out but put anonymous userLogin in temporaryAnonymousUserLogin request attribute", module);
+            session.setAttribute("userLogin", userLogin);
+            Debug.logInfo("Cato: Doing clearCart for anonymous user, but leaving anonymous user login in session (partyId: '" + userLogin.getString("partyId") + "'", module);
         }
 
         return "success";

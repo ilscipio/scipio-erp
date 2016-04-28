@@ -16,14 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign sectionTitle>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</#assign>
-<#macro menuContent menuArgs={}>
-  <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text=uiLabelMap.ProductNewFacility class="+${styles.action_nav!} ${styles.action_add!}" />
-  </@menu>
-</#macro>
-<@section title=sectionTitle menuContent=menuContent>
-        
+
+<@section menuContent=menuContent>
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
       <@section>
@@ -220,7 +214,7 @@ under the License.
               </@tr>
               <@tr>
                 <@td colspan="2" align="right">
-                  <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                  <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
                 </@td>
               </@tr>
             <#else>
@@ -240,11 +234,11 @@ under the License.
       <#-- Initial Screen -->
     <#else>
       <@section title=uiLabelMap.ProductReceiveReturn>
-      <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>">
+      <form name="receiveInventoryReturn" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
         <input type="hidden" name="initialSelected" value="Y" />
           <@field type="input" label=uiLabelMap.ProductReturnNumber name="returnId" size="20" maxlength="20" value=(requestParameters.returnId!) />
-          <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
+          <@field type="submit" submitType="link" href="javascript:document.receiveInventoryReturn.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct />
       </form>
       </@section>
     </#if>

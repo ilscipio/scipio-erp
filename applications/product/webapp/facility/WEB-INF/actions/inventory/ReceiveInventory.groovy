@@ -17,15 +17,19 @@
  * under the License.
  */
 
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.entity.util.*
+import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.*
+import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
 
 facilityId = request.getParameter("facilityId");
 purchaseOrderId = request.getParameter("purchaseOrderId");
 productId = request.getParameter("productId");
 shipmentId = request.getParameter("shipmentId");
+Debug.log("facilityId ===============> " + facilityId);
+Debug.log("purchaseOrderId ===============> " + purchaseOrderId);
+Debug.log("productId ===============> " + productId);
+Debug.log("shipmentId ===============> " + shipmentId);
 
 partialReceive = parameters.partialReceive;
 if (partialReceive) {

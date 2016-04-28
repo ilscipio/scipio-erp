@@ -215,7 +215,6 @@ under the License.
                </platform-specific>
             </widgets>
         </section>
-        
     </screen>
     
     <screen name="TransferInventoryItem">
@@ -1043,45 +1042,31 @@ under the License.
             <actions>
                 <set field="activeSubMenuItem" value="ReceiveInventory"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.ProductReceiveInventory}"/>
+                <set field="title" value="${uiLabelMap.ProductReceiveInventoryItems} ${facilityId}"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/ConvertUom.js" global="true"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/inventory/receiveInventory.ftl"/></html>
-                        </platform-specific>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific><html><html-template location="component://product/webapp/facility/inventory/receiveInventory.ftl"/></html></platform-specific>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific><html><html-template location="component://product/webapp/facility/returns/receiveReturn.ftl"/></html></platform-specific>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="ReceiveReturn">
-        <section>
-            <actions>
-                <set field="titleProperty" value="ProductReceiveReturn"/>
-                <set field="activeMainMenuItem" value="facility"/>
-                <set field="activeSubMenuItem" value="ReceiveReturn"/>
 
-                <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
-                <set field="facilityMenu" value="FacilityInventorySideBar" />
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
-                    <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/returns/receiveReturn.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="UpdatedInventoryItemStatus">
         <section>
             <actions>

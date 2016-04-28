@@ -568,9 +568,9 @@ under the License.
             <submit/>
         </field>
     </form>
-    <!-- Cato: ListPhysicalInventory moved to  -->
-    <form name="ListPhysicalInventory" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
-        odd-row-style="alternate-row" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- Cato: ListPhysicalInventory moved to component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail -->
+    <!-- <form name="ListPhysicalInventory" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
+        odd-row-style="alternate-row" separate-columns="true"> orig: default-table-style=-style="basic-table hover-bar"
         <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${inventoryItemId}" target="EditInventoryItem">
                 <parameter param-name="inventoryItemId"/>
@@ -597,7 +597,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit/>
         </field>
-    </form>
+    </form> -->
     <!-- FacilityGroups -->
     <!-- Cato: Hide for now -->
     <!-- <form name="EditFacilityGroups" type="list" target="updateGroupToFacility" paginate-target="EditFacilityGroups" title="" list-name="facilityGroupMembers"

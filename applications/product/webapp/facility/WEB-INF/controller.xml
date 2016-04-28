@@ -578,7 +578,8 @@ under the License.
         <response name="success" type="request" value="EditInventoryItem"/>
         <response name="error" type="view" value="ReceiveInventory"/>
     </request-map>
-    <request-map uri="ReceiveReturn">
+    <!-- Cato: Merged with ReceiveInventory  -->
+    <!-- <request-map uri="ReceiveReturn">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ReceiveReturn"/>
     </request-map>
@@ -587,7 +588,7 @@ under the License.
         <event type="service-multi" path="" invoke="receiveInventoryProduct"/>
         <response name="success" type="view" value="ReceiveReturn"/>
         <response name="error" type="view" value="ReceiveReturn"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="UpdatedInventoryItemStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UpdatedInventoryItemStatus"/>
@@ -1374,7 +1375,8 @@ under the License.
     <view-map name="TransferInventoryItemDetail" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TransferInventoryItemDetail"/>
     
     <view-map name="ReceiveInventory" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveInventory"/>
-    <view-map name="ReceiveReturn" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveReturn"/>
+    <!-- Cato: Merged with ReceiveInventory  -->
+    <!-- <view-map name="ReceiveReturn" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReceiveReturn"/> -->
     <view-map name="UpdatedInventoryItemStatus" type="screen" page="component://product/widget/facility/FacilityScreens.xml#UpdatedInventoryItemStatus"/>
     <view-map name="FindFacilityPhysicalInventory" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityPhysicalInventory"/>
 

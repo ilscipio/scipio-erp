@@ -31721,12 +31721,15 @@
         <value xml:lang="en">Location Seq Id From</value>
     </property>
     <property key="ProductInventoryTransfers">
-        <value xml:lang="en">Inventory transfer List</value>
+        <value xml:lang="en">Inventory Transfer List</value>
     </property>
     <property key="ProductRequestedTransfers">
         <value xml:lang="en">Requested transfers</value>
     </property>
     <property key="ProductPhysicalInventoryList">
         <value xml:lang="en">Physical Inventory List</value>
+    </property>
+    <property key="ProductReceiveInventoryItems">
+        <value xml:lang="en">Receive Inventory</value>
     </property>
 </resource>

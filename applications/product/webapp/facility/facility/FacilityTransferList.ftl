@@ -44,7 +44,7 @@
                         <@td>${inventoryItem.availableToPromiseTotal!}/${inventoryItem.quantityOnHandTotal!}</@td>
                         <@td>${transfer.sendDate!}</@td>
                         <@td>${transfer.receiveDate!}</@td>
-                        <@td><@field type="submit" submitType="link" href=makeOfbizUrl("TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}") text=uiLabelMap.CommonUpdate /></@td>
+                        <@td><a href=<@ofbizUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@ofbizUrl>")>${uiLabelMap.CommonUpdate}</a></@td>
                     </@tr>
                 </#list>
             </@table>    

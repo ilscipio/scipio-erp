@@ -313,11 +313,12 @@ under the License.
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <menu-item name="ReceiveReturn" title="${uiLabelMap.ProductReceiveReturn}">
+        <!-- Cato: Merged with ReceiveInventory -->
+        <!-- <menu-item name="ReceiveReturn" title="${uiLabelMap.ProductReceiveReturn}">
             <link target="ReceiveReturn">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     
     <menu name="FacilityPickingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

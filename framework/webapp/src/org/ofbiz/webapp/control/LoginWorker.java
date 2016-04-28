@@ -685,12 +685,16 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
-        if (security != null && userLogin != null) {
+        // CATO: We do NOT do this for the anonymous user. Core login should recognize this user.
+        //if (security != null && userLogin != null) {
+        if (security != null && userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
             security.clearUserData(userLogin);
         }
 
         // set the logged out flag
-        if (userLogin != null) {
+        // CATO: We do NOT do this for the anonymous user. Core login should recognize this user.
+        //if (userLogin != null) {
+        if (userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
             LoginWorker.setLoggedOut(userLogin.getString("userLoginId"), delegator);
         }
 

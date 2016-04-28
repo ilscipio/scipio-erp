@@ -27,6 +27,8 @@ under the License.
     <screen name="OrderPDF">
         <section>
             <actions>
+                <!-- Cato: FIXME!!!: This screen does not properly do permission checks!!!
+                    It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value) -->
                 <set field="titleProperty" value="OrderOrder"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>

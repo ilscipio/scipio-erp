@@ -568,6 +568,7 @@ under the License.
             <submit/>
         </field>
     </form>
+    <!-- Cato: ListPhysicalInventory moved to  -->
     <form name="ListPhysicalInventory" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
         odd-row-style="alternate-row" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">

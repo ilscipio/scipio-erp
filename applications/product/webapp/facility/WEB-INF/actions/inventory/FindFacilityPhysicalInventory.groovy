@@ -17,14 +17,17 @@
  * under the License.
  */
 
-import org.ofbiz.service.ServiceUtil
+import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.*
+import org.ofbiz.service.ServiceUtil
 
 facilityId = parameters.facilityId;
 
 // fields to search by
 productId = parameters.productId ? parameters.productId.trim() : null;
 internalName = parameters.internalName ? parameters.internalName.trim() : null;
+physicalInventoryId = parameters.physicalInventoryId ? parameters.physicalInventoryId : null;
+Debug.log("parameters physicalInventoryId ==================> " + parameters.physicalInventoryId); 
 
 // build conditions
 conditions = [EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId),
@@ -38,6 +41,8 @@ if (internalName) {
 }
 
 if (conditions.size() > 2) {
+    context.varianceReasonList = from("VarianceReason").orderBy("description").queryList();
+    
     physicalInventory = from("ProductInventoryItem").where(conditions).orderBy("productId").queryList();
 
     // also need the overal product QOH and ATP for each product

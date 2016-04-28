@@ -31726,4 +31726,7 @@
     <property key="ProductRequestedTransfers">
         <value xml:lang="en">Requested transfers</value>
     </property>
+    <property key="ProductPhysicalInventoryList">
+        <value xml:lang="en">Physical Inventory List</value>
+    </property>
 </resource>

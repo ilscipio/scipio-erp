@@ -1004,23 +1004,36 @@ under the License.
     <screen name="FindFacilityPhysicalInventory">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindFacilityPhysicalInventory"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PhysicalInventory"/>
+                <set field="facilityId" value="${parameters.facilityId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/FindFacilityPhysicalInventory.groovy"/>
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
+                <set field="title" value="${uiLabelMap.ProductPhysicalInventory} ${facilityId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                        <screenlet>
                             <include-form name="FindPhysicalInventory" location="component://product/widget/facility/FacilityForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
+                        <!-- <screenlet title="${uiLabelMap.PageTitleFindFacilityPhysicalInventory}">
                             <include-form name="ListPhysicalInventory" location="component://product/widget/facility/FacilityForms.xml"/>
-                        </screenlet>
+                        </screenlet> -->
+                        <include-screen name="CatoFacilityPhysicalInventoryList"/>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CatoFacilityPhysicalInventoryList">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/facility/inventory/PhysicalInventoryList.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

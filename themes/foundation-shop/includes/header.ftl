@@ -75,6 +75,9 @@ under the License.
     </#if>-->
     <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
         <li class="divider"></li>
+    </#if>
+    <#-- Now show this even for anon, unless it's anon without a party -->
+    <#if userLogin?has_content && !(userLogin.userLoginId == "anonymous" && !userLogin.partyId?has_content)>
         <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
 </#macro>
@@ -200,9 +203,31 @@ under the License.
 </div>
 
 <#macro rightMenu>
-      <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+      <#-- Cato: NOTE: We must display something for the anonymous user that has a partyId
+          attached (created during anon checkout), because otherwise he has no way to clear his session.
+          His temporary partyId is now (and must be) kept after checkout is done, for technical reasons,
+          but also it's very convenient. 
+          Presence of userLogin.partyId is what marks the difference. -->
+      <#if userLogin?has_content && !(userLogin.userLoginId == "anonymous" && !userLogin.partyId?has_content)>
           <li class="has-dropdown not-click">
-            <a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a>
+            <#if userLogin.userLoginId == "anonymous">
+              <#assign person = delegator.findOne("Person", {"partyId":userLogin.partyId}, true)!>
+              <#if person?has_content>
+                <#assign welcomeName = person.firstName!userLogin.userLoginId>
+              <#else>
+                <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId":userLogin.partyId}, true)!>
+                <#if partyGroup?has_content>
+                  <#assign welcomeName = partyGroup.groupName!userLogin.userLoginId>
+                <#else>
+                  <#-- Use userLoginId ("anonymous") as the fallback for now; the partyId will be a random number, kind of insulting -->
+                  <#assign welcomeName = userLogin.userLoginId>
+                </#if>
+              </#if>
+            <#else>
+              <#-- NOTE: This is a bit inconsistent with the anon user -->
+              <#assign welcomeName = userLogin.userLoginId>
+            </#if>
+            <a href="#">${uiLabelMap.CommonWelcome}! ${welcomeName}</a>
             <ul class="dropdown">       
                 <@generalMenu />
             </ul>

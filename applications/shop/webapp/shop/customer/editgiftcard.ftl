@@ -65,10 +65,10 @@ under the License.
         <#assign expMonth = "">
         <#assign expYear = "">
         <#if giftCardData?? && giftCardData.expireDate??>
-          <#assign expDate = giftCard.expireDate>
-          <#if (expDate?? && expDate.indexOf("/") > 0)>
-            <#assign expMonth = expDate.substring(0,expDate.indexOf("/"))>
-            <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
+          <#assign expDate = giftCard.expireDate!?string>
+          <#if (expDate?? && (expDate?index_of("/") > 0))>
+            <#assign expMonth = expDate?substring(0, expDate?index_of("/"))>
+            <#assign expYear = expDate?substring(expDate?index_of("/")+1)>
           </#if>
         </#if>
         <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();" tooltip=uiLabelMap.CommonMonth>

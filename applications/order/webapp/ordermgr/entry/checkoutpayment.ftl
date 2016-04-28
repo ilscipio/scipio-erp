@@ -104,19 +104,19 @@ var issuerId = "";
 
             <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
               <#macro labelContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- Cato: Use full so clearer: OrderMoneyOrder -->
-              <@invertedField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=labelContent/>
+              <@checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=labelContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
               <#macro labelContent args={}><label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label></#macro>
-              <@invertedField type="radio" labelContent=labelContent type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId) labelContent=labelContent />
+              <@checkoutInvField type="radio" labelContent=labelContent type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId) labelContent=labelContent />
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
               <#macro labelContent args={}><label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label></#macro>
-              <@invertedField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId) labelContent=labelContent/>
+              <@checkoutInvField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId) labelContent=labelContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
               <#macro labelContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label></#macro>
-              <@invertedField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=labelContent />
+              <@checkoutInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=labelContent />
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
               <#macro labelContent args={}>
@@ -131,7 +131,7 @@ var issuerId = "";
                   </#if>
                 </div>
               </#macro>
-              <@invertedField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == checkOutPaymentId) labelContent=labelContent />
+              <@checkoutInvField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == checkOutPaymentId) labelContent=labelContent />
             </#if>
 
             <#if !paymentMethodList?has_content>
@@ -162,35 +162,35 @@ var issuerId = "";
                   </#if>
 
                   <#macro labelContent args={}>
-                    <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}:${giftCardNumber}</label>
+                    <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
                     <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                     <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                     <@field type="input" fieldsType="default-compact" ignoreParentField=true label=uiLabelMap.OrderBillUpTo size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                   </#macro>
-                  <@invertedField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent />
+                  <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent />
                  </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
                     <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
                     <#macro labelContent args={}>
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">CC:${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
+                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingCreditCard}: ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
                       <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                       <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                       <#assign fieldValue><#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                       <@field type="input" fieldsType="default-compact" ignoreParentField=true label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                     </#macro>
-                    <@invertedField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent/>
+                    <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=labelContent/>
                   </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
                     <#macro labelContent args={}>
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingEFTAccount}:${eftAccount.bankName!}: ${eftAccount.accountNumber!}</label>
+                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingEFTAccount}: ${eftAccount.bankName!}: ${eftAccount.accountNumber!}</label>
                       <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
                       <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     </#macro>
-                    <@invertedField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == checkOutPaymentId) labelContent=labelContent/>
+                    <@checkoutInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == checkOutPaymentId) labelContent=labelContent/>
                   </#if>
                 </#if>
               </#list>
@@ -204,7 +204,7 @@ var issuerId = "";
                     <#list billingAccountList as billingAccount>
                       <#assign availableAmount = billingAccount.accountBalance>
                       <#assign accountLimit = billingAccount.accountLimit>
-                      <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == (selectedBillingAccountId!"")>selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
+                      <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                     </#list>
                 </@field>
                 <@field type="input" size="5" id="billingAccountAmount" name="billingAccountAmount" value="" label=uiLabelMap.OrderBillUpTo/>
@@ -222,7 +222,7 @@ var issuerId = "";
                 </#if>
                 <@field type="input" fieldsType="default-compact" ignoreParentField=true size="6" id="giftCardAmount" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingAmount/>
               </#macro>
-              <@invertedField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=labelContent/>
+              <@checkoutInvField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=labelContent/>
             </#if>
 
             <@menu type="button">

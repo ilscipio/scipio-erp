@@ -141,17 +141,19 @@ under the License.
                         <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
                         <div>
                           <#if contactMechPurposeType??>
+                          <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"><span style="white-space:nowrap;"></#if>
                             ${contactMechPurposeType.get("description",locale)}
-                            <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
+                            <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (((profiledefs.defaultShipAddr)!"") == contactMech.contactMechId)>
                               <span><strong>[${uiLabelMap.EcommerceIsDefault}]</strong></span>
                             <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                              <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                              <form name="defaultShippingAddressForm" style="display:inline;" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                                 <input type="hidden" name="productStoreId" value="${productStoreId}" />
                                 <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                                 <input type="hidden" name="partyId" value="${party.partyId}" />
-                                <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
                               </form>
                             </#if>
+                          <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION"></span></#if>
                           <#else>
                             ${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"
                           </#if>
@@ -161,19 +163,19 @@ under the License.
                       <#if (contactMech.contactMechTypeId!) == "POSTAL_ADDRESS">
                         <#assign postalAddress = partyContactMechValueMap.postalAddress! />
                         <div>
-                          <#if postalAddress??>
+                          <#if postalAddress?has_content>
                             <#if postalAddress.toName?has_content>${uiLabelMap.CommonTo}: ${postalAddress.toName}<br /></#if>
                             <#if postalAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${postalAddress.attnName}<br /></#if>
-                            ${postalAddress.address1}<br />
-                            <#if postalAddress.address2?has_content>${postalAddress.address2}<br /></#if>
-                            ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode!}
-                            <#if postalAddress.countryGeoId?has_content><br />${postalAddress.countryGeoId}</#if>
+                            ${postalAddress.address1!}<br />
+                            <#if postalAddress.address2?has_content>${postalAddress.address2!}<br /></#if>
+                            ${postalAddress.city!}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId!}</#if>&nbsp;${postalAddress.postalCode!}
+                            <#if postalAddress.countryGeoId?has_content><br />${postalAddress.countryGeoId!}</#if>
                             <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
-                              <#assign addr1 = postalAddress.address1! />
-                              <#if (addr1.indexOf(" ") > 0)>
-                                <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
-                                <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1) />
-                                <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
+                              <#assign addr1 = postalAddress.address1!?string />
+                              <#if (addr1?index_of(" ") > 0)>
+                                <#assign addressNum = addr1?substring(0, addr1?index_of(" ")) />
+                                <#assign addressOther = addr1?substring(addr1?index_of(" ")+1) />
+                                <br/><a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav_inline!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                               </#if>
                             </#if>
                           <#else>
@@ -196,18 +198,19 @@ under the License.
                         </#if>
                         </div>
                       <#elseif (contactMech.contactMechTypeId!) == "EMAIL_ADDRESS">
-                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys_inline!} ${styles.action_send!} ${styles.action_external!}">${contactMech.infoString}</a>
+                          <a href="mailto:${contactMech.infoString!}" class="${styles.link_run_sys_inline!} ${styles.action_send!} ${styles.action_external!}">${contactMech.infoString!}</a>
                       <#elseif (contactMech.contactMechTypeId!) == "WEB_ADDRESS">
                         <div>
                           ${contactMech.infoString}
-                          <#assign openAddress = contactMech.infoString! />
-                          <#if !openAddress.startsWith("http") && !openAddress.startsWith("HTTP")><#assign openAddress = "http://" + openAddress /></#if>
+                          <#assign openAddress = contactMech.infoString!?string />
+                          <#if !openAddress?starts_with("http://") && !openAddress?starts_with("HTTP://") && !openAddress?starts_with("https://") && !openAddress?starts_with("HTTPS://")><#assign openAddress = "http://" + openAddress /></#if>
                           <a target="_blank" href="${openAddress}" class="${styles.link_nav!} ${styles.action_view!} ${styles.action_external!}">${uiLabelMap.CommonOpenNewWindow}</a>
                         </div>
                       <#else>
                         ${contactMech.infoString!}
                       </#if>
-                      <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
+                      <#-- Cato: needless information
+                      <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>-->
                       <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
                     </@td>
                     <@td>(${partyContactMech.allowSolicitation!})</@td>

@@ -47,7 +47,7 @@ function makeExpDate() {
               <#if billingAccountList?has_content>
                 <#assign labelContent>${uiLabelMap.FormFieldTitle_billingAccountId}</#assign>
                 <#assign postfixContent></#assign>
-                <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                     <select name="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
@@ -63,20 +63,20 @@ function makeExpDate() {
                 </@invertedField>
                 <#assign labelContent>${uiLabelMap.OrderBillUpTo}</#assign>
                 <#assign postfixContent></#assign>
-                <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                     <input type="text" size="5" name="billingAccountAmount" value=""/>
                 </@invertedField>
                 
               </#if>
               <#assign labelContent><label for="checkOutPaymentId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" id="checkOutPaymentId_EXT_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if>/>
               </@invertedField>
              
               <#assign labelContent><label for="checkOutPaymentId_EXT_COD">${uiLabelMap.OrderCOD}</label></#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" id="checkOutPaymentId_EXT_COD" name="checkOutPaymentId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if>/>
               </@invertedField>
              
@@ -92,7 +92,7 @@ function makeExpDate() {
                         <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip=uiLabelMap.OrderCardSecurityCode/>
                     </#assign>
                     <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
-                    <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                    <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                     </@invertedField>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
@@ -102,7 +102,7 @@ function makeExpDate() {
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label></#assign>
                     <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
-                    <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                    <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                     </@invertedField>
                     
@@ -149,7 +149,7 @@ function makeExpDate() {
             <#if cart.getShippingContactMechId()??>
             <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
             <#assign postfixContent></#assign>
-            <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+            <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                 <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr??>checked="checked"</#if>/>
             </@invertedField>
 
@@ -303,26 +303,26 @@ function makeExpDate() {
             <#if "Y" != requestParameters.createNew?default("")>
               <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
               </@invertedField>
               
               <#assign labelContent>${uiLabelMap.OrderCOD}</#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
               </@invertedField>
             </#if>
 
               <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
               </@invertedField>
               
               <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
               <#assign postfixContent></#assign>
-              <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
               </@invertedField>
           </form>

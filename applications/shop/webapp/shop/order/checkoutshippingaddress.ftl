@@ -53,14 +53,20 @@ function toggleBillingAccount(box) {
     }
 }
 
+function updateAddrVisibility() {
+    updateNewAddrFormVisibility();
+}
+
 <#-- Cato: show new address form -->
-function toggleNewAddressForm() {
-    if (jQuery('#newshipaddr').is(':visible')) {
-        jQuery('#newshipaddr').hide();
-    } else {
-        jQuery('#newshipaddr').show();
-        jQuery('#newshipaddr .newshipaddrradioarea input').prop('checked', true);
-        jQuery('#newshipaddr').focus();
+function updateNewAddrFormVisibility() {
+    var radio = jQuery('#newshipaddrfield .newshipaddrradioarea input');
+    if (radio.length > 0) {
+        if (radio.is(":checked")) {
+            jQuery('#newshipaddrcontent').show();
+            jQuery('#newshipaddrcontent').focus();
+        } else {
+            jQuery('#newshipaddrcontent').hide();
+        }
     }
 }
 
@@ -70,6 +76,13 @@ jQuery(document).ready(function() {
         getAssociatedStateList('newShipAddr_countryGeoId', 'newShipAddr_stateProvinceGeoId', null, null);
     });
     getAssociatedStateList('newShipAddr_countryGeoId', 'newShipAddr_stateProvinceGeoId', null, null);
+    
+    <#-- Cato: Needed for page refreshes to work -->
+    updateAddrVisibility();
+    
+    <#-- Cato: FIXME? Which will work currently depends on markup -->
+    jQuery('input.addr-select-radio').change(updateAddrVisibility);
+    jQuery('.addr-select-radio input').change(updateAddrVisibility);
 });
 
 </@script>
@@ -166,9 +179,11 @@ jQuery(document).ready(function() {
     <#-- Cato: This old link becomes redundant with the addition of an inlined form (below). 
     <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
     -->
-  <#if shippingContactMechList?has_content><#-- Cato: If no shipping methods, don't offer button to close the form, required. -->
-    <@menuitem type="link" href="javascript:toggleNewAddressForm();" class="+${styles.action_nav_local!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
-  </#if>
+    <#-- Integrate this with radio button instead so more direct
+    <#if shippingContactMechList?has_content>
+      <@menuitem type="link" href="javascript:updateNewAddrFormVisibility();" class="+${styles.action_nav_local!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
+    </#if>
+    -->
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderWhereShallWeShipIt}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}? -->
@@ -202,20 +217,16 @@ jQuery(document).ready(function() {
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </#assign>
-            <@invertedField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent/>
+            <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
           </#list>
         </#if>
 
-    <#macro newAddrFormContent args={}>
-    <@fields type="default" ignoreParentField=true>
-      <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>
-
-
+    <#macro newAddrFormContent args={} fieldsType="default">
+    <@fields type=fieldsType ignoreParentField=true>
       <input type="hidden" name="new_ship_addr_prefix" value="newShipAddr_" />
       <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
       <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
-
       
       <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address
            and saves as default in profile due to way createPostalAddressAndPurposes service written.
@@ -256,7 +267,6 @@ jQuery(document).ready(function() {
     </@fields>
     </#macro>
 
-      <div id="newshipaddr"<#if !showNewAddrForm> style="display:none;"</#if>>
         <#-- Cato: _NEW_RECORD_ asks the checkout process to check for _NEW_RECORD_ and create a new contact mech if needed before the other events -->
         <#if shippingContactMechList?has_content>
           <#if parameters.shipping_contact_mech_id?has_content>
@@ -264,12 +274,24 @@ jQuery(document).ready(function() {
           <#else>
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
-          <@invertedField type="radio" name="shipping_contact_mech_id" value="_NEW_RECORD_" checked=checkThisAddress labelContent=newAddrFormContent widgetAreaClass="+newshipaddrradioarea"/>
+          <#macro newAddrFormContentAndTitle args={}>
+            <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
+            <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
+            <#-- Cato: Can pass this to change the look/markup: <@newAddrFormContent fieldsType="default-compact"... -->
+            <@newAddrFormContent />
+            </div>
+          </#macro>
+          <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="_NEW_RECORD_" checked=checkThisAddress 
+            labelContent=newAddrFormContentAndTitle widgetAreaClass="+newshipaddrradioarea" 
+            id="newshipaddrradio" containerId="newshipaddrfield" 
+            class="+addr-select-radio"/>
         <#else>
-          <input type="hidden" name="shipping_contact_mech_id" value="_NEW_RECORD_" />
-          <@newAddrFormContent />
+          <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
+            <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>
+            <input type="hidden" name="shipping_contact_mech_id" value="_NEW_RECORD_" />
+            <@newAddrFormContent />
+          </div>
         </#if>
-      </div>
     
     </@section>
 
@@ -299,7 +321,7 @@ jQuery(document).ready(function() {
                 ${agreement.description!}
             </@modal>
           </#assign>
-          <@invertedField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
+          <@checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
         </#list>
       </#if>
     </@section>

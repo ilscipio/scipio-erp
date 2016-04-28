@@ -64,24 +64,33 @@ function submitForm(form, mode, value) {
 
             <#-- Cato: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
+            <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <@field type="generic" label=uiLabelMap.OrderShippingMethod>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
-                <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-                <#assign labelContent>
-                      <#if shoppingCart.getShippingContactMechId()??>
-                        <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                      </#if>
-                      <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                      <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
-                </#assign>
-                <#--<@invertedField type="generic" labelContent=labelContent>-->
-                <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == rawString(chosenShippingMethod!"N@A")) label=labelContent /><#--inline=true -->
-                <#--</@invertedField>-->
+                <#-- Cato: For shop, will not show ship methods whose shipping estimates returned an error.
+                    Selecting them here causes the next events to fail (offline calc for these was not supported in ecommerce). 
+                    Some stores may want to let customers place
+                    orders with offline calculation, but we know the failure is very likely to be misconfiguration
+                    or connectivity failure, and by default we can't assume the store is equipped to handle offlines in these cases.
+                    NOTE: Failure is subtly noted by the absence of ship estimate (null). -->
+                <#if shippingEstWpr.getShippingEstimate(carrierShipmentMethod)??>
+                  <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+                  <#assign labelContent>
+                    <#if shoppingCart.getShippingContactMechId()??>
+                      <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
+                    </#if>
+                    <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
+                    <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
+                  </#assign>
+                  <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
+                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=labelContent /><#--inline=true -->
+                  <#--</@invertedField>-->
+                </#if>
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
-                <#--<@invertedField type="generic" labelContent=labelContent>-->
+                <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
                 <@field type="radio" name="shipping_method" value="Default" checked=true label=labelContent/><#--inline=true -->
                 <#--</@invertedField>-->
               </#if>
@@ -92,30 +101,30 @@ function submitForm(form, mode, value) {
               
             <@field type="generic" label="${uiLabelMap.OrderShipAllAtOnce}?">
               <@fields inlineItems=false>
-              <@field type="radio" checked=("Y" != (shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}."/>
-              <@field type="radio" checked=("Y" == (shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}."/>
+              <@field type="radio" checked=("Y" != (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="false" label="${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}."/>
+              <@field type="radio" checked=("Y" == (parameters.may_split!shoppingCart.getMaySplit()!"N")) name="may_split" value="true" label="${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}."/>
               </@fields>
             </@field>
               <#--<hr />-->
 
-              <@field type="textarea" title=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" wrap="hard" name="shipping_instructions" label=uiLabelMap.OrderSpecialInstructions>${shoppingCart.getShippingInstructions()!}</@field>
+              <@field type="textarea" title=uiLabelMap.OrderSpecialInstructions cols="30" rows="3" wrap="hard" name="shipping_instructions" label=uiLabelMap.OrderSpecialInstructions>${parameters.shipping_instructions!shoppingCart.getShippingInstructions()!}</@field>
        
               <#--<hr />-->
 
               <#if shoppingCart.getPoNumber()?? && shoppingCart.getPoNumber() != "(none)">
                 <#assign currentPoNumber = shoppingCart.getPoNumber()>
               </#if>
-              <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value=(currentPoNumber!)/>
+              <@field type="input" label=uiLabelMap.OrderPoNumber name="correspondingPoId" size="15" value=(parameters.correspondingPoId!currentPoNumber!)/>
      
             <#if (productStore.showCheckoutGiftOptions!) != "N">
               <#--<hr />-->
               <@field type="generic" label=uiLabelMap.OrderIsThisGift>
-                    <@field type="radio" checked=("Y" == (shoppingCart.getIsGift()!"N")) name="is_gift" value="true" label=uiLabelMap.CommonYes />
-                    <@field type="radio" checked=("Y" != (shoppingCart.getIsGift()!"N")) name="is_gift" value="false" label=uiLabelMap.CommonNo />
+                    <@field type="radio" checked=("Y" == (parameters.is_gift!shoppingCart.getIsGift()!"N")) name="is_gift" value="true" label=uiLabelMap.CommonYes />
+                    <@field type="radio" checked=("Y" != (parameters.is_gift!shoppingCart.getIsGift()!"N")) name="is_gift" value="false" label=uiLabelMap.CommonNo />
               </@field>
               <#--<hr />-->
 
-              <@field type="textarea" label=uiLabelMap.OrderGiftMessage cols="30" rows="3" wrap="hard" name="gift_message">${shoppingCart.getGiftMessage()!}</@field>
+              <@field type="textarea" label=uiLabelMap.OrderGiftMessage cols="30" rows="3" wrap="hard" name="gift_message">${parameters.gift_message!shoppingCart.getGiftMessage()!}</@field>
      
             <#else>
               <input type="hidden" name="is_gift" value="false"/>
@@ -133,7 +142,7 @@ function submitForm(form, mode, value) {
                   <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}" target="_BLANK">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                  <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>
+                  <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(parameters.order_additional_emails!shoppingCart.getOrderAdditionalEmails()!)/>
               </@field>
         </fieldset>
     </form>

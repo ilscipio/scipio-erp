@@ -97,7 +97,7 @@ function toggleBillingAccount(box) {
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </#assign>
-            <@invertedField type="generic" labelContent=labelContent postfixContent=postfixContent>
+            <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
             </@invertedField>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
@@ -124,7 +124,7 @@ function toggleBillingAccount(box) {
       <#else>
         <#list agreements as agreement>
           <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
-          <@invertedField type="radio" name="agreementId" value=(agreement.agreementId!) checked=true labelContent="${agreement.description!} will be used for this order." />
+          <@checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=true labelContent="${agreement.description!} will be used for this order." />
         </#list>
       </#if>
     </@section>

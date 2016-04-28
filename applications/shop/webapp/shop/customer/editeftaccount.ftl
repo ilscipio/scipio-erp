@@ -82,12 +82,12 @@ under the License.
                 </div>
               </#list>
               <div>
-                <#if curPostalAddress.toName??><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName}<br /></#if>
-                <#if curPostalAddress.attnName??><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName}<br /></#if>
+                <#if curPostalAddress.toName??><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName!}<br /></#if>
+                <#if curPostalAddress.attnName??><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName!}<br /></#if>
                 ${curPostalAddress.address1!}<br />
-                <#if curPostalAddress.address2??>${curPostalAddress.address2}<br /></#if>
-                ${curPostalAddress.city}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId}</#if>&nbsp;${curPostalAddress.postalCode}
-                <#if curPostalAddress.countryGeoId??><br />${curPostalAddress.countryGeoId}</#if>
+                <#if curPostalAddress.address2??>${curPostalAddress.address2!}<br /></#if>
+                ${curPostalAddress.city!}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId}</#if>&nbsp;${curPostalAddress.postalCode!}
+                <#if curPostalAddress.countryGeoId??><br />${curPostalAddress.countryGeoId!}</#if>
               </div>
               <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
               <#if curPartyContactMech.thruDate??><div><b>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></div></#if>
@@ -123,12 +123,12 @@ under the License.
                     </div>
                 </#list>
                 <div>
-                  <#if postalAddress.toName??><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br /></#if>
-                  <#if postalAddress.attnName??><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br /></#if>
+                  <#if postalAddress.toName??><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName!}<br /></#if>
+                  <#if postalAddress.attnName??><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName!}<br /></#if>
                   ${postalAddress.address1!}<br />
-                  <#if postalAddress.address2??>${postalAddress.address2}<br /></#if>
-                  ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode}
-                  <#if postalAddress.countryGeoId??><br />${postalAddress.countryGeoId}</#if>
+                  <#if postalAddress.address2??>${postalAddress.address2!}<br /></#if>
+                  ${postalAddress.city!}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode!}
+                  <#if postalAddress.countryGeoId??><br />${postalAddress.countryGeoId!}</#if>
                 </div>
                 <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
                 <#if partyContactMech.thruDate??><div><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>

@@ -234,10 +234,10 @@ under the License.
                     <#if postalAddress.countryGeoId?has_content><li>${postalAddress.countryGeoId}</li></#if>
                     </ul>
                     <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
-                      <#assign addr1 = postalAddress.address1! />
-                      <#if (addr1.indexOf(" ") > 0)>
-                        <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
-                        <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1) />
+                      <#assign addr1 = postalAddress.address1!?string />
+                      <#if (addr1?index_of(" ") > 0)>
+                        <#assign addressNum = addr1?substring(0, addr1?index_of(" ")) />
+                        <#assign addressOther = addr1?substring(addr1?index_of(" ")+1) />
                         <a target="_blank" href="#" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">(${uiLabelMap.CommonLookupWhitepages})</a>
                       </#if>
                     </#if>

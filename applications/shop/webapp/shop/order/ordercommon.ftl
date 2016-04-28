@@ -6,7 +6,7 @@ Cato: Local order template common defs
 -->
 
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
-<#macro invertedField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#macro checkoutInvField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>
@@ -77,4 +77,27 @@ Cato: Local order template common defs
     </@row>
 </#macro>
 
-
+<#macro formattedCreditCard creditCard paymentMethod={} verbose=true>
+  <#if verbose>
+    <#--
+    <#if !paymentMethod?has_content>
+      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod")>
+    </#if>
+    -->
+    ${(delegator.findOne("Enumeration", {"enumId":creditCard.cardType!}, true).get("description", locale))!creditCard.cardType!}<#t>
+    <#local cardNum = creditCard.cardNumber!?string>
+    <#if cardNum?has_content>
+      <#if (cardNum?length > 4)>
+        <#t> ${cardNum[0..<(cardNum?length-4)]?replace('.','*','r')}${cardNum[(cardNum?length-4)..]}
+      <#else>
+        <#t> ${cardNum}
+      </#if>
+    </#if>
+    <#if creditCard.expireDate?has_content>
+      <#t> ${creditCard.expireDate}
+    </#if>
+  <#else>
+    <#-- stock ofbiz method -->
+    ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}<#t>
+  </#if>
+</#macro>

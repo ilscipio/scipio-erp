@@ -86,7 +86,7 @@ function shipBillAddr() {
 
         <#if cart.getShippingContactMechId()?? && paymentMethodType != "GC">
           <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
-          <@invertedField type="checkbox" checkboxType="simple" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) labelContent=labelContent />
+          <@checkoutInvField type="checkbox" checkboxType="simple" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" checked=(requestParameters.useShipAddr??) labelContent=labelContent />
 
           <hr />
    
@@ -159,25 +159,25 @@ function shipBillAddr() {
         <input type="hidden" name="createNew" value="Y" />
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingCheckGiftCard}</#assign>
-          <@invertedField type="checkbox" name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") labelContent=labelContent />
+          <@checkoutInvField type="checkbox" name="useGc" value="GC" checked=(paymentMethodType?? && paymentMethodType == "GC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
           <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
-          <@invertedField type="radio" name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") labelContent=labelContent />
+          <@checkoutInvField type="radio" name="paymentMethodType" value="offline" checked=(paymentMethodType?? && paymentMethodType == "offline") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
-          <@invertedField type="radio" name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") labelContent=labelContent />
+          <@checkoutInvField type="radio" name="paymentMethodType" value="CC" checked=(paymentMethodType?? && paymentMethodType == "CC") labelContent=labelContent />
 
           <#--<hr />-->
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
           <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
-          <@invertedField type="radio" name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") labelContent=labelContent />
+          <@checkoutInvField type="radio" name="paymentMethodType" value="EFT" checked=(paymentMethodType?? && paymentMethodType == "EFT") labelContent=labelContent />
 
         </#if>
 

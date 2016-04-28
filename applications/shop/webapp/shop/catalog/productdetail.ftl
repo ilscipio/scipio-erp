@@ -496,9 +496,9 @@
                                 <#-- Cato: TODO: format this -->
                                 <div>
                                     <@field type="input" size="10" name="reservStart" label="Start Date(yyyy-mm-dd)"/>
-                                    <a href="javascript:call_cal_notime(document.addform.reservStart, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
+                                    <a href="javascript:call_cal_notime(document.addform.reservStart, '${nowTimestamp.toString()?string?substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
                                     <@field type="input" size="10" name="reservEnd" label="End Date(yyyy-mm-dd)"/>
-                                    <a href="javascript:call_cal_notime(document.addform.reservEnd, '${nowTimestamp.toString().substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
+                                    <a href="javascript:call_cal_notime(document.addform.reservEnd, '${nowTimestamp.toString()?string?substring(0,10)}');"><img src="<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>" width="16" height="16" alt="Calendar" alt="" /></a>
                                 </div>
                                 <div>
                                    <@field type="input" size="4" name="reservLength" value="" label="Number of days" />

@@ -4,7 +4,7 @@ Cato: Local order template common defs
 
 <#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
 <#-- TODO: Formalize and integrate in htmlForm - but use the shop version instead -->
-<#macro invertedField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#macro checkoutInvField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>

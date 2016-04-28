@@ -42,7 +42,8 @@ under the License.
 <#if (orderHeader.orderId)?has_content><#-- Cato: Only if order not yet placed -->
   <#if !printable>
     <@menu args=menuArgs>
-      <#-- Cato: No reason to hide it: <#if maySelect>-->
+      <#-- Cato: No reason to hide it: 
+      <#if maySelect>-->
       <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       <#--</#if>-->
       <#-- above will be better
@@ -67,10 +68,13 @@ under the License.
         <@cell columns=4>
             <@section title=uiLabelMap.CommonOverview>
                 <@table type="fields">
-                  <#if localOrderReadHelper?? && orderHeader?has_content><#-- Cato: Show only for placed orders -->
-                    <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
+                  <#if placingParty?has_content && orderDate?has_content>
+                    <#-- Cato: screen finds it -->
+                    <#--<#assign displayParty = localOrderReadHelper.getPlacingParty()!/>-->
+                    <#assign displayParty = placingParty/>
+                    <#assign displayPartyNameResult = {}/>
                     <#if displayParty?has_content>
-                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderHeader.orderDate!), "userLogin":userLogin})/>
+                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>
                     </#if>
                     <#if displayPartyNameResult?has_content>
                         <@tr>
@@ -78,6 +82,18 @@ under the License.
                           <@td colspan="3">${(displayPartyNameResult.fullName)!"[Name Not Found]"}</@td>
                         </@tr>
                     </#if>
+                  </#if>
+                    <#-- Cato: Show the emails (from placing party + additional, combined due to schema) -->
+                  <#if orderEmailList?has_content>
+                    <@tr>
+                      <@td class="${styles.grid_large!}2">${uiLabelMap.CommonEmail}</@td>
+                      <@td colspan="3">
+                        <#-- NOTE: Make sure to show a comma, because this is the accepted delimiter -->
+                        <#list orderEmailList as email>
+                          ${email}<#if email_has_next>, </#if>
+                        </#list>
+                      </@td>
+                    </@tr>
                   </#if>
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
@@ -126,7 +142,10 @@ under the License.
             <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
                 <@section title=uiLabelMap.AccountingPaymentInformation>
                     <@table type="fields">
-                        <#if !paymentMethod?has_content && paymentMethodType?has_content>
+                        <#-- Cato: NOTE: a bugfix was applied to stock here: 
+                            paymentMethod?has_content -> paymentMethods?has_content 
+                            May change test results -->
+                        <#if !paymentMethods?has_content && paymentMethodType?has_content>
                         
                             <#-- offline payment -->
                             <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
@@ -173,7 +192,9 @@ under the License.
                             <#list paymentMethods as paymentMethod>
                                   <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                     <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-                                    <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
+                                    <#-- Cato: nicer format
+                                    <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>-->
+                                    <#assign formattedCardNumber><@formattedCreditCard creditCard=creditCard verbose=true /></#assign>
                                   <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
                                     <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
                                   <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
@@ -186,12 +207,12 @@ under the License.
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}</@td>
                                         <@td colspan="3">${formattedCardNumber}<br/>
-                                          <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}><br/></#if>
-                                          <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}><br/></#if>
-                                          ${creditCard.firstNameOnCard}<br/>
-                                          <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}><br/></#if>
-                                          ${creditCard.lastNameOnCard}<br/>
-                                          <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
+                                          <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}></#if> <#t>
+                                          <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}></#if> <#t>
+                                          ${creditCard.firstNameOnCard} <#t>
+                                          <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}></#if> <#t>
+                                          ${creditCard.lastNameOnCard} <#t>
+                                          <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if> <#t>
                                         </@td>
                                     </@tr>
                                     

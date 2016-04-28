@@ -29,23 +29,25 @@ under the License.
     <@field type="input" size="30" maxlength="60" name="companyNameOnCard" value=(creditCard.companyNameOnCard!) label=uiLabelMap.AccountingCompanyNameCard/>     
     <@field type="select" name="titleOnCard" label=uiLabelMap.AccountingPrefixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
-        <option<#if ((creditCard.titleOnCard)?default("") == "${uiLabelMap.CommonTitleMr}")> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
-        <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
-        <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
-        <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
+        <#assign ccfTitleOnCard = (creditCard.titleOnCard)!"">
+        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMr}" || ccfTitleOnCard == "Mr."> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
+        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMrs}" || ccfTitleOnCard == "Mrs."> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
+        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleMs}" || ccfTitleOnCard == "Ms."> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
+        <option<#if ccfTitleOnCard == "${uiLabelMap.CommonTitleDr}" || ccfTitleOnCard == "Dr."> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
     </@field>    
     <@field type="input" size="20" maxlength="60" name="firstNameOnCard" value=((creditCard.firstNameOnCard)!) label=uiLabelMap.AccountingFirstNameCard required=true/>     
     <@field type="input" size="15" maxlength="60" name="middleNameOnCard" value=((creditCard.middleNameOnCard)!) label=uiLabelMap.AccountingMiddleNameCard />    
     <@field type="input" size="20" maxlength="60" name="lastNameOnCard" value=((creditCard.lastNameOnCard)!) label=uiLabelMap.AccountingLastNameCard required=true />  
     <@field type="select" name="suffixOnCard" label=uiLabelMap.AccountingSuffixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> selected="selected"</#if>>Jr.</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> selected="selected"</#if>>Sr.</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "I")> selected="selected"</#if>>I</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "II")> selected="selected"</#if>>II</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "III")> selected="selected"</#if>>III</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> selected="selected"</#if>>IV</option>
-        <option<#if ((creditCard.suffixOnCard)?default("") == "V")> selected="selected"</#if>>V</option>
+        <#assign ccfSuffixOnCard = (creditCard.suffixOnCard)!"">
+        <option<#if ccfSuffixOnCard == "Jr."> selected="selected"</#if>>Jr.</option>
+        <option<#if ccfSuffixOnCard == "Sr."> selected="selected"</#if>>Sr.</option>
+        <option<#if ccfSuffixOnCard == "I"> selected="selected"</#if>>I</option>
+        <option<#if ccfSuffixOnCard == "II"> selected="selected"</#if>>II</option>
+        <option<#if ccfSuffixOnCard == "III"> selected="selected"</#if>>III</option>
+        <option<#if ccfSuffixOnCard == "IV"> selected="selected"</#if>>IV</option>
+        <option<#if ccfSuffixOnCard == "V"> selected="selected"</#if>>V</option>
     </@field>
     <@field type="select" name="cardType" label=uiLabelMap.AccountingCardType required=true>
         <#if creditCard.cardType??>
@@ -97,28 +99,29 @@ under the License.
         </#if>
     </#if>
       
-    <@field type="select" name="expMonth" label=uiLabelMap.AccountingExpirationDate required=true>
-        <#if creditCard?has_content && expMonth?has_content>
-        <#assign ccExprMonth = expMonth>
-        <#else>
-        <#assign ccExprMonth = requestParameters.expMonth!>
-        </#if>
-        <#if ccExprMonth?has_content>
-        <option value="${ccExprMonth!}">${ccExprMonth!}</option>
-        </#if>
-        <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
-    </@field>
-    
-    <@field type="select" name="expYear">
-        <#if creditCard?has_content && expYear?has_content>
-          <#assign ccExprYear = expYear>
-        <#else>
-          <#assign ccExprYear = requestParameters.expYear!>
-        </#if>
-        <#if ccExprYear?has_content>
-          <option value="${ccExprYear!}">${ccExprYear!}</option>
-        </#if>
-        <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
+    <@field type="generic" label=uiLabelMap.AccountingExpirationDate required=true>
+        <@field type="select" inline=true name="expMonth" required=true>
+          <#if creditCard?has_content && expMonth?has_content>
+            <#assign ccExprMonth = expMonth>
+          <#else>
+            <#assign ccExprMonth = requestParameters.expMonth!>
+          </#if>
+          <#if ccExprMonth?has_content>
+            <option value="${ccExprMonth!}">${ccExprMonth!}</option>
+          </#if>
+          <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
+        </@field>
+        <@field type="select" inline=true name="expYear" required=true>
+          <#if creditCard?has_content && expYear?has_content>
+            <#assign ccExprYear = expYear>
+          <#else>
+            <#assign ccExprYear = requestParameters.expYear!>
+          </#if>
+          <#if ccExprYear?has_content>
+            <option value="${ccExprYear!}">${ccExprYear!}</option>
+          </#if>
+          <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
+        </@field>
     </@field>
 
     <@field type="input" size="20" maxlength="30" name="description" value=(paymentMethod.description!) label=uiLabelMap.CommonDescription/>

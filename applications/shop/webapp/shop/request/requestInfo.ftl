@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 <@section title="${uiLabelMap.OrderRequest}&nbsp;${custRequest.custRequestId}&nbsp;${uiLabelMap.CommonInformation}">
         <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
             <#-- request header information -->
@@ -25,7 +26,7 @@ under the License.
                 </@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
-                    ${(custRequestType.get("description",locale))?default(custRequest.custRequestTypeId!)}
+                    ${(custRequestType.get("description",locale))!(custRequest.custRequestTypeId)!}
                 </@td>
             </@tr>
             <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
@@ -36,7 +37,7 @@ under the License.
                 </@td>
                 <@td width="5%">&nbsp;</@td>
                 <@td valign="top" width="80%">
-                    ${(statusItem.get("description", locale))?default(custRequest.statusId!)}
+                    ${(statusItem.get("description", locale))!(custRequest.statusId)!}
                 </@td>
             </@tr>
             <#-- party -->

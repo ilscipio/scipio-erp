@@ -53,13 +53,6 @@ under the License.
 <#assign dummy = setRequestAttribute("setLocalesTarget", "setSessionLocaleProfile")>
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
-<#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-        <#assign itemText><#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></#assign>
-        <@menuitem type="link" href=makeOfbizUrl("editperson") text=itemText />
-    </@menu>
-</#macro>
-
 
 <ul class="tabs" data-tab>
   <li class="tab-title active"><a href="#panel1"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
@@ -72,6 +65,12 @@ under the License.
     
      <#-- Personal information -->
      <div class="content active" id="panel1">
+        <#macro menuContent menuArgs={}>
+            <@menu args=menuArgs>
+                <#assign itemText><#if person??>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></#assign>
+                <@menuitem type="link" href=makeOfbizUrl("editperson") text=itemText />
+            </@menu>
+        </#macro>
         <@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
             <#if person??>
               <#-- Cato: This was a table, not illogical but will look better as fields -->
@@ -586,5 +585,5 @@ under the License.
 <@render resource="component://shop/widget/CustomerScreens.xml#showProductReviews" />
 -->
 <#else>
-    <@commonMsg type="error">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</@commonMsg>
+    <@commonMsg type="error">${uiLabelMap.PartyNoPartyForCurrentUserName}: ${(userLogin.userLoginId)!uiLabelMap.CommonNA}</@commonMsg>
 </#if>

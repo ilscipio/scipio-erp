@@ -25,7 +25,9 @@ under the License.
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
-  <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson<#else>createPerson/${donePage}</#if></@ofbizUrl>" name="editpersonform">    
+  <#-- Cato: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
+    but the view override is inconsistent with the other edit*.ftl pages. -->
+  <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson?DONE_PAGE=${donePage}<#else>createPerson?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editpersonform">    
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   

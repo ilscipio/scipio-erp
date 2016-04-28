@@ -105,7 +105,7 @@ under the License.
                         </#if>
                       </@td>
                     </@tr>
-                  <#if orderHeader?has_content><#-- Cato: Show only for placed orders -->
+                  <#if orderHeader?has_content><#-- Cato: Show only for placed orders (for non-placed, context.orderDate is not the actual placing time) -->
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDateOrdered}</@td>
                       <@td colspan="3">

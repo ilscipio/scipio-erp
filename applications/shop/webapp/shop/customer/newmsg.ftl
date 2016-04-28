@@ -27,7 +27,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <#if showMessageLinks?default("false")?upper_case == "TRUE">
+        <#if ((showMessageLinks!"FALSE")?upper_case) == "TRUE">
           <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
         </#if>
     </@menu>
@@ -55,7 +55,7 @@ under the License.
             <@td colspan="2">&nbsp;</@td>
           </@tr>
           <@tr>
-            <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
+            <@td>${uiLabelMap.CommonFrom}</@td>
             <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)</@td>
           </@tr>
           <#if partyIdTo?has_content>
@@ -65,7 +65,7 @@ under the License.
               <@td colspan="2">&nbsp;</@td>
             </@tr>
             <@tr>
-              <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
+              <@td>${uiLabelMap.CommonTo}</@td>
               <@td>&nbsp;${partyToName}</@td>
             </@tr>
           </#if>
@@ -83,14 +83,14 @@ under the License.
             </#if>
           </#if>
           <@tr>
-            <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
+            <@td>${uiLabelMap.EcommerceSubject}</@td>
             <@td><input type="input" name="subject" size="20" value="${defaultSubject}"/></@td>
           </@tr>
           <@tr>
             <@td colspan="2">&nbsp;</@td>
           </@tr>
           <@tr>
-            <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonMessage}:</div></@td>
+            <@td>${uiLabelMap.CommonMessage}</@td>
             <@td>&nbsp;</@td>
           </@tr>
           <@tr>

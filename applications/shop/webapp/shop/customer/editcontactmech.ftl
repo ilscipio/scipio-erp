@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 <#assign requireCreate = false>
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
@@ -28,7 +29,7 @@ under the License.
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
       <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
-        <form method="post" action="<@ofbizUrl>editcontactmechnosave</@ofbizUrl>" name="createcontactmechform">
+        <form method="post" action="<@ofbizUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@ofbizUrl>" name="createcontactmechform">
             <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
@@ -71,7 +72,7 @@ under the License.
                     <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpires}:${partyContactMechPurpose.thruDate.toString()})</#if>
                   </@td>
                   <@td>
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose</@ofbizUrl>">
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>">
                           <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
@@ -84,7 +85,7 @@ under the License.
               <#if purposeTypes?has_content>
                 <@tr>
                   <@td>
-                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
+                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
                         <@field type="select" name="contactMechPurposeTypeId">
@@ -103,7 +104,7 @@ under the License.
         </@field>
     </#if>
     
-  <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
           <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />

@@ -70,7 +70,7 @@ under the License.
                   <input type="hidden" id="emailContactMechId" name="emailContactMechId" value="${emailContactMechId!}" />
                   <input type="hidden" name="shipToName" value="${shipToName!}" />
                   <input type="hidden" name="shipToAttnName" value="${shipToAttnName!}" />
-                  <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+                  <#if userHasAccount>
                     <input type="hidden" name="keepAddressBook" value="Y" />
                     <input type="hidden" name="setDefaultShipping" value="Y" />
                     <input type="hidden" name="userLoginId" id="userLoginId" value="${userLogin.userLoginId!}" />
@@ -208,7 +208,7 @@ under the License.
                 <input type="hidden" id="billToPhoneContactMechId" name="billToPhoneContactMechId" value="${(billToTelecomNumber.contactMechId)!}" />
                 <input type="hidden" name="billToName" value="${billToName!}" />
                 <input type="hidden" name="billToAttnName" value="${billToAttnName!}" />
-                <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+                <#if userHasAccount>
                   <input type="hidden" name="keepAddressBook" value="Y" />
                   <input type="hidden" name="setDefaultBilling" value="Y" />
                   <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />

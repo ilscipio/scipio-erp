@@ -91,7 +91,7 @@ jQuery(document).ready(function() {
 
 <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
 
-<#if !userLogin?has_content || userLogin.userLoginId == "anonymous">
+<#if userIsAnon>
 <#-- Cato: New form to allow creation of a temp anon user (based on old/legacy anon checkout)
     at the same time the ship address form is submitted -->
 <@section title=uiLabelMap.EcommerceYourNamePhoneAndEmail>
@@ -175,7 +175,12 @@ jQuery(document).ready(function() {
         
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
+    <#-- Cato: FIXME?: splitship currently will not work for anon users. 
+        This is a limitation of combining the personal info into the ship address page.
+        However, it is probably acceptable to require an account for more advanced shipping features. -->
+    <#if userHasAccount>
+      <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
+    </#if>
     <#-- Cato: This old link becomes redundant with the addition of an inlined form (below). 
     <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.PartyAddNewAddress />
     -->
@@ -287,7 +292,8 @@ jQuery(document).ready(function() {
             class="+addr-select-radio"/>
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
-            <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>
+            <#-- Cato: title is not needed; implied
+            <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>-->
             <input type="hidden" name="shipping_contact_mech_id" value="_NEW_RECORD_" />
             <@newAddrFormContent />
           </div>
@@ -303,6 +309,8 @@ jQuery(document).ready(function() {
       <#--</@fields>-->
     </@section>
 
+  <#-- Cato: NOTE: Agreements only show if they are defined in the data for the specific customer.
+      e.g. there are none for anon user by default. -->
   <#if agreements?has_content>
     <@section title=uiLabelMap.AccountingAgreementInformation>
       <#-- Cato: for shop, use only select boxes, otherwise can't link to anything -->
@@ -317,7 +325,7 @@ jQuery(document).ready(function() {
           <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
           <#assign labelContent>${agreement.description!} will be used for this order. 
             <@modal id="agreement_info_${agreement.agreementId!}" label="Click here for more details">
-                <#-- Cato: I don't know what else to put here at current time -->
+                <#-- Cato: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
                 ${agreement.description!}
             </@modal>
           </#assign>

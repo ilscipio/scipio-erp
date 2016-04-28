@@ -327,7 +327,7 @@ function getConfigDetails(event) {
         </#if>
       </form>
     <div>
-      <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+      <#if userHasAccount>
 
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${product.productId}" />

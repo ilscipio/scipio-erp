@@ -25,39 +25,35 @@ under the License.
 </#if>
 
 <@heading level=1>${uiLabelMap.CommonLogin}</@heading>
-<br />
 
 <@section title=uiLabelMap.CommonPasswordChange style="float: center; width: 49%; margin-right: 5px; text-align: center;">
-      <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">
-          <input type="hidden" name="requirePasswordChange" value="Y"/>
-          <input type="hidden" name="USERNAME" value="${username}"/>
+  <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">
+      <input type="hidden" name="requirePasswordChange" value="Y"/>
+      <input type="hidden" name="USERNAME" value="${username}"/>
+      <@field type="display" label=uiLabelMap.CommonUsername value=username />
+
+      <#if autoUserLogin?has_content>
           <div>
-              ${uiLabelMap.CommonUsername}:&nbsp;${username}
+              (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
           </div>
-          <#if autoUserLogin?has_content>
-              <div>
-                  (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
-              </div>
-          </#if>
-          <div>
-              ${uiLabelMap.CommonPassword}:&nbsp;
-              <input type="password" name="PASSWORD" value="" size="20"/>
-          </div>
-          <div>
-              ${uiLabelMap.CommonNewPassword}:&nbsp;
-              <input type="password" name="newPassword" value="" size="20"/>
-          </div>
-          <div>
-              ${uiLabelMap.CommonNewPasswordVerify}:&nbsp;
-              <input type="password" name="newPasswordVerify" value="" size="20"/>
-          </div>
-          <div>
-              <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
-          </div>
+      </#if>
+
+      <@field type="password" name="PASSWORD" value="" size="20" label=uiLabelMap.CommonPassword required=true />
+      <@field type="password" name="newPassword" value="" size="20" label=uiLabelMap.CommonNewPassword required=true />
+      <@field type="password" name="newPasswordVerify" value="" size="20" label=uiLabelMap.CommonNewPasswordVerify required=true />
+
+      <@field type="submit" class="${styles.link_run_session!} ${styles.action_login!}" text=uiLabelMap.CommonLogin/>
+ 
       </form>
 </@section>
 
 <@script>
-  <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
-  <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
+    jQuery(document).ready(function() {
+      <#if autoUserLogin?has_content>
+        document.loginform.PASSWORD.focus();
+      <#else>
+        document.loginform.USERNAME.focus();
+      </#if>
+    });
 </@script>
+

@@ -34,7 +34,7 @@ under the License.
       <ul class="other-links">
         <#-- language select --> 
           <li>
-              <a href="<@ofbizUrl><#if userLogin?has_content && userLogin.userLoginId != "anonymous">viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@ofbizUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
                 ${uiLabelMap.CommonChooseLanguage}
               </a>
           </li>

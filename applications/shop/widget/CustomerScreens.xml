@@ -43,12 +43,22 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>                                
-                                <html-template location="component://shop/webapp/shop/customer/editcontactmech.ftl"/>
-                            </html>
-                        </platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>                                
+                                        <html-template location="component://shop/webapp/shop/customer/editcontactmech.ftl"/>
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -65,7 +75,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editcreditcard.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editcreditcard.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -80,7 +100,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editeftaccount.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editeftaccount.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -95,7 +125,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editgiftcard.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editgiftcard.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -111,7 +151,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/changepassword.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/changepassword.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -129,7 +179,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editperson.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editperson.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -209,7 +269,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-screen name="messagelist-include"/>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="messagelist-include"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -247,7 +317,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagedetail.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagedetail.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -270,7 +350,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/newmsg.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/newmsg.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -290,14 +380,25 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition><if-compare field="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
                             <widgets>
-                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/digitalproductlist.ftl"/></html></platform-specific>
+                                <section>
+                                    <condition><if-compare field="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/digitalproductlist.ftl"/></html></platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container><label style="head2" text="${uiLabelMap.EcommerceSorryDigitalProductUploadNotEnabled}"></label></container>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
-                                <container><label style="head2" text="${uiLabelMap.EcommerceSorryDigitalProductUploadNotEnabled}"></label></container>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </fail-widgets>
                         </section>
+                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -343,12 +444,22 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition><if-compare field="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
                             <widgets>
-                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/digitalproductedit.ftl"/></html></platform-specific>
+                                <section>
+                                    <condition><if-compare field="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/digitalproductedit.ftl"/></html></platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container><label style="common-msg-info-important" text="${uiLabelMap.EcommerceSorryDigitalProductUploadNotEnabled}"></label></container>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
-                                <container><label style="head2" text="${uiLabelMap.EcommerceSorryDigitalProductUploadNotEnabled}"></label></container>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -514,7 +625,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/viewprofile.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/viewprofile.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -578,7 +699,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/EditProfile.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/EditProfile.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -600,7 +731,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/ManageAddress.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/ManageAddress.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -651,5 +792,37 @@ under the License.
         </section>
     </screen>
 
-
+    <!-- Cato: Duplicated from: component://marketing/widget/ContactListScreens.xml#OptOutResponse -->
+    <screen name="OptOutResponse">
+        <section>
+            <actions>
+                <service service-name="optOutOfListFromCommEvent" result-map="optOutResult"/>                
+                <entity-one value-field="contactList" entity-name="ContactList">
+                    <field-map from-field="optOutResult.contactListId" field-name="contactListId"/>                    
+                </entity-one>
+                <set field="contactListId" from-field="contactList.contactListId"/>
+                <set field="screenName" from-field="contactList.optOutScreen" default-value="component://shop/widget/CustomerScreens.xml#DefaultOptOutScreen"/>
+            </actions>
+            <widgets>
+                <include-screen name="${screenName}" share-scope="true"/>                
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: Duplicated from: component://marketing/widget/ContactListScreens.xml#DefaultOptOutScreen -->
+    <screen name="DefaultOptOutScreen">
+        <section>            
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Opt-Out Results">
+                            <container>
+                                <label text="You have been successfully removed from the ${contactList.contactListName} mailing list!"/>                                            
+                            </container>                                        
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

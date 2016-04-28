@@ -45,7 +45,7 @@ under the License.
 <@section title=uiLabelMap.EcommerceSignUpForContactList id="miniSignUpForContactList">
   <#if sessionAttributes.autoName?has_content>
   <#-- The visitor potentially has an account and party id -->
-    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+    <#if userHasAccount>
     <#-- They are logged in so lets present the form to sign up with their email address -->
       <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
         <fieldset>

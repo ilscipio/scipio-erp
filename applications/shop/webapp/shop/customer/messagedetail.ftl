@@ -46,19 +46,19 @@ under the License.
     <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
       <@tr><@td>&nbsp;</@td></@tr>
       <@tr>
-          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
+          <@td>${uiLabelMap.CommonFrom}</@td>
           <@td>${fromName!}</@td>
       </@tr>
       <@tr>
-          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonTo}:</div></@td>
+          <@td>${uiLabelMap.CommonTo}</@td>
           <@td>${toName!}</@td>
       </@tr>
       <@tr>
-          <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonDate}:</div></@td>
+          <@td>${uiLabelMap.CommonDate}</@td>
           <@td>${communicationEvent.entryDate}</@td>
       </@tr>
       <@tr>
-          <@td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></@td>
+          <@td>${uiLabelMap.EcommerceSubject}</@td>
           <@td>&nbsp;${(communicationEvent.subject)!("[${uiLabelMap.EcommerceNoSubject}]")}</@td>
       </@tr>
       <@tr><@td>&nbsp;</@td></@tr>

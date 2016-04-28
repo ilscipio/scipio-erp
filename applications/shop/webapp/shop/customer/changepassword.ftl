@@ -24,6 +24,7 @@ under the License.
     </@menu>
 </#macro>
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
+    <#-- Cato: WARN/FIXME?: view switch --> 
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
 
       <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label="${uiLabelMap.PartyOldPassword}"/>

@@ -509,4 +509,26 @@ under the License.
             </fail-widgets>
         </section>
     </screen>
+    
+    <!-- Cato: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts -->
+    <screen name="compareProducts">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="compareProducts" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Cato: Original: component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly -->
+    <screen name="ProductUomDropDownOnly">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <include-screen name="ProductUomDropDownOnly" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
 </screens>

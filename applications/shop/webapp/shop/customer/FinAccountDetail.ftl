@@ -19,24 +19,24 @@ under the License.
 
 <@table type="fields"> <#-- orig: border="0" cellpadding="1" -->
   <@tr>
-      <@td align="right" width="25%"><div class="tableheadtext">Account Number:</div></@td>
+      <@td width="25%">Account Number</@td>
       <@td>${ownedFinAccount.finAccountId}</@td>
   </@tr>
   <@tr>
-      <@td align="right"><div class="tableheadtext">Currency:</div></@td>
+      <@td>Currency</@td>
       <@td>${(accountCurrencyUom.description)!} [${ownedFinAccount.currencyUomId!}]</@td>
   </@tr>
   <@tr>
-      <@td align="right"><div class="tableheadtext">Date Opened:</div></@td>
+      <@td>Date Opened</@td>
       <@td>${ownedFinAccount.fromDate!}</@td>
   </@tr>
   <@tr>
-      <@td align="right"><div class="tableheadtext">Status:</div></@td>
+      <@td>Status</@td>
       <@td>${(finAccountStatusItem.description)!"Active"}</@td>
   </@tr>
   <#if ownedFinAccount.replenishLevel??>
   <@tr>
-      <@td align="right"><div class="tableheadtext">Replenish Level:</div></@td>
+      <@td>Replenish Level</@td>
       <@td>${ownedFinAccount.replenishLevel}</@td>
   </@tr>
   </#if>

@@ -113,23 +113,68 @@ under the License.
                 <!-- TODO: This needs to be a "smart" decorator that can adapt depending on which
                     checkout process is used -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/CheckoutCommon.groovy" />
+                <!-- By default, checkout screens require at least a userIsKnown check (some might need userHasAccount), unless
+                    noted here -->
+                <set field="checkoutAllowAnonUnknown" from-field="checkoutAllowAnonUnknown" type="Boolean" default-value="false" />
+                <set field="checkoutAllowEmptyCart" from-field="checkoutAllowEmptyCart" type="Boolean" default-value="false" />
+                <!-- These are also set in main-decorator, but need to get values early -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonPermChecks.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
-                    <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field="checkoutAllowAnonUnknown" type="Boolean" operator="equals" value="true"/>
+                            <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                        </or>
+                    </condition>
+                    <widgets>
                         <section>
                             <condition>
-                                <if-compare field="checkoutType" operator="equals" value="full" />
+                                <or>
+                                    <if-compare field="checkoutAllowEmptyCart" type="Boolean" operator="equals" value="true"/>
+                                    <if-compare field="cartSize" type="Integer" operator="greater" value="0"/>
+                                </or>
                             </condition>
                             <widgets>
-                                <include-screen name="CheckoutProgressFull"/>
+                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                    <decorator-section name="pre-body" use-when="${context.checkoutType == 'full'}" override-by-auto-include="true">
+                                        <section>
+                                            <condition>
+                                                <and>
+                                                    <if-compare field="checkoutType" operator="equals" value="full" />
+                                                </and>
+                                            </condition>
+                                            <widgets>
+                                                <include-screen name="CheckoutProgressFull"/>
+                                            </widgets>
+                                        </section>
+                                    </decorator-section>
+                                    <decorator-section name="body">
+                                        <decorator-section-include name="body"/>
+                                    </decorator-section>
+                                </decorator-screen>
                             </widgets>
+                            <fail-widgets>
+                                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                                    <decorator-section name="body">
+                                        <label style="common-msg-error" text="${uiLabelMap.EcommerceYourShoppingCartEmpty}."/>
+                                        <container>
+                                            <link target="main" text="${uiLabelMap.EcommerceContinueShopping}" style="${styles.link_nav_cancel}"/>
+                                        </container>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </fail-widgets>
                         </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" auto-decorator-section-include="true">
+                            <decorator-section name="body">
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -147,6 +192,8 @@ under the License.
                 <set field="checkoutType" value="full" />
                 <set field="checkoutMode" value="anon" /> <!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="customer" />
+                <!-- Cato: NOTE: This is the only screen in the anon checkout that doesn't need userIsKnown check -->
+                <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
@@ -316,6 +363,7 @@ under the License.
 
                 <set field="checkoutType" value="quick" />
                 <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
+                <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
@@ -346,6 +394,8 @@ under the License.
                 <set field="checkoutType" value="full" />
                 <set field="checkoutMode" value="registered" /><!-- Cato: FIXME?: This is currently forced... -->
                 <set field="activeStep" value="shippingAddress" />
+                <!-- Cato: NOTE: This is the only screen in the regular full checkout that does not need userIsKnown check -->
+                <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
@@ -445,7 +495,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/checkoutreview.ftl"/></html></platform-specific>
+                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/checkoutreview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -462,7 +512,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -481,7 +541,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderhistory.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderhistory.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -500,9 +570,22 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
-                            <include-screen name="orderdownloadswidget" />
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <!-- Cato: NOTE: this should probably really be userHasAccount, but leaving for now,
+                                    because otherwise anon user can't download anything (even though maybe login should
+                                    be required for those kinds of products) -->
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="orderdownloadswidget" />
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -529,7 +612,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderstatus.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderstatus.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -559,7 +652,17 @@ under the License.
                 <!-- FIXME? This isn't the best decorator for this -->
                 <decorator-screen name="CommonEmptyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="p" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -579,7 +682,17 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/order/requestreturn.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/order/requestreturn.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -802,6 +915,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="body">
+                        <!-- Cato: NOTE: Supports full anon -->
                         <platform-specific><html><html-template location="component://shop/webapp/shop/order/OnePageCheckoutProcess.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>

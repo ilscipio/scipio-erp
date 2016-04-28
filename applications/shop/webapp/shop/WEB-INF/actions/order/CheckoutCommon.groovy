@@ -12,3 +12,12 @@ if (!context.checkoutMode) {
     context.checkoutMode = "registered"
 }
 
+cart = session.getAttribute("shoppingCart");
+cartSize = 0;
+if (cart != null) {
+    cartSize = cart.size();
+}
+
+context.cart = cart;
+context.cartSize = cartSize;
+

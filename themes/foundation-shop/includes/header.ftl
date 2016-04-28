@@ -26,7 +26,7 @@ under the License.
   <#assign userName = person.firstName! + " " + person.middleName! + " " + person.lastName!>
 <#elseif partyGroup?has_content>
   <#assign userName = partyGroup.groupName!>
-<#elseif userLogin?has_content && userLogin.userLoginId != "anonymous">
+<#elseif userHasAccount>
   <#assign userName = userLogin.userLoginId>
 <#else>
   <#assign userName = "">
@@ -37,7 +37,7 @@ under the License.
   <#assign orgName = "">
 </#if>
 <#macro generalMenu>
-    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+    <#if userHasAccount>
         <#--
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
@@ -73,11 +73,11 @@ under the License.
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
         <#include "component://common/webcommon/includes/helplink.ftl" />
     </#if>-->
-    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+    <#if userHasAccount>
         <li class="divider"></li>
     </#if>
     <#-- Now show this even for anon, unless it's anon without a party -->
-    <#if userLogin?has_content && !(userLogin.userLoginId == "anonymous" && !userLogin.partyId?has_content)>
+    <#if userIsKnown>
         <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
 </#macro>
@@ -208,9 +208,9 @@ under the License.
           His temporary partyId is now (and must be) kept after checkout is done, for technical reasons,
           but also it's very convenient. 
           Presence of userLogin.partyId is what marks the difference. -->
-      <#if userLogin?has_content && !(userLogin.userLoginId == "anonymous" && !userLogin.partyId?has_content)>
+      <#if userIsKnown>
           <li class="has-dropdown not-click">
-            <#if userLogin.userLoginId == "anonymous">
+            <#if userIsAnon>
               <#assign person = delegator.findOne("Person", {"partyId":userLogin.partyId}, true)!>
               <#if person?has_content>
                 <#assign welcomeName = person.firstName!userLogin.userLoginId>
@@ -289,7 +289,7 @@ under the License.
           <#-- language select
           <li>
             <div id="lang-select">
-              <a href="<@ofbizUrl><#if userLogin?has_content && userLogin.userLoginId != "anonymous">viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@ofbizUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
                 <i class="${styles.icon} ${styles.icon_prefix}flag"></i>
               </a>
             </div>

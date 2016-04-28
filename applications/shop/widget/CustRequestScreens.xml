@@ -51,9 +51,19 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://shop/webapp/shop/request/RequestList.ftl"/></html>
-                        </platform-specific>
+                        <section>
+                            <condition>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/request/RequestList.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -83,31 +93,41 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare-field operator="equals" field="custRequest.fromPartyId" to-field="userLogin.partyId"></if-compare-field>
+                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
                             </condition>
                             <widgets>
-                                <container style="${styles.grid_large}6">
-                                    <platform-specific>
-                                        <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
-                                    </platform-specific>
-                                    <platform-specific>
-                                        <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
-                                    </platform-specific>
-                                </container>
-                                <container style="${styles.grid_large}6">
-                                    <platform-specific>
-                                        <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
-                                    </platform-specific>
-                                    <platform-specific>
-                                        <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
-                                    </platform-specific>
-                                    <platform-specific>
-                                        <html><html-template location="component://shop/webapp/shop/request/requestRoles.ftl"/></html>
-                                    </platform-specific>
-                                </container>
+                                <section>
+                                    <condition>
+                                        <if-compare-field operator="equals" field="custRequest.fromPartyId" to-field="userLogin.partyId"></if-compare-field>
+                                    </condition>
+                                    <widgets>
+                                        <container style="${styles.grid_large}6">
+                                            <platform-specific>
+                                                <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
+                                            </platform-specific>
+                                            <platform-specific>
+                                                <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
+                                            </platform-specific>
+                                        </container>
+                                        <container style="${styles.grid_large}6">
+                                            <platform-specific>
+                                                <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
+                                            </platform-specific>
+                                            <platform-specific>
+                                                <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
+                                            </platform-specific>
+                                            <platform-specific>
+                                                <html><html-template location="component://shop/webapp/shop/request/requestRoles.ftl"/></html>
+                                            </platform-specific>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label>${uiLabelMap.OrderNoRequestFound}</label>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
-                                <label>${uiLabelMap.OrderNoRequestFound}</label>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

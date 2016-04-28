@@ -59,13 +59,25 @@ under the License.
     </after-login>
 
     <!-- General Request Mappings -->
-    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main" save-current-view="true"/></request-map>
-    <request-map uri="policies"><security https="false" auth="false"/><response name="success" type="view" value="policies"/></request-map>
-    <request-map uri="license"><security https="false" auth="false"/><response name="success" type="view" value="license"/></request-map>
+    <request-map uri="main">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main" save-current-view="true"/>
+    </request-map>
+    <request-map uri="policies">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="policies"/>
+    </request-map>
+    <request-map uri="license">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="license"/>
+    </request-map>
 
     <!-- Session Setting Requests -->
     <!-- Cato: need a language select screen for anon users -->
-    <request-map uri="ListLocales"><security https="false" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+    <request-map uri="ListLocales">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="ListLocales" save-last-view="true"/>
+    </request-map>
  
     <request-map uri="setSessionLocale">
         <security https="false" auth="false"/>
@@ -591,18 +603,22 @@ under the License.
       <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
       <response name="payment" type="view" value="checkoutpayment"/>
       <response name="confirm" type="request" value="calcShipping"/>
+      <!-- Cato: Not supported
       <response name="quick" type="view" value="quickcheckout"/>
+      -->
+      <response name="quick" type="view" value="checkoutshippingaddress"/>
       <response name="error" type="view" value="checkoutshippingaddress"/>
       <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
-    <!-- Cato: NOTE: In shop, quickcheckout is currently not supported.
-        DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything. -->
+    <!-- Cato: Not supported
+        DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything.
     <request-map uri="quickcheckout">
-        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <security https="true" auth="false"/><!- Cato: CHANGED TO AUTH FALSE so may support anon checkout ->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="view"  save-current-view="true" value="quickcheckout"/>
         <response name="error" type="view" value="main"/>
     </request-map>
+    -->
     <request-map uri="splitship">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="splitship"/>
@@ -984,118 +1000,124 @@ under the License.
     </request-map>
 
     <request-map uri="createCustomerTaxAuthInfo">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createCustomerTaxAuthInfo"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
     <request-map uri="updateCustomerTaxAuthInfo">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyTaxAuthInfo"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
     <request-map uri="deleteCustomerTaxAuthInfo">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="deletePartyTaxAuthInfo"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
     <!-- ContactMech Requests -->
-    <request-map uri="editcontactmech"><security https="true" auth="true"/><response name="success" type="view" value="editcontactmech"/></request-map>
-    <request-map uri="editcontactmechnosave"><security https="true" auth="true"/><response name="success" type="view" value="editcontactmech"/></request-map>
+    <request-map uri="editcontactmech">
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <response name="success" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="editcontactmechnosave">
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <response name="success" type="view" value="editcontactmech"/>
+    </request-map>
 
     <request-map uri="createContactMech">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateContactMech">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deleteContactMech">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="deletePartyContactMech"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPostalAddressAndPurpose">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="createPostalAddress">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updatePostalAddress">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createTelecomNumber">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateTelecomNumber">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createEmailAddress">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateEmailAddress">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPartyContactMechPurpose">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMechPurpose"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deletePartyContactMechPurpose">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="deletePartyContactMechPurpose"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="editcreditcard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="createCreditCard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
         <response name="address" type="view" value="editcontactmech"/>
@@ -1103,41 +1125,41 @@ under the License.
     </request-map>
 
     <request-map uri="editgiftcard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editgiftcard"/>
     </request-map>
     <request-map uri="createGiftCard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createGiftCard"/>
         <response name="success" type="view" value="editgiftcard"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
     <request-map uri="updateGiftCard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updateGiftCard"/>
         <response name="success" type="view" value="editgiftcard"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
 
     <request-map uri="editeftaccount">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="createEftAccount">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="updateEftAccount">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
     <request-map uri="deletePaymentMethod">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="deletePaymentMethod"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
@@ -1145,17 +1167,17 @@ under the License.
 
     <!-- Person and other profile requests -->
     <request-map uri="editperson">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <response name="success" type="view" value="editperson"/>
     </request-map>
     <request-map uri="createPerson">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
     <request-map uri="updatePerson">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
@@ -1172,7 +1194,10 @@ under the License.
 
 
 
-    <request-map uri="tellafriend"><security https="false" auth="false"/><response name="success" type="view" value="tellafriend"/></request-map>
+    <request-map uri="tellafriend">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="tellafriend"/>
+    </request-map>
     <request-map uri="emailFriend">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="tellAFriend"/>
@@ -1180,7 +1205,10 @@ under the License.
         <response name="error" type="view" value="tellafriend"/>
     </request-map>
 
-    <request-map uri="giftcardbalance"><security https="true" auth="false"/><response name="success" type="view" value="giftcardbalance"/></request-map>
+    <request-map uri="giftcardbalance">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="giftcardbalance"/>
+    </request-map>
     <request-map uri="querygcbalance">
         <security https="true" auth="false"/>
         <event type="service" invoke="balanceInquireGiftCard"/>
@@ -1188,7 +1216,10 @@ under the License.
         <response name="error" type="view" value="giftcardbalance"/>
     </request-map>
 
-    <request-map uri="giftcardlink"><security https="true" auth="false"/><response name="success" type="view" value="giftcardlink"/></request-map>
+    <request-map uri="giftcardlink">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="giftcardlink"/>
+    </request-map>
     <request-map uri="linkgiftcard">
         <security https="true" auth="false"/>
         <event type="service" invoke="linkPhysicalGiftCard"/>
@@ -1198,8 +1229,14 @@ under the License.
 
     <!-- ======================= Customer Digital Product Requests ======================= -->
 
-    <request-map uri="digitalproductlist"><security https="true" auth="true"/><response name="success" type="view" value="digitalproductlist"/></request-map>
-    <request-map uri="digitalproductedit"><security https="true" auth="true"/><response name="success" type="view" value="digitalproductedit"/></request-map>
+    <request-map uri="digitalproductlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="digitalproductlist"/>
+    </request-map>
+    <request-map uri="digitalproductedit">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="digitalproductedit"/>
+    </request-map>
 
     <request-map uri="createCustomerDigitalDownloadProduct">
         <security https="true" auth="true"/>
@@ -1278,25 +1315,25 @@ under the License.
     </request-map>
 
     <request-map uri="signUpForContactList">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="signUpForContactList"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="unsubscribeContactListParty">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="unsubscribeContactListParty"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="unsubscribeContactListPartyContachMech">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="unsubscribeContactListPartyContachMech"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last" value="main"/>
     </request-map>
     <request-map uri="contactListOptOut" track-serverhit="false" track-visit="false">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="updateContactListPartyNoUserLogin"/>
         <response name="success" type="view" value="ContactListOptOut"/>
     </request-map>
@@ -1327,7 +1364,7 @@ under the License.
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
     <request-map uri="updateContactListPartyNoUserLogin">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO HTTPS TRUE for basic user security -->
         <event type="service" invoke="updateContactListPartyNoUserLogin"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
@@ -1423,8 +1460,14 @@ under the License.
 
     <!-- PDFs -->
     <!-- Cato: Anon customer must be able to print his PDF, so auth="false" -->
-    <request-map uri="order.pdf"><security https="true" auth="false"/><response name="success" type="view" value="OrderPDF"/></request-map>
-    <request-map uri="invoice.pdf"><security https="true" auth="true"/><response name="success" type="view" value="InvoicePDF"/></request-map>
+    <request-map uri="order.pdf">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="OrderPDF"/>
+    </request-map>
+    <request-map uri="invoice.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InvoicePDF"/>
+    </request-map>
 
     <!-- ================ SimpleContent Requests ================= -->
 
@@ -1777,7 +1820,9 @@ under the License.
     <view-map name="paymentoptions" type="screen" page="component://shop/widget/OrderScreens.xml#paymentoptions"/>
     <view-map name="paymentinformation" type="screen" page="component://shop/widget/OrderScreens.xml#paymentinformation"/>
 
+    <!-- Cato: Not supported
     <view-map name="quickcheckout" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutoptions"/>
+    -->
     <view-map name="checkoutshippingaddress" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutshippingaddress"/>
     <view-map name="checkoutshippingoptions" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutshippingoptions"/>
     <view-map name="checkoutpayment" type="screen" page="component://shop/widget/OrderScreens.xml#checkoutpayment"/>
@@ -1837,23 +1882,25 @@ under the License.
     <view-map name="ListRequests" type="screen" page="component://shop/widget/CustRequestScreens.xml#ListRequests"/>
     <view-map name="ViewRequest" type="screen" page="component://shop/widget/CustRequestScreens.xml#ViewRequest"/>
 
-    <!-- PDFs  -->
-    <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
-    <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
+    <!-- PDFs -->
+    <view-map name="OrderPDF" type="screenfop" page="component://shop/widget/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="InvoicePDF" type="screenfop" page="component://shop/widget/OrderPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
 
     <!-- One Page Checkout -->
     <view-map name="OnePageCheckout" type="screen" page="component://shop/widget/OrderScreens.xml#OnePageCheckout"/>
     <!-- Google Checkout View Mapping -->
+    <!-- Cato: No longer exists
     <view-map name="cartToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
     <view-map name="redirectToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
+    -->
     
-    <view-map name="compareProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts"/>
+    <view-map name="compareProducts" type="screen" page="component://shop/widget/CatalogScreens.xml#compareProducts"/>
     
     <!-- Product in the different UOM -->
-    <view-map name="ProductUomDropDownOnly" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly"/>
+    <view-map name="ProductUomDropDownOnly" type="screen" page="component://shop/widget/CatalogScreens.xml#ProductUomDropDownOnly"/>
     
     <!-- Contact List -->
-    <view-map name="ContactListOptOut" type="screen" page="component://marketing/widget/ContactListScreens.xml#OptOutResponse"/>
+    <view-map name="ContactListOptOut" type="screen" page="component://shop/widget/ContactListScreens.xml#OptOutResponse"/>
 
     <!-- Product Category 's Ajax -->
     <view-map name="productCategoryList" type="screen" page="component://shop/widget/CatalogScreens.xml#productCategoryList"/>

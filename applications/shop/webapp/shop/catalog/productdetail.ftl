@@ -542,7 +542,7 @@
         </@panel>
         <#-- CATO: Shopping list functionality - disabled for now
         <div id="product-shopping-list">
-            <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+            <#if userHasAccount>
                 <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
                     <fieldset>
                         <input type="hidden" name="productId" value="${product.productId}" />

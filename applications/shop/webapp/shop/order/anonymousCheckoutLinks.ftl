@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#-- Cato: DEPRECATED old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@script>
 function submitForm(form) {
    form.submit();
 }
 </@script>
-<#-- Cato: old (preserve for links) Superseded by checkoutstepsfull.ftl
 <@menu type="button">
     <#assign submitFormOnClick><#if callSubmitForm??>javascript:submitForm(document.${parameters.formNameValue!});</#if></#assign>
     <@menuitem type="link" href=makeOfbizUrl("setCustomer") onClick=submitFormOnClick text="Personal Info" />

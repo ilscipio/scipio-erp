@@ -5171,7 +5171,21 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh_TW">缺少上傳檔...</value>
     </property>
+    <!-- Cato: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
     <property key="PartyCreateNewBillingAddress">
+        <value xml:lang="cs">Zložte novou fakturační adresu</value>
+        <value xml:lang="de">Legen Sie eine neue Rechnungsadresse</value>
+        <value xml:lang="en">Create a new billing address</value>
+        <value xml:lang="es">Crear una nueva dirección de facturación</value>
+        <value xml:lang="fr">Créer une adresse de facturation</value>
+        <value xml:lang="hi_IN">क्रेडिट कार्ड का नया पता बनाइये</value>
+        <value xml:lang="it">Creare un nuovo indirizzo di fatturazione</value>
+        <value xml:lang="nl">Maak een nieuw faktuuradres aan</value>
+        <value xml:lang="pt_BR">Criar um novo endereço para cobrança para</value>
+        <value xml:lang="pt_PT">Criar nova morada de cobrança para</value>
+        <value xml:lang="ro">Creare o noua adresa de facturare</value>
+    </property>
+    <property key="PartyCreateNewBillingAddressCreditCard">
         <value xml:lang="cs">Zložte novou fakturační adresu pro tuto kreditkartu</value>
         <value xml:lang="de">Legen Sie eine neue Rechnungsadresse für diese Kreditkarte an</value>
         <value xml:lang="en">Create a new billing address for this credit card</value>

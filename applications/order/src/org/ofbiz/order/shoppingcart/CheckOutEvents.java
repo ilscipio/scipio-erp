@@ -1224,7 +1224,7 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Checks a ship contact meth ID; if it has the special value _NEW_RECORD_, it will check other
+     * Cato: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before the new contact mech ID. This allows inlining
      * new ship address forms.
      * <p>
@@ -1255,7 +1255,7 @@ public class CheckOutEvents {
 
     
     /**
-     * Cato: Checks a contact meth ID; if it has the special value _NEW_RECORD_, it will check other
+     * Cato: Checks a contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before the new contact mech ID. This allows inlining
      * new contact mech forms.
      * <p>
@@ -1266,7 +1266,7 @@ public class CheckOutEvents {
     public static String getCheckContactMechIdOrCreateNew(HttpServletRequest request, String paramName, String prefixParamName, 
             String serviceName, Map<String, Object> overrideParams, MapValidator paramValidator) throws GeneralException {
         String contactMechId = getRequestAttribOrParam(request, paramName);
-        if ("_NEW_RECORD_".equals(contactMechId)) {
+        if ("_NEW_".equals(contactMechId)) {
             String paramPrefix = null;
             if (prefixParamName != null && !prefixParamName.isEmpty()) {
                 paramPrefix = getRequestAttribOrParam(request, prefixParamName);

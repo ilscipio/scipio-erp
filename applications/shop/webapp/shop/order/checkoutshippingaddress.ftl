@@ -171,7 +171,7 @@ jQuery(document).ready(function() {
 
 
 <#-- Cato: if there are no shipping addresses available, always offer a form. If there are already addresses, offer a button to show the form. -->
-<#assign showNewAddrForm = !shippingContactMechList?has_content || ((parameters.shipping_contact_mech_id!) == "_NEW_RECORD_")>
+<#assign showNewAddrForm = !shippingContactMechList?has_content || ((parameters.shipping_contact_mech_id!) == "_NEW_")>
         
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -227,8 +227,7 @@ jQuery(document).ready(function() {
           </#list>
         </#if>
 
-    <#macro newAddrFormContent args={} fieldsType="default">
-    <@fields type=fieldsType ignoreParentField=true>
+    <#macro newAddrFormContent args={}>
       <input type="hidden" name="new_ship_addr_prefix" value="newShipAddr_" />
       <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
       <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
@@ -269,24 +268,22 @@ jQuery(document).ready(function() {
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
       </@field>
-    </@fields>
     </#macro>
 
-        <#-- Cato: _NEW_RECORD_ asks the checkout process to check for _NEW_RECORD_ and create a new contact mech if needed before the other events -->
+        <#-- Cato: _NEW_ asks the checkout process to check for _NEW_ and create a new contact mech if needed before the other events -->
         <#if shippingContactMechList?has_content>
           <#if parameters.shipping_contact_mech_id?has_content>
-            <#assign checkThisAddress = (parameters.shipping_contact_mech_id == "_NEW_RECORD_")>
+            <#assign checkThisAddress = (parameters.shipping_contact_mech_id == "_NEW_")>
           <#else>
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
           <#macro newAddrFormContentAndTitle args={}>
             <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
             <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
-            <#-- Cato: Can pass this to change the look/markup: <@newAddrFormContent fieldsType="default-compact"... -->
-            <@newAddrFormContent />
+              <@newAddrFormContent />
             </div>
           </#macro>
-          <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="_NEW_RECORD_" checked=checkThisAddress 
+          <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
             labelContent=newAddrFormContentAndTitle widgetAreaClass="+newshipaddrradioarea" 
             id="newshipaddrradio" containerId="newshipaddrfield" 
             class="+addr-select-radio"/>
@@ -294,7 +291,7 @@ jQuery(document).ready(function() {
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
             <#-- Cato: title is not needed; implied
             <@heading>${uiLabelMap.PartyAddNewAddress}</@heading>-->
-            <input type="hidden" name="shipping_contact_mech_id" value="_NEW_RECORD_" />
+            <input type="hidden" name="shipping_contact_mech_id" value="_NEW_" />
             <@newAddrFormContent />
           </div>
         </#if>

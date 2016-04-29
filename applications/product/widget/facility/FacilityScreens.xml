@@ -1041,13 +1041,11 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="ReceiveInventory"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.ProductReceiveInventoryItems} ${facilityId}"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/ConvertUom.js" global="true"/>
+                <!-- <set field="layoutSettings.javaScripts[+0]" value="/ordermgr-js/ConvertUom.js" global="true"/> -->
                 <set field="facilityMenu" value="FacilityInventorySideBar" />
             </actions>
             <widgets>
@@ -1055,16 +1053,48 @@ under the License.
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <platform-specific><html><html-template location="component://product/webapp/facility/inventory/receiveInventory.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventory.ftl"/></html></platform-specific>
+                                <include-screen name="CatoReceiveInventoryDetail"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <platform-specific><html><html-template location="component://product/webapp/facility/returns/receiveReturn.ftl"/></html></platform-specific>
+                               <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturn.ftl"/></html></platform-specific>
+                                <include-screen name="CatoReceiveReturnDetail"/>
                             </container>
                         </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    
+    <screen name="CatoReceiveInventoryDetail">
+	    <section>
+		    <condition>
+		        <if-empty field="parameters.returnId"/>
+		    </condition>
+		    <actions>
+		        <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
+		    </actions>
+		    <widgets>
+		        <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventoryDetail.ftl"/></html></platform-specific>
+		    </widgets>
+	    </section>
+    </screen>
+    <screen name="CatoReceiveReturnDetail">
+        <section>
+	        <condition>
+	            <and>
+	                <if-empty field="parameters.productId"/>
+	                <if-empty field="parameters.purchaseOrderId"/>
+	            </and>
+	        </condition>
+	        <actions>
+	              <script location="component://product/webapp/facility/WEB-INF/actions/returns/ReceiveReturn.groovy"/>
+	        </actions>
+	        <widgets>
+	              <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturnDetail.ftl"/></html></platform-specific>
+	        </widgets>
+	   </section>
     </screen>
 
     <screen name="UpdatedInventoryItemStatus">

@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "customercommon.ftl">
 
 <#assign requireCreate = false>
 <#if canNotView>
@@ -120,26 +121,11 @@ under the License.
     </#if>
 
     <#if contactMechTypeId == "POSTAL_ADDRESS">
-      <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="toName" value=(postalAddressData.toName!) />
-      <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="attnName" value=(postalAddressData.attnName!) />
-      <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="address1" value=(postalAddressData.address1!) />
-      <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="address2" value=(postalAddressData.address2!) />
-      <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="city" value=(postalAddressData.city!) />
-      <@field type="select" label="${uiLabelMap.PartyState}" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-      </@field>      
-      <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="postalCode" value=(postalAddressData.postalCode!) />
-      <@field type="select" label="${uiLabelMap.CommonCountry}" name="countryGeoId" id="editcontactmechform_countryGeoId">
-          <@render resource="component://common/widget/CommonScreens.xml#countries" />        
-          <#if (postalAddress??) && (postalAddress.countryGeoId??)>
-            <#assign defaultCountryGeoId = postalAddress.countryGeoId>
-          <#else>
-            <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
-          </#if>
-          <option selected="selected" value="${defaultCountryGeoId}">
-          <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
-            ${countryGeo.get("geoName",locale)}
-          </option>
-      </@field>
+      <#-- Cato: Delegated -->
+        <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
+            ctxVars={
+              "pafFieldNamePrefix":"",
+              "pafUseScripts":true }/>
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
           <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(telecomNumberData.countryCode!) tooltip=uiLabelMap.CommonCountryCode />
@@ -159,11 +145,11 @@ under the License.
       <@field type="input" label=(contactMechType.get("description",locale)!) required=true size="60" maxlength="255" name="infoString" value=(contactMechData.infoString!) />
     </#if>
       <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation">
-        <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+        <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+        <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
         <option></option>
-        <option value="Y">${uiLabelMap.CommonY}</option>
-        <option value="N">${uiLabelMap.CommonN}</option>
+        <option value="Y">${uiLabelMap.CommonYes}</option>
+        <option value="N">${uiLabelMap.CommonNo}</option>
       </@field>
   </form>
 </@section>

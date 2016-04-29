@@ -21,14 +21,42 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- Cato: Based on a combination of editcreditcard and editcontactmech -->
-    <screen name="billaddresspick">
+    <!-- Cato: new -->
+    <screen name="eftAccountFields">
         <section>
             <actions>
-                <set field="fieldClass" from-field="billAddrFieldClass" default-value="bill-addr-pick-radio" />
+                <set field="fieldNamePrefix" from-field="eafFieldNamePrefix" default-value="" />
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/eftaccountfields.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Cato: Original: component://accounting/widget/CommonScreens.xml#creditCardFields -->
+    <screen name="creditCardFields">
+        <section>
+            <actions>
+                <set field="ccfTemplateLocation" value="component://shop/webapp/shop/customer/creditcardfields.ftl" />
+            </actions>
+            <widgets>
+                <!-- Reuse actions -->
+                <include-screen name="creditCardFields" location="component://accounting/widget/CommonScreens.xml" />
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Cato: Based on a combination of editcreditcard and editcontactmech -->
+    <screen name="billaddresspickfields">
+        <section>
+            <actions>
+                <set field="pickFieldClass" from-field="billAddrPickFieldClass" default-value="bill-addr-pick-field" />
                 <set field="fieldNamePrefix" from-field="billAddrFieldNamePrefix" default-value="" />
+                <set field="useNewAddr" from-field="billAddrUseNewAddr" type="Boolean" default-value="false" />
                 <set field="newAddrInline" from-field="billAddrNewAddrInline" type="Boolean" default-value="false" />
                 <set field="newAddrContentId" from-field="billAddrNewAddrContentId" default-value="newbilladdrcontent" />
+                <set field="newAddrFieldId" from-field="billAddrNewAddrFieldId" default-value="newbilladdrfield" />
+                <set field="useScripts" from-field="billAddrUseScripts" type="Boolean" default-value="true" />
             </actions>
             <widgets>
                 <section>
@@ -42,14 +70,27 @@ under the License.
                                 <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPaymentMethod.groovy"/>
                             </actions>
                             <widgets>
-                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspick.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspickfields.ftl"/></html></platform-specific>
                             </widgets>
                         </section>
                     </widgets>
                     <fail-widgets>
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspick.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspickfields.ftl"/></html></platform-specific>
                     </fail-widgets>
                 </section>            
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Cato: new -->
+    <screen name="postalAddressFields">
+        <section>
+            <actions>
+                <set field="fieldNamePrefix" from-field="pafFieldNamePrefix" default-value="" />
+                <set field="useScripts" from-field="pafUseScripts" type="Boolean" default-value="true" />
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/postaladdressfields.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

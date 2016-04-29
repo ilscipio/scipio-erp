@@ -18,13 +18,5 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<@section title="${survey.surveyName}">
-    <#-- Render the survey -->
-    <#if surveyWrapper?has_content>
-        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
-          ${surveyWrapper.render(context)}
-        </form>
-    <#else>
-        <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
-    </#if>
-</@section>
+<#-- Cato: Still using ones from accounting for time being -->
+<#include "component://accounting/webapp/accounting/common/creditcardfields.ftl">

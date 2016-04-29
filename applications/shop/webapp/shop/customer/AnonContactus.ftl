@@ -17,6 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#include "customercommon.ftl">
+
 <@script>
     function reloadCaptcha(fieldName) {
         var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";

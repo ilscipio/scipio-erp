@@ -83,16 +83,16 @@ function submitForm(form, mode, value) {
                     <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                     <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
                   </#assign>
-                  <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
+                  <#--<@commonInvField type="generic" labelContent=labelContent>-->
                   <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=labelContent /><#--inline=true -->
-                  <#--</@checkoutInvField>-->
+                  <#--</@commonInvField>-->
                 </#if>
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
-                <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
+                <#--<@commonInvField type="generic" labelContent=labelContent>-->
                 <@field type="radio" name="shipping_method" value="Default" checked=true label=labelContent/><#--inline=true -->
-                <#--</@checkoutInvField>-->
+                <#--</@commonInvField>-->
               </#if>
             </@fields>
             </@field>

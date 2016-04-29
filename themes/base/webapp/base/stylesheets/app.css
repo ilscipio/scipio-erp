@@ -10684,6 +10684,12 @@ input::-moz-focus-inner {
   padding: 0;
 }
 
+/*Complex radio selection stuff*/
+/* line 713, ../scss/_base.scss */
+.new-item-selection-content {
+  margin-top: 0.6rem;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "customercommon.ftl">
 
 <#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>

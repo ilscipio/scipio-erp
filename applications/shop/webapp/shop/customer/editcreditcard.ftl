@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "customercommon.ftl">
 
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
@@ -39,13 +40,13 @@ under the License.
     <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
   </#if>  
 
-         <@render resource="component://accounting/widget/CommonScreens.xml#creditCardFields" />
-         <@field type="generic" label=uiLabelMap.PartyBillingAddress>
-            <#-- Cato: Factored out for reuse -->
-            <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspick" 
-                ctxVars={"billAddrNewAddrInline":false, "billAddrFieldNamePrefix":""}/>
-         </@field>
-       </div>
+     <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" />
+     <@field type="generic" label=uiLabelMap.PartyBillingAddress>
+        <#-- Cato: Factored out for reuse -->
+        <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
+            ctxVars={"billAddrUseNewAddr":true, "billAddrNewAddrInline":false, "billAddrFieldNamePrefix":""}/>
+     </@field>
+
   </form>  
 </@section>
 </#if>

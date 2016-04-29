@@ -48,11 +48,11 @@ under the License.
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="homeSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-          <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+          <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+          <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
           <option></option>
-          <option value="Y">${uiLabelMap.CommonY}</option>
-          <option value="N">${uiLabelMap.CommonN}</option>
+          <option value="Y">${uiLabelMap.CommonYes}</option>
+          <option value="N">${uiLabelMap.CommonNo}</option>
         </@field>
       </@fields>
     </@field>
@@ -66,11 +66,11 @@ under the License.
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="workSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-          <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+          <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+          <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
           <option></option>
-          <option value="Y">${uiLabelMap.CommonY}</option>
-          <option value="N">${uiLabelMap.CommonN}</option>
+          <option value="Y">${uiLabelMap.CommonYes}</option>
+          <option value="N">${uiLabelMap.CommonNo}</option>
         </@field>
       </@fields>
     </@field>
@@ -79,11 +79,11 @@ under the License.
     <@field type="input" name="emailAddress" value=(parameters.emailAddress!) required=true label=uiLabelMap.PartyEmailAddress/>
 
     <@field type="select" name="emailSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-      <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-      <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+      <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+      <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
       <option></option>
-      <option value="Y">${uiLabelMap.CommonY}</option>
-      <option value="N">${uiLabelMap.CommonN}</option>
+      <option value="Y">${uiLabelMap.CommonYes}</option>
+      <option value="N">${uiLabelMap.CommonNo}</option>
     </@field>
 
     <#--

@@ -130,7 +130,7 @@ under the License.
                   <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if> />
                 </@td>
                 <@td valign="middle" width="80%">
-                  ${uiLabelMap.PartyCreateNewBillingAddress}.
+                  ${uiLabelMap.PartyCreateNewBillingAddressCreditCard}.
                 </@td>
               </@tr>
               -->

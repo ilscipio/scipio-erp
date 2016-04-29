@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "customercommon.ftl">
 
 <#if getUsername>
 <@script>
@@ -228,11 +229,11 @@ will generally always be reserved for the logo at the top of the page.
       <label for="CUSTOMER_ADDRESS_ALLOW_SOL">${uiLabelMap.PartyAllowAddressSolicitation}</label>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
       <select name="CUSTOMER_ADDRESS_ALLOW_SOL" id="CUSTOMER_ADDRESS_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
         <option></option>
-        <option value="Y">${uiLabelMap.CommonY}</option>
-        <option value="N">${uiLabelMap.CommonN}</option>
+        <option value="Y">${uiLabelMap.CommonYes}</option>
+        <option value="N">${uiLabelMap.CommonNo}</option>
       </select>
     </div>
 
@@ -260,11 +261,11 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_HOME_EXT" size="6" value="${requestParameters.CUSTOMER_HOME_EXT!}"/></@td>
           <@td>
             <select name="CUSTOMER_HOME_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
               <option></option>
-              <option value="Y">${uiLabelMap.CommonY}</option>
-              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
             </select>
           </@td>
         </@tr>
@@ -276,11 +277,11 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_WORK_EXT" size="6" value="${requestParameters.CUSTOMER_WORK_EXT!}" /></@td>
           <@td>
             <select name="CUSTOMER_WORK_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
               <option></option>
-              <option value="Y">${uiLabelMap.CommonY}</option>
-              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
             </select>
           </@td>
         </@tr>
@@ -292,11 +293,11 @@ will generally always be reserved for the logo at the top of the page.
           <@td></@td>
           <@td>
             <select name="CUSTOMER_FAX_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
               <option></option>
-              <option value="Y">${uiLabelMap.CommonY}</option>
-              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
             </select>
           </@td>
         </@tr>
@@ -308,11 +309,11 @@ will generally always be reserved for the logo at the top of the page.
           <@td></@td>
           <@td>
             <select name="CUSTOMER_MOBILE_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
               <option></option>
-              <option value="Y">${uiLabelMap.CommonY}</option>
-              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
             </select>
           </@td>
         </@tr>
@@ -330,11 +331,11 @@ will generally always be reserved for the logo at the top of the page.
     <div>
       <label for="CUSTOMER_EMAIL_ALLOW_SOL">${uiLabelMap.PartyAllowSolicitation}</label>
       <select name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
         <option></option>
-        <option value="Y">${uiLabelMap.CommonY}</option>
-        <option value="N">${uiLabelMap.CommonN}</option>
+        <option value="Y">${uiLabelMap.CommonYes}</option>
+        <option value="N">${uiLabelMap.CommonNo}</option>
       </select>
     </div>
   </fieldset>

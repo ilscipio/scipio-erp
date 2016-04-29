@@ -1,53 +1,7 @@
 <#--
 Cato: Local order template common defs
 -->
-<#-- This may include more generic files as well, as long as careful about double includes
-<#include "....ftl">
--->
-
-<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
-    NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
-<#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
-<#--
-  <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
-  <@row>
-    <@cell class=addClassArg(gridStyles.labelArea, "${styles.text_right!}")>
-      <#nested>
-    </@cell>
-    <#local id = (getRequestVar("catoLastFieldInfo").id)!"">
-    <@cell class=gridStyles.widgetArea>
-      ${labelContent}
-    </@cell>  
-    <@cell class=gridStyles.postfixArea>
-      ${postfixContent}
-    </@cell>  
-  </@row>
--->
-  <#if !postfixColumns?has_content>
-    <#local postfixColumns = 3>
-  </#if>
-  <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = 11>
-  </#if>
-  <#if postfixContent?is_directive || postfixContent?has_content>
-    <#local postfix = true>
-  </#if>
-  <#local widgetAreaClass = addClassArg(widgetAreaClass, styles.text_right!)>
-  <#if labelContent?has_content || labelContent?is_directive>
-    <#local labelContentArgs = {"labelContentFieldsType":labelContentFieldsType, "labelContent":labelContent, "labelContentArgs":labelContentArgs}>
-    <#local labelContent = checkoutInvFieldLabelRender>
-  </#if>
-  <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix
-    labelContent=labelContent labelContentArgs=labelContentArgs
-    postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
-</#macro>
-
-<#-- this is an ugly kludge needed due to only having one #nested in freemarker -->
-<#macro checkoutInvFieldLabelRender args={}>
-  <@fields type=args.labelContentFieldsType ignoreParentField=true>
-    <@contentArgRender content=args.labelContent args=args.labelContentArgs />
-  </@fields>
-</#macro>
+<#include "../common/common.ftl">
 
 <#macro checkoutActionsMenu text="" formName="" directLinks=true>
     <#if !formName?has_content>
@@ -91,27 +45,4 @@ Cato: Local order template common defs
     </@row>
 </#macro>
 
-<#macro formattedCreditCard creditCard paymentMethod={} verbose=true>
-  <#if verbose>
-    <#--
-    <#if !paymentMethod?has_content>
-      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod")>
-    </#if>
-    -->
-    ${(delegator.findOne("Enumeration", {"enumId":creditCard.cardType!}, true).get("description", locale))!creditCard.cardType!}<#t>
-    <#local cardNum = creditCard.cardNumber!?string>
-    <#if cardNum?has_content>
-      <#if (cardNum?length > 4)>
-        <#t> ${cardNum[0..<(cardNum?length-4)]?replace('.','*','r')}${cardNum[(cardNum?length-4)..]}
-      <#else>
-        <#t> ${cardNum}
-      </#if>
-    </#if>
-    <#if creditCard.expireDate?has_content>
-      <#t> ${creditCard.expireDate}
-    </#if>
-  <#else>
-    <#-- stock ofbiz method -->
-    ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}<#t>
-  </#if>
-</#macro>
+

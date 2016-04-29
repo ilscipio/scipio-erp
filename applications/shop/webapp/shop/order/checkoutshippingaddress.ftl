@@ -53,37 +53,8 @@ function toggleBillingAccount(box) {
     }
 }
 
-function updateAddrVisibility() {
-    updateNewAddrFormVisibility();
-}
-
-<#-- Cato: show new address form -->
-function updateNewAddrFormVisibility() {
-    var radio = jQuery('#newshipaddrfield .newshipaddrradioarea input');
-    if (radio.length > 0) {
-        if (radio.is(":checked")) {
-            jQuery('#newshipaddrcontent').show();
-            jQuery('#newshipaddrcontent').focus();
-        } else {
-            jQuery('#newshipaddrcontent').hide();
-        }
-    }
-}
-
-jQuery(document).ready(function() {
-    <#-- FIXME: error message div for ajax failures -->
-    jQuery("#newShipAddr_countryGeoId").change(function() {
-        getAssociatedStateList('newShipAddr_countryGeoId', 'newShipAddr_stateProvinceGeoId', null, null);
-    });
-    getAssociatedStateList('newShipAddr_countryGeoId', 'newShipAddr_stateProvinceGeoId', null, null);
-    
-    <#-- Cato: Needed for page refreshes to work -->
-    updateAddrVisibility();
-    
-    <#-- Cato: FIXME? Which will work currently depends on markup -->
-    jQuery('input.addr-select-radio').change(updateAddrVisibility);
-    jQuery('.addr-select-radio input').change(updateAddrVisibility);
-});
+<@initItemSelectionWithNewFormScript itemFieldClass="addr-select-radio" 
+    newItems=[{"fieldId":"newshipaddrradio", "contentId":"newshipaddrcontent"}] />
 
 </@script>
 
@@ -129,11 +100,11 @@ jQuery(document).ready(function() {
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="homeSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-          <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+          <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+          <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
           <option></option>
-          <option value="Y">${uiLabelMap.CommonY}</option>
-          <option value="N">${uiLabelMap.CommonN}</option>
+          <option value="Y">${uiLabelMap.CommonYes}</option>
+          <option value="N">${uiLabelMap.CommonNo}</option>
         </@field>
       </@fields>
     </@field>
@@ -147,11 +118,11 @@ jQuery(document).ready(function() {
 
       <@fields type="default-compact" ignoreParentField=true>
         <@field type="select" name="workSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-          <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+          <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+          <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
           <option></option>
-          <option value="Y">${uiLabelMap.CommonY}</option>
-          <option value="N">${uiLabelMap.CommonN}</option>
+          <option value="Y">${uiLabelMap.CommonYes}</option>
+          <option value="N">${uiLabelMap.CommonNo}</option>
         </@field>
       </@fields>
     </@field>
@@ -160,11 +131,11 @@ jQuery(document).ready(function() {
     <@field type="input" name="emailAddress" value=(parameters.emailAddress!) required=true label=uiLabelMap.PartyEmailAddress/>
 
     <@field type="select" name="emailSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-      <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-      <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+      <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+      <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
       <option></option>
-      <option value="Y">${uiLabelMap.CommonY}</option>
-      <option value="N">${uiLabelMap.CommonN}</option>
+      <option value="Y">${uiLabelMap.CommonYes}</option>
+      <option value="N">${uiLabelMap.CommonNo}</option>
     </@field>
 </@section>
 </#if>
@@ -200,30 +171,20 @@ jQuery(document).ready(function() {
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
     <@section>
         <#if shippingContactMechList?has_content>
-          <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
           <#list shippingContactMechList as shippingContactMech>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <#if parameters.shipping_contact_mech_id?has_content>
               <#assign checkThisAddress = (shippingAddress.contactMechId == parameters.shipping_contact_mech_id)>
             <#else>
-              <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
+              <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || ((cart.getShippingContactMechId()!"") == shippingAddress.contactMechId)/>
               <#-- Cato: auto check if it's the only one -->
               <#assign checkThisAddress = checkThisAddress || (shippingContactMechList?size == 1)>
             </#if>
             <#assign postfixContent></#assign>
             <#assign labelContent>
-                <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
-                <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
-                <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
-                <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
-                <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
-                <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
-                <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+              <@formattedAddress address=shippingAddress updateLink="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" emphasis=true />
             </#assign>
-            <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
-            <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
+            <@commonInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
           </#list>
         </#if>
 
@@ -240,34 +201,10 @@ jQuery(document).ready(function() {
       <input type="hidden" name="newShipAddr_setShippingPurpose" value="Y" />-->
       
       <#-- Cato: Fields copied from editcontactmech.ftl (+ newShipAddr_ prefix) -->
-
-      <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="newShipAddr_toName" value="" />
-      <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="newShipAddr_attnName" value="" />
-      <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="newShipAddr_address1" value="" />
-      <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="newShipAddr_address2" value="" />
-      <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="newShipAddr_city" value="" />
-      <@field type="select" label="${uiLabelMap.PartyState}" name="newShipAddr_stateProvinceGeoId" id="newShipAddr_stateProvinceGeoId">
-      </@field>      
-      <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="newShipAddr_postalCode" value="" />
-      <@field type="select" label="${uiLabelMap.CommonCountry}" name="newShipAddr_countryGeoId" id="newShipAddr_countryGeoId">
-          <@render resource="component://common/widget/CommonScreens.xml#countries" />        
-          <#if (postalAddress??) && (postalAddress.countryGeoId??)>
-            <#assign defaultCountryGeoId = postalAddress.countryGeoId>
-          <#else>
-            <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
-          </#if>
-          <option selected="selected" value="${defaultCountryGeoId}">
-          <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
-            ${countryGeo.get("geoName",locale)}
-          </option>
-      </@field>
-      <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="newShipAddr_allowSolicitation">
-        <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
-        <option></option>
-        <option value="Y">${uiLabelMap.CommonY}</option>
-        <option value="N">${uiLabelMap.CommonN}</option>
-      </@field>
+      <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
+            ctxVars={
+                "pafFieldNamePrefix":"newShipAddr_",
+                "pafUseScripts":true}/>
     </#macro>
 
         <#-- Cato: _NEW_ asks the checkout process to check for _NEW_ and create a new contact mech if needed before the other events -->
@@ -279,14 +216,12 @@ jQuery(document).ready(function() {
           </#if>
           <#macro newAddrFormContentAndTitle args={}>
             <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
-            <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
+            <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">
               <@newAddrFormContent />
             </div>
           </#macro>
-          <@checkoutInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
-            labelContent=newAddrFormContentAndTitle widgetAreaClass="+newshipaddrradioarea" 
-            id="newshipaddrradio" containerId="newshipaddrfield" 
-            class="+addr-select-radio"/>
+          <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
+            labelContent=newAddrFormContentAndTitle id="newshipaddrradio" class="+addr-select-radio"/>
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
             <#-- Cato: title is not needed; implied
@@ -326,7 +261,7 @@ jQuery(document).ready(function() {
                 ${agreement.description!}
             </@modal>
           </#assign>
-          <@checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
+          <@commonInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
         </#list>
       </#if>
     </@section>

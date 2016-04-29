@@ -51,9 +51,9 @@ under the License.
   <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
 </@field>
 <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation" disabled=(requestParameters.useShipAddr??)>
-      <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-      <#if (((parameters.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+      <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+      <#if (((parameters.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
       <option></option>
-      <option value="Y">${uiLabelMap.CommonY}</option>
-      <option value="N">${uiLabelMap.CommonN}</option>
+      <option value="Y">${uiLabelMap.CommonYes}</option>
+      <option value="N">${uiLabelMap.CommonNo}</option>
 </@field>

@@ -19,8 +19,6 @@ under the License.
 
 <#-- Cato: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
 
-<#assign fieldNamePrefix = ccfFieldNamePrefix!"">
-
 <#if !creditCard?has_content>
     <#assign creditCard = requestParameters>
 </#if>
@@ -29,7 +27,9 @@ under the License.
     <#assign paymentMethod = requestParameters>
 </#if>
 
+<#-- Cato: include fieldset in parent if desired
 <@fieldset>
+-->
     <@field type="input" size="30" maxlength="60" name="${fieldNamePrefix}companyNameOnCard" value=(creditCard.companyNameOnCard!) label=uiLabelMap.AccountingCompanyNameCard/>     
     <@field type="select" name="${fieldNamePrefix}titleOnCard" label=uiLabelMap.AccountingPrefixCard>
         <option value="">${uiLabelMap.CommonSelectOne}</option>
@@ -131,4 +131,7 @@ under the License.
     </@field>
 
     <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}description" value=(paymentMethod.description!) label=uiLabelMap.CommonDescription/>
+
+<#--
 </@fieldset>
+-->

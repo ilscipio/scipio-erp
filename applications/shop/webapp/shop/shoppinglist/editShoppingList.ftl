@@ -158,11 +158,11 @@ under the License.
                 <@td><div class="tableheadtext">${uiLabelMap.EcommercePublic}?</div></@td>
                 <@td>
                   <select name="isPublic">
-                    <#if (((shoppingList.isPublic)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-                    <#if (((shoppingList.isPublic)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+                    <#if (((shoppingList.isPublic)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+                    <#if (((shoppingList.isPublic)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
                     <option></option>
-                    <option value="Y">${uiLabelMap.CommonY}</option>
-                    <option value="N">${uiLabelMap.CommonN}</option>
+                    <option value="Y">${uiLabelMap.CommonYes}</option>
+                    <option value="N">${uiLabelMap.CommonNo}</option>
                   </select>
                 </@td>
               </@tr>
@@ -170,11 +170,11 @@ under the License.
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceActive}?</div></@td>
                 <@td>
                   <select name="isActive">
-                    <#if (((shoppingList.isActive)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-                    <#if (((shoppingList.isActive)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+                    <#if (((shoppingList.isActive)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
+                    <#if (((shoppingList.isActive)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
                     <option></option>
-                    <option value="Y">${uiLabelMap.CommonY}</option>
-                    <option value="N">${uiLabelMap.CommonN}</option>
+                    <option value="Y">${uiLabelMap.CommonYes}</option>
+                    <option value="N">${uiLabelMap.CommonNo}</option>
                   </select>
                 </@td>
               </@tr>

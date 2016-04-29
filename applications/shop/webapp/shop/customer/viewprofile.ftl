@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "customercommon.ftl">
 
 <#if party??>
 <#-- Main Heading -->
@@ -163,12 +164,7 @@ under the License.
                         <#assign postalAddress = partyContactMechValueMap.postalAddress! />
                         <div>
                           <#if postalAddress?has_content>
-                            <#if postalAddress.toName?has_content>${uiLabelMap.CommonTo}: ${postalAddress.toName}<br /></#if>
-                            <#if postalAddress.attnName?has_content>${uiLabelMap.PartyAddrAttnName}: ${postalAddress.attnName}<br /></#if>
-                            ${postalAddress.address1!}<br />
-                            <#if postalAddress.address2?has_content>${postalAddress.address2!}<br /></#if>
-                            ${postalAddress.city!}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId!}</#if>&nbsp;${postalAddress.postalCode!}
-                            <#if postalAddress.countryGeoId?has_content><br />${postalAddress.countryGeoId!}</#if>
+                            <@formattedAddress address=postalAddress emphasis=false />
                             <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
                               <#assign addr1 = postalAddress.address1!?string />
                               <#if (addr1?index_of(" ") > 0)>

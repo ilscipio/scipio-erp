@@ -921,6 +921,35 @@
     </@form>
   </@section>
 
+  <@section title="@fields container inheritance test (NOTE: default is inherit-all)">
+    <@form name="form8">
+      <@fields>
+        <@field type="input" name="input1" label="inherit-all, no effect" />
+      </@fields>
+      <@fields>
+        <@fields type="inherit-all"> 
+          <@field type="input" name="input2" label="inherit-all, no effect" />
+        </@fields>
+      </@fields>
+
+      <@fields type="default-compact">
+        <@fields type="inherit-all"> 
+          <@field type="input" name="input3" label="default-compact + inherit-all" />
+        </@fields>
+      </@fields>
+      <@fields type="default-compact" fieldArgs={"required":true}>
+        <@fields type="inherit-all" fieldArgs={"tooltip":"extra tooltip"}> 
+          <@field type="input" name="input3" label="required + extra tooltip" />
+        </@fields>
+      </@fields>
+      <@fields type="default-compact" fieldArgs={"required":true}>
+        <@fields type="inherit" fieldArgs={"tooltip":"extra tooltip"}> 
+          <@field type="input" name="input3" label="inherit type only (required off)" />
+        </@fields>
+      </@fields>
+    </@form>
+  </@section>
+
 </@section>
 
 <@section title="Class arguments test">

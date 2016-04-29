@@ -454,11 +454,20 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type                        = (default|generic|..., default: default) The type of fields arrangement. 
+    type                        = (default|inherit|inherit-all|generic|..., default: inherit-all) The type of fields arrangement. 
                                   Affects layout and styling of contained fields.
                                   Cato standard markup types:
                                   * {{{default}}}: default cato field arrangement. This is the type assumed when no @fields element is present.
                                     Currently, it mostly influences the label area (present for all @field types except submit).
+                                  * {{{inherit}}}: SPECIAL VALUE: causes the {{{type}}} value (only) to inherit from the current parent container. 
+                                    If there is no parent, the default is {{{default}}}.
+                                    This does not affect the other parameters' fallback behaviors.
+                                  * {{{inherit-all}}}: SPECIAL VALUE: Inherits all parameters (including type) from parent @fields element(s).
+                                    With this, all unspecified args are inherited from parent @fields element if one exists.
+                                    No global style lookups are performed.
+                                    If there are no parents, the regular defaults are used, and the default type is {{{default}}}.
+                                    This is currently the default when no type is specified or empty. If you want to prevent inheritance of other parameters,
+                                    use "inherit", or to prevent inheritance completely, use any other type.
                                   * {{{default-nolabelarea}}}: default cato field arrangement for common sets of fields with no label area.
                                     It expects that @field entries won't be passed any labels except for field types where they may trickle inline into the widget's inline label area.
                                   * {{{default-compact}}}: default cato field arrangement for fields that are in limited space.
@@ -474,6 +483,8 @@ or even multiple per fieldset.
                                       This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic);
                                       Generally, @field specifies label as pure data and theme decides where and how to display it.
                                       In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
+                                  DEV NOTE: Internally, the {{{type}}} values {{{inherit}}} and {{{inherit-all}}} are not stored.
+                                      The inheritance is merged immediately and the internal default becomes {{{default}}}.
     labelType                   = (horizontal|vertical|none, default: -type-specific-) Override for type of the field labels themselves
                                   * {{{horizontal}}}: A label area added to the left (or potentially to the right) a field, horizontally. 
                                     the implementation decides how to do this.
@@ -522,7 +533,7 @@ or even multiple per fieldset.
                                     <@fields type="default" fieldArgs={"labelArea":false}>
 -->
 <#assign fields_defaultArgs = {
-  "type":"default", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
+  "type":"", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
   "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", 
   "fieldArgs":true, "passArgs":{}
 }>
@@ -539,8 +550,60 @@ or even multiple per fieldset.
 </#macro>
 
 <#function makeFieldsInfo args={}>
-  <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.fields_defaultArgs)>
+  <#local origType = args.type!"">
+  <#if !origType?has_content>
+    <#local origType = "inherit-all">
+  </#if>
+
+  <#local parentFieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
+
+  <#local effType = origType>
+  <#local effFieldArgs = args.fieldArgs!true>
+  <#local defaultArgs = catoStdTmplLib.fields_defaultArgs>
+  
+  <#if !origType?has_content>
+    <#local effType = "default">
+  <#elseif origType == "inherit-all">
+    <#if parentFieldsInfo.type??>
+      <#-- inherit everything from parent -->
+      <#local effType = parentFieldsInfo.type>
+      <#local defaultArgs = parentFieldsInfo.origArgs>
+      
+      <#if args.fieldArgs??>
+        <#if args.fieldArgs?is_boolean>
+          <#if args.fieldArgs>
+            <#local effFieldArgs = parentFieldsInfo.fieldArgs!true>
+          <#else>
+            <#-- here, prevent combining field args (special case); keep ours -->
+          </#if>
+        <#else>
+          <#if parentFieldsInfo.fieldArgs?is_boolean>
+            <#-- no parent field args; keep ours -->
+          <#else>
+            <#-- combine with parent -->
+            <#local effFieldArgs = concatMaps(parentFieldsInfo.fieldArgs, args.fieldArgs)>
+          </#if>
+        </#if>
+      <#else>
+        <#local effFieldArgs = parentFieldsInfo.fieldArgs!true>
+      </#if>
+    <#else>
+      <#local effType = "default">
+    </#if>
+  <#elseif origType == "inherit">
+    <#if parentFieldsInfo.type??>
+      <#local effType = parentFieldsInfo.type>
+    <#else>
+      <#local effType = "default">
+    </#if>
+  </#if>
+  
+  <#local args = mergeArgMapsBasic(args, {}, defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  
+  <#local type = effType>
+  <#local fieldArgs = effFieldArgs>
   
   <#local stylesType = type?replace("-","_")>
   <#local stylesPrefix = "fields_" + stylesType>
@@ -660,7 +723,7 @@ or even multiple per fieldset.
     </#if>
   </#if>
 
-  <#return {"type":type, "stylesType":stylesType, "stylesPrefix":stylesPrefix, "labelType":labelType, "labelPosition":labelPosition, 
+  <#return {"type":type, "origType":origType, "origArgs":origArgs, "stylesType":stylesType, "stylesPrefix":stylesPrefix, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
     "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,

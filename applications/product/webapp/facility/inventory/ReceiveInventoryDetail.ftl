@@ -151,7 +151,7 @@
             </form>
         </@section>
     <#-- Select Shipment Screen -->
-    <#elseif !requestParameters.shipmentId??>
+    <#elseif !requestParameters.shipmentId?? && (requestParameters.productId?has_content || requestParameters.purchaseOrderId?has_content)>
         <@section title=uiLabelMap.ProductSelectShipmentReceive>
             <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name="selectAllForm">
                 <#-- general request fields -->
@@ -194,7 +194,7 @@
         </@section>
     <#-- Multi-Item PO Receiving -->
     <#elseif purchaseOrder?has_content>
-            <@section>
+            <@section title=uiLabelMap.ProductReceivePurchaseOrder>
                 <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl>getConvertedPrice"</@ofbizUrl> />
                 <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
                 <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name="selectAllForm">
@@ -214,7 +214,7 @@
                             <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                                 <@thead>
                                     <@tr>
-                                        <@th>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</@th>
+                                        <@th>#${purchaseOrder.orderId}</@th>
                                         <@th>
                                             <#if shipment?has_content>
                                                 ${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}                                            
@@ -253,120 +253,79 @@
                                         </#if>
                                         
                                         <@tr>
-                                            <@td>
-                                                <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-                                                    <@tr>
+                                            <@td colspan=2>
+                                                <@fields type="default-compact">
                                                         <#if orderItem.productId??>
                                                             <#assign product = orderItem.getRelatedOne("Product", true)/>
-                                                            <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}"/>
-                                                            <@td>
-                                                                ${orderItem.orderItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
-                                                            </@td>
+                                                            <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}"/>                                                            
+                                                            ${orderItem.orderItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}                                                            
                                                         <#else>
-                                                            <@td>
-                                                                <b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
-                                                                <@field type="input" size="12" name="productId_o_${rowCount}"/>
+                                                            <@field type="input" size="12" name="productId_o_${rowCount}" label="${orderItemType.get('description',locale)} ${orderItem.itemDescription!}">
                                                                 <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
-                                                            </@td>
-                                                        </#if>
-                                                        <@td>${uiLabelMap.ProductLocation}:</@td>
-                                                        <#-- location(s) -->
-                                                        <@td>
-                                                            <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
-                                                            <#if facilityLocations?has_content>
-                                                                <@field type="select" name="locationSeqId_o_${rowCount}">
-                                                                    <#list facilityLocations as productFacilityLocation>
-                                                                        <#assign facility = productFacilityLocation.getRelatedOne("Facility", true)/>
-                                                                        <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation", false)!/>
-                                                                        <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOne("TypeEnumeration", true))!/>
-                                                                        <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum??>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
-                                                                    </#list>
-                                                                    <option value="">${uiLabelMap.ProductNoLocation}</option>
-                                                                </@field>
-                                                            <#else>
-                                                                <#if parameters.facilityId??>
-                                                                    <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
-                                                                <#else>
-                                                                    <#assign LookupFacilityLocationView="LookupFacilityLocation">
-                                                                </#if>
-                                                                <@field type="lookup" formName="selectAllForm" name="locationSeqId_o_${rowCount}" id="locationSeqId_o_${rowCount}" fieldFormName="${LookupFacilityLocationView}"/>
-                                                            </#if>
-                                                        </@td>
-                                                        <@td>${uiLabelMap.ProductQtyReceived} :</@td>
-                                                        <@td>
-                                                            <#assign fieldValue><#if partialReceive??>0<#else>${defaultQuantity?string.number}</#if></#assign>
-                                                            <@field type="input" name="quantityAccepted_o_${rowCount}" size="6" value=fieldValue />
-                                                        </@td>
-                                                    </@tr>
-                                                    <@tr>
-                                                        <@td >
-                                                            ${uiLabelMap.ProductInventoryItemType} :&nbsp;
-                                                            <@field type="select" name="inventoryItemTypeId_o_${rowCount}" size="1">
-                                                                <#list inventoryItemTypes as nextInventoryItemType>
-                                                                    <option value="${nextInventoryItemType.inventoryItemTypeId}"<#rt>
-                                                                    <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)> selected="selected"</#if>><#t>
-                                                                    ${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option><#lt>
-                                                                </#list>
                                                             </@field>
-                                                          </@td>
-                                                          <@td>${uiLabelMap.ProductRejectionReason} :</@td>
-                                                          <@td>
-                                                                <@field type="select" name="rejectionId_o_${rowCount}" size="1">
-                                                                    <option></option>
-                                                                    <#list rejectReasons as nextRejection>
-                                                                        <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
-                                                                    </#list>
-                                                                </@field>
-                                                          </@td>
-                                                          <@td>${uiLabelMap.ProductQtyRejected} :</@td>
-                                                          <@td>
-                                                                <@field type="input" name="quantityRejected_o_${rowCount}" value="0" size="6"/>
-                                                          </@td>
-                                                    </@tr>
-                                                    <@tr>
-                                                        <@td>&nbsp;</@td>
+                                                        </#if>
+                                                       
+                                                        <#-- location(s) -->                                                        
+                                                        <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
+                                                        <#if facilityLocations?has_content>
+                                                            <@field type="select" name="locationSeqId_o_${rowCount}" label=uiLabelMap.ProductLocation>
+                                                                <#list facilityLocations as productFacilityLocation>
+                                                                    <#assign facility = productFacilityLocation.getRelatedOne("Facility", true)/>
+                                                                    <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation", false)!/>
+                                                                    <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOne("TypeEnumeration", true))!/>
+                                                                    <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum??>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                                                                </#list>
+                                                                <option value="">${uiLabelMap.ProductNoLocation}</option>
+                                                            </@field>
+                                                        <#else>
+                                                            <#if parameters.facilityId??>
+                                                                <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
+                                                            <#else>
+                                                                <#assign LookupFacilityLocationView="LookupFacilityLocation">
+                                                            </#if>
+                                                            <@field type="lookup" formName="selectAllForm" name="locationSeqId_o_${rowCount}" id="locationSeqId_o_${rowCount}" fieldFormName="${LookupFacilityLocationView}"/>
+                                                        </#if>                                                        
+                                                       
+                                                        <#assign fieldValue><#if partialReceive??>0<#else>${defaultQuantity?string.number}</#if></#assign>
+                                                        <@field type="input" name="quantityAccepted_o_${rowCount}" size="6" value=fieldValue label=uiLabelMap.ProductQtyReceived/>
+                                                        
+                                                        ${uiLabelMap.ProductInventoryItemType} :&nbsp;
+                                                        <@field type="select" name="inventoryItemTypeId_o_${rowCount}" size="1">
+                                                            <#list inventoryItemTypes as nextInventoryItemType>
+                                                                <option value="${nextInventoryItemType.inventoryItemTypeId}"<#rt>
+                                                                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)> selected="selected"</#if>><#t>
+                                                                ${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option><#lt>
+                                                            </#list>
+                                                        </@field>
+                                                          
+                                                        <@field type="select" name="rejectionId_o_${rowCount}" size="1" label=uiLabelMap.ProductRejectionReason>
+                                                            <option></option>
+                                                            <#list rejectReasons as nextRejection>
+                                                                <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
+                                                            </#list>
+                                                        </@field>
+                                                         
+                                                        <@field type="input" name="quantityRejected_o_${rowCount}" value="0" size="6" label=uiLabelMap.ProductQtyRejected/>
+                                                       
                                                         <#if !product.lotIdFilledIn?has_content || product.lotIdFilledIn != "Forbidden">
-                                                            <@td>${uiLabelMap.ProductLotId}</@td>
-                                                            <@td>
-                                                                <@field type="input" name="lotId_o_${rowCount}" size="20" />
-                                                            </@td>
-                                                        <#else>
-                                                            <@td>&nbsp;</@td>
-                                                            <@td>&nbsp;</@td>
+                                                            <@field type="input" name="lotId_o_${rowCount}" size="20" label=uiLabelMap.ProductLotId />
                                                         </#if>
-                                                        <@td>${uiLabelMap.OrderQtyOrdered} :</@td>
-                                                        <@td>
-                                                            <@field type="input" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled" />
-                                                        </@td>
-                                                            
-                                                    </@tr>
-                                                    <@tr>
-                                                        <@td>&nbsp;</@td>
-                                                        <@td>${uiLabelMap.ProductFacilityOwner}:</@td>
-                                                        <@td><input type="text" name="ownerPartyId_o_${rowCount}" size="20" maxlength="20" value="${facility.ownerPartyId}"/></@td>
+                                                        <@field type="input" name="quantityOrdered" value=orderItem.quantity size="6" maxlength="20" disabled="disabled" label=uiLabelMap.OrderQtyOrdered />
+                                                        <@field type="input" name="ownerPartyId_o_${rowCount}" size="20" maxlength="20" value="${facility.ownerPartyId}" label=uiLabelMap.ProductFacilityOwner/>
                                                         <#if (currencyUomId!'') != (orderCurrencyUomId!'')>
-                                                            <@td>${uiLabelMap.ProductPerUnitPriceOrder}:</@td>
-                                                            <@td>
-                                                                <input type="hidden" name="orderCurrencyUomId_o_${rowCount}" value="${orderCurrencyUomId!}" />
-                                                                <@field type="input" id="orderCurrencyUnitPrice_${rowCount}" name="orderCurrencyUnitPrice_o_${rowCount}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${rowCount}, '${orderCurrencyUomId}', '${currencyUomId}', '${rowCount}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />
-                                                                ${orderCurrencyUomId!}
-                                                            </@td>
-                                                            <@td>${uiLabelMap.ProductPerUnitPriceFacility}:</@td>
-                                                            <@td>
-                                                                <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
-                                                                <@field type="input" id="unitCost_${rowCount}" name="unitCost_o_${rowCount}" value=itemCost readonly="readonly" size="6" maxlength="20" />
-                                                                ${currencyUomId!}
-                                                            </@td>
+                                                            <input type="hidden" name="orderCurrencyUomId_o_${rowCount}" value="${orderCurrencyUomId!}" />
+                                                            <@field type="input" id="orderCurrencyUnitPrice_${rowCount}" name="orderCurrencyUnitPrice_o_${rowCount}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${rowCount}, '${orderCurrencyUomId}', '${currencyUomId}', '${rowCount}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" label=uiLabelMap.ProductPerUnitPriceOrder/>
+                                                            ${orderCurrencyUomId!}
+                                                      
+                                                            <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
+                                                            <@field type="input" id="unitCost_${rowCount}" name="unitCost_o_${rowCount}" value=itemCost readonly="readonly" size="6" maxlength="20" label=uiLabelMap.ProductPerUnitPriceFacility />
+                                                            ${currencyUomId!}                                                            
                                                         <#else>
-                                                            <@td>${uiLabelMap.ProductPerUnitPrice}:</@td>
-                                                            <@td>
-                                                                <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
-                                                                <@field type="input" name="unitCost_o_${rowCount}" value=itemCost size="6" maxlength="20" />
-                                                                ${currencyUomId!}
-                                                            </@td>
+                                                            <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId!}" />
+                                                            <@field type="input" name="unitCost_o_${rowCount}" value=itemCost size="6" maxlength="20" label=uiLabelMap.ProductPerUnitPrice/>
+                                                            ${currencyUomId!}                                                            
                                                         </#if>
-                                                    </@tr>
-                                                </@table>
+                                                    </@fields>
                                             </@td>
                                             <@td>
                                                  <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onClick="javascript:checkToggle(this, 'selectAllForm');"/>
@@ -374,12 +333,7 @@
                                         </@tr>
                                         <#assign rowCount = rowCount + 1>
                                     </#if>
-                                </#list>
-                            <@tr type="util">
-                                <@td colspan="2">
-                                    <hr />
-                                </@td>
-                            </@tr>
+                                </#list>                           
                             <#if rowCount == 0>
                                 <@tr>
                                     <@td colspan="2">${uiLabelMap.ProductNoItemsPo} #${purchaseOrder.orderId} ${uiLabelMap.ProductToReceive}.</@td>

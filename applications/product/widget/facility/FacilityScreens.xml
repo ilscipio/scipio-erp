@@ -1052,11 +1052,13 @@ under the License.
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.commonFacilityDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <platform-specific><html><html-template location="component://product/webapp/facility/inventory/ReceiveInventory.ftl"/></html></platform-specific>
                                 <include-screen name="CatoReceiveInventoryDetail"/>
                             </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                <platform-specific><html><html-template location="component://product/webapp/facility/returns/ReceiveReturn.ftl"/></html></platform-specific>
                                 <include-screen name="CatoReceiveReturnDetail"/>
                             </container>

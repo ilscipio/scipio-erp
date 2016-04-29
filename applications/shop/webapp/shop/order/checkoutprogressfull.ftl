@@ -19,7 +19,7 @@ under the License.
 <#include "ordercommon.ftl">
 
 <@section>
-<#if checkoutMode == "registered">
+<#if checkoutMode == "primary">
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
         <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>Shipping Address</@step>

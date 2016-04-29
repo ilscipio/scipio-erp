@@ -21,6 +21,39 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- Cato: Based on a combination of editcreditcard and editcontactmech -->
+    <screen name="billaddresspick">
+        <section>
+            <actions>
+                <set field="fieldClass" from-field="billAddrFieldClass" default-value="bill-addr-pick-radio" />
+                <set field="fieldNamePrefix" from-field="billAddrFieldNamePrefix" default-value="" />
+                <set field="newAddrInline" from-field="billAddrNewAddrInline" type="Boolean" default-value="false" />
+                <set field="newAddrContentId" from-field="billAddrNewAddrContentId" default-value="newbilladdrcontent" />
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <!-- double-include prevention -->
+                        <not><if-compare field="editPaymentMethodDataPrepared" operator="equals" value="true" type="Boolean"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <actions>
+                                <script location="component://shop/webapp/shop/WEB-INF/actions/customer/EditPaymentMethod.groovy"/>
+                            </actions>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspick.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/customer/billaddresspick.ftl"/></html></platform-specific>
+                    </fail-widgets>
+                </section>            
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="editcontactmech">
         <section>
             <actions>

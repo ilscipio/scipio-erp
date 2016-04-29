@@ -5,8 +5,9 @@ Cato: Local order template common defs
 <#include "....ftl">
 -->
 
-<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
-<#macro checkoutInvField type="generic" postfixColumns="" widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
+<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked 
+    NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType -->
+<#macro checkoutInvField type="generic" labelContentFieldsType="default-compact" postfixColumns="" labelContent="" labelContentArgs={} widgetAreaClass="" widgetPostfixColumns="" postfixContent="" postfix=false inlineArgs...>
 <#--
   <#local gridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixColumns":postfixColumns, "widgetPostfixCombined":false})>
   <@row>
@@ -32,7 +33,20 @@ Cato: Local order template common defs
     <#local postfix = true>
   </#if>
   <#local widgetAreaClass = addClassArg(widgetAreaClass, styles.text_right!)>
-  <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+  <#if labelContent?has_content || labelContent?is_directive>
+    <#local labelContentArgs = {"labelContentFieldsType":labelContentFieldsType, "labelContent":labelContent, "labelContentArgs":labelContentArgs}>
+    <#local labelContent = checkoutInvFieldLabelRender>
+  </#if>
+  <@field type=type inverted=true args=inlineArgs widgetAreaClass=widgetAreaClass postfix=postfix
+    labelContent=labelContent labelContentArgs=labelContentArgs
+    postfixContent=postfixContent widgetPostfixColumns=widgetPostfixColumns postfixColumns=postfixColumns><#nested></@field>
+</#macro>
+
+<#-- this is an ugly kludge needed due to only having one #nested in freemarker -->
+<#macro checkoutInvFieldLabelRender args={}>
+  <@fields type=args.labelContentFieldsType ignoreParentField=true>
+    <@contentArgRender content=args.labelContent args=args.labelContentArgs />
+  </@fields>
 </#macro>
 
 <#macro checkoutActionsMenu text="" formName="" directLinks=true>

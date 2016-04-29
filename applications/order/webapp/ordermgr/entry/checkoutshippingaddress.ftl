@@ -99,7 +99,7 @@ function toggleBillingAccount(box) {
             </#assign>
             <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress />
-            </@invertedField>
+            </@checkoutInvField>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>
        </#if>

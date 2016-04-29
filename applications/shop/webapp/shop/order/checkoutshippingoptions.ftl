@@ -85,14 +85,14 @@ function submitForm(form, mode, value) {
                   </#assign>
                   <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
                   <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=labelContent /><#--inline=true -->
-                  <#--</@invertedField>-->
+                  <#--</@checkoutInvField>-->
                 </#if>
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
                 <#--<@checkoutInvField type="generic" labelContent=labelContent>-->
                 <@field type="radio" name="shipping_method" value="Default" checked=true label=labelContent/><#--inline=true -->
-                <#--</@invertedField>-->
+                <#--</@checkoutInvField>-->
               </#if>
             </@fields>
             </@field>

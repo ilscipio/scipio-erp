@@ -64,3 +64,8 @@ if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.cred
 } else {
     context.canNotView = false;
 }
+
+// Cato: for double-inclusion detection
+context.editPaymentMethodDataPrepared = true;
+
+

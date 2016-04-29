@@ -479,7 +479,7 @@ under the License.
     <screen name="creditCardFields">
         <section>
             <actions>
-                <set field="fieldNamePrefix" from-field="ccfFieldNamePrefix" default-value="" />
+                <set field="fieldNamePrefix" from-field="ccfFieldNamePrefix" default-value="${''}" />
                 <!-- Cato: Parametrized, to reuse actions here (once needed) -->
                 <set field="ccfTemplateLocation" from-field="ccfTemplateLocation" default-value="component://accounting/webapp/accounting/common/creditcardfields.ftl" />
             </actions>

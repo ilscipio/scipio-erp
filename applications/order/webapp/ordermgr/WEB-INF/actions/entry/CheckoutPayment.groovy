@@ -73,3 +73,11 @@ if (checkIdealPayment) {
         context.issuerList = issuerList;
     }
 }
+
+// Cato: Make party, person, partyGroup available
+context.party = party;
+person = from("Person").where("partyId", partyId).cache(true).queryOne();
+context.person = person;
+partyGroup = from("PartyGroup").where("partyId", partyId).cache(true).queryOne();
+context.partyGroup = partyGroup;
+

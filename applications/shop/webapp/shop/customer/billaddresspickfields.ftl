@@ -111,7 +111,7 @@ under the License.
             <@fields type="default" ignoreParentField=true>
               <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                   ctxVars={
-                    "pafFieldNamePrefix":"${fieldNamePrefix}newAddr_",
+                    "pafFieldNamePrefix":newAddrFieldNamePrefix,
                     "pafUseScripts":useScripts}/>
             </@fields>
           </div>       

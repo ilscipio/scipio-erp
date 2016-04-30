@@ -97,6 +97,7 @@ jQuery(document).ready(function(){
  
 <#assign cart = shoppingCart! />
 
+<p>(NOTE: all buttons to be removed)</p><#-- TODO -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
@@ -253,7 +254,7 @@ jQuery(document).ready(function(){
                     ctxVars={
                         "billAddrUseNewAddr":true,
                         "billAddrNewAddrInline":true, 
-                        "billAddrFieldNamePrefix":"newCreditCard_addr_",
+                        "billAddrFieldNamePrefix":"newCreditCard_",
                         "billAddrNewAddrContentId":"newcreditcard_newbilladdrcontent",
                         "billAddrPickFieldClass":"new-cc-bill-addr-pick-radio",
                         "billAddrNewAddrFieldId":"newcreditcard_newaddrradio"
@@ -261,7 +262,9 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <@field type="checkbox" checkboxType="simple-standard" name="newCreditCard_save" value="Y" checked=((parameters.newCreditCard_save!) == "Y") label="Save to Account"/> <#-- TODO: Localize -->
+                <#-- Cato: TODO: this would be related to "singleUsePayment", but currently functionality is unclear
+                <@field type="checkbox" checkboxType="simple-standard" name="newCreditCard_save" value="Y" checked=((parameters.newCreditCard_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
+                -->
               </#if>
               <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="newCreditCard_amount" value=(parameters.newCreditCard_amount!) />
             </div>
@@ -286,7 +289,7 @@ jQuery(document).ready(function(){
                     ctxVars={
                         "billAddrUseNewAddr":true,
                         "billAddrNewAddrInline":true, 
-                        "billAddrFieldNamePrefix":"newEftAccount_addr_",
+                        "billAddrFieldNamePrefix":"newEftAccount_",
                         "billAddrNewAddrContentId":"neweftaccount_newbilladdrcontent",
                         "billAddrPickFieldClass":"new-eft-bill-addr-pick-radio",
                         "billAddrNewAddrFieldId":"neweftaccount_newaddrradio"
@@ -294,7 +297,9 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <@field type="checkbox" checkboxType="simple-standard" name="newEftAccount_save" value="Y" checked=((parameters.newEftAccount_save!) == "Y") label="Save to Account"/> <#-- TODO: Localize -->
+                <#-- Cato: TODO: this would be related to "singleUsePayment", but currently functionality is unclear
+                <@field type="checkbox" checkboxType="simple-standard" name="newEftAccount_save" value="Y" checked=((parameters.newEftAccount_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
+                -->
               </#if>
               <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="newEftAccount_amount" value=(parameters.newEftAccount_amount!) />
             </div>

@@ -537,7 +537,7 @@ under the License.
         <!-- Cato: FIXME: There should be an event here that ensures the user has completed enough steps so far to access this directly, and if not,
             redirects to the last type he can access; NOTE: For security reasons (view switches) such a check must first be implemented in the screen, AND then here as well! -->
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <response name="success" type="view" value="checkoutpayment"/>
+        <response name="success" type="request" value="calcShippingBeforePayment"/><!-- Cato: changed from: type="view" value="checkoutpayment" -->
     </request-map>
     <!-- Cato: This is a compatibility request to make sure can return from adding a new address; missing in stock ecommerce? -->
     <request-map uri="checkoutshippingaddress">

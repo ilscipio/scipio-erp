@@ -97,7 +97,6 @@ jQuery(document).ready(function(){
  
 <#assign cart = shoppingCart! />
 
-<p>(NOTE: all buttons to be removed)</p><#-- TODO -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
@@ -113,6 +112,7 @@ jQuery(document).ready(function(){
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+<p>(NOTE: all buttons above to be removed)</p><#-- TODO -->
 
   <#-- Cato: allow remember via params first, over stored -->
   <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentId!"">
@@ -243,21 +243,38 @@ jQuery(document).ready(function(){
           <#macro payMethContent args={}>
             <label for="newCreditCard">${uiLabelMap.AccountingCreditCard}: <strong>${uiLabelMap.CommonNew}</strong></label>
             <div id="newcreditcardcontent"<#if ("_NEW_CREDIT_CARD_" != selectedCheckOutPaymentId)> style="display:none;"</#if> class="new-item-selection-content">
-              (NOT IMPLEMENTED) <#-- TODO: Server-size -->
               <input type="hidden" name="newCreditCardPrefix" value="newCreditCard_" />
               
               <#-- Cato: FIELDS BASED ON editcreditcard.ftl -->
+              <#assign titleOnCard = "">
+              <#assign firstNameOnCard = "">
+              <#assign middleNameOnCard = "">
+              <#assign lastNameOnCard = "">
+              <#if person?has_content>
+                <#assign titleOnCard = person.personalTitle!>
+                <#assign firstNameOnCard = person.firstName!>
+                <#assign middleNameOnCard = person.middleName!>
+                <#assign lastNameOnCard = person.lastName!>
+              </#if>
               <@render resource="component://shop/widget/CustomerScreens.xml#creditCardFields" 
-                ctxVars={"ccfFieldNamePrefix": "newCreditCard_"} />
+                  ctxVars={
+                    "ccfFieldNamePrefix": "newCreditCard_",
+                    "ccfFallbacks":{
+                        "titleOnCard":titleOnCard,
+                        "firstNameOnCard":firstNameOnCard, 
+                        "middleNameOnCard":middleNameOnCard, 
+                        "lastNameOnCard":lastNameOnCard
+                    }
+                  }/>
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
-                        "billAddrUseNewAddr":true,
-                        "billAddrNewAddrInline":true, 
-                        "billAddrFieldNamePrefix":"newCreditCard_",
-                        "billAddrNewAddrContentId":"newcreditcard_newbilladdrcontent",
-                        "billAddrPickFieldClass":"new-cc-bill-addr-pick-radio",
-                        "billAddrNewAddrFieldId":"newcreditcard_newaddrradio"
+                        "bapfUseNewAddr":true,
+                        "bapfNewAddrInline":true, 
+                        "bapfFieldNamePrefix":"newCreditCard_",
+                        "bapfNewAddrContentId":"newcreditcard_newbilladdrcontent",
+                        "bapfPickFieldClass":"new-cc-bill-addr-pick-radio",
+                        "bapfNewAddrFieldId":"newcreditcard_newaddrradio"
                         }/>
               </@field>
 
@@ -278,21 +295,28 @@ jQuery(document).ready(function(){
           <#macro payMethContent args={}>
             <label for="newEftAccount">${uiLabelMap.AccountingEFTAccount}: <strong>${uiLabelMap.CommonNew}</strong></label>
             <div id="neweftaccountcontent"<#if ("_NEW_EFT_ACCOUNT_" != selectedCheckOutPaymentId)> style="display:none;"</#if> class="new-item-selection-content">
-              (NOT IMPLEMENTED) <#-- TODO: Server-size -->
               <input type="hidden" name="newEftAccountPrefix" value="newEftAccount_" />
               
               <#-- Cato: FIELDS BASED ON editeftaccount.ftl -->
+              <#assign nameOnAccount = "">
+              <#if person?has_content>
+                <#-- TODO: Unhardcode -->
+                <#assign nameOnAccount = "${person.firstName!} ${person.lastName!}">
+              </#if>
               <@render resource="component://shop/widget/CustomerScreens.xml#eftAccountFields" 
-                ctxVars={"eafFieldNamePrefix": "newEftAccount_"} />
+                ctxVars={
+                    "eafFieldNamePrefix": "newEftAccount_",
+                    "eafFallbacks":{"nameOnAccount":nameOnAccount}
+                    } />
               <@field type="generic" label=uiLabelMap.PartyBillingAddress>
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
-                        "billAddrUseNewAddr":true,
-                        "billAddrNewAddrInline":true, 
-                        "billAddrFieldNamePrefix":"newEftAccount_",
-                        "billAddrNewAddrContentId":"neweftaccount_newbilladdrcontent",
-                        "billAddrPickFieldClass":"new-eft-bill-addr-pick-radio",
-                        "billAddrNewAddrFieldId":"neweftaccount_newaddrradio"
+                        "bapfUseNewAddr":true,
+                        "bapfNewAddrInline":true, 
+                        "bapfFieldNamePrefix":"newEftAccount_",
+                        "bapfNewAddrContentId":"neweftaccount_newbilladdrcontent",
+                        "bapfPickFieldClass":"new-eft-bill-addr-pick-radio",
+                        "bapfNewAddrFieldId":"neweftaccount_newaddrradio"
                         }/>
               </@field>
 

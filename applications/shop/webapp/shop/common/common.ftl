@@ -61,7 +61,7 @@ jQuery(document).ready(function() {
         if (radio.length > 0) {
             if (radio.is(":checked")) {
                 jQuery('#'+contentId).show();
-                jQuery('#'+contentId).focus();
+                jQuery('#'+fieldId).focus();
             } else {
                 jQuery('#'+contentId).hide();
             }

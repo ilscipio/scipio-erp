@@ -249,15 +249,14 @@ under the License.
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">
                                             ${uiLabelMap.AccountingEFTAccount}
-                                            ${eftAccount.nameOnAccount!}
                                         </@td>
                                         <@td>
                                             ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
+                                            ${eftAccount.nameOnAccount!}
                                         </@td>
                                         <@td colspan="2">
-                                            <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}</#if>><br/>
+                                            <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
                                             ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
-
                                         </@td>
                                     </@tr>
                                 </#if>

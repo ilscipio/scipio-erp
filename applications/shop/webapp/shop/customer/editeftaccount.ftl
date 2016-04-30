@@ -51,7 +51,7 @@ under the License.
     <@field type="generic" label=uiLabelMap.PartyBillingAddress>
         <#-- Cato: Billing fields are replaced with common new defs (old defs that were here discarded) -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
-            ctxVars={"billAddrUseNewAddr":false, "billAddrNewAddrInline":false, "billAddrFieldNamePrefix":""}/>
+            ctxVars={"bapfUseNewAddr":false, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
     </@field>
   </form>
 </@section>

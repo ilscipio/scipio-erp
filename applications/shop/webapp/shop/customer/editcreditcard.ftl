@@ -44,7 +44,7 @@ under the License.
      <@field type="generic" label=uiLabelMap.PartyBillingAddress>
         <#-- Cato: Factored out for reuse -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
-            ctxVars={"billAddrUseNewAddr":true, "billAddrNewAddrInline":false, "billAddrFieldNamePrefix":""}/>
+            ctxVars={"bapfUseNewAddr":true, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
      </@field>
 
   </form>  

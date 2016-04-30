@@ -43,6 +43,8 @@ under the License.
     <#assign selectedContactMechId = parameters["${fieldNamePrefix}contactMechId"]>
   <#elseif hasCurrent>
     <#assign selectedContactMechId = curContactMechId>
+  <#elseif (bapfFallbacks.contactMechId)??>
+    <#assign selectedContactMechId = bapfFallbacks.contactMechId>
   <#else>
     <#assign selectedContactMechId = "">
   </#if>
@@ -63,8 +65,10 @@ under the License.
         <div>
           <@formattedAddress address=curPostalAddress emphasis=false />
         </div>
+      <#if showVerbose>
         <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
         <#if curPartyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</div></#if>
+      </#if>
     </#macro>
     <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=curContactMechId 
         labelContent=addrContent checked=(selectedContactMechId == curContactMechId) class="+${pickFieldClass}"  />
@@ -92,8 +96,10 @@ under the License.
         <div>
           <@formattedAddress address=postalAddress emphasis=false />
         </div>
+      <#if showVerbose>
         <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
         <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
+      </#if>
     </#macro>
     <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
         labelContent=addrContent checked=(selectedContactMechId == contactMech.contactMechId) class="+${pickFieldClass}" />
@@ -107,12 +113,13 @@ under the License.
         <#if newAddrInline>
           <div<#if newAddrContentId?has_content> id="${newAddrContentId}"</#if><#rt/>
             <#lt><#if (selectedContactMechId != "_NEW_")> style="display:none;"</#if> class="new-item-selection-content">
-            (NOT IMPLEMENTED)
             <@fields type="default" ignoreParentField=true>
               <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                   ctxVars={
                     "pafFieldNamePrefix":newAddrFieldNamePrefix,
-                    "pafUseScripts":useScripts}/>
+                    "pafUseScripts":useScripts,
+                    "pafFallbacks":(bapfNewAddrFallbacks!{})
+                    }/>
             </@fields>
           </div>       
         </#if>

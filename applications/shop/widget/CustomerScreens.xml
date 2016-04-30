@@ -50,14 +50,15 @@ under the License.
     <screen name="billaddresspickfields">
         <section>
             <actions>
-                <set field="pickFieldClass" from-field="billAddrPickFieldClass" default-value="bill-addr-pick-field" />
-                <set field="fieldNamePrefix" from-field="billAddrFieldNamePrefix" default-value="${''}" />
-                <set field="newAddrFieldNamePrefix" from-field="billAddrNewAddrFieldNamePrefix" default-value="${fieldNamePrefix}" />
-                <set field="useNewAddr" from-field="billAddrUseNewAddr" type="Boolean" default-value="false" />
-                <set field="newAddrInline" from-field="billAddrNewAddrInline" type="Boolean" default-value="false" />
-                <set field="newAddrContentId" from-field="billAddrNewAddrContentId" default-value="newbilladdrcontent" />
-                <set field="newAddrFieldId" from-field="billAddrNewAddrFieldId" default-value="newbilladdrfield" />
-                <set field="useScripts" from-field="billAddrUseScripts" type="Boolean" default-value="true" />
+                <set field="pickFieldClass" from-field="bapfPickFieldClass" default-value="bill-addr-pick-field" />
+                <set field="fieldNamePrefix" from-field="bapfFieldNamePrefix" default-value="${''}" />
+                <set field="newAddrFieldNamePrefix" from-field="bapfNewAddrFieldNamePrefix" default-value="${fieldNamePrefix}" />
+                <set field="useNewAddr" from-field="bapfUseNewAddr" type="Boolean" default-value="false" />
+                <set field="newAddrInline" from-field="bapfNewAddrInline" type="Boolean" default-value="false" />
+                <set field="newAddrContentId" from-field="bapfNewAddrContentId" default-value="newbilladdrcontent" />
+                <set field="newAddrFieldId" from-field="bapfNewAddrFieldId" default-value="newbilladdrfield" />
+                <set field="useScripts" from-field="bapfUseScripts" type="Boolean" default-value="true" />
+                <set field="showVerbose" from-field="bapfShowVerbose" type="Boolean" default-value="false" />
             </actions>
             <widgets>
                 <section>

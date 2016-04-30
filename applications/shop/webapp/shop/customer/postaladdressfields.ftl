@@ -24,6 +24,8 @@ under the License.
   <#assign defaultStateProvinceGeoId = parameters["${fieldNamePrefix}stateProvinceGeoId"]>
 <#elseif (postalAddress??) && (postalAddress.stateProvinceGeoId??)>
   <#assign defaultStateProvinceGeoId = postalAddress.stateProvinceGeoId>
+<#elseif (pafFallbacks.stateProvinceGeoId)??>
+  <#assign defaultStateProvinceGeoId = pafFallbacks.stateProvinceGeoId>
 <#else>
   <#assign defaultStateProvinceGeoId = "">
 </#if>
@@ -51,24 +53,25 @@ jQuery(document).ready(function() {
 
 </#if>
 
-
-  <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(parameters["${fieldNamePrefix}toName"]!(postalAddressData.toName)!) />
-  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(parameters["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!) />
-  <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(parameters["${fieldNamePrefix}address1"]!(postalAddressData.address1)!) />
-  <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(parameters["${fieldNamePrefix}address2"]!(postalAddressData.address2)!) />
-  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(parameters["${fieldNamePrefix}city"]!(postalAddressData.city)!) />
+  <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(parameters["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
+  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(parameters["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) />
+  <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(parameters["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
+  <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(parameters["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
+  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(parameters["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />
   <@field type="select" label="${uiLabelMap.PartyState}" name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldNamePrefix}stateProvinceGeoId">
     <#-- Cato: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
     <#if defaultStateProvinceGeoId?has_content>
       <option value="${defaultStateProvinceGeoId}">${defaultStateProvinceGeoId}</option>
     </#if>
   </@field>      
-  <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(parameters["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!) />
+  <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(parameters["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
   <@field type="select" label="${uiLabelMap.CommonCountry}" name="${fieldNamePrefix}countryGeoId" id="${fieldNamePrefix}countryGeoId">
       <#if parameters["${fieldNamePrefix}countryGeoId"]??>    
         <#assign defaultCountryGeoId = parameters["${fieldNamePrefix}countryGeoId"]>
       <#elseif (postalAddress??) && (postalAddress.countryGeoId??)>
         <#assign defaultCountryGeoId = postalAddress.countryGeoId>
+      <#elseif (pafFallbacks.countryGeoId)??>
+        <#assign defaultCountryGeoId = pafFallbacks.countryGeoId>
       <#else>
         <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
       </#if>

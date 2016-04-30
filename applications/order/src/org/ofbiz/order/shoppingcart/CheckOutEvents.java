@@ -52,6 +52,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -112,11 +113,13 @@ public class CheckOutEvents {
             //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
             String shippingContactMechId;
             try {
-                shippingContactMechId = getCheckShipContactMechIdOrCreateNewAddr(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
-            } catch (TargetServiceErrorException e1) {
-                Debug.logInfo(e1, module); // normal occurrence
-                ServiceUtil.appendMessageLists(request, e1.getServResult());
-                return "error";
+                Map<String, Object> contactMechResult = getCheckShipContactMechIdOrCreateNew(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+                if (ServiceUtil.isSuccess(contactMechResult)) {
+                    shippingContactMechId = (String) contactMechResult.get("contactMechId");
+                } else {
+                    ServiceUtil.appendMessageLists(request, contactMechResult);
+                    return "error";
+                }
             } catch (GeneralException e1) {
                 Debug.logError(e1, module); // unexpected error
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
@@ -185,7 +188,19 @@ public class CheckOutEvents {
             }
         } else if ("payment".equals(curPage) == true) {
             // Set the payment options
-            Map<String, Map<String, Object>> selectedPaymentMethods = getSelectedPaymentMethods(request);
+            // Cato: Handle new error cases
+            Map<String, Map<String, Object>> selectedPaymentMethods;
+            try {
+                selectedPaymentMethods = getSelectedPaymentMethods(request);
+            } catch (ServiceErrorException e) {
+                Debug.logInfo(e.getMessage(), module); // regular error (probably user)
+                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                return "error";
+            } catch (GeneralException e) {
+                Debug.logError(e, module); // unexpected error
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
+                return "error";
+            }
 
             String billingAccountId = request.getParameter("billingAccountId");
             if (UtilValidate.isNotEmpty(billingAccountId)) {
@@ -313,7 +328,7 @@ public class CheckOutEvents {
         return "success";
     }
 
-    public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) {
+    public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) throws ServiceErrorException, GeneralException {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         //Locale locale = UtilHttp.getLocale(request);
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
@@ -329,6 +344,15 @@ public class CheckOutEvents {
             for (int i = 0; i < paymentMethods.length; i++) {
                 Map<String, Object> paymentMethodInfo = FastMap.newInstance();
 
+                // Cato: Allow inlined address creation
+                String paymentMethodId;
+                Map<String, Object> payMethResult = getCheckPaymentMethodIdOrCreateNew(request, "checkOutPaymentId", "newCreditCardPrefix", "newEftAccountPrefix");
+                if (ServiceUtil.isSuccess(payMethResult)) {
+                    paymentMethodId = (String) payMethResult.get("paymentMethodId");
+                } else {
+                    throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
+                }
+                
                 String securityCode = request.getParameter("securityCode_" + paymentMethods[i]);
                 if (UtilValidate.isNotEmpty(securityCode)) {
                     paymentMethodInfo.put("securityCode", securityCode);
@@ -346,7 +370,7 @@ public class CheckOutEvents {
                     }
                 }
                 paymentMethodInfo.put("amount", amount);
-                selectedPaymentMethods.put(paymentMethods[i], paymentMethodInfo);
+                selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // Cato: edited
             }
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
@@ -360,8 +384,20 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         // Set the payment options
-        Map<String, Map<String, Object>> selectedPaymentMethods = getSelectedPaymentMethods(request);
-
+        // Cato: Handle new error cases
+        Map<String, Map<String, Object>> selectedPaymentMethods;
+        try {
+            selectedPaymentMethods = getSelectedPaymentMethods(request);
+        } catch (ServiceErrorException e) {
+            Debug.logInfo(e.getMessage(), module); // regular error (probably user)
+            ServiceUtil.appendMessageLists(request, e.getServiceResult());
+            return "error";
+        } catch (GeneralException e) {
+            Debug.logError(e, module); // unexpected error
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
+            return "error";
+        }
+        
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         // get the billing account and amount
@@ -386,11 +422,13 @@ public class CheckOutEvents {
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
         try {
-            shippingContactMechId = getCheckShipContactMechIdOrCreateNewAddr(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
-        } catch (TargetServiceErrorException e1) {
-            Debug.logInfo(e1, module); // normal occurrence
-            ServiceUtil.appendMessageLists(request, e1.getServResult());
-            return "error";
+            Map<String, Object> contactMechResult = getCheckShipContactMechIdOrCreateNew(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+            if (ServiceUtil.isSuccess(contactMechResult)) {
+                shippingContactMechId = (String) contactMechResult.get("contactMechId");
+            } else {
+                ServiceUtil.appendMessageLists(request, contactMechResult);
+                return "error";
+            }
         } catch (GeneralException e1) {
             Debug.logError(e1, module); // unexpected error
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
@@ -927,7 +965,19 @@ public class CheckOutEvents {
             Map<String, Object> errorMaps = new HashMap<String, Object>();
 
             // Set the payment options
-            Map<String, Map<String, Object>> selectedPaymentMethods = getSelectedPaymentMethods(request);
+            // Cato: Handle new error cases
+            Map<String, Map<String, Object>> selectedPaymentMethods;
+            try {
+                selectedPaymentMethods = getSelectedPaymentMethods(request);
+            } catch (ServiceErrorException e) {
+                Debug.logInfo(e.getMessage(), module); // regular error (probably user)
+                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                return "error";
+            } catch (GeneralException e) {
+                Debug.logError(e, module); // unexpected error
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
+                return "error";
+            }
 
             // Set the billing account (if any)
             String billingAccountId = request.getParameter("billingAccountId");
@@ -1225,21 +1275,23 @@ public class CheckOutEvents {
     
     /**
      * Cato: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
-     * params and try to create a new address before the new contact mech ID. This allows inlining
+     * params and try to create a new address before returning the new contact mech ID. This allows inlining
      * new ship address forms.
      * <p>
      * Mostly for checkout's shipping_contact_mech_id.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
-     * <p>
-     * Errors are set in the request.
      */
-    public static String getCheckShipContactMechIdOrCreateNewAddr(HttpServletRequest request, String paramName, String prefixParamName) throws GeneralException {
+    public static Map<String, Object> getCheckShipContactMechIdOrCreateNew(HttpServletRequest request, String paramName, String prefixParamName) throws GeneralException {
         // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
-        String paramPrefix = getRequestAttribOrParam(request, prefixParamName);
+        String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
         
-        String setShippingPurpose = getRequestAttribOrParam(request, (paramPrefix != null ? paramPrefix : "") + "setShippingPurpose");
+        // FIXME: VALIDATION IS INCOMPLETE
+        MapValidator validator = null;
+        String serviceName;
+        String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
         Map<String, Object> overrideParams = UtilMisc.toMap("setBillingPurpose", null);
+
         // We can only set either setShippingPurpose or contactMechPurposeTypeId here
         if ("Y".equals(setShippingPurpose)) {
             overrideParams.put("setShippingPurpose", "Y");
@@ -1248,63 +1300,139 @@ public class CheckOutEvents {
             overrideParams.put("setShippingPurpose", null);
             overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         }
-        return getCheckContactMechIdOrCreateNew(request, paramName, prefixParamName, "createPostalAddressAndPurposes",
-                overrideParams, 
-                new ShippingAddressValidator(request));
+        String contactMechId = getRequestAttribOrParam(request, paramName);
+        if ("_NEW_".equals(contactMechId)) {
+            validator = PostalAddressValidator.getInstance(request);
+            serviceName = "createPostalAddressAndPurposes";
+        } else {
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("contactMechId", contactMechId);
+            return result;
+        }
+        
+        Map<String, Object> servResult = runServiceFromParams(request, paramName, prefixParamName, serviceName, overrideParams, validator);
+        
+        if (!ServiceUtil.isSuccess(servResult)) {
+            Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
+            return servResult;
+        } else {
+            contactMechId = (String) servResult.get("contactMechId");
+        }
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("contactMechId", contactMechId);
+        return result;
+    }
+    
+    /**
+     * Cato: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_, it will check other
+     * params and try to create new records before returning the new contact mech ID. This allows inlining
+     * new ship address forms.
+     * <p>
+     * Mostly for checkout's checkOutPaymentId.
+     * <p>
+     * NOTE: This checks request attribs before request parameters so that other events may influence.
+     */
+    public static Map<String, Object> getCheckPaymentMethodIdOrCreateNew(HttpServletRequest request, String paramName, 
+            String ccPrefixParamName, String eftPrefixParamName) throws GeneralException {
+        
+        // FIXME: VALIDATION IS INCOMPLETE
+        MapValidator validator = null;
+        String serviceName;
+        Map<String, Object> overrideParams = new HashMap<String, Object>();
+        String prefixParamName;
+        
+        String paymentMethodId = getRequestAttribOrParam(request, paramName);
+        if ("_NEW_CREDIT_CARD_".equals(paymentMethodId)) {
+            prefixParamName = ccPrefixParamName;
+            String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
+            String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
+            if (UtilValidate.isNotEmpty(addrContactMechId)) {
+                if ("_NEW_".equals(addrContactMechId)) {
+                    // Cato: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
+                    // other inline stuff already (not delayed to another screen)
+                    serviceName = "createCreditCardAndAddress";
+                    validator = PostalAddressValidator.getInstance(request);
+                    overrideParams.put("contactMechId", null);
+                } else {
+                    serviceName = "createCreditCard";
+                }
+            } else {
+                // TODO: Localize
+                // NOTE: The schema doesn't enforce this
+                return ServiceUtil.returnError("No contact mech (billing address) specified for new credit card");
+            }
+        } else if ("_NEW_EFT_ACCOUNT_".equals(paymentMethodId)) {
+            prefixParamName = eftPrefixParamName;
+            String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
+            String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
+            if (UtilValidate.isNotEmpty(addrContactMechId)) {
+                if ("_NEW_".equals(addrContactMechId)) {
+                    serviceName = "createEftAccountAndAddress";
+                    validator = PostalAddressValidator.getInstance(request);
+                    overrideParams.put("contactMechId", null);
+                } else {
+                    serviceName = "createEftAccount";
+                }
+            } else {
+                // TODO: Localize
+                // NOTE: The schema doesn't enforce this
+                return ServiceUtil.returnError("No contact mech (billing address) specified for new EFT account");
+            }
+        } else {
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("paymentMethodId", paymentMethodId);
+            return result;
+        }
+        
+        Map<String, Object> servResult = runServiceFromParams(request, paramName, prefixParamName, serviceName, overrideParams, validator);
+        
+        if (!ServiceUtil.isSuccess(servResult)) {
+            Debug.logInfo("Could not create new pay method during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
+            return servResult;
+        } else {
+            paymentMethodId = (String) servResult.get("paymentMethodId");
+        }
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("paymentMethodId", paymentMethodId);
+        return result;
     }
 
     
     /**
-     * Cato: Checks a contact meth ID; if it has the special value _NEW_, it will check other
-     * params and try to create a new address before the new contact mech ID. This allows inlining
-     * new contact mech forms.
+     * Cato: Service invocation helper; uses combine req attribs + params.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
-     * <p>
-     * Errors are set in the request.
      */
-    public static String getCheckContactMechIdOrCreateNew(HttpServletRequest request, String paramName, String prefixParamName, 
+    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramName, String prefixParamName, 
             String serviceName, Map<String, Object> overrideParams, MapValidator paramValidator) throws GeneralException {
-        String contactMechId = getRequestAttribOrParam(request, paramName);
-        if ("_NEW_".equals(contactMechId)) {
-            String paramPrefix = null;
-            if (prefixParamName != null && !prefixParamName.isEmpty()) {
-                paramPrefix = getRequestAttribOrParam(request, prefixParamName);
-            }
-            if (paramPrefix == null) {
-                paramPrefix = "";
-            }
-            
-            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            
-            Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
-            Map<String, Object> context;
-            if (paramPrefix.isEmpty()) {
-                context = combinedMap;
-            } else {
-                context = UtilMisc.getPrefixedMapEntries(combinedMap, paramPrefix);
-            }
+        String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
+        
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        
+        Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
+        Map<String, Object> context;
+        if (paramPrefix.isEmpty()) {
+            context = combinedMap;
+        } else {
+            context = UtilMisc.getPrefixedMapEntries(combinedMap, paramPrefix);
+        }
 
-            Map<String, Object> servCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
-            servCtx.put("userLogin", combinedMap.get("userLogin"));
-            servCtx.put("locale", combinedMap.get("locale"));
-            servCtx.putAll(overrideParams);
-            if (paramValidator != null) {
-                Map<String, String> errorMsgs = new HashMap<String, String>();
-                paramValidator.validate(servCtx, errorMsgs);
-                if (errorMsgs.size() > 0) {
-                    Map<String, Object> validateRes = ServiceUtil.returnError(new ArrayList<String>(errorMsgs.values()));
-                    throw new TargetServiceErrorException(validateRes, "Could not validate contact mech fields: " + ServiceUtil.getErrorMessage(validateRes));
-                }
-            }
-            Map<String, Object> servResult = dispatcher.runSync(serviceName, servCtx);
-            if (!ServiceUtil.isSuccess(servResult)) {
-                throw new TargetServiceErrorException(servResult, "Could not create contact mech: " + ServiceUtil.getErrorMessage(servResult));
-            } else {
-                contactMechId = (String) servResult.get("contactMechId");
+        Map<String, Object> servCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
+        servCtx.put("userLogin", combinedMap.get("userLogin"));
+        servCtx.put("locale", combinedMap.get("locale"));
+        servCtx.putAll(overrideParams);
+        if (paramValidator != null) {
+            Map<String, String> errorMsgs = new HashMap<String, String>();
+            paramValidator.validate(servCtx, errorMsgs);
+            if (errorMsgs.size() > 0) {
+                Map<String, Object> validateRes = ServiceUtil.returnError(new ArrayList<String>(errorMsgs.values()));
+                Debug.logInfo("Could not validate fields: " + ServiceUtil.getErrorMessage(validateRes), module);
+                return validateRes;
             }
         }
-        return contactMechId;
+        return dispatcher.runSync(serviceName, servCtx);
     }
     
     /**
@@ -1319,78 +1447,15 @@ public class CheckOutEvents {
         return res;
     }
     
-    /**
-     * Cato: Small exception class to pass around service results.
-     */
-    @SuppressWarnings("serial")
-    static class TargetServiceErrorException extends GeneralException {
-
-        private final Map<String, Object> servResult;
-        
-        public TargetServiceErrorException(Map<String, Object> servResult, String exMsg) {
-            super(exMsg);
-            this.servResult = servResult;
+    private static String getRequestAttribOrParamPrefix(HttpServletRequest request, String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
         }
-        
-        public TargetServiceErrorException(List<String> errorMessageList, String exMsg) {
-            super(exMsg);
-            this.servResult = ServiceUtil.returnError(errorMessageList);
+        String res = getRequestAttribOrParam(request, name);
+        if (res == null) {
+            res = "";
         }
-        
-        public TargetServiceErrorException(String errorMessage, String exMsg) {
-            super(exMsg);
-            this.servResult = ServiceUtil.returnError(errorMessage);
-        }
-
-        public Map<String, Object> getServResult() {
-            return servResult;
-        }
-    }
-    
-    /**
-     * Cato: Shippign address validator class for checkout.
-     * <p>
-     * TODO: factor out into party app?
-     */
-    public static class ShippingAddressValidator implements MapValidator {
-
-        private final HttpServletRequest request;
-        
-        public ShippingAddressValidator(HttpServletRequest request) {
-            super();
-            this.request = request;
-        }
-
-        @Override
-        public void validate(Map<String, Object> map, Map<String, String> errorMessages) {
-            // TODO: This is definitely insufficient... for now just make sure the essential fields are not empty
-            // TODO: localize
-            // toName
-            // attnName
-            // address1
-            // address2
-            // city
-            // stateProvinceGeoId
-            // postalCode
-            // countryGeoId
-            // allowSolicitation
-            if (!stringNotEmpty(map.get("address1"))) {
-                errorMessages.put("address1", "Missing address line");
-            }
-            if (!stringNotEmpty(map.get("city"))) {
-                errorMessages.put("city", "Missing city");
-            }
-            if (!stringNotEmpty(map.get("postalCode"))) {
-                errorMessages.put("postalCode", "Missing postal code");
-            }
-            if (!stringNotEmpty(map.get("countryGeoId"))) {
-                errorMessages.put("countryGeoId", "Missing country");
-            }
-        }
-        
-        private static boolean stringNotEmpty(Object str) {
-            return (str instanceof String) && ((String) str).trim().length() > 0;
-        }
+        return res;
     }
     
 }

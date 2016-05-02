@@ -1024,6 +1024,7 @@ public class CheckOutEvents {
 
             // If the user has just created a new payment method, add it to the map with a null amount, so that
             //  it becomes the sole payment method for the order.
+            // Cato: FIXME?: This is stock code and it appears to be deprecated or not work properly.
             String newPaymentMethodId = (String) request.getAttribute("paymentMethodId");
             if (! UtilValidate.isEmpty(newPaymentMethodId)) {
                 selectedPaymentMethods.put(newPaymentMethodId, null);

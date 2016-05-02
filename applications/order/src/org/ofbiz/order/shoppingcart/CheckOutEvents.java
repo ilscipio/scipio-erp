@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
@@ -343,10 +344,12 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        /* Cato: TODO?: Currently, this event does nothing. This is because checkOutHelper.validatePaymentMethods()
-         * performs mainly a total amount validation which causes errors when going backward in checkout due
-         * to change shipping options which can affect totals and result a negative balance error.
-         * This method is thus currently a placeholder.
+        
+        // Cato: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
+        // performs mainly a total amount validation which causes errors when going backward in checkout due
+        // to change shipping options which can affect totals and result a negative balance error.
+        // This method is thus currently a placeholder.
+        /*
         Map<String, Object> resp = checkOutHelper.validatePaymentMethods();
         if (ServiceUtil.isError(resp)) {
             request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resp));
@@ -1487,7 +1490,7 @@ public class CheckOutEvents {
         return res;
     }
     
-    private static String getRequestAttribOrParamPrefix(HttpServletRequest request, String name) {
+    static String getRequestAttribOrParamPrefix(HttpServletRequest request, String name) {
         if (name == null || name.isEmpty()) {
             return "";
         }
@@ -1497,5 +1500,26 @@ public class CheckOutEvents {
         }
         return res;
     }
+    
+    // Cato: Alternative pattern meant for integration with setCheckoutError; not yet needed.
+//    /**
+//     * Cato: This creates a note in the request of the type of error we ran into. 
+//     */
+//    static void registerCheckoutError(HttpServletRequest request, String errorType) {
+//        List<String> errors = getCheckoutErrors(request);
+//        errors.add(errorType);
+//        request.setAttribute("checkoutErrors", errors);
+//    }
+//    
+//    /**
+//     * Cato: Gets a list of checkout error types recorded during the request so far.
+//     */
+//    static List<String> getCheckoutErrors(HttpServletRequest request) {
+//        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));
+//        if (errors == null) {
+//            errors = FastList.newInstance();
+//        }
+//        return errors;
+//    }
     
 }

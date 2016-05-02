@@ -592,23 +592,29 @@ under the License.
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="setPoNumber">
-      <security direct-request="false"/>
-      <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setPoNumber"/>
-      <response name="success" type="request" value="calcShippingBeforePayment"/>
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setPoNumber"/>
+        <response name="success" type="request" value="calcShippingBeforePayment"/>
     </request-map>
     <request-map uri="checkouterror">
-      <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
-      <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
-      <response name="shippingaddress" type="view" value="checkoutshippingaddress"/>
-      <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
-      <response name="payment" type="view" value="checkoutpayment"/>
-      <response name="confirm" type="request" value="calcShipping"/>
-      <!-- Cato: Not supported
-      <response name="quick" type="view" value="quickcheckout"/>
-      -->
-      <response name="quick" type="view" value="checkoutshippingaddress"/>
-      <response name="error" type="view" value="checkoutshippingaddress"/>
-      <response name="success" type="view" value="checkoutshippingaddress"/>
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
+        <response name="shippingaddress" type="view" value="checkoutshippingaddress"/>
+        <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
+        <response name="payment" type="view" value="checkoutpayment"/>
+        <response name="confirm" type="request" value="calcShipping"/>
+        <!-- Cato: Not supported
+        <response name="quick" type="view" value="quickcheckout"/>
+        -->
+        <response name="quick" type="view" value="checkoutshippingaddress"/>
+        <response name="error" type="view" value="checkoutshippingaddress"/>
+        <response name="success" type="view" value="checkoutshippingaddress"/>
+    </request-map>
+    <!-- Cato: Abstraction for checkout errors that need to specifically send to payments page. -->
+    <request-map uri="checkoutpaymenterror">
+        <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
+        <response name="success" type="view" value="checkoutpayment"/>
+        <response name="error" type="view" value="checkoutpayment"/>
     </request-map>
     <!-- Cato: Not supported
         DEV NOTE: If must prevent access to screens (for security), you must comment out the view-maps more than anything.
@@ -705,10 +711,14 @@ under the License.
             errors when going back and forth in checkout with "change returned cannot be greater than the cash given".
             It doesn't appear necessary. The new event, checkPaymentMethodsBeforePayment, at current time is a placeholder
             and does nothing.
+            WARN: If you chain other events after this, they must be payment-related; any non-payment events
+                must be called before this event.
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/> -->
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethodsBeforePayment"/>
         <response name="success" type="view" value="checkoutpayment"/>
-        <response name="error" type="request" value="checkouterror"/>
+        <!-- Cato: Send directly back to payment for now; stock checkouterror sends back to shipping
+        <response name="error" type="request" value="checkouterror"/>-->
+        <response name="payment" type="request" value="checkoutpaymenterror"/>
     </request-map>
 
     <request-map uri="checkBlacklist">
@@ -729,11 +739,20 @@ under the License.
     <request-map uri="processorder">
         <security https="true" auth="false" />
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
-        <response name="success" type="request" value="processordercreate"/>
+        <response name="success" type="request" value="processordervalidatepayment"/>
         <response name="error" type="request-redirect-noparam" value="showcart" />
     </request-map>
+    <!-- Cato: add extra check to validate payment methods before order is sent for creation, in case user managed to bypass -->
+    <request-map uri="processordervalidatepayment">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
+        <response name="success" type="request" value="processordercreate"/>
+        <!-- Cato: Send directly back to payment for now; stock checkouterror sends back to checkoutreview
+        <response name="error" type="request" value="checkouterror"/>-->
+        <response name="payment" type="request" value="checkoutpaymenterror"/>
+    </request-map>
     <request-map uri="processordercreate">
-        <security https="true" auth="false" direct-request="false"/>
+        <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
         <response name="sales_order" type="request" value="checkBlacklist"/>
         <response name="work_order" type="request" value="checkBlacklist"/>

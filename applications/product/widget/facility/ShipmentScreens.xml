@@ -392,12 +392,15 @@ under the License.
     <screen name="PackOrder">
         <section>
             <actions>
-                <set field="titleProperty" value="ProductPackOrder"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="title" value="${uiLabelMap.ProductPackOrder} ${facilityId}"/>
                 <set field="activeMainMenuItem" value="shipment"/>
+                <set field="facilityMenu" value="FacilityPackOrderSideBar"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/facility/shipment/PackOrder.ftl"/></html>

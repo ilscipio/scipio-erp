@@ -327,6 +327,30 @@ public class CheckOutEvents {
         }
         return "success";
     }
+    
+    /**
+     * Cato: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
+     * selection.
+     * <p>
+     * TODO?: Currently, this event does nothing. See comments.
+     */
+    public static String checkPaymentMethodsBeforePayment(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+        /* Cato: TODO?: Currently, this event does nothing. This is because checkOutHelper.validatePaymentMethods()
+         * performs mainly a total amount validation which causes errors when going backward in checkout due
+         * to change shipping options which can affect totals and result a negative balance error.
+         * This method is thus currently a placeholder.
+        Map<String, Object> resp = checkOutHelper.validatePaymentMethods();
+        if (ServiceUtil.isError(resp)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resp));
+            return "error";
+        }
+        */
+        return "success";
+    }
 
     public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) throws ServiceErrorException, GeneralException {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");

@@ -701,7 +701,12 @@ under the License.
     </request-map>
     <request-map uri="validatePaymentMethodsBeforePayment">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
+        <!-- Cato: 2016-05-02: WARN: We no longer perform payment methods check at this point due to causing
+            errors when going back and forth in checkout with "change returned cannot be greater than the cash given".
+            It doesn't appear necessary. The new event, checkPaymentMethodsBeforePayment, at current time is a placeholder
+            and does nothing.
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/> -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethodsBeforePayment"/>
         <response name="success" type="view" value="checkoutpayment"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>

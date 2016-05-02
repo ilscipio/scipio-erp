@@ -86,7 +86,9 @@ public class CheckOutEvents {
         HttpSession session = request.getSession();
 
         //Locale locale = UtilHttp.getLocale(request);
-        String curPage = request.getParameter("checkoutpage");
+        // CATO: Read the "checkoutpage" from attributes first, so events may modify
+        //String curPage = request.getParameter("checkoutpage");
+        String curPage = getRequestAttribOrParam(request, "checkoutpage");
         Debug.logInfo("CheckoutPage: " + curPage, module);
 
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
@@ -281,7 +283,9 @@ public class CheckOutEvents {
     }
 
     public static String setCheckOutError(HttpServletRequest request, HttpServletResponse response) {
-        String currentPage = request.getParameter("checkoutpage");
+        // CATO: Read the "checkoutpage" from attributes first, so events may modify
+        //String currentPage = request.getParameter("checkoutpage");
+        String currentPage = getRequestAttribOrParam(request, "checkoutpage");
         if (UtilValidate.isEmpty(currentPage)) {
             return "error";
         } else {
@@ -1460,12 +1464,24 @@ public class CheckOutEvents {
     }
     
     /**
-     * Cato: Util to get request attrib or param of same name.
-     * If request attrib is non-null but empty, params are ignored.
+     * Cato: Local util to get request attrib or param of same name. If request attrib is null, falls back
+     * to params.
+     * <p>
+     * <strong>WARN</strong>: If request attrib is non-null but empty, params are ignored. This is
+     * intentional, to allow empty as an override value.
      */
-    private static String getRequestAttribOrParam(HttpServletRequest request, String name) {
-        String res = (String) request.getAttribute(name);
-        if (res == null) {
+    static String getRequestAttribOrParam(HttpServletRequest request, String name) {
+        String res;
+        Object resObj = request.getAttribute(name);
+        if (resObj != null) {
+            if (resObj instanceof String) {
+                res = (String) resObj;
+            } else {
+                res = resObj.toString();
+                Debug.logWarning("Cato: WARNING: Reading non-string request attribute '" + name + 
+                        "' as string (value: '" + res + "')", module);
+            }
+        } else {
             res = request.getParameter(name);
         }
         return res;

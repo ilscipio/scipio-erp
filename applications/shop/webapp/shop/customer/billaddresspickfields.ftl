@@ -64,7 +64,7 @@ under the License.
           </div>
         </#list>
         <div>
-          <@formattedAddress address=curPostalAddress emphasis=false />
+          <@formattedAddress address=curPostalAddress emphasis=false updateLink=(useUpdate?string(updateLink!,""))/>
         </div>
       <#if showVerbose>
         <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
@@ -97,7 +97,7 @@ under the License.
           </div>
         </#list>
         <div>
-          <@formattedAddress address=postalAddress emphasis=false />
+          <@formattedAddress address=postalAddress emphasis=false updateLink=(useUpdate?string(rawString(updateLink!)?replace('_CONTACT_MECH_ID_', contactMech.contactMechId),"")) />
         </div>
       <#if showVerbose>
         <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
@@ -123,6 +123,7 @@ under the License.
               <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
                   ctxVars={
                     "pafFieldNamePrefix":newAddrFieldNamePrefix,
+                    "pafFieldIdPrefix":newAddrFieldIdPrefix,
                     "pafUseScripts":useScripts,
                     "pafFallbacks":(bapfNewAddrFallbacks!{})
                     }/>

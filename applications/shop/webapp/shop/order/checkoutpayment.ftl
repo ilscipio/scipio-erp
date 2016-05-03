@@ -51,9 +51,13 @@ function submitForm(form, mode, value) {
         // edit eft account
         form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
-    } else if (mode = "EG") {
+    } else if (mode == "EG") {
         // edit gift card
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.submit();
+    } else if (mode == "EA") { <#-- CATO: new -->
+        // edit address
+        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutpayment&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     }
 }
@@ -302,6 +306,8 @@ jQuery(document).ready(function(){
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
                         "bapfUseNewAddr":true,
+                        "bapfUseUpdate":false, <#-- FIXME?: not allowing update yet because may affect shipping calc (?) -->
+                        "bapfUpdateLink":"javascript:submitForm(document.checkoutInfoForm, 'EA', '_CONTACT_MECH_ID_');",
                         "bapfNewAddrInline":true, 
                         "bapfFieldNamePrefix":"newCreditCard_",
                         "bapfNewAddrContentId":"newcreditcard_newbilladdrcontent",
@@ -346,6 +352,8 @@ jQuery(document).ready(function(){
                 <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
                     ctxVars={
                         "bapfUseNewAddr":true,
+                        "bapfUseUpdate":false, <#-- FIXME?: not allowing update yet because may affect shipping calc (?) -->
+                        "bapfUpdateLink":"javascript:submitForm(document.checkoutInfoForm, 'EA', '_CONTACT_MECH_ID_');",
                         "bapfNewAddrInline":true, 
                         "bapfFieldNamePrefix":"newEftAccount_",
                         "bapfNewAddrContentId":"neweftaccount_newbilladdrcontent",

@@ -108,16 +108,16 @@ under the License.
   <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
-          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
-          <#if contactMechPurposeType??>
-            <p>(${uiLabelMap.PartyNewContactHavePurpose} "${contactMechPurposeType.get("description",locale)!}")</p>
-          </#if>
-          <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}" /></#if>
-          <#if preContactMechTypeId?has_content><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
-          <#if paymentMethodId?has_content><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
+      <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
+      <#if contactMechPurposeType??>
+        <p>(${uiLabelMap.PartyNewContactHavePurpose} "${contactMechPurposeType.get("description",locale)!}")</p>
+      </#if>
+      <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}" /></#if>
+      <#if preContactMechTypeId?has_content><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
+      <#if paymentMethodId?has_content><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
     <#else>
-          <input type="hidden" name="contactMechId" value="${contactMechId}" />
-          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
+      <input type="hidden" name="contactMechId" value="${contactMechId}" />
+      <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
     </#if>
 
     <#if contactMechTypeId == "POSTAL_ADDRESS">
@@ -125,7 +125,9 @@ under the License.
         <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
             ctxVars={
               "pafFieldNamePrefix":"",
-              "pafUseScripts":true }/>
+              "pafUseScripts":false, <#-- NOTE: false because another script takes care of it here for us --> 
+              "pafFieldIdPrefix":"editcontactmechform_"
+              }/>
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
       <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
           <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(telecomNumberData.countryCode!) tooltip=uiLabelMap.CommonCountryCode />

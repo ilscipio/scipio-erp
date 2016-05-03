@@ -57,7 +57,7 @@ function submitForm(form, mode, value) {
         // edit eft account
         form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
-    } else if (mode = "EG") {
+    } else if (mode == "EG") {
         // edit gift card
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();

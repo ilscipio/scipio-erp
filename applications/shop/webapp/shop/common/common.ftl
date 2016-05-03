@@ -11,7 +11,7 @@
   <#if address.postalCode?has_content><br />${address.postalCode}</#if>
   <#if address.countryGeoId?has_content><br />${address.countryGeoId}</#if>
   <#if updateLink?has_content>
-    <a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+    <a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
   </#if>
 </#macro>
 

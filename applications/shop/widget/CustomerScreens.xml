@@ -52,8 +52,13 @@ under the License.
             <actions>
                 <set field="pickFieldClass" from-field="bapfPickFieldClass" default-value="bill-addr-pick-field" />
                 <set field="fieldNamePrefix" from-field="bapfFieldNamePrefix" default-value="${''}" />
+                <set field="fieldIdPrefix" from-field="bapfFieldIdPrefix" default-value="${fieldNamePrefix}" />
                 <set field="newAddrFieldNamePrefix" from-field="bapfNewAddrFieldNamePrefix" default-value="${fieldNamePrefix}" />
+                <set field="newAddrFieldIdPrefix" from-field="bapfNewAddrFieldIdPrefix" default-value="${newAddrFieldNamePrefix}" />
                 <set field="useNewAddr" from-field="bapfUseNewAddr" type="Boolean" default-value="false" />
+                <set field="useUpdate" from-field="bapfUseUpdate" type="Boolean" default-value="false" />
+                <set field="updateLink" from-field="bapfUpdateLink" type="String" default-value="" />
+                <set field="donePage" from-field="bapfDonePage" type="String" default-value="" />
                 <set field="newAddrInline" from-field="bapfNewAddrInline" type="Boolean" default-value="false" />
                 <set field="newAddrContentId" from-field="bapfNewAddrContentId" default-value="newbilladdrcontent" />
                 <set field="newAddrFieldId" from-field="bapfNewAddrFieldId" default-value="newbilladdrfield" />
@@ -89,6 +94,7 @@ under the License.
         <section>
             <actions>
                 <set field="fieldNamePrefix" from-field="pafFieldNamePrefix" default-value="${''}" />
+                <set field="fieldIdPrefix" from-field="pafFieldIdPrefix" default-value="${fieldNamePrefix}" />
                 <set field="useScripts" from-field="pafUseScripts" type="Boolean" default-value="true" />
             </actions>
             <widgets>

@@ -107,7 +107,7 @@ jQuery(document).ready(function() {
     <#local postfixColumns = 3>
   </#if>
   <#if !widgetPostfixColumns?has_content>
-    <#local widgetPostfixColumns = 11>
+    <#local widgetPostfixColumns = 10>
   </#if>
   <#if postfixContent?is_directive || postfixContent?has_content>
     <#local postfix = true>
@@ -128,4 +128,19 @@ jQuery(document).ready(function() {
     <@contentArgRender content=args.labelContent args=args.labelContentArgs />
   </@fields>
 </#macro>
+
+<#macro addressList>
+  <#-- Use simple floats for this. it works out better... -->
+  <div class="${styles.float_clearfix}">
+    <#nested>
+  </div>
+</#macro>
+
+<#macro addressEntry>
+  <#-- Use simple floats for this. it works out better... -->
+  <div style="float:left; width:250px;"><#-- FIXME: Unhardcode -->
+    <#nested>
+  </div>
+</#macro>
+
 

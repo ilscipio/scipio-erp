@@ -171,7 +171,10 @@ function toggleBillingAccount(box) {
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
     <@section>
         <#if shippingContactMechList?has_content>
+          <#-- Use standard floats for this?... -->
+          <@addressList>
           <#list shippingContactMechList as shippingContactMech>
+            <@addressEntry>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
             <#if parameters.shipping_contact_mech_id?has_content>
               <#assign checkThisAddress = (shippingAddress.contactMechId == parameters.shipping_contact_mech_id)>
@@ -185,8 +188,11 @@ function toggleBillingAccount(box) {
               <@formattedAddress address=shippingAddress updateLink="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" emphasis=true />
             </#assign>
             <@commonInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
+            </@addressEntry>
           </#list>
+          </@addressList>
         </#if>
+    
 
     <#macro newAddrFormContent args={}>
       <input type="hidden" name="new_ship_addr_prefix" value="newShipAddr_" />
@@ -214,14 +220,23 @@ function toggleBillingAccount(box) {
           <#else>
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
-          <#macro newAddrFormContentAndTitle args={}>
+          <#macro newAddrFormFieldContent args={}>
             <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
+            <#--
             <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">
               <@newAddrFormContent />
             </div>
+            -->
           </#macro>
+          <@addressList>
+            <@addressEntry>
           <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
-            labelContent=newAddrFormContentAndTitle id="newshipaddrradio" class="+addr-select-radio"/>
+            labelContent=newAddrFormFieldContent id="newshipaddrradio" class="+addr-select-radio"/>
+            </@addressEntry>
+          </@addressList>
+            <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">
+              <@newAddrFormContent />
+            </div>
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
             <#-- Cato: title is not needed; implied
@@ -230,6 +245,8 @@ function toggleBillingAccount(box) {
             <@newAddrFormContent />
           </div>
         </#if>
+
+
     
     </@section>
 

@@ -25,7 +25,7 @@ under the License.
     <!-- <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/> -->
     <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>
     <include location="component://workeffort/webapp/workeffort/WEB-INF/controller.xml"/>
-    <description>SFA Manager Module Site Configuration File</description>
+    <description>CRM Module Site Configuration File</description>
     
     <!-- Request Mappings -->
     <request-map uri="main">

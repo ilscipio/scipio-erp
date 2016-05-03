@@ -44,11 +44,18 @@ under the License.
         location="webapp/marketing"
         base-permission="OFBTOOLS,MARKETING"
         mount-point="/marketing"/>
-    <webapp name="SalesForceAutomation"
-        title="SFA"
+    <webapp name="CRM"
+        title="CRM"
         server="default-server"
         location="webapp/sfa"
         base-permission="OFBTOOLS,SFA"
-        mount-point="/sfa"/>
+        mount-point="/crm"/>
+    <webapp name="salesForceAutomation"
+        title="SFA"
+        menu-name="secondary"
+        server="default-server"
+        location="webapp/sfaredirect"
+        app-bar-display="false"
+        mount-point="/sfa"/> 
 </ofbiz-component>
 

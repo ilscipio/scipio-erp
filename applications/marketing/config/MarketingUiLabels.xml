@@ -850,37 +850,37 @@
     </property>
     <property key="MarketingFindAccounts">
         <value xml:lang="de">Accounts suchen</value>
-        <value xml:lang="en">Find SFA Accounts</value>
+        <value xml:lang="en">Find CRM Accounts</value>
         <value xml:lang="fr">Rechercher les comptes de ventes</value>
-        <value xml:lang="it">Ricerca utenze SFA</value>
-        <value xml:lang="ja">SFAアカウントを検索</value>
+        <value xml:lang="it">Ricerca utenze CRM</value>
+        <value xml:lang="ja">CRMアカウントを検索</value>
         <value xml:lang="pt_BR">Encontrar contas da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Account</value>
         <value xml:lang="vi">Tìm kiếm tài khoản bán hàng</value>
         <value xml:lang="zh">查找销售管理账户</value>
-        <value xml:lang="zh_TW">尋找營業支援(SFA)帳戶</value>
+        <value xml:lang="zh_TW">尋找營業支援(CRM)帳戶</value>
     </property>
     <property key="MarketingFindContacts">
         <value xml:lang="de">Kontakte suchen</value>
-        <value xml:lang="en">Find SFA Contacts</value>
+        <value xml:lang="en">Find CRM Contacts</value>
         <value xml:lang="fr">Rechercher des contacts</value>
-        <value xml:lang="ja">SFA連絡を検索</value>
+        <value xml:lang="ja">CRM連絡を検索</value>
         <value xml:lang="pt_BR">Encontrar contatos da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Contact</value>
         <value xml:lang="vi">Tìm kiếm Liên hệ</value>
         <value xml:lang="zh">查找销售管理联系人</value>
-        <value xml:lang="zh_TW">尋找營業支援(SFA)聯絡人</value>
+        <value xml:lang="zh_TW">尋找營業支援(CRM)聯絡人</value>
     </property>
     <property key="MarketingFindLeads">
         <value xml:lang="de">Leads suchen</value>
-        <value xml:lang="en">Find SFA Leads</value>
+        <value xml:lang="en">Find Leads</value>
         <value xml:lang="fr">Rechercher des prospects</value>
-        <value xml:lang="ja">SFAリードを検索</value>
+        <value xml:lang="ja">CRMリードを検索</value>
         <value xml:lang="pt_BR">Buscar Leads da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Lead</value>
         <value xml:lang="vi">Tìm Đầu mối</value>
         <value xml:lang="zh">查找销售管理线索</value>
-        <value xml:lang="zh_TW">尋找營業支援(SFA)線索</value>
+        <value xml:lang="zh_TW">尋找營業支援(CRM)線索</value>
     </property>
     <property key="MarketingMainPage">
         <value xml:lang="de">Haupt</value>
@@ -3274,8 +3274,8 @@
         <value xml:lang="zh_TW">銷售預測明細資訊清單</value>
     </property>
     <property key="SfaManager">
-        <value xml:lang="de">CRM Manager</value>
-        <value xml:lang="en">SFA Manager</value>
+        <value xml:lang="de">CRM</value>
+        <value xml:lang="en">CRM</value>
         <value xml:lang="fr">Application de gestion des ventes</value>
         <value xml:lang="it">Gestione vendite</value>
         <value xml:lang="ja">営業支援(SFA)管理</value>
@@ -3292,7 +3292,7 @@
         <value xml:lang="pt_BR">Applicação de gestão de automação de equipe de vendas</value>
         <value xml:lang="vi">Quản trị Kinh doanh tiếp thị (SFA)</value>
         <value xml:lang="zh">销售管理应用程序</value>
-        <value xml:lang="zh_TW">營業支援(SFA)應用程式</value>
+        <value xml:lang="zh_TW">營業支援(CRM)應用程式</value>
     </property>
     <property key="SfaManagerWelcome">
         <value xml:lang="de">Willkommen bei der CRM-Anwendung.</value>

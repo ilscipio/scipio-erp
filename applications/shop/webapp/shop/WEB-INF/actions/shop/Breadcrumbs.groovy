@@ -29,46 +29,50 @@ import org.ofbiz.product.product.ProductContentWrapper;
 // Cato: NOTE: This script is responsible for checking whether solr is applicable.
 
 module = "Breadcrumbs.groovy";
-
-currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
-
-currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-// Cato: IMPORTANT: Check request attribs before parameters map
-curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
-curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";
-if(UtilValidate.isEmpty(curCategoryId)){
-    if (context.product) {
-        curCategoryId = product.primaryProductCategoryId;
-    }
-}
-
-topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
-productCategoryId = curCategoryId;
-
-//Debug.log("curCategoryId ====> " + curCategoryId, module);
-//Debug.log("curProductId ====> " + curProductId, module);
-validBreadcrumb = topCategoryId + "/";
-
-dctx = dispatcher.getDispatchContext();
-categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
 breadcrumbsList = FastList.newInstance();
-breadcrumbs = categoryPath.split("/");
-for (breadcrumb in breadcrumbs) {
-    if (!breadcrumb.equals(topCategoryId) && !breadcrumbsList.contains(breadcrumb))
-        breadcrumbsList.add(breadcrumb);
-    if (breadcrumb.equals(curCategoryId))
-        break;
-}
 
+
+try{
+	currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
+	
+	currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+	// Cato: IMPORTANT: Check request attribs before parameters map
+	curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
+	curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";
+	if(UtilValidate.isEmpty(curCategoryId)){
+	    if (context.product) {
+	        curCategoryId = product.primaryProductCategoryId;
+	    }
+	}
+	
+	topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
+	productCategoryId = curCategoryId;
+	
+	//Debug.log("curCategoryId ====> " + curCategoryId, module);
+	//Debug.log("curProductId ====> " + curProductId, module);
+	validBreadcrumb = topCategoryId + "/";
+	
+	dctx = dispatcher.getDispatchContext();
+	categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
+	breadcrumbs = categoryPath.split("/");
+	for (breadcrumb in breadcrumbs) {
+	    if (!breadcrumb.equals(topCategoryId) && !breadcrumbsList.contains(breadcrumb))
+	        breadcrumbsList.add(breadcrumb);
+	    if (breadcrumb.equals(curCategoryId))
+	        break;
+	}
+	
+	if(context.product){
+		if(context.productContentWrapper == null){
+		productContentWrapper = new ProductContentWrapper(product, request);
+		context.productContentWrapper = productContentWrapper;
+		}
+	}
+	
+}catch(Exception e){
+	// We are not in a store, so we continue with regular page based breadcrumbs
+}
 context.breadcrumbsList = breadcrumbsList;
-
-if(context.product){
-    if(context.productContentWrapper == null){
-    productContentWrapper = new ProductContentWrapper(product, request);
-    context.productContentWrapper = productContentWrapper;
-    }
-}
-
 
 /*
 I think there is a conceptual mistake here. The breadcrumbs don't really care if another category exists or not, nor do they list EVERY category they have. 

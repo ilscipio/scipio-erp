@@ -23227,6 +23227,9 @@
         <value xml:lang="zh">包装订单</value>
         <value xml:lang="zh_TW">包裝訂單</value>
     </property>
+    <property key="ProductAddProductToPack">
+        <value xml:lang="en">Add Product To Package</value>    
+    </property>
     <property key="ProductPackQty">
         <value xml:lang="de">Menge zu verpacken</value>
         <value xml:lang="en">Qty to Pack</value>

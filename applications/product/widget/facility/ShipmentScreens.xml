@@ -395,7 +395,8 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="title" value="${uiLabelMap.ProductPackOrder} ${facilityId}"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <set field="activeMainMenuItem" value="facility"/>
+                <set field="activeSubMenuItem" value="PackOrder"/>
                 <set field="facilityMenu" value="FacilityPackOrderSideBar"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.groovy"/>
             </actions>

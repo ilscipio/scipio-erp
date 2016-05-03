@@ -754,7 +754,7 @@
             for example, the *bgcolor can be set to the value "none" to prevent setting a color class.
          DEV NOTE: the bg colors may seem like overkill, but they avoid redundancy in the CSS maybe? whatever, more configurable this way -->
     "tile_default_containerclass" : "tile-container-default", 
-    "tile_default_class" : "tile-default",  
+    "tile_default_class" : "tile-default tile-common",  
     "tile_default_size" : "normal",
     "tile_default_color" : "0",
     "tile_default_titletype" : "default",
@@ -767,12 +767,12 @@
     "tile_default_linktarget" : "",
     
     "tile_generic_containerclass" : "tile-container-generic", 
-    "tile_generic_class" : "tile-generic",  
+    "tile_generic_class" : "tile-generic",  <#-- NOTE: NO tile-common here -->
     "tile_generic_size" : "normal",
     "tile_generic_color" : "none",
     "tile_generic_titletype" : "default",
     "tile_generic_titlebgcolor" : "none",
-    "tile_generic_overlaytype" : "contain",
+    "tile_generic_overlaytype" : "static",
     "tile_generic_overlaybgcolor" : "none",
     "tile_generic_imagetype" : "cover",
     "tile_generic_imagebgcolor" : "none",
@@ -780,7 +780,7 @@
     "tile_generic_linktarget" : "",
     
     "tile_gallery1_containerclass" : "tile-container-gallery1", 
-    "tile_gallery1_class" : "tile-gallery1",  
+    "tile_gallery1_class" : "tile-gallery1 tile-common",  
     "tile_gallery1_size" : "normal",
     "tile_gallery1_color" : "0",
     "tile_gallery1_titletype" : "default",
@@ -808,6 +808,7 @@
     "tile_overlay_default" : "tile-overlay-slide-up",    
     <#-- styles for specific overlay types (extensible by theme) (looked up based on overlay type) -->
     "tile_overlay_slide_up" : "tile-overlay-slide-up",
+    "tile_overlay_static" : "tile-overlay-static",
     <#-- image styles -->
     "tile_image" : "tile-image",
     <#-- default image styles (looked up based on image type) -->

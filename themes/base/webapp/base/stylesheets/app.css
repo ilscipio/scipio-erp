@@ -10715,8 +10715,7 @@ input::-moz-focus-inner {
   float: left;
   margin: 5px;
   color: #fff;
-  /* 2016-05-02: do NOT set a default background color. some tilesType want no bg color
-  background-color: #eeeeee; */
+  background-color: #eeeeee;
   box-shadow: inset 0 0 1px #FFFFCC;
   cursor: pointer;
   position: relative;
@@ -10726,7 +10725,7 @@ input::-moz-focus-inner {
   -ms-user-select: none;
   user-select: none;
 }
-/* line 30, ../scss/_tiles.scss */
+/* line 29, ../scss/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -10735,11 +10734,11 @@ input::-moz-focus-inner {
   height: inherit;
   overflow: hidden;
 }
-/* line 38, ../scss/_tiles.scss */
+/* line 37, ../scss/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 42, ../scss/_tiles.scss */
+/* line 41, ../scss/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -10751,7 +10750,7 @@ input::-moz-focus-inner {
   margin-left: -32px;
   text-align: center;
 }
-/* line 54, ../scss/_tiles.scss */
+/* line 53, ../scss/_tiles.scss */
 .tile .tile-content .tile-title-default {
   position: absolute;
   bottom: 0;
@@ -10763,7 +10762,7 @@ input::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 69, ../scss/_tiles.scss */
+/* line 68, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay-slide-up {
   width: 100%;
   height: inherit;
@@ -10776,7 +10775,7 @@ input::-moz-focus-inner {
   height: 100%;
   transition: all 0.3s ease;
 }
-/* line 86, ../scss/_tiles.scss */
+/* line 85, ../scss/_tiles.scss */
 .tile .tile-image-cover {
   background-color: #ffffff;
   display: block;
@@ -10786,7 +10785,7 @@ input::-moz-focus-inner {
   background-repeat: no-repeat;
   transition: all 0.6s ease;
 }
-/* line 96, ../scss/_tiles.scss */
+/* line 95, ../scss/_tiles.scss */
 .tile .tile-image-contain {
   background-color: #ffffff;
   display: block;
@@ -10797,38 +10796,38 @@ input::-moz-focus-inner {
   background-position: center;
   transition: all 0.6s ease;
 }
-/* line 107, ../scss/_tiles.scss */
+/* line 106, ../scss/_tiles.scss */
 .tile a, .tile a:active, .tile a:visited {
   color: #fff;
 }
-/* line 110, ../scss/_tiles.scss */
+/* line 109, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 113, ../scss/_tiles.scss */
+/* line 112, ../scss/_tiles.scss */
 .tile:hover .tile-overlay-slide-up {
   top: 0;
   transition: all 0.3s ease;
 }
-/* line 118, ../scss/_tiles.scss */
+/* line 117, ../scss/_tiles.scss */
 .tile:hover .tile-image-cover {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
-/* line 124, ../scss/_tiles.scss */
+/* line 123, ../scss/_tiles.scss */
 .tile:hover .tile-image-contain {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
 
-/* line 134, ../scss/_tiles.scss */
+/* line 133, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 139, ../scss/_tiles.scss */
+/* line 138, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -10837,24 +10836,24 @@ input::-moz-focus-inner {
   margin-left: -16px;
 }
 
-/* line 149, ../scss/_tiles.scss */
+/* line 148, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 150, ../scss/_tiles.scss */
+/* line 149, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 151, ../scss/_tiles.scss */
+/* line 150, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 153, ../scss/_tiles.scss */
+/* line 152, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -10863,12 +10862,12 @@ input::-moz-focus-inner {
   margin-left: -64px;
 }
 
-/* line 163, ../scss/_tiles.scss */
+/* line 162, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 165, ../scss/_tiles.scss */
+/* line 164, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -10877,12 +10876,12 @@ input::-moz-focus-inner {
   margin-left: -96px;
 }
 
-/* line 175, ../scss/_tiles.scss */
+/* line 174, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 177, ../scss/_tiles.scss */
+/* line 176, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10891,69 +10890,69 @@ input::-moz-focus-inner {
   margin-left: -128px;
 }
 
-/* line 190, ../scss/_tiles.scss */
+/* line 189, ../scss/_tiles.scss */
 .tile-color-0, .tile-color-primary {
   background-color: #008cba !important;
 }
 
-/* line 191, ../scss/_tiles.scss */
+/* line 190, ../scss/_tiles.scss */
 .tile-color-1, .tile-color-secondary {
   background-color: #e7e7e7 !important;
 }
 
-/* line 192, ../scss/_tiles.scss */
+/* line 191, ../scss/_tiles.scss */
 .tile-color-2, .tile-color-alert {
   background-color: #f04124 !important;
 }
 
-/* line 193, ../scss/_tiles.scss */
+/* line 192, ../scss/_tiles.scss */
 .tile-color-3, .tile-color-success {
   background-color: #43ac6a !important;
 }
 
-/* line 194, ../scss/_tiles.scss */
+/* line 193, ../scss/_tiles.scss */
 .tile-color-4, .tile-color-warning {
   background-color: #f08a24 !important;
 }
 
-/* line 195, ../scss/_tiles.scss */
+/* line 194, ../scss/_tiles.scss */
 .tile-color-5, .tile-color-info {
   background-color: #a0d3e8 !important;
 }
 
-/* line 196, ../scss/_tiles.scss */
+/* line 195, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333 !important;
 }
 
-/* line 197, ../scss/_tiles.scss */
+/* line 196, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc !important;
 }
 
-/* line 198, ../scss/_tiles.scss */
+/* line 197, ../scss/_tiles.scss */
 .tile-color-8, .tile-color-default-title {
   background-color: #f9f9f9 !important;
 }
 
-/* line 201, ../scss/_tiles.scss */
+/* line 200, ../scss/_tiles.scss */
 .tile-color-50l, .tile-color-primary-alpha-light,
 .tile-color-gallery-overlay-bg {
   background-color: rgba(0, 140, 186, 0.3) !important;
 }
 
-/* line 203, ../scss/_tiles.scss */
+/* line 202, ../scss/_tiles.scss */
 .tile-color-50h, .tile-color-primary-alpha-heavy {
   background-color: rgba(0, 140, 186, 0.7) !important;
 }
 
-/* line 204, ../scss/_tiles.scss */
+/* line 203, ../scss/_tiles.scss */
 .tile-color-58l, .tile-color-snow-alpha-light,
 .tile-color-gallery-title-bg {
   background-color: rgba(249, 249, 249, 0.3) !important;
 }
 
-/* line 206, ../scss/_tiles.scss */
+/* line 205, ../scss/_tiles.scss */
 .tile-color-58h, .tile-color-snow-alpha-heavy {
   background-color: rgba(249, 249, 249, 0.7) !important;
 }

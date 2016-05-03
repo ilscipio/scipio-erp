@@ -621,13 +621,13 @@ under the License.
         <attribute name="pickerPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
         <attribute name="nextPackageSeq" type="Integer" mode="INOUT" optional="true"/>
-        <attribute name="prdInfo" type="Map" string-map-prefix="prd_" mode="IN" optional="true"/>
-        <attribute name="qtyInfo" type="Map" string-map-prefix="qty_" mode="IN" optional="true"/>
-        <attribute name="pkgInfo" type="Map" string-map-prefix="pkg_" mode="IN" optional="true"/>
-        <attribute name="selInfo" type="Map" string-map-prefix="sel_" mode="IN" optional="true"/>
-        <attribute name="iteInfo" type="Map" string-map-prefix="ite_" mode="IN" optional="true"/>
-        <attribute name="wgtInfo" type="Map" string-map-prefix="wgt_" mode="IN" optional="true"/>
-        <attribute name="numPackagesInfo" type="Map" string-map-prefix="numPackages_" mode="IN" optional="true"/>
+        <attribute name="prd" type="String" mode="IN" optional="true"/>
+        <attribute name="qty" type="String" mode="IN" optional="true"/>
+        <attribute name="pkg" type="String" mode="IN" optional="true"/>
+       <!--  <attribute name="sel" type="String" mode="IN" optional="true"/> -->
+        <attribute name="ite" type="String" mode="IN" optional="true"/>
+        <attribute name="wgt" type="String" mode="IN" optional="true"/>
+        <attribute name="numPackages" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="setNextPackageSeq" engine="java"

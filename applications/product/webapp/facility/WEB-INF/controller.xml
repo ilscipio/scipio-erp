@@ -778,7 +778,7 @@ under the License.
     </request-map>
     <request-map uri="ProcessBulkPackOrder">
         <security https="true" auth="true"/>
-        <event type="service" invoke="packBulkItems"/>
+        <event type="service-multi" invoke="packBulkItems"/>
         <response name="success" type="view" value="PackOrder"/>
         <response name="error" type="view" value="PackOrder"/>
     </request-map>

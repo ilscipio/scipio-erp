@@ -109,102 +109,102 @@ public class PackingServices {
         String pickerPartyId = (String) context.get("pickerPartyId");
         session.setPickerPartyId(pickerPartyId);
 
-        Map<String, ?> selInfo = UtilGenerics.checkMap(context.get("selInfo"));
-        Map<String, String> iteInfo = UtilGenerics.checkMap(context.get("iteInfo"));
-        Map<String, String> prdInfo = UtilGenerics.checkMap(context.get("prdInfo"));
-        Map<String, String> qtyInfo = UtilGenerics.checkMap(context.get("qtyInfo"));
-        Map<String, String> pkgInfo = UtilGenerics.checkMap(context.get("pkgInfo"));
-        Map<String, String> wgtInfo = UtilGenerics.checkMap(context.get("wgtInfo"));
-        Map<String, String> numPackagesInfo = UtilGenerics.checkMap(context.get("numPackagesInfo"));
-
-        if (selInfo != null) {
-            for (String rowKey: selInfo.keySet()) {
-                String orderItemSeqId = iteInfo.get(rowKey);
-                String prdStr = prdInfo.get(rowKey);
-                if (UtilValidate.isEmpty(prdStr)) {
-                    // set the productId to null if empty
-                    prdStr = null;
-                }
-
-                // base package/quantity/weight strings
-                String pkgStr = pkgInfo.get(rowKey);
-                String qtyStr = qtyInfo.get(rowKey);
-                String wgtStr = wgtInfo.get(rowKey);
-
-                Debug.logInfo("Item: " + orderItemSeqId + " / Product: " + prdStr + " / Quantity: " + qtyStr + " /  Package: " + pkgStr + " / Weight: " + wgtStr, module);
-
-                // array place holders
-                String[] quantities;
-                String[] packages;
-                String[] weights;
-
-                // process the package array
-                if (pkgStr.indexOf(",") != -1) {
-                    // this is a multi-box update
-                    packages = pkgStr.split(",");
-                } else {
-                    packages = new String[] { pkgStr };
-                }
-
-                // check to make sure there is at least one package
-                if (packages == null || packages.length == 0) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                            "ProductPackBulkNoPackagesDefined", locale));
-                }
-
-                // process the quantity array
-                if (qtyStr == null) {
-                    quantities = new String[packages.length];
-                    for (int p = 0; p < packages.length; p++) {
-                        quantities[p] = qtyInfo.get(rowKey + ":" + packages[p]);
-                    }
-                    if (quantities.length != packages.length) {
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                                "ProductPackBulkPackagesAndQuantitiesDoNotMatch", locale));
-                    }
-                } else {
-                    quantities = new String[] { qtyStr };
-                }
-
-                // process the weight array
-                if (UtilValidate.isEmpty(wgtStr)) wgtStr = "0";
-                weights = new String[] { wgtStr };
-
-                for (int p = 0; p < packages.length; p++) {
-                    BigDecimal quantity;
-                    int packageSeq;
-                    BigDecimal weightSeq;
-                    try {
-                        quantity = new BigDecimal(quantities[p]);
-                        packageSeq = Integer.parseInt(packages[p]);
-                        weightSeq = new BigDecimal(weights[p]);
-                    } catch (Exception e) {
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
-
-                    try {
-                        String numPackagesStr = numPackagesInfo.get(rowKey);
-                        int numPackages = 1;
-                        if (numPackagesStr != null) {
-                            try {
-                                numPackages = Integer.parseInt(numPackagesStr);
-                                if (numPackages < 1) {
-                                    numPackages = 1;
-                                }
-                            } catch (NumberFormatException nex) {
-                            }
-                        }
-                        for (int numPackage=0; numPackage<numPackages; numPackage++) {
-                            session.addOrIncreaseLine(orderId, orderItemSeqId, shipGroupSeqId, prdStr, quantity, packageSeq+numPackage, weightSeq, updateQuantity.booleanValue());
-                        }
-                    } catch (GeneralException e) {
-                        Debug.logError(e, module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
-                }
-            }
+        String orderItemSeqId = null;
+        String prdStr = null;
+        String pkgStr = null;
+        String qtyStr = null;
+        String wgtStr = null;
+        String numPackagesStr = null;
+        // String selInfo = context.get("sel");
+        if (UtilValidate.isNotEmpty(context.get("ite"))) {
+            orderItemSeqId = (String) context.get("ite");
+        }
+        if (UtilValidate.isNotEmpty(context.get("prd"))) {
+            prdStr = (String) context.get("prd");
+        }
+        if (UtilValidate.isNotEmpty(context.get("qty"))) {
+            qtyStr = (String) context.get("qty");
+        }
+        if (UtilValidate.isNotEmpty(context.get("pkg"))) {
+            pkgStr = (String) context.get("pkg");
+        }
+        if (UtilValidate.isNotEmpty(context.get("wgt"))) {
+            wgtStr = (String) context.get("wgt");
+        }
+        if (UtilValidate.isNotEmpty(context.get("numPackages"))) {
+            numPackagesStr = (String) context.get("numPackages");
         }
 
+        Debug.log("Item: " + orderItemSeqId + " / Product: " + prdStr + " / Quantity: " + qtyStr + " /  Package: " + pkgStr + " / Weight: " + wgtStr, module);
+
+        // array place holders
+        String[] quantities;
+        String[] packages;
+        String[] weights;
+
+        // process the package array
+        if (pkgStr.indexOf(",") != -1) {
+            // this is a multi-box update
+            packages = pkgStr.split(",");
+        } else {
+            packages = new String[] { pkgStr };
+        }
+
+        // check to make sure there is at least one package
+        if (packages == null || packages.length == 0) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ProductPackBulkNoPackagesDefined", locale));
+        }
+
+        // process the quantity array
+        if (qtyStr == null) {
+            quantities = new String[packages.length];
+            for (int p = 0; p < packages.length; p++) {
+                quantities[p] = qtyStr;
+            }
+            if (quantities.length != packages.length) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ProductPackBulkPackagesAndQuantitiesDoNotMatch", locale));
+            }
+        } else {
+            quantities = new String[] { qtyStr };
+        }
+
+        // process the weight array
+        if (UtilValidate.isEmpty(wgtStr))
+            wgtStr = "0";
+        weights = new String[] { wgtStr };
+
+        for (int p = 0; p < packages.length; p++) {
+            BigDecimal quantity;
+            int packageSeq;
+            BigDecimal weightSeq;
+            try {
+                quantity = new BigDecimal(quantities[p]);
+                packageSeq = Integer.parseInt(packages[p]);
+                weightSeq = new BigDecimal(weights[p]);
+            } catch (Exception e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+
+            try {
+                int numPackages = 1;
+                if (numPackagesStr != null) {
+                    try {
+                        numPackages = Integer.parseInt(numPackagesStr);
+                        if (numPackages < 1) {
+                            numPackages = 1;
+                        }
+                    } catch (NumberFormatException nex) {
+                    }
+                }
+                for (int numPackage = 0; numPackage < numPackages; numPackage++) {
+                    session.addOrIncreaseLine(orderId, orderItemSeqId, shipGroupSeqId, prdStr, quantity, packageSeq + numPackage, weightSeq,
+                            updateQuantity.booleanValue());
+                }
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
         return ServiceUtil.returnSuccess();
     }
 

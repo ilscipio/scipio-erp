@@ -1077,6 +1077,8 @@ under the License.
     <screen name="countries">
         <section>
             <actions>
+                <!-- Cato: we now support currentCountryGeoId -->
+                <set field="currentCountryGeoId" from-field="currentCountryGeoId" default-value="${''}"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>

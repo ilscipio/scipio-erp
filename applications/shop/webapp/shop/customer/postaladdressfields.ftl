@@ -67,19 +67,23 @@ jQuery(document).ready(function() {
   <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(parameters["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
   <@field type="select" label="${uiLabelMap.CommonCountry}" name="${fieldNamePrefix}countryGeoId" id="${fieldIdPrefix}countryGeoId">
       <#if parameters["${fieldNamePrefix}countryGeoId"]??>    
-        <#assign defaultCountryGeoId = parameters["${fieldNamePrefix}countryGeoId"]>
+        <#assign currentCountryGeoId = parameters["${fieldNamePrefix}countryGeoId"]>
       <#elseif (postalAddress??) && (postalAddress.countryGeoId??)>
-        <#assign defaultCountryGeoId = postalAddress.countryGeoId>
+        <#assign currentCountryGeoId = postalAddress.countryGeoId>
       <#elseif (pafFallbacks.countryGeoId)??>
-        <#assign defaultCountryGeoId = pafFallbacks.countryGeoId>
+        <#assign currentCountryGeoId = pafFallbacks.countryGeoId>
       <#else>
-        <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
+        <#-- redundant done
+        <#assign currentCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">-->
+        <#assign currentCountryGeoId = "">
       </#if>
-      <option selected="selected" value="${defaultCountryGeoId}">
-      <#assign countryGeo = delegator.findOne("Geo",{"geoId":defaultCountryGeoId}, false)>
+    <#-- Cato: there's no reason for this; allow countries ftl to select the right one
+      <option selected="selected" value="${currentCountryGeoId}">
+      <#assign countryGeo = delegator.findOne("Geo",{"geoId":currentCountryGeoId}, false)>
         ${countryGeo.get("geoName",locale)}
       </option>
       <option></option>
-      <@render resource="component://common/widget/CommonScreens.xml#countries" />   
+    -->
+      <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":currentCountryGeoId}/>   
   </@field>
     

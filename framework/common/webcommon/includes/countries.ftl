@@ -18,8 +18,11 @@ under the License.
 -->
 <#assign countries = Static["org.ofbiz.common.CommonWorkers"].getCountryList(delegator)>
 <#list countries as country>
-    <#if defaultCountryGeoId??>
-        <option value="${country.geoId}" ${(country.geoId==defaultCountryGeoId)?string("selected=\"selected\"","")}>${country.get("geoName",locale)!country.geoId}</option>
+    <#-- CATO: support currentCountryGeoId, and use has_content instead of ?? -->
+    <#if currentCountryGeoId?has_content>
+        <option value="${country.geoId}"${(country.geoId==currentCountryGeoId)?string(" selected=\"selected\"","")}>${country.get("geoName",locale)!country.geoId}</option>
+    <#elseif defaultCountryGeoId?has_content>
+        <option value="${country.geoId}"${(country.geoId==defaultCountryGeoId)?string(" selected=\"selected\"","")}>${country.get("geoName",locale)!country.geoId}</option>
     <#else>
         <option value="${country.geoId}">${country.get("geoName",locale)!country.geoId}</option>
     </#if>

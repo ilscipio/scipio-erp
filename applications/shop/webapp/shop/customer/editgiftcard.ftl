@@ -60,7 +60,7 @@ under the License.
       </#if>
     </#if>
     <@field type="input" label="${uiLabelMap.AccountingCardNumber}" size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
-    <@field type="password" label="${uiLabelMap.AccountingPINNumber}" size="10" maxlength="60" name="pinNumber" value=(giftCardData.pinNumber!) />
+    <@field type="password" label="${uiLabelMap.AccountingPINNumber}" size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
 
     <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}">
         <#assign expMonth = "">

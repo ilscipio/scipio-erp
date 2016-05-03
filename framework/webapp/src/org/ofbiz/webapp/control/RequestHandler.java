@@ -84,6 +84,11 @@ public class RequestHandler {
     private final boolean trackVisit;
     private final boolean cookies;
     private final String charset;
+    
+    /**
+     * Cato: Allows or prevents override view URIs, based on web.xml config. Default: true (stock behavior).
+     */
+    private final boolean allowOverrideViewUri;
 
     public static RequestHandler getRequestHandler(ServletContext servletContext) {
         RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
@@ -111,6 +116,9 @@ public class RequestHandler {
         this.trackVisit = !"false".equalsIgnoreCase(context.getInitParameter("track-visit"));
         this.cookies = !"false".equalsIgnoreCase(context.getInitParameter("cookies"));
         this.charset = context.getInitParameter("charset");
+        
+        // Cato: New (currently true by default)
+        this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
     }
 
     public ConfigXMLReader.ControllerConfig getControllerConfig() {
@@ -166,8 +174,13 @@ public class RequestHandler {
             }
         }
 
-        String overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
-
+        // Cato: may now prevent this
+        //String overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
+        String overrideViewUri = null;
+        if (allowOverrideViewUri) {
+            overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
+        }
+        
         String requestMissingErrorMessage = "Unknown request [" + defaultRequestUri + "]; this request does not exist or cannot be called directly.";
         ConfigXMLReader.RequestMap requestMap = null;
         if (defaultRequestUri != null) {
@@ -230,7 +243,10 @@ public class RequestHandler {
             if (request.getAttribute("_POST_CHAIN_VIEW_") != null) {
                 overrideViewUri = (String) request.getAttribute("_POST_CHAIN_VIEW_");
             } else {
-                overrideViewUri = RequestHandler.getOverrideViewUri(chain);
+                // Cato: may now prevent this
+                if (allowOverrideViewUri) {
+                    overrideViewUri = RequestHandler.getOverrideViewUri(chain);
+                }
             }
             if (overrideViewUri != null) {
                 // put this in a request attribute early in case an event needs to access it

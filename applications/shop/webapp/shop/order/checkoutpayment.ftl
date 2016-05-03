@@ -97,6 +97,10 @@ jQuery(document).ready(function(){
  
 <#assign cart = shoppingCart! />
 
+
+<#-- Cato: We need to show total because this influence user's decision and amounts he will enter -->
+<p><strong>${uiLabelMap.OrderOrderTotal}:</strong> <@ofbizCurrency amount=((cart.getDisplayGrandTotal())!0) isoCode=cart.getCurrency()/></p>
+
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
@@ -197,12 +201,26 @@ jQuery(document).ready(function(){
                   <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#assign curPayAmountStr = "">
+                  <#assign fieldValue = "">
+                  <#assign fieldTooltip = "">
                   <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
                     <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>  
                   <#else>
-                    <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
+                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
+                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
+                            offers no way to distinguish between user-entered and validation-determined amounts. -->
+                    <#if cart.isPaymentsAdequate()>
+                      <#assign fieldValue = curPayAmountStr>
+                    </#if>
                   </#if>
-                  <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
+                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
                 </#macro>
                 <@commonInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
               </#if>
@@ -213,12 +231,26 @@ jQuery(document).ready(function(){
                   <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingCreditCard}: <@formattedCreditCard creditCard=creditCard paymentMethod=paymentMethod verbose=true /></label>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#assign curPayAmountStr = "">
+                  <#assign fieldValue = "">
+                  <#assign fieldTooltip = "">
                   <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
                     <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>
                   <#else>
-                    <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
+                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
+                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
+                            offers no way to distinguish between user-entered and validation-determined amounts. -->
+                    <#if cart.isPaymentsAdequate()>
+                      <#assign fieldValue = curPayAmountStr>
+                    </#if>
                   </#if>
-                  <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
+                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
                 </#macro>
                 <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
@@ -283,7 +315,9 @@ jQuery(document).ready(function(){
                 <@field type="checkbox" checkboxType="simple-standard" name="newCreditCard_save" value="Y" checked=((parameters.newCreditCard_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
                 -->
               </#if>
-              <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="newCreditCard_amount" value=(parameters.newCreditCard_amount!) />
+              <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+                  Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newCreditCard_amount" value=(parameters.newCreditCard_amount!) />
             </div>
           </#macro>
           <@commonInvField type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" labelContent=payMethContent checked=("_NEW_CREDIT_CARD_" == selectedCheckOutPaymentId)
@@ -325,7 +359,9 @@ jQuery(document).ready(function(){
                 <@field type="checkbox" checkboxType="simple-standard" name="newEftAccount_save" value="Y" checked=((parameters.newEftAccount_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
                 -->
               </#if>
-              <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="newEftAccount_amount" value=(parameters.newEftAccount_amount!) />
+              <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+                  Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newEftAccount_amount" value=(parameters.newEftAccount_amount!) />
             </div>
           </#macro>
           <@commonInvField type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" labelContent=payMethContent checked=("_NEW_EFT_ACCOUNT_" == selectedCheckOutPaymentId)

@@ -130,15 +130,15 @@ jQuery(document).ready(function() {
 </#macro>
 
 <#macro addressList>
-  <#-- Use simple floats for this. it works out better... -->
-  <div class="${styles.float_clearfix}">
+  <#-- Use simple inline-blocks for this... -->
+  <div>
     <#nested>
   </div>
 </#macro>
 
 <#macro addressEntry>
-  <#-- Use simple floats for this. it works out better... -->
-  <div style="float:left; width:20em; margin-bottom:1em;"><#-- FIXME: Unhardcode -->
+  <#-- Use simple inline-blocks for this... -->
+  <div style="display:inline-block; vertical-align:top; width:20em; margin-bottom:1em;"><#-- FIXME: Unhardcode -->
     <#nested>
   </div>
 </#macro>

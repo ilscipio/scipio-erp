@@ -49,6 +49,7 @@ under the License.
     <#assign selectedContactMechId = "">
   </#if>
 
+  <@addressList>
   <#if hasCurrent>
 
     <#macro addrContent args={}>
@@ -70,8 +71,10 @@ under the License.
         <#if curPartyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</div></#if>
       </#if>
     </#macro>
+    <@addressEntry>
     <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=curContactMechId 
         labelContent=addrContent checked=(selectedContactMechId == curContactMechId) class="+${pickFieldClass}"  />
+    </@addressEntry>
   <#else>
     <#-- 
     ${uiLabelMap.PartyBillingAddressNotSelected}
@@ -101,15 +104,18 @@ under the License.
         <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
       </#if>
     </#macro>
+    <@addressEntry>
     <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
         labelContent=addrContent checked=(selectedContactMechId == contactMech.contactMechId) class="+${pickFieldClass}" />
+    </@addressEntry>
   </#list>
+  </@addressList>
     <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Cato: Don't show if also showing "new" option -->
       <@commonMsg type="info">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
     </#if>
   <#if useNewAddr>
     <#macro addrContent args={}>
-        ${uiLabelMap.PartyCreateNewBillingAddress}.
+        <#--${uiLabelMap.PartyCreateNewBillingAddress}-->
         <#if newAddrInline>
           <div<#if newAddrContentId?has_content> id="${newAddrContentId}"</#if><#rt/>
             <#lt><#if (selectedContactMechId != "_NEW_")> style="display:none;"</#if> class="new-item-selection-content">
@@ -124,8 +130,14 @@ under the License.
           </div>       
         </#if>
     </#macro>
+    <@addressList>
+      <@addressEntry>
     <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
-        labelContent=addrContent class="+${pickFieldClass}" id=(newAddrFieldId!) />
+        class="+${pickFieldClass}" id=(newAddrFieldId!) label=uiLabelMap.PartyCreateNewBillingAddress/><#--labelContent=addrContent -->
+      </@addressEntry>
+    </@addressList>
+
+    <@addrContent />
   </#if>
 </@fields>
 

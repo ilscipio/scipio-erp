@@ -138,7 +138,7 @@ jQuery(document).ready(function() {
 
 <#macro addressEntry>
   <#-- Use simple floats for this. it works out better... -->
-  <div style="float:left; width:250px;"><#-- FIXME: Unhardcode -->
+  <div style="float:left; width:20em; margin-bottom:1em;"><#-- FIXME: Unhardcode -->
     <#nested>
   </div>
 </#macro>

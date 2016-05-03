@@ -221,12 +221,12 @@ function toggleBillingAccount(box) {
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
           <#macro newAddrFormFieldContent args={}>
-            <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
             <#--
+            <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
+            -->
             <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">
               <@newAddrFormContent />
             </div>
-            -->
           </#macro>
           <@addressList>
             <@addressEntry>
@@ -234,9 +234,7 @@ function toggleBillingAccount(box) {
              id="newshipaddrradio" class="+addr-select-radio" label=uiLabelMap.PartyAddNewAddress/><#--labelContent=newAddrFormFieldContent-->
             </@addressEntry>
           </@addressList>
-            <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">
-              <@newAddrFormContent />
-            </div>
+          <@newAddrFormFieldContent />
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>
             <#-- Cato: title is not needed; implied

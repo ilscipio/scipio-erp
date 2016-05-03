@@ -305,6 +305,10 @@ public class CheckOutEvents {
     }
 
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
+        // Cato: We currently *may* run into additional problems if try to create new records during partial saves.
+        // Also, note the fixme below is a stock fixme, not by us; it shouldn't be changed with current implementation (which is a "best-effort")...
+        request.setAttribute("checkoutUseNewRecords", Boolean.FALSE);
+        
         // FIXME response need to be checked ?
         // String resp = setCheckOutOptions(request, response);
         setCheckOutOptions(request, response);
@@ -380,6 +384,10 @@ public class CheckOutEvents {
                 Map<String, Object> payMethResult = getCheckPaymentMethodIdOrCreateNew(request, "checkOutPaymentId", "newCreditCardPrefix", "newEftAccountPrefix");
                 if (ServiceUtil.isSuccess(payMethResult)) {
                     paymentMethodId = (String) payMethResult.get("paymentMethodId");
+                    // SPECIAL CASE: paymentMethodId may be null or empty, in which case we skip
+                    if (UtilValidate.isEmpty(paymentMethodId)) {
+                        continue;
+                    }
                 } else {
                     throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
                 }
@@ -1333,7 +1341,16 @@ public class CheckOutEvents {
             overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         }
         String contactMechId = getRequestAttribOrParam(request, paramName);
+
+        
         if ("_NEW_".equals(contactMechId)) {
+            // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
+            if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("contactMechId", null);
+                return result;
+            }
+            
             validator = PostalAddressValidator.getInstance(request);
             serviceName = "createPostalAddressAndPurposes";
         } else {
@@ -1375,7 +1392,14 @@ public class CheckOutEvents {
         String prefixParamName;
         
         String paymentMethodId = getRequestAttribOrParam(request, paramName);
-        if ("_NEW_CREDIT_CARD_".equals(paymentMethodId)) {
+        if ("_NEW_CREDIT_CARD_".equals(paymentMethodId)) {  
+            // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
+            if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("paymentMethodId", null);
+                return result;
+            }
+            
             prefixParamName = ccPrefixParamName;
             String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
@@ -1395,6 +1419,13 @@ public class CheckOutEvents {
                 return ServiceUtil.returnError("No contact mech (billing address) specified for new credit card");
             }
         } else if ("_NEW_EFT_ACCOUNT_".equals(paymentMethodId)) {
+            // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
+            if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("paymentMethodId", null);
+                return result;
+            }
+            
             prefixParamName = eftPrefixParamName;
             String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");

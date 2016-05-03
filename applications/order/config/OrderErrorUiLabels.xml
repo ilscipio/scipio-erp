@@ -5175,6 +5175,10 @@
         <value xml:lang="zh">退货的修改不能大于给付的金额。</value>
         <value xml:lang="zh_TW">退貨的修改不能大于給付的金額。</value>
     </property>
+    <property key="checkevents.payment_cannot_be_greater_than_order"><!-- Cato: TODO: Localize -->
+        <value xml:lang="de">Die Zahlung insgesamt nicht größer sein als der Auftragssumme.</value>
+        <value xml:lang="en">Payment total cannot be greater than the order total.</value>
+    </property>
     <property key="checkhelper.could_not_create_order_invoking_service">
         <value xml:lang="de">FEHLER: Auftrag konnte nicht erstellt werden (Problem beim Aufruf des Service: ${service})</value>
         <value xml:lang="en">ERROR: Could not create order (problem invoking the service: ${service})</value>

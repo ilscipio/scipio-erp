@@ -1619,7 +1619,9 @@ public class CheckOutHelper {
             BigDecimal changeAmount = selectedPaymentTotal.subtract(requiredAmount);
             if (!paymentTypes.contains("CASH")) {
                 Debug.logError("Change Amount : " + changeAmount + " / No cash.", module);
-                errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                // Cato: Use less cryptic message
+                //errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                errMsg = UtilProperties.getMessage(resource_error, "checkevents.payment_cannot_be_greater_than_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 return ServiceUtil.returnError(errMsg);
             } else {
                 int cashIndex = paymentTypes.indexOf("CASH");
@@ -1627,7 +1629,9 @@ public class CheckOutHelper {
                 BigDecimal cashAmount = cart.getPaymentAmount(cashId);
                 if (cashAmount.compareTo(changeAmount) < 0) {
                     Debug.logError("Change Amount : " + changeAmount + " / Cash Amount : " + cashAmount, module);
-                    errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    // Cato: Use less cryptic message
+                    //errMsg = UtilProperties.getMessage(resource_error, "checkhelper.change_returned_cannot_be_greater_than_cash", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    errMsg = UtilProperties.getMessage(resource_error, "checkevents.payment_cannot_be_greater_than_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
                     return ServiceUtil.returnError(errMsg);
                 }
             }

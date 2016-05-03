@@ -16,7 +16,8 @@
     float: left;
     margin: 5px;
     color:#fff;
-    background-color: #eeeeee;
+    /* 2016-05-02: do NOT set a default background color. some tilesType want no bg color
+    background-color: #eeeeee; */
     box-shadow: inset 0 0 1px #FFFFCC;
     cursor: pointer;
     position: relative;

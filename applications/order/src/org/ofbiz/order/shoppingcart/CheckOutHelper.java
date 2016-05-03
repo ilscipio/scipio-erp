@@ -229,6 +229,12 @@ public class CheckOutHelper {
         return errorMessages;
     }
 
+    /**
+     * Stores checkout payment in cart.
+     * <p>
+     * Cato: WARN: The stock code in this method does not adjust pay meth amounts. That is done later
+     * by {@link #validatePaymentMethods()}.
+     */
     public Map<String, Object> setCheckOutPayment(Map<String, Map<String, Object>> selectedPaymentMethods, List<String> singleUsePayments, String billingAccountId) {
         List<String> errorMessages = new ArrayList<String>();
         Map<String, Object> result;
@@ -1531,6 +1537,14 @@ public class CheckOutHelper {
         return accountMap;
     }
 
+    /**
+     * Validates payment methods.
+     * <p>
+     * Cato: WARN: The stock code in this method does not only check the validity of current pay methods in cart; it
+     * also updates pay meth amounts for those that were previously left null.
+     * <p>
+     * Cato: NOTE: Logic must reflect that of {@link ShoppingCart#isPaymentAdequate()}.
+     */
     public Map<String, Object> validatePaymentMethods() {
         String errMsg = null;
         String billingAccountId = cart.getBillingAccountId();
@@ -1619,6 +1633,35 @@ public class CheckOutHelper {
             }
         }
         return ServiceUtil.returnSuccess();
+    }
+    
+    /**
+     * Cato: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * other words the cart payments in current state can effectively be used to pay for the order.
+     * <p>
+     * The definition of "adequate" is abstracted by this method. Currently, it requires that the payment method
+     * total equals exactly the grand total. Due to stock code function, this is only true after a successful
+     * call to {@link CheckOutHelper#validatePaymentMethods} (WARN: it is NOT necessarily true after a call to
+     * {@link CheckOutHelper#setCheckOutPayment}!).
+     * 
+     * @see CheckOutHelper#validatePaymentMethods()
+     */
+    public static boolean isPaymentsAdequate(ShoppingCart cart) {
+        BigDecimal reqAmtPreParse = cart.getGrandTotal().subtract(cart.getBillingAccountAmount());
+        BigDecimal selectedPmnt = cart.getPaymentTotal();
+
+        BigDecimal selectedPaymentTotal = selectedPmnt.setScale(scale, rounding);
+        BigDecimal requiredAmount = reqAmtPreParse.setScale(scale, rounding);
+        
+        return (requiredAmount.compareTo(selectedPaymentTotal) == 0);
+    }
+    
+    /**
+     * Cato: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * other words the cart payments in current state can effectively be used to pay for the order.
+     */
+    public boolean isPaymentsAdequate() {
+        return isPaymentsAdequate(this.cart);
     }
 
     public void validateGiftCardAmounts() {

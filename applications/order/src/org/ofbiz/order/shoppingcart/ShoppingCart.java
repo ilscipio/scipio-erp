@@ -1558,7 +1558,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         CartPaymentInfo inf = new CartPaymentInfo();
         inf.refNum[0] = refNum;
         inf.amount = amount;
-
+        inf.origAmount = amount;    // Cato: Save the original amount, that was specified upon creation
+        
         if (!isPaymentMethodType(id)) {
             inf.paymentMethodTypeId = this.getPaymentMethodTypeId(id);
             inf.paymentMethodId = id;
@@ -1574,6 +1575,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         inf.refNum[0] = refNum;
         inf.refNum[1] = authCode;
         inf.amount = amount;
+        inf.origAmount = amount;    // Cato: Save the original amount, that was specified upon creation
 
         if (!isPaymentMethodType(id)) {
             inf.paymentMethodTypeId = this.getPaymentMethodTypeId(id);
@@ -1697,6 +1699,14 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public BigDecimal getPaymentAmount(String id) {
         return this.getPaymentInfo(id).amount;
     }
+    
+    /** 
+     * Cato: returns the original payment method/payment method type amount as specified
+     * upon payment meth info creation (usually by the user).
+     */
+    public BigDecimal getPaymentOrigAmount(String id) {
+        return this.getPaymentInfo(id).origAmount;
+    }
 
     public void addPaymentRef(String id, String ref, String authCode) {
         this.getPaymentInfo(id).refNum[0] = ref;
@@ -1723,6 +1733,14 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return total;
     }
 
+    /**
+     * Cato: Verifies if current payment methods in cart are adequate enough to cover the current order, or in
+     * other words the cart payments in current state can effectively be used to pay for the order.
+     */
+    public boolean isPaymentsAdequate() {
+        return CheckOutHelper.isPaymentsAdequate(this);
+    }
+    
     public int selectedPayments() {
         return paymentInfo.size();
     }
@@ -4830,7 +4848,15 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public boolean isPresent = false;
         public boolean isSwiped = false;
         public boolean overflow = false;
+        public BigDecimal origAmount = null; // Cato: original amount as specified upon creation. should not change.
 
+        /**
+         * Cato: Default constructor
+         */
+        public CartPaymentInfo() {
+            super();
+        }
+        
         public GenericValue getValueObject(Delegator delegator) {
             String entityName = null;
             Map<String, String> lookupFields = null;

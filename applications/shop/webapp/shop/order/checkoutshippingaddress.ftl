@@ -231,7 +231,7 @@ function toggleBillingAccount(box) {
           <@addressList>
             <@addressEntry>
           <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
-            labelContent=newAddrFormFieldContent id="newshipaddrradio" class="+addr-select-radio"/>
+             id="newshipaddrradio" class="+addr-select-radio" label=uiLabelMap.PartyAddNewAddress/><#--labelContent=newAddrFormFieldContent-->
             </@addressEntry>
           </@addressList>
             <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if> class="new-item-selection-content">

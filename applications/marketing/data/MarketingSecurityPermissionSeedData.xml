@@ -29,13 +29,13 @@ under the License.
     <SecurityPermission description="Limited update operations in the Marketing Manager." permissionId="MARKETING_ROLE_UPDATE"/>
 
     <!-- SFA security -->
-    <SecurityPermission description="View operations in the SFA Manager." permissionId="SFA_VIEW"/>
-    <SecurityPermission description="Create operations in the SFA Manager." permissionId="SFA_CREATE"/>
-    <SecurityPermission description="Update operations in the SFA Manager." permissionId="SFA_UPDATE"/>
-    <SecurityPermission description="Delete operations in the SFA Manager." permissionId="SFA_DELETE"/>
-    <SecurityPermission description="ALL operations in the SFA Manager." permissionId="SFA_ADMIN"/>
-    <SecurityPermission description="Limited view operations in the SFA Manager." permissionId="SFA_ROLE_VIEW"/>
-    <SecurityPermission description="Limited update operations in the SFA Manager." permissionId="SFA_ROLE_UPDATE"/>
+    <SecurityPermission description="View operations in the CRM." permissionId="SFA_VIEW"/>
+    <SecurityPermission description="Create operations in the CRM." permissionId="SFA_CREATE"/>
+    <SecurityPermission description="Update operations in the CRM." permissionId="SFA_UPDATE"/>
+    <SecurityPermission description="Delete operations in the CRM." permissionId="SFA_DELETE"/>
+    <SecurityPermission description="ALL operations in the CRM." permissionId="SFA_ADMIN"/>
+    <SecurityPermission description="Limited view operations in the CRM." permissionId="SFA_ROLE_VIEW"/>
+    <SecurityPermission description="Limited update operations in the CRM." permissionId="SFA_ROLE_UPDATE"/>
     
     <!-- add admin to SUPER permission group -->
     <SecurityGroupPermission groupId="SUPER" permissionId="MARKETING_ADMIN"/>

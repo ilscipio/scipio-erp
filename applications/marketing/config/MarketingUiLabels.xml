@@ -2874,8 +2874,8 @@
         <value xml:lang="zh_TW">關閉日期</value>
     </property>
     <property key="SfaCompanyName">
-        <value xml:lang="de">CATO - Vertriebsmanager</value>
-        <value xml:lang="en">CATO - SFA Manager</value>
+        <value xml:lang="de">CATO - CRM</value>
+        <value xml:lang="en">CATO - CRM</value>
         <value xml:lang="es">Gestor de fuerzas de ventas</value>
         <value xml:lang="fr">CATO - gestion des ventes</value>
         <value xml:lang="it">CATO - Gestione forze di vendita</value>

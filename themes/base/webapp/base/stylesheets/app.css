@@ -10714,11 +10714,10 @@ input::-moz-focus-inner {
   display: block;
   float: left;
   margin: 5px;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
 }
-/* line 22, ../scss/_tiles.scss */
+/* line 21, ../scss/_tiles.scss */
 .tile .tile-content {
   position: absolute;
   top: 0;
@@ -10727,11 +10726,11 @@ input::-moz-focus-inner {
   height: inherit;
   overflow: hidden;
 }
-/* line 30, ../scss/_tiles.scss */
+/* line 29, ../scss/_tiles.scss */
 .tile .tile-content :first-child {
   display: block;
 }
-/* line 34, ../scss/_tiles.scss */
+/* line 33, ../scss/_tiles.scss */
 .tile .tile-content .tile-icon {
   position: absolute;
   width: 64px;
@@ -10743,8 +10742,8 @@ input::-moz-focus-inner {
   margin-left: -32px;
   text-align: center;
 }
-/* line 46, ../scss/_tiles.scss */
-.tile .tile-content .tile-title-default {
+/* line 45, ../scss/_tiles.scss */
+.tile .tile-content .tile-title {
   position: absolute;
   bottom: 0;
   padding: .425rem .425rem;
@@ -10755,7 +10754,15 @@ input::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 61, ../scss/_tiles.scss */
+/* line 60, ../scss/_tiles.scss */
+.tile .tile-content .tile-title-common {
+  border-bottom: 1px solid #eee;
+  color: #222222;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+/* line 76, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay-slide-up {
   width: 100%;
   height: inherit;
@@ -10768,62 +10775,39 @@ input::-moz-focus-inner {
   height: 100%;
   transition: all 0.3s ease;
 }
-/* line 76, ../scss/_tiles.scss */
+/* line 91, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay-static {
   width: 100%;
   height: inherit;
   display: block;
   height: 100%;
 }
-/* line 84, ../scss/_tiles.scss */
-.tile .tile-image-cover {
-  background-color: #ffffff;
+/* line 99, ../scss/_tiles.scss */
+.tile .tile-image {
   display: block;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
+}
+/* line 105, ../scss/_tiles.scss */
+.tile .tile-image-common {
+  background-color: #ffffff;
   transition: all 0.6s ease;
 }
-/* line 94, ../scss/_tiles.scss */
+/* line 110, ../scss/_tiles.scss */
+.tile .tile-image-cover {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+/* line 115, ../scss/_tiles.scss */
 .tile .tile-image-contain {
-  background-color: #ffffff;
-  display: block;
-  width: 100%;
-  height: 100%;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transition: all 0.6s ease;
-}
-/* line 105, ../scss/_tiles.scss */
-.tile a, .tile a:active, .tile a:visited {
-  color: #fff;
-}
-/* line 108, ../scss/_tiles.scss */
-.tile:hover {
-  outline: #999999 solid 3px;
-}
-/* line 111, ../scss/_tiles.scss */
-.tile:hover .tile-overlay-slide-up {
-  top: 0;
-  transition: all 0.3s ease;
-}
-/* line 116, ../scss/_tiles.scss */
-.tile:hover .tile-image-cover {
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-  transition: all 0.6s ease;
-}
-/* line 122, ../scss/_tiles.scss */
-.tile:hover .tile-image-contain {
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-  transition: all 0.6s ease;
 }
 
-/* line 130, ../scss/_tiles.scss */
+/* line 126, ../scss/_tiles.scss */
 .tile-common {
+  cursor: pointer;
   color: #fff;
   background-color: #eeeeee;
   box-shadow: inset 0 0 1px #FFFFCC;
@@ -10832,13 +10816,38 @@ input::-moz-focus-inner {
   -ms-user-select: none;
   user-select: none;
 }
+/* line 136, ../scss/_tiles.scss */
+.tile-common a, .tile-common a:active, .tile-common a:visited {
+  color: #fff;
+}
+/* line 138, ../scss/_tiles.scss */
+.tile-common:hover {
+  outline: #999999 solid 3px;
+}
+/* line 141, ../scss/_tiles.scss */
+.tile-common:hover .tile-overlay-slide-up {
+  top: 0;
+  transition: all 0.3s ease;
+}
+/* line 146, ../scss/_tiles.scss */
+.tile-common:hover .tile-image-cover {
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  transition: all 0.6s ease;
+}
+/* line 152, ../scss/_tiles.scss */
+.tile-common:hover .tile-image-contain {
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  transition: all 0.6s ease;
+}
 
-/* line 148, ../scss/_tiles.scss */
+/* line 168, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 153, ../scss/_tiles.scss */
+/* line 173, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -10847,24 +10856,24 @@ input::-moz-focus-inner {
   margin-left: -16px;
 }
 
-/* line 163, ../scss/_tiles.scss */
+/* line 183, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 164, ../scss/_tiles.scss */
+/* line 184, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 165, ../scss/_tiles.scss */
+/* line 185, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 167, ../scss/_tiles.scss */
+/* line 187, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -10873,12 +10882,12 @@ input::-moz-focus-inner {
   margin-left: -64px;
 }
 
-/* line 177, ../scss/_tiles.scss */
+/* line 197, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 179, ../scss/_tiles.scss */
+/* line 199, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -10887,12 +10896,12 @@ input::-moz-focus-inner {
   margin-left: -96px;
 }
 
-/* line 189, ../scss/_tiles.scss */
+/* line 209, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 191, ../scss/_tiles.scss */
+/* line 211, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10901,69 +10910,69 @@ input::-moz-focus-inner {
   margin-left: -128px;
 }
 
-/* line 204, ../scss/_tiles.scss */
+/* line 224, ../scss/_tiles.scss */
 .tile-color-0, .tile-color-primary {
   background-color: #008cba !important;
 }
 
-/* line 205, ../scss/_tiles.scss */
+/* line 225, ../scss/_tiles.scss */
 .tile-color-1, .tile-color-secondary {
   background-color: #e7e7e7 !important;
 }
 
-/* line 206, ../scss/_tiles.scss */
+/* line 226, ../scss/_tiles.scss */
 .tile-color-2, .tile-color-alert {
   background-color: #f04124 !important;
 }
 
-/* line 207, ../scss/_tiles.scss */
+/* line 227, ../scss/_tiles.scss */
 .tile-color-3, .tile-color-success {
   background-color: #43ac6a !important;
 }
 
-/* line 208, ../scss/_tiles.scss */
+/* line 228, ../scss/_tiles.scss */
 .tile-color-4, .tile-color-warning {
   background-color: #f08a24 !important;
 }
 
-/* line 209, ../scss/_tiles.scss */
+/* line 229, ../scss/_tiles.scss */
 .tile-color-5, .tile-color-info {
   background-color: #a0d3e8 !important;
 }
 
-/* line 210, ../scss/_tiles.scss */
+/* line 230, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333 !important;
 }
 
-/* line 211, ../scss/_tiles.scss */
+/* line 231, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc !important;
 }
 
-/* line 212, ../scss/_tiles.scss */
+/* line 232, ../scss/_tiles.scss */
 .tile-color-8, .tile-color-default-title {
   background-color: #f9f9f9 !important;
 }
 
-/* line 215, ../scss/_tiles.scss */
+/* line 235, ../scss/_tiles.scss */
 .tile-color-50l, .tile-color-primary-alpha-light,
 .tile-color-gallery-overlay-bg {
   background-color: rgba(0, 140, 186, 0.3) !important;
 }
 
-/* line 217, ../scss/_tiles.scss */
+/* line 237, ../scss/_tiles.scss */
 .tile-color-50h, .tile-color-primary-alpha-heavy {
   background-color: rgba(0, 140, 186, 0.7) !important;
 }
 
-/* line 218, ../scss/_tiles.scss */
+/* line 238, ../scss/_tiles.scss */
 .tile-color-58l, .tile-color-snow-alpha-light,
 .tile-color-gallery-title-bg {
   background-color: rgba(249, 249, 249, 0.3) !important;
 }
 
-/* line 220, ../scss/_tiles.scss */
+/* line 240, ../scss/_tiles.scss */
 .tile-color-58h, .tile-color-snow-alpha-heavy {
   background-color: rgba(249, 249, 249, 0.7) !important;
 }

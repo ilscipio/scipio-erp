@@ -770,11 +770,11 @@
     "tile_generic_class" : "tile-generic",  <#-- NOTE: NO tile-common here -->
     "tile_generic_size" : "normal",
     "tile_generic_color" : "none",
-    "tile_generic_titletype" : "default",
+    "tile_generic_titletype" : "generic",
     "tile_generic_titlebgcolor" : "none",
     "tile_generic_overlaytype" : "static",
     "tile_generic_overlaybgcolor" : "none",
-    "tile_generic_imagetype" : "cover",
+    "tile_generic_imagetype" : "generic",
     "tile_generic_imagebgcolor" : "none",
     "tile_generic_icon" : "",
     "tile_generic_linktarget" : "",
@@ -801,7 +801,8 @@
     <#-- title styles -->
     "tile_title" : "tile-title",
     <#-- default title styles (looked up based on title type) -->
-    "tile_title_default" : "tile-title-default",
+    "tile_title_default" : "tile-title-default tile-title-common",
+    "tile_title_generic" : "tile-title-generic",
     <#-- overlay styles -->
     "tile_overlay" : "tile-overlay",
     <#-- default overlay styles (looked up based on overlay type) -->
@@ -812,10 +813,11 @@
     <#-- image styles -->
     "tile_image" : "tile-image",
     <#-- default image styles (looked up based on image type) -->
-    "tile_image_default" : "tile-image-cover",
+    "tile_image_default" : "tile-image-cover tile-image-common",
     <#-- styles for specific tile types (extensible by theme) (looked up based on image type) -->
-    "tile_image_cover" : "tile-image-cover",
-    "tile_image_contain" : "tile-image-contain",
+    "tile_image_cover" : "tile-image-cover tile-image-common",
+    "tile_image_contain" : "tile-image-contain tile-image-common",
+    "tile_image_generic" : "tile-image-generic",
     
   <#-- Image galleries (non-tile settings - tile settings contained in tile styles) -->
     "gallery_share_view_width" : 500,

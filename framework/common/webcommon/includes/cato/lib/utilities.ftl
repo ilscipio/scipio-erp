@@ -1353,7 +1353,7 @@ TODO: Lists, strings, etc.
 
   * Parameters *
     object                  = ((object), required) The source object
-    mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force, default: simple) Rewrapping mode and target wrapper type
+    mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force|simple-copy|simple-raw-deep-copy|simple-force-copy|simple-raw-deep-force-copy, default: simple) Rewrapping mode and target wrapper type
                               The keywords mean the following:
                               * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
                                 but only if they are not already simple and the other options do not force it.

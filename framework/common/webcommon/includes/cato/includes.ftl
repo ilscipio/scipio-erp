@@ -26,7 +26,8 @@
 <#-- these can be included early, for use in this file, since meant to be everything-agnostic -->
 <#include 'component://common/webcommon/includes/cato/lib/utilities.ftl'>
 
-<#-- cache these template interprets so they only need to happen once in a request -->
+<#-- cache these template interprets so they only need to happen once in a request 
+    NOTE: catoVariablesIncludeDirective is currently not really reused, is an artifact from prior code that had less caching -->
 <#assign catoVariablesIncludeDirective = getRequestVar("catoVariablesIncludeDirective")!false>
 
 <#if catoVariablesIncludeDirective?is_directive>
@@ -64,7 +65,12 @@
         <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
     </#if>
 
-    <#if catoVariablesLibraryPath?has_content>
+
+    <#-- 2016-05-04: We now support and prefer groovy-based var data -->
+    <#if catoVariablesLibraryPath?ends_with(".groovy")>
+        <#assign catoVariablesIncludeDirective = ('<#assign dummy = "">')?interpret>
+    <#elseif catoVariablesLibraryPath?ends_with(".ftl")>
+        <#-- DEPRECATED -->
         <#assign catoVariablesIncludeDirective = ('<#include "' + catoVariablesLibraryPath + '">')?interpret>
     <#else>
         <#assign catoVariablesIncludeDirective = ('<#assign dummy = "">')?interpret>
@@ -75,17 +81,26 @@
         <#assign catoTemplateIncludeDirective = ('<#assign dummy = "">')?interpret>
     </#if>
 
+    <#assign dummy = setRequestVar("catoVariablesLibraryPath", catoVariablesLibraryPath)>
+    <#assign dummy = setRequestVar("catoTemplateLibraryPath", catoTemplateLibraryPath)>
+    
     <#assign dummy = setRequestVar("catoVariablesIncludeDirective", catoVariablesIncludeDirective)>
     <#assign dummy = setRequestVar("catoTemplateIncludeDirective", catoTemplateIncludeDirective)>
     
     <#-- Include and cache the global variables -->
-    <#assign catoMainNsPreGlobalVarsNames = toSet(.main?keys)>
-    <#-- Main theme variables include -->
-    <@catoVariablesIncludeDirective />
-    <#assign catoMainNsPostGlobalVarsNames = toSet(.main?keys)>
-    <#assign dummy = catoMainNsPostGlobalVarsNames.removeAll(catoMainNsPreGlobalVarsNames)!>
-    <#assign dummy = catoMainNsPostGlobalVarsNames.remove("catoMainNsPreGlobalVarsNames")!>
-    <#assign catoTmplGlobalVars = copyMap(.main, "i", catoMainNsPostGlobalVarsNames)>
+    <#if catoVariablesLibraryPath?ends_with(".groovy")>
+        <#assign catoTmplGlobalVars = rewrapMap(Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocationNewEmptyContext(catoVariablesLibraryPath, ""), "simple-raw-deep")>
+        <#assign dummy = varsPutAll(catoTmplGlobalVars)>
+    <#elseif catoVariablesLibraryPath?ends_with(".ftl")>
+        <#-- DEPRECATED -->
+        <#assign catoMainNsPreGlobalVarsNames = toSet(.main?keys)>
+        <#-- Main theme variables include -->
+        <@catoVariablesIncludeDirective />
+        <#assign catoMainNsPostGlobalVarsNames = toSet(.main?keys)>
+        <#assign dummy = catoMainNsPostGlobalVarsNames.removeAll(catoMainNsPreGlobalVarsNames)!>
+        <#assign dummy = catoMainNsPostGlobalVarsNames.remove("catoMainNsPreGlobalVarsNames")!>
+        <#assign catoTmplGlobalVars = copyMap(.main, "i", catoMainNsPostGlobalVarsNames)>
+    </#if>
 
     <#-- make the styles var persist for anything that might need it (usually not FTL, for now always reincluded above) 
         NOTE: is guaranteed to stay FTL-wrapped; any outside code reading back must use FtlTransformUtil.unwrapXxx 

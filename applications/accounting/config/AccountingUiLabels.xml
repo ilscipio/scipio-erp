@@ -11597,6 +11597,11 @@
         <value xml:lang="zh">支付方式</value>
         <value xml:lang="zh_TW">支付方式</value>
     </property>
+    <!-- Cato: TODO: Localize -->
+    <property key="AccountingAdditionalPaymentMethods">
+        <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
+        <value xml:lang="en">Additional Payment Methods</value>
+    </property>
     <property key="AccountingPaymentMethodAssignAccountType">
         <value xml:lang="de">Kontenart für Zahlungsmethode</value>
         <value xml:lang="en">Payment Method Assign Account Type</value>

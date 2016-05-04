@@ -47,7 +47,23 @@ context.shoppingCart = cart;
 context.userLogin = userLogin;
 context.productStoreId = productStoreId;
 context.checkOutPaymentId = checkOutPaymentId;
-context.paymentMethodList = EntityUtil.filterByDate(party?.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false), true);
+paymentMethodList = EntityUtil.filterByDate(party?.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false), true);
+context.paymentMethodList = paymentMethodList;
+
+// Cato: group pay methods by payment method type
+paymentMethodListsByType = new LinkedHashMap();
+if (paymentMethodList) {
+    for (paymentMethod in paymentMethodList) {
+        payMethList = paymentMethodListsByType[paymentMethod.paymentMethodTypeId];
+        if (payMethList == null) {
+            payMethList = [];
+        } 
+        payMethList.add(paymentMethod);
+        paymentMethodListsByType[paymentMethod.paymentMethodTypeId] = payMethList;
+    }
+}
+context.paymentMethodListsByType = paymentMethodListsByType;
+
 
 billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // Cato: missing party check
 if (billingAccountList) {

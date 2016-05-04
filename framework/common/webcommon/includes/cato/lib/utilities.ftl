@@ -1358,10 +1358,10 @@ TODO: Lists, strings, etc.
                               * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
                                 but only if they are not already simple and the other options do not force it.
                               * {{{raw}}}: the target wrapper should be free of HTML auto-escaping
-                                WARN: Currently, this forces a performance-intensive unwrap operation in all cases,
+                                WARN: Currently, this forces a performance-intensive unwrap operation in many cases,
                                     because Freemarker does not allow checking which wrapper an object is currently using.
                               * {{{deep}}}: the wrapper select should apply to any children the object may have
-                                WARN: Currently, this forces a performance-intensive deep unwrap operation in all cases,
+                                WARN: Currently, this forces a performance-intensive deep unwrap operation in many cases,
                                     because Freemarker does not allow checking which wrapper an object is currently using.
                               * {{{force}}}: advanced option: this will force re-wrapping even if the target already appears adequate.
                               * {{{copy}}}: requests a copy operation where possible. The copy operation will be slow, but

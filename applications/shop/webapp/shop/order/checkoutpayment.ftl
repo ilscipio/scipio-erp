@@ -19,6 +19,7 @@ under the License.
 <#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
 <#include "ordercommon.ftl">
+
 <#-- Cato: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->
 <@script>
@@ -62,6 +63,7 @@ function submitForm(form, mode, value) {
     }
 }
 
+<#-- Cato: now covered by script further below 
 jQuery(document).ready(function(){
     var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
@@ -88,14 +90,7 @@ jQuery(document).ready(function(){
     });
 
 });
-
-
-<@initItemSelectionWithNewFormScript itemFieldClass="pay-select-radio" 
-    newItems=[
-        {"fieldId":"newcreditcardradio", "contentId":"newcreditcardcontent"},
-        {"fieldId":"neweftaccountradio", "contentId":"neweftaccountcontent"}
-    ] />
-
+-->
 </@script>
 
  
@@ -120,46 +115,80 @@ jQuery(document).ready(function(){
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
-<p>(NOTE: all buttons above to be removed)</p><#-- TODO -->
+  <p>(NOTE: all buttons above to be removed)</p><#-- TODO -->
 
   <#-- Cato: allow remember via params first, over stored -->
   <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentId!"">
   <#assign selectedBillingAccountId = parameters.billingAccountId!selectedBillingAccountId!"">
 
-  <@fields checkboxType="simple">
-    <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
-        <input type="hidden" name="checkoutpage" value="payment" />
-        <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
-        <input type="hidden" name="issuerId" id="issuerId" value="" />
+  <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
+    <input type="hidden" name="checkoutpage" value="payment" />
+    <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
+    <input type="hidden" name="issuerId" id="issuerId" value="" />
 
+    <#-- Cato: Cato: Used to build a radio/checkbox to content div mapping for JS -->
+    <#function registerFieldContentId fieldId contentId>
+      <#-- FIXME: slow -->
+      <#assign fieldContentIdMapList = (fieldContentIdMapList![]) + [{"fieldId":fieldId,"contentId":contentId}]>
+      <#assign fieldContentIdMap = (fieldContentIdMap!{}) + {fieldId:contentId}>
+      <#return "">
+    </#function>
+
+    <#-- Cato: Payment method content and markup.
+        This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
+        The macro is invoked in steps with a different type each time. -->
+    <#macro paymentMethodContent showPrimary=false showSupplemental=false showSelect=false showDetails=false>
+      <#local detailHeadingArgs = {}><#-- current is good: {"relLevel":+1} -->
+
+      <#local primSupplSuffix = "">
+      <#if showPrimary>
+        <#local primSupplSuffix = "_primary">
+      </#if>
+      <#if showSupplemental>
+        <#local primSupplSuffix = "_suppl">
+      </#if>
+
+      <@fields type="inherit-all" checkboxType="simple-standard" inlineItems=false>
+      <#if showPrimary>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-          <#macro payMethContent args={}>
-            <label for="checkOutPaymentId_OFFLINE">${getLabel("PaymentMethodType.description.EXT_OFFLINE", "AccountingEntityLabels")} (${uiLabelMap.OrderMoneyOrder})</label><#-- ${uiLabelMap.OrderPaymentOfflineCheckMoney} -->
-          </#macro><#-- Cato: Use full so clearer: OrderMoneyOrder -->
-          <@commonInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio"/>
+          <#if showSelect>
+            <#-- ${uiLabelMap.OrderPaymentOfflineCheckMoney} -->
+            <#assign dummy = registerFieldContentId("checkOutPaymentId_OFFLINE", "")>
+            <@field type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == selectedCheckOutPaymentId) 
+              class="+pay-select-radio pay-select-field" label="${getLabel('PaymentMethodType.description.EXT_OFFLINE', 'AccountingEntityLabels')} (${uiLabelMap.OrderMoneyOrder})"/>
+          </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
-          <#macro payMethContent args={}>
-            <label for="checkOutPaymentId_COD">${getLabel("PaymentMethodType.description.EXT_COD", "AccountingEntityLabels")} (${uiLabelMap.OrderCOD})</label>
-          </#macro>
-          <@commonInvField type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio" />
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("checkOutPaymentId_COD", "")>
+            <@field type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == selectedCheckOutPaymentId) 
+              class="+pay-select-radio pay-select-field" label="${getLabel('PaymentMethodType.description.EXT_COD', 'AccountingEntityLabels')} (${uiLabelMap.OrderCOD})"/>
+          </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
-          <#macro payMethContent args={}>
-            <label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label>
-          </#macro>
-          <@commonInvField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio"/>
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("checkOutPaymentId_WORLDPAY", "")>
+            <@field type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == selectedCheckOutPaymentId) 
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithWorldPay />
+          </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
-          <#macro payMethContent args={}>
-            <label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
-          </#macro>
-          <@commonInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio" />
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("checkOutPaymentId_PAYPAL", "")>
+            <@field type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == selectedCheckOutPaymentId) 
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithPayPal />
+          </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
-          <#macro payMethContent args={}>
-            <label for="checkOutPaymentId_IDEAL">${uiLabelMap.AccountingPayWithiDEAL}</label>
-            <div id="issuers">
+          <#assign methodLabel = uiLabelMap.AccountingPayWithiDEAL>
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("checkOutPaymentId_IDEAL", "issuers")>
+            <@field type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == selectedCheckOutPaymentId) 
+              class="+pay-select-radio pay-select-field" label=methodLabel />
+          </#if>
+          <#if showDetails>
+            <@section containerId="issuers" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithiDEAL>
+              <p>${methodLabel}</p>
               <#if issuerList?has_content>
                 <@field type="select" name="issuer" id="issuer" label=uiLabelMap.AccountingBank>
                   <#list issuerList as issuer>
@@ -167,72 +196,27 @@ jQuery(document).ready(function(){
                   </#list>
                 </@field>
               </#if>
-            </div>
-          </#macro>
-          <@commonInvField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio" />
+            </@section>
+          </#if>
         </#if>
 
-        <#if !paymentMethodList?has_content>
-          <#-- Cato: This is too weird because there are clearly options above, they mean the user has no payment
-            methods set in his account: 
-          <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>-->
-        <#else>
-          <#list paymentMethodList as paymentMethodLocal>
-            <#-- Cato: workaround for access from macros -->
-            <#assign paymentMethod = paymentMethodLocal>
-          
-            <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
-              <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
-
-                <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                  <#assign giftCardNumber = "" />
-                  <#assign pcardNumber = giftCard.cardNumber />
-                  <#if pcardNumber?has_content>
-                    <#assign psize = pcardNumber?length - 4 />
-                    <#if (0 < psize)>
-                      <#list 0 .. psize-1 as foo>
-                        <#assign giftCardNumber = giftCardNumber + "*" />
-                      </#list>
-                      <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-                    <#else>
-                      <#assign giftCardNumber = pcardNumber />
-                    </#if>
-                  </#if>
-                </#if>
-
-                <#macro payMethContent args={}>
-                  <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
-                  <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                  <#assign curPayAmountStr = "">
-                  <#assign fieldValue = "">
-                  <#assign fieldTooltip = "">
-                  <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
-                    <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>  
-                  <#else>
-                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
-                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
-                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
-                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
-                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
-                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
-                            offers no way to distinguish between user-entered and validation-determined amounts. -->
-                    <#if cart.isPaymentsAdequate()>
-                      <#assign fieldValue = curPayAmountStr>
-                    </#if>
-                  </#if>
-                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
-                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
-                </#macro>
-                <@commonInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
+        <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
+          <#-- User's credit cards -->
+          <#if (paymentMethodListsByType.CREDIT_CARD)?has_content>
+            <#list paymentMethodListsByType.CREDIT_CARD as paymentMethodLocal>
+              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
+              <#assign methodLabel>${uiLabelMap.AccountingCreditCard}: <@formattedCreditCard creditCard=creditCard paymentMethod=paymentMethod verbose=true /></#assign>
+              <#if showSelect>
+                <#assign dummy = registerFieldContentId("checkOutPayment_${paymentMethod.paymentMethodId}", "creditcardcontent_${paymentMethod.paymentMethodId}")>
+               <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
+                    cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
+                <@field type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) 
+                  class="+pay-select-radio pay-select-field" label=methodLabel />
               </#if>
-            <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
-              <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
-                <#macro payMethContent args={}>
-                  <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingCreditCard}: <@formattedCreditCard creditCard=creditCard paymentMethod=paymentMethod verbose=true /></label>
+              <#if showDetails>
+                <@section containerId="creditcardcontent_${paymentMethod.paymentMethodId}" containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard>
+                  <p>${methodLabel}</p>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   <#assign curPayAmountStr = "">
@@ -255,30 +239,21 @@ jQuery(document).ready(function(){
                   <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                       Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
                   <@field type="input" label=uiLabelMap.AccountingAmount size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
-                </#macro>
-                <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
-                    cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
-                <@commonInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio"/>
+                </@section>
               </#if>
-            <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
-              <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
-                <#macro payMethContent args={}>
-                  <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingEFTAccount}: ${eftAccount.bankName!}: ${eftAccount.accountNumber!}</label>
-                  <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
-                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                </#macro>
-                <@commonInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) labelContent=payMethContent class="+pay-select-radio"/>
-              </#if>
-            </#if>
-          </#list>
-        </#if>
-
-        <#-- Cato: JS-based new credit card option -->
-        <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-          <#macro payMethContent args={}>
-            <label for="newCreditCard">${uiLabelMap.AccountingCreditCard}: <strong>${uiLabelMap.CommonNew}</strong></label>
-            <div id="newcreditcardcontent"<#if ("_NEW_CREDIT_CARD_" != selectedCheckOutPaymentId)> style="display:none;"</#if> class="new-item-selection-content">
+            </#list>
+          </#if>
+        
+          <#-- Cato: JS-based new credit card option -->
+          <#assign methodLabel>${uiLabelMap.AccountingCreditCard}: <strong>${uiLabelMap.CommonNew}</strong></#assign>
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("newCreditCard", "newcreditcardcontent")>
+            <@field type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" labelContent=payMethContent 
+              checked=("_NEW_CREDIT_CARD_" == selectedCheckOutPaymentId) class="+pay-select-radio pay-select-field" label=methodLabel />
+          </#if>
+          <#if showDetails>
+            <@section containerId="newcreditcardcontent" containerClass="+new-item-selection-content" 
+                containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard><#-- let JS do the following (there is no point; even if do it, still need JS for page refresh): <#if ("_NEW_CREDIT_CARD_" != selectedCheckOutPaymentId)> style="display:none;"</#if> -->
               <input type="hidden" name="newCreditCardPrefix" value="newCreditCard_" />
               
               <#-- Cato: FIELDS BASED ON editcreditcard.ftl -->
@@ -324,17 +299,42 @@ jQuery(document).ready(function(){
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
               <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newCreditCard_amount" value=(parameters.newCreditCard_amount!) />
-            </div>
-          </#macro>
-          <@commonInvField type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" labelContent=payMethContent checked=("_NEW_CREDIT_CARD_" == selectedCheckOutPaymentId)
-              id="newcreditcardradio" class="+pay-select-radio" />
+            </@section>
+          </#if>
         </#if>
 
-        <#-- Cato: JS-based new eft account option -->
         <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-          <#macro payMethContent args={}>
-            <label for="newEftAccount">${uiLabelMap.AccountingEFTAccount}: <strong>${uiLabelMap.CommonNew}</strong></label>
-            <div id="neweftaccountcontent"<#if ("_NEW_EFT_ACCOUNT_" != selectedCheckOutPaymentId)> style="display:none;"</#if> class="new-item-selection-content">
+          <#-- User's EFT accounts -->
+          <#if (paymentMethodListsByType.EFT_ACCOUNT)?has_content>
+            <#list paymentMethodListsByType.EFT_ACCOUNT as paymentMethodLocal>
+              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
+              <#assign methodLabel = "${uiLabelMap.AccountingEFTAccount}: ${eftAccount.bankName!}: ${eftAccount.accountNumber!}">
+              <#if showSelect>
+                <#assign dummy = registerFieldContentId("checkOutPayment_${paymentMethod.paymentMethodId}", "eftaccountcontent_${paymentMethod.paymentMethodId}")>
+                <@field type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) 
+                  class="+pay-select-radio pay-select-field" label=methodLabel />
+              </#if>
+              <#if showDetails>
+                <@section containerId="eftaccountcontent_${paymentMethod.paymentMethodId}" containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount>
+                  <p>${methodLabel}</p>
+                  <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
+                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                </@section>
+              </#if>
+            </#list>
+          </#if>
+
+          <#-- Cato: JS-based new eft account option -->
+          <#assign methodLabel>${uiLabelMap.AccountingEFTAccount}: <strong>${uiLabelMap.CommonNew}</strong></#assign>
+          <#if showSelect>
+            <#assign dummy = registerFieldContentId("newEftAccount", "neweftaccountcontent")>
+            <@field type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" checked=("_NEW_EFT_ACCOUNT_" == selectedCheckOutPaymentId)
+              class="+pay-select-radio pay-select-field" label=methodLabel />
+          </#if>
+          <#if showDetails>
+            <@section containerId="neweftaccountcontent" containerClass="+new-item-selection-content" 
+                containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount><#-- let JS do it: <#if ("_NEW_EFT_ACCOUNT_" != selectedCheckOutPaymentId)> style="display:none;"</#if> -->
               <input type="hidden" name="newEftAccountPrefix" value="newEftAccount_" />
               
               <#-- Cato: FIELDS BASED ON editeftaccount.ftl -->
@@ -370,47 +370,228 @@ jQuery(document).ready(function(){
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
               <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newEftAccount_amount" value=(parameters.newEftAccount_amount!) />
-            </div>
-          </#macro>
-          <@commonInvField type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" labelContent=payMethContent checked=("_NEW_EFT_ACCOUNT_" == selectedCheckOutPaymentId)
-              id="neweftaccountradio" class="+pay-select-radio" />
+            </@section>
+          </#if>
         </#if>
+      </#if>
 
         <#-- special billing account functionality to allow use w/ a payment method -->
         <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
           <#if billingAccountList?has_content>
-            <#macro payMethContent args={}>
-              <@field type="select" name="billingAccountId" id="billingAccountId" label=uiLabelMap.FormFieldTitle_billingAccountId>
-                <option value=""></option>
-                <#list billingAccountList as billingAccount>
-                  <#assign availableAmount = billingAccount.accountBalance>
-                  <#assign accountLimit = billingAccount.accountLimit>
-                  <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
-                </#list>
-              </@field>
-              <@field type="input" size="5" id="billingAccountAmount" name="billingAccountAmount" value=(parameters.billingAccountAmount!) label=uiLabelMap.OrderBillUpTo/>
-            </#macro>
-            <@commonInvField type="generic" labelContent=payMethContent/>
+              <#assign methodLabel = uiLabelMap.AccountingBillingAccount>
+              <#if showSupplemental>
+                <#if showSelect>
+                  <#assign dummy = registerFieldContentId("checkOutPaymentId_billingAccount${primSupplSuffix}", "billingaccountcontent${primSupplSuffix}")>
+                  <@field type="checkbox" id="checkOutPaymentId_billingAccount${primSupplSuffix}" name="checkOutPaymentId" value="" checked=false 
+                    class="+pay-select-checkbox pay-select-field" label=methodLabel />
+                </#if>
+              </#if>
+              <#if showPrimary>
+                <#if showSelect>
+                  <#assign dummy = registerFieldContentId("checkOutPaymentId_billingAccount${primSupplSuffix}", "billingaccountcontent${primSupplSuffix}")>
+                  <@field type="radio" id="checkOutPaymentId_billingAccount${primSupplSuffix}" name="checkOutPaymentId" value="" checked=false 
+                    class="+pay-select-radio pay-select-field" label=methodLabel />
+                </#if>
+              </#if>
+              <#if showDetails && showSupplemental><#-- only show last -->
+                <@section containerId="billingaccountcontent${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingBillingAccount>
+                  <@field type="select" name="billingAccountId" id="billingAccountId${primSupplSuffix}" label=uiLabelMap.FormFieldTitle_billingAccountId>
+                    <option value=""></option>
+                    <#list billingAccountList as billingAccount>
+                      <#assign availableAmount = billingAccount.accountBalance>
+                      <#assign accountLimit = billingAccount.accountLimit>
+                      <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
+                    </#list>
+                  </@field>
+                  <@field type="input" size="5" id="billingAccountAmount${primSupplSuffix}" name="billingAccountAmount" value=(parameters.billingAccountAmount!) label=uiLabelMap.OrderBillUpTo/>
+                </@section>
+              </#if>
           </#if>
         </#if>
-        <#-- end of special billing account functionality -->
 
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-          <input type="hidden" name="singleUseGiftCard" value="Y" />
-          <#macro payMethContent args={}>
-            <label for="addGiftCard">${uiLabelMap.AccountingUseGiftCardNotOnFile}</label>
-            <@field type="input" size="15" id="giftCardNumber" name="giftCardNumber" value=((parameters.giftCardNumber)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingNumber/>
-            <#if cart.isPinRequiredForGC(delegator)>
-              <@field type="input" size="10" id="giftCardPin" name="giftCardPin" value=((parameters.giftCardPin)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingPIN/>
-            </#if>
-            <@field type="input" size="6" id="giftCardAmount" name="giftCardAmount" value=((parameters.giftCardAmount)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingAmount/>
-          </#macro>
-          <@commonInvField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=payMethContent checked=((parameters.addGiftCard!) == "Y")/>
-        </#if>
+          <#-- User's gift cards -->
+          <#if (paymentMethodListsByType.GIFT_CARD)?has_content>
+            <#list paymentMethodListsByType.GIFT_CARD as paymentMethodLocal>
+              <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
+              <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
+              <#assign giftCardNumber = getGiftCardDisplayNumber(giftCard)!"">
+              <#assign methodLabel>${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}</#assign>
+              <#if showSupplemental>
+                <#if showSelect>
+                  <#assign dummy = registerFieldContentId("checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "giftcardcontent_${paymentMethod.paymentMethodId}${primSupplSuffix}")>
+                  <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" 
+                    class="+pay-select-checkbox pay-select-field" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) label=methodLabel />
+                </#if>
+              </#if>
+              <#if showPrimary>
+                <#-- TODO: checked: cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
+                <#if showSelect> 
+                  <#assign dummy = registerFieldContentId("checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "giftcardcontent_${paymentMethod.paymentMethodId}${primSupplSuffix}")>
+                  <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" 
+                    class="+pay-select-radio pay-select-field" checked=false label=methodLabel />
+                </#if>
+              </#if>
+              <#if showDetails>
+                <@section containerId="giftcardcontent_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
+                  <p>${methodLabel}</p>
+                  <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#assign curPayAmountStr = "">
+                  <#assign fieldValue = "">
+                  <#assign fieldTooltip = "">
+                  <#if parameters["amount_${paymentMethod.paymentMethodId}"]??>
+                    <#assign fieldValue = parameters["amount_${paymentMethod.paymentMethodId}"]>  
+                  <#else>
+                    <#-- Cato: changed to use getPaymentOrigAmount (new method) instead of getPaymentAmount because we want to be consistent
+                        and only show the amounts if the user originally entered one. Otherwise, leave null, and submit will recalculate as needed: cart.getPaymentAmount(paymentMethod.paymentMethodId) -->
+                    <#assign curPayAmountStr><#if ((cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentOrigAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
+                    <#-- Cato: NOTE: We ONLY set the previous pay amount as field value if the payments are adequate to cover the current amount (NOTE: currently this definition is very strict - see ShoppingCart).
+                        Otherwise, the amount specified here is likely to be invalid if resubmitted as-is (as in stock it does not really function as a "bill up to" amount).
+                        FIXME?: There is an inconsistency here: user may have left this empty, but re-viewing payment will populate this field. Currently ShoppingCart
+                            offers no way to distinguish between user-entered and validation-determined amounts. -->
+                    <#if cart.isPaymentsAdequate()>
+                      <#assign fieldValue = curPayAmountStr>
+                    </#if>
+                  </#if>
+                  <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
+                      Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
+                  <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue tooltip=fieldTooltip />
+                </@section>
+              </#if>
+            </#list>
+          </#if>
 
-    </form>
+          <#-- Gift card not on file -->
+          <#-- TODO: select this if gift card only, also set addGiftCard_main=Y for params to remember -->
+          <#-- NOTE: Should have empty value -->
+          <#assign methodLabel = uiLabelMap.AccountingUseGiftCardNotOnFile>
+          <#if showSupplemental>
+            <#if showSelect>
+              <#assign dummy = registerFieldContentId("checkOutPaymentId_addGiftCard${primSupplSuffix}", "newgiftcardcontent${primSupplSuffix}")>
+              <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="addGiftCard" value="Y" checked=((parameters.addGiftCard!) == "Y") 
+                class="+pay-select-checkbox pay-select-field" label=methodLabel />
+            </#if>
+          </#if>
+          <#if showPrimary>
+            <#if showSelect>
+              <#assign dummy = registerFieldContentId("checkOutPaymentId_addGiftCard${primSupplSuffix}", "newgiftcardcontent${primSupplSuffix}")>
+              <@field type="radio" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="checkOutPaymentId" value="" checked=false 
+                class="+pay-select-radio pay-select-field" label=methodLabel />
+              <input type="hidden" name="addGiftCard_main" value="N" />
+            </#if>
+          </#if>
+          <#if showDetails>
+            <@section containerId="newgiftcardcontent${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
+              <input type="hidden" name="singleUseGiftCard" value="Y" />
+              <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((parameters.giftCardNumber)!) label=uiLabelMap.AccountingNumber/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+              <#if cart.isPinRequiredForGC(delegator)>
+                <@field type="input" size="10" id="giftCardPin${primSupplSuffix}" name="giftCardPin" value=((parameters.giftCardPin)!) label=uiLabelMap.AccountingPIN/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+              </#if>
+              <@field type="input" size="6" id="giftCardAmount${primSupplSuffix}" name="giftCardAmount" value=((parameters.giftCardAmount)!) label=uiLabelMap.AccountingAmount/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
+            </@section>
+          </#if>
+        </#if>
+      </@fields>
+    </#macro>
+
+
+    <#-- Cato: Main structure
+        NOTE: Some pay methods (EXT_BILLACT, GIFT_CARD) work as both main payments and as supplemental, so they reappear twice and have to be managed differently.
+            Because we using radios, at least one must be selected by user otherwise breaks html expectations (stock code allowed selecting none; was sketchy) -->
+
+    <@field type="generic" label=uiLabelMap.AccountingPaymentMethod>
+      <@paymentMethodContent showPrimary=true showSelect=true />
+    </@field>
+    <div id="paymethcontent_primary">
+      <@paymentMethodContent showPrimary=true showDetails=true />
+    </div>
+
+  <div id="paymeth_supplemental" style="display:none;">
+    <@field type="generic" label=uiLabelMap.AccountingAdditionalPaymentMethods>
+      <@paymentMethodContent showSupplemental=true showSelect=true />
+    </@field>
+    <div id="paymethcontent_supplemental">
+      <@paymentMethodContent showSupplemental=true showDetails=true />
+    </div>
+  </div>
     
-  </@fields>
+  </form>
+
+  <@script>
+    var paySelectPrimaryElems = null;
+    var paySelectSupplElems = null;
+    <#-- don't need yet
+    var fieldContentIdMap = <@objectAsScript lang="js" object=fieldContentIdMap />;
+    var fieldContentIdMapList = <@objectAsScript lang="js" object=fieldContentIdMapList />;
+    -->
+
+    <#-- WARN: highly coupled with macro -->
+    <#assign updateCallbackPostVisibJs>
+    
+        if (paySelectPrimaryElems == null) {
+            paySelectPrimaryElems = getCatoFieldCheckElems('pay-select-radio');
+        }
+        if (paySelectSupplElems == null) {
+            paySelectSupplElems = getCatoFieldCheckElems('pay-select-checkbox');
+        }    
+    
+        <#-- if any of the radios are checked and there are additional pay methods available not already
+            shown, show additional; otherwise hide 
+            NOTE: this way works even with page refresh -->
+
+        <#-- (this map should get only one entry) -->
+        var selectedPrimaryMap = {};
+        var selectedPrimarySupplMap = {};
+        var selectedPrimarySupplCount = 0;
+        jQuery.each(fieldIdShowMap, function(k, v) {
+            <#-- doesn't work with current markup...
+            if (v.hasClass('pay-select-radio')) {
+                showAdditional = true;
+            }
+            -->
+            if (v.closest('.pay-select-radio')) {
+                selectedPrimaryMap[k] = v;
+                
+                <#-- get the supplemental option corresponding to this radio, if any -->
+                if (k.endsWith('_primary')) {
+                    var suppl = jQuery('#'+k.substring(0, k.length - '_primary'.length)+'_suppl');
+                    if (suppl) {
+                        selectedPrimarySupplMap[k] = suppl;
+                        selectedPrimarySupplCount = selectedPrimarySupplCount + 1;
+                    }
+                }
+            }
+        });
+        
+        <#-- Hide the supplemental version of the primary to avoid doubles -->
+        if (selectedPrimarySupplMap) {
+            <#-- first, show all existing -->
+            paySelectSupplElems.closest('form-field-entry').show();
+            <#-- now hide -->
+            jQuery.each(selectedPrimarySupplMap, function(k, v) { 
+                v.closest('form-field-entry').hide();
+            }); 
+        }
+        
+        <#-- if any radio is selected and there exist suppl pay methods after eliminating the ones already
+            selected in radios, only then show supplemental pay methods 
+            FIXME?: There is no support yet for arbitrary numbers of gift cards with this method; they would be
+                a special case... -->
+        if (selectedPrimaryMap && (paySelectSupplElems.length > selectedPrimarySupplCount)) {
+            <#-- FIXME missing tests for  -->
+            jQuery('#paymeth_supplemental').show();
+        } else {
+            jQuery('#paymeth_supplemental').hide();
+        }
+    </#assign>
+
+    <#-- Cato: Enable JS-based content reveal for pay methods -->
+    <@initItemSelectionWithContentFormScript itemFieldClass="pay-select-field" 
+        contentItems=fieldContentIdMapList updateCallbackPostVisibJs=updateCallbackPostVisibJs />
+
+  </@script>
+
 </@section>
 
 <#-- Cato: Not this label, as there may be intermediate payment screens: uiLabelMap.OrderContinueToFinalOrderReview -->

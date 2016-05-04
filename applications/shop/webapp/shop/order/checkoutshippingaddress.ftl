@@ -53,8 +53,8 @@ function toggleBillingAccount(box) {
     }
 }
 
-<@initItemSelectionWithNewFormScript itemFieldClass="addr-select-radio" 
-    newItems=[{"fieldId":"newshipaddrradio", "contentId":"newshipaddrcontent"}] />
+<@initItemSelectionWithContentFormScript itemFieldClass="addr-select-radio" 
+    contentItems=[{"fieldId":"newshipaddrradio", "contentId":"newshipaddrcontent"}] />
 
 </@script>
 

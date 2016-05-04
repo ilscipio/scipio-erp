@@ -40,46 +40,84 @@
   </#if>
 </#macro>
 
-<#-- Generic javascript for radios that have a "new item" option that should display content when radio selected -->
-<#macro initItemSelectionWithNewFormScript itemFieldClass newItems=[] updateCallbackJs="">
-  <#assign itemFieldClass = escapePart(itemFieldClass, 'js')>
-  
-if (typeof getCatoFieldRadioInput === 'undefined') {
-    function getCatoFieldRadioInput(fieldId) {
-        var radio = jQuery('#' + fieldId + ' input');
-        if (!radio.length) {
-            radio = jQuery('input#' + fieldId); <#-- alt markup support -->
-        }
-        return radio;
+<#-- Migrated from checkoutpayment.ftl -->
+<#function getGiftCardDisplayNumber giftCard>
+    <#if giftCard?has_content && giftCard.cardNumber?has_content>
+      <#local giftCardNumber = "" />
+      <#local pcardNumber = giftCard.cardNumber />
+      <#if pcardNumber?has_content>
+        <#local psize = pcardNumber?length - 4 />
+        <#if (0 < psize)>
+          <#list 0 .. psize-1 as foo>
+            <#local giftCardNumber = giftCardNumber + "*" />
+          </#list>
+          <#local giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
+        <#else>
+          <#local giftCardNumber = pcardNumber />
+        </#if>
+        <#return giftCardNumber>
+      </#if>
+    </#if>
+</#function>
+
+
+<#-- Generic javascript for radios that have a "new item" option that should display content when radio selected 
+    WARN: JS callbacks are highly coupled with macro -->
+<#macro initItemSelectionWithContentFormScript itemFieldClass contentItems=[] 
+    updateCallbackPerElemJs="" updateCallbackPreVisibJs="" updateCallbackPostVisibJs="">
+
+if (typeof getCatoFieldCheckElems === 'undefined') {
+    <#-- returns radio and/or checkbox with given class -->
+    function getCatoFieldCheckElems(fieldClass) {
+        <#-- NOTE: alt markup support -->
+        return jQuery.merge(jQuery('input.'+fieldClass), jQuery('.'+fieldClass+' input'))
     }
-}
+}  
   
 jQuery(document).ready(function() {
+    var allItems = getCatoFieldCheckElems('${escapePart(itemFieldClass, 'js')}');
     
-    var updateNewItemContentVisibility = function(elem, fieldId, contentId) {
-        var radio = getCatoFieldRadioInput(fieldId);
-        if (radio.length > 0) {
-            if (radio.is(":checked")) {
-                jQuery('#'+contentId).show();
-                jQuery('#'+fieldId).focus();
-            } else {
-                jQuery('#'+contentId).hide();
-            }
-        }
+    var contentItemMap = {
+      <#list contentItems as item>
+        "${escapePart(item.fieldId, 'js')}" : "${escapePart(item.contentId, 'js')}"<#if item_has_next>, </#if>
+      </#list>
     };
     
     var updateItemVisibility = function(event) {
         var elem = jQuery(this);
-        <#list newItems as newItem>
-          updateNewItemContentVisibility(elem, '${escapePart(newItem.fieldId, 'js')}', '${escapePart(newItem.contentId, 'js')}');
-        </#list>
-        ${updateCallbackJs}
+        var fieldIdShowMap = {}; <#-- for callbacks -->
+        var fieldIdHideMap = {};
+        var contentIdShowMap = {};
+        var contentIdHideMap = {};
+        allItems.each(function(i, e) {
+            e = jQuery(e);
+            var eid = e.attr('id');
+            var cid = contentItemMap[eid];
+            if (e.is(":checked")) {
+                contentIdShowMap[cid] = jQuery('#'+cid);
+                fieldIdShowMap[eid] = e;
+            } else {
+                contentIdHideMap[cid] = jQuery('#'+cid);
+                fieldIdHideMap[eid] = e;
+            }
+            ${rawString(updateCallbackPerElemJs)}
+        });
+        ${rawString(updateCallbackPreVisibJs)}
+        jQuery.each(contentIdHideMap, function(k, v) {
+            if (v) {
+                v.hide();
+            }
+        });
+        jQuery.each(contentIdShowMap, function(k, v) {
+            if (v) {
+                v.show();
+            }
+        });
+        ${rawString(updateCallbackPostVisibJs)}
     };
 
-    <#-- Cato: Needed for page refreshes to work -->
-    updateItemVisibility();
-    jQuery('input.${itemFieldClass}').change(updateItemVisibility);
-    jQuery('.${itemFieldClass} input').change(updateItemVisibility); <#-- alt markup support -->
+    updateItemVisibility(); <#-- Needed for page refreshes to work and to set initial visibility (if FTL doesn't do it) -->
+    allItems.change(updateItemVisibility);
 });
 
 </#macro>

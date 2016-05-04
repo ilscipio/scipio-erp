@@ -856,6 +856,10 @@ public abstract class LangFtlUtil {
     /**
      * Converts map to a simple wrapper, if applicable. Currently only applies to complex maps.
      * <p>
+     * If the specified ObjectWrapper is a BeansWrapper, this forces rewrapping as a SimpleMapModel.
+     * If it isn't we assume caller specified an objectWrapper that will rewrap the map with
+     * a simple model (we have no way of knowing).
+     * <p>
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
@@ -863,8 +867,14 @@ public abstract class LangFtlUtil {
     public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
             // WARN: bypasses auto-escaping
-            Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
-            return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+            Map<?, ?> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
+            if (objectWrapper instanceof BeansWrapper) {
+                // Bypass the beanswrapper wrap method and always make simple wrapper
+                return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+            } else {
+                // If anything other than BeansWrapper, assume caller is aware and his wrapper will create a simple map
+                return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
+            }
         }
         else if (object instanceof TemplateHashModel) {
             return (TemplateHashModel) object;
@@ -878,6 +888,10 @@ public abstract class LangFtlUtil {
      * Converts map to a simple wrapper, if applicable, by rewrapping
      * known complex map wrappers that implement <code>WrapperTemplateModel</code>.
      * <p>
+     * If the specified ObjectWrapper is a BeansWrapper, this forces rewrapping as a SimpleMapModel.
+     * If it isn't we assume caller specified an objectWrapper that will rewrap the map with
+     * a simple model (we have no way of knowing).
+     * <p>
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
@@ -885,8 +899,14 @@ public abstract class LangFtlUtil {
     public static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof SimpleMapModel || object instanceof BeanModel || object instanceof DefaultMapAdapter) {
             // Permissive
-            Map<?, ?> map = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
-            return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
+            Map<?, ?> wrappedObject = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
+            if (objectWrapper instanceof BeansWrapper) {
+                // Bypass the beanswrapper wrap method and always make simple wrapper
+                return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+            } else {
+                // If anything other than BeansWrapper, assume caller is aware and his wrapper will create a simple map
+                return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
+            }
         }
         else if (object instanceof TemplateHashModel) {
             return (TemplateHashModel) object;
@@ -903,6 +923,10 @@ public abstract class LangFtlUtil {
      * This method is very permissive: anything that wraps a Map is accepted.
      * Other types of hashes are returned as-is.
      * <p>
+     * If the specified ObjectWrapper is a BeansWrapper, this forces rewrapping as a SimpleMapModel.
+     * If it isn't we assume caller specified an objectWrapper that will rewrap the map with
+     * a simple model (we have no way of knowing).
+     * <p>
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
@@ -910,8 +934,14 @@ public abstract class LangFtlUtil {
     public static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof WrapperTemplateModel) {
             // Permissive
-            Map<?, ?> map = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
-            return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
+            Map<?, ?> wrappedObject = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
+            if (objectWrapper instanceof BeansWrapper) {
+                // Bypass the beanswrapper wrap method and always make simple wrapper
+                return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+            } else {
+                // If anything other than BeansWrapper, assume caller is aware and his wrapper will create a simple map
+                return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
+            }
         }
         else if (object instanceof TemplateHashModel) {
             return (TemplateHashModel) object;

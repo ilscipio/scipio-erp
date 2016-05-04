@@ -216,6 +216,28 @@ public abstract class LangFtlUtil {
     }
     
     /**
+     * Returns a non-escaping, simple-types-only copying object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
+        return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
+    }
+    
+    /**
+     * Returns a non-escaping, simple-types-only copying object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper(Environment env) {
+        return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
+    }    
+    
+    /**
+     * Returns a non-escaping, simple-types-only copying object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeCopyingNonEscapingObjectWrapper() {
+        return FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper();
+    }
+    
+    
+    /**
      * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
      * Currently leaving all to object wrapper, but may change... 
@@ -885,16 +907,20 @@ public abstract class LangFtlUtil {
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
      */
-    public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+    public static TemplateHashModel toSimpleMap(TemplateModel object, Boolean copy, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
             // WARN: bypasses auto-escaping
             Map<?, ?> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
-            if (objectWrapper instanceof BeansWrapper) {
-                // Bypass the beanswrapper wrap method and always make simple wrapper
-                return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+            if (Boolean.TRUE.equals(copy)) {
+                return new SimpleHash(wrappedObject, objectWrapper);
             } else {
-                // If anything other than BeansWrapper, assume caller is aware and his wrapper will create a simple map
-                return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
+                if (objectWrapper instanceof BeansWrapper) {
+                    // Bypass the beanswrapper wrap method and always make simple wrapper
+                    return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+                } else {
+                    // If anything other than BeansWrapper for some reason, assume caller is aware and his wrapper will create a simple map
+                    return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
+                }
             }
         }
         else if (object instanceof TemplateHashModel) {
@@ -916,9 +942,11 @@ public abstract class LangFtlUtil {
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
+     * 
+     * @deprecated don't use
      */
     @Deprecated
-    public static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+    private static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof SimpleMapModel || object instanceof BeanModel || object instanceof DefaultMapAdapter) {
             // Permissive
             Map<?, ?> wrappedObject = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
@@ -952,9 +980,11 @@ public abstract class LangFtlUtil {
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
+     * 
+     * @deprecated don't use
      */
     @Deprecated
-    public static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+    private static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof WrapperTemplateModel) {
             // Permissive
             Map<?, ?> wrappedObject = (Map<?, ?>) ((WrapperTemplateModel) object).getWrappedObject();
@@ -1420,8 +1450,8 @@ public abstract class LangFtlUtil {
                         throw new TemplateModelException("Cato: rewrapMap mode not yet implemented");
                     } else {
                         // Shallow re-wrap to simple, non-(necessarily-)raw map. 
-                        // This is the only case we can currently optimize...
-                        return toSimpleMap(model, curObjectWrapper);
+                        // This is the rare case we can currently optimize...
+                        return toSimpleMap(model, mode.copy, curObjectWrapper);
                     }
                 }
             }
@@ -1437,7 +1467,8 @@ public abstract class LangFtlUtil {
 
         if (mode.raw) {
             if (mode.deep) {
-                ObjectWrapper modelWrapper = LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
+                ObjectWrapper modelWrapper = mode.copy ? 
+                        LangFtlUtil.getSimpleTypeCopyingNonEscapingObjectWrapper(curObjectWrapper) : LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
                 return modelWrapper.wrap(unwrapped);
             } else {
                 // Can't do raw without doing deep
@@ -1450,7 +1481,11 @@ public abstract class LangFtlUtil {
                 // as-is, to do deep, you must also do raw.
                 throw new TemplateModelException("Cato: rewrapMap mode not yet implemented");
             } else {
-                return new SimpleMapModel(unwrapped, (BeansWrapper) curObjectWrapper);
+                if (mode.copy) {
+                    return new SimpleHash(unwrapped, curObjectWrapper);
+                } else {
+                    return new SimpleMapModel(unwrapped, (BeansWrapper) curObjectWrapper);
+                }
             }
         }
     }

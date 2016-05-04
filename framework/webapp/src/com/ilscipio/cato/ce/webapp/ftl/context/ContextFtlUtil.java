@@ -699,7 +699,7 @@ public abstract class ContextFtlUtil {
         SimpleHash res = new SimpleHash(objectWrapper);
         
         if (args != null) {
-            args = (TemplateHashModelEx) LangFtlUtil.toSimpleMap(args, objectWrapper);
+            args = (TemplateHashModelEx) LangFtlUtil.toSimpleMap(args, null, objectWrapper);
         }
         
         if (defaultArgs != null && !defaultArgs.isEmpty()) {

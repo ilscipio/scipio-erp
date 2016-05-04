@@ -1352,7 +1352,7 @@ WARN: Currently this only works for maps!
 TODO: Lists, strings, etc.
 
   * Parameters *
-    object                  = ((map), required) The source map
+    object                  = ((object), required) The source object
     mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force, default: simple) Rewrapping mode and target wrapper type
                               The keywords mean the following:
                               * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
@@ -1364,6 +1364,8 @@ TODO: Lists, strings, etc.
                                 WARN: Currently, this forces a performance-intensive deep unwrap operation in all cases,
                                     because Freemarker does not allow checking which wrapper an object is currently using.
                               * {{{force}}}: advanced option: this will force re-wrapping even if the target already appears adequate.
+                              * {{{copy}}}: requests a copy operation where possible. The copy operation will be slow, but
+                                it may make the resulting type faster.
                               NOTE: Only the listed combinations are supported.
                               WARN: {{{simple-raw-deep}}} uses a heuristic to avoid rewrapping simple FTL hashes. It is NOT
                                   accurate. If problems arise, use {{{simple-raw-deep-force}}} instead.

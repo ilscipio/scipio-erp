@@ -9,8 +9,10 @@ final module = "getContextCatoStyles.groovy"
 
 setContextCatoStylesAsGlobal = context.setContextCatoStylesAsGlobal
 
+// 2016-05-04: we use catoTmplGlobalVarsAdapted instead of catoTmplGlobalVars as an optimization
+
 // get the cached variables
-tmplGlobalVars = LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
+tmplGlobalVars = LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("catoTmplGlobalVarsAdapted", context.request, context));
 
 if (tmplGlobalVars == null) {
     // nothing from cache, so there probably hasn't been a render yet... so we must trigger a dummy FTL render
@@ -21,7 +23,7 @@ if (tmplGlobalVars == null) {
     env = FreeMarkerWorker.renderTemplateFromString("getContextCatoTmplGlobalVarsDummyTemplate", "", ftlContext, sw, useCache)
     
     if (env != null) {
-        tmplGlobalVars = LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
+        tmplGlobalVars = LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("catoTmplGlobalVarsAdapted", context.request, context));
 
     }
     else {

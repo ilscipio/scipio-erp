@@ -89,7 +89,10 @@
     
     <#-- Include and cache the global variables -->
     <#if catoVariablesLibraryPath?ends_with(".groovy")>
-        <#assign catoTmplGlobalVars = rewrapMap(Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocationNewEmptyContext(catoVariablesLibraryPath, ""), "simple-raw-deep")>
+        <#-- NOTE: Here we can do simple-raw-deep OR simple-raw-deep-copy. simple-raw-deep will make faster screenwidget access,
+            while simple-raw-deep-copy will make faster FTL access. We'll simply do both for now. -->
+        <#assign catoTmplGlobalVarsAdapted = rewrapMap(Static["org.ofbiz.base.util.GroovyUtil"].runScriptAtLocationNewEmptyContext(catoVariablesLibraryPath, ""), "simple-raw-deep")>
+        <#assign catoTmplGlobalVars = rewrapMap(catoTmplGlobalVarsAdapted, "simple-raw-deep-force-copy")>
         <#assign dummy = varsPutAll(catoTmplGlobalVars)>
     <#elseif catoVariablesLibraryPath?ends_with(".ftl")>
         <#-- DEPRECATED -->
@@ -100,13 +103,15 @@
         <#assign dummy = catoMainNsPostGlobalVarsNames.removeAll(catoMainNsPreGlobalVarsNames)!>
         <#assign dummy = catoMainNsPostGlobalVarsNames.remove("catoMainNsPreGlobalVarsNames")!>
         <#assign catoTmplGlobalVars = copyMap(.main, "i", catoMainNsPostGlobalVarsNames)>
+        <#assign catoTmplGlobalVarsAdapted = catoTmplGlobalVars>
     </#if>
 
     <#-- make the styles var persist for anything that might need it (usually not FTL, for now always reincluded above) 
         NOTE: is guaranteed to stay FTL-wrapped; any outside code reading back must use FtlTransformUtil.unwrapXxx 
         NOTE: would have to do this even if there was no caching, because non-FTL currently needs to read back -->
     <#assign dummy = setRequestVar("catoTmplGlobalVars", catoTmplGlobalVars, "w")>
-    
+    <#assign dummy = setRequestVar("catoTmplGlobalVarsAdapted", catoTmplGlobalVarsAdapted, "w")>
+        
     <#-- dump the styles into the global vars (we have no namespace) -->
     <#assign dummy = globalsPutAll(catoTmplGlobalVars)>
 </#if>

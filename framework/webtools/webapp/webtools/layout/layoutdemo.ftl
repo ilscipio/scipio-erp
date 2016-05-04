@@ -14,7 +14,7 @@
     <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">Cloning</li>
 </@nav>
 
-<@section>
+<@section containerClass="+my-container-class" class="+my-cell-class" containerId="this-id-never-shown" id="the-id-really-used">
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
     <@row class="+${styles.grid_display!}">
         <@cell columns=2>2</@cell>

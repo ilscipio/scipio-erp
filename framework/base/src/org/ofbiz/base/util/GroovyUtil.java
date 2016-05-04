@@ -186,6 +186,16 @@ public class GroovyUtil {
         }
         return result;
     }
+    
+    /**
+     * Cato: Special case of {@link #runScriptAtLocation} that uses an empty context and returns the new
+     * context (instead of script result).
+     */
+    public static Map<String, Object> runScriptAtLocationNewEmptyContext(String location, String methodName) throws GeneralException {
+        Map<String, Object> context = new HashMap<String, Object>();
+        runScriptAtLocation(location, methodName, context);
+        return context;
+    }
 
     private GroovyUtil() {}
 }

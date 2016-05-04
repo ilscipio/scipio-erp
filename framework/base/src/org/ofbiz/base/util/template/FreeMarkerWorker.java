@@ -60,6 +60,8 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
@@ -83,7 +85,17 @@ public class FreeMarkerWorker {
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
     private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
-
+    
+    /**
+     * Cato: A basic object wrapper that produces mainly simple, inline-FTL-like types.
+     */
+    private static final ObjectWrapper defaultSimpleTypeWrapper;
+    static {
+        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
+        builder.setUseAdaptersForContainers(true);
+        defaultSimpleTypeWrapper = builder.build();
+    }
+    
     /**
      * Cato: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
@@ -92,6 +104,13 @@ public class FreeMarkerWorker {
     
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
+    }
+    
+    /**
+     * Cato: Get a Freemarker simple type wrapper.
+     */
+    public static ObjectWrapper getDefaultSimpleTypeWrapper() {
+        return defaultSimpleTypeWrapper;
     }
 
     public static Configuration makeConfiguration(BeansWrapper wrapper) {

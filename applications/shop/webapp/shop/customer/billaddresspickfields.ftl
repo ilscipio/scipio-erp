@@ -25,8 +25,8 @@ under the License.
     newAddrFieldId?has_content>
 <@script>
 
-<@initItemSelectionWithNewFormScript itemFieldClass=pickFieldClass 
-    newItems=[{"fieldId":newAddrFieldId, "contentId":newAddrContentId}] />
+<@initItemSelectionWithContentFormScript itemFieldClass=pickFieldClass 
+    contentItems=[{"fieldId":newAddrFieldId, "contentId":newAddrContentId}] />
 
 </@script>
 </#if>
@@ -53,7 +53,7 @@ under the License.
   <#if hasCurrent>
 
     <#macro addrContent args={}>
-        <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
+        <b>${uiLabelMap.PartyUseCurrentAddress}:</b>
         <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
           <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
           <div>

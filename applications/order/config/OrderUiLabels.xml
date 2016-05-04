@@ -5525,7 +5525,7 @@
         <value xml:lang="zh_TW">預訂</value>
     </property>
     <property key="OrderManager">
-        <value xml:lang="de">Auftragsverwaltung Anwendung</value>
+        <value xml:lang="de">Auftragsverwaltung</value>
         <value xml:lang="en">Order Manager</value>
         <value xml:lang="es">Gestión de pedidos</value>
         <value xml:lang="fr">Gestion de Commandes</value>
@@ -5542,7 +5542,7 @@
         <value xml:lang="zh_TW">訂單管理應用程式</value>
     </property>
     <property key="OrderManagerApplication">
-        <value xml:lang="de">Auftragsverwaltung Anwendung</value>
+        <value xml:lang="de">Auftragsverwaltung</value>
         <value xml:lang="en">Order Manager Application</value>
         <value xml:lang="es">Gestión de pedidos</value>
         <value xml:lang="fr">Gestion de Commandes</value>

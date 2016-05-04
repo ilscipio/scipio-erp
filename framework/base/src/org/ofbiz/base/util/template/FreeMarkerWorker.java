@@ -97,6 +97,16 @@ public class FreeMarkerWorker {
     }
     
     /**
+     * Cato: A basic object wrapper that produces mainly simple, inline-FTL-like types, as copies.
+     */
+    private static final ObjectWrapper defaultSimpleTypeCopyingWrapper;
+    static {
+        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
+        builder.setUseAdaptersForContainers(false);
+        defaultSimpleTypeCopyingWrapper = builder.build();
+    }
+    
+    /**
      * Cato: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
      */
@@ -111,6 +121,13 @@ public class FreeMarkerWorker {
      */
     public static ObjectWrapper getDefaultSimpleTypeWrapper() {
         return defaultSimpleTypeWrapper;
+    }
+    
+    /**
+     * Cato: Get a Freemarker simple type copying wrapper.
+     */
+    public static ObjectWrapper getDefaultSimpleTypeCopyingWrapper() {
+        return defaultSimpleTypeCopyingWrapper;
     }
 
     public static Configuration makeConfiguration(BeansWrapper wrapper) {

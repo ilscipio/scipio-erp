@@ -8,7 +8,7 @@
 * Includes all other default Cato standard markup macros.
 *
 * Alongside this master include exists a global variables and styles definition file,
-* {{{htmlVariables.ftl}}}, which defines global styles used by most macros and utilities
+* {{{htmlVariables.groovy}}}, which defines global styles used by most macros and utilities
 * (currently has no HTML documentation - mostly relevant to theme writers - see source).
 *
 * NOTES:
@@ -129,7 +129,7 @@
 *************************************
 * EXTERNAL IMPORTS AND INCLUDES *
 *************************************
-* NOTE: Assumes utilities.ftl and htmlVariables.ftl included.
+* NOTE: Assumes utilities.ftl and htmlVariables.groovy included.
 -->
 
 <#-- (currently none) -->

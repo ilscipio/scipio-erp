@@ -60,13 +60,13 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_MENU_MACRO_LIB" resourceValue="component://widget/templates/htmlMenuMacroLibrary.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_TREE_MACRO_LIB" resourceValue="component://widget/templates/htmlTreeMacroLibrary.ftl" sequenceId="01"/>-->
     <!-- Cato library locations for web request render context only (frontend and backend)
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_WEB" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_WEB" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.groovy" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_WEB" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
     <!-- Cato library locations for email render context only
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_MAIL" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_MAIL" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.groovy" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_MAIL" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
     <!-- Cato library locations used when no web-specific or e-mail-specific locations specified and for any other/unrecognized render contexts 
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlVariables.groovy" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://common/webcommon/includes/cato/lib/standard/htmlTemplate.ftl" sequenceId="01"/>-->
 
     <!-- GENERAL -->

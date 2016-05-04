@@ -24,16 +24,18 @@ import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: ToSimpleRawMapMethod - Another workaround for BeansWrapper kludge.
+ * Cato: ToRawStringMethod - Prevents Ofbiz auto-escaping of string.
  */
-public class ToSimpleRawMapMethod implements TemplateMethodModelEx {
+public class ToRawStringMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleRawMapMethod.class.getName();
+    public static final String module = ToRawStringMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -41,13 +43,13 @@ public class ToSimpleRawMapMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        Object arg = args.get(0);
+        if (arg == null) { // Emulates StringUtil.wrapString
+            return null;
         }
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        ObjectWrapper objectWrapper = LangFtlUtil.getNonEscapingObjectWrapper(env);
-        return LangFtlUtil.toSimpleMapRewrapAdapters(object, objectWrapper);
+        TemplateScalarModel strModel = (TemplateScalarModel) arg;
+        String str = LangFtlUtil.getAsStringNonEscaping(strModel);
+        return new SimpleScalar(str); // Emulates Freemarker ?string built-in
     }
     
 }

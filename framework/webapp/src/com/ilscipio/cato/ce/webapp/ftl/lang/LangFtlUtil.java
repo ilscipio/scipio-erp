@@ -195,6 +195,27 @@ public abstract class LangFtlUtil {
     }
     
     /**
+     * Returns a non-escaping, simple-types-only object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
+        return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
+    }
+    
+    /**
+     * Returns a non-escaping, simple-types-only object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper(Environment env) {
+        return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
+    }    
+    
+    /**
+     * Returns a non-escaping, simple-types-only object wrapper.
+     */
+    public static ObjectWrapper getSimpleTypeNonEscapingObjectWrapper() {
+        return FreeMarkerWorker.getDefaultSimpleTypeWrapper();
+    }
+    
+    /**
      * Cato wrapper around ObjectWrapper.wrap in case extra logic is needed.
      * <p>
      * Currently leaving all to object wrapper, but may change... 
@@ -896,6 +917,7 @@ public abstract class LangFtlUtil {
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
      */
+    @Deprecated
     public static TemplateHashModel toSimpleMapRewrapAdapters(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof SimpleMapModel || object instanceof BeanModel || object instanceof DefaultMapAdapter) {
             // Permissive
@@ -931,6 +953,7 @@ public abstract class LangFtlUtil {
      * (e.g. the object wrapper used to rewrap the result).
      * Other types of maps are not altered.
      */
+    @Deprecated
     public static TemplateHashModel toSimpleMapRewrapAny(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof WrapperTemplateModel) {
             // Permissive
@@ -1341,4 +1364,95 @@ public abstract class LangFtlUtil {
             return model.getAsString();
         }
     }
+    
+    /**
+     * Generic rewrapObject abstracted implementation.
+     * <p>
+     * Rewraps objects with different wrappers.
+     * <p>
+     * curObjectWrapper should usually be gotten from environment.
+     * If targetObjectWrapper is non-null, it overrides the method's decisions for the wrapper to use
+     * for the model itself (and, if deep, for the models it returns).
+     */
+    public static Object rewrapObject(TemplateModel model, RewrapMode mode, Environment env, 
+        ObjectWrapper curObjectWrapper) throws TemplateModelException {
+        if (model instanceof TemplateHashModel) {
+            return rewrapMap((TemplateHashModel) model, mode, env, curObjectWrapper);
+        } else {
+            if (mode.simple && mode.raw && mode.deep) {
+                Object unwrapped = LangFtlUtil.unwrapAlways(model);
+                ObjectWrapper objectWrapper = LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
+                return objectWrapper.wrap(unwrapped);
+            }
+            
+            throw new TemplateModelException("Cato: rewrapObject doesn't support given object type or mode");
+        }
+    }
+    
+    public static Object rewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
+            ObjectWrapper curObjectWrapper) throws TemplateModelException {
+        if (mode.simple) {
+            if (mode.force) {
+                return alwaysRewrapMap(model, mode, env, curObjectWrapper);
+            } else {
+                if (mode.raw) {
+                    if (mode.deep) {
+                        // WARN: Here we make one VERY delicate optimization:
+                        // if the map is a simple hash, we do nothing to it.
+                        // In theory this is WRONG but it works in most practical cases.
+                        // Caller can force if it doesn't work right in his case.
+                        if (model instanceof SimpleHash) {
+                            return model;
+                        }
+                        
+                        // FIXME: Here we are forced to rewrap in most cases because Freemarker interface
+                        // does not allow inspecting which object wrapper an object is using!
+                        return alwaysRewrapMap(model, mode, env, curObjectWrapper);
+                    } else {
+                        // Can't do raw without doing deep
+                        throw new TemplateModelException("Cato: rewrapMap mode unsupported");
+                    }
+                } else {
+                    if (mode.deep) {
+                        // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
+                        // that would preserve the wrapping mode curObjectWrapper is doing.
+                        // Currently, to do deep, you must also do raw.
+                        throw new TemplateModelException("Cato: rewrapMap mode not yet implemented");
+                    } else {
+                        // Shallow re-wrap to simple, non-(necessarily-)raw map. 
+                        // This is the only case we can currently optimize...
+                        return toSimpleMap(model, curObjectWrapper);
+                    }
+                }
+            }
+            
+        } else {
+            throw new TemplateModelException("Cato: rewrapMap currently only supports simple target maps");
+        }
+    }
+    
+    public static Object alwaysRewrapMap(TemplateHashModel model, RewrapMode mode, Environment env, 
+            ObjectWrapper curObjectWrapper) throws TemplateModelException {
+        Map<?, ?> unwrapped = (Map<?, ?>) LangFtlUtil.unwrapAlways(model);
+
+        if (mode.raw) {
+            if (mode.deep) {
+                ObjectWrapper modelWrapper = LangFtlUtil.getSimpleTypeNonEscapingObjectWrapper(curObjectWrapper);
+                return modelWrapper.wrap(unwrapped);
+            } else {
+                // Can't do raw without doing deep
+                throw new TemplateModelException("Cato: rewrapMap mode unsupported");
+            }
+        } else {
+            if (mode.deep) {
+                // TODO: This mode is desirable but it requires implementing a new DefaultObjectWrapper
+                // that would preserve the wrapping mode curObjectWrapper is doing.
+                // as-is, to do deep, you must also do raw.
+                throw new TemplateModelException("Cato: rewrapMap mode not yet implemented");
+            } else {
+                return new SimpleMapModel(unwrapped, (BeansWrapper) curObjectWrapper);
+            }
+        }
+    }
+    
 }

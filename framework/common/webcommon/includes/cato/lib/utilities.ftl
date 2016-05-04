@@ -667,46 +667,6 @@ Returns empty string if no label is found
 
 <#-- 
 *************
-* rawString
-************
-Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
-
-This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
-the resulting type into a simple Freemarker string.
-
-  * Parameters *
-    str                     = ((string), required) The string to return raw.
--->
-<#-- IMPLEMENTED AS TRANSFORM
-<#function rawString str>
-  <#- ?string turns it into a basic FTL string ->
-  <#return StringUtil.wrapString(str)?string> 
-</#function>
--->
-
-<#-- 
-*************
-* htmlContentString
-************
-Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
-depending on current implementation and system policy may process the string for allowed HTML.
-
-Typically for database-stored content such as product descriptions which use limited HTML.
-
-WARN: This is NOT fully implemented and currently does the same as #rawString.
-
-  * Parameters *
-    str                     = ((string), required) The string
-    
-  * Related *
-    #rawString
--->
-<#function htmlContentString str>
-  <#return rawString(str)> 
-</#function>
-
-<#-- 
-*************
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.
@@ -1289,25 +1249,6 @@ FIXME: Auto-escaping issues
 
 <#-- 
 *************
-* rawObjectDeep
-************
-Takes any object and performs an explicit deep-unwrap, returning it in a wrapper that will never perform
-auto-escaping of strings.
-
-Generally this is very slow and for diagnostic purposes.
-
-NOTE: The result is NOT guaranteed to be a simple type. Use #toSimpleMap or other calls.
-
-  * Parameters *
-    object                  = ((object), required) The object to make raw
--->
-<#-- IMPLEMENTED AS TRANSFORM
-<#function rawObjectDeep object>
-</#function>
--->
-
-<#-- 
-*************
 * copyMap
 ************
 Performs a shallow copy of a map. 
@@ -1335,114 +1276,144 @@ NOTES:
 </#function>
 -->
 
+
+<#-- 
+*************
+* toRawString
+************
+Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+
+This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
+the resulting type into a simple Freemarker string.
+
+  * Parameters *
+    str                     = ((string), required) The string to return raw.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toRawString str>
+  <#- ?string turns it into a basic FTL string ->
+  <#return StringUtil.wrapString(str)?string> 
+</#function>
+-->
+
+<#-- 
+*************
+* rawString
+************
+Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+Alias for #toRawString (common operation).
+
+This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
+the resulting type into a simple Freemarker string.
+
+  * Parameters *
+    str                     = ((string), required) The string to return raw.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function rawString str>
+  <#- ?string turns it into a basic FTL string ->
+  <#return StringUtil.wrapString(str)?string> 
+</#function>
+-->
+
+<#-- 
+*************
+* htmlContentString
+************
+Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and 
+depending on current implementation and system policy may process the string for allowed HTML.
+
+Typically for database-stored content such as product descriptions which use limited HTML.
+
+WARN: This is NOT fully implemented and currently does the same as #rawString.
+
+  * Parameters *
+    str                     = ((string), required) The string
+    
+  * Related *
+    #rawString
+-->
+<#function htmlContentString str>
+  <#return rawString(str)> 
+</#function>
+
+<#-- 
+*************
+* rewrapObject
+************
+Takes a object and, if applicable, rewraps it with a different Freemarker wrapper.
+Used to convert complex BeansWrapper objects to simple maps and auto-HTML-escaping wrappers to non-escaping
+wrappers, either shallow or deep.
+
+This tries to avoid rewrapping unless forced by the mode or the input map.
+
+WARN: Currently this only works for maps!
+
+TODO: Lists, strings, etc.
+
+  * Parameters *
+    object                  = ((map), required) The source map
+    mode                    = (simple|simple-raw-deep|simple-force|simple-raw-deep-force, default: simple) Rewrapping mode and target wrapper type
+                              The keywords mean the following:
+                              * {{{simple}}}: convert "complex" BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
+                                but only if they are not already simple and the other options do not force it.
+                              * {{{raw}}}: the target wrapper should be free of HTML auto-escaping
+                                WARN: Currently, this forces a performance-intensive unwrap operation in all cases,
+                                    because Freemarker does not allow checking which wrapper an object is currently using.
+                              * {{{deep}}}: the wrapper select should apply to any children the object may have
+                                WARN: Currently, this forces a performance-intensive deep unwrap operation in all cases,
+                                    because Freemarker does not allow checking which wrapper an object is currently using.
+                              * {{{force}}}: advanced option: this will force re-wrapping even if the target already appears adequate.
+                              NOTE: Only the listed combinations are supported.
+                              WARN: {{{simple-raw-deep}}} uses a heuristic to avoid rewrapping simple FTL hashes. It is NOT
+                                  accurate. If problems arise, use {{{simple-raw-deep-force}}} instead.
+                              TODO?: {{{simple-deep}}} may be desirable but currently not supported.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function rewrapObject object mode="simple">
+</#function>
+-->
+
+<#-- 
+*************
+* rewrapMap
+************
+Takes a map and, if applicable, rewraps it with a different wrapper.
+Used to convert complex BeansWrapper objets to simple maps and auto-HTML-escaping wrappers to non-escaping
+wrappers, either shallow or deep.
+
+Alias for #rewrapObject.
+
+  * Related *
+    #rewrapMap
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function rewrapMap object mode="simple">
+</#function>
+-->
+
 <#-- 
 *************
 * toSimpleMap
 ************
 Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
-any copies.
+any copies. Alias for #rewrapMap(object, "simple").
 
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.
 
 NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
     called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
     is why its behavior is to leave maps alone unless they are complex bean maps.
-    Calling ?keys on this map may give escaped keys; use #mapKeys or #toSimpleRawMap.
+    Calling ?keys on this map may give escaped keys; use #mapKeys or #rewrapMap with args (object, "simple-raw").
 
   * Parameters *
     object                  = ((map), required) The source map
     
   * Related *
-    #toSimpleRawMap
+    #rewrapMap
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toSimpleMap object>
-</#function>
--->
-
-<#-- 
-*************
-* toSimpleMapAny
-************
-Takes a map wrapper of any kind and switches it to a simple map adapter instead, without performing
-any copies. Will even switch Freemarker built-ins. FOR ADVANCED USAGE AND TESTING.
-
-This function is more permissive than #toSimpleMap.
-
-If the object is not wrapper but another type of map, returns it as-is. Other types throw errors.
-
-NOTE: This only changes the complexity of the map; it does NOT prevent auto-escaping.
-
-  * Parameters *
-    object                  = ((map), required) The source map
-    
-  * Related *
-    #toSimpleMap
--->
-<#-- IMPLEMENTED AS TRANSFORM
-<#function toSimpleMapAny object>
-</#function>
--->
-
-<#-- 
-*************
-* toSimpleRawMap
-************
-Takes a bean-wrapped or simple-wrapped map or and switches it to a simple map adapter instead, 
-without performing any copies, with the new adapter having a non-escaping object wrapper.
-This bypasses screen auto-escaping for such maps.
-
-This function is more permissive than #toSimpleMap in which maps it will re-wrap.
-It will return as-is types of map it does not recognize such as simple hashes.
-
-WARN: The resulting map is inherently unsafe! Values should be escaped manually.
-
-WARN: This tries to cover the known types of maps in Ofbiz, but it does not convert any
-    map that is not based on wrappers, like simple hashes. But typically simple hashes are
-    created in FTL templates and aren't subject to escaping issues.
-
-NOTE: The auto-escaping bypass will only work properly on map types that do not already contain
-    TemplateModels internally. If TemplateModels are stored in a map from groovy, this method
-    will likely not prevent them from auto-escaping. These cases are very rare.
-
-  * Parameters *
-    object                  = ((map), required) The source map
-    
-  * Related *
-    #toSimpleMap
--->
-<#-- IMPLEMENTED AS TRANSFORM
-<#function toSimpleRawMap object>
-</#function>
--->
-
-<#-- 
-*************
-* toSimpleRawMapAny
-************
-Takes a map wrapper of any kind and switch it simple map adapter instead, without performing
-any copies. In addition, it will switch the map adapter for other types of maps to
-non-escaping maps, allowing contents of the result to be automatically spared screen
-auto-escaping. It will even rewrap built in FTL types. FOR ADVANCED USAGE AND TESTING.
-
-This function is more permissive than #toSimpleRawMap. It will even switch built in FTL types.
-
-WARN: This tries to cover the known types of maps in Ofbiz, but it does not convert any
-    map that is not based on wrappers, like simple hashes. But typically simple hashes are
-    created in FTL templates and aren't subject to escaping issues.
-
-NOTE: The auto-escaping bypass will only work properly on map types that do not already contain
-    TemplateModels internally. If TemplateModels are stored in a map from groovy, this method
-    will likely not prevent them from auto-escaping. These cases are very rare.
-
-  * Parameters *
-    object                  = ((map), required) The source map
-    
-  * Related *
-    #toSimpleRawMap
--->
-<#-- IMPLEMENTED AS TRANSFORM
-<#function toSimpleRawMapAny object>
 </#function>
 -->
 

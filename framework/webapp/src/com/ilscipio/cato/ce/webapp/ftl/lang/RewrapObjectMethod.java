@@ -23,19 +23,17 @@ import java.util.List;
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: RawStringMethod - Prevents Ofbiz auto-escaping of string.
+ * Cato: RewrapObjectMethod - Rewraps objects with different Freemarker wrappers.
  */
-public class RawStringMethod implements TemplateMethodModelEx {
+public class RewrapObjectMethod implements TemplateMethodModelEx {
 
-    public static final String module = RawStringMethod.class.getName();
+    public static final String module = RewrapObjectMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -43,13 +41,28 @@ public class RawStringMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Object arg = args.get(0);
-        if (arg == null) { // Emulates StringUtil.wrapString
-            return null;
+        if (args == null || args.size() < 1 || args.size() > 2 ) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
-        TemplateScalarModel strModel = (TemplateScalarModel) arg;
-        String str = LangFtlUtil.getAsStringNonEscaping(strModel);
-        return new SimpleScalar(str); // Emulates Freemarker ?string built-in
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        TemplateModel object = (TemplateModel) args.get(0);
+        
+        String modeStr = null;
+        TemplateScalarModel modeModel = (TemplateScalarModel) args.get(1);
+        if (modeModel != null) {
+            modeStr = modeModel.getAsString();
+        }
+        RewrapMode mode;
+        if (modeStr == null || modeStr.length() <= 0) {
+            mode = RewrapMode.SIMPLE;
+        } else {
+            mode = RewrapMode.fromString(modeStr);
+            if (mode == null) {
+                throw new TemplateModelException("Unrecognized mode: " + modeStr);
+            }
+        }
+
+        return LangFtlUtil.rewrapObject(object, mode, env, LangFtlUtil.getCurrentObjectWrapper());
     }
     
 }

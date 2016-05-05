@@ -203,12 +203,13 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
 <#-- @step main markup - theme override -->
 <#macro step_markup class="" icon="" completed=false disabled=false active=false href="" origArgs={} passArgs={} catchArgs...>
   <li class="${styles.nav_step!}<#if active> ${styles.nav_step_active!}</#if><#if disabled> ${styles.nav_step_disabled!}</#if> ${class!""}">
-    <#if href?has_content && !disabled && !active>
+    <#local showLink = href?has_content && !disabled><#-- allow link to active for clean page refresh: && !active -->
+    <#if showLink>
       <a href="${escapeFullUrl(href, 'html')}">
     </#if>
     <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${icon}</#if>"></i></#if>
     <#nested>
-    <#if href?has_content && !disabled && !active>
+    <#if showLink>
       </a>
     </#if>
   </li>

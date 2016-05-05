@@ -105,14 +105,10 @@ under the License.
       </#if>
     </#macro>
     <@addressEntry>
-    <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
-        labelContent=addrContent checked=(selectedContactMechId == contactMech.contactMechId) class="+${pickFieldClass}" />
+      <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value=contactMech.contactMechId 
+          labelContent=addrContent checked=(selectedContactMechId == contactMech.contactMechId) class="+${pickFieldClass}" />
     </@addressEntry>
   </#list>
-  </@addressList>
-    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Cato: Don't show if also showing "new" option -->
-      <@commonMsg type="info">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
-    </#if>
   <#if useNewAddr>
     <#macro addrContent args={}>
         <#--${uiLabelMap.PartyCreateNewBillingAddress}-->
@@ -131,14 +127,19 @@ under the License.
           </div>       
         </#if>
     </#macro>
-    <@addressList>
-      <@addressEntry>
-    <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
-        class="+${pickFieldClass}" id=(newAddrFieldId!) label=uiLabelMap.PartyCreateNewBillingAddress/><#--labelContent=addrContent -->
-      </@addressEntry>
-    </@addressList>
-
+    <@addressEntry ownLine=true>
+      <@commonInvField type="radio" name="${fieldNamePrefix}contactMechId" value="_NEW_" checked=(selectedContactMechId == "_NEW_") 
+          class="+${pickFieldClass}" id=(newAddrFieldId!) label=uiLabelMap.PartyCreateNewBillingAddress/><#--labelContent=addrContent -->
+    </@addressEntry>
+  </#if>
+  </@addressList>
+    
+  <#if useNewAddr>
     <@addrContent />
   </#if>
+
+    <#if !postalAddressInfos?has_content && !curContactMech?? && !useNewAddr><#-- Cato: Don't show if also showing "new" option -->
+      <@commonMsg type="info">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
+    </#if>
 </@fields>
 

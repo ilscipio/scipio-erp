@@ -18,7 +18,9 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save. -->
+<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save.
+    The controller is currently not able to redirect this back except using override view URIs, but override view URIs generally break
+    the checkout process. -->
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
 
 <#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>

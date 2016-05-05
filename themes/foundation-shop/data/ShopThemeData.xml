@@ -33,6 +33,8 @@ under the License.
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://foundation-shop-theme/includes/appbar.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://foundation-shop-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://foundation-shop-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://foundation-shop-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://foundation-shop-theme/includes/themeTemplate.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/foundation-shop-theme/images/favicon.ico" sequenceId="01"/>
 
 

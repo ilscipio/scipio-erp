@@ -133,16 +133,17 @@ if (orderId) {
         context.orderReadHelper = orh;
         orderItemShipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
         context.orderItemShipGroup = orderItemShipGroup;
-        carrierPartyId = orderItemShipGroup.carrierPartyId;
+        if (orderItemShipGroup) {
+            carrierPartyId = orderItemShipGroup.carrierPartyId;
             carrierShipmentBoxTypes = from("CarrierShipmentBoxType").where("partyId", carrierPartyId).queryList();
             if (carrierShipmentBoxTypes) {
-            context.carrierShipmentBoxTypes = carrierShipmentBoxTypes;
+                context.carrierShipmentBoxTypes = carrierShipmentBoxTypes;
             }
+        }
 
         if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
             if (shipGroupSeqId) {
                 if (!shipment) {
-    
                     // Generate the shipment cost estimate for the ship group
                     productStoreId = orh.getProductStoreId();
                     shippableItemInfo = orh.getOrderItemAndShipGroupAssoc(shipGroupSeqId);
@@ -150,7 +151,7 @@ if (orderId) {
                     shippableTotal = new Double(orh.getShippableTotal(shipGroupSeqId).doubleValue());
                     shippableWeight = new Double(orh.getShippableWeight(shipGroupSeqId).doubleValue());
                     shippableQuantity = new Double(orh.getShippableQuantity(shipGroupSeqId).doubleValue());
-                    if (orderItemShipGroup.contactMechId && orderItemShipGroup.shipmentMethodTypeId && orderItemShipGroup.carrierPartyId && orderItemShipGroup.carrierRoleTypeId) {
+                    if (orderItemShipGroup && orderItemShipGroup.contactMechId && orderItemShipGroup.shipmentMethodTypeId && orderItemShipGroup.carrierPartyId && orderItemShipGroup.carrierRoleTypeId) {
                         shipmentCostEstimate = packSession.getShipmentCostEstimate(orderItemShipGroup, productStoreId, shippableItemInfo, shippableTotal, shippableWeight, shippableQuantity);
                         context.shipmentCostEstimateForShipGroup = shipmentCostEstimate;
                     }

@@ -306,6 +306,7 @@ under the License.
                                     </@tr>
                                 </@thead>
                                 <#list packageSeqIds as packageSeqId>
+                                    ${Static["org.ofbiz.base.util.Debug"].log("packageSeqId =============> " + packageSeqId)}
                                     <@tr>
                                         <@td>                                            
                                             <#assign packageWeightLabel>${uiLabelMap.ProductPackage} ${packageSeqId}</#assign>

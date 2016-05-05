@@ -17,13 +17,14 @@
  * under the License.
  */
 
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.shipment.verify.VerifyPickSession;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilProperties
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityUtil
+import org.ofbiz.order.order.OrderReadHelper
+import org.ofbiz.shipment.verify.VerifyPickSession
 
 verifyPickSession = session.getAttribute("verifyPickSession");
 if (!verifyPickSession) {
@@ -91,12 +92,16 @@ context.picklistBinId = picklistBinId;
 context.isOrderStatusApproved = false;
 
 if (orderId) {
+    Debug.log("orderId =============> " + orderId);
     orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
     if (orderHeader) {
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         context.orderId = orderId;
         context.orderHeader = orderHeader;
         context.orderReadHelper = orh;
+        
+        shipments = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryList();
+        context.shipments = shipments;
         
         orderItemShipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
         context.orderItemShipGroup = orderItemShipGroup;
@@ -107,10 +112,9 @@ if (orderId) {
             context.isOrderStatusApproved = true;
             if (shipGroupSeqId) {
                 productStoreId = orh.getProductStoreId();
-                context.productStoreId = productStoreId;
-                shipments = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryList();
-                if (shipments) {
-                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorAllItemsOfOrderAreAlreadyVerified", [orderId : orderId], locale));
+                context.productStoreId = productStoreId;                
+                if (shipments) {                  
+                    request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorAllItemsOfOrderAreAlreadyVerified", [orderId : orderId], locale));
                 }
             } else {
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorNoShipGroupSequenceIdFoundCannotProcess", locale));

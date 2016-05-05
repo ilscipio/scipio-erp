@@ -80,9 +80,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
              </#if>
              <@td>${partyName.groupName!}${partyName.lastName!} ${partyName.firstName!} ${partyName.middleName!}
              <#if security.hasPermission("PARTYMGR_VIEW", session) || security.hasPermission("PARTYMGR_ADMIN", session)>
-               [<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyId}</@ofbizInterWebappUrl>">${partyId}</a>]
+               [<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyId!}</@ofbizInterWebappUrl>">${partyId!}</a>]
              <#else>
-               [${partyId}]
+               [${partyId!}]
              </#if>
              </@td>
              <@td><@ofbizCurrency amount=(payment.amount!) isoCode=(currencyUomId!) /></@td>

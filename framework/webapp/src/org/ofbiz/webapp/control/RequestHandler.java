@@ -1973,7 +1973,18 @@ public class RequestHandler {
      * Cato: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
      */
+    public static boolean controllerHasRequestUriDirect(HttpServletRequest request, String uri) {
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return rh.controllerHasRequestUriDirect(uri);
+    }
+    
+    /**
+     * Cato: Utility method that can be used for security checks to check if controller of current webapp
+     * has the specified URI and allows direct/public access.
+     */
     public boolean controllerHasRequestUriDirect(String uri) {
+        
+        
         try {
             ConfigXMLReader.RequestMap requestMap = getControllerConfig().getRequestMapMap().get(uri);
             

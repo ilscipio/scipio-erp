@@ -509,11 +509,11 @@ under the License.
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="pickerPartyId" type="String" mode="IN" optional="true"/>
-        <attribute name="productMap" type="Map" string-map-prefix="prd_" mode="IN" optional="true"/>
-        <attribute name="originGeoIdMap" type="Map" string-map-prefix="geo_" mode="IN" optional="true"/>
-        <attribute name="quantityMap" type="Map" string-map-prefix="qty_" mode="IN" optional="true"/>
-        <attribute name="selectedMap" type="Map" string-map-prefix="sel_" mode="IN" optional="true"/>
-        <attribute name="itemMap" type="Map" string-map-prefix="ite_" mode="IN" optional="true"/>
+        <attribute name="prd" type="String" mode="IN" optional="true"/>
+        <attribute name="geo" type="String" mode="IN" optional="true"/>
+        <attribute name="qty" type="String" mode="IN" optional="true"/>
+        <!-- <attribute name="sel" type="String" mode="IN" optional="true"/> -->
+        <attribute name="ite" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cancelAllRows" engine="java"

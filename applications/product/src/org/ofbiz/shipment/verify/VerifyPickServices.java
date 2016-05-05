@@ -57,17 +57,32 @@ public class VerifyPickServices {
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
-        Map<String, ?> selectedMap = UtilGenerics.checkMap(context.get("selectedMap"));
-        Map<String, String> itemMap = UtilGenerics.checkMap(context.get("itemMap"));
-        Map<String, String> productMap = UtilGenerics.checkMap(context.get("productMap"));
-        Map<String, String> originGeoIdMap = UtilGenerics.checkMap(context.get("originGeoIdMap"));
-        Map<String, String> quantityMap = UtilGenerics.checkMap(context.get("quantityMap"));
-        if (selectedMap != null) {
-            for (String rowKey : selectedMap.keySet()) {
-                String orderItemSeqId = itemMap.get(rowKey);
-                String productId = productMap.get(rowKey);
-                String originGeoId = originGeoIdMap.get(rowKey);
-                String quantityStr = quantityMap.get(rowKey);
+//        String selectedMap = null;
+//        if (UtilValidate.isNotEmpty(context.get("selectedMap"))) {
+//            selectedMap = (String) context.get("selectedMap");
+//        }
+        String orderItemSeqId = null;
+        if (UtilValidate.isNotEmpty(context.get("ite"))) {
+            orderItemSeqId = (String) context.get("ite");
+        }
+        String productId = null;
+        if (UtilValidate.isNotEmpty(context.get("prd"))) {
+            productId = (String) context.get("prd");
+        }
+        String originGeoId = null;
+        if (UtilValidate.isNotEmpty(context.get("geo"))) {
+            originGeoId = (String) context.get("geo");
+        }
+        String quantityStr = null;
+        if (UtilValidate.isNotEmpty(context.get("qty"))) {
+            quantityStr = (String) context.get("qty");
+        }
+//        if (selectedMap != null) {
+//            for (String rowKey : selectedMap.keySet()) {
+//                String orderItemSeqId = itemMap.get(rowKey);
+//                String productId = productMap.get(rowKey);
+//                String originGeoId = originGeoIdMap.get(rowKey);
+//                String quantityStr = quantityMap.get(rowKey);
                 if (UtilValidate.isNotEmpty(quantityStr)) {
                     BigDecimal quantity = new BigDecimal(quantityStr);
                     if (quantity.compareTo(ZERO) > 0) {
@@ -78,8 +93,8 @@ public class VerifyPickServices {
                         }
                     }
                 }
-            }
-        }
+//            }
+//        }
         return ServiceUtil.returnSuccess();
     }
 

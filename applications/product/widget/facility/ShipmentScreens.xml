@@ -370,12 +370,13 @@ under the License.
     <screen name="VerifyPick">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="ProductVerifyPick"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="facilityId" value="${parameters.facilityId}"/>
                 <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="VerifyPick"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/VerifyPick.groovy"/>
                 <set field="facilityMenu" value="FacilityPickingSideBar" />
+                <set field="title" value="${uiLabelMap.ProductVerifyPick} ${facilityId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">

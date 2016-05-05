@@ -698,7 +698,7 @@ under the License.
 
     <request-map uri="processBulkVerifyPick">
         <security https="true" auth="true"/>
-        <event type="service" invoke="verifyBulkItem"/>
+        <event type="service-multi" invoke="verifyBulkItem"/>
         <response name="success" type="view" value="VerifyPick"/>
         <response name="error" type="view" value="VerifyPick"/>
     </request-map>

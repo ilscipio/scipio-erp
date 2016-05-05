@@ -1173,6 +1173,7 @@ under the License.
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
+        <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="updateEftAccount">

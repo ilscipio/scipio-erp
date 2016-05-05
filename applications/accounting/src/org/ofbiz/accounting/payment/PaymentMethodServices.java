@@ -51,7 +51,9 @@ public class PaymentMethodServices {
 
     public final static String module = PaymentMethodServices.class.getName();
     public final static String resource = "AccountingUiLabels";
-    public static final String resourceError = "AccountingUiLabels";
+    // Cato: Fix wrong error resource!
+    //public static final String resourceError = "AccountingUiLabels";
+    public static final String resourceError = "AccountingErrorUiLabels";
 
     /**
      * Deletes a PaymentMethod entity according to the parameters passed in the context
@@ -715,7 +717,8 @@ public class PaymentMethodServices {
         newEa.set("accountNumber", context.get("accountNumber"));
         newEa.set("nameOnAccount", context.get("nameOnAccount"));
         newEa.set("companyNameOnAccount", context.get("companyNameOnAccount"));
-        newEa.set("contactMechId", context.get("contactMechId"));
+        // Cato: Only set this below if not _NEW_
+        //newEa.set("contactMechId", context.get("contactMechId"));
 
         newPm.set("paymentMethodId", newPmId);
         newPm.set("paymentMethodTypeId", "EFT_ACCOUNT");
@@ -724,7 +727,12 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (UtilValidate.isNotEmpty(contactMechId)) {
+        // Cato: Ignore if _NEW_
+        //if (UtilValidate.isNotEmpty(contactMechId)) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+            // Cato: Only set this if not _NEW_
+            newEa.set("contactMechId", context.get("contactMechId"));
+            
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 

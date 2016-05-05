@@ -44,9 +44,9 @@ if (cart) {
 checkOutPaymentIdSet = [] as Set;
 if (cart) {
     if (cart.getPaymentMethodIds()) {
-        checkOutPaymentIdList.addAll(cart.getPaymentMethodIds());
+        checkOutPaymentIdSet.addAll(cart.getPaymentMethodIds());
     } else if (cart.getPaymentMethodTypeIds()) {
-        checkOutPaymentIdList.addAll(cart.getPaymentMethodTypeIds());
+        checkOutPaymentIdSet.addAll(cart.getPaymentMethodTypeIds());
     }
 }
 context.checkOutPaymentIdSet = checkOutPaymentIdSet;

@@ -2330,6 +2330,17 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
     }
     
+    /**
+     * Cato: Get all shipping contact mech IDs.
+     */
+    public List<String> getAllShippingContactMechId() {
+        List<String> res = new ArrayList<String>(shipInfo.size());
+        for (CartShipInfo info : this.shipInfo) {
+            res.add(info.getContactMechId());
+        }
+        return res;
+    }
+    
     /** Returns the shipping contact mech id. */
     public String getShippingContactMechId(int idx) {
         CartShipInfo csi = this.getShipInfo(idx);

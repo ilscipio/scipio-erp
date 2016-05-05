@@ -192,3 +192,16 @@ footer {
     margin-right: auto;
     text-align:center;
 }
+
+/*Specific elements*/
+.address-list .address-entry {
+    display: inline-block;
+    vertical-align: top;
+    width: 20em;
+    margin-bottom: 1em;
+}
+
+.address-list .address-entry-ownline {
+    display: block;
+}
+

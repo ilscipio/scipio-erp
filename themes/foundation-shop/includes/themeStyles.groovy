@@ -21,8 +21,11 @@ GroovyUtil.runScriptAtLocation("component://common/webcommon/includes/cato/lib/s
 
 context.styles.putAll([
     
-    "TEST" : "SDFSDFSDF",
-    
+  /* Specific display elements */
+    /* Address picker */
+    "address_list" : "address-list",
+    "address_entry" : "address-entry",
+    "address_entry_ownline" : "address-entry-ownline",
     
   /* Always declare last */
     "dummy" : ""

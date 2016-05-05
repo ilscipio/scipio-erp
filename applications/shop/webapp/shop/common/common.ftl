@@ -195,15 +195,16 @@ jQuery(document).ready(function() {
 </#macro>
 
 <#macro addressList>
+  <#-- NOTE: These are currently shop-theme-specific styles -->
   <#-- Use simple inline-blocks for this... -->
-  <div>
+  <div class="${styles.address_list!}">
     <#nested>
   </div>
 </#macro>
 
-<#macro addressEntry>
+<#macro addressEntry ownLine=false>
   <#-- Use simple inline-blocks for this... -->
-  <div style="display:inline-block; vertical-align:top; width:20em; margin-bottom:1em;"><#-- FIXME: Unhardcode -->
+  <div class="${styles.address_entry!}<#if ownLine> ${styles.address_entry_ownline!}</#if>">
     <#nested>
   </div>
 </#macro>

@@ -63,28 +63,33 @@
 
 <#-- Generic javascript for radios that have a "new item" option that should display content when radio selected 
     WARN: JS callbacks are highly coupled with macro -->
-<#macro initItemSelectionWithContentFormScript itemFieldClass contentItems=[] 
+<#macro initItemSelectionWithContentFormScript itemFieldClass contentItems=[]
     updateCallbackPerElemJs="" updateCallbackPreVisibJs="" updateCallbackPostVisibJs="">
 
 if (typeof getCatoFieldCheckElems === 'undefined') {
     <#-- returns radio and/or checkbox with given class -->
-    function getCatoFieldCheckElems(fieldClass) {
+    function getCatoFieldCheckElemsByClass(fieldClass) {
         <#-- NOTE: alt markup support -->
         return jQuery.merge(jQuery('input.'+fieldClass), jQuery('.'+fieldClass+' input'))
     }
 }  
   
 jQuery(document).ready(function() {
-    var allItems = getCatoFieldCheckElems('${escapePart(itemFieldClass, 'js')}');
+    var allItems = getCatoFieldCheckElemsByClass('${escapePart(itemFieldClass, 'js')}');
     
     var contentItemMap = {
       <#list contentItems as item>
-        "${escapePart(item.fieldId, 'js')}" : "${escapePart(item.contentId, 'js')}"<#if item_has_next>, </#if>
+        "${escapePart(item.fieldId, 'js')}" : <@objectAsScript lang="js" object=item />,
       </#list>
     };
     
     var updateItemVisibility = function(event) {
         var elem = jQuery(this);
+        var isTargetElem = false;
+        if (elem.is(":checked")) {
+            isTargetElem = true;
+        }
+        
         var fieldIdShowMap = {}; <#-- for callbacks -->
         var fieldIdHideMap = {};
         var contentIdShowMap = {};
@@ -92,27 +97,43 @@ jQuery(document).ready(function() {
         allItems.each(function(i, e) {
             e = jQuery(e);
             var eid = e.attr('id');
-            var cid = contentItemMap[eid];
-            if (e.is(":checked")) {
-                contentIdShowMap[cid] = jQuery('#'+cid);
-                fieldIdShowMap[eid] = e;
-            } else {
-                contentIdHideMap[cid] = jQuery('#'+cid);
-                fieldIdHideMap[eid] = e;
+            if (contentItemMap[eid] && contentItemMap[eid].contentId) {
+                var cid = contentItemMap[eid].contentId;
+                if (e.is(":checked")) {
+                    contentIdShowMap[cid] = jQuery('#'+cid);
+                    fieldIdShowMap[eid] = e;
+                } else if (contentItemMap[eid].noHideContent !== true) {
+                    contentIdHideMap[cid] = jQuery('#'+cid);
+                    fieldIdHideMap[eid] = e;
+                }
             }
             ${rawString(updateCallbackPerElemJs)}
         });
         ${rawString(updateCallbackPreVisibJs)}
         jQuery.each(contentIdHideMap, function(k, v) {
-            if (v) {
-                v.hide();
+            if (v && v.is(':visible')) {
+                v.fadeOut('fast');
             }
         });
         jQuery.each(contentIdShowMap, function(k, v) {
-            if (v) {
-                v.show();
+            if (v && !v.is(':visible')) {
+                v.fadeIn('fast');
             }
         });
+        <#-- FIXME: does not work: focus on the content of the last one clicked
+        if (isTargetElem) {
+            var eid = elem.attr('id');
+            if (contentItemMap[eid] && contentItemMap[eid].contentId) {
+                var cid = contentItemMap[eid].contentId;
+                var elemContent = contentIdShowMap[cid];
+                if (elemContent) {
+                    elemContent.show(function() {
+                        elemContent.focus();
+                    });
+                }
+            }
+        }
+        -->
         ${rawString(updateCallbackPostVisibJs)}
     };
 

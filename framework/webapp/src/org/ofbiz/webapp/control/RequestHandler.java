@@ -1968,4 +1968,22 @@ public class RequestHandler {
             return false;
         }
     }
+    
+    /**
+     * Cato: Utility method that can be used for security checks to check if controller of current webapp
+     * has the specified URI and allows direct/public access.
+     */
+    public boolean controllerHasRequestUriDirect(String uri) {
+        try {
+            ConfigXMLReader.RequestMap requestMap = getControllerConfig().getRequestMapMap().get(uri);
+            
+            if (requestMap != null && requestMap.securityDirectRequest) {
+                return true;
+            }
+            
+        } catch (Exception e) {
+            ;
+        }
+        return false;
+    }
 }

@@ -886,11 +886,13 @@ Specific version of @elemAttribStr, similar to @commonElemAttribStr but specific
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if><#t/>
         <#if name?has_content> name="${name?html}"</#if> value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#lt/>
       <#if labelPosition != "before">${labelMarkup}</#if>
+      <#-- FIXME: Should really have a better way to do this -->
+      <#-- NOTE: Currently, the br must be inside the span, as long as this is not fixed -->
+      <#local sepClass = "">
+      <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
+      <#local sepClass = addClassArg(sepClass, inlineClass)>
+      <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     </span>
-    <#local sepClass = "">
-    <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
-    <#local sepClass = addClassArg(sepClass, inlineClass)>
-    <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     <#if id?has_content>
       <#local currentId = id + "_" + (item_index + 2)?string>
     </#if>

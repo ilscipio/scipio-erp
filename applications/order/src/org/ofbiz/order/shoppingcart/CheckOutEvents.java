@@ -116,7 +116,8 @@ public class CheckOutEvents {
             //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
             String shippingContactMechId;
             try {
-                Map<String, Object> contactMechResult = getCheckShipContactMechIdOrCreateNew(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+                shippingContactMechId = getRequestAttribOrParam(request, "shipping_contact_mech_id");
+                Map<String, Object> contactMechResult = checkShipContactMechIdForNew(request, shippingContactMechId, "new_ship_addr_prefix");
                 if (ServiceUtil.isSuccess(contactMechResult)) {
                     shippingContactMechId = (String) contactMechResult.get("contactMechId");
                 } else {
@@ -385,8 +386,24 @@ public class CheckOutEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         //Locale locale = UtilHttp.getLocale(request);
         Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
-        String[] paymentMethods = request.getParameterValues("checkOutPaymentId");
-
+        
+        // Cato: Allow override via request attribs
+        String[] paymentMethods;
+        if (request.getAttribute("checkOutPaymentId") != null) {
+            Object copid = request.getAttribute("checkOutPaymentId");
+            if (copid instanceof String) {
+                paymentMethods = new String[]{ (String) copid };
+            } else if (copid instanceof List) {
+                paymentMethods = (UtilGenerics.<String>checkList(copid)).toArray(new String[]{});
+            } else {
+                Debug.logError("Cato: checkOutPaymentId request attrib was neither string nor list; treating as null", module);
+                //paymentMethods = request.getParameterValues("checkOutPaymentId");
+                paymentMethods = null;
+            }
+        } else {
+            paymentMethods = request.getParameterValues("checkOutPaymentId");
+        }
+        
         if (UtilValidate.isNotEmpty(request.getParameter("issuerId"))) {
             request.setAttribute("issuerId", request.getParameter("issuerId"));
         }
@@ -398,8 +415,8 @@ public class CheckOutEvents {
                 Map<String, Object> paymentMethodInfo = FastMap.newInstance();
 
                 // Cato: Allow inlined address creation
-                String paymentMethodId;
-                Map<String, Object> payMethResult = getCheckPaymentMethodIdOrCreateNew(request, "checkOutPaymentId", "newCreditCardPrefix", "newEftAccountPrefix");
+                String paymentMethodId = paymentMethods[i];
+                Map<String, Object> payMethResult = checkPaymentMethodIdForNew(request, paymentMethodId, "newCreditCardPrefix", "newEftAccountPrefix");
                 if (ServiceUtil.isSuccess(payMethResult)) {
                     paymentMethodId = (String) payMethResult.get("paymentMethodId");
                     // SPECIAL CASE: paymentMethodId may be null or empty, in which case we skip
@@ -490,7 +507,8 @@ public class CheckOutEvents {
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
         try {
-            Map<String, Object> contactMechResult = getCheckShipContactMechIdOrCreateNew(request, "shipping_contact_mech_id", "new_ship_addr_prefix");
+            shippingContactMechId = getRequestAttribOrParam(request, "shipping_contact_mech_id");
+            Map<String, Object> contactMechResult = checkShipContactMechIdForNew(request, shippingContactMechId, "new_ship_addr_prefix");
             if (ServiceUtil.isSuccess(contactMechResult)) {
                 shippingContactMechId = (String) contactMechResult.get("contactMechId");
             } else {
@@ -1354,28 +1372,26 @@ public class CheckOutEvents {
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
-    public static Map<String, Object> getCheckShipContactMechIdOrCreateNew(HttpServletRequest request, String paramName, String prefixParamName) throws GeneralException {
-        // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
-        String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
-        
-        // FIXME: VALIDATION IS INCOMPLETE
-        MapValidator validator = null;
-        String serviceName;
-        String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
-        Map<String, Object> overrideParams = UtilMisc.toMap("setBillingPurpose", null);
-
-        // We can only set either setShippingPurpose or contactMechPurposeTypeId here
-        if ("Y".equals(setShippingPurpose)) {
-            overrideParams.put("setShippingPurpose", "Y");
-            overrideParams.put("contactMechPurposeTypeId", null);
-        } else {
-            overrideParams.put("setShippingPurpose", null);
-            overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
-        }
-        String contactMechId = getRequestAttribOrParam(request, paramName);
-
-        
+    public static Map<String, Object> checkShipContactMechIdForNew(HttpServletRequest request, String contactMechId, String prefixParamName) throws GeneralException {
         if ("_NEW_".equals(contactMechId)) {
+            // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
+            String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
+            
+            // FIXME: VALIDATION IS INCOMPLETE
+            MapValidator validator = null;
+            String serviceName;
+            String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
+            Map<String, Object> overrideParams = UtilMisc.toMap("setBillingPurpose", null);
+
+            // We can only set either setShippingPurpose or contactMechPurposeTypeId here
+            if ("Y".equals(setShippingPurpose)) {
+                overrideParams.put("setShippingPurpose", "Y");
+                overrideParams.put("contactMechPurposeTypeId", null);
+            } else {
+                overrideParams.put("setShippingPurpose", null);
+                overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+            }
+            
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1385,24 +1401,25 @@ public class CheckOutEvents {
             
             validator = PostalAddressValidator.getInstance(request);
             serviceName = "createPostalAddressAndPurposes";
+            
+            
+            Map<String, Object> servResult = runServiceFromParams(request, prefixParamName, serviceName, overrideParams, validator);
+            
+            if (!ServiceUtil.isSuccess(servResult)) {
+                Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
+                return servResult;
+            } else {
+                contactMechId = (String) servResult.get("contactMechId");
+            }
+            
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("contactMechId", contactMechId);
+            return result;
         } else {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
             return result;
         }
-        
-        Map<String, Object> servResult = runServiceFromParams(request, paramName, prefixParamName, serviceName, overrideParams, validator);
-        
-        if (!ServiceUtil.isSuccess(servResult)) {
-            Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
-            return servResult;
-        } else {
-            contactMechId = (String) servResult.get("contactMechId");
-        }
-        
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        result.put("contactMechId", contactMechId);
-        return result;
     }
     
     /**
@@ -1414,16 +1431,15 @@ public class CheckOutEvents {
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
-    public static Map<String, Object> getCheckPaymentMethodIdOrCreateNew(HttpServletRequest request, String paramName, 
+    public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
             String ccPrefixParamName, String eftPrefixParamName) throws GeneralException {
         
-        // FIXME: VALIDATION IS INCOMPLETE
+        // FIXME: VALIDATION INCOMPLETE
         MapValidator validator = null;
         String serviceName;
         Map<String, Object> overrideParams = new HashMap<String, Object>();
         String prefixParamName;
-        
-        String paymentMethodId = getRequestAttribOrParam(request, paramName);
+
         if ("_NEW_CREDIT_CARD_".equals(paymentMethodId)) {  
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
@@ -1480,7 +1496,7 @@ public class CheckOutEvents {
             return result;
         }
         
-        Map<String, Object> servResult = runServiceFromParams(request, paramName, prefixParamName, serviceName, overrideParams, validator);
+        Map<String, Object> servResult = runServiceFromParams(request, prefixParamName, serviceName, overrideParams, validator);
         
         if (!ServiceUtil.isSuccess(servResult)) {
             Debug.logInfo("Could not create new pay method during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
@@ -1500,7 +1516,7 @@ public class CheckOutEvents {
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
-    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramName, String prefixParamName, 
+    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String prefixParamName, 
             String serviceName, Map<String, Object> overrideParams, MapValidator paramValidator) throws GeneralException {
         String paramPrefix = getRequestAttribOrParamPrefix(request, prefixParamName);
         

@@ -459,7 +459,9 @@ public class CheckOutHelper {
         Map<String, Object> result = new HashMap<String, Object>();
         String errMsg = null;
         // handle gift card payment
-        if (params.get("addGiftCard") != null) {
+        // Cato: This is too sensitive. Make a check for "Y" instead.
+        //if (params.get("addGiftCard") != null) {
+        if ("Y".equals(params.get("addGiftCard"))) {
             String gcNum = (String) params.get("giftCardNumber");
             String gcPin = (String) params.get("giftCardPin");
             String gcAmt = (String) params.get("giftCardAmount");

@@ -35,6 +35,21 @@ function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
         form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
+        
+        <#-- Cato: must process some checkboxes -->
+        if (jQuery('#newCreditCard_saveToAccount').is(":checked")) {
+            jQuery('#singleUsePayment__NEW_CREDIT_CARD_').val("N");
+        } else {
+            jQuery('#singleUsePayment__NEW_CREDIT_CARD_').val("Y");
+        }
+        
+        <#-- Cato: must process some checkboxes -->
+        if (jQuery('#newEftAccount_saveToAccount').is(":checked")) {
+            jQuery('#singleUsePayment__NEW_EFT_ACCOUNT_').val("N");
+        } else {
+            jQuery('#singleUsePayment__NEW_EFT_ACCOUNT_').val("Y");
+        }
+        
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
@@ -125,10 +140,20 @@ jQuery(document).ready(function(){
 <@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
   <p>(NOTE: all buttons above to be removed)</p><#-- TODO -->
 
-  <#-- Cato: allow remember via params first, over stored -->
-  <#-- FIXME: selectedCheckOutPaymentId doesn't work, checkOutPaymentId may have multiple values!!! -->
-  <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentId!"">
-  <#assign selectedBillingAccountId = parameters.billingAccountId!selectedBillingAccountId!"">
+  <#-- Cato: allow remember form filled via parameters first, over stored -->
+  <#-- NOTE: parameters.checkOutPaymentId may already be a list -->
+  <#-- FIXME?: There is no real verification of correctness of exclusivity of the payment methods here... -->
+  <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentIdList!"">
+  <#if selectedCheckOutPaymentId?has_content>
+    <#if selectedCheckOutPaymentId?is_enumerable>
+      <#assign selectedCheckOutPaymentIdList = selectedCheckOutPaymentId>
+    <#else>
+      <#assign selectedCheckOutPaymentIdList = [selectedCheckOutPaymentId?string]>
+    </#if>
+  <#else>
+    <#assign selectedCheckOutPaymentIdList = []>
+  </#if>
+  <#assign selectedBillingAccountId = (parameters.billingAccountId!selectedBillingAccountId!"")?string>
 
   <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
     <input type="hidden" name="checkoutpage" value="payment" />
@@ -162,28 +187,28 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#-- ${uiLabelMap.OrderPaymentOfflineCheckMoney} -->
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_OFFLINE", "contentId":""})>
-            <@field type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == selectedCheckOutPaymentId) 
+            <@field type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_OFFLINE")) 
               class="+pay-select-radio pay-select-field" label="${getLabel('PaymentMethodType.description.EXT_OFFLINE', 'AccountingEntityLabels')} (${uiLabelMap.OrderMoneyOrder})"/>
           </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_COD", "contentId":""})>
-            <@field type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == selectedCheckOutPaymentId) 
+            <@field type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_COD")) 
               class="+pay-select-radio pay-select-field" label="${getLabel('PaymentMethodType.description.EXT_COD', 'AccountingEntityLabels')} (${uiLabelMap.OrderCOD})"/>
           </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_WORLDPAY", "contentId":""})>
-            <@field type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == selectedCheckOutPaymentId) 
+            <@field type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_WORLDPAY")) 
               class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithWorldPay />
           </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_PAYPAL", "contentId":""})>
-            <@field type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == selectedCheckOutPaymentId) 
+            <@field type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_PAYPAL")) 
               class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithPayPal />
           </#if>
         </#if>
@@ -191,7 +216,7 @@ jQuery(document).ready(function(){
           <#assign methodLabel = uiLabelMap.AccountingPayWithiDEAL>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_IDEAL", "contentId":"issuers"})>
-            <@field type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == selectedCheckOutPaymentId) 
+            <@field type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_IDEAL")) 
               class="+pay-select-radio pay-select-field" label=methodLabel />
           </#if>
           <#if showDetails>
@@ -219,7 +244,7 @@ jQuery(document).ready(function(){
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"creditcardcontent_${paymentMethod.paymentMethodId}"})>
                <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
-                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) 
+                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                   class="+pay-select-radio pay-select-field" label=methodLabel />
               </#if>
               <#if showDetails>
@@ -257,11 +282,11 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newCreditCard", "contentId":"newcreditcardcontent"})>
             <@field type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" labelContent=payMethContent 
-              checked=("_NEW_CREDIT_CARD_" == selectedCheckOutPaymentId) class="+pay-select-radio pay-select-field" label=methodLabel />
+              checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_")) class="+pay-select-radio pay-select-field" label=methodLabel />
           </#if>
           <#if showDetails>
             <@section containerId="newcreditcardcontent" containerClass="+new-item-selection-content" 
-                containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard><#-- let JS do the following (there is no point; even if do it, still need JS for page refresh): <#if ("_NEW_CREDIT_CARD_" != selectedCheckOutPaymentId)> style="display:none;"</#if> -->
+                containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard><#-- let JS do the following (there is no point; even if do it, still need JS for page refresh): <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_"))> style="display:none;"</#if> -->
               <input type="hidden" name="newCreditCardPrefix" value="newCreditCard_" />
               
               <#-- Cato: FIELDS BASED ON editcreditcard.ftl -->
@@ -300,9 +325,10 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <#-- Cato: TODO: this would be related to "singleUsePayment", but currently functionality is unclear
-                <@field type="checkbox" checkboxType="simple-standard" name="newCreditCard_save" value="Y" checked=((parameters.newCreditCard_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
-                -->
+                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <@field type="checkbox" checkboxType="simple-standard" id="newCreditCard_saveToAccount" name="newCreditCard_saveToAccount" value="Y" 
+                    checked=((parameters.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
+                <input type="hidden" id="singleUsePayment__NEW_CREDIT_CARD_" name="singleUsePayment__NEW_CREDIT_CARD_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
@@ -321,7 +347,7 @@ jQuery(document).ready(function(){
               <#assign methodLabel = "${uiLabelMap.AccountingEFTAccount}: ${eftAccount.bankName!}: ${eftAccount.accountNumber!}">
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"eftaccountcontent_${paymentMethod.paymentMethodId}"})>
-                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == selectedCheckOutPaymentId) 
+                <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
                   class="+pay-select-radio pay-select-field" label=methodLabel />
               </#if>
               <#if showDetails>
@@ -338,12 +364,12 @@ jQuery(document).ready(function(){
           <#assign methodLabel>${uiLabelMap.AccountingEFTAccount}: <strong>${uiLabelMap.CommonNew}</strong></#assign>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newEftAccount", "contentId":"neweftaccountcontent"})>
-            <@field type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" checked=("_NEW_EFT_ACCOUNT_" == selectedCheckOutPaymentId)
+            <@field type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))
               class="+pay-select-radio pay-select-field" label=methodLabel />
           </#if>
           <#if showDetails>
             <@section containerId="neweftaccountcontent" containerClass="+new-item-selection-content" 
-                containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount><#-- let JS do it: <#if ("_NEW_EFT_ACCOUNT_" != selectedCheckOutPaymentId)> style="display:none;"</#if> -->
+                containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount><#-- let JS do it: <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))> style="display:none;"</#if> -->
               <input type="hidden" name="newEftAccountPrefix" value="newEftAccount_" />
               
               <#-- Cato: FIELDS BASED ON editeftaccount.ftl -->
@@ -372,9 +398,10 @@ jQuery(document).ready(function(){
               </@field>
 
               <#if userHasAccount>
-                <#-- Cato: TODO: this would be related to "singleUsePayment", but currently functionality is unclear
-                <@field type="checkbox" checkboxType="simple-standard" name="newEftAccount_save" value="Y" checked=((parameters.newEftAccount_save!) == "Y") label="Save to Account"/> <#- TODO: Localize ->
-                -->
+                <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
+                <@field type="checkbox" checkboxType="simple-standard" id="newEftAccount_saveToAccount" name="newEftAccount_saveToAccount" 
+                    value="Y" checked=((parameters.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
+                <input type="hidden" id="singleUsePayment__NEW_EFT_ACCOUNT_" name="singleUsePayment__NEW_EFT_ACCOUNT_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
@@ -421,14 +448,14 @@ jQuery(document).ready(function(){
                     class="+pay-select-checkbox pay-select-field" label=methodLabel />
                 </#if>
               </#if>
-              <#if showDetails && showSupplemental><#-- only show last -->
+              <#if showDetails && showSupplemental>
                 <@section containerId="billingaccountcontent${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingBillingAccount>
                   <@field type="select" name="billingAccountId" id="billingAccountId${primSupplSuffix}" label=uiLabelMap.FormFieldTitle_billingAccountId>
                     <option value=""></option>
                     <#list billingAccountList as billingAccount>
                       <#assign availableAmount = billingAccount.accountBalance>
                       <#assign accountLimit = billingAccount.accountLimit>
-                      <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>><#rt>
+                      <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == selectedBillingAccountId> selected="selected"</#if>><#rt>
                         <#lt>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <#rt>
                         <#lt><@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <#rt>
                         <#lt><@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
@@ -453,10 +480,10 @@ jQuery(document).ready(function(){
                 <#if showSelect>
                   <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "contentId":"giftcardcontent_${paymentMethod.paymentMethodId}${primSupplSuffix}"})>
                   <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" 
-                    class="+pay-select-checkbox pay-select-field" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) label=methodLabel />
+                    class="+pay-select-checkbox pay-select-field" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) label=methodLabel />
                 </#if>
               </#if>
-              <#if showDetails>
+              <#if showDetails && showSupplemental>
                 <@section containerId="giftcardcontent_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
                   <p>${methodLabel}</p>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
@@ -494,11 +521,11 @@ jQuery(document).ready(function(){
             <#if showSelect>
               <#-- MUST SUBMIT EMPTY VALUE FOR checkOutPaymentId -->
               <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_addGiftCard${primSupplSuffix}", "contentId":"newgiftcardcontent${primSupplSuffix}"})>
-              <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="checkOutPaymentId" value="" checked=((parameters.addGiftCard!) == "Y") 
+              <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="checkOutPaymentId" value="" checked=((selectedCheckOutPaymentIdList?seq_contains("_NEW_GIFT_CARD_")) || ((parameters.addGiftCard!) == "Y")) 
                 class="+pay-select-checkbox pay-select-field" label=methodLabel />
             </#if>
           </#if>
-          <#if showDetails>
+          <#if showDetails && showSupplemental>
             <@section containerId="newgiftcardcontent${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
               <input type="hidden" name="singleUseGiftCard" value="Y" />
               <input type="hidden" name="addGiftCard" value="Y" />

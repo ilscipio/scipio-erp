@@ -15172,4 +15172,8 @@
         <value xml:lang="pt_BR">Todas as promoções</value>
         <value xml:lang="ro">Toate Promotiile </value>
     </property>
+    <property key="OrderSaveToAccount">
+        <value xml:lang="de">Sparen zu berücksichtigen</value>
+        <value xml:lang="en">Save to account</value>
+    </property>
 </resource>

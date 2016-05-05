@@ -126,6 +126,7 @@ jQuery(document).ready(function(){
   <p>(NOTE: all buttons above to be removed)</p><#-- TODO -->
 
   <#-- Cato: allow remember via params first, over stored -->
+  <#-- FIXME: selectedCheckOutPaymentId doesn't work, checkOutPaymentId may have multiple values!!! -->
   <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentId!"">
   <#assign selectedBillingAccountId = parameters.billingAccountId!selectedBillingAccountId!"">
 

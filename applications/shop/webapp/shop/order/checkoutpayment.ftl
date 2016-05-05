@@ -19,6 +19,7 @@ under the License.
 <#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
 <#-- FIXME: PRESELECTION IS BROKEN -->
+<#-- FIXME: MISSING SERVER-SIDE VALIDATION OF EVERYTHING -->
 
 <#include "ordercommon.ftl">
 

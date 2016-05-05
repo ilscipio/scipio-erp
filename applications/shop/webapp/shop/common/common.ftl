@@ -120,16 +120,22 @@ jQuery(document).ready(function() {
                 v.fadeIn('fast');
             }
         });
-        <#-- FIXME: does not work: focus on the content of the last one clicked
+        <#-- focus on the content of the last one clicked -->
+        <#-- FIXME: focus does not work
         if (isTargetElem) {
             var eid = elem.attr('id');
             if (contentItemMap[eid] && contentItemMap[eid].contentId) {
                 var cid = contentItemMap[eid].contentId;
                 var elemContent = contentIdShowMap[cid];
                 if (elemContent) {
-                    elemContent.show(function() {
+
+                    if (elemContent.is(':visible')) {
                         elemContent.focus();
-                    });
+                    } else {
+                        elemContent.fadeIn('fast', function() {
+                            elemContent.focus();
+                        });
+                    } 
                 }
             }
         }

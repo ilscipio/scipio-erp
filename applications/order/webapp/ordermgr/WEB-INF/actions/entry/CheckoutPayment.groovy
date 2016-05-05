@@ -40,6 +40,19 @@ if (cart) {
     }
 }
 
+// Cato: Need a list of ALL payment meths selected
+checkOutPaymentIdSet = [] as Set;
+if (cart) {
+    if (cart.getPaymentMethodIds()) {
+        checkOutPaymentIdList.addAll(cart.getPaymentMethodIds());
+    } else if (cart.getPaymentMethodTypeIds()) {
+        checkOutPaymentIdList.addAll(cart.getPaymentMethodTypeIds());
+    }
+}
+context.checkOutPaymentIdSet = checkOutPaymentIdSet;
+context.checkOutPaymentIdList = checkOutPaymentIdSet as List;
+
+
 finAccounts = from("FinAccountAndRole").where("partyId", partyId, "roleTypeId", "OWNER").filterByDate(UtilDateTime.nowTimestamp(), "fromDate", "thruDate", "roleFromDate", "roleThruDate").queryList();
 context.finAccounts = finAccounts;
 

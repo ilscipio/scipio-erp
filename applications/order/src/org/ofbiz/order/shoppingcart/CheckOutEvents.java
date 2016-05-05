@@ -231,6 +231,9 @@ public class CheckOutEvents {
             
             List<String> singleUsePayments = new ArrayList<String>();
 
+            // Cato: Support single-use for arbitrary pay methods
+            addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
+            
             // check for gift card not on file
             Map<String, Object> params = UtilHttp.getParameterMap(request);
             Map<String, Object> gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
@@ -262,6 +265,21 @@ public class CheckOutEvents {
         return curPage;
     }
 
+    /**
+     * Cato: Adds the IDs of single use payments from selected methods to the given list.
+     */
+    static void addSingleUsePayments(HttpServletRequest request, Map<String, Map<String, Object>> selectedPaymentMethods, List<String> singleUsePayments) {
+        if (selectedPaymentMethods != null) {
+            for(Map.Entry<String, Map<String, Object>> entry : selectedPaymentMethods.entrySet()) {
+                Map<String, Object> info = entry.getValue();
+                if (info != null && Boolean.TRUE.equals(info.get("singleUsePayment"))) {
+                    singleUsePayments.add(entry.getKey());
+                }
+            }
+        }
+    }
+    
+    
     private static final String DEFAULT_INIT_CHECKOUT_PAGE = "shippingaddress";
 
     /**
@@ -392,11 +410,11 @@ public class CheckOutEvents {
                     throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
                 }
                 
-                String securityCode = request.getParameter("securityCode_" + paymentMethods[i]);
+                String securityCode = request.getParameter("securityCode_" + paymentMethodId);
                 if (UtilValidate.isNotEmpty(securityCode)) {
                     paymentMethodInfo.put("securityCode", securityCode);
                 }
-                String amountStr = request.getParameter("amount_" + paymentMethods[i]);
+                String amountStr = request.getParameter("amount_" + paymentMethodId);
                 BigDecimal amount = null;
                 if (UtilValidate.isNotEmpty(amountStr) && !"REMAINING".equals(amountStr)) {
                     try {
@@ -409,6 +427,17 @@ public class CheckOutEvents {
                     }
                 }
                 paymentMethodInfo.put("amount", amount);
+                
+                // Cato: Get single-use flag
+                Boolean singleUseBool = null;
+                String singleUseFlag = request.getParameter("singleUsePayment_" + paymentMethodId);
+                if ("Y".equals(singleUseFlag)) {
+                    singleUseBool = Boolean.TRUE;
+                } else if ("N".equals(singleUseFlag)) {
+                    singleUseBool = Boolean.FALSE;
+                }
+                paymentMethodInfo.put("singleUsePayment", singleUseBool);
+                
                 selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // Cato: edited
             }
         }
@@ -489,6 +518,9 @@ public class CheckOutEvents {
 
         List<String> singleUsePayments = new ArrayList<String>();
 
+        // Cato: Support single-use for arbitrary pay methods
+        addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
+        
         // get a request map of parameters
         Map<String, Object> params = UtilHttp.getParameterMap(request);
 

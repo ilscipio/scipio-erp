@@ -11134,7 +11134,11 @@ canvas {
   background-color: #007295;
   color: #fff;
 }
-/* line 73, ../scss/_steps.scss */
+/* line 74, ../scss/_steps.scss */
+.steps li.active a, .steps li.active a:hover, .steps li.active a:visited, .steps li.active a:active, .steps li.active a:focus {
+  color: #fff;
+}
+/* line 79, ../scss/_steps.scss */
 .steps li.disabled,
 .steps li.disabled:after {
   background-color: #fff;

@@ -70,6 +70,12 @@
         color: #fff;
     }
     
+    li.active {     
+        a, a:hover, a:visited, a:active, a:focus {
+            color: #fff;
+        }
+    }
+    
     li.disabled,
     li.disabled:after {
         background-color: #fff;

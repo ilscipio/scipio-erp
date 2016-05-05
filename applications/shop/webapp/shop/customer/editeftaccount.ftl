@@ -25,6 +25,9 @@ under the License.
   </@menu>
 <#else>
 
+<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save. -->
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
@@ -51,7 +54,7 @@ under the License.
     <@field type="generic" label=uiLabelMap.PartyBillingAddress>
         <#-- Cato: Billing fields are replaced with common new defs (old defs that were here discarded) -->
         <@render resource="component://shop/widget/CustomerScreens.xml#billaddresspickfields" 
-            ctxVars={"bapfUseNewAddr":false, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
+            ctxVars={"bapfUseNewAddr":true, "bapfNewAddrInline":false, "bapfFieldNamePrefix":""}/>
     </@field>
   </form>
 </@section>

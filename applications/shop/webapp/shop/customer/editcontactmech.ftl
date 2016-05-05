@@ -45,6 +45,20 @@ under the License.
     </#if>
   </#if>
 
+<#-- Cato: If we are editing an address currently selected for shipping in cart, show this warning.
+    This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
+<#if contactMech??>
+  <#if !cart?? && sessionAttributes.shoppingCart??>
+    <#assign cart = sessionAttributes.shoppingCart>
+  </#if>
+  <#if cart?? && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
+    <@commonMsg type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.ShopEditingShipAddressShipCostChange}</@commonMsg>
+  </#if>
+</#if>
+
+<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save. -->
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+
   <#if contactMechTypeId??>
   
 <#macro menuContent menuArgs={}>

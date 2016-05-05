@@ -25,6 +25,9 @@ under the License.
   </@menu>
 <#else>
 
+<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save. -->
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />

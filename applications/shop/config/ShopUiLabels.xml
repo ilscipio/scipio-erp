@@ -44,5 +44,18 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="zh">你无权浏览这个页面。</value>
         <value xml:lang="zh_CN">你没有权限查看此页</value>
         <value xml:lang="zh_TW">你無權檢視這個頁面.</value>
-    </property>        
+    </property>     
+    <!-- Cato: TODO: Localize -->
+    <property key="ShopSaveGoBackExplanation">
+        <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern".
+             Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>
+        <value xml:lang="en">When you are satisfied with your changes, click "Save" below. 
+            Afterward, click "Go Back" to return to your previous destination.</value>
+    </property>   
+    <property key="ShopEditingShipAddressShipCostChange">
+        <value xml:lang="de">Sie bearbeiten ein Postanschrift derzeit verwendeten Versand zu berechnen. Ändern
+             kann diese Adresse Versandkosten ändern.</value>
+        <value xml:lang="en">You are editing a postal address currently being used to calculate shipping. Changing
+            this address may change shipping costs.</value>
+    </property>   
 </resource>

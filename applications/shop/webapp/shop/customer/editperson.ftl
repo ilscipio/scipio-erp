@@ -18,6 +18,9 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
+<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save. -->
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+
 <#assign sectionTitle><#if person??><#-- Cato: duplicate: ${uiLabelMap.PartyEditPersonalInformation}--><#else>${uiLabelMap.PartyAddNewPersonalInformation}</#if></#assign>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>

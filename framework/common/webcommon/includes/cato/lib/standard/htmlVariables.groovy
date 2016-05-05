@@ -7,8 +7,6 @@
  *
  * NOTES: 
  * * Currently targeted toward Foundation CSS.
- * * Variables must be defined using #assign directive, not #global; please treat this file as if it were being
- *   included in its own namespace, even if it is not.
  */
 
 /*

@@ -243,8 +243,6 @@ function toggleBillingAccount(box) {
             <@newAddrFormContent />
           </div>
         </#if>
-
-
     
     </@section>
 
@@ -260,7 +258,7 @@ function toggleBillingAccount(box) {
       e.g. there are none for anon user by default. -->
   <#if agreements?has_content>
     <@section title=uiLabelMap.AccountingAgreementInformation>
-      <#-- Cato: for shop, use only select boxes, otherwise can't link to anything -->
+      <#-- Cato: for shop, use only radios; can't link to anything with select -->
       <#if false && agreements.size() != 1>
           <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
             <#list agreements as agreement>
@@ -268,16 +266,18 @@ function toggleBillingAccount(box) {
             </#list>
           </@field>
       <#else>
-        <#list agreements as agreement>
-          <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
-          <#assign labelContent>${agreement.description!} will be used for this order. 
-            <@modal id="agreement_info_${agreement.agreementId!}" label="Click here for more details">
-                <#-- Cato: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
-                ${agreement.description!}
-            </@modal>
-          </#assign>
-          <@commonInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) labelContent=labelContent />
-        </#list>
+        <@field type="generic" label=uiLabelMap.AccountingAgreement name="agreementId">
+            <#list agreements as agreement>
+              <#-- Cato: I don't know why this was the condition: checked=checkThisAddress -->
+              <#assign fieldLabel>${agreement.description!} will be used for this order. 
+                <@modal id="agreement_info_${agreement.agreementId!}" label=uiLabelMap.CommonClickHereDetails>
+                    <#-- Cato: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
+                    ${agreement.description!}
+                </@modal>
+              </#assign>
+              <@field type="radio" inlineItems=false name="agreementId" value=(agreement.agreementId!) checked=(agreements?size == 1) label=fieldLabel />
+            </#list>
+        </@field>
       </#if>
     </@section>
   </#if>

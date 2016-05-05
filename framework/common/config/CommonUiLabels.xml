@@ -16157,4 +16157,8 @@
         <value xml:lang="de">Druckfähig</value>
         <value xml:lang="en">Printable</value>
     </property>
+    <property key="CommonClickHereDetails">
+        <value xml:lang="de">Hier klicken für Details</value>
+        <value xml:lang="en">Click here for details</value>
+    </property>
 </resource>

@@ -22360,7 +22360,13 @@
         <value xml:lang="zh">交易成功了。</value>
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
+    <!-- Cato: TODO: Localize -->
     <property key="AccountingMaintenanceJobs">
+        <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>
+    </property>
+    <property key="AccountingLeaveEmptyFullAmount">
+        <value xml:lang="de">Leer lassen, in voller Höhe zu verwenden</value>
+        <value xml:lang="en">Leave empty to use full amount</value>
     </property>
 </resource>

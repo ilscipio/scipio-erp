@@ -100,18 +100,18 @@ function getAssociatedStateList(countryId, stateId, errorId, divId) {
                 geoValues = this.split(': ');
                 stateSelect.append(jQuery('<option value = '+geoValues[1]+' >'+geoValues[0]+'</option>'));
             });
-
+            // Cato: FIXED for ID bugs
             if (stateList.length <= 1) {
                 if (jQuery("#" + divId).is(':visible') || jQuery("#" + errorId).is(':visible')) {
-                    jQuery("#divId").fadeOut("fast");
-                    jQuery("#errorId").fadeOut("fast");
-                    jQuery("#stateId").unbind("blur");
+                    jQuery("#" + divId).fadeOut("fast");
+                    jQuery("#" + errorId).fadeOut("fast");
+                    jQuery("#" + stateId).unbind("blur");
                 }
             } else {
-                jQuery("#divId").fadeIn("fast");
-                jQuery("#stateId").bind("blur", function() {
+                jQuery("#" + divId).fadeIn("fast");
+                jQuery("#" + stateId).bind("blur", function() {
                     if (jQuery("#" + stateId).val() == "") {
-                        jQuery("#errorId").fadeIn("fast")
+                        jQuery("#" + errorId).fadeIn("fast")
                     }
                 });
             }

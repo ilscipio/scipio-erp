@@ -684,34 +684,74 @@ public class RequestHandler {
             
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                // Cato: Sanity check
+                if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
+                    Debug.logError("Cato: Redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
+                }
                 // Cato: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
                 callRedirect(nextRequestResponseValue, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-
+                // Cato: Sanity check
+                if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
+                    Debug.logError("Cato: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")");
+                }
                 String url = nextRequestResponseValue.startsWith("/") ? nextRequestResponseValue : "/" + nextRequestResponseValue;
                 // Cato: Modified to pass through encodeURL and more intelligent link-building method
                 // NOTE: no support for webSiteId, so absPath assumed true
                 //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 String targetUrl = makeLinkAutoFull(request, response, url + this.makeQueryString(request, nextRequestResponse), true, true, null, null);
+                // Cato: Sanity check
+                if (targetUrl == null || targetUrl.isEmpty()) {
+                    Debug.logError("Cato: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                // Cato: Sanity check
+                if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
+                    Debug.logError("Cato: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")");
+                }
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
-                callRedirect(makeLinkFullWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
+                String targetUrl = makeLinkFullWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse);
+                // Cato: Sanity check
+                if (targetUrl == null || targetUrl.isEmpty()) {
+                    Debug.logError("Cato: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                }
+                callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                // Cato: Sanity check
+                if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
+                    Debug.logError("Cato: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")");
+                }
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
                 //callRedirect(makeLink(request, response, nextRequestResponseValue), response, request, statusCodeString);
-                callRedirect(makeLinkFull(request, response, nextRequestResponseValue), response, request, statusCodeString);
+                String targetUrl = makeLinkFull(request, response, nextRequestResponseValue);
+                // Cato: Sanity check
+                if (targetUrl == null || targetUrl.isEmpty()) {
+                    Debug.logError("Cato: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                }
+                callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
-
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
+                // Cato: Sanity check
+                if (viewName == null || viewName.isEmpty()) {
+                    Debug.logError("Cato: view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: view name is empty (request map URI: " + requestMap.uri + ")");
+                }
                 renderView(viewName, requestMap.securityExternalView, request, response, saveName);
             } else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
@@ -743,6 +783,11 @@ public class RequestHandler {
                         }
                     }
                 }
+                // Cato: Sanity check
+                if (viewName == null || viewName.isEmpty()) {
+                    Debug.logError("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")");
+                }
                 renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
@@ -759,6 +804,11 @@ public class RequestHandler {
                      viewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
                  } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
                      viewName = nextRequestResponseValue;
+                 }
+                 // Cato: Sanity check
+                 if (viewName == null || viewName.isEmpty()) {
+                     Debug.logError("Cato: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
+                     throw new RequestHandlerException("Cato: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
                  }
                  renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("view-home".equals(nextRequestResponse.type)) {
@@ -777,6 +827,11 @@ public class RequestHandler {
                     for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
+                }
+                // Cato: Sanity check
+                if (viewName == null || viewName.isEmpty()) {
+                    Debug.logError("Cato: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
+                    throw new RequestHandlerException("Cato: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("none".equals(nextRequestResponse.type)) {
@@ -940,6 +995,11 @@ public class RequestHandler {
         // Cato: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "], sessionId=" + UtilHttp.getSessionId(req), module);
+        // Cato: sanity check
+        if (url == null || url.isEmpty()) {
+            Debug.logError("Cato: Redirect URL is empty", module);
+            throw new RequestHandlerException("Cato: Redirect URL is empty");
+        }
         // set the attributes in the session so we can access it.
         Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
         Map<String, Object> reqAttrMap = new HashMap<String, Object>();
@@ -974,6 +1034,12 @@ public class RequestHandler {
         }
     }
     private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException {
+        // Cato: sanity check
+        if (view == null || view.isEmpty()) {
+            Debug.logError("Cato: View name is empty", module);
+            throw new RequestHandlerException("Cato: View name is empty");
+        }
+        
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         // workaraound if we are in the root webapp
         String cname = UtilHttp.getApplicationName(req);
@@ -1371,6 +1437,12 @@ public class RequestHandler {
         // Cato: enforce this check for time being
         if (interWebapp && webappInfo == null) {
             throw new IllegalArgumentException("Cato: Cannot build inter-webapp URL without webapp info");
+        }
+        
+        // Cato: Sanity check: null/missing URL
+        if (url == null || url.isEmpty()) {
+            Debug.logError("Cato: makeLink received null URL; returning null", module);
+            return null;
         }
         
         // Cato: always get current request webSiteProps

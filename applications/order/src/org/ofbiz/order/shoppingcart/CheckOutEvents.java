@@ -117,7 +117,7 @@ public class CheckOutEvents {
             String shippingContactMechId;
             try {
                 shippingContactMechId = getRequestAttribOrParam(request, "shipping_contact_mech_id");
-                Map<String, Object> contactMechResult = checkShipContactMechIdForNew(request, shippingContactMechId, "new_ship_addr_prefix");
+                Map<String, Object> contactMechResult = checkShipContactMechIdForNew(request, shippingContactMechId, "newShipAddr_");
                 if (ServiceUtil.isSuccess(contactMechResult)) {
                     shippingContactMechId = (String) contactMechResult.get("contactMechId");
                 } else {

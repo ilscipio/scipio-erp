@@ -2121,6 +2121,9 @@ public class RequestHandler {
      * has the specified URI and allows direct/public access.
      */
     public static boolean controllerHasRequestUriDirect(HttpServletRequest request, String uri) {
+        if (request == null) {
+            return false;
+        }
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
         return rh.controllerHasRequestUriDirect(uri);
     }
@@ -2130,8 +2133,6 @@ public class RequestHandler {
      * has the specified URI and allows direct/public access.
      */
     public boolean controllerHasRequestUriDirect(String uri) {
-        
-        
         try {
             ConfigXMLReader.RequestMap requestMap = getControllerConfig().getRequestMapMap().get(uri);
             

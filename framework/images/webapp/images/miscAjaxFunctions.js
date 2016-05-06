@@ -51,30 +51,39 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
             list = result[responseName];
             // Create and show dependent select options            
             if (list) {
-                if(allowEmpty) {
-                    // Allow null selection in dependent and set it as default if no selection exists.
-                    if (selected == undefined || selected == "_none_") {
-                      optionList += "<option selected='selected' value=''></option>";
-                    } else {
-                      optionList += "<option value=''></option>";
-                    }
-                }
+            	// Cato: supports new _previous_ selected option; it allows using markup to specify the initial value
+            	if (selected === '_previous_') {
+            		selected = jQuery(target).val();
+            		if (!selected) {
+            			selected = '';
+            		}
+            	}
                 jQuery.each(list, function(key, value){
                     if (typeof value == 'string') {
                         values = value.split(': ');
-                        if (values[1].indexOf(selected) >= 0 && selected.length > 0) {
-                            optionList += "<option selected='selected' value = " + values[1] + " >" + values[0] + "</option>";
+                        if (selected && values[1].indexOf(selected) >= 0) { // Cato: check fixed
+                            optionList += '<option selected="selected" value="' + values[1] + '">' + values[0] + '</option>';
                         } else {
-                            optionList += "<option value = " + values[1] + " >" + values[0] + "</option>";
+                            optionList += '<option value="' + values[1] + '">' + values[0] + '</option>';
                         }
                     } else {
                         if (value[keyName] == selected) {
-                            optionList += "<option selected='selected' value = " + value[keyName] + " >" + value[descName] + "</option>";
+                            optionList += '<option selected="selected" value="' + value[keyName] + '">' + value[descName] + '</option>';
                         } else {
-                            optionList += "<option value = " + value[keyName] + " >" + value[descName] + "</option>";
+                            optionList += '<option value="' + value[keyName] + '">' + value[descName] + '</option>';
                         }
                     }
                 })
+                if(allowEmpty) {
+                	var preOptionList = "";
+                    // Allow null selection in dependent and set it as default if no selection exists.
+                    if (!selected || selected === "_none_") { // Cato: check fixed
+                    	preOptionList += '<option selected="selected" value=""></option>';
+                    } else {
+                    	preOptionList += "<option value=''></option>";
+                    }
+                    optionList = preOptionList + optionList;
+                }
             };
             // Hide/show the dependent drop-down if hide=true else simply disable/enable
             if ((!list) || (list.length < 1) || ((list.length == 1) && jQuery.inArray("_NA_", list) != -1)) {

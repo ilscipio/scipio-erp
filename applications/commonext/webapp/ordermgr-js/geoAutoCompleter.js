@@ -95,10 +95,16 @@ function getAssociatedStateList(countryId, stateId, errorId, divId) {
             }
             stateList = data.stateList;
             var stateSelect = jQuery("#" + stateId);
+            // Cato: Try to preserve the previous value if possible; allows using markup to specify the initial value
+            var selected = stateSelect.val();
             stateSelect.find("option").remove();
             jQuery.each(stateList, function(state) {
                 geoValues = this.split(': ');
-                stateSelect.append(jQuery('<option value = '+geoValues[1]+' >'+geoValues[0]+'</option>'));
+                var selectedStr = "";
+                if (selected && selected === geoValues[1]) {
+                	selectedStr = ' selected="selected"';
+                }
+                stateSelect.append(jQuery('<option value="'+geoValues[1]+'"'+selectedStr+'>'+geoValues[0]+'</option>'));
             });
             // Cato: FIXED for ID bugs
             if (stateList.length <= 1) {

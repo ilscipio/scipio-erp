@@ -20,6 +20,7 @@ package org.ofbiz.order.shoppingcart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,8 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.MapValidator;
+import org.ofbiz.base.util.MapProcessor;
+import org.ofbiz.base.util.MapProcessorInvoker;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -47,6 +49,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.marketing.tracking.TrackingCodeEvents;
+import org.ofbiz.minilang.SimpleMapProcessorProcessor;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -1376,8 +1379,7 @@ public class CheckOutEvents {
         if ("_NEW_".equals(contactMechId)) {
             // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
             
-            // FIXME: VALIDATION IS INCOMPLETE
-            MapValidator validator = null;
+            Collection<MapProcessor> paramValidators = null;
             String serviceName;
             String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
             Map<String, Object> overrideParams = UtilMisc.toMap("setBillingPurpose", null);
@@ -1398,11 +1400,10 @@ public class CheckOutEvents {
                 return result;
             }
             
-            validator = PostalAddressValidator.getInstance(request);
+            paramValidators = UtilMisc.<MapProcessor>toList(getPostalAddressValidator(request));
             serviceName = "createPostalAddressAndPurposes";
             
-            
-            Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, validator);
+            Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
             
             if (!ServiceUtil.isSuccess(servResult)) {
                 Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
@@ -1433,8 +1434,7 @@ public class CheckOutEvents {
     public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
             String ccParamPrefix, String eftParamPrefix) throws GeneralException {
         
-        // FIXME: VALIDATION INCOMPLETE
-        MapValidator validator = null;
+        Collection<MapProcessor> paramValidators = null;
         String serviceName;
         Map<String, Object> overrideParams = new HashMap<String, Object>();
         String paramPrefix;
@@ -1454,10 +1454,18 @@ public class CheckOutEvents {
                     // Cato: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
                     // other inline stuff already (not delayed to another screen)
                     serviceName = "createCreditCardAndAddress";
-                    validator = PostalAddressValidator.getInstance(request);
+                    paramValidators = UtilMisc.<MapProcessor>toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                                    "createCreditCard"),
+                            getPostalAddressValidator(request)
+                            );
                     overrideParams.put("contactMechId", null);
                 } else {
                     serviceName = "createCreditCard";
+                    paramValidators = UtilMisc.<MapProcessor>toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            "createCreditCard")
+                            );
                 }
             } else {
                 // TODO: Localize
@@ -1477,10 +1485,18 @@ public class CheckOutEvents {
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
                     serviceName = "createEftAccountAndAddress";
-                    validator = PostalAddressValidator.getInstance(request);
+                    paramValidators = UtilMisc.<MapProcessor>toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                                    "createEftAccount"),
+                            getPostalAddressValidator(request)
+                            );
                     overrideParams.put("contactMechId", null);
                 } else {
                     serviceName = "createEftAccount";
+                    paramValidators = UtilMisc.<MapProcessor>toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                            "createEftAccount")
+                            );
                 }
             } else {
                 // TODO: Localize
@@ -1493,7 +1509,7 @@ public class CheckOutEvents {
             return result;
         }
         
-        Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, validator);
+        Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
         
         if (!ServiceUtil.isSuccess(servResult)) {
             Debug.logInfo("Could not create new pay method during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
@@ -1507,6 +1523,11 @@ public class CheckOutEvents {
         return result;
     }
 
+    public static MapProcessor getPostalAddressValidator(HttpServletRequest request) {
+        return SimpleMapProcessorProcessor.getInstance(request, "component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml", 
+                "postalAddress");
+    }
+    
     
     /**
      * Cato: Service invocation helper; uses combine req attribs + params.
@@ -1514,7 +1535,7 @@ public class CheckOutEvents {
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
     public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramPrefix, 
-            String serviceName, Map<String, Object> overrideParams, MapValidator paramValidator) throws GeneralException {
+            String serviceName, Map<String, Object> overrideParams, Collection<MapProcessor> paramValidators) throws GeneralException {
         
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
@@ -1526,19 +1547,20 @@ public class CheckOutEvents {
             context = UtilMisc.getPrefixedMapEntries(combinedMap, paramPrefix);
         }
 
-        Map<String, Object> servCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
-        servCtx.put("userLogin", combinedMap.get("userLogin"));
-        servCtx.put("locale", combinedMap.get("locale"));
-        servCtx.putAll(overrideParams);
-        if (paramValidator != null) {
-            Map<String, String> errorMsgs = new HashMap<String, String>();
-            paramValidator.validate(servCtx, errorMsgs);
-            if (errorMsgs.size() > 0) {
-                Map<String, Object> validateRes = ServiceUtil.returnError(new ArrayList<String>(errorMsgs.values()));
+        context.putAll(overrideParams);
+        if (paramValidators != null && !paramValidators.isEmpty()) {
+            MapProcessorInvoker mpi = new MapProcessorInvoker(context, UtilHttp.getLocale(request));
+            mpi.process(paramValidators, true, false);
+            List<String> errorMessages = mpi.getAllErrorMessages();
+            if (!errorMessages.isEmpty()) {
+                Map<String, Object> validateRes = ServiceUtil.returnError(errorMessages);
                 Debug.logInfo("Could not validate fields: " + ServiceUtil.getErrorMessage(validateRes), module);
                 return validateRes;
             }
         }
+        Map<String, Object> servCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
+        servCtx.put("userLogin", combinedMap.get("userLogin"));
+        servCtx.put("locale", combinedMap.get("locale"));
         return dispatcher.runSync(serviceName, servCtx);
     }
     

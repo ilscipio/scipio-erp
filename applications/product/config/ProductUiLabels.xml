@@ -8663,7 +8663,7 @@
         <value xml:lang="zh_TW">增加產品商店運輸設置</value>
     </property>
     <property key="PageTitleAddProductStoreSurveys">
-        <value xml:lang="de">Surveys den Shops hinzufügen</value>
+        <value xml:lang="de">Umfragen dem Shop hinzufügen</value>
         <value xml:lang="en">Add Product Store Surveys</value>
         <value xml:lang="es">Añadir encuesta a tienda</value>
         <value xml:lang="fr">Ajouter des sondages</value>
@@ -29379,7 +29379,7 @@
         <value xml:lang="zh_TW">結果模板路徑</value>
     </property>
     <property key="ProductStoreSurveySettings">
-        <value xml:lang="de">Shop Befragung Einstellungen</value>
+        <value xml:lang="de">Umfrageneinstellungen des Shops</value>
         <value xml:lang="en">Store Survey Settings</value>
         <value xml:lang="es">Configuración de encuesta de tienda</value>
         <value xml:lang="fr">Paramètres de sondage du centre de profit</value>

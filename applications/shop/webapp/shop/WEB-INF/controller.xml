@@ -1041,6 +1041,20 @@ under the License.
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
+    
+    <!-- Cato: New helper event that redirects to the request URI named in the 
+        request attribute or parameter "targetPage" or "donePage".
+        This helps avoid extra steps when updating addresses, user info, etc.
+        The profile is only used in case of error which is usually a miscoded screen.  -->
+    <request-map uri="handleProfileTargetPage">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="processTargetPage"/>
+        <!-- Cato: This special response value syntax works thanks to a Cato enhancement to Ofbiz request handler -->
+        <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}"/>
+        <response name="forward" type="request" value="${requestAttributes.targetPage}"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
 
     <!-- ContactMech Requests -->
     <request-map uri="editcontactmech">
@@ -1055,13 +1069,17 @@ under the License.
     <request-map uri="createContactMech">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMech"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Updated to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateContactMech">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyContactMech"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deleteContactMech">
@@ -1074,52 +1092,68 @@ under the License.
     <request-map uri="createPostalAddressAndPurpose">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="createPostalAddress">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyPostalAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updatePostalAddress">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyPostalAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createTelecomNumber">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyTelecomNumber"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyTelecomNumber"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createEmailAddress">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyEmailAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateEmailAddress">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePartyEmailAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPartyContactMechPurpose">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPartyContactMechPurpose"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcontactmech"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deletePartyContactMechPurpose">
@@ -1136,14 +1170,18 @@ under the License.
     <request-map uri="createCreditCard">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createCreditCard"/>
-        <response name="success" type="view" value="editcreditcard"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcreditcard"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCard">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateCreditCard"/>
-        <response name="success" type="view" value="editcreditcard"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editcreditcard"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
@@ -1155,13 +1193,17 @@ under the License.
     <request-map uri="createGiftCard">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createGiftCard"/>
-        <response name="success" type="view" value="editgiftcard"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editgiftcard"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
     <request-map uri="updateGiftCard">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updateGiftCard"/>
-        <response name="success" type="view" value="editgiftcard"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editgiftcard"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editgiftcard"/>
     </request-map>
 
@@ -1172,14 +1214,18 @@ under the License.
     <request-map uri="createEftAccount">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="createEftAccount"/>
-        <response name="success" type="view" value="editeftaccount"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editeftaccount"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="updateEftAccount">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="simple" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentMethodEvents.xml" invoke="updateEftAccount"/>
-        <response name="success" type="view" value="editeftaccount"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editeftaccount"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
@@ -1198,13 +1244,17 @@ under the License.
     <request-map uri="createPerson">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="createPerson"/>
-        <response name="success" type="view" value="editperson"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editperson"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
     <request-map uri="updatePerson">
         <security https="true" auth="false"/><!-- Cato: CHANGED TO AUTH FALSE so may support anon checkout -->
         <event type="service" invoke="updatePerson"/>
-        <response name="success" type="view" value="editperson"/>
+        <!-- Cato: Changed to support better redirects and forward
+        <response name="success" type="view" value="editperson"/>-->
+        <response name="success" type="request" value="handleProfileTargetPage"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
 
@@ -1214,9 +1264,6 @@ under the License.
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
-
-
-
 
 
     <request-map uri="tellafriend">

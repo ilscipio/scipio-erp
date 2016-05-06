@@ -18,10 +18,9 @@ under the License.
 -->
 <#include "customercommon.ftl">
 
-<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save.
-    The controller is currently not able to redirect this back except using override view URIs, but override view URIs generally break
-    the checkout process. -->
-<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+    to redirect automatically.
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -30,8 +29,8 @@ under the License.
     </@menu>
 </#macro>
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
-    <#-- Cato: WARN/FIXME?: view switch --> 
-    <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
+    <#-- Cato: NOTE: view-switch replaced with redirect -->
+    <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@ofbizUrl>">
 
       <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label="${uiLabelMap.PartyOldPassword}"/>
       <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label="${uiLabelMap.PartyNewPassword}"/>

@@ -25,10 +25,9 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save.
-    The controller is currently not able to redirect this back except using override view URIs, but override view URIs generally break
-    the checkout process. -->
-<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+    to redirect automatically.
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -39,7 +38,7 @@ under the License.
 <#assign sectionTitle><#if !creditCard??>${uiLabelMap.AccountingAddNewCreditCard}<#else><#-- Cato: duplicate: ${uiLabelMap.AccountingEditCreditCard}--></#if></#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
-  <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}<#else>updateCreditCard?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editcreditcardform">
+  <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editcreditcardform">
   
   <#if creditCard??>
     <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />

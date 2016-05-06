@@ -56,10 +56,9 @@ under the License.
   </#if>
 </#if>
 
-<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save.
-    The controller is currently not able to redirect this back except using override view URIs, but override view URIs generally break
-    the checkout process. -->
-<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+    to redirect automatically.
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
   <#if contactMechTypeId??>
   
@@ -121,7 +120,7 @@ under the License.
         </@field>
     </#if>
     
-  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
       <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />

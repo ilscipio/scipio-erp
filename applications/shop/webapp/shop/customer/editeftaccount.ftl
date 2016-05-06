@@ -25,10 +25,9 @@ under the License.
   </@menu>
 <#else>
 
-<#-- Cato: This is a helper message to explain the current kludge where (due to controller) you have to click Go Back after clicking Save.
-    The controller is currently not able to redirect this back except using override view URIs, but override view URIs generally break
-    the checkout process. -->
-<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>
+<#-- Cato: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
+    to redirect automatically.
+<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -45,7 +44,7 @@ under the License.
 </#assign>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
-  <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}<#else>updateEftAccount?DONE_PAGE=${donePage}</#if></@ofbizUrl>" name="editeftaccountform">
+  <form method="post" action="<@ofbizUrl><#if !eftAccount??>createEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateEftAccount?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editeftaccountform">
 
     <#if eftAccount??>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />

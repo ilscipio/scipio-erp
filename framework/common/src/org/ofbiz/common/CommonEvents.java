@@ -59,6 +59,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
+import org.ofbiz.webapp.control.RequestHandler;
 
 /**
  * Common Services
@@ -484,6 +485,87 @@ public class CommonEvents {
             captchaCodeMap.put(captchaCodeId, captchaCode);
         } catch (Exception ioe) {
             Debug.logError(ioe.getMessage(), module);
+        }
+        return "success";
+    }
+
+    /**
+     * Cato: Prepares a redirect or forward based on a targetPage request URI passed by the screens.
+     * The targetPage is re-saved in request attributes as "targetPage". targetPage must be a controller
+     * request URI within current controller that supports direct (public) requests.
+     * <p>
+     * Prepares a redirects to the controller URI named in the "targetPage" 
+     * request attribute or parameter, where parameter also supports "TARGET_PAGE". This is used if 
+     * targetPageResponse is "redirect-target". In this case the result is "redirect".
+     * <p>
+     * If targetPageResponse is "forward-target", then it does a forward to targetPage, and result is "forward".
+     * <p>
+     * if targetPageResponse is "forward-done" or "redirect-done", then it does the same thing
+     * but with the alternate var name "donePage", as convenience for some cases where donePage
+     * is reserved.
+     * <p>
+     * If targetPageResponse is not set, it simply returns success.
+     * <p>
+     * If targetPageResponse is set but targetPage is missing, returns an error. The screens should
+     * be coded to always pass donePage if response expected.
+     * <p>
+     *  If there is another error such as security-related error,
+     * returns error. The passed values must be valid public controller URIs in current webapp.
+     * <p>
+     * NOTE: This event requires the Cato-enhanced RequestHandler to function properly.
+     * <p>
+     * NOTE: This does not set any error messages in request, because they are all internal errors.
+     * The event response "error" can point to another event which sets an error.
+     */
+    public static String processTargetPage(HttpServletRequest request, HttpServletResponse response) {
+        
+        String targetPageResponse = (String) request.getAttribute("targetPageResponse");
+        if (targetPageResponse == null) {
+            targetPageResponse = request.getParameter("targetPageResponse");
+        }
+        if (UtilValidate.isNotEmpty(targetPageResponse)) {
+            if ("redirect-done".equals(targetPageResponse) || "forward-done".equals(targetPageResponse)
+                    || "forward-target".equals(targetPageResponse) || "redirect-target".equals(targetPageResponse)) {
+                String targetPage;
+                boolean isAlt = targetPageResponse.endsWith("-done");
+                if (isAlt) {
+                    targetPage = (String) request.getAttribute("donePage");
+                    if (targetPage == null) {
+                        targetPage = request.getParameter("donePage");
+                        if (targetPage == null) {
+                            targetPage = request.getParameter("DONE_PAGE");
+                        }
+                    }
+                } else {
+                    isAlt = true;
+                    targetPage = (String) request.getAttribute("targetPage");
+                    if (targetPage == null) {
+                        targetPage = request.getParameter("targetPage");
+                        if (targetPage == null) {
+                            targetPage = request.getParameter("TARGET_PAGE");
+                        }
+                    }
+                }
+                
+                if (UtilValidate.isEmpty(targetPage)) {
+                    Debug.logError("Cato: Missing target page for targetPageResponse " + targetPageResponse, module);
+                    return "error";
+                } else {
+                    // Cato: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
+                    // we link within our controller
+                    if (RequestHandler.controllerHasRequestUriDirect(request, targetPage)) {
+                        request.setAttribute("targetPage", targetPage);
+                        return targetPageResponse.substring(0, targetPageResponse.indexOf('-'));
+                    } else {
+                        Debug.logError("Cato: targetPage is not a valid direct controller request URI for redirect/forward "
+                                + "('" + targetPage + "')", module);
+                        return "error";
+                    }
+                }
+            } else {
+                Debug.logError("Cato: Invalid targetPageResponse: " + targetPageResponse, module);
+                return "error";
+            }
         }
         return "success";
     }

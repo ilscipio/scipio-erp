@@ -1446,6 +1446,14 @@ public class RequestHandler {
                     return null;
                 }
             }
+            
+            // Cato: 2016-05-06: If controller requested and request could not be found, show an error and return null.
+            // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
+            // then we can't use this as a security check. Likely also to make some template errors clearer.
+            if (requestMap == null) {
+                Debug.logError("Cato: Cannot build link: could not locate the expected request '" + requestUri + "' in controller config", module);
+                return null; 
+            }
         }
         
         boolean didFullSecure = false;

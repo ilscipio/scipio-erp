@@ -800,10 +800,12 @@ public class RequestHandler {
      * requestAttrParam - checks attributes; if null, uses params
      * sessionAttributes
      * applicationAttributes
+     * <p>
+     * Returns empty string instead of null if missing, for compatibility with existing Ofbiz code.
      */
     String parseResponseValue(HttpServletRequest request, HttpServletResponse response, String value, ConfigXMLReader.RequestMap requestMap) {
         if (value == null) {
-            return value;
+            return "";
         }
         if (value.startsWith("${") && value.endsWith("}")) {
             Object attrValue = null;
@@ -838,14 +840,14 @@ public class RequestHandler {
                 } else {
                     if (requestMap != null) {
                         Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
-                                attrValue.toString() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as null", module);
+                                attrValue.toString() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as empty", module);
                     } else {
                         Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
-                                attrValue.toString() + "' did not evaluate to a string; treating as null", module);
+                                attrValue.toString() + "' did not evaluate to a string; treating as empty", module);
                     }
                 }
             }
-            return null;
+            return "";
         }
         return value;
     }

@@ -91,6 +91,7 @@ May have implicit dependencies on other parts of Cato API.        </span>
         <a href="#entry-mtarget">mtarget</a>, 
         <a href="#entry-nav">nav</a>, 
         <a href="#entry-paginate">paginate</a>, 
+        <a href="#entry-step">step</a>, 
         <a href="#entry-treemenu">treemenu</a>
       </p>
     </div>
@@ -161,7 +162,10 @@ Since this is very foundation specific, this function may be dropped in future i
                     <div class="lib-entry-params-formal">
                       <p>
                           <code>type</code>, 
+                          <code>id</code>, 
                           <code>class</code>, 
+                          <code>style</code>, 
+                          <code>activeElem</code>, 
                           <code>passArgs</code>
                       </p>
                     </div>
@@ -172,7 +176,7 @@ Since this is very foundation specific, this function may be dropped in future i
                         <code>type</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(inline|magellan|breadcrumbs, default: inline)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(inline|magellan|breadcrumbs|steps|, default: inline)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
@@ -198,6 +202,38 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
       </li>
   </ul>
 </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>activeElem</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string)|(list))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Name of the active element or elements</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+The meaning and effect depends on the nav type.        </span>
 </span>
                     </td>
                   </tr>
@@ -323,6 +359,75 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
 
                   </div>
 
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-step"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">step</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>step</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Creates a single step - to be used with <code>&lt;@nav type=&quot;steps&quot; /&gt;</code>.</p>
+                      <div class="lib-entry-extradesc">
+        <h4>Parameters</h4>
+<pre>name                    = Step name, for auto-matching purposes (optional if not using auto active matching)
+icon                    = Generates icon inside the step
+disabled                = ((boolean)) step is disabled (override)
+active                  = ((boolean)) marks the current step (override)
+completed               = ((boolean)) step is completed (will override icon if icon is set)
+class                   = ((css-class)) CSS classes
+                          Supports prefixes (see #compileClassArg for more info):</pre>        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+<pre>href                    = link (if not disabled or active)</pre>                      </div>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>name</code>, 
+                          <code>icon</code>, 
+                          <code>completed</code>, 
+                          <code>disabled</code>, 
+                          <code>active</code>, 
+                          <code>class</code>, 
+                          <code>href</code>, 
+                          <code>passArgs</code>
+                      </p>
+                    </div>
+
+                      <div class="lib-entry-params-details">
+                        <p>
+                        <strong>NOTE:</strong> This macro implements an advanced arguments interface supplementing
+                            regular macro invocations. See <a href="../standard/htmlTemplate.html">standard/htmlTemplate</a> for details.
+                        </p>
+                      </div>
+                  </div>
+
+              <div class="lib-entry-details">
+                <p>
+                  
+                </p>
+              </div>
             
           </div>
           
@@ -517,8 +622,8 @@ alternatively, the items can be specified as nested content.        </span>
                       <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added before items and nested content</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-excluded from sorting.
-templates should generally avoid use unless specific need, but may be used by other macros.        </span>
+Excluded from sorting.
+Templates should generally avoid use unless specific need, but may be used by other macros.        </span>
 </span>
                     </td>
                   </tr>
@@ -530,7 +635,7 @@ templates should generally avoid use unless specific need, but may be used by ot
                       <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added after items and nested content</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-excluded from sorting.
+Excluded from sorting.
 Avoid use unless specific need; may be needed by cato menu handling.
 Templates should generally avoid use unless specific need, but may be used by other macros.        </span>
 </span>
@@ -671,13 +776,14 @@ survive direct FTL file includes.          </div>
                           <code>selected</code>, 
                           <code>active</code>, 
                           <code>target</code>, 
+                          <code>title</code>, 
                           <code>nestedContent</code>, 
                           <code>nestedMenu</code>, 
                           <code>wrapNested</code>, 
                           <code>nestedFirst</code>, 
                           <code>htmlwrap</code>, 
                           <code>inlineItem</code>, 
-                          <code>contentWrapper</code>, 
+                          <code>contentWrapElem</code>, 
                           <code>isNestedMenu</code>, 
                           <code>passArgs</code>
                       </p>
@@ -813,7 +919,7 @@ arg from the &quot;args&quot; map using the logic in combineClassArgs function, 
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Content name attrib (name=&quot;&quot; on &lt;a&gt; link)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Content name attrib (<code>name=&quot;&quot;</code> on <code>&lt;a&gt;</code> link)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -823,7 +929,7 @@ arg from the &quot;args&quot; map using the logic in combineClassArgs function, 
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Extra menu item content attributes (for &lt;a&gt;, &lt;span&gt; or &lt;input&gt; element)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc"> Extra menu item content attributes (for <code>&lt;a&gt;</code>, <code>&lt;span&gt;</code> or <code>&lt;input&gt;</code> element)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -846,9 +952,15 @@ nested content will by default be put outside the link.        </span>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Content link, for &quot;link&quot; type</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Content link, for <code>link</code> type</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-Also supports ofbiz request URLs using the notation: <code>ofbizUrl://</code> (see interpretRequestUri function)        </span>
+Also supports ofbiz request URLs using the notation: <code>ofbizUrl://</code> (see interpretRequestUri function)
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
                     </td>
                   </tr>
@@ -973,13 +1085,13 @@ If false, the nested content will come before or after (depending on nestedFirst
                   </tr>
                   <tr>
                     <td class="entry-paramname">
-                        <code>contentWrapper</code>
+                        <code>contentWrapElem</code>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> type items, controls the extra content wrapper around nested</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-If true, a div will be added around nested; if any string, the given string will be used as the element.
+If true, a <code>div</code> will be added around nested; if any string, the given string will be used as the element.
 This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
 If false, no wrapper will be added.
         </span>
@@ -1264,7 +1376,12 @@ For &quot;content&quot; mode, with false, will still render nested content (that
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Base Url to be used for pagination</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -1347,7 +1464,12 @@ even if false, large requests may be coerced to POST.          </div>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 e.g.
         </span>
-<pre>param1=val1&amp;amp;param2=val2</pre></span>
+<pre>param1=val1&amp;amp;param2=val2</pre>          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
+</span>
                     </td>
                   </tr>
                   <tr>

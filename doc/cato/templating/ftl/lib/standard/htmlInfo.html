@@ -209,6 +209,21 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
 </span>
                     </td>
                   </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>href</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Link</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
+</span>
+                    </td>
+                  </tr>
               </table>
                       </div>
 
@@ -270,6 +285,11 @@ For most cases, it is preferrable to use <a href="#entry-commonMsg">@commonMsg</
                           <code>type</code>, 
                           <code>class</code>, 
                           <code>id</code>, 
+                          <code>style</code>, 
+                          <code>closable</code>, 
+                          <code>containerClass</code>, 
+                          <code>containerId</code>, 
+                          <code>containerStyle</code>, 
                           <code>passArgs</code>
                       </p>
                     </div>
@@ -307,6 +327,36 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">ID on innermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute on innermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>closable</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-, fallback default: true)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Whether the alert should be hidable/closable</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
               </table>
@@ -362,6 +412,9 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                       <p>
                           <code>type</code>, 
                           <code>title</code>, 
+                          <code>id</code>, 
+                          <code>class</code>, 
+                          <code>style</code>, 
                           <code>passArgs</code>
                       </p>
                     </div>
@@ -384,6 +437,50 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
                       <span class="lib-entry-param-desc-shortdesc">Title</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">ID for outermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>class</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes or additional classes for outermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute for outermost container (for compatibility)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -548,7 +645,7 @@ Types recognizes by Cato standard markup (theme-defined types are possible):
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">ID</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">ID on innermost container</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>

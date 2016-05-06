@@ -122,14 +122,19 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-addParamsToStr">addParamsToStr</a>, 
                   <a href="#entry-addParamsToUrl">addParamsToUrl</a>, 
                   <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
+                  <a href="#entry-clearVars">clearVars</a>, 
                   <a href="#entry-compileProgressSuccessAction">compileProgressSuccessAction</a>, 
                   <a href="#entry-concatMaps">concatMaps</a>, 
                   <a href="#entry-containsStyleName">containsStyleName</a>, 
                   <a href="#entry-containsStyleNamePrefix">containsStyleNamePrefix</a>, 
                   <a href="#entry-copyMap">copyMap</a>, 
                   <a href="#entry-copyObject">copyObject</a>, 
+                  <a href="#entry-escapeFull">escapeFull</a>, 
+                  <a href="#entry-escapeFullUrl">escapeFullUrl</a>, 
+                  <a href="#entry-escapePart">escapePart</a>, 
                   <a href="#entry-escapeUrlParamDelims">escapeUrlParamDelims</a>, 
                   <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
+                  <a href="#entry-extractVars">extractVars</a>, 
                   <a href="#entry-getCurrentHeadingLevel">getCurrentHeadingLevel</a>, 
                   <a href="#entry-getCurrentSectionLevel">getCurrentSectionLevel</a>, 
                   <a href="#entry-getDefaultHeadingLevel">getDefaultHeadingLevel</a>, 
@@ -140,6 +145,7 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-getPropertyValue">getPropertyValue</a>, 
                   <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
                   <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
+                  <a href="#entry-htmlContentString">htmlContentString</a>, 
                   <a href="#entry-interpretRequestUri">interpretRequestUri</a>, 
                   <a href="#entry-isObjectType">isObjectType</a>, 
                   <a href="#entry-joinStyleNames">joinStyleNames</a>, 
@@ -156,18 +162,27 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-ofbizWebappUrl">ofbizWebappUrl</a>, 
                   <a href="#entry-rawString">rawString</a>, 
                   <a href="#entry-removeStyleNames">removeStyleNames</a>, 
+                  <a href="#entry-render">render</a>, 
+                  <a href="#entry-rewrapMap">rewrapMap</a>, 
+                  <a href="#entry-rewrapObject">rewrapObject</a>, 
+                  <a href="#entry-setContextField">setContextField</a>, 
                   <a href="#entry-setCurrentHeadingLevel">setCurrentHeadingLevel</a>, 
                   <a href="#entry-setCurrentSectionLevel">setCurrentSectionLevel</a>, 
+                  <a href="#entry-setGlobalContextField">setGlobalContextField</a>, 
+                  <a href="#entry-setRequestAttribute">setRequestAttribute</a>, 
+                  <a href="#entry-setVars">setVars</a>, 
                   <a href="#entry-splitStrParams">splitStrParams</a>, 
                   <a href="#entry-splitStyleNames">splitStyleNames</a>, 
                   <a href="#entry-splitStyleNamesToSet">splitStyleNamesToSet</a>, 
                   <a href="#entry-stripParamStrFromUrl">stripParamStrFromUrl</a>, 
+                  <a href="#entry-toRawString">toRawString</a>, 
                   <a href="#entry-toSet">toSet</a>, 
                   <a href="#entry-toSimpleMap">toSimpleMap</a>, 
                   <a href="#entry-trimParamStrDelims">trimParamStrDelims</a>, 
                   <a href="#entry-urlContainsPathPart">urlContainsPathPart</a>, 
                   <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
-                  <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>
+                  <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>, 
+                  <a href="#entry-varSection">varSection</a>
                 </p>
 </li>
             <li><a href="#section-API-WRITING UTILITIES">API-WRITING UTILITIES                </a><br/>
@@ -176,11 +191,13 @@ completely static) so that any macro or function here can easily be interchanged
                   <a href="#entry-addClassArgDefault">addClassArgDefault</a>, 
                   <a href="#entry-addClassArgDefaultExplicit">addClassArgDefaultExplicit</a>, 
                   <a href="#entry-addClassArgReplacing">addClassArgReplacing</a>, 
+                  <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
                   <a href="#entry-combineClassArgs">combineClassArgs</a>, 
                   <a href="#entry-compileClassArg">compileClassArg</a>, 
                   <a href="#entry-compileClassArgExplicit">compileClassArgExplicit</a>, 
                   <a href="#entry-compiledClassAttribStr">compiledClassAttribStr</a>, 
                   <a href="#entry-compiledClassAttribStrExplicit">compiledClassAttribStrExplicit</a>, 
+                  <a href="#entry-contentArgRender">contentArgRender</a>, 
                   <a href="#entry-elemAttribStr">elemAttribStr</a>, 
                   <a href="#entry-evalAbsContainerSizeFactors">evalAbsContainerSizeFactors</a>, 
                   <a href="#entry-extractPrefixedStyleNamesWithInt">extractPrefixedStyleNamesWithInt</a>, 
@@ -252,7 +269,9 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-addParamDelimToUrl">addParamDelimToUrl</a>, 
         <a href="#entry-addParamsToStr">addParamsToStr</a>, 
         <a href="#entry-addParamsToUrl">addParamsToUrl</a>, 
+        <a href="#entry-addStringToBoolStringVal">addStringToBoolStringVal</a>, 
         <a href="#entry-camelCaseToDashLowerName">camelCaseToDashLowerName</a>, 
+        <a href="#entry-clearVars">clearVars</a>, 
         <a href="#entry-combineClassArgs">combineClassArgs</a>, 
         <a href="#entry-compileClassArg">compileClassArg</a>, 
         <a href="#entry-compileClassArgExplicit">compileClassArgExplicit</a>, 
@@ -262,13 +281,18 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-concatMaps">concatMaps</a>, 
         <a href="#entry-containsStyleName">containsStyleName</a>, 
         <a href="#entry-containsStyleNamePrefix">containsStyleNamePrefix</a>, 
+        <a href="#entry-contentArgRender">contentArgRender</a>, 
         <a href="#entry-copyMap">copyMap</a>, 
         <a href="#entry-copyObject">copyObject</a>, 
         <a href="#entry-elemAttribStr">elemAttribStr</a>, 
+        <a href="#entry-escapeFull">escapeFull</a>, 
+        <a href="#entry-escapeFullUrl">escapeFullUrl</a>, 
+        <a href="#entry-escapePart">escapePart</a>, 
         <a href="#entry-escapeUrlParamDelims">escapeUrlParamDelims</a>, 
         <a href="#entry-evalAbsContainerSizeFactors">evalAbsContainerSizeFactors</a>, 
         <a href="#entry-evalToSimpleMap">evalToSimpleMap</a>, 
         <a href="#entry-extractPrefixedStyleNamesWithInt">extractPrefixedStyleNamesWithInt</a>, 
+        <a href="#entry-extractVars">extractVars</a>, 
         <a href="#entry-formatDate">formatDate</a>, 
         <a href="#entry-formatDateTime">formatDateTime</a>, 
         <a href="#entry-formattedDate">formattedDate</a>, 
@@ -300,6 +324,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-getStyleNamesByPrefix">getStyleNamesByPrefix</a>, 
         <a href="#entry-getTextLabelFromExpr">getTextLabelFromExpr</a>, 
         <a href="#entry-globalsPutAll">globalsPutAll</a>, 
+        <a href="#entry-htmlContentString">htmlContentString</a>, 
         <a href="#entry-interpretRequestUri">interpretRequestUri</a>, 
         <a href="#entry-isObjectType">isObjectType</a>, 
         <a href="#entry-joinStyleNames">joinStyleNames</a>, 
@@ -328,18 +353,26 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-rawString">rawString</a>, 
         <a href="#entry-readRequestStack">readRequestStack</a>, 
         <a href="#entry-removeStyleNames">removeStyleNames</a>, 
+        <a href="#entry-render">render</a>, 
+        <a href="#entry-rewrapMap">rewrapMap</a>, 
+        <a href="#entry-rewrapObject">rewrapObject</a>, 
         <a href="#entry-saveCurrentContainerSizes">saveCurrentContainerSizes</a>, 
         <a href="#entry-saveCurrentContainerSizesFromStyleStr">saveCurrentContainerSizesFromStyleStr</a>, 
+        <a href="#entry-setContextField">setContextField</a>, 
         <a href="#entry-setCurrentHeadingLevel">setCurrentHeadingLevel</a>, 
         <a href="#entry-setCurrentSectionLevel">setCurrentSectionLevel</a>, 
+        <a href="#entry-setGlobalContextField">setGlobalContextField</a>, 
         <a href="#entry-setLastRequestStack">setLastRequestStack</a>, 
+        <a href="#entry-setRequestAttribute">setRequestAttribute</a>, 
         <a href="#entry-setRequestVar">setRequestVar</a>, 
+        <a href="#entry-setVars">setVars</a>, 
         <a href="#entry-splitStrParams">splitStrParams</a>, 
         <a href="#entry-splitStyleNames">splitStyleNames</a>, 
         <a href="#entry-splitStyleNamesToSet">splitStyleNamesToSet</a>, 
         <a href="#entry-stripParamStrFromUrl">stripParamStrFromUrl</a>, 
         <a href="#entry-toClassArgAppending">toClassArgAppending</a>, 
         <a href="#entry-toClassArgReplacing">toClassArgReplacing</a>, 
+        <a href="#entry-toRawString">toRawString</a>, 
         <a href="#entry-toSet">toSet</a>, 
         <a href="#entry-toSimpleMap">toSimpleMap</a>, 
         <a href="#entry-translateStyleStrBoolArg">translateStyleStrBoolArg</a>, 
@@ -350,6 +383,7 @@ completely static) so that any macro or function here can easily be interchanged
         <a href="#entry-urlContainsPathPart">urlContainsPathPart</a>, 
         <a href="#entry-urlEndsWithPathPart">urlEndsWithPathPart</a>, 
         <a href="#entry-urlStartsWithPath">urlStartsWithPath</a>, 
+        <a href="#entry-varSection">varSection</a>, 
         <a href="#entry-varsPutAll">varsPutAll</a>
       </p>
     </div>
@@ -385,6 +419,163 @@ Intended for use anywhere in production templates and templating macros.        
 
           
           <hr />
+          <a name="entry-render"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">render</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>render</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Renders an Ofbiz screen or other resource.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Screens are rendered using Ofbiz&#39;s <code>screens.render</code> utility function.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>resource</code>, 
+                          <code>name</code>, 
+                          <code>type</code>, 
+                          <code>ctxVars</code>, 
+                          <code>globalCtxVars</code>, 
+                          <code>reqAttribs</code>, 
+                          <code>clearValues</code>, 
+                          <code>restoreValues</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>resource</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The resource identifier, with format depending on type</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>screen</code>: path and name, or path alone
+e.g.,
+        </span>
+<pre>&quot;component://common/widget/CommonScreens.xml#listLocales&quot;
+&quot;component://common/widget/CommonScreens.xml&quot;</pre>      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>name</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> A resource name part, if not already included in the resource</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>type</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(screen, default: screen)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The type of resource to render</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>screen</code>: an Ofbiz screen by <code>component://</code> location        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>ctxVars</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of screen context vars to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>globalCtxVars</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of screen global context vars to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>reqAttribs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of request attributes to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>clearValues</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, the passed request attributes and context vars are removed (or set to null) after invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>restoreValues</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-ofbizUrl"></a>
           <div class="lib-entry lib-entry-type-macro">
 
@@ -400,11 +591,37 @@ Intended for use anywhere in production templates and templating macros.        
                       <p class="lib-entry-shortdesc">Builds an Ofbiz navigation URL.</p>
                       <div class="lib-entry-extradesc">
         <p>
-THIS IS THE MAIN STOCK OFBIZ URL MACRO. It may be modified with enhanced
-capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+This utility and all similar link-generating utilities do NOT escape the URLs for
+HTML or javascript! You may need to use <a href="#entry-escapeFullUrl">#escapeFullUrl</a> in addition if there is
+any chance of the link containing parameters from user input or unsafe stored database data.
+The Ofbiz automatic context screen escaping is frequently bypassed using <a href="#entry-rawString">#rawString</a>
+for URLs, resulting in some dangerous URLs, particularly in javascript but also HTML.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+<code>fullPath</code> and <code>secure</code> parameters have different behavior than stock Ofbiz!          </div>
         <p>
 With Cato, boolean arguments can be given as booleans, string representation of booleans
 or empty string (signifies use defaults).        </p>
+        <p>
+<strong>fullPath behavior change:</strong> In Cato, when fullPath is specified for a controller request, if the
+request is defined as secure, a secure URL will be created. This method will now never allow an
+insecure URL to built for a controller request marked secure. In stock Ofbiz, this behavior was
+different: fullPath could generate insecure URLs to secure requests. In addition, fullPath will
+by default no longer downgrade HTTPS connections. To allow downgrades, you must explicitly specify
+request it by passing secure false, and this may still produce a secure link if the target
+is marked secure. Currently, this applies to all links including inter-webapp links.        </p>
+        <p>
+<strong>secure behavior change:</strong> In Cato, if current browsing is secure, we NEVER downgrade to HTTPS unless
+explicitly requested by passing secure false, and secure false may still produce a secure link if
+needed. Currently (2016-04-06), for security reasons, this
+downgrading request request only applies to the case where the target link is marked as non-secure, such
+that in general, setting secure false does not may the link will be insecure in all cases.
+In addition, in Cato, secure flag no longer forces a fullPath link. Specify fullPath true in addition to
+secure to force a fullPath link. Links may still generate full-path secure links when needed even
+if not requested, however.        </p>
                       </div>
                   </div>
             
@@ -630,7 +847,15 @@ is sacrificed to allow this flag to be used safely and more easily.          </d
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">or string boolean repr</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-If true, forces a full URL with secure protocol (HTTPS).
+If true, ensures the resulting URL will be a secure link.
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+MODIFIED IN CATO: This does not guarantee a full URL will be built, only when needed.
+Pass fullPath <code>true</code> to always force a full path. In addition, this parameter now
+recognizes the value <code>false</code> to force downgrades to HTTP when the target controller request
+is marked as non-secure.          </div>
+        <span>
 (Stock arg, enhanced in Cato: supports both boolean and string containing boolean)        </span>
 </span>
                     </td>
@@ -740,7 +965,7 @@ which is very frequent due to use of macros.        </p>
                       <div class="lib-entry-extradesc">
         <p>
 The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.        </p>
+but this is normally used to access another servlet, such as /products/PH-1000.        </p>
         <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
                       </div>
@@ -808,7 +1033,7 @@ This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWeba
                       <div class="lib-entry-extradesc">
         <p>
 The URI takes the basic form /control/requesturi,
-but this is normally used to access another servlet, such as /products/GZ-1000.        </p>
+but this is normally used to access another servlet, such as /products/PH-1000.        </p>
         <p>
 This calls <a href="#entry-ofbizUrl">@ofbizUrl</a> with absPath=false, interWebapp=false, controller=false by default.        </p>
                       </div>
@@ -1009,8 +1234,7 @@ If args is specified as map, &quot;webSiteId&quot; must be passed in args, not a
                       <p class="lib-entry-shortdesc">Builds an Ofbiz content/resource URL.</p>
                       <div class="lib-entry-extradesc">
         <p>
-THIS IS THE STOCK OFBIZ CONTENT URL MACRO. It may be modified with enhanced
-capabilities for Cato.        </p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
                       </div>
                   </div>
             
@@ -1233,6 +1457,480 @@ Order of arguments is strict; args will be stripped.          </div>
           
           
           <hr />
+          <a name="entry-setRequestAttribute"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">setRequestAttribute</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setRequestAttribute</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets a request attribute.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>name</code>, 
+                          <code>value</code>
+                      </p>
+                    </div>
+
+                  </div>
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-setContextField"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">setContextField</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setContextField</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets a field value in context</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Cato.        </p>
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>name</code>, 
+                          <code>value</code>
+                      </p>
+                    </div>
+
+                  </div>
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-setGlobalContextField"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">setGlobalContextField</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setGlobalContextField</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets a field value in global context.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+New in Cato.        </p>
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>name</code>, 
+                          <code>value</code>
+                      </p>
+                    </div>
+
+                  </div>
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-setVars"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">setVars</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>setVars</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets context variables and request attributes.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>varMaps</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>varMaps</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Map of maps of vars to set</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>ctxVars</code>: A map of screen context vars to be set before the invocation
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+      </li>
+      <li>
+        <span>
+<code>globalCtxVars</code>: A map of screen global context vars to be set before the invocation
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+      </li>
+      <li>
+        <span>
+<code>reqAttribs</code>: A map of request attributes to be set before the invocation
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-clearVars"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">clearVars</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>clearVars</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets context variables and request attributes.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>varLists</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>varLists</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of lists, or map of maps (keys used), of var names to clear</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>ctxVars</code>: A list (or map - keys used) of screen context vars names to clear        </span>
+      </li>
+      <li>
+        <span>
+<code>globalCtxVars</code>: A list (or map - keys used) of screen global context vars names to clear        </span>
+      </li>
+      <li>
+        <span>
+<code>reqAttribs</code>: A list (or map - keys used) of request attributes names to clear        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-extractVars"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">extractVars</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>extractVars</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Gets all the named attributes and context vars.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>varLists</code>, 
+                          <code>saveNulls</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>varLists</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of lists, or map of maps (keys used), of var names to extract values</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+      <li>
+        <span>
+<code>ctxVars</code>: A list (or map - keys used) of screen context vars names to extract        </span>
+      </li>
+      <li>
+        <span>
+<code>globalCtxVars</code>: A list (or map - keys used) of screen global context vars names to extract        </span>
+      </li>
+      <li>
+        <span>
+<code>reqAttribs</code>: A list (or map - keys used) of request attributes names to extract        </span>
+      </li>
+  </ul>
+</div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>saveNulls</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, null/missing values will get map entries with <code>CatoNullObject</code>; otherwise, omitted from results</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-return">
+                    <h4>Return Value</h4>
+                    <p>
+A map of maps with same keys as parameters.                    </p>
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-varSection"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">varSection</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>varSection</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Sets context variables and request attributes around a nested block. Can also be used alone.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This function is enhanced to support more value types and the special value catoNullObject
+to indicate the value null.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>ctxVars</code>, 
+                          <code>globalCtxVars</code>, 
+                          <code>reqAttribs</code>, 
+                          <code>clearValues</code>, 
+                          <code>restoreValues</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>ctxVars</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of screen context vars to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setContextField">#setContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>globalCtxVars</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of screen global context vars to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setGlobalContextField">#setGlobalContextField</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>reqAttribs</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map), default: -empty-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">A map of request attributes to be set before the invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Currently, this uses <a href="#entry-setRequestAttribute">#setRequestAttribute</a>. To set null, the key values may be set to a special null-representing
+object found in the global <code>catoNullObject</code> variable.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>clearValues</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, the passed request attributes and context vars are removed (or set to null) after invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>restoreValues</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If true, the original values are saved and restored after invocation</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-getLabel"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -1282,57 +1980,6 @@ If label not found in uiLabelMap (preferred), falls back to lookup in this
 resource. Usually uiLabelMap is preferred for templates, but sometimes not worth importing
 a whole file for one label.        </span>
 </span>
-                    </td>
-                  </tr>
-              </table>
-                      </div>
-
-                  </div>
-            
-
-            
-          </div>
-          
-          
-          <hr />
-          <a name="entry-rawString"></a>
-          <div class="lib-entry lib-entry-type-function">
-
-            <h3 class="lib-entry-title">rawString</h3>
-            
-            <div class="lib-entry-formal">
-               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rawString</code></span>
-                  </h4>
-            </div>
-            
-              
-                  <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding.
-This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</code>, but further simplifies
-the resulting type.</p>
-                      <div class="lib-entry-extradesc">
-                      </div>
-                  </div>
-            
-              
-                  <div class="lib-entry-section-params">
-                    <h4>Parameters</h4>
-                    
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>str</code>
-                      </p>
-                    </div>
-                      <div class="lib-entry-params-doc">
-              <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>str</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
               </table>
@@ -2686,7 +3333,7 @@ The url and pathPart must not be escaped; use <a href="#entry-rawString">#rawStr
                       <span class="lib-entry-param-desc-typeinfo"><code>(required)</code></span>
                       <span class="lib-entry-param-desc-shortdesc">Path part</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
-e.g., <code>/GZ-1000</code>        </span>
+e.g., <code>/PH-1000</code>        </span>
 </span>
                     </td>
                   </tr>
@@ -2841,6 +3488,9 @@ complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet()
 Usually not needed in FTL; provided for advanced usage.
 The resulting underlying type may differ from the original, but tries to keep the type similar when
 possible.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Behavior w.r.t. auto-escaping is currently inconsistent and poorly-defined.          </div>
                       </div>
                   </div>
             
@@ -2898,6 +3548,9 @@ possible.        </p>
         <p>
 Usually not needed in FTL; for advanced usage. The resulting underlying type may differ from the
 original; in principle tries to preserve, but in most cases will create a simple FTL hash.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Behavior w.r.t. auto-escaping is currently inconsistent and poorly-defined.          </div>
           <div class="lib-text-note">
             <strong>NOTES: </strong>
   <ul>
@@ -2984,6 +3637,352 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
           
           
           <hr />
+          <a name="entry-toRawString"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">toRawString</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>toRawString</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</code>, but further simplifies
+the resulting type into a simple Freemarker string.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-rawString"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">rawString</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rawString</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string.
+Alias for <a href="#entry-toRawString">#toRawString</a> (common operation).</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This is the same as the Ofbiz-provided function, <code>StringUtil.wrapString</code>, but further simplifies
+the resulting type into a simple Freemarker string.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The string to return raw.</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-htmlContentString"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">htmlContentString</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>htmlContentString</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Returns the given string, free of Ofbiz auto HTML encoding, as a simple Freemarker string, and
+depending on current implementation and system policy may process the string for allowed HTML.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Typically for database-stored content such as product descriptions which use limited HTML.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+This is NOT fully implemented and currently does the same as <a href="#entry-rawString">#rawString</a>.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The string</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-rawString">#rawString</a>
+                     </p>
+                  </div>  
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-rewrapObject"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">rewrapObject</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rewrapObject</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Takes a object and, if applicable, rewraps it with a different Freemarker wrapper.
+Used to convert complex BeansWrapper objects to simple maps and auto-HTML-escaping wrappers to non-escaping
+wrappers, either shallow or deep.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This tries to avoid rewrapping unless forced by the mode or the input map.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Currently this only works for maps!          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>object</code>, 
+                          <code>mode</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>object</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((object), required)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The source object</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>mode</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(simple|simple-raw-deep|simple-force|simple-raw-deep-force|simple-copy|simple-raw-deep-copy|simple-force-copy|simple-raw-deep-force-copy, default: simple)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Rewrapping mode and target wrapper type</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+The keywords mean the following:
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>simple</code>: convert &quot;complex&quot; BeansWrapper maps to simple adapter maps (that have no extra unwanted keys),
+but only if they are not already simple and the other options do not force it.        </span>
+      </li>
+      <li>
+        <span>
+<code>raw</code>: the target wrapper should be free of HTML auto-escaping
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Currently, this forces a performance-intensive unwrap operation in many cases,
+because Freemarker does not allow checking which wrapper an object is currently using.          </div>
+      </li>
+      <li>
+        <span>
+<code>deep</code>: the wrapper select should apply to any children the object may have
+        </span>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+Currently, this forces a performance-intensive deep unwrap operation in many cases,
+because Freemarker does not allow checking which wrapper an object is currently using.          </div>
+      </li>
+      <li>
+        <span>
+<code>force</code>: advanced option: this will force re-wrapping even if the target already appears adequate.        </span>
+      </li>
+      <li>
+        <span>
+<code>copy</code>: requests a copy operation where possible. The copy operation will be slow, but
+it may make the resulting type faster.        </span>
+      </li>
+  </ul>
+</div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Only the listed combinations are supported.          </div>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+<code>simple-raw-deep</code> uses a heuristic to avoid rewrapping simple FTL hashes. It is NOT
+accurate. If problems arise, use <code>simple-raw-deep-force</code> instead.          </div>
+</span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-rewrapMap"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">rewrapMap</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>rewrapMap</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Takes a map and, if applicable, rewraps it with a different wrapper.
+Used to convert complex BeansWrapper objets to simple maps and auto-HTML-escaping wrappers to non-escaping
+wrappers, either shallow or deep.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+Alias for <a href="#entry-rewrapObject">#rewrapObject</a>.        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>object</code>, 
+                          <code>mode</code>
+                      </p>
+                    </div>
+
+                  </div>
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-rewrapMap">#rewrapMap</a>
+                     </p>
+                  </div>  
+            
+
+              <div class="lib-entry-details">
+                <p>
+                  <span class="lib-entry-detail">Implemented as transform.</span>
+                </p>
+              </div>
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-toSimpleMap"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -2997,10 +3996,16 @@ This will only copy maps that don&#39;t have ?keys support if mode is include (&
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Takes a bean-wrapped map and switches it to a simple map adapter instead, without performing
-any copies.</p>
+any copies. Alias for <a href="#entry-rewrapMap">#rewrapMap</a>(object, &quot;simple&quot;).</p>
                       <div class="lib-entry-extradesc">
         <p>
 If the object is not a complex map but already another type of map, returns it as-is. Other types throw errors.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This only changes the complexity of the map; it does NOT prevent auto-escaping. In fact, if
+called on certain types of unescaped complex maps, this function may cause auto-escaping to return, which
+is why its behavior is to leave maps alone unless they are complex bean maps.
+Calling ?keys on this map may give escaped keys; use <a href="#entry-mapKeys">#mapKeys</a> or #rewrapMap with args (object, &quot;simple-raw&quot;).          </div>
                       </div>
                   </div>
             
@@ -3030,6 +4035,14 @@ If the object is not a complex map but already another type of map, returns it a
 
                   </div>
             
+              
+                  <div class="lib-entry-section-related">
+                     <h4>Related</h4>
+                     <p>
+                       <a href="#entry-rewrapMap">#rewrapMap</a>
+                     </p>
+                  </div>  
+            
 
               <div class="lib-entry-details">
                 <p>
@@ -3058,6 +4071,10 @@ a bean-wrapped context var (.ketSet()).</p>
                       <div class="lib-entry-extradesc">
         <p>
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.        </p>
+          <div class="lib-text-note">
+            <strong>WARN: </strong>
+The resulting keys are unescaped, not passed through auto-escaping, so that
+the map values can be keyed back without having to call <a href="#entry-rawString">#rawString</a>.          </div>
                       </div>
                   </div>
             
@@ -3771,6 +4788,263 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
             
           </div>
           
+          
+          <hr />
+          <a name="entry-escapeFull"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">escapeFull</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapeFull</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Encodes/escapes a COMPLETE text string for a given language, recognizing and sparing the language&#39;s delimiters.
+Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
+and encode in the requested language.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This can be used on full HTML snippets, etc.        </p>
+        <p>
+This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
+It abstracts the encoder selection.        </p>
+        <p>
+Currently, it uses Ofbiz&#39;s encoder (subject to change).        </p>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>, 
+                          <code>lang</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The string to escape</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>lang</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(html|xml|raw)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The target language</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This does not currently support js/json because it does not
+usually make sense to escape anything but single value strings.
+It also does not encode URLs; see <a href="#entry-escapeFullUrl">#escapeFullUrl</a>.          </div>
+        <span>
+
+        </span>
+        <h4>Related</h4>
+<pre>#escapePart</pre></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-escapeFullUrl"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">escapeFullUrl</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapeFullUrl</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Encodes/escapes a COMPLETE URL for a given language.
+Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
+and encode in the requested language.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This is meant to be used to encode full URLs so they can be safely included in HTML attributes,
+javascript strings, etc.        </p>
+        <p>
+This is a convenience wrapper around #rawString and the Ofbiz and Freemarker encoders.
+It abstracts the encoder selection.        </p>
+        <p>
+Currently, it uses Freemarker built-ins (subject to change); the Ofbiz encoders do not appear
+suited to handling URLs.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+In addition to the above, for compability reaons, this function will currently accept param delimiters
+in either the escaped <code>&amp;amp;</code> form or unescaped <code>&amp;</code> form.
+Ideally, we should not receive escaped delimiters here, but Ofbiz frequently escapes early.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-examples">
+                    <h4>Usage Examples</h4>
+<pre>
+    &lt;a href=&quot;${escapeFullUrl(&#39;http://www.ilscipio.com/test?param1=val1&amp;param2=val2;jsessionid=fake&#39;, &#39;html&#39;)}&quot;&gt;Link&lt;/a&gt;
+
+    &lt;@script&gt;
+      var link = &quot;${escapeFullUrl(&#39;http://www.ilscipio.com/test?param1=val1&amp;param2=val2;jsessionid=fake&#39;, &#39;js&#39;)}&quot;;
+    &lt;/@script&gt;
+</pre>                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>, 
+                          <code>lang</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The string to escape</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>lang</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(html|js|jsdq|json|js-html|jsdq-html|xml|raw)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The target language</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+<code>jsdq</code>: special case of js where it is assumed the value
+        </span>
+<pre>will be contained in double quotes, such that single quotes
+don&#39;t need to be escaped.</pre></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
+          
+          <hr />
+          <a name="entry-escapePart"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">escapePart</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>escapePart</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Encodes/escapes a SINGLE VALUE string for a given language, crushing delimiters.
+Will automatically call <a href="#entry-rawString">#rawString</a> on the passed string (bypassing screen auto-escaping)
+and encode in the requested language.</p>
+                      <div class="lib-entry-extradesc">
+        <p>
+This ONLY works to escape individual values of the given language. For example, &quot;url&quot;
+can only encode individual parameters in a URL, not the full URL; it will encoding delimiters.
+To encode a full URL, you must use <a href="#entry-escapeFullUrl">#escapeFullUrl</a>. You can use this on HTML attributes, but for full HTML texts,
+you should use <a href="#entry-escapeFull">#escapeFull</a>.        </p>
+        <p>
+Essentially this is a wrapping around #rawString and the encoders.
+It abstracts the encoder selection.        </p>
+        <p>
+Currently, it uses Freemarker built-ins (subject to change).        </p>
+        <p>
+Currently, there is no real need to replace occurrences of Freemarker built-ins with this function.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+There are a few rare stock Ofbiz templates where this should not be used, on account of the
+#rawString call, where there is a complex mix of javascript and html.          </div>
+                      </div>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>str</code>, 
+                          <code>lang</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>str</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The string to escape</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>lang</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(js|jsdq|json|html|url|xml|raw)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">The target language</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+These are similar to the Freemarker built-in counterparts, but may
+not produce the exact same results.
+<code>jsdq</code>: special case of js where it is assumed the value
+        </span>
+<pre>will be contained in double quotes, such that single quotes
+don&#39;t need to be escaped.</pre>        <span>
+
+        </span>
+        <h4>Related</h4>
+<pre>#escapeFull</pre></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
       </div>
 
       <hr />  
@@ -3784,6 +5058,77 @@ For advanced markup; bypasses <a href="standard/htmlStructure.html#entry-section
 Intended to assist implementation of template macros.        </span>
 </p>
 
+          
+          <hr />
+          <a name="entry-contentArgRender"></a>
+          <div class="lib-entry lib-entry-type-macro">
+
+            <h3 class="lib-entry-title">contentArgRender</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">macro</span> <span class="lib-entry-formalname"><code>contentArgRender</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Renders an argument supposed to contain a string or macro representing template content.
+If it is a macro, it must accept a single <code>args</code> parameter (map), which may
+be empty or populating depending on the specific point of use.</p>
+                  </div>
+            
+              
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>content</code>, 
+                          <code>doTrim</code>, 
+                          <code>args</code>
+                      </p>
+                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>content</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((string)|(macro))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> The content to render</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>doTrim</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> If string, trim it</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>args</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"> Map of arguments to pass to macro</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+              </table>
+                      </div>
+
+                  </div>
+            
+
+            
+          </div>
+          
           
           <hr />
           <a name="entry-mergeArgMaps"></a>
@@ -3954,7 +5299,7 @@ but otherwise should avoid using this map when possible.          </div>
             
               
                   <div class="lib-entry-section-maindesc">
-                      <p class="lib-entry-shortdesc">a version of mergeArgMaps that only merges maps, but doesn&#39;t perform any special implied
+                      <p class="lib-entry-shortdesc">A version of mergeArgMaps that only merges maps, but doesn&#39;t perform any special implied
 operations on them.</p>
                   </div>
             
@@ -4898,6 +6243,39 @@ Usually those macro args take &quot;&quot; by default, to mean default.        <
           
           
           <hr />
+          <a name="entry-addStringToBoolStringVal"></a>
+          <div class="lib-entry lib-entry-type-function">
+
+            <h3 class="lib-entry-title">addStringToBoolStringVal</h3>
+            
+            <div class="lib-entry-formal">
+               <h4><span class="lib-entry-type-text">function</span> <span class="lib-entry-formalname"><code>addStringToBoolStringVal</code></span>
+                  </h4>
+            </div>
+            
+              
+                  <div class="lib-entry-section-maindesc">
+                      <p class="lib-entry-shortdesc">Adds a string with optional delimiter to a string that supports boolean values.</p>
+                  </div>
+            
+                  <div class="lib-entry-section-params">
+                    <h4>Parameters</h4>
+                    
+                    <div class="lib-entry-params-formal">
+                      <p>
+                          <code>orig</code>, 
+                          <code>toAdd</code>, 
+                          <code>delim</code>
+                      </p>
+                    </div>
+
+                  </div>
+
+            
+          </div>
+          
+          
+          <hr />
           <a name="entry-pushRequestStack"></a>
           <div class="lib-entry lib-entry-type-function">
 
@@ -4976,6 +6354,12 @@ Must be unique across all known types of contexts (request attribs, screen conte
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Pops a global stack variable in request scope (request attributes, or if no request, globals).</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+AUTO-ESCAPING: Unlike <code>request.getAttribute</code>, values retrieved are not auto-escaped,
+unless they were inserted already escaped. In general, what you put in is what you get out.          </div>
+                      </div>
                   </div>
             
               
@@ -5097,6 +6481,12 @@ Must be unique across all known types of contexts (request attribs, screen conte
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+AUTO-ESCAPING: Unlike <code>request.getAttribute</code>, values retrieved are not auto-escaped,
+unless they were inserted already escaped. In general, what you put in is what you get out.          </div>
+                      </div>
                   </div>
             
               
@@ -5151,6 +6541,12 @@ Must be unique across all known types of contexts (request attribs, screen conte
               
                   <div class="lib-entry-section-maindesc">
                       <p class="lib-entry-shortdesc">Gets a copy of the named request stack as a list (read-only).</p>
+                      <div class="lib-entry-extradesc">
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+AUTO-ESCAPING: Unlike <code>request.getAttribute</code>, values retrieved are not auto-escaped,
+unless they were inserted already escaped. In general, what you put in is what you get out.          </div>
+                      </div>
                   </div>
             
               
@@ -5327,6 +6723,10 @@ w: always keep TemplateModel as-is (wrapped) when storing        </span>
         <p>
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.        </p>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+AUTO-ESCAPING: Unlike <code>request.getAttribute</code>, values retrieved are not auto-escaped,
+unless they were inserted already escaped. In general, what you put in is what you get out.          </div>
                       </div>
                   </div>
             

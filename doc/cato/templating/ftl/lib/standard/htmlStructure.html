@@ -273,6 +273,7 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                       <p>
                           <code>class</code>, 
                           <code>id</code>, 
+                          <code>style</code>, 
                           <code>collapse</code>, 
                           <code>norows</code>, 
                           <code>alt</code>, 
@@ -315,6 +316,26 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> If true alternate row (odd), if false regular (even)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Row ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -409,6 +430,7 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                           <code>largeOffset</code>, 
                           <code>class</code>, 
                           <code>id</code>, 
+                          <code>style</code>, 
                           <code>collapse</code>, 
                           <code>nocells</code>, 
                           <code>last</code>, 
@@ -441,6 +463,26 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>id</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Cell ID</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
                   <tr>
@@ -1156,6 +1198,7 @@ This has dependencies on some non-structural macros.          </div>
                           <code>type</code>, 
                           <code>id</code>, 
                           <code>title</code>, 
+                          <code>style</code>, 
                           <code>class</code>, 
                           <code>padded</code>, 
                           <code>autoHeadingLevel</code>, 
@@ -1164,12 +1207,17 @@ This has dependencies on some non-structural macros.          </div>
                           <code>defaultHeadingLevel</code>, 
                           <code>menuContent</code>, 
                           <code>menuClass</code>, 
-                          <code>menuLayout</code>, 
+                          <code>menuLayoutTitle</code>, 
+                          <code>menuLayoutGeneral</code>, 
                           <code>menuRole</code>, 
                           <code>requireMenu</code>, 
                           <code>forceEmptyMenu</code>, 
+                          <code>menuItemsInlined</code>, 
                           <code>hasContent</code>, 
                           <code>titleClass</code>, 
+                          <code>containerClass</code>, 
+                          <code>containerId</code>, 
+                          <code>containerStyle</code>, 
                           <code>open</code>, 
                           <code>close</code>, 
                           <code>passArgs</code>
@@ -1182,9 +1230,14 @@ This has dependencies on some non-structural macros.          </div>
                         <code>type</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic, default: generic)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(default|generic|..., default: default)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Cato standard currently only defines <code>default</code> and <code>generic</code> - almost the same except
+<code>generic</code> explicitly expects themes not to change defaults (unless absolutely necessary) whereas it&#39;s more acceptable
+to change <code>default</code> defaults. Custom types may be defined.
+        </span>
+</span>
                     </td>
                   </tr>
                   <tr>
@@ -1193,7 +1246,7 @@ This has dependencies on some non-structural macros.          </div>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes, on outer columns element (affects title)</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes, on outer cell element (affects title) (NOT on outermost container)</span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
@@ -1211,6 +1264,33 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 boolean false has no effect here          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+Grid size classes may be specified here to limit dimensions.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>containerClass</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">CSS classes, on outermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
+        </span>
+        <div>  <ul>
+      <li>
+        <span>
+<code>+</code>: causes the classes to append only, never replace defaults (same logic as empty string &quot;&quot;)        </span>
+      </li>
+      <li>
+        <span>
+<code>=</code>: causes the classes to replace non-essential defaults (same as specifying a class name directly)        </span>
+      </li>
+  </ul>
+</div>
 </span>
                     </td>
                   </tr>
@@ -1220,7 +1300,44 @@ boolean false has no effect here          </div>
                     </td>
                     <td class="entry-paramdesc">
                       <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Section ID</span><br/>
+                      <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+By convention (and for compability) this will always be on the outermost container.          </div>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>containerId</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Section ID, on outermost container (nearly synonym for <code>id</code>)</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+Unlike <code>id</code>, <code>containerId</code> is never used to generate related IDs automatically.
+If <code>id</code> is specified, <code>containerId</code> will not take effect because
+they both apply to the same container.        </span>
+</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>style</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container</span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>containerStyle</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML style attribute, on outermost container (synonym for <code>style</code>)</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
@@ -1340,14 +1457,24 @@ assumed to be &quot;section&quot; or &quot;section-inline&quot;.          </div>
                   </tr>
                   <tr>
                     <td class="entry-paramname">
-                        <code>menuLayout</code>
+                        <code>menuLayoutTitle</code>
                     </td>
                     <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(post-title|pre-title|inline-title, default: post-title)</code></span>
+                      <span class="lib-entry-param-desc-typeinfo"><code>(post-title|pre-title|inline-title, default: -from global styles-, fallback default: post-title)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"></span><br/>
                       <span class="lib-entry-param-desc-extradesc">        <span>
 This is a low-level control; avoid where possible.        </span>
 </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>menuLayoutGeneral</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>(top|bottom|top-bottom, default: -from global styles-, fallback default: top)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
+                      <span class="lib-entry-param-desc-extradesc"></span>
                     </td>
                   </tr>
                   <tr>
@@ -1404,6 +1531,22 @@ This is a low-level control; avoid where possible.        </span>
                       <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
                       <span class="lib-entry-param-desc-shortdesc"> If true, always add menu and must be empty</span><br/>
                       <span class="lib-entry-param-desc-extradesc"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="entry-paramname">
+                        <code>menuItemsInlined</code>
+                    </td>
+                    <td class="entry-paramdesc">
+                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -auto-)</code></span>
+                      <span class="lib-entry-param-desc-shortdesc">Override flag to say if menuContent string contains menu items only or also the menu wrapper</span><br/>
+                      <span class="lib-entry-param-desc-extradesc">        <span>
+If this is omitted (or empty string), it tries to determine automatically from the string.
+        </span>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This only applies if menuContent is a string.          </div>
+</span>
                     </td>
                   </tr>
                   <tr>

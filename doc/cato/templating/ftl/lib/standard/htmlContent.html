@@ -793,6 +793,10 @@ legacy Ofbiz code tables may be assigned this for input forms formatted with tab
 ultimately belong as <a href="../standard/htmlForm.html#entry-field">@field</a> and <a href="../standard/htmlStructure.html#entry-row">@row</a>/<a href="../standard/htmlStructure.html#entry-cell">@cell</a>.
         </span>
       </li>
+      <li>
+        <span>
+<code>fields-vert</code>: like <code>fields</code> but arranged like a regular table with labels in a header row.        </span>
+      </li>
   </ul>
 </div>
           <div class="lib-text-note">
@@ -2313,6 +2317,11 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
 can only use if no other links inside nested content          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
                     </td>
                   </tr>
@@ -2473,6 +2482,11 @@ bgcover = css background cover        </span>
                       <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
 can only use if no other links inside nested content          </div>
+          <div class="lib-text-note">
+            <strong>NOTE: </strong>
+This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
+to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
+but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
                     </td>
                   </tr>

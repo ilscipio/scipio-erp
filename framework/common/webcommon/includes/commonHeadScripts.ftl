@@ -3,10 +3,10 @@
 <@script output=true>
 
     <#-- Common Ofbiz URIs for use in javascript -->
-    <@requireScriptOfbizUrl uri="getJSONuiLabelArray" />
-    <@requireScriptOfbizUrl uri="getJSONuiLabel" />
+    <@requireScriptOfbizUrl uri="getJSONuiLabelArray" onlyIfExists=true/>
+    <@requireScriptOfbizUrl uri="getJSONuiLabel" onlyIfExists=true/>
     <#-- This belongs in @progressScript, but Ofbiz FTL bug requires it here -->
-    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
+    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" onlyIfExists=true/>
     
     <#-- NOTE: a screen that needs a URL in JS must call @requireScriptOfbizUrl 
          FTL macro, for now, see htmlUtilities.ftl -->

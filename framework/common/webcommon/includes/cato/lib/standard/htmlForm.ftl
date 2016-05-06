@@ -2100,8 +2100,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 * getDefaultFieldGridStyles
 ************
 Returns the classes that @field would put on the label, widget and postfix area containers, given the requirements.
-
-The parameter defaults for totalColumns, 
+Caller may override any.
 
 NOTE: This is used both internally by @field and in some cases is also needed in templates.
                     
@@ -2117,7 +2116,6 @@ NOTE: This is used both internally by @field and in some cases is also needed in
                               NOTE: This does not have to be 12.
     widgetPostfixColumns    = ((int), default: -from global styles-) The columns size of widget and postfix combined (regardless of {{{widgetPostfixCombined}}}).         
 -->
-<#-- calculates the default @field grid styles - used unless overridden by @field's caller -->
 <#assign getDefaultFieldGridStyles_defaultArgs = {
   "totalColumns":"", "widgetPostfixColumns":"", "labelArea":true, "labelInRow":true,
   "postfix":false, "postfixColumns":"", "isLargeParent":"", "labelSmallColDiff":"",

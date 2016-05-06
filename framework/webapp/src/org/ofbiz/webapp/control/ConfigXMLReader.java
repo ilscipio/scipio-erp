@@ -576,7 +576,10 @@ public class ConfigXMLReader {
             RequestResponse requestResponse = new RequestResponse();
             requestResponse.name = "empty-none";
             requestResponse.type = "none";
-            requestResponse.value = null;
+            // Cato: This is an error; Element.getAttribute returns empty string if missing, so this is not equivalent to
+            // rest of code
+            //requestResponse.value = null;
+            requestResponse.value = "";
             return requestResponse;
         }
 

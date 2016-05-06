@@ -234,7 +234,9 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             out.write(link);
                         }
                         else {
-                            out.write(requestUrl);
+                            // Cato: If link is null, it means there was an error building link; write nothing, so that
+                            // it's possible for templates to catch this case if they need to.
+                            //out.write(requestUrl);
                         }
                     } else {
                         out.write(buf.toString());

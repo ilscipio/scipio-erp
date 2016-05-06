@@ -186,33 +186,41 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
                                   and will be included by decorator in footer.
     htmlwrap                = ((boolean), default: false) Whether to wrap in @script
                               NOTE: Default is FALSE for this macro (unlike others).
+    onlyIfExists            = ((boolean), default: false) Whether to omit URL if not defined in controller
+                              If true, the require request will not produce an entry if the controller
+                              doesn't support the given URI. If false, it will always try to make a URL,
+                              which if missing from controller may give a lot or other error.
 -->
-<#macro requireScriptOfbizUrl uri htmlwrap=false output="">
+<#macro requireScriptOfbizUrl uri htmlwrap=false output="" onlyIfExists=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
-    <#if output?is_boolean && output == true>
-      <@script htmlwrap=htmlwrap output=output>
-        <#if requiredScriptOfbizUrls?is_boolean>
+  <#if uri?has_content && requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
+    <#if !onlyIfExists || (Static["org.ofbiz.webapp.control.RequestHandler"].controllerHasRequestUriDirect(request, uri))>
+      <#if output?is_boolean && output == true>
+        <@script htmlwrap=htmlwrap output=output>
+
+          <#if requiredScriptOfbizUrls?is_boolean>
           if (typeof variable === 'undefined') {
               var commonOfbizUrls = {};
           }
-        </#if>
-        commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-      </@script>
-    <#else>
-      <#if requiredScriptOfbizUrls?is_boolean>
-        <#local requiredScriptOfbizUrls = toSet([uri])>
+          </#if>
+          commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
+          
+        </@script>
       <#else>
-        <#local dummy = requiredScriptOfbizUrls.add(uri)!>
+        <#if requiredScriptOfbizUrls?is_boolean>
+          <#local requiredScriptOfbizUrls = toSet([uri])>
+        <#else>
+          <#local dummy = requiredScriptOfbizUrls.add(uri)!>
+        </#if>
+        <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
       </#if>
-      <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
     </#if>
   </#if>
 </#macro>
 
 <#macro includeRecordedScriptOfbizUrls htmlwrap=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
+  <#if (!requiredScriptOfbizUrls?is_boolean) && (!requiredScriptOfbizUrls.isEmpty())>
     <@script output=true htmlwrap=htmlwrap>
 
       if (typeof variable === 'undefined') {
@@ -220,8 +228,9 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${escapeFullUrl(uri, 'js')}"] = "${escapeFullUrl(makeOfbizUrl(uri), 'js')}";
+      commonOfbizUrls["${uri?js_string}"] = "${makeOfbizUrl(uri)?js_string}";
       </#list>
+
     </@script>
   </#if>
 </#macro>

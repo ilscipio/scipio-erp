@@ -633,7 +633,10 @@ public class RequestHandler {
             throw new RequestHandlerException("Illegal response; handler could not process request [" + requestMap.uri + "] and event return [" + eventReturn + "].");
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", sessionId=" + UtilHttp.getSessionId(request), module);
+        // Cato: Parse value
+        String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
+        
+        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", parsed-value=" + nextRequestResponseValue + ", sessionId=" + UtilHttp.getSessionId(request), module);
 
         // ========== Handle the responses - chains/views ==========
 
@@ -642,7 +645,7 @@ public class RequestHandler {
             // Debug.logInfo("======save last view: " + session.getAttribute("_LAST_VIEW_NAME_"));
             String lastViewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
             // Do not save the view if the last view is the same as the current view and saveCurrentView is false
-            if (!(!nextRequestResponse.saveCurrentView && "view".equals(nextRequestResponse.type) && nextRequestResponse.value.equals(lastViewName))) {
+            if (!(!nextRequestResponse.saveCurrentView && "view".equals(nextRequestResponse.type) && nextRequestResponseValue.equals(lastViewName))) {
                 session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
                 session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
             }
@@ -654,7 +657,7 @@ public class RequestHandler {
         if ("request".equals(nextRequestResponse.type)) {
             // chained request
             Debug.logInfo("[RequestHandler.doRequest]: Response is a chained request." + " sessionId=" + UtilHttp.getSessionId(request), module);
-            doRequest(request, response, nextRequestResponse.value, userLogin, delegator);
+            doRequest(request, response, nextRequestResponseValue, userLogin, delegator);
         } else {
             // ======== handle views ========
 
@@ -679,15 +682,15 @@ public class RequestHandler {
             if(UtilValidate.isNotEmpty(responseStatusCode))
                 statusCodeString = responseStatusCode;            
             
-            
             if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // Cato: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
-                callRedirect(nextRequestResponse.value, response, request, statusCodeString);
+                callRedirect(nextRequestResponseValue, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
-                String url = nextRequestResponse.value.startsWith("/") ? nextRequestResponse.value : "/" + nextRequestResponse.value;
+
+                String url = nextRequestResponseValue.startsWith("/") ? nextRequestResponseValue : "/" + nextRequestResponseValue;
                 // Cato: Modified to pass through encodeURL and more intelligent link-building method
                 // NOTE: no support for webSiteId, so absPath assumed true
                 //callRedirect(url + this.makeQueryString(request, nextRequestResponse), response, request, statusCodeString);
@@ -697,24 +700,24 @@ public class RequestHandler {
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
-                //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
-                callRedirect(makeLinkFullWithQueryString(request, response, "/" + nextRequestResponse.value, nextRequestResponse), response, request, statusCodeString);
+                //callRedirect(makeLinkWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
+                callRedirect(makeLinkFullWithQueryString(request, response, "/" + nextRequestResponseValue, nextRequestResponse), response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
                 // Cato: We MUST pass fullPath=true so that the host part will be looked up in Ofbiz entities as opposed to decided by Tomcat during redirect operation
-                //callRedirect(makeLink(request, response, nextRequestResponse.value), response, request, statusCodeString);
-                callRedirect(makeLinkFull(request, response, nextRequestResponse.value), response, request, statusCodeString);
+                //callRedirect(makeLink(request, response, nextRequestResponseValue), response, request, statusCodeString);
+                callRedirect(makeLinkFull(request, response, nextRequestResponseValue), response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
-                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponse.value;
+                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
                 renderView(viewName, requestMap.securityExternalView, request, response, saveName);
             } else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
-                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponse.value;
+                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
 
                 // as a further override, look for the _SAVED and then _HOME and then _LAST session attributes
                 Map<String, Object> urlParams = null;
@@ -727,8 +730,8 @@ public class RequestHandler {
                 } else if (session.getAttribute("_LAST_VIEW_NAME_") != null) {
                     viewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
                     urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_LAST_VIEW_PARAMS_"));
-                } else if (UtilValidate.isNotEmpty(nextRequestResponse.value)) {
-                    viewName = nextRequestResponse.value;
+                } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
+                    viewName = nextRequestResponseValue;
                 }
                 if (urlParams != null) {
                     for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
@@ -745,7 +748,7 @@ public class RequestHandler {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
                  // check for an override view, only used if "success" = eventReturn
-                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponse.value;
+                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
 
                  // as a further override, look for the _SAVED and then _HOME and then _LAST session attributes
                  if (session.getAttribute("_SAVED_VIEW_NAME_") != null) {
@@ -754,15 +757,15 @@ public class RequestHandler {
                      viewName = (String) session.getAttribute("_HOME_VIEW_NAME_");
                  } else if (session.getAttribute("_LAST_VIEW_NAME_") != null) {
                      viewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
-                 } else if (UtilValidate.isNotEmpty(nextRequestResponse.value)) {
-                     viewName = nextRequestResponse.value;
+                 } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
+                     viewName = nextRequestResponseValue;
                  }
                  renderView(viewName, requestMap.securityExternalView, request, response, null);
             } else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
-                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponse.value;
+                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
 
                 // as a further override, look for the _HOME session attributes
                 Map<String, Object> urlParams = null;
@@ -786,6 +789,68 @@ public class RequestHandler {
         }
     }
 
+    /**
+     * Cato: New feature that allows controller responses to dig values out of request attributes using the 
+     * EL-like syntax: ${scope.name}. The value must be a string otherwise an error is logged.
+     * returned.
+     * <p>
+     * Currently the supported scopes are:
+     * requestAttributes
+     * requestParameters
+     * requestAttrParam - checks attributes; if null, uses params
+     * sessionAttributes
+     * applicationAttributes
+     */
+    String parseResponseValue(HttpServletRequest request, HttpServletResponse response, String value, ConfigXMLReader.RequestMap requestMap) {
+        if (value == null) {
+            return value;
+        }
+        if (value.startsWith("${") && value.endsWith("}")) {
+            Object attrValue = null;
+            int dotIndex = value.indexOf('.');
+            if (dotIndex >= 0) {
+                String scope = value.substring(2, dotIndex).trim();
+                String name = value.substring(dotIndex+1, value.length() - 1).trim();
+                if (scope.length() > 0 && name.length() > 0) {
+                    if ("requestAttributes".equals(scope)) {
+                        attrValue = request.getAttribute(name);
+                    } else if ("requestParameters".equals(scope)) {
+                        attrValue = request.getParameter(name);
+                    } else if ("requestAttrParam".equals(scope)) {
+                        attrValue = request.getAttribute(name);
+                        if (attrValue == null) {
+                            attrValue = request.getParameter(name);
+                        }
+                    } else if ("sessionAttributes".equals(scope)) {
+                        HttpSession session = request.getSession(false);
+                        if (session != null) {
+                            attrValue = session.getAttribute(name);
+                        }
+                    } else if ("applicationAttributes".equals(scope)) {
+                        attrValue = request.getServletContext().getAttribute(name);
+                    }
+                }
+            }
+            if (attrValue != null) {
+                if (attrValue instanceof String) {
+                    String attrStr = (String) attrValue;
+                    return attrStr;
+                } else {
+                    if (requestMap != null) {
+                        Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
+                                attrValue.toString() + "' from request URI '" + requestMap.uri + "' did not evaluate to a string; treating as null", module);
+                    } else {
+                        Debug.logError("Cato: Error in request handler: The interpreted request response value '" +
+                                attrValue.toString() + "' did not evaluate to a string; treating as null", module);
+                    }
+                }
+            }
+            return null;
+        }
+        return value;
+    }
+    
+    
     /** Find the event handler and invoke an event. */
     public String runEvent(HttpServletRequest request, HttpServletResponse response,
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {

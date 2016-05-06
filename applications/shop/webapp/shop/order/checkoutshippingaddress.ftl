@@ -170,9 +170,10 @@ function toggleBillingAccount(box) {
   <#--<fieldset>-->
     <input type="hidden" name="checkoutpage" value="shippingaddress"/>
     <@section>
+      <@addressList>
         <#if shippingContactMechList?has_content>
           <#-- Use standard floats for this?... -->
-          <@addressList>
+
           <#list shippingContactMechList as shippingContactMech>
             <@addressEntry>
             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
@@ -190,28 +191,8 @@ function toggleBillingAccount(box) {
             <@commonInvField type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" checked=checkThisAddress labelContent=labelContent postfixContent=postfixContent class="+addr-select-radio"/>
             </@addressEntry>
           </#list>
-          </@addressList>
-        </#if>
-    
 
-    <#macro newAddrFormContent args={}>
-      <input type="hidden" name="new_ship_addr_prefix" value="newShipAddr_" />
-      <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
-      <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
-      
-      <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address
-           and saves as default in profile due to way createPostalAddressAndPurposes service written.
-           It's nice that it sets as default in profile (maybe), but I'm not sure we want it to remove the SHIPPING_LOCATION
-           purpose from the other address. With it commented, it simply adds another SHIPPING_LOCATION and does not set in
-           profile.
-      <input type="hidden" name="newShipAddr_setShippingPurpose" value="Y" />-->
-      
-      <#-- Cato: Fields copied from editcontactmech.ftl (+ newShipAddr_ prefix) -->
-      <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
-            ctxVars={
-                "pafFieldNamePrefix":"newShipAddr_",
-                "pafUseScripts":true}/>
-    </#macro>
+        </#if>
 
         <#-- Cato: _NEW_ asks the checkout process to check for _NEW_ and create a new contact mech if needed before the other events -->
         <#if shippingContactMechList?has_content>
@@ -220,6 +201,33 @@ function toggleBillingAccount(box) {
           <#else>
             <#assign checkThisAddress = (!shippingContactMechList?has_content)>
           </#if>
+          <@addressEntry ownLine=true>
+            <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
+               id="newshipaddrradio" class="+addr-select-radio" label=uiLabelMap.PartyAddNewAddress/><#--labelContent=newAddrFormFieldContent-->
+          </@addressEntry>
+        </#if>
+    
+      </@addressList>
+    
+        <#macro newAddrFormContent args={}>
+          <input type="hidden" name="newShipAddr_partyId" value="${parameters.partyId!}" />
+          <input type="hidden" name="newShipAddr_productStoreId" value="${productStoreId!}" />
+          
+          <#-- Cato: UNTESTED: If this is uncommented, this address takes over the SHIPPING_LOCATION purpose from the last address
+               and saves as default in profile due to way createPostalAddressAndPurposes service written.
+               It's nice that it sets as default in profile (maybe), but I'm not sure we want it to remove the SHIPPING_LOCATION
+               purpose from the other address. With it commented, it simply adds another SHIPPING_LOCATION and does not set in
+               profile.
+          <input type="hidden" name="newShipAddr_setShippingPurpose" value="Y" />-->
+          
+          <#-- Cato: Fields copied from editcontactmech.ftl (+ newShipAddr_ prefix) -->
+          <@render resource="component://shop/widget/CustomerScreens.xml#postalAddressFields" 
+                ctxVars={
+                    "pafFieldNamePrefix":"newShipAddr_",
+                    "pafUseScripts":true}/>
+        </#macro>
+    
+        <#if shippingContactMechList?has_content>
           <#macro newAddrFormFieldContent args={}>
             <#--
             <label for="newshipaddrradio"><@heading relLevel=+1>${uiLabelMap.PartyAddNewAddress}</@heading></label>
@@ -228,12 +236,6 @@ function toggleBillingAccount(box) {
               <@newAddrFormContent />
             </div>
           </#macro>
-          <@addressList>
-            <@addressEntry>
-          <@commonInvField type="radio" name="shipping_contact_mech_id" value="_NEW_" checked=checkThisAddress 
-             id="newshipaddrradio" class="+addr-select-radio" label=uiLabelMap.PartyAddNewAddress/><#--labelContent=newAddrFormFieldContent-->
-            </@addressEntry>
-          </@addressList>
           <@newAddrFormFieldContent />
         <#else>
           <div id="newshipaddrcontent"<#if !showNewAddrForm> style="display:none;"</#if>>

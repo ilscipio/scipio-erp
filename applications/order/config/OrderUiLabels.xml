@@ -15176,4 +15176,26 @@
         <value xml:lang="de">Sparen zu berücksichtigen</value>
         <value xml:lang="en">Save to account</value>
     </property>
+    <!-- Cato: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being 
+        DO NOT REUSE these for now. -->
+    <property key="OrderPaymentDescOffline">
+        <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder Zahlungsanweisung.</value>
+        <value xml:lang="en">Pay using mail-in check or money order.</value>
+    </property>
+    <property key="OrderPaymentDescCOD">
+        <value xml:lang="de">Achten Sie bei der Lieferung Ihrer Position (en).</value>
+        <value xml:lang="en">Pay upon delivery of your item(s).</value>
+    </property>
+    <property key="OrderPaymentDescPaypal">
+        <value xml:lang="de">Bezahlen extern mit Paypal. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="en">Pay with Paypal externally. You will be redirected back to review your order afterward.</value>
+    </property>
+    <property key="OrderPaymentDescWorldpay">
+        <value xml:lang="de">Bezahlen extern mit Worldpay. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="en">Pay with Worldpay externally. You will be redirected back to review your order afterward.</value>
+    </property>
+    <property key="OrderPaymentDescIdeal">
+        <value xml:lang="de">Bezahlen extern mit iDEAL. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="en">Pay with iDEAL externally. You will be redirected back to review your order afterward.</value>
+    </property>
 </resource>

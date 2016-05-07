@@ -50,10 +50,6 @@ under the License.
   </#if>
   <#--<@render resource="component://common/widget/CommonScreens.xml#states" />-->
 </@field>
-<@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation" disabled=(requestParameters.useShipAddr??)>
-      <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-      <#if (((parameters.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-      <option></option>
-      <option value="Y">${uiLabelMap.CommonYes}</option>
-      <option value="N">${uiLabelMap.CommonNo}</option>
-</@field>
+
+<@allowSolicitationField name="allowSolicitation" allowSolicitation="" disabled=(requestParameters.useShipAddr??) />
+

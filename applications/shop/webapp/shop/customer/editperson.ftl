@@ -36,18 +36,8 @@ under the License.
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   
-    <@field type="select" label="${uiLabelMap.CommonTitle}" name="personalTitle">
-        <#if personData.personalTitle?has_content >
-          <option>${personData.personalTitle}</option>
-          <option value="${personData.personalTitle}"> -- </option>
-        <#else>
-          <option value="">${uiLabelMap.CommonSelectOne}</option>
-        </#if>
-        <option>${uiLabelMap.CommonTitleMr}</option>
-        <option>${uiLabelMap.CommonTitleMrs}</option>
-        <option>${uiLabelMap.CommonTitleMs}</option>
-        <option>${uiLabelMap.CommonTitleDr}</option>
-    </@field>
+    <@personalTitleField label=uiLabelMap.CommonTitle name="personalTitle" personalTitle=((personData.personalTitle)!) />
+
     <@field type="input" label="${uiLabelMap.PartyFirstName}" required=true size="30" maxlength="30" name="firstName" value=(personData.firstName!)/>
     <@field type="input" label="${uiLabelMap.PartyMiddleInitial}" size="4" maxlength="4" name="middleName" value=(personData.middleName!)/>
     <@field type="input" label="${uiLabelMap.PartyLastName}" required=true size="30" maxlength="30" name="lastName" value=(personData.lastName!)/>

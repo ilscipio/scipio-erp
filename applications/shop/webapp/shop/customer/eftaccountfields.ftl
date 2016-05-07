@@ -32,14 +32,14 @@ under the License.
   <#assign selectedAccountType = (parameters["${fieldNamePrefix}accountType"]!(eftAccountData.accountType)!(eafFallbacks.accountType)!)>
   <#-- Cato: NOTE: These type names are very loosely defined... -->
   <#if !["Checking", "Savings"]?seq_contains(selectedAccountType)>
-    <option value="${selectedAccountType}">${eftAccountData.accountType!}</option>
+    <option value="${selectedAccountType}">${selectedAccountType!}</option>
     <option></option>
   </#if>
   <option<#if selectedAccountType == "Checking"> value="Checking"</#if>>${uiLabelMap.CommonChecking}</option>
   <option<#if selectedAccountType == "Savings"> value="Savings"</#if>>${uiLabelMap.CommonSavings}</option>
 </@field>
 <@field type="input" label="${uiLabelMap.AccountingAccountNumber}" required=true size="20" maxlength="40" name="${fieldNamePrefix}accountNumber" value=(parameters["${fieldNamePrefix}accountNumber"]!(eftAccountData.accountNumber)!(eafFallbacks.accountNumber)!) />
-<@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="${fieldNamePrefix}description" value=(parameters["${fieldNamePrefix}description"]!(paymentMethodData.description)!(eafFallbacks.description)!) />
+<@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="${fieldNamePrefix}description" value=(parameters["${fieldNamePrefix}description"]!(paymentMethodData.description)!(eafFallbacks.description)!) containerClass="+${styles.field_extra!}" />
 
 
    

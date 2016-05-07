@@ -138,19 +138,20 @@ will generally always be reserved for the logo at the top of the page.
     </div>
     ----------------------------------------------------------------------->
     <div>
+      <#-- TODO: @personalTitleField -->
       <label for="USER_TITLE">${uiLabelMap.CommonTitle}</label>
       <@fieldErrors fieldName="USER_TITLE"/>
       <select name="USER_TITLE" id="USER_TITLE">
         <#if requestParameters.USER_TITLE?has_content >
-          <option>${requestParameters.USER_TITLE}</option>
-          <option value="${requestParameters.USER_TITLE}"> -- </option>
+          <option value="${requestParameters.USER_TITLE}">${requestParameters.USER_TITLE}</option>
+          <option value="">---</option>
         <#else>
           <option value="">${uiLabelMap.CommonSelectOne}</option>
         </#if>
-        <option>${uiLabelMap.CommonTitleMr}</option>
-        <option>${uiLabelMap.CommonTitleMrs}</option>
-        <option>${uiLabelMap.CommonTitleMs}</option>
-        <option>${uiLabelMap.CommonTitleDr}</option>
+        <option value="Mr.">${uiLabelMap.CommonTitleMr}</option>
+        <option value="Mrs.">${uiLabelMap.CommonTitleMrs}</option>
+        <option value="Ms.">${uiLabelMap.CommonTitleMs}</option>
+        <option value="Dr.">${uiLabelMap.CommonTitleDr}</option>
       </select>
     </div>
 

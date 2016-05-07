@@ -59,7 +59,7 @@ function submitForm(form, mode, value) {
 
 <@section title="${uiLabelMap.OrderHowShallWeShipIt}?"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}? -->
     <form method="post" name="checkoutInfoForm" id="checkoutInfoForm">
-        <fieldset>
+        <#--<fieldset>-->
             <input type="hidden" name="checkoutpage" value="shippingoptions"/>
 
             <#-- Cato: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
@@ -144,7 +144,7 @@ function submitForm(form, mode, value) {
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                   <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(parameters.order_additional_emails!shoppingCart.getOrderAdditionalEmails()!)/>
               </@field>
-        </fieldset>
+        <#--</fieldset>-->
     </form>
 </@section>
 

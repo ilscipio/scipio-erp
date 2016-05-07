@@ -1020,7 +1020,8 @@ context.styles = [
     "field_tooltip_wrap" : "field-tooltip-wrap",  /* for some @field types, an extra container is added to support tooltips; it receives this style */
     "field_inverted" : "field-inverted",                /* style added to outer container for inverted fields NOTE: duplicated in fields_default_fieldargs */
     "field_standard" : "field-standard",                /* style added to outer container for non-inverted fields NOTE: duplicated in fields_default_fieldargs */
-
+    "field_extra" : "field-extra",                      /* extra field (non-essential) - relative term */
+    
     /* Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
         For any entries not specified, "default" entry is consulted.

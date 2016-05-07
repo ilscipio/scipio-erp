@@ -71,72 +71,11 @@ function toggleBillingAccount(box) {
 
    <#-- Cato: NOTE: fields duplicated from old checkout custsettings.ftl -->
 
-   <#-- Cato: WARN: this partyId is needed even if userLogin.partyId is already set -->
+   <#-- Cato: WARN: this partyId is needed even if userLogin.partyId is already set! -->
    <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
 
-   <@field type="select" name="personalTitle" label=uiLabelMap.CommonTitle>
-      <#if requestParameters.personalTitle?has_content>
-        <option>${parameters.personalTitle}</option>
-        <option value="${parameters.personalTitle}">--</option>
-      <#else>
-        <option value="">${uiLabelMap.CommonSelectOne}</option>
-      </#if>
-      <option>${uiLabelMap.CommonTitleMr}</option>
-      <option>${uiLabelMap.CommonTitleMrs}</option>
-      <option>${uiLabelMap.CommonTitleMs}</option>
-      <option>${uiLabelMap.CommonTitleDr}</option>
-    </@field>
-    <@field type="input" name="firstName" value=(parameters.firstName!) required=true label=uiLabelMap.PartyFirstName/>
-    <@field type="input" name="middleName" value=(parameters.middleName!) label=uiLabelMap.PartyMiddleInitial/>
-    <@field type="input" name="lastName" value=(parameters.lastName!) required=true label=uiLabelMap.PartyLastName/>
-    <@field type="input" name="suffix" value=(parameters.suffix!) label=uiLabelMap.PartySuffix/>
+   <@render resource="component://shop/widget/CustomerScreens.xml#customerBasicFields" ctxVars={}/>
 
-    <input type="hidden" name="homePhoneContactMechId" value="${parameters.homePhoneContactMechId!}"/>
-    <@field type="generic" label=uiLabelMap.PartyHomePhone required=true tooltip=false>
-        <@field type="input" inline=true size="4" maxlength="10" name="homeCountryCode" value=(parameters.homeCountryCode!) required=true tooltip=uiLabelMap.CommonCountryCode/>
-        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="homeAreaCode" value=(parameters.homeAreaCode!) required=true tooltip=uiLabelMap.PartyAreaCode />
-        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="homeContactNumber" value=(parameters.homeContactNumber!) required=true tooltip=uiLabelMap.PartyContactNumber />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="homeExt" value=(parameters.homeExt!) tooltip=uiLabelMap.PartyExtension />
-
-      <@fields type="default-compact" ignoreParentField=true>
-        <@field type="select" name="homeSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-          <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-          <option></option>
-          <option value="Y">${uiLabelMap.CommonYes}</option>
-          <option value="N">${uiLabelMap.CommonNo}</option>
-        </@field>
-      </@fields>
-    </@field>
-
-    <input type="hidden" name="workPhoneContactMechId" value="${parameters.workPhoneContactMechId!}"/>
-    <@field type="generic" label=uiLabelMap.PartyBusinessPhone>
-        <@field type="input" inline=true size="4" maxlength="10" name="workCountryCode" value=(parameters.workCountryCode!) tooltip=uiLabelMap.CommonCountryCode/>
-        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="workAreaCode" value=(parameters.workAreaCode!) tooltip=uiLabelMap.PartyAreaCode />
-        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="workContactNumber" value=(parameters.workContactNumber!) tooltip=uiLabelMap.PartyContactNumber />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="workExt" value=(parameters.workExt!) tooltip=uiLabelMap.PartyExtension />
-
-      <@fields type="default-compact" ignoreParentField=true>
-        <@field type="select" name="workSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-          <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-          <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-          <option></option>
-          <option value="Y">${uiLabelMap.CommonYes}</option>
-          <option value="N">${uiLabelMap.CommonNo}</option>
-        </@field>
-      </@fields>
-    </@field>
-
-    <input type="hidden" name="emailContactMechId" value="${parameters.emailContactMechId!}"/>
-    <@field type="input" name="emailAddress" value=(parameters.emailAddress!) required=true label=uiLabelMap.PartyEmailAddress/>
-
-    <@field type="select" name="emailSol" label="${uiLabelMap.PartyAllowSolicitation}?">
-      <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-      <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-      <option></option>
-      <option value="Y">${uiLabelMap.CommonYes}</option>
-      <option value="N">${uiLabelMap.CommonNo}</option>
-    </@field>
 </@section>
 </#if>
 

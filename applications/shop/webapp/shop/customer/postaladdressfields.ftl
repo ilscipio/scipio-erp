@@ -38,8 +38,8 @@ jQuery(document).ready(function() {
 
     <#assign fieldIdPrefixJs = escapePart(fieldIdPrefix, 'js')>
 
-    <#-- Cato: FIXME: error message div for ajax failures is missing 
-        FIXME: initial selected value may currently not work -->
+    <#-- Cato: NOTE: the container IDs can be omitted because the js doesn't make proper use of them anyhow -->
+    <#-- TODO?: getAssociatedStateList may be out of date compared to getDependentDropdownValues?  -->
     var errorMsgContainerId = null;
     var containerId = null;
     jQuery("#${fieldIdPrefixJs}countryGeoId").change(function() {
@@ -54,16 +54,10 @@ jQuery(document).ready(function() {
 </#if>
 
   <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="${fieldNamePrefix}toName" value=(parameters["${fieldNamePrefix}toName"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
-  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(parameters["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) />
+  <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="${fieldNamePrefix}attnName" value=(parameters["${fieldNamePrefix}attnName"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
   <@field type="input" label="${uiLabelMap.PartyAddressLine1}" required=true size="30" maxlength="30" name="${fieldNamePrefix}address1" value=(parameters["${fieldNamePrefix}address1"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
   <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="${fieldNamePrefix}address2" value=(parameters["${fieldNamePrefix}address2"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
-  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(parameters["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />
-  <@field type="select" label="${uiLabelMap.PartyState}" name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldIdPrefix}stateProvinceGeoId">
-    <#-- Cato: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
-    <#if defaultStateProvinceGeoId?has_content>
-      <option value="${defaultStateProvinceGeoId}">${defaultStateProvinceGeoId}</option>
-    </#if>
-  </@field>      
+  <@field type="input" label="${uiLabelMap.PartyCity}" required=true size="30" maxlength="30" name="${fieldNamePrefix}city" value=(parameters["${fieldNamePrefix}city"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
   <@field type="input" label="${uiLabelMap.PartyZipCode}" required=true size="12" maxlength="10" name="${fieldNamePrefix}postalCode" value=(parameters["${fieldNamePrefix}postalCode"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
   <@field type="select" label="${uiLabelMap.CommonCountry}" name="${fieldNamePrefix}countryGeoId" id="${fieldIdPrefix}countryGeoId">
       <#if parameters["${fieldNamePrefix}countryGeoId"]??>    
@@ -86,4 +80,10 @@ jQuery(document).ready(function() {
     -->
       <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"currentCountryGeoId":currentCountryGeoId}/>   
   </@field>
-    
+  <@field type="select" label="${uiLabelMap.PartyState}" name="${fieldNamePrefix}stateProvinceGeoId" id="${fieldIdPrefix}stateProvinceGeoId">
+    <#-- Cato: NOTE: This was empty in stock; supposed to load via JS; for now, put the current if this is empty -->
+    <#if defaultStateProvinceGeoId?has_content>
+      <option value="${defaultStateProvinceGeoId}">${defaultStateProvinceGeoId}</option>
+    </#if>
+  </@field>
+

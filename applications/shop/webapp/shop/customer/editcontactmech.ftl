@@ -144,12 +144,8 @@ under the License.
               "pafFieldIdPrefix":"editcontactmechform_"
               }/>
     <#elseif contactMechTypeId == "TELECOM_NUMBER">
-      <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
-          <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value=(telecomNumberData.countryCode!) tooltip=uiLabelMap.CommonCountryCode />
-          -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value=(telecomNumberData.areaCode!) tooltip=uiLabelMap.PartyAreaCode />
-          -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="contactNumber" value=(telecomNumberData.contactNumber!) tooltip=uiLabelMap.PartyContactNumber />
-          &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="extension" value=(partyContactMechData.extension!) tooltip=uiLabelMap.PartyExtension />
-      </@field>
+      <@telecomNumberField label=uiLabelMap.PartyPhoneNumber countryCode=((telecomNumberData.countryCode)!) areaCode=((telecomNumberData.areaCode)!) 
+        contactNumber=((telecomNumberData.contactNumber)!) extension=((partyContactMechData.extension)!) />
       <#-- Cato: use tooltips
       <@field type="display">
           [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
@@ -161,13 +157,7 @@ under the License.
     <#else>
       <@field type="input" label=(contactMechType.get("description",locale)!) required=true size="60" maxlength="255" name="infoString" value=(contactMechData.infoString!) />
     </#if>
-      <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name="allowSolicitation">
-        <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonYes}</option></#if>
-        <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonNo}</option></#if>
-        <option></option>
-        <option value="Y">${uiLabelMap.CommonYes}</option>
-        <option value="N">${uiLabelMap.CommonNo}</option>
-      </@field>
+      <@allowSolicitationField name="allowSolicitation" allowSolicitation=((partyContactMechData.allowSolicitation)!"") />
   </form>
 </@section>
 

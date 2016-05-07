@@ -190,56 +190,30 @@ under the License.
 
                         <#elseif paymentMethods?has_content>
                             <#list paymentMethods as paymentMethod>
-                                  <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
-                                    <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-                                    <#-- Cato: nicer format
-                                    <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>-->
-                                    <#assign formattedCardNumber><@formattedCreditCard creditCard=creditCard verbose=true /></#assign>
-                                  <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
-                                    <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-                                  <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
-                                    <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
-                                  </#if>
+                                <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
+                                  <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
+                                <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
+                                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
+                                <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
+                                  <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
+                                </#if>
 
-                                  <#-- credit card info -->
+                                <#-- Credit Card info -->
                                 <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
                                     <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingCreditCard}</@td>
-                                        <@td colspan="3">${formattedCardNumber}<br/>
-                                          <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}></#if> <#t>
-                                          <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}></#if> <#t>
-                                          ${creditCard.firstNameOnCard} <#t>
-                                          <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}></#if> <#t>
-                                          ${creditCard.lastNameOnCard} <#t>
-                                          <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if> <#t>
+                                        <@td colspan="3">
+                                          <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
                                         </@td>
                                     </@tr>
-                                    
                                 </#if>
-
 
                                 <#-- Gift Card info -->
                                 <#if "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
-                                    <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                                      <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
-                                      <#assign giftCardNumber = "">
-                                      <#assign pcardNumber = giftCard.cardNumber>
-                                      <#if pcardNumber?has_content>
-                                        <#assign psize = pcardNumber?length - 4>
-                                        <#if 0 < psize>
-                                          <#list 0 .. psize-1 as foo>
-                                            <#assign giftCardNumber = giftCardNumber + "*">
-                                          </#list>
-                                          <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
-                                        <#else>
-                                          <#assign giftCardNumber = pcardNumber>
-                                        </#if>
-                                      </#if>
-                                    </#if>
                                     <@tr>
                                         <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGiftCard}</@td>
-                                        <@td colspan="3">${giftCardNumber}</@td>
+                                        <@td colspan="3"><@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod /></@td>
                                     </@tr>
                                 </#if>
 
@@ -251,12 +225,7 @@ under the License.
                                             ${uiLabelMap.AccountingEFTAccount}
                                         </@td>
                                         <@td>
-                                            ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
-                                            ${eftAccount.nameOnAccount!}
-                                        </@td>
-                                        <@td colspan="2">
-                                            <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
-                                            ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
+                                            <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
                                         </@td>
                                     </@tr>
                                 </#if>
@@ -265,14 +234,7 @@ under the License.
                                 <@tr>
                                     <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAddress}</@td>
                                     <@td colspan="3">
-                                        <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}<br/></#if>
-                                        <#if pmBillingAddress.attnName?has_content>${uiLabelMap.CommonAttn}: ${pmBillingAddress.attnName}<br/></#if>
-                                        ${pmBillingAddress.address1}<br/>
-                                        <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br/></#if>
-                                        <#assign pmBillingStateGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.stateProvinceGeoId!}, false))! />
-                                        ${pmBillingAddress.city}<#if pmBillingStateGeo?has_content>, ${ pmBillingStateGeo.geoName!}</#if> ${pmBillingAddress.postalCode!}<br/>
-                                        <#assign pmBillingCountryGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.countryGeoId!}, false))! />
-                                        <#if pmBillingCountryGeo?has_content>${pmBillingCountryGeo.geoName!}</#if>
+                                        <@formattedAddress address=pmBillingAddress />
                                     </@td>
                                 </@tr>
                               </#if>
@@ -280,25 +242,29 @@ under the License.
                         </#if>
                         <#-- billing account info -->
                         <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-                            <#if billingAccount?has_content || customerPoNumberSet?has_content>>
+                            <#if billingAccount?has_content>
                                 <@tr>
-                                    <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentInformation}</@td>
+                                    <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingBillingAccount}</@td>
                                     <@td colspan="3">
-                                        <#if billingAccount?has_content>
-                                            ${uiLabelMap.AccountingBillingAccount}
-                                            #${billingAccount.billingAccountId!} - ${billingAccount.description!}
-                                      </#if>
-                                      <#if (customerPoNumberSet?has_content)>
-                                          ${uiLabelMap.OrderPurchaseOrderNumber}
-                                          <#list customerPoNumberSet as customerPoNumber>
-                                            ${customerPoNumber!}
-                                          </#list>
-                                      </#if>
+                                      <@formattedBillingAccountDetail billingAccount=billingAccount />
                                     </@td>
                                 </@tr>
                             </#if>
                         </#if>
-                        
+                        <#-- extra payment information (Cato: This from separated out from billing account) -->
+                        <#if paymentMethods?has_content || paymentMethodType?has_content>
+                          <#if customerPoNumberSet?has_content>
+                            <@tr>
+                                <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingPaymentInformation}</@td>
+                                <@td colspan="3">
+                                  ${uiLabelMap.OrderPurchaseOrderNumber}
+                                  <#list customerPoNumberSet as customerPoNumber>
+                                    ${customerPoNumber!}
+                                  </#list>
+                                </@td>
+                            </@tr>
+                          </#if>
+                        </#if>
                     </@table>   
                 </@section>
             </#if>

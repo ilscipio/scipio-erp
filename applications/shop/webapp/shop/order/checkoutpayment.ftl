@@ -18,13 +18,8 @@ under the License.
 -->
 <#-- Cato: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutpayment.ftl -->
 
-<#-- FIXME: PRESELECTION IS BROKEN -->
-<#-- FIXME: MISSING SERVER-SIDE VALIDATION OF EVERYTHING -->
-<#-- FIXME: MISSING SINGLE-USE PAYEMENT CHECKBOXES -->
 <#-- FIXME: SINGLE USE GIFT CARD INCONSISTENT WITH CC && EFT (SINGLE-USE FORCED) -->
-<#-- TODO: REMOVE BUTTONS -->
-<#-- FIXME: PAYPAL, IDEAL, WORLDPAY NON-FUNCTIONAL -->
-<#-- TODO: MISSING CC && EFT ADDRESS UPDATE FUNCTIONALITY (BUT COULD CONFLICT W/SHIP ESTIMATES?...)-->
+<#-- TODO: PAYPAL, IDEAL, WORLDPAY -->
 
 <#include "ordercommon.ftl">
 
@@ -119,22 +114,22 @@ jQuery(document).ready(function(){
  
 <#assign cart = shoppingCart! />
 
-
 <#-- Cato: We need to show total because this influence user's decision and amounts he will enter -->
 <p><strong>${uiLabelMap.OrderOrderTotal}:</strong> <@ofbizCurrency amount=((cart.getDisplayGrandTotal())!0) isoCode=cart.getCurrency()/></p>
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
+<#-- Cato: all deprecated
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
     <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NC', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingCreditCard}" />
   </#if>
   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
     <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} ${uiLabelMap.AccountingEFTAccount}" />
   </#if>
-  <#-- Cato: These used to be on their own menu below... -->
   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
   <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&amp;singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
+-->
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderHowShallYouPay}?" menuContent=menuContent menuLayoutGeneral="bottom"><#-- Cato: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
@@ -163,6 +158,13 @@ jQuery(document).ready(function(){
       <#assign fieldContentIdMapList = (fieldContentIdMapList![]) + ([fieldContentArgs])>
       <#return "">
     </#function>
+    <#function getPayMethTypeDesc paymentMethodTypeId>
+      <#local desc = (productStorePaymentMethodSettingByTypeMap[paymentMethodTypeId].getRelatedOne("PaymentMethodType").get("description", locale))!false>
+      <#if !desc?is_boolean>
+        <#return desc>
+      </#if>
+      <#-- return nothing otherwise -->
+    </#function>
 
     <#-- Cato: Payment method content and markup.
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
@@ -188,15 +190,12 @@ jQuery(document).ready(function(){
             <#-- ${uiLabelMap.OrderPaymentOfflineCheckMoney} -->
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_OFFLINE", "contentId":"content_OFFLINE"})>
             <@field type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_OFFLINE")) 
-              class="+pay-select-radio pay-select-field" label=methodLabel/>
+              class="+pay-select-radio pay-select-field" label=methodLabel /><#--tooltip=(getPayMethTypeDesc("EXT_OFFLINE")!)-->
           </#if>
           <#if showDetails>
-            <@section containerId="content_OFFLINE" containerStyle="display:none;" title=methodLabel>
-              <#if paymentMethod.get("description", locale)?has_content>
-                <p>(${paymentMethod.get("description", locale)})</p>
-              <#else>
-                <p>${uiLabelMap.OrderPaymentDescOffline}</p>
-              </#if>
+            <@section containerId="content_OFFLINE" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
+              <#-- Cato: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
+              <p>${uiLabelMap.OrderPaymentDescOffline}</p>
             </@section>
           </#if>
         </#if>
@@ -205,68 +204,55 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_COD", "contentId":"content_COD"})>
             <@field type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_COD")) 
-              class="+pay-select-radio pay-select-field" label=methodLabel/>
+              class="+pay-select-radio pay-select-field" label=methodLabel /><#--tooltip=(getPayMethTypeDesc("EXT_COD")!)-->
           </#if>
           <#if showDetails>
-            <@section containerId="content_COD" containerStyle="display:none;" title=methodLabel>
-              <#if paymentMethod.get("description", locale)?has_content>
-                <p>(${paymentMethod.get("description", locale)})</p>
-              <#else>
-                <p>${uiLabelMap.OrderPaymentDescCOD}</p>
-              </#if>
+            <@section containerId="content_COD" containerClass="+pay-meth-content" containerStyle="display:none;" title=methodLabel>
+              <p>${uiLabelMap.OrderPaymentDescCOD}</p>
             </@section>
           </#if>
         </#if>
-    <#-- Cato: TODO?: Uncomment if Worldpay implemented
-        <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
-          <#if showSelect>
-            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_WORLDPAY", "contentId":"content_WORLDPAY"})>
-            <@field type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_WORLDPAY")) 
-              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithWorldPay />
-          </#if>
-          <#if showDetails>
-            <@section containerId="content_WORLDPAY" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithWorldPay>
-              <#if paymentMethod.get("description", locale)?has_content>
-                <p>(${paymentMethod.get("description", locale)})</p>
-              <#else>
-                <p>${uiLabelMap.OrderPaymentDescWorldpay}</p>
-              </#if>
-            </@section>
-          </#if>
-        </#if>
-    -->
-    <#-- Cato: TODO?: Uncomment if Paypal implemented
+    <#-- Cato: TODO?: Uncomment if Paypal implemented -->
+    <#if false>
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_PAYPAL", "contentId":"content_PAYPAL"})>
             <@field type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_PAYPAL")) 
-              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithPayPal />
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithPayPal /><#--tooltip=(getPayMethTypeDesc("EXT_PAYPAL")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content_PAYPAL" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithPayPal>
-              <#if paymentMethod.get("description", locale)?has_content>
-                <p>(${paymentMethod.get("description", locale)})</p>
-              <#else>
-                <p>${uiLabelMap.OrderPaymentDescPaypal}</p>
-              </#if>
+            <@section containerId="content_PAYPAL" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithPayPal>
+              <p>${uiLabelMap.OrderPaymentDescPaypal}</p>
             </@section>
           </#if>
         </#if>
-    -->
-    <#-- Cato: TODO?: Uncomment if iDEAL implemented
+    </#if>
+    <#-- Cato: TODO?: Uncomment if Worldpay implemented -->
+    <#if false>
+        <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
+          <#if showSelect>
+            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_WORLDPAY", "contentId":"content_WORLDPAY"})>
+            <@field type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_WORLDPAY")) 
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithWorldPay /><#--tooltip=(getPayMethTypeDesc("EXT_WORLDPAY")!)-->
+          </#if>
+          <#if showDetails>
+            <@section containerId="content_WORLDPAY" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithWorldPay>
+              <p>${uiLabelMap.OrderPaymentDescWorldpay}</p>
+            </@section>
+          </#if>
+        </#if>
+    </#if>
+    <#-- Cato: TODO?: Uncomment if iDEAL implemented -->
+    <#if false>
         <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_IDEAL", "contentId":"content_IDEAL"})>
             <@field type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_IDEAL")) 
-              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithiDEAL />
+              class="+pay-select-radio pay-select-field" label=uiLabelMap.AccountingPayWithiDEAL /><#--tooltip=(getPayMethTypeDesc("EXT_IDEAL")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content_IDEAL" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithiDEAL>
-              <#if paymentMethod.get("description", locale)?has_content>
-                <p>(${paymentMethod.get("description", locale)})</p>
-              <#else>
-                <p>${uiLabelMap.OrderPaymentDescIdeal}</p>
-              </#if>
+            <@section containerId="content_IDEAL" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingPayWithiDEAL>
+              <p>${uiLabelMap.OrderPaymentDescIdeal}</p>
               <#if issuerList?has_content>
                 <@field type="select" name="issuer" id="issuer" label=uiLabelMap.AccountingBank>
                   <#list issuerList as issuer>
@@ -277,7 +263,7 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    -->
+    </#if>
 
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#-- User's credit cards -->
@@ -285,18 +271,18 @@ jQuery(document).ready(function(){
             <#list paymentMethodListsByType.CREDIT_CARD as paymentMethodLocal>
               <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
               <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
-              <#assign methodShortInfo><@formattedCreditCard creditCard=creditCard paymentMethod=paymentMethod verbose=true /></#assign>
+              <#assign methodShortInfo><@formattedCreditCardShort creditCard=creditCard paymentMethod=paymentMethod verbose=true /></#assign>
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
                <#-- Cato: NOTE: I've changed this from checkbox to radio, because I'm not sure why this would be an addon while EFT is not (from user POV)
                     cart.isPaymentSelected(paymentMethod.paymentMethodId) -->
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" />
+                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
               </#if>
               <#if showDetails>
-                <@section containerId="content_${paymentMethod.paymentMethodId}" containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard>
-                  <p>${methodShortInfo}</p><#-- TODO: long info -->
-                  <#if paymentMethod.get("description", locale)?has_content>(${paymentMethod.get("description", locale)})</#if>
+                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard>
+                  <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
+                  <#if (paymentMethod.get("description", locale))?has_content>(${paymentMethod.get("description", locale)})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   <#assign curPayAmountStr = "">
                   <#assign fieldValue = "">
@@ -330,10 +316,10 @@ jQuery(document).ready(function(){
             <#assign dummy = registerFieldContent({"fieldId":"newCreditCard", "contentId":"content__NEW_CREDIT_CARD"})>
             <@field type="radio" id="newCreditCard" name="checkOutPaymentId" value="_NEW_CREDIT_CARD_" 
               checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_")) class="+pay-select-radio pay-select-field" 
-              label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" />
+              label="${uiLabelMap.AccountingCreditCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("CREDIT_CARD")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content__NEW_CREDIT_CARD" containerClass="+new-item-selection-content" 
+            <@section containerId="content__NEW_CREDIT_CARD" containerClass="+new-item-selection-content pay-meth-content" 
                 containerStyle="display:none;" title=uiLabelMap.AccountingCreditCard><#-- let JS do the following (there is no point; even if do it, still need JS for page refresh): <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_CREDIT_CARD_"))> style="display:none;"</#if> -->
               
               <#-- Cato: FIELDS BASED ON editcreditcard.ftl -->
@@ -391,15 +377,15 @@ jQuery(document).ready(function(){
             <#list paymentMethodListsByType.EFT_ACCOUNT as paymentMethodLocal>
               <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
               <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
-              <#assign methodShortInfo = "${eftAccount.bankName!}: ${eftAccount.accountNumber!}">
+              <#assign methodShortInfo><@formattedEftAccountShort eftAccount=eftAccount paymentMethod=paymentMethod /></#assign>
               <#if showSelect>
                 <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}", "contentId":"content_${paymentMethod.paymentMethodId}"})>
                 <@field type="radio" id="checkOutPaymentId_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" />
+                  class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
               </#if>
               <#if showDetails>
-                <@section containerId="content_${paymentMethod.paymentMethodId}" containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount>
-                  <p>${methodShortInfo}</p><#-- TODO: Long info -->
+                <@section containerId="content_${paymentMethod.paymentMethodId}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount>
+                  <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
                   <#if paymentMethod.get("description", locale)?has_content><p>(${paymentMethod.get("description", locale)})</p></#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   <#-- Cato: This field was added by us, was missing for EFT accounts -->
@@ -417,10 +403,10 @@ jQuery(document).ready(function(){
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"newEftAccount", "contentId":"content__NEW_EFT_ACCOUNT_"})>
             <@field type="radio" id="newEftAccount" name="checkOutPaymentId" value="_NEW_EFT_ACCOUNT_" checked=(selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))
-              class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" />
+              class="+pay-select-radio pay-select-field" label="${uiLabelMap.AccountingEFTAccount}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("EFT_ACCOUNT")!) -->
           </#if>
           <#if showDetails>
-            <@section containerId="content__NEW_EFT_ACCOUNT_" containerClass="+new-item-selection-content" 
+            <@section containerId="content__NEW_EFT_ACCOUNT_" containerClass="+new-item-selection-content pay-meth-content" 
                 containerStyle="display:none;" title=uiLabelMap.AccountingEFTAccount><#-- let JS do it: <#if (!selectedCheckOutPaymentIdList?seq_contains("_NEW_EFT_ACCOUNT_"))> style="display:none;"</#if> -->
               
               <#-- Cato: FIELDS BASED ON editeftaccount.ftl -->
@@ -475,9 +461,8 @@ jQuery(document).ready(function(){
             <#-- Special case: click never hides content -->
             <#assign dummy = registerFieldContent({"fieldId":"supplPayMeth", "contentId":"paymeth_supplemental", "noHideContent":true})>
             <@field type="radio" id="supplPayMeth" name="checkOutPaymentId" value="" checked=false 
-              class="+pay-select-radio pay-select-field" label=methodLabel /><#-- checked handled by JS for the moment -->
+              class="+pay-select-radio pay-select-field" label=methodLabel /><#-- checked handled by JS for the moment --><#--tooltip=uiLabelMap.AccountingAdditionalPaymentMethods -->
           </#if>
-           
         </#if>
 
       </#if><#-- /showPrimary -->
@@ -499,7 +484,7 @@ jQuery(document).ready(function(){
                 </#if>
               </#if>
               <#if showDetails && showSupplemental>
-                <@section containerId="content_BILLACT${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingBillingAccount>
+                <@section containerId="content_BILLACT${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingBillingAccount>
                   <@field type="select" name="billingAccountId" id="billingAccountId${primSupplSuffix}" label=uiLabelMap.FormFieldTitle_billingAccountId>
                     <option value=""></option>
                     <#list billingAccountList as billingAccount>
@@ -524,19 +509,18 @@ jQuery(document).ready(function(){
             <#list paymentMethodListsByType.GIFT_CARD as paymentMethodLocal>
               <#assign paymentMethod = paymentMethodLocal><#-- Cato: workaround for access from macros -->
               <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
-              <#assign giftCardNumber = getGiftCardDisplayNumber(giftCard)!"">
-              <#assign methodShortInfo>${giftCardNumber}</#assign>
+              <#assign methodShortInfo><@formattedGiftCardShort giftCard=giftCard paymentMethod=paymentMethod /></#assign>
               <#if showSupplemental>
                 <#if showSelect>
                   <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}", "contentId":"content_${paymentMethod.paymentMethodId}${primSupplSuffix}"})>
                   <@field type="checkbox" id="checkOutPaymentId_${paymentMethod.paymentMethodId}${primSupplSuffix}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" 
                     class="+pay-select-checkbox pay-select-field" checked=(selectedCheckOutPaymentIdList?seq_contains(paymentMethod.paymentMethodId)) 
-                    label="${uiLabelMap.AccountingGiftCard}: ${methodShortInfo}" />
+                    label="${uiLabelMap.AccountingGiftCard}: ${methodShortInfo}" /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
                 </#if>
               </#if>
               <#if showDetails && showSupplemental>
-                <@section containerId="content_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
-                  <p>${methodShortInfo}</p><#-- TODO: Long info -->
+                <@section containerId="content_${paymentMethod.paymentMethodId}${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
+                  <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
                   <#if paymentMethod.get("description", locale)?has_content>(${paymentMethod.get("description", locale)})</#if>
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   <#assign curPayAmountStr = "">
@@ -572,11 +556,11 @@ jQuery(document).ready(function(){
               <#-- MUST SUBMIT EMPTY VALUE FOR checkOutPaymentId -->
               <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_addGiftCard${primSupplSuffix}", "contentId":"content__NEW_GIFT_CARD_${primSupplSuffix}"})>
               <@field type="checkbox" id="checkOutPaymentId_addGiftCard${primSupplSuffix}" name="addGiftCard" value="Y" checked=((selectedCheckOutPaymentIdList?seq_contains("_NEW_GIFT_CARD_")) || ((parameters.addGiftCard!) == "Y")) 
-                class="+pay-select-checkbox pay-select-field" label=uiLabelMap.AccountingUseGiftCardNotOnFile />
+                class="+pay-select-checkbox pay-select-field" label=uiLabelMap.AccountingUseGiftCardNotOnFile /><#--tooltip=(getPayMethTypeDesc("GIFT_CARD")!) -->
             </#if>
           </#if>
           <#if showDetails && showSupplemental>
-            <@section containerId="content__NEW_GIFT_CARD_${primSupplSuffix}" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
+            <@section containerId="content__NEW_GIFT_CARD_${primSupplSuffix}" containerClass="+pay-meth-content" containerStyle="display:none;" title=uiLabelMap.AccountingGiftCard>
               <input type="hidden" name="singleUseGiftCard" value="Y" />
               <@field type="input" size="15" id="giftCardNumber${primSupplSuffix}" name="giftCardNumber" value=((parameters.giftCardNumber)!) label=uiLabelMap.AccountingNumber/><#--onFocus="document.getElementById('addGiftCard').checked=true;"-->
               <#if cart.isPinRequiredForGC(delegator)>
@@ -595,23 +579,29 @@ jQuery(document).ready(function(){
       NOTE: Some pay methods (EXT_BILLACT, GIFT_CARD) work as both main payments and as supplemental, so they reappear twice and have to be managed differently.
           Because we using radios, at least one must be selected by user otherwise breaks html expectations (stock code allowed selecting none; was sketchy) -->
 
-  <@section containerId="paymeth_primary">
-    <@field type="generic" label="<strong>${uiLabelMap.AccountingPaymentMethod}</strong>">
-      <@paymentMethodContent showPrimary=true showSelect=true />
-    </@field>
-    <@section containerId="paymethcontent_primary" containerClass="+pay-meth-content-container">
+<div id="paymethselection" class="pay-meth-selection">
+  <@section containerId="paymeth_primary" containerClass="+pay-meth-options-all-content pay-meth-primary">
+    <div id="paymethselect_primary" class="pay-meth-options">
+      <@field type="generic" label="<strong>${uiLabelMap.AccountingPaymentMethod}</strong>">
+        <@paymentMethodContent showPrimary=true showSelect=true />
+      </@field>
+    </div>
+    <@section containerId="paymethcontent_primary" containerClass="+pay-meth-all-content">
       <@paymentMethodContent showPrimary=true showDetails=true />
     </@section>
   </@section>
 
-  <@section containerId="paymeth_supplemental"><#-- always show now: style="display:none;" -->
-    <@field type="generic" label="<strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong>">
-      <@paymentMethodContent showSupplemental=true showSelect=true />
-    </@field>
-    <@section containerId="paymethcontent_supplemental" containerClass="+pay-meth-content-container">
+  <@section containerId="paymeth_supplemental" containerClass="+pay-meth-options-all-content pay-meth-supplemental"><#-- always show now: style="display:none;" -->
+    <div id="paymethselect_supplemental" class="pay-meth-options">
+      <@field type="generic" label="<strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong>">
+        <@paymentMethodContent showSupplemental=true showSelect=true />
+      </@field>
+    </div>
+    <@section containerId="paymethcontent_supplemental" containerClass="+pay-meth-all-content">
       <@paymentMethodContent showSupplemental=true showDetails=true />
     </@section>
   </@section>
+</div>
     
   </form>
 
@@ -649,8 +639,6 @@ jQuery(document).ready(function(){
     });
 
   </@script>
-
-  <p>(NOTE: all buttons below to be removed)</p><#-- TODO -->
 
 </@section>
 

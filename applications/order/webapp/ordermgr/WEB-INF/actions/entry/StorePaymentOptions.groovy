@@ -31,3 +31,13 @@ while (productStorePaymentSettingIter.hasNext()) {
     productStorePaymentMethodTypeIdMap.put(productStorePaymentSetting.get("paymentMethodTypeId"), true);
 }
 context.put("productStorePaymentMethodTypeIdMap", productStorePaymentMethodTypeIdMap);
+
+context.productStorePaymentSettingList = productStorePaymentSettingList; // Cato: make available
+
+// Cato: we can put more info than just booleans...
+productStorePaymentMethodSettingByTypeMap = new HashMap();
+for (productStorePaymentSetting in productStorePaymentSettingList) {
+    productStorePaymentMethodSettingByTypeMap.put(productStorePaymentSetting.get("paymentMethodTypeId"), productStorePaymentSetting);
+}
+context.productStorePaymentMethodSettingByTypeMap = productStorePaymentMethodSettingByTypeMap;
+

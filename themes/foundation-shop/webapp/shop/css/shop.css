@@ -205,3 +205,21 @@ footer {
     display: block;
 }
 
+/*
+div.pay-meth-selection div.pay-meth-options-all-content {
+    margin-top: 1em;
+}
+div.pay-meth-selection div.pay-meth-options-all-content.pay-meth-supplemental {
+    margin-top: 0; // has already margin for some reason
+}
+*/
+
+div.pay-meth-selection div.pay-meth-content {
+    margin-top: 1em;
+}
+
+div.field-extra {
+    display:none;
+}
+
+

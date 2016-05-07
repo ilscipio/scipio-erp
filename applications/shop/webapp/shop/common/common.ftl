@@ -1,21 +1,23 @@
 
 <#-- Cato: common shop-wide helper definitions and macros -->
 
-<#macro formattedAddress address emphasis=false updateLink="">
+<#macro formattedAddress address emphasis=false updateLink="" abbrev=false verbose=true>
   <#if address.toName?has_content><#if emphasis><b></#if>${uiLabelMap.CommonTo}:<#if emphasis></b></#if>&nbsp;${address.toName}<br /></#if>
   <#if address.attnName?has_content><#if emphasis><b></#if>${uiLabelMap.PartyAddrAttnName}:<#if emphasis></b></#if>&nbsp;${address.attnName}<br /></#if>
   <#if address.address1?has_content>${address.address1}<br /></#if>
   <#if address.address2?has_content>${address.address2}<br /></#if>
   <#if address.city?has_content>${address.city}</#if><#rt>
-  <#lt><#if address.stateProvinceGeoId?has_content><#if address.city?has_content>, <#else><br/></#if>${address.stateProvinceGeoId}</#if>
+  <#lt><#if address.stateProvinceGeoId?has_content><#if address.city?has_content>, <#else><br/></#if><#rt>
+    <#if verbose>${(delegator.findOne("Geo", {"geoId", address.stateProvinceGeoId}, true).get("geoName", locale))!address.stateProvinceGeoId}<#else>${address.stateProvinceGeoId}</#if></#if><#lt>
   <#if address.postalCode?has_content><br />${address.postalCode}</#if>
-  <#if address.countryGeoId?has_content><br />${address.countryGeoId}</#if>
+  <#if address.countryGeoId?has_content><br /><#rt>
+    <#if verbose>${(delegator.findOne("Geo", {"geoId", address.countryGeoId}, true).get("geoName", locale))!address.countryGeoId}<#else>${address.countryGeoId}</#if></#if><#lt>
   <#if updateLink?has_content>
     <a href="${escapeFullUrl(updateLink, 'html')}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
   </#if>
 </#macro>
 
-<#macro formattedCreditCard creditCard paymentMethod={} verbose=true>
+<#macro formattedCreditCardShort creditCard paymentMethod={} verbose=true>
   <#if verbose>
     <#--
     <#if !paymentMethod?has_content>
@@ -37,6 +39,45 @@
   <#else>
     <#-- stock ofbiz method -->
     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}<#t>
+  </#if>
+</#macro>
+
+<#macro formattedCreditCardDetail creditCard paymentMethod={}>
+  <@formattedCreditCardShort creditCard=creditCard verbose=true /><br/>
+  <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}</#if> <#t>
+  <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}</#if> <#t>
+  ${creditCard.firstNameOnCard} <#t>
+  <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}</#if> <#t>
+  ${creditCard.lastNameOnCard} <#t>
+  <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if> <#t>
+</#macro>
+
+<#macro formattedGiftCardShort giftCard paymentMethod={} verbose=true>
+  ${getGiftCardDisplayNumber(giftCard)!}<#t>
+</#macro>
+
+<#macro formattedGiftCardDetail giftCard paymentMethod={} verbose=true>
+  <@formattedGiftCardShort giftCard=giftCard paymentMethod=paymentMethod verbose=verbose /><#t>
+</#macro>
+
+<#macro formattedEftAccountShort eftAccount paymentMethod={} verbose=true>
+  ${eftAccount.bankName!}: ${eftAccount.accountNumber!}<#t>
+</#macro>
+
+<#macro formattedEftAccountDetail eftAccount paymentMethod={} verbose=true>
+  ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber!}<br/>
+  ${eftAccount.nameOnAccount!}<br/>
+  <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br/></#if>
+  ${uiLabelMap.AccountingBank}: ${eftAccount.bankName!}, ${eftAccount.routingNumber!}
+</#macro>
+
+<#macro formattedBillingAccountShort billingAccount paymentMethod={} customerPoNumberSet=[] verbose=true>
+  ${billingAccount.billingAccountId!} - ${billingAccount.description!}<#t>
+</#macro>
+
+<#macro formattedBillingAccountDetail billingAccount paymentMethod={} customerPoNumberSet=[] verbose=true>
+  <#if billingAccount?has_content>
+    ${uiLabelMap.AccountingBillingAccount} #: ${billingAccount.billingAccountId!} - ${billingAccount.description!}
   </#if>
 </#macro>
 
@@ -209,4 +250,74 @@ jQuery(document).ready(function() {
   </div>
 </#macro>
 
+<#macro telecomNumberField label="" fieldNamePrefix="" required=false tooltip=false inlineArgs...>
+  <#local args = inlineArgs>
+  <#local countryCodeName = (args.countryCodeName)!"${fieldNamePrefix}countryCode">
+  <#local areaCodeName = (args.areaCodeName)!"${fieldNamePrefix}areaCode">
+  <#local contactNumberName = (args.contactNumberName)!"${fieldNamePrefix}contactNumber">
+  <#local extensionName = (args.extensionName)!"${fieldNamePrefix}extension">
+  <@field type="generic" label=label tooltip=tooltip required=required args=args>
+      <@field type="input" inline=true size="4" maxlength="10" name="${countryCodeName}" value=((parameters[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="${areaCodeName}" value=((parameters[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="${contactNumberName}" value=((parameters[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="${extensionName}" value=((parameters[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension />
+    <#nested>
+  </@field>
+</#macro>
 
+<#macro allowSolicitationField name="" inlineArgs...>
+  <#local args = inlineArgs>
+  <@field type="select" label="${uiLabelMap.PartyAllowSolicitation}?" name=name args=args>
+    <option></option><#-- NOTE: Empty must be allowed? -->
+    <option value="Y"<#if (parameters[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
+    <option value="N"<#if (parameters[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
+  </@field>
+</#macro>
+
+<#macro personalTitleField name="" label="" inlineArgs...>
+    <#local args = inlineArgs>
+    <@field type="select" name=name label=label>
+        <#-- Cato: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+            This is probably an error because the values read from DB become hard to re-localize.
+            It is better to store these as values coded in english (and localize on print only). -->
+        <#assign personalTitle = parameters[name]!(args.personalTitle)!"">
+        <#if personalTitle?has_content>
+          <#local localizedPersTitle = getLocalizedPersonalTitle(personalTitle)!false>
+          <#if localizedPersTitle?is_boolean>
+            <#-- we failed... -->
+            <option value="${personalTitle}">${personalTitle}</option>
+            <option value=""></option>
+            <option value="Mr.">${uiLabelMap.CommonTitleMr}</option>
+            <option value="Mrs.">${uiLabelMap.CommonTitleMrs}</option>
+            <option value="Ms.">${uiLabelMap.CommonTitleMs}</option>
+            <option value="Dr.">${uiLabelMap.CommonTitleDr}</option>
+          <#else>
+            <option value=""></option><#-- NOTE: empty is allowed -->
+            <option value="Mr."<#if personalTitle == "Mr." || personalTitle == uiLabelMap.CommonTitleMr> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
+            <option value="Mrs."<#if personalTitle == "Mrs." || personalTitle == uiLabelMap.CommonTitleMrs> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
+            <option value="Ms."<#if personalTitle == "Ms." || personalTitle == uiLabelMap.CommonTitleMs> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
+            <option value="Dr."<#if personalTitle == "Dr." || personalTitle == uiLabelMap.CommonTitleDr> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
+          </#if>
+        <#else>
+          <option value="">${uiLabelMap.CommonSelectOne}</option>
+          <option value=""></option><#-- NOTE: empty is allowed -->
+          <option value="Mr.">${uiLabelMap.CommonTitleMr}</option>
+          <option value="Mrs.">${uiLabelMap.CommonTitleMrs}</option>
+          <option value="Ms.">${uiLabelMap.CommonTitleMs}</option>
+          <option value="Dr.">${uiLabelMap.CommonTitleDr}</option>
+        </#if>
+    </@field>   
+</#macro>
+
+
+<#function getLocalizedPersonalTitle personalTitle>
+    <#-- Cato: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
+        This is probably an error because the values read from DB become hard to re-localize.
+        It is better to store these as values coded in english (and localize on print only). 
+        But otherwise, this function is a best-effort only. -->
+    <#if personalTitle == "Mr." || personalTitle == uiLabelMap.CommonTitleMr><#return uiLabelMap.CommonTitleMr></#if>
+    <#if personalTitle == "Mrs." || personalTitle == uiLabelMap.CommonTitleMrs><#return uiLabelMap.CommonTitleMrs></#if>
+    <#if personalTitle == "Ms." || personalTitle == uiLabelMap.CommonTitleMs><#return uiLabelMap.CommonTitleMs></#if>
+    <#if personalTitle == "Dr." || personalTitle == uiLabelMap.CommonTitleDr><#return uiLabelMap.CommonTitleDr></#if>
+    <#-- return nothing if could not detect so caller can default -->
+</#function>

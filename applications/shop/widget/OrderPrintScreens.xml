@@ -32,6 +32,8 @@ under the License.
                     It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
                     and not allow viewing other people's orders!!!
                     See component://order/widget/ordermgr/OrderPrintScreens.xml -->
+               <set field="permChecksSetGlobal" type="Boolean" value="true" />
+               <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonPermChecks.groovy"/>
             </actions>
             <widgets>
                 <section>
@@ -58,6 +60,8 @@ under the License.
                     It must allow anonymous user (userLoginId "anonymous" with partyId set to temporary value)
                     and not allow viewing other people's orders!!!
                     See component://accounting/widget/AccountingPrintScreens.xml -->
+               <set field="permChecksSetGlobal" type="Boolean" value="true" />
+               <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonPermChecks.groovy"/>
             </actions>
             <widgets>
                 <section>

@@ -1,6 +1,19 @@
 <#--
 * 
-* Content element HTML template include, standard Cato markup
+* Content Elements
+* 
+* The CATO framework comes with a set of standard content elements. The elements are largely based on standard 
+* html elements so the transition should be straight forward. Since all macros also standardize the html patterns, 
+* it is recommended to rely on the CATO tag alternatives for all html. All macros start with "<@", so tags can
+* be converted by adding an @ in front of them. 
+* 
+* The CATO content elements add new options that can be added as attributes. For example, whereas <@table> will create a
+* default table, <@table responsive=true> will generate the very same with added resizing for smaller devices. 
+* The available options and their respective use are outlined by this document. 
+* 
+* Additionally, some already known attributes have been enhanced to make styling easier. As one example, classes are 
+* automatically assigned based on the overarching theme. Additional classes can be set with the 'class' attribute. 
+* However, the developer has the option to specify whether the classes should expand, or replace default values.
 *
 * Included by htmlTemplate.ftl.
 *

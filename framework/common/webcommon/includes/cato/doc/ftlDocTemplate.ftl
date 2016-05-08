@@ -174,7 +174,7 @@ pre {
                 <#if section.title?has_content><@labelText text=section.title /><#t>
                 <#elseif sectionName == "default"><@labelText text="MAIN" /><#t>
                 <#else><@labelText text=sectionName /></#if><#t>
-                </a><br/>
+                </a>
                 <#--<strong>Definitions:</strong><br/>-->
                 <p>
                 <#list section.entryMap?keys?sort as entryName>
@@ -267,9 +267,9 @@ pre {
                       <p>
                       <#-- NOTE: do not sort -->
                       <#if entry.argList?has_content>
-                        <#list entry.argList as argName>
+                        <#--<#list entry.argList as argName>
                           <code>${escapeText(argName)}</code><#if argName_has_next>, </#if>
-                        </#list>
+                        </#list>-->
                       <#else>
                         (none)
                       </#if>

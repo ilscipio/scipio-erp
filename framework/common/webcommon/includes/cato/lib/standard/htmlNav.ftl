@@ -1,6 +1,10 @@
 <#--
 * 
-* Navigation HTML template include, standard Cato markup
+* Navigation & Menus
+*
+* Navigational elements that can be used to generate complexe menus, pagination controls or other 
+* navigation elements (magelan, step elements, breadcrumbs or alike). The usage should be largely simplified
+* by the elements provided. 
 *
 * Included by htmlTemplate.ftl.
 *

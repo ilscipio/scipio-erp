@@ -1,7 +1,13 @@
 <#--
 * 
-* Structural code (grid, tile, etc.) HTML template include, standard Cato markup
+* The Grid
 *
+* Displaying content within a (flexible) grid is a way of structuring content on a website.
+* The grid itself works as a layer on top of the basic html structure. Everything visible is grouped inside 
+* columns and individual cells. The CATO framework uses the standard 12 column grid that is used by  
+* modern CSS frameworks, such as foundation or bootstrap.
+* 
+* This template contains structural code (grid, tile, etc.) that is used by all CATO standard HTML markup.
 * Included by htmlTemplate.ftl.
 *
 * NOTES: 

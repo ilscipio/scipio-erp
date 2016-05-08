@@ -1,7 +1,16 @@
 <#--
 * 
-* Form and field HTML template include, standard Cato markup
+* Forms
 *
+* In the same fashion as the content elements, CATO form elements are meant as a mean to standardize
+* the development of complexe forms. The elements follow standard html patterns, with the only difference
+* being the @field attribute replacing the input tag. 
+*
+* All elements come with additional options, that simplifies their use quite a bit. A good example are the
+* <@field definitions, where each element are wrapped in containing rows and cells, labels added when defined 
+* and ids set automatically. The use of the CATO elements largely simplify the creation of complexe forms and
+* standardize the html output for visualization.
+* 
 * Included by htmlTemplate.ftl.
 *
 * NOTES: 

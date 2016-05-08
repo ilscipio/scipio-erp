@@ -1,6 +1,10 @@
 <#--
 * 
-* HTML document markup and script HTML template include, standard Cato markup
+* HTML & Script Wrappers
+* 
+* Wrapping HTML, such as the boiler plate html head content or the javascript definition tags have been
+* enhanced in order to strip templates from unneccessary information. Additional options are available 
+* for each element.
 *
 * Included by htmlTemplate.ftl.
 *

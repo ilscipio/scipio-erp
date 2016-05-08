@@ -1,6 +1,9 @@
 <#--
 * 
-* Informational/notification element HTML template include, standard Cato markup
+* Information & Notifications
+*
+* The information and notification elements can be used to define content that should catch the users attention,
+* such as modals, panels and alerts.
 *
 * Included by htmlTemplate.ftl.
 *

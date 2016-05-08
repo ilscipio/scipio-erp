@@ -1,8 +1,9 @@
 <#--
 * 
-* General-purpose Cato Utilities
+* Utility Functions
 *
-* A set of standalone utility functions and macros, largely devoid of markup and independent from templating macros and styles and with minimal dependencies, 
+* A set of standalone utility functions and macros, largely devoid of markup and 
+* independent from templating macros and styles and with minimal dependencies, 
 * part of standard Cato Freemarker API.
 * Generally CSS-framework-agnostic. 
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.

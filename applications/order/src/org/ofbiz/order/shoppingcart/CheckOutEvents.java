@@ -419,9 +419,11 @@ public class CheckOutEvents {
 
                 // Cato: Allow inlined address creation
                 String paymentMethodId = paymentMethods[i];
+                String origPaymentMethodId = paymentMethods[i];
                 Map<String, Object> payMethResult = checkPaymentMethodIdForNew(request, paymentMethodId, "newCreditCard_", "newEftAccount_");
                 if (ServiceUtil.isSuccess(payMethResult)) {
                     paymentMethodId = (String) payMethResult.get("paymentMethodId");
+                    origPaymentMethodId = (String) payMethResult.get("origPaymentMethodId");
                     // SPECIAL CASE: paymentMethodId may be null or empty, in which case we skip
                     if (UtilValidate.isEmpty(paymentMethodId)) {
                         continue;
@@ -430,11 +432,11 @@ public class CheckOutEvents {
                     throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
                 }
                 
-                String securityCode = request.getParameter("securityCode_" + paymentMethodId);
+                String securityCode = request.getParameter("securityCode_" + origPaymentMethodId);
                 if (UtilValidate.isNotEmpty(securityCode)) {
                     paymentMethodInfo.put("securityCode", securityCode);
                 }
-                String amountStr = request.getParameter("amount_" + paymentMethodId);
+                String amountStr = request.getParameter("amount_" + origPaymentMethodId);
                 BigDecimal amount = null;
                 if (UtilValidate.isNotEmpty(amountStr) && !"REMAINING".equals(amountStr)) {
                     try {
@@ -450,7 +452,7 @@ public class CheckOutEvents {
                 
                 // Cato: Get single-use flag
                 Boolean singleUseBool = null;
-                String singleUseFlag = request.getParameter("singleUsePayment_" + paymentMethodId);
+                String singleUseFlag = request.getParameter("singleUsePayment_" + origPaymentMethodId);
                 if ("Y".equals(singleUseFlag)) {
                     singleUseBool = Boolean.TRUE;
                 } else if ("N".equals(singleUseFlag)) {
@@ -1376,6 +1378,7 @@ public class CheckOutEvents {
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
     public static Map<String, Object> checkShipContactMechIdForNew(HttpServletRequest request, String contactMechId, String paramPrefix) throws GeneralException {
+        String origContactMechId = contactMechId;
         if ("_NEW_".equals(contactMechId)) {
             // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
             
@@ -1397,6 +1400,7 @@ public class CheckOutEvents {
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("contactMechId", null);
+                result.put("origContactMechId", origContactMechId);
                 return result;
             }
             
@@ -1414,18 +1418,21 @@ public class CheckOutEvents {
             
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
+            result.put("origContactMechId", origContactMechId);
+            result.put("paramPrefix", paramPrefix);
             return result;
         } else {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
+            result.put("origContactMechId", origContactMechId);
             return result;
         }
     }
     
     /**
-     * Cato: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_, it will check other
+     * Cato: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
      * params and try to create new records before returning the new contact mech ID. This allows inlining
-     * new ship address forms.
+     * new ship address forms. NOTE: it can support multiple of each.
      * <p>
      * Mostly for checkout's checkOutPaymentId.
      * <p>
@@ -1434,20 +1441,22 @@ public class CheckOutEvents {
     public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
             String ccParamPrefix, String eftParamPrefix) throws GeneralException {
         
+        String origPaymentMethodId = paymentMethodId;
         Collection<MapProcessor> paramValidators = null;
         String serviceName;
         Map<String, Object> overrideParams = new HashMap<String, Object>();
         String paramPrefix;
 
-        if ("_NEW_CREDIT_CARD_".equals(paymentMethodId)) {  
+        if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_CREDIT_CARD_")) {  
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("paymentMethodId", null);
+                result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
             
-            paramPrefix = ccParamPrefix;
+            paramPrefix = ccParamPrefix + paymentMethodId.substring("_NEW_CREDIT_CARD_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
@@ -1472,15 +1481,16 @@ public class CheckOutEvents {
                 // NOTE: The schema doesn't enforce this
                 return ServiceUtil.returnError("No contact mech (billing address) specified for new credit card");
             }
-        } else if ("_NEW_EFT_ACCOUNT_".equals(paymentMethodId)) {
+        } else if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_EFT_ACCOUNT_")) {
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("paymentMethodId", null);
+                result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
             
-            paramPrefix = eftParamPrefix;
+            paramPrefix = eftParamPrefix + paymentMethodId.substring("_NEW_EFT_ACCOUNT_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
@@ -1506,6 +1516,7 @@ public class CheckOutEvents {
         } else {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("paymentMethodId", paymentMethodId);
+            result.put("origPaymentMethodId", origPaymentMethodId);
             return result;
         }
         
@@ -1520,6 +1531,8 @@ public class CheckOutEvents {
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("paymentMethodId", paymentMethodId);
+        result.put("origPaymentMethodId", origPaymentMethodId);
+        result.put("paramPrefix", paramPrefix);
         return result;
     }
 

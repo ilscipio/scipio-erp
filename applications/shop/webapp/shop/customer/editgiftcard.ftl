@@ -29,6 +29,9 @@ under the License.
     to redirect automatically.
 <@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
 
+<#-- Cato: FIXME -->
+<@commonMsg type="warning">WARNING: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
+
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${donePage}") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
@@ -36,7 +39,7 @@ under the License.
   </@menu>
 </#macro>
 <#assign sectionTitle>
-  <#if !eftAccount??>
+  <#if !giftCard??>
     ${uiLabelMap.AccountingAddNewGiftCard}
   <#else>
     <#-- Cato: duplicate: ${uiLabelMap.AccountingEditGiftCard} -->

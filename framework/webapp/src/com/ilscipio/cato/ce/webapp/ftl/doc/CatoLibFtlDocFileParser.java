@@ -204,6 +204,8 @@ public class CatoLibFtlDocFileParser extends FtlDocFileParser {
         Map<String, Object> entryBodyInfo = parseEntryBody(body);
         info.putAll(entryBodyInfo);
         
+        amendArgListInfo(info);
+        
         setEntryProperties(info);
 
         return info;
@@ -256,6 +258,63 @@ public class CatoLibFtlDocFileParser extends FtlDocFileParser {
                 info.put("isAbstract", Boolean.TRUE);
             }
         }
+    }
+    
+    protected void amendArgListInfo(Map<String, Object> info) throws ParseException {
+        List<String> argList = (List<String>) info.get("argList");
+        Map<String, Object> argMap = null;
+        if (argList != null) {
+            argMap = keyListToObjectMapMap(argList);
+        }
+        Map<String, Object> paramDescMap = (Map<String, Object>) info.get("paramDescMap");
+        
+        Map<String, Object> argMapUnaccounted = null;
+        Map<String, Object> argMapPlusParamDescMap = null;
+        Map<String, Object> paramDescMapPlusArgMapUnaccounted = null;
+        
+        Map<String, Object> paramDescMapSplitKeys = null;
+        if (paramDescMap != null) {
+            paramDescMapSplitKeys = makeDataMap();
+            for(Map.Entry<String, Object> paramDescMapEntry : paramDescMap.entrySet()) {
+                String fullKey = paramDescMapEntry.getKey();
+                String[] allKeys = fullKey.split(",");
+                for(String key : allKeys) {
+                    String k = key.trim();
+                    if (k.length() > 0) {
+                        paramDescMapSplitKeys.put(k, paramDescMapEntry.getValue());
+                    }
+                }
+            }
+        }
+        
+        if (paramDescMap != null || argMap != null) {
+            if (paramDescMap == null) {
+                paramDescMap = makeDataMap();
+            }
+            if (paramDescMapSplitKeys == null) {
+                paramDescMapSplitKeys = makeDataMap();
+            }
+            if (argMap == null) {
+                argMap = makeDataMap();
+            }
+            argMapUnaccounted = makeDataMap();
+            for(Map.Entry<String, Object> argMapEntry : argMap.entrySet()) {
+                if (!paramDescMapSplitKeys.containsKey(argMapEntry.getKey())) { // NOTE: must use split keys map!
+                    argMapUnaccounted.put(argMapEntry.getKey(), argMapEntry.getValue());
+                }
+            }
+
+            paramDescMapPlusArgMapUnaccounted = makeDataMap(paramDescMap);
+            paramDescMapPlusArgMapUnaccounted.putAll(argMapUnaccounted);
+            
+            argMapPlusParamDescMap = makeDataMap(argMap);
+            argMapPlusParamDescMap.putAll(paramDescMapSplitKeys); // NOTE: must use split keys map!
+        }
+        
+        info.put("argMapUnaccounted", argMapUnaccounted);
+        info.put("argMapWithParamDescMapEntries", argMapPlusParamDescMap);
+        info.put("paramDescMapPlusArgMapUnaccounted", paramDescMapPlusArgMapUnaccounted);
+        info.put("paramDescMapSplitKeys", paramDescMapSplitKeys);
     }
     
     private static final Pattern entryBodySectionsPat = Pattern.compile(
@@ -526,6 +585,16 @@ public class CatoLibFtlDocFileParser extends FtlDocFileParser {
                 return null;
             }
         }
+    }
+    
+    private Map<String, Object> keyListToObjectMapMap(List<String> keys) {
+        Map<String, Object> res = makeDataMap();
+        if (keys != null) {
+            for(String key : keys) {
+                res.put(key, makeObjectMap());
+            }
+        }
+        return res;
     }
     
     private static final Pattern macroPat = Pattern.compile(

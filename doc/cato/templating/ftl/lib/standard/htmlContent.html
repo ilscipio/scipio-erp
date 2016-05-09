@@ -7,7 +7,7 @@
 
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Content element HTML template include, standard Cato markup</title>
+      <title>Content Elements</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -60,11 +60,24 @@ pre {
 
   
     <div>
-        <h1 class="lib-pagetitle">Content element HTML template include, standard Cato markup</h1>
+        <h1 class="lib-pagetitle">Content Elements</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlContent.ftl</span></em></p>
 
         <div class="lib-pagedesc">
+        <p>
+The CATO framework comes with a set of standard content elements. The elements are largely based on standard
+html elements so the transition should be straight forward. Since all macros also standardize the html patterns,
+it is recommended to rely on the CATO tag alternatives for all html. All macros start with &quot;&lt;@&quot;, so tags can
+be converted by adding an @ in front of them.        </p>
+        <p>
+The CATO content elements add new options that can be added as attributes. For example, whereas &lt;<a href="#entry-table">@table</a>&gt; will create a
+default table, &lt;@table responsive=true&gt; will generate the very same with added resizing for smaller devices.
+The available options and their respective use are outlined by this document.        </p>
+        <p>
+Additionally, some already known attributes have been enhanced to make styling easier. As one example, classes are
+automatically assigned based on the overarching theme. Additional classes can be set with the &#39;class&#39; attribute.
+However, the developer has the option to specify whether the classes should expand, or replace default values.        </p>
         <p>
 Included by htmlTemplate.ftl.        </p>
           <div class="lib-text-note">
@@ -154,74 +167,60 @@ May have implicit dependencies on other parts of Cato API.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>elemType</code>, 
-                          <code>level</code>, 
-                          <code>relLevel</code>, 
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>levelClassPrefix</code>, 
-                          <code>consumeLevel</code>, 
-                          <code>containerElemType</code>, 
-                          <code>containerClass</code>, 
-                          <code>containerId</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>elemType</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(heading|h|p|span|div|raw|(boolean), default: heading)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Element type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>elemType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(heading|h|p|span|div|raw|(boolean), default: heading)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Element type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 boolean true means use default; false means none (same as &quot;raw&quot;).
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Do not specify h1-h6 here; use level argument instead.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>level</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -current global heading level-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Specific heading level</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>level</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -current global heading level-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Specific heading level</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If not specified, current heading level returned by <a href="../utilities.html#entry-getCurrentHeadingLevel">#getCurrentHeadingLevel</a> function is used.
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 Does not consume a level.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>relLevel</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 0)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Determines heading level by adding this number to current global heading level</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>relLevel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: 0)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Determines heading level by adding this number to current global heading level</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -236,62 +235,60 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>levelClassPrefix</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;heading-level-&quot;)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Prefix for level number class</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Heading ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>consumeLevel</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Whether should consume a level in addition to printing a heading</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>levelClassPrefix</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;heading-level-&quot;)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Prefix for level number class</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Heading ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>consumeLevel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether should consume a level in addition to printing a heading</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If true, the global heading level is set to (calculated level for this heading) + 1.
         </span>
           <div class="lib-text-note">
             <strong>NOTE: </strong>
 this is better handled through use of the <a href="../standard/htmlStructure.html#entry-section">@section</a> macro. Mostly useful for h1.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>containerElemType</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(div|, default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If present, adds container around title or this elem type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>containerClass</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Container element CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerElemType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(div|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If present, adds container around title or this elem type</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerClass</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Container element CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -306,43 +303,50 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>containerId</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Container ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>containerId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Container ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Needed for names containing dashes.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineAttribs...</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Extra legacy h1-h6 attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -392,33 +396,25 @@ camelCase names are automatically converted to dash-separated-lowercase-names.  
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(html|java|css|javascript|log, default:html)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(html|java|css|javascript|log, default:html)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -433,8 +429,15 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -475,11 +478,17 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>formType</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>formType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                   </div>
 
@@ -507,143 +516,141 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>enabled</code>, 
-                          <code>tableId</code>, 
-                          <code>tableType</code>, 
-                          <code>tableStyleName</code>, 
-                          <code>responsive</code>, 
-                          <code>scrollable</code>, 
-                          <code>responsiveOptions</code>, 
-                          <code>responsiveDefaults</code>, 
-                          <code>fixedColumnsLeft</code>, 
-                          <code>fixedColumnsRight</code>, 
-                          <code>htmlwrap</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>enabled</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Helper arg to prevent the whole macro from executing, when false</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>tableId</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Table ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>tableType</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Table type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>tableStyleName</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: -based on table type-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Table style name (optimization)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>enabled</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Helper arg to prevent the whole macro from executing, when false</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>tableId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Table ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>tableType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Table type</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>tableStyleName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: -based on table type-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Table style name (optimization)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Usually should be be omitted and will be determined automatically from table type.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>responsive</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, will generate a responsive table</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>responsive</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, will generate a responsive table</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Currently, this relies on the jQuery plugin datatables.js (www.datatables.net) to generate responsive table.
 Can be combined with fixed column type.
 If explicitly set to false, will disable responsive regardless of defaults.
 The default depends on global styles, looked up using table type.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>responsiveOptions</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Map of options passed directly to responsive tables implementation (javascript implementation)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>responsiveDefaults</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Fine-grained control for whether responsive defaults are looked up or not</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>responsiveOptions</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Map of options passed directly to responsive tables implementation (javascript implementation)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>responsiveDefaults</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Fine-grained control for whether responsive defaults are looked up or not</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults per-option; if false, no defaults are used and only
 responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>scrollable</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Scrolling control (convenience parameter)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>scrollable</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Scrolling control (convenience parameter)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If true, guarantees table will be scrollable horizontally.
 implementation of scrollable depends on macro and global styles (by default, uses responsive).
 If explicitly set to false, prevents scrolling.
 Currently, alias for responsiveOptions.scrollX.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>fixedColumnsLeft</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the left-hand side (convenience parameter)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>fixedColumnsLeft</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the left-hand side (convenience parameter)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Currently, alias for responsiveOptions.fixedColumns.leftColumns.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>fixedColumnsRight</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the right hand side  (convenience parameter)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>fixedColumnsRight</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((integer))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Number of columns that are fixed on the right hand side  (convenience parameter)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Currently, alias for responsiveOptions.fixedColumns.rightColumns.        </span>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>htmlwrap</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -708,41 +715,19 @@ Required wrapper for all <a href="#entry-table">@table</a> sub-element macros.  
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>hasHeader</code>, 
-                          <code>cellspacing</code>, 
-                          <code>responsive</code>, 
-                          <code>scrollable</code>, 
-                          <code>responsiveOptions</code>, 
-                          <code>responsiveDefaults</code>, 
-                          <code>fixedColumnsLeft</code>, 
-                          <code>fixedColumnsRight</code>, 
-                          <code>autoAltRows</code>, 
-                          <code>firstRowAlt</code>, 
-                          <code>inheritAltRows</code>, 
-                          <code>useFootAltRows</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
                             <div class="lib-entry-paramsection lib-entry-paramsection-general">
                               <h5>General</h5>
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|(theme-specific), default: generic)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Table type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <h4>STANDARD TYPES</h4>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(generic|(theme-specific), default: generic)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Table type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <h4>STANDARD TYPES</h4>
         <span>
 These types must always be recognized by all styles themes:
         </span>
@@ -803,16 +788,17 @@ ultimately belong as <a href="../standard/htmlForm.html#entry-field">@field</a> 
             <strong>NOTE: </strong>
 These types are mainly targeted for backend applications.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -from global styles-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -from global styles-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -833,26 +819,25 @@ Defaults are looked up in global styles using:
 where type is the table type above. If the given style entry does not exist, the default is instead determined by:
         </span>
 <pre>styles[&quot;table_default&quot;]</pre></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Table ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>hasHeader</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Hint to indicate that table is expected to have a header, normally a &lt;<a href="#entry-thead">@thead</a>&gt; element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Table ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>hasHeader</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Hint to indicate that table is expected to have a header, normally a &lt;<a href="#entry-thead">@thead</a>&gt; element</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 <a href="#entry-table">@table</a> will try to figure this out on its own, but in some cases it may not be possible
 or not possible to know in advance, in which case caller must specify this flag.
 Currently, this setting affects the following:
@@ -865,115 +850,130 @@ Responsive tables        </span>
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>autoAltRows</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-, fallback default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>firstRowAlt</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inheritAltRows</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Only for nested tables: If true, all rows in nested tables will inherit alt from parent table row</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>useFootAltRoots</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether use alt row logic in foot or not</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>cellspacing</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -from global styles-, fallback default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Traditional cellspacing</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>autoAltRows</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -from global styles-, fallback default: false)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>firstRowAlt</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inheritAltRows</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Only for nested tables: If true, all rows in nested tables will inherit alt from parent table row</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>useFootAltRoots</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Whether use alt row logic in foot or not</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>cellspacing</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -from global styles-, fallback default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Traditional cellspacing</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Should be avoided in modern templates.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>open, close</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open, close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Needed for names containing dashes.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineAttribs...</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes and values</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;table&gt; attributes and values</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 camelCase names are automatically converted to dash-separated-lowercase-names.          </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
               </table>
                             </div>
                             <div class="lib-entry-paramsection lib-entry-paramsection-responsiveTables">
                               <h5>Responsive Tables</h5>
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>responsive,     responsiveOptions,     responsiveDefaults,     scrollable,     fixedColumnsLeft,     fixedColumnsRight</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-tableResponsiveScript">@tableResponsiveScript</a> macro for descriptions</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>responsive,     responsiveOptions,     responsiveDefaults,     scrollable,     fixedColumnsLeft,     fixedColumnsRight</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-tableResponsiveScript">@tableResponsiveScript</a> macro for descriptions</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 <a href="#entry-table">@table</a> with default markup will automatically disable responsive on tables
 that have no <a href="#entry-thead">@thead</a> element and hasHeader=true is not specified.
 Responsive tables may break when no header is present (may require a &lt;thead&gt; HTML element).          </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+              </table>
+                            </div>
+                            <div class="lib-entry-paramsection lib-entry-paramsection-unlisted">
+                              <h5>Other</h5>
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>useFootAltRows</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                             </div>
                       </div>
@@ -1015,16 +1015,52 @@ Responsive tables may break when no header is present (may require a &lt;thead&g
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -1062,16 +1098,52 @@ Responsive tables may break when no header is present (may require a &lt;thead&g
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -1109,16 +1181,52 @@ Responsive tables may break when no header is present (may require a &lt;thead&g
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -1157,32 +1265,16 @@ Responsive tables may break when no header is present (may require a &lt;thead&g
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>useAlt</code>, 
-                          <code>alt</code>, 
-                          <code>groupLast</code>, 
-                          <code>groupParent</code>, 
-                          <code>selected</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|content|meta|util, default: -dependent on table type-, fallback default: generic)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(generic|content|meta|util, default: -dependent on table type-, fallback default: generic)</code></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 In complete absence of global styles, default is &quot;generic&quot;.
 In default cato styles, default is &quot;generic&quot; for &quot;generic&quot; tables, and &quot;content&quot; for all other table types.
 Standard types:
@@ -1212,16 +1304,17 @@ such as: spacer rows (<code>&lt;@tr type=&quot;util&quot;&gt;&lt;@td colspan=3&g
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -1236,108 +1329,113 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Row ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>useAlt</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If specified, can manually enable/disable whether alternate row code runs per-row</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>alt</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If specified, override the automatic auto-alt styling to specific value true or false (manual mode)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Row ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>useAlt</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If specified, can manually enable/disable whether alternate row code runs per-row</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>alt</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If specified, override the automatic auto-alt styling to specific value true or false (manual mode)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 At current time, alt on non-body rows (except foot rows if enabled in <a href="#entry-table">@table</a>) does not affect
 next row&#39;s alt (unless groupLast used explicit on next) logic.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>groupLast</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, considers row logically grouped with last row</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>groupLast</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, considers row logically grouped with last row</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Sets alt to exact same as last row.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>groupParent</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Nested tables only, if true, considers row logically grouped with parent row</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>groupParent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Nested tables only, if true, considers row logically grouped with parent row</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Sets alt to exact same as parent row.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>selected</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If specified and true marked as selected</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>open, close</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;tr&gt; attributes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>selected</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If specified and true marked as selected</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open, close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;tr&gt; attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Needed for names containing dashes.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineAttribs...</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;tr&gt; attributes and values</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;tr&gt; attributes and values</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1379,26 +1477,17 @@ Needed for names containing dashes.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -1413,50 +1502,54 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Cell ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>open, close</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;th&gt; and &lt;td&gt; attributes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Cell ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open, close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Advanced structure control, for esoteric cases</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Other legacy &lt;th&gt; and &lt;td&gt; attributes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Needed for names containing dashes.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineAttribs...</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;th&gt; and &lt;td&gt; attributes and values</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineAttribs...</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((inline-args))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Other legacy &lt;th&gt; and &lt;td&gt; attributes and values</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1498,28 +1591,56 @@ Needed for names containing dashes.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>id</code>, 
-                          <code>open</code>, 
-                          <code>close</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>(other)</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>open</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>close</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">See <a href="#entry-th">@th</a></span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1568,24 +1689,17 @@ DEPRECATED: use <a href="#entry-table">@table</a>, <a href="#entry-tr">@tr</a> m
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>class</code>, 
-                          <code>alt</code>, 
-                          <code>selected</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -1600,28 +1714,33 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>alt</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true is alternate row (odd), if false regular (even)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>selected</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true marked as selected</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>alt</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true is alternate row (odd), if false regular (even)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>selected</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true marked as selected</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1675,24 +1794,23 @@ Since this is very foundation specific, this function may be dropped in future i
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>title</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>title</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Fieldset title</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Fieldset title</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1738,24 +1856,23 @@ Since this is very foundation specific, this function may be dropped in future i
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string) price|description|title|button, default:-empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string) price|description|title|button, default:-empty-)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1811,115 +1928,94 @@ Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>library</code>, 
-                          <code>title</code>, 
-                          <code>xlabel</code>, 
-                          <code>ylabel</code>, 
-                          <code>label1</code>, 
-                          <code>label2</code>, 
-                          <code>labelUom1</code>, 
-                          <code>labelUom2</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(pie|bar|line, default: pie)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>library</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: chart)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Uses either chart.js or foundation.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(pie|bar|line, default: pie)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>library</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: chart)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Uses either chart.js or foundation.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
  &quot;foundation&quot; is deprecated and requires additional seed data in order to run.
  Uncomment &quot;PIZZA AMORE&quot; in component://base-theme/data/BaseThemeData.xml to use        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>title</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Data Title</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>xlabel</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">X-axis label</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>ylabel</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Y-axis label</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>label1</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Dataset 1 label</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>label2</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Dataset 2 label</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>labelUom1</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Dataset 1 currency symbol (automatically added to the tooltips)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>labelUom2</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Dataset 2 currency symbol (automatically added to the tooltips)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Data Title</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>xlabel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">X-axis label</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>ylabel</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Y-axis label</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>label1</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Dataset 1 label</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>label2</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Dataset 2 label</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelUom1</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Dataset 1 currency symbol (automatically added to the tooltips)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>labelUom2</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Dataset 2 currency symbol (automatically added to the tooltips)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1969,34 +2065,24 @@ Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>content</code>, 
-                          <code>library</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>content</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(pie|bar|line, default: pie)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>library</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: chart)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>content</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(pie|bar|line, default: pie)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>library</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(foundation|chart, default: chart)</code></span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -2027,14 +2113,38 @@ Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>title</code>, 
-                          <code>value</code>, 
-                          <code>value2</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>value</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>value2</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -2090,48 +2200,35 @@ Chart.js: <a href="http://www.chartjs.org/docs/">http://www.chartjs.org/docs/</a
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>title</code>, 
-                          <code>library</code>, 
-                          <code>id</code>, 
-                          <code>class</code>, 
-                          <code>controls</code>, 
-                          <code>indicator</code>, 
-                          <code>jsOptions</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>title</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Data Title</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Slider id</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Data Title</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Slider id</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Heading element CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -2146,51 +2243,56 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>library</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>library</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
  &quot;owl&quot; &amp; &quot;slick&quot; require additional seed data in order to run.
  Uncomment &quot;Owl&quot; in component://base-theme/data/BaseThemeData.xml in order to use        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>controls</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Left / Right navigation</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>indicator</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Bullet indicators</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>jsOptions</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Additional js argument, included on js initialization</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>controls</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Left / Right navigation</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>indicator</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Bullet indicators</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>jsOptions</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Additional js argument, included on js initialization</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -2248,37 +2350,26 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>title</code>, 
-                          <code>class</code>, 
-                          <code>library</code>, 
-                          <code>link</code>, 
-                          <code>linkTarget</code>, 
-                          <code>image</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>title</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Data Title</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string), default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Data Title</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -2293,28 +2384,29 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>library</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>library</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(|owl|slick, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Uses either Owl carousel, Slick or foundation orbit.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
  &quot;owl&quot; &amp; &quot;slick&quot; require additional seed data in order to run.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>link</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>link</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
 can only use if no other links inside nested content          </div>
           <div class="lib-text-note">
@@ -2323,30 +2415,36 @@ This parameter is automatically (re-)escaped for HTML and javascript (using <a h
 to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
 but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>linkTarget</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Target for link element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>linkTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Target for link element</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If boolean, false prevents any; true will allow global styles hash lookup.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>image</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Background image URL</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>image</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Background image URL</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -2403,38 +2501,26 @@ Relies on custom catoObjectFit Javascript function as a fallback for IE.</p>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>src</code>, 
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>width</code>, 
-                          <code>height</code>, 
-                          <code>link</code>, 
-                          <code>linkTarget</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>src</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> image location</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>src</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> image location</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -2449,16 +2535,16 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(none|fill|cover|contain|scale-down|bg-cover, default: cover)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(none|fill|cover|contain|scale-down|bg-cover, default: cover)</code></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 fill|cover|contain|scale-down = css3 object-fit        </span>
@@ -2470,16 +2556,16 @@ bgcover = css background cover        </span>
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>link</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>link</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Link URL around nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>WARN: </strong>
 can only use if no other links inside nested content          </div>
           <div class="lib-text-note">
@@ -2488,40 +2574,46 @@ This parameter is automatically (re-)escaped for HTML and javascript (using <a h
 to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
 but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>linkTarget</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Target for link element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>linkTarget</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Target for link element</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If boolean, false prevents any; true will allow global styles hash lookup.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>width</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> container width, e.g. &quot;12px&quot; - acts as a max-width</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>height</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> container height e.g. &quot;12px&quot; - acts as a max-height</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>width</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> container width, e.g. &quot;12px&quot; - acts as a max-width</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>height</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(string)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> container height e.g. &quot;12px&quot; - acts as a max-height</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 

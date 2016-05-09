@@ -7,7 +7,7 @@
 
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-      <title>Navigation HTML template include, standard Cato markup</title>
+      <title>Navigation &amp; Menus</title>
 
 <style type="text/css">
 table.entry-parameters {
@@ -60,11 +60,15 @@ pre {
 
   
     <div>
-        <h1 class="lib-pagetitle">Navigation HTML template include, standard Cato markup</h1>
+        <h1 class="lib-pagetitle">Navigation &amp; Menus</h1>
         <h2>Templating Documentation</h2>
         <p><em><span class="lib-filename">standard/htmlNav.ftl</span></em></p>
 
         <div class="lib-pagedesc">
+        <p>
+Navigational elements that can be used to generate complexe menus, pagination controls or other
+navigation elements (magelan, step elements, breadcrumbs or alike). The usage should be largely simplified
+by the elements provided.        </p>
         <p>
 Included by htmlTemplate.ftl.        </p>
           <div class="lib-text-note">
@@ -159,36 +163,25 @@ Since this is very foundation specific, this function may be dropped in future i
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>id</code>, 
-                          <code>class</code>, 
-                          <code>style</code>, 
-                          <code>activeElem</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(inline|magellan|breadcrumbs|steps|, default: inline)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(inline|magellan|breadcrumbs|steps|, default: inline)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -203,40 +196,44 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>style</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>activeElem</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((string)|(list))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Name of the active element or elements</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>style</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy HTML <code>style</code> attribute</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>activeElem</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((string)|(list))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Name of the active element or elements</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 The meaning and effect depends on the nav type.        </span>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -277,12 +274,24 @@ The meaning and effect depends on the nav type.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>arrival</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>arrival</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -320,11 +329,17 @@ The meaning and effect depends on the nav type.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>id</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                   </div>
 
@@ -351,11 +366,17 @@ The meaning and effect depends on the nav type.        </span>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>id</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                   </div>
 
@@ -402,18 +423,66 @@ class                   = ((css-class)) CSS classes
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>name</code>, 
-                          <code>icon</code>, 
-                          <code>completed</code>, 
-                          <code>disabled</code>, 
-                          <code>active</code>, 
-                          <code>class</code>, 
-                          <code>href</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
+                      <div class="lib-entry-params-doc">
+              <table class="entry-parameters">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>name</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>icon</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>completed</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>disabled</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>active</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>href</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+              </table>
+                      </div>
 
                       <div class="lib-entry-params-details">
                         <p>
@@ -481,40 +550,17 @@ The submenu&#39;s main class may be set as altnested in global styles.        </
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>inlineItems</code>, 
-                          <code>id</code>, 
-                          <code>style</code>, 
-                          <code>attribs</code>, 
-                          <code>items</code>, 
-                          <code>preItems</code>, 
-                          <code>postItems</code>, 
-                          <code>sort</code>, 
-                          <code>sortBy</code>, 
-                          <code>sortDesc</code>, 
-                          <code>nestedFirst</code>, 
-                          <code>title</code>, 
-                          <code>specialType</code>, 
-                          <code>mainButtonClass</code>, 
-                          <code>htmlwrap</code>, 
-                          <code>isNestedMenu</code>, 
-                          <code>parentMenuType</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">The menu type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">The menu type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 For nested menus, this will inherit the type of the parent.
 General:
         </span>
@@ -526,26 +572,26 @@ General:
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineItems</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -based on menu type-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes for menu</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineItems</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -based on menu type-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes for menu</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -569,147 +615,166 @@ for this macro, the inline &quot;class&quot; args is now logically combined with
 arg from the &quot;args&quot; map using the logic in combineClassArgs function, with
 inline having priority.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Menu ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>style</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Legacy menu HTML style attribute (for &lt;ul&gt; element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((maps))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Other menu attributes (for &lt;ul&gt; element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>items</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">List of maps, where each hash contains arguments representing a menu item,</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Menu ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>style</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy menu HTML style attribute (for &lt;ul&gt; element)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((maps))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Other menu attributes (for &lt;ul&gt; element)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>items</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">List of maps, where each hash contains arguments representing a menu item,</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 same as <a href="#entry-menuitem">@menuitem</a> macro parameters.
 alternatively, the items can be specified as nested content.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>preItems</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added before items and nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>preItems</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added before items and nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Excluded from sorting.
 Templates should generally avoid use unless specific need, but may be used by other macros.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>postItems</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added after items and nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>postItems</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((list))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Special-case list of maps of items, added after items and nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Excluded from sorting.
 Avoid use unless specific need; may be needed by cato menu handling.
 Templates should generally avoid use unless specific need, but may be used by other macros.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>sort,     sortBy,     sortDesc</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Items sorting behavior; will only work if items are specified</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><pre>through items list of hashes, currently does not apply to
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>sort,     sortBy,     sortDesc</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Items sorting behavior; will only work if items are specified</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc"><pre>through items list of hashes, currently does not apply to
 nested items. by default, sorts by text, or sortBy can specify a menu item arg to sort by.
 normally case-insensitive.</pre></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>nestedFirst</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, use nested items before items list, otherwise items list always first</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>nestedFirst</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, use nested items before items list, otherwise items list always first</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Usually should use only one of alternatives, but is versatile.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>htmlwrap</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(ul|div|span, default: ul)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>specialType</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(button-dropdown|, default: -none-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>isNestedMenu</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty, automatic-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Override to tell the macro if it&#39;s nested or not</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>htmlwrap</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(ul|div|span, default: ul)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>specialType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(button-dropdown|, default: -none-)</code></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc"></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>isNestedMenu</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|, default: -empty, automatic-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Override to tell the macro if it&#39;s nested or not</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 The menu macro will try to figure out if nested or not on its own. In rare custom code, this boolean may need to be specified,
 in case it is needed a nested menu behaves as a top-level menu (by passing false).        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>parentMenuType</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Manual override to tell macro what the parent menu type was</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>parentMenuType</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Manual override to tell macro what the parent menu type was</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 This is usually determined automatically, but in esoteric cases may need to specify.        </span>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>mainButtonClass</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -757,47 +822,17 @@ survive direct FTL file includes.          </div>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>type</code>, 
-                          <code>class</code>, 
-                          <code>contentClass</code>, 
-                          <code>id</code>, 
-                          <code>style</code>, 
-                          <code>attribs</code>, 
-                          <code>contentId</code>, 
-                          <code>contentStyle</code>, 
-                          <code>contentName</code>, 
-                          <code>contentAttribs</code>, 
-                          <code>text</code>, 
-                          <code>href</code>, 
-                          <code>onClick</code>, 
-                          <code>disabled</code>, 
-                          <code>selected</code>, 
-                          <code>active</code>, 
-                          <code>target</code>, 
-                          <code>title</code>, 
-                          <code>nestedContent</code>, 
-                          <code>nestedMenu</code>, 
-                          <code>wrapNested</code>, 
-                          <code>nestedFirst</code>, 
-                          <code>htmlwrap</code>, 
-                          <code>inlineItem</code>, 
-                          <code>contentWrapElem</code>, 
-                          <code>isNestedMenu</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(generic|link|text|submit, default: generic)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Menu item (content) type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(generic|link|text|submit, default: generic)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Menu item (content) type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 <code>generic</code>: any generic content, but specific types should be preferred.        </span>
@@ -805,16 +840,17 @@ survive direct FTL file includes.          </div>
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -based on menu type-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes for menu item</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class), default: -based on menu type-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes for menu item</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -833,46 +869,42 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
 for this macro, the inline &quot;class&quot; args is now logically combined with the &quot;class&quot;
 arg from the &quot;args&quot; map using the logic in combineClassArgs function, with inline given priority.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Menu item ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>style</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Legacy menu item style (for &lt;li&gt; element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Extra menu item attributes (for &lt;li&gt; element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentClass</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes, for menu item content element (&lt;a&gt;, &lt;span&gt; or &lt;input&gt; element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Menu item ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>style</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy menu item style (for &lt;li&gt; element)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Extra menu item attributes (for &lt;li&gt; element)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentClass</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes, for menu item content element (&lt;a&gt;, &lt;span&gt; or &lt;input&gt; element)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -891,69 +923,62 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
 for this macro, the inline &quot;contentClass&quot; args is now logically combined with the &quot;contentClass&quot;
 arg from the &quot;args&quot; map using the logic in combineClassArgs function, with inline given priority.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentId</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Menu item content ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentStyle</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Legacy menu item content style</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentName</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Content name attrib (<code>name=&quot;&quot;</code> on <code>&lt;a&gt;</code> link)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentAttribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Extra menu item content attributes (for <code>&lt;a&gt;</code>, <code>&lt;span&gt;</code> or <code>&lt;input&gt;</code> element)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>text</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Text to use as content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentId</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Menu item content ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentStyle</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Legacy menu item content style</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentName</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Content name attrib (<code>name=&quot;&quot;</code> on <code>&lt;a&gt;</code> link)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentAttribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Extra menu item content attributes (for <code>&lt;a&gt;</code>, <code>&lt;span&gt;</code> or <code>&lt;input&gt;</code> element)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>text</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Text to use as content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 By default, you <strong>must</strong> use this to specific link text, not nested content;
 nested content will by default be put outside the link.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>href</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Content link, for <code>link</code> type</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>href</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Content link, for <code>link</code> type</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Also supports ofbiz request URLs using the notation: <code>ofbizUrl://</code> (see interpretRequestUri function)
         </span>
           <div class="lib-text-note">
@@ -962,135 +987,131 @@ This parameter is automatically (re-)escaped for HTML and javascript (using <a h
 to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
 but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>onClick</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((js))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> onClick (for content elem)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>title</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Logical title attribute of content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>disabled</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether menu item disabled</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>active</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Whether menu item active (current page)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>selected</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Whether selected or not (selected but not necessarily current)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>onClick</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((js))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> onClick (for content elem)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>title</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Logical title attribute of content</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>disabled</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Whether menu item disabled</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>active</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Whether menu item active (current page)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>selected</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Whether selected or not (selected but not necessarily current)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Currently this is not used much. It would be used for marking an item as preselected.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>nestedContent</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Macro arg alternative to macro nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>nestedContent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Macro arg alternative to macro nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 This may be passed in <a href="#entry-menu">@menu</a> items list.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>nestedMenu</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Map of <a href="#entry-menu">@menu</a> arguments, alternative to nestedContent arg and macro nested content</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>nestedMenu</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Map of <a href="#entry-menu">@menu</a> arguments, alternative to nestedContent arg and macro nested content</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 For menu to use as sub-menu.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>wrapNested</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -true for type generic, false for all other types-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, nested content is wrapped within the content element (link, span, etc.)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>wrapNested</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: -true for type generic, false for all other types-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, nested content is wrapped within the content element (link, span, etc.)</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If false, the nested content will come before or after (depending on nestedFirst) the content element.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>nestedFirst</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true, nested content comes before content elem</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>htmlwrap</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(li|span|div, default: -from global styles-, fallback default: li)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Wrapping HTML element</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineItem</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>contentWrapElem</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> type items, controls the extra content wrapper around nested</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>nestedFirst</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, nested content comes before content elem</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>htmlwrap</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(li|span|div, default: -from global styles-, fallback default: li)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Wrapping HTML element</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineItem</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>contentWrapElem</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean)|div|..., default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">For <code>generic</code> type items, controls the extra content wrapper around nested</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If true, a <code>div</code> will be added around nested; if any string, the given string will be used as the element.
 This wrapper will receive the contentClass and other content attributes normally given to inline elements for the other types.
 If false, no wrapper will be added.
@@ -1099,8 +1120,29 @@ If false, no wrapper will be added.
             <strong>NOTE: </strong>
 This currently only works for <code>generic</code> type items.          </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>target</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>isNestedMenu</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1149,23 +1191,16 @@ menu item element must override this and provide a proper check.        </p>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>menuContent</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>menuContent</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">string of HTML markup</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>menuContent</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">string of HTML markup</span>
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1208,53 +1243,16 @@ functionality.</p>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>mode</code>, 
-                          <code>type</code>, 
-                          <code>layout</code>, 
-                          <code>noResultsMode</code>, 
-                          <code>enabled</code>, 
-                          <code>url</code>, 
-                          <code>class</code>, 
-                          <code>viewIndex</code>, 
-                          <code>listSize</code>, 
-                          <code>viewSize</code>, 
-                          <code>prioViewSize</code>, 
-                          <code>altParam</code>, 
-                          <code>forcePost</code>, 
-                          <code>paramStr</code>, 
-                          <code>viewIndexFirst</code>, 
-                          <code>showCount</code>, 
-                          <code>alwaysShowCount</code>, 
-                          <code>countMsg</code>, 
-                          <code>lowCountMsg</code>, 
-                          <code>paginateToggle</code>, 
-                          <code>paginateOn</code>, 
-                          <code>paginateToggleOnValue</code>, 
-                          <code>paginateToggleOffValue</code>, 
-                          <code>viewSizeSelection</code>, 
-                          <code>position</code>, 
-                          <code>viewIndexString</code>, 
-                          <code>viewSizeString</code>, 
-                          <code>paginateToggleString</code>, 
-                          <code>paramDelim</code>, 
-                          <code>paramPrefix</code>, 
-                          <code>previousViewSize</code>, 
-                          <code>paginateOffViewSize</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>mode</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(content|single, default: single)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>mode</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(content|single, default: single)</code></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 <code>content</code>: decorates the nested content with one or more pagination menus (depending on layout, and layout can be centralized)
@@ -1270,16 +1268,17 @@ in overwhelmingly most cases, this mode should be preferred, as it offers more c
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>type</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default, default: default)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Type of the pagination menu itself</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>type</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default, default: default)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Type of the pagination menu itself</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 <code>default</code>: default cato pagination menu        </span>
@@ -1287,16 +1286,17 @@ in overwhelmingly most cases, this mode should be preferred, as it offers more c
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>layout</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default|top|bottom|both, default: default)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Type of layout, only meaningful for &quot;content&quot; mode</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>layout</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default|top|bottom|both, default: default)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Type of layout, only meaningful for &quot;content&quot; mode</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 <code>default</code>: &quot;pagination_layout&quot; from styles hash, otherwise both        </span>
@@ -1316,29 +1316,30 @@ in overwhelmingly most cases, this mode should be preferred, as it offers more c
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>position</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(top|bottom|, default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Optional position indicator, only makes sense in single mode.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>position</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(top|bottom|, default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Optional position indicator, only makes sense in single mode.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 If specified, it may lead to the pagination not rendering depending on resolved value of layout.
 In content mode (preferred), this is handled automatically.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>noResultsMode</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default|hide|disable, default: default)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>noResultsMode</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default|hide|disable, default: default)</code></span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <div>  <ul>
       <li>
         <span>
 <code>default</code>: &quot;pagination_noresultsmode&quot; from styles hash, otherwise hide. may depend on mode argument.        </span>
@@ -1354,44 +1355,46 @@ In content mode (preferred), this is handled automatically.        </span>
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>enabled</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Manual control to disable the entire macro</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>enabled</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: true)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Manual control to disable the entire macro</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Sometimes needed to work around FTL language.
 For &quot;content&quot; mode, with false, will still render nested content (that is the purpose), but will never decorate.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>url</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Base Url to be used for pagination</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>url</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Base Url to be used for pagination</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 This parameter is automatically (re-)escaped for HTML and javascript (using <a href="../utilities.html#entry-escapeFullUrl">#escapeFullUrl</a> or equivalent)
 to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
 but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>class</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">CSS classes</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>class</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((css-class))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">CSS classes</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compileClassArg</a> for more info):
         </span>
         <div>  <ul>
@@ -1406,62 +1409,61 @@ Supports prefixes (see <a href="../utilities.html#entry-compileClassArg">#compil
   </ul>
 </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>listSize</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Size of the list in total</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewIndex</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Page currently displayed</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewSize</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Maximum number of items displayed</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>listSize</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Size of the list in total</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewIndex</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Page currently displayed</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewSize</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Maximum number of items displayed</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 this should be decided earlier in rendering (data prep) and a valid value MUST be passed.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>forcePost</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Always use POST for non-ajax browsing</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>forcePost</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Always use POST for non-ajax browsing</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 even if false, large requests may be coerced to POST.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paramStr</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Extra URL parameters in string format, escaped</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paramStr</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Extra URL parameters in string format, escaped</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 e.g.
         </span>
 <pre>param1=val1&amp;amp;param2=val2</pre>          <div class="lib-text-note">
@@ -1470,78 +1472,73 @@ This parameter is automatically (re-)escaped for HTML and javascript (using <a h
 to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
 but other characters should not be manually escaped (apart from URL parameter encoding).          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewIndexFirst</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> First viewIndex value number (0 or 1, only affects param values, not display)</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>showCount</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true show &quot;Displaying...&quot; count or string provided in countMsg; if false don&#39;t; empty string is let markup/theme decide</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>alwaysShowCount</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true, show count even if other pagination controls are supposed to be omitted</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>countMsg</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Custom message for count, optional; markup provides its own default or in styles hash</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>lowCountMsg</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Alternate custom message for low counts, optional; markup provides its own or in styles hash</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paginateToggle</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If true, include a control to toggle pagination on/off</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewIndexFirst</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> First viewIndex value number (0 or 1, only affects param values, not display)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>showCount</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true show &quot;Displaying...&quot; count or string provided in countMsg; if false don&#39;t; empty string is let markup/theme decide</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>alwaysShowCount</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, show count even if other pagination controls are supposed to be omitted</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>countMsg</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Custom message for count, optional; markup provides its own default or in styles hash</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>lowCountMsg</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Alternate custom message for low counts, optional; markup provides its own or in styles hash</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateToggle</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If true, include a control to toggle pagination on/off</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 (specify current state with paginateOn and tweak using paginateToggle* arguments)        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paginateOn</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Indicates whether pagination is currently on or off</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateOn</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Indicates whether pagination is currently on or off</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Can be used with paginateToggle to indicate current state, or set to false to prevent
 pagination controls while still allowing some decorations (depending on styling).
         </span>
@@ -1549,104 +1546,128 @@ pagination controls while still allowing some decorations (depending on styling)
             <strong>NOTE: </strong>
 this is not the same as enabled control. paginateOn does not prevent macro from rendering.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>previousViewSize</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Used if paginate state is off. if not specified, it will use a default from general.properties.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paginateOffViewSize</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -in general.properties-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> A viewSize value send when turning off pagination via toggle</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewSizeSelection</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Currently officially unsupported.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>altParam</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewIndexString</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: VIEW_INDEX)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>viewSizeString</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: VIEW_SIZE)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paginateToggleString</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: PAGING)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paramPrefix</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: -empty-)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Prefix added to param names. Some screens need &quot;~&quot;.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>previousViewSize</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Used if paginate state is off. if not specified, it will use a default from general.properties.</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateOffViewSize</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((int), default: -in general.properties-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> A viewSize value send when turning off pagination via toggle</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewSizeSelection</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean), default: false)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Currently officially unsupported.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc"></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>altParam</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewIndexString</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: VIEW_INDEX)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>viewSizeString</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: VIEW_SIZE)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateToggleString</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: PAGING)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Specific param name to use</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paramPrefix</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: -empty-)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Prefix added to param names. Some screens need &quot;~&quot;.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Does not affect paramStr - caller must handle.          </div>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>paramDelim</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Param delimiter. Some screens need &quot;/&quot;.</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paramDelim</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(default: &quot;&amp;amp;&quot;)</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">Param delimiter. Some screens need &quot;/&quot;.</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">          <div class="lib-text-note">
             <strong>NOTE: </strong>
 Does not affect paramStr - caller must handle.          </div>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>prioViewSize</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateToggleOnValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>paginateToggleOffValue</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 
@@ -1703,84 +1724,89 @@ Does not affect paramStr - caller must handle.          </div>
                   <div class="lib-entry-section-params">
                     <h4>Parameters</h4>
                     
-                    <div class="lib-entry-params-formal">
-                      <p>
-                          <code>library</code>, 
-                          <code>data</code>, 
-                          <code>settings</code>, 
-                          <code>plugins</code>, 
-                          <code>inlineItems</code>, 
-                          <code>id</code>, 
-                          <code>attribs</code>, 
-                          <code>passArgs</code>
-                      </p>
-                    </div>
                       <div class="lib-entry-params-doc">
               <table class="entry-parameters">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>treeMenuLibrary</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>(jsTree, default: jsTree)</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>inlineItems</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>id</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code></code></span>
-                      <span class="lib-entry-param-desc-shortdesc">Menu ID</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>attribs</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"> Map of other tree menu attribs</span><br/>
-                      <span class="lib-entry-param-desc-extradesc"></span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>data</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If jsTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>treeMenuLibrary</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>(jsTree, default: jsTree)</code></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>inlineItems</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((boolean))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> If true, generate only items, not menu container</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>id</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-shortdesc">Menu ID</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>attribs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((map))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc"> Map of other tree menu attribs</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>data</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If jsTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Same as @treemenuitem macro parameters.        </span>
 </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>settings</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
-                      <span class="lib-entry-param-desc-shortdesc">If jsTree: settings</span><br/>
-                      <span class="lib-entry-param-desc-extradesc">        <span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>settings</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                            <span class="lib-entry-param-desc-typeinfo"><code>((object))</code></span>
+                            <span class="lib-entry-param-desc-shortdesc">If jsTree: settings</span>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc">        <span>
 Alternatively, the items can be specified as nested content.        </span>
 </span>
-                    </td>
-                  </tr>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>library</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>plugins</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>passArgs</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                        </td>
+                      </tr>
               </table>
                       </div>
 

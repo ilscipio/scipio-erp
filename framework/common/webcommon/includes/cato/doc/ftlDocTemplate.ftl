@@ -263,34 +263,51 @@ pre {
                   <div class="lib-entry-section-params">
                     <h4><@labelText text=entrySection.title!"Parameters" /></h4>
                     
+                  <#if false>
                     <div class="lib-entry-params-formal"><#--<em>All parameters:</em>-->
                       <p>
                       <#-- NOTE: do not sort -->
                       <#if entry.argList?has_content>
-                        <#--<#list entry.argList as argName>
+                        <#list entry.argList as argName>
                           <code>${escapeText(argName)}</code><#if argName_has_next>, </#if>
-                        </#list>-->
+                        </#list>
                       <#else>
                         (none)
                       </#if>
                       </p>
                     </div>
+                  </#if>
                     <#-- NOTE: there is an entry-wide paramDescMap, and each param section has one too -->
-                    <#if entrySection.paramDescMap?has_content>
+                    <#--<#if entrySection.paramDescMap?has_content>-->
                       <div class="lib-entry-params-doc">
-                        <#if (entrySection.paramSectionMap?size >= 2)>
+                      <#assign exclude = ["(other)"]>
+                      <#assign defaultDesc = (entry.paramDescMap["(other)"])!"">
+                      <#if entry.type == "function" && !entry.isAdvancedArgs>
+                        <#-- If it's a non-advanced function, the param order is pretty important,
+                            so don't support sections and make sure argList order is followed and complete -->
+                        <@parametersTable paramDescMaps=entry.argMapWithParamDescMapEntries exclude=exclude defaultDesc=defaultDesc/>
+                      <#else>
+                        <#-- for macros and other: append unlisted params at end (in Other section if there were sections) -->
+                        <#if entrySection.paramSectionMap?has_content && (entrySection.paramSectionMap?size >= 2)>
                           <#list entrySection.paramSectionMap?keys as paramSectionName>
                             <#assign paramSection = entrySection.paramSectionMap[paramSectionName]>
                             <div class="lib-entry-paramsection lib-entry-paramsection-${paramSectionName}">
                               <h5><@labelText text=paramSection.title /></h5>
-                              <@parametersTable paramDescMap=paramSection.paramDescMap />
+                              <@parametersTable paramDescMaps=paramSection.paramDescMap exclude=exclude defaultDesc=defaultDesc />
                             </div>
                           </#list>
+                          <#if entry.argMapUnaccounted?has_content>
+                            <div class="lib-entry-paramsection lib-entry-paramsection-unlisted">
+                              <h5><@labelText text="Other" /></h5>
+                              <@parametersTable paramDescMaps=entry.argMapUnaccounted exclude=exclude defaultDesc=defaultDesc />
+                            </div>
+                          </#if>
                         <#else>
-                          <@parametersTable paramDescMap=entry.paramDescMap />
+                          <@parametersTable paramDescMaps=entry.paramDescMapPlusArgMapUnaccounted exclude=exclude defaultDesc=defaultDesc/>
                         </#if>
+                      </#if>
                       </div>
-                    </#if>
+                    <#--</#if>-->
 
                     <#if entry.isAdvancedArgs>
                       <div class="lib-entry-params-details">
@@ -310,23 +327,44 @@ pre {
                 <#global parametersSectionRendered = true>
             </#macro>
 
-            <#macro parametersTable paramDescMap>
+            <#macro parametersTable paramDescMaps exclude=[] defaultDesc={}>
               <table class="entry-parameters">
-                <#list paramDescMap?keys as paramName>
-                  <#assign paramDesc = paramDescMap[paramName]!"">
-                  <tr>
-                    <td class="entry-paramname">
-                        <code>${escapeText(paramName)}</code>
-                    </td>
-                    <td class="entry-paramdesc">
-                      <#-- TODO? the type str can be highlighted by is currently not parsed -->
-                    <@contentGroup>
-                      <span class="lib-entry-param-desc-typeinfo"><code>${escapeText(paramDesc.typeStr!"")}</code></span>
-                      <span class="lib-entry-param-desc-shortdesc"><@descText text=paramDesc.shortDesc!"" /></span><br/>
-                      <span class="lib-entry-param-desc-extradesc"><@complexContent text=paramDesc.extraDesc!"" paragraphs=false/></span>
-                    </@contentGroup>
-                    </td>
-                  </tr>
+                <#if !paramDescMaps?is_sequence>
+                  <#local paramDescMaps = [paramDescMaps]>
+                </#if>
+                <#list paramDescMaps as paramDescMap>
+                  <#if paramDescMap?has_content>
+                  <#list paramDescMap?keys as paramName>
+                    <#if !exclude?seq_contains(paramName)>
+                      <#assign paramDesc = paramDescMap[paramName]!"">
+                      <tr>
+                        <td class="entry-paramname">
+                            <code>${escapeText(paramName)}</code>
+                        </td>
+                        <td class="entry-paramdesc">
+                          <#-- TODO? the type str can be highlighted by is currently not parsed -->
+                        <@contentGroup>
+                        <#if paramDesc?has_content || defaultDesc?has_content>
+                          <#if !paramDesc?has_content>
+                            <#local paramDesc = defaultDesc>
+                          </#if>
+                          <#if paramDesc.typeStr?has_content>
+                            <span class="lib-entry-param-desc-typeinfo"><code>${escapeText(paramDesc.typeStr!"")}</code></span>
+                          </#if>
+                          <#if paramDesc.shortDesc?has_content>
+                            <span class="lib-entry-param-desc-shortdesc"><@descText text=paramDesc.shortDesc!"" /></span>
+                          </#if>
+                          <#if paramDesc.extraDesc?has_content>
+                            <br/>
+                            <span class="lib-entry-param-desc-extradesc"><@complexContent text=paramDesc.extraDesc!"" paragraphs=false/></span>
+                          </#if>
+                        </#if>
+                        </@contentGroup>
+                        </td>
+                      </tr>
+                    </#if>
+                  </#list>
+                  </#if>
                 </#list>
               </table>
             </#macro>

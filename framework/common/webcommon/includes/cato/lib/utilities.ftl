@@ -395,7 +395,7 @@ The following URI forms are currently interpreted and transformed:
   NOTE: Order of arguments is strict; args will be stripped.
                  
   * Parameters *
-    url                     = uri to interpret for known formats and, if matching, to produce URL
+    uri                     = uri to interpret for known formats and, if matching, to produce URL
 -->
 <#function interpretRequestUri uri>
   <#local uri = rawString(uri)>

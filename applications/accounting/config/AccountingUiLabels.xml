@@ -9678,6 +9678,11 @@
         <value xml:lang="zh">没有修改，不更新电子资金转账账户</value>
         <value xml:lang="zh_TW">沒有修改,不更新電子資金轉帳帳戶</value>
     </property>
+    <!-- Cato: TODO: Localize -->
+    <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
+        <value xml:lang="de">Keine Änderungen, Gift Card wurde nicht aktualisiert</value>
+        <value xml:lang="en">No changes made, not updating Gift Card</value>
+    </property>
     <property key="AccountingNoChildPeriodsFound">
         <value xml:lang="de">Keine untergeordneten Zeiträume gefunden</value>
         <value xml:lang="en">No child periods found</value>

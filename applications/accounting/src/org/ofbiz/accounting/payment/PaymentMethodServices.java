@@ -650,7 +650,7 @@ public class PaymentMethodServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingEftAccountCannotBeUpdated",
+                        "AccountingGiftCardCannotBeUpdated",
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
         } else {
@@ -658,7 +658,7 @@ public class PaymentMethodServices {
             result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, 
-                    "AccountingNoChangesMadeNotUpdatingEftAccount", locale));
+                    "AccountingNoChangesMadeNotUpdatingGiftCard", locale));
 
             return result;
         }

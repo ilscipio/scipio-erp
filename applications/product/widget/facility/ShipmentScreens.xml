@@ -59,16 +59,19 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-menu location="component://product/widget/facility/FacilityMenus.xml" name="ShipmentSideBar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-has-permission permission="FACILITY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
+                                <!-- <platform-specific>
                                     <html><html-template location="component://product/webapp/facility/shipment/ShipmentTabBar.ftl"/></html>
-                                </platform-specific>
-                                <section>
+                                </platform-specific> -->
+                                <!-- <section>
                                     <condition>
                                         <not><if-empty field="shipment"/></not>
                                     </condition>
@@ -80,7 +83,7 @@ under the License.
                                             </link>
                                         </container>
                                     </widgets>
-                                </section>
+                                </section> -->
                                 <section>
                                     <condition>
                                         <and>
@@ -133,10 +136,11 @@ under the License.
     <screen name="ViewShipment">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewShipment"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="ViewShipment"/>
-
+                <set filed="shipmentId" from-value="parameters.shipmentId"/>
+                <set field="title" value="${uiLabelMap.FacilityShipment} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ViewShipment.groovy"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.groovy"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPackages.groovy"/>
@@ -197,7 +201,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShipmentDecorator">
                     <decorator-section name="body">
-                        <include-form name="EditShipment" location="component://product/widget/facility/ShipmentForms.xml"/>
+                         <!-- <include-form name="EditShipment" location="component://product/widget/facility/ShipmentForms.xml"/> -->
+                         <platform-specific>
+                             <html><html-template location="component://product/webapp/facility/shipment/ViewShipment.ftl"/></html>
+                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -311,10 +318,11 @@ under the License.
     <screen name="AddItemsFromOrder">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleAddItemsFromOrder"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="shipmentId" from-field="parameters.shipmentId" />        
                 <set field="activeMainMenuItem" value="shipment"/>
-                <set field="activeSubMenuItem" value="AddItemsFromOrder"/>
-
+                <set field="activeSubMenuItem" value="AddItemsFromOrder"/>        
+                <set field="title" value="${uiLabelMap.PageTitleAddItemsFromOrder} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromOrder.groovy"/>
             </actions>
             <widgets>

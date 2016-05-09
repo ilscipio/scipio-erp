@@ -125,15 +125,15 @@ function lookupShipments() {
             <#assign destinationFacility = delegator.findOne("Facility", {"facilityId":shipment.destinationFacilityId}, true)! />
             <#assign statusItem = delegator.findOne("StatusItem", {"statusId":shipment.statusId}, true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
-            <@tr valign="middle">
-              <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
+            <@th>
+              <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>
               <@td>${(statusItem.get("description",locale))?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
               <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
               <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
-              <@td><span style="white-space: nowrap;">${(shipment.estimatedShipDate.toString())!}</span></@td>
-              <@td align="right">
-                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+              <@td>${(shipment.estimatedShipDate.toString())!}</@td>
+              <@td>
+                <a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
               </@td>
             </@tr>
           </#list>

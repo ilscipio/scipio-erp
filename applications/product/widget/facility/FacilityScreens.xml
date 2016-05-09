@@ -842,12 +842,14 @@ under the License.
     <screen name="EditInventoryItem">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditInventoryItem"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
                 <set field="subTabButtonItem" value="EditInventoryItem"/>
                 <set field="displayWithNoFacility" value="Y"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="inventoryItemId" from-field="parameters.inventoryItemId"/>
+                
+                <set field="title" value="${uiLabelMap.PageTitleEditInventoryItem} ${facilityId}"/>                
 
                 <entity-one entity-name="Facility" value-field="facility" auto-field-map="true"/>
                 <entity-one entity-name="InventoryItem" value-field="inventoryItem" auto-field-map="true"/>
@@ -883,11 +885,10 @@ under the License.
                                 <not><if-empty field="inventoryItem"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                                <container style="h2">
-                                    <label text="${uiLabelMap.PageTitleEditInventoryItem}"/>
-                                </container>
-                                <container style="widget-container">
+                                <!-- Cato: This makes no sense -->
+                                <!-- <include-menu name="InventoryItemTabBar" location="component://product/widget/facility/FacilityMenus.xml"/> -->
+                                <!-- Cato: FIXME: Move this to a proper menu -->                                
+                                <!-- <container style="widget-container">
                                     <link target="EditInventoryItem" text="${uiLabelMap.ProductNewInventoryItem}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="facilityId" from-field="facilityId"/>
                                     </link>
@@ -895,13 +896,13 @@ under the License.
                                         <parameter param-name="inventoryItemId" from-field="inventoryItemId"/>
                                         <parameter param-name="facilityId" from-field="facilityId"/>
                                     </link>
-                                </container>
+                                </container> -->
                             </widgets>
-                            <fail-widgets>
+                           <!--  <fail-widgets>
                                 <container style="h2">
                                     <label text="${uiLabelMap.ProductNewInventoryItem}"/>
                                 </container>
-                            </fail-widgets>
+                            </fail-widgets> -->
                         </section>
                         <include-form name="EditInventoryItem" location="component://product/widget/facility/InventoryForms.xml"/>
                         <section>

@@ -25,6 +25,9 @@ if (!shipmentId) {
 }
 shipment = from("Shipment").where("shipmentId", shipmentId).queryOne();
 
+shipmentTypeList = from("ShipmentType").queryList();
+context.shipmentTypeList = shipmentTypeList;
+
 context.shipmentId = shipmentId;
 context.shipment = shipment;
 

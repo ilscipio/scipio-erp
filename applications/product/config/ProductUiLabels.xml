@@ -456,6 +456,9 @@
         <value xml:lang="zh_CN">同时货运全部商品，或单项可用即刻发货？</value>
         <value xml:lang="zh_TW">全部一次送貨, 或有貨即送？</value>
     </property>
+    <property key="FacilityShipment">
+        <value xml:lang="en">Shipment</value>
+    </property>
     <property key="FacilityShipmentConfigProps">
         <value xml:lang="en">Config Properties (deprecated use)</value>
         <value xml:lang="it">Property per configurazione spedizioniere (uso deprecato)</value>

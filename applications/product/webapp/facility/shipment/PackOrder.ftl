@@ -155,7 +155,7 @@ under the License.
             </#if>
     
             <#-- manual per item form -->
-            <#if showInput != "N">
+            <#if showInput != "N" && itemInfos?has_content>
                 <#assign sectionTitle="${uiLabelMap.ProductProduct} ${uiLabelMap.ProductToPack}"/>
                 <@section title=sectionTitle>
                     <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">                    
@@ -173,12 +173,10 @@ under the License.
                             <@field type="submit" submitType="input-button" text=uiLabelMap.ProductNextPackage onClick="javascript:document.incPkgSeq.submit();" />
                         </@field>                    
                     </form>
-                </@section>
-            </#if>
+                </@section>       
     
-            <#-- auto grid form -->
-            <#assign itemInfos = packingSession.getItemInfos()!>
-            <#if showInput != "N" && itemInfos?has_content>
+                <#-- auto grid form -->
+                <#assign itemInfos = packingSession.getItemInfos()!>
                 <#assign sectionTitle="${uiLabelMap.ProductProducts} ${uiLabelMap.ProductToPack}"/>
                 <@section title=sectionTitle>
                     <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>">

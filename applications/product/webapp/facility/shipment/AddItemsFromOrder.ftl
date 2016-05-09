@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if shipment??>
-<@section title=uiLabelMap.PageTitleAddItemsFromOrder>
+<@section>
     <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <@field type="lookup" value=(orderId!) label=uiLabelMap.ProductOrderId formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>

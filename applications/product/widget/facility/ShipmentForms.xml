@@ -195,7 +195,7 @@ under the License.
             </service>
         </actions>
         <field name="shipmentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
-            <hyperlink target="ViewShipment" description="${shipmentId}">
+            <hyperlink target="EditShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>

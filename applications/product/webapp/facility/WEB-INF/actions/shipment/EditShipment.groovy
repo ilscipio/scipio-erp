@@ -29,7 +29,12 @@ if (!shipment) {
 } else {
     primaryOrderId = shipment.primaryOrderId;
 }
-orderHeader = from("OrderHeader").where(orderId : primaryOrderId).queryOne();
+orderHeader = from("OrderHeader").where("orderId" : primaryOrderId).queryOne();
+
+if (orderHeader) {
+    productStoreFacilityList = delegator.findByAnd("ProductStoreFacilityByOrder", ["orderId" : orderHeader.orderId], null, false);
+    context.productStoreFacilityList = productStoreFacilityList;
+}    
 
 // the kind of StatusItem to use is based on the type of order
 statusItemTypeId = "SHIPMENT_STATUS";
@@ -41,12 +46,17 @@ context.statusItemTypeId = statusItemTypeId;
 context.shipmentId = shipmentId;
 context.shipment = shipment;
 
+shipmentTypeList = from("ShipmentType").queryList();
+context.shipmentTypeList = shipmentTypeList;
+
 if (shipment) {
     currentStatus = shipment.getRelatedOne("StatusItem", false);
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress", false);
     destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress", false);
     originTelecomNumber = shipment.getRelatedOne("OriginTelecomNumber", false);
     destinationTelecomNumber = shipment.getRelatedOne("DestinationTelecomNumber", false);
+    
+    statusList = from("StatusValidChangeToDetail").where(["statusId" : shipment.statusId]).queryList();
 
     if (orderHeader) {
         context.productStoreId = orderHeader.productStoreId;
@@ -58,4 +68,7 @@ if (shipment) {
     context.originTelecomNumber = originTelecomNumber;
     context.destinationTelecomNumber = destinationTelecomNumber;
 
+} else {
+    statusList = from("StatusItem").where(["statusTypeId" : statusItemTypeId]).queryList();
 }
+context.statusList = statusList;

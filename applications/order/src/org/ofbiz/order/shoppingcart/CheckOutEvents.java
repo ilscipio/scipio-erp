@@ -1376,6 +1376,8 @@ public class CheckOutEvents {
      * Mostly for checkout's shipping_contact_mech_id.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
+     * <p>
+     * NOTE: This also sets a newShipContactMechInfoMap map in request attributes that screens may need.
      */
     public static Map<String, Object> checkShipContactMechIdForNew(HttpServletRequest request, String contactMechId, String paramPrefix) throws GeneralException {
         String origContactMechId = contactMechId;
@@ -1416,6 +1418,15 @@ public class CheckOutEvents {
                 contactMechId = (String) servResult.get("contactMechId");
             }
             
+            Map<String, Object> newShipContactMechInfoMap = UtilGenerics.checkMap(request.getAttribute("newShipContactMechInfoMap"));
+            if (newShipContactMechInfoMap == null) {
+                newShipContactMechInfoMap = new HashMap<String, Object>();
+            }
+            Map<String, Object> info = new HashMap<String, Object>();
+            info.put("contactMechId", contactMechId);
+            newShipContactMechInfoMap.put(origContactMechId, info);
+            request.setAttribute("newShipContactMechInfoMap", newShipContactMechInfoMap);
+            
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
             result.put("origContactMechId", origContactMechId);
@@ -1437,6 +1448,8 @@ public class CheckOutEvents {
      * Mostly for checkout's checkOutPaymentId.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
+     * <p>
+     * NOTE: This also sets a newPaymentMethodInfoMap map in request attributes that screens may need.
      */
     public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
             String ccParamPrefix, String eftParamPrefix) throws GeneralException {
@@ -1528,6 +1541,18 @@ public class CheckOutEvents {
         } else {
             paymentMethodId = (String) servResult.get("paymentMethodId");
         }
+        
+        // UPDATED: If we successfully created a pay method during this request, set a map in request attributes
+        // that maps the _NEW_xxxx to the new ID. Screens may need this to work around lack of global event transactions and param preselection issues.
+        
+        Map<String, Object> newPaymentMethodInfoMap = UtilGenerics.checkMap(request.getAttribute("newPaymentMethodIdMap"));
+        if (newPaymentMethodInfoMap == null) {
+            newPaymentMethodInfoMap = new HashMap<String, Object>();
+        }
+        Map<String, Object> info = new HashMap<String, Object>();
+        info.put("paymentMethodId", paymentMethodId);
+        newPaymentMethodInfoMap.put(origPaymentMethodId, info);
+        request.setAttribute("newPaymentMethodInfoMap", newPaymentMethodInfoMap);
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("paymentMethodId", paymentMethodId);

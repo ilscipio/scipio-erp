@@ -220,19 +220,6 @@ public class CheckOutEvents {
                 selectedPaymentMethods.put("EXT_BILLACT", UtilMisc.<String, Object>toMap("amount", billingAccountAmt, "securityCode", null));
             }
 
-            if (UtilValidate.isEmpty(selectedPaymentMethods)) {
-                // CATO: 2016-04-21: patch is based on logic from org.ofbiz.order.shoppingcart.CheckOutHelper.setCheckOutPaymentInternal
-                // we need an error message and the behavior for whether to require it is now based on ProductStore.reqPayMethForFreeOrders,
-                // otherwise the different checkout methods known to stock are too inconsistent.
-                // The default is Y which was the original behavior of this part of code, and is the most "safe" default.
-                GenericValue productStore = ProductStoreWorker.getProductStore(request);
-                if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0 || !(productStore != null && "N".equals(productStore.getString("reqPayMethForFreeOrders")))) {
-                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"checkhelper.select_method_of_payment",
-                            (cart != null ? cart.getLocale() : Locale.getDefault())));
-                    return "error";
-                }
-            }
-            
             List<String> singleUsePayments = new ArrayList<String>();
 
             // Cato: Support single-use for arbitrary pay methods
@@ -252,9 +239,26 @@ public class CheckOutEvents {
                     if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
                         singleUsePayments.add(gcPaymentMethodId);
                     }
+                    
+                    // CATO: Save the info of which paymentMethodId was just created for the new card
+                    saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
             }
 
+            // CATO: 2016-05-09: This check moved AFTER gift card check so can use GC alone
+            if (UtilValidate.isEmpty(selectedPaymentMethods)) {
+                // CATO: 2016-04-21: patch is based on logic from org.ofbiz.order.shoppingcart.CheckOutHelper.setCheckOutPaymentInternal
+                // we need an error message and the behavior for whether to require it is now based on ProductStore.reqPayMethForFreeOrders,
+                // otherwise the different checkout methods known to stock are too inconsistent.
+                // The default is Y which was the original behavior of this part of code, and is the most "safe" default.
+                GenericValue productStore = ProductStoreWorker.getProductStore(request);
+                if (cart.getGrandTotal().compareTo(BigDecimal.ZERO) != 0 || !(productStore != null && "N".equals(productStore.getString("reqPayMethForFreeOrders")))) {
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"checkhelper.select_method_of_payment",
+                            (cart != null ? cart.getLocale() : Locale.getDefault())));
+                    return "error";
+                }
+            }
+            
             Map<String, Object> callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId);
             ServiceUtil.getMessages(request, callResult, null);
 
@@ -442,10 +446,13 @@ public class CheckOutEvents {
                     try {
                         amount = new BigDecimal(amountStr);
                     } catch (NumberFormatException e) {
-                        Debug.logError(e, module);
-                        errMsg = UtilProperties.getMessage(resource_error, "checkevents.invalid_amount_set_for_payment_method", (cart != null ? cart.getLocale() : Locale.getDefault()));
-                        request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                        return null;
+                        // Cato: Let caller handle
+                        throw new ServiceErrorException("Invalid amount set for payment method: " + amountStr, ServiceUtil.returnError(
+                                UtilProperties.getMessage(resource_error, "checkevents.invalid_amount_set_for_payment_method", (cart != null ? cart.getLocale() : Locale.getDefault()))));
+                        //Debug.logError(e, module);
+                        //errMsg = UtilProperties.getMessage(resource_error, "checkevents.invalid_amount_set_for_payment_method", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                        //request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                        //return null;
                     }
                 }
                 paymentMethodInfo.put("amount", amount);
@@ -577,6 +584,9 @@ public class CheckOutEvents {
             if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
                 singleUsePayments.add(gcPaymentMethodId);
             }
+            
+            // CATO: Save the info of which paymentMethodId was just created for the new card
+            saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
         }
 
         Map<String, Object> optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
@@ -1104,6 +1114,12 @@ public class CheckOutEvents {
             if (errorMessages.size() == 0 && errorMaps.size() == 0) {
                 String gcPaymentMethodId = (String) callResult.get("paymentMethodId");
                 BigDecimal giftCardAmount = (BigDecimal) callResult.get("amount");
+                
+                // CATO: Save the info of which paymentMethodId was just created for the new card
+                if (gcPaymentMethodId != null) {
+                    saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
+                }
+                
                 // WARNING: if gcPaymentMethodId is not empty, all the previously set payment methods will be removed
                 Map<String, Object> gcCallRes = checkOutHelper.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
                 ServiceUtil.addErrors(errorMessages, errorMaps, gcCallRes);
@@ -1544,21 +1560,25 @@ public class CheckOutEvents {
         
         // UPDATED: If we successfully created a pay method during this request, set a map in request attributes
         // that maps the _NEW_xxxx to the new ID. Screens may need this to work around lack of global event transactions and param preselection issues.
-        
-        Map<String, Object> newPaymentMethodInfoMap = UtilGenerics.checkMap(request.getAttribute("newPaymentMethodIdMap"));
-        if (newPaymentMethodInfoMap == null) {
-            newPaymentMethodInfoMap = new HashMap<String, Object>();
-        }
-        Map<String, Object> info = new HashMap<String, Object>();
-        info.put("paymentMethodId", paymentMethodId);
-        newPaymentMethodInfoMap.put(origPaymentMethodId, info);
-        request.setAttribute("newPaymentMethodInfoMap", newPaymentMethodInfoMap);
+        saveToNewPaymentMethodIdMap(request, origPaymentMethodId, paymentMethodId);
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("paymentMethodId", paymentMethodId);
         result.put("origPaymentMethodId", origPaymentMethodId);
         result.put("paramPrefix", paramPrefix);
         return result;
+    }
+    
+    static void saveToNewPaymentMethodIdMap(HttpServletRequest request, String origId, String paymentMethodId)  {
+        Map<String, Object> newPaymentMethodInfoMap = UtilGenerics.checkMap(request.getAttribute("newPaymentMethodIdMap"));
+        if (newPaymentMethodInfoMap == null) {
+            newPaymentMethodInfoMap = new HashMap<String, Object>();
+        }
+        Map<String, Object> info = new HashMap<String, Object>();
+        info.put("paymentMethodId", paymentMethodId);
+        newPaymentMethodInfoMap.put(origId, info);
+        request.setAttribute("newPaymentMethodInfoMap", newPaymentMethodInfoMap);
+        
     }
 
     public static MapProcessor getPostalAddressValidator(HttpServletRequest request) {

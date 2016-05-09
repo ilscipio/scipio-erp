@@ -39,4 +39,10 @@ under the License.
     <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="ofbGcAuthorize" paymentCustomMethodId="GIFT_AUTH_OFBIZ"/>
     <ProductStorePaymentSetting productStoreId="CatoShop" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="ofbGcRefund" paymentCustomMethodId="GIFT_REFUND_OFBIZ"/>
 
+    <!-- DEMO: Demo gift cards for validation testing -->
+    <FinAccount finAccountId="CATOSHOP_GC_001" finAccountTypeId="GIFTCERT_ACCOUNT" statusId="FNACT_ACTIVE" finAccountName="Cato Shop Gift Card 001" finAccountCode="123412341234" finAccountPin="1234"
+        currencyUomId="USD" organizationPartyId="Company" ownerPartyId="DemoCustomer" isRefundable="Y" replenishLevel="0.00" actualBalance="500.0" availableBalance="500.0"/>
+    <FinAccount finAccountId="CATOSHOP_GC_002" finAccountTypeId="GIFTCERT_ACCOUNT" statusId="FNACT_ACTIVE" finAccountName="Cato Shop Gift Card 002" finAccountCode="432143214321" finAccountPin="4321"
+        currencyUomId="USD" organizationPartyId="Company" ownerPartyId="DemoCustomer" isRefundable="Y" replenishLevel="0.00" actualBalance="100.0" availableBalance="100.0"/>
+
 </entity-engine-xml>

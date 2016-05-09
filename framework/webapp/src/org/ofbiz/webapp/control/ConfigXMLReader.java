@@ -499,6 +499,8 @@ public class ConfigXMLReader {
         public String invoke;
         public boolean globalTransaction = true;
         public Metrics metrics = null;
+        public Boolean transaction = null; // Cato: A generic transaction flag
+        public String abortTransaction = ""; // Cato: Allow aborting transaction 
 
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -510,6 +512,16 @@ public class ConfigXMLReader {
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
             }
+            // Cato: new attribs
+            String transStr = eventElement.getAttribute("transaction");
+            if ("true".equals(transStr)) {
+                transaction = Boolean.TRUE;
+            } else if ("false".equals(transStr)) {
+                transaction = Boolean.FALSE;
+            } else {
+                transaction = null;
+            }
+            this.abortTransaction = eventElement.getAttribute("abort-transaction");
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -517,6 +529,17 @@ public class ConfigXMLReader {
             this.path = path;
             this.invoke = invoke;
             this.globalTransaction = globalTransaction;
+        }
+
+        public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
+                Boolean transaction, String abortTransaction) {
+            super();
+            this.type = type;
+            this.path = path;
+            this.invoke = invoke;
+            this.globalTransaction = globalTransaction;
+            this.transaction = transaction;
+            this.abortTransaction = abortTransaction;
         }
     }
 

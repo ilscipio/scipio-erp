@@ -77,11 +77,12 @@ public class JavaEventHandler implements EventHandler {
         Debug.logVerbose("*[[Event invocation]]*", module);
         Object[] params = new Object[] {request, response};
 
-        return invoke(event.path, event.invoke, eventClass, paramTypes, params);
+        return invoke(event.path, event.invoke, eventClass, paramTypes, params, event); // Cato: pass the event
     }
 
-    private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params) throws EventHandlerException {
+    private String invoke(String eventPath, String eventMethod, Class<?> eventClass, Class<?>[] paramTypes, Object[] params, Event event) throws EventHandlerException {
         boolean beganTransaction = false;
+        boolean rollback = false;
         if (eventClass == null) {
             throw new EventHandlerException("Error invoking event, the class " + eventPath + " was not found");
         }
@@ -96,6 +97,13 @@ public class JavaEventHandler implements EventHandler {
             String eventReturn = (String) m.invoke(null, params);
 
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
+            
+            // Cato: Trigger transaction abort if configured
+            if ("error".equals(eventReturn) && "on-error".equals(event.abortTransaction)) {
+                TransactionUtil.rollback(beganTransaction, "Event returned an error", null);
+                rollback = true;
+            }
+            
             return eventReturn;
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
@@ -111,10 +119,12 @@ public class JavaEventHandler implements EventHandler {
             Debug.logError(e, "Problems Processing Event", module);
             throw new EventHandlerException("Problems processing event: " + e.toString(), e);
         } finally {
-            try {
-                TransactionUtil.commit(beganTransaction);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, module);
+            if (!rollback) {
+                try {
+                    TransactionUtil.commit(beganTransaction);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, module);
+                }
             }
         }
     }

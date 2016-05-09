@@ -99,8 +99,12 @@ public class JavaEventHandler implements EventHandler {
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             
             // Cato: Trigger transaction abort if configured
-            if ("error".equals(eventReturn) && "on-error".equals(event.abortTransaction)) {
-                TransactionUtil.rollback(beganTransaction, "Event returned an error", null);
+            if ("error".equals(eventReturn) && ("on-any-error".equals(event.abortTransaction) || "on-error-result".equals(event.abortTransaction))) {
+                try {
+                    TransactionUtil.rollback(beganTransaction, "Event returned an error", null);
+                } catch (GenericTransactionException e1) {
+                    Debug.logError(e1, module);
+                }
                 rollback = true;
             }
             
@@ -108,6 +112,16 @@ public class JavaEventHandler implements EventHandler {
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
 
+            // Cato: Trigger transaction abort if configured
+            if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
+                try {
+                    TransactionUtil.rollback(beganTransaction, "Event exception", t);
+                } catch (GenericTransactionException e1) {
+                    Debug.logError(e1, module);
+                }
+                rollback = true;
+            }
+            
             if (t != null) {
                 Debug.logError(t, "Problems Processing Event", module);
                 throw new EventHandlerException("Problems processing event: " + t.toString(), t);
@@ -116,6 +130,17 @@ public class JavaEventHandler implements EventHandler {
                 throw new EventHandlerException("Problems processing event: " + e.toString(), e);
             }
         } catch (Exception e) {
+            
+            // Cato: Trigger transaction abort if configured
+            if ("on-any-error".equals(event.abortTransaction) || "on-exception".equals(event.abortTransaction)) {
+                try {
+                    TransactionUtil.rollback(beganTransaction, "Event exception", e);
+                } catch (GenericTransactionException e1) {
+                    Debug.logError(e1, module);
+                }
+                rollback = true;
+            }
+            
             Debug.logError(e, "Problems Processing Event", module);
             throw new EventHandlerException("Problems processing event: " + e.toString(), e);
         } finally {

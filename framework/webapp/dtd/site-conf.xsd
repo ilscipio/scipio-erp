@@ -494,8 +494,10 @@ under the License.
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="on-error-result"/>
                     <xs:enumeration value=""/>
+                    <xs:enumeration value="on-error-result"/>
+                    <xs:enumeration value="on-exception"/>
+                    <xs:enumeration value="on-any-error"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

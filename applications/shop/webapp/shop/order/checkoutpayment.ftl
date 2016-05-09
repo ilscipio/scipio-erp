@@ -359,14 +359,14 @@ jQuery(document).ready(function(){
 
               <#if userHasAccount>
                 <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
-                <@field type="checkbox" checkboxType="simple-standard" id="newCreditCard_saveToAccount" name="newCreditCard_saveToAccount" value="Y" 
+                <@field type="checkbox" checkboxType="simple-standard" id="newCreditCard_saveToAccount" name="saveToAccount__NEW_CREDIT_CARD_" value="Y" 
                     checked=((parameters.singleUsePayment__NEW_CREDIT_CARD_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_CREDIT_CARD_" name="singleUsePayment__NEW_CREDIT_CARD_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newCreditCard_amount" value=(parameters.newCreditCard_amount!) tooltip=fieldTooltip/>
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_CREDIT_CARD_" value=(parameters.amount__NEW_CREDIT_CARD_!) tooltip=fieldTooltip/>
             </@section>
           </#if>
         </#if>
@@ -436,14 +436,14 @@ jQuery(document).ready(function(){
 
               <#if userHasAccount>
                 <#-- Cato: This should be the opposite of "single use payment"... so we use form submit hook to set the hidden field -->
-                <@field type="checkbox" checkboxType="simple-standard" id="newEftAccount_saveToAccount" name="newEftAccount_saveToAccount" 
+                <@field type="checkbox" checkboxType="simple-standard" id="newEftAccount_saveToAccount" name="saveToAccount__NEW_EFT_ACCOUNT_" 
                     value="Y" checked=((parameters.singleUsePayment__NEW_EFT_ACCOUNT_!"") != "Y") label=uiLabelMap.OrderSaveToAccount/>
                 <input type="hidden" id="singleUsePayment__NEW_EFT_ACCOUNT_" name="singleUsePayment__NEW_EFT_ACCOUNT_" value="" />
               </#if>
               <#assign fieldTooltip = "${uiLabelMap.AccountingLeaveEmptyFullAmount}">
               <#-- Cato: NOTE: Stock ofbiz labels this as "bill up to", but it does NOT function as a "bill up to" but rather as an exact amount.
                   Unless this behavior is changed, show "Amount" instead of "BillUpTo": uiLabelMap.OrderBillUpTo -->
-              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="newEftAccount_amount" value=(parameters.newEftAccount_amount!) tooltip=fieldTooltip />
+              <@field type="input" label=uiLabelMap.AccountingAmount size="5" name="amount__NEW_EFT_ACCOUNT_" value=(parameters.amount__NEW_EFT_ACCOUNT_!) tooltip=fieldTooltip />
             </@section>
           </#if>
         </#if>
@@ -582,7 +582,7 @@ jQuery(document).ready(function(){
 <div id="paymethselection" class="pay-meth-selection">
   <@section containerId="paymeth_primary" containerClass="+pay-meth-options-all-content pay-meth-primary">
     <div id="paymethselect_primary" class="pay-meth-options">
-      <@field type="generic" label="<strong>${uiLabelMap.AccountingPaymentMethod}</strong>">
+      <@field type="generic" label="<strong>${uiLabelMap.AccountingPaymentMethod}</strong>" required=true>
         <@paymentMethodContent showPrimary=true showSelect=true />
       </@field>
     </div>
